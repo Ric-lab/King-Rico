@@ -1,0 +1,43 @@
+/* Fortune Circus — motion.
+   Rule of thumb: UI presses are fast and springy; reel/celebration motion
+   overshoots then settles. Nothing eases linearly except the spinning blur. */
+:root {
+  --fc-dur-press: 90ms;
+  --fc-dur-fast: 180ms;
+  --fc-dur-base: 320ms;
+  --fc-dur-drop: 420ms;    /* symbol landing */
+  --fc-dur-celebrate: 700ms;
+  --fc-dur-line: 1600ms;   /* payline sweep */
+
+  --fc-ease-out: cubic-bezier(0.22, 0.9, 0.3, 1);
+  --fc-ease-bounce: cubic-bezier(0.18, 1.5, 0.4, 1);
+  --fc-ease-inout: ease-in-out;
+
+  --fc-press-scale: 0.88;
+  --fc-hover-lift: translateY(-1px);
+
+  /* Press = sink into the art. Darken instantly, recover slowly. */
+  --fc-dur-press-in: 30ms;
+  --fc-dur-release: 350ms;
+  --fc-dur-release-coin: 300ms;
+  --fc-press-delay: 280ms;          /* click lands, then the reels start */
+  --fc-sink-strong: brightness(.6) saturate(1.2);   /* spin bar */
+  --fc-sink-soft: brightness(.84) saturate(1.08);   /* turbo / auto coins */
+  --fc-sink-shadow-strong: inset 0 4px 12px rgba(0,0,0,.6), inset 0 -1px 0 rgba(255,255,255,.08);
+  --fc-sink-shadow-soft: inset 0 2px 6px rgba(0,0,0,.32);
+  --fc-sink-offset-strong: 2px;
+  --fc-sink-offset-soft: 1px;
+}
+
+@keyframes fcDrop { 0% { transform: translateY(-34%); } 55% { transform: translateY(7%); } 78% { transform: translateY(-3%); } 100% { transform: translateY(0); } }
+@keyframes fcBlur { 0% { transform: translateY(-11%); filter: blur(2px); } 100% { transform: translateY(11%); filter: blur(2px); } }
+@keyframes fcPop { 0% { transform: scale(.62); opacity: 0; } 55% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fcBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+@keyframes fcWin { 0%, 100% { box-shadow: 0 0 0 3px rgba(255,229,138,.9), 0 0 24px 8px rgba(255,200,60,.6) inset; } 50% { box-shadow: 0 0 0 5px rgba(255,247,200,1), 0 0 38px 15px rgba(255,180,30,.9) inset; } }
+@keyframes fcLock { 0%, 100% { box-shadow: 0 0 0 3px rgba(120,255,170,.85), 0 0 18px 5px rgba(60,220,120,.45) inset; } 50% { box-shadow: 0 0 0 4px rgba(200,255,220,1), 0 0 26px 9px rgba(60,220,120,.7) inset; } }
+@keyframes fcAntic { 0%, 100% { box-shadow: 0 0 0 3px rgba(255,90,90,.8), 0 0 26px 10px rgba(255,120,40,.4) inset; } 50% { box-shadow: 0 0 0 5px rgba(255,190,90,1), 0 0 44px 18px rgba(255,120,40,.7) inset; } }
+@keyframes fcRing { 0%, 100% { box-shadow: 0 0 0 2px rgba(255,246,190,.95), 0 0 16px 4px rgba(255,200,60,.8); } 50% { box-shadow: 0 0 0 3px #fff, 0 0 26px 9px rgba(255,200,60,1); } }
+@keyframes fcShake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-3px, 2px); } 40% { transform: translate(3px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
+@keyframes fcLine { 0% { opacity: 0; transform: scaleX(.2); } 25% { opacity: 1; transform: scaleX(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes fcShine { 0% { transform: translateX(-140%) skewX(-18deg); } 100% { transform: translateX(260%) skewX(-18deg); } }
+@keyframes fcPulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }

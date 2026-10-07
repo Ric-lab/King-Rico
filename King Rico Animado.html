@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>King Rico — animado</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.184.0/examples/jsm/"
+} }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; background: #1d0733; color: #f6e8ff; font-family: 'Baloo 2', system-ui, sans-serif; }
+  a { color: #ffd257; } a:hover { color: #fff1b8; }
+  #wrap { max-width: 900px; margin: 0 auto; padding: 18px; display: grid; gap: 12px; }
+  h1 { margin: 0; font-size: 26px; color: #ffd257; }
+  #view { width: 100%; height: min(70vh, 620px); border-radius: 16px; overflow: hidden; background: radial-gradient(70% 70% at 50% 40%, #4a1a6e, #1d0733); }
+  #bar { display: flex; flex-wrap: wrap; gap: 8px; }
+  #bar button { font: 800 14px 'Baloo 2', sans-serif; color: #062c14; background: #4fd97a; border: 0; border-radius: 10px; padding: 9px 14px; cursor: pointer; }
+  #bar button[aria-pressed="true"] { background: #ffd257; }
+  #st { font-size: 14px; color: #c9a8e6; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1>King Rico animado</h1>
+  <div id="view"></div>
+  <div id="bar"></div>
+  <div id="st">Carregando…</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const LABELS = { Idle: 'Parado', Big_Wave_Hello: 'Acenar', Motivational_Cheer: 'Torcer', Happy_Sway_Standing: 'Feliz', Joyful_Dance_with_Hand_Sway: 'Dançar', victory: 'Vitória', Angry_Stomp: 'Perdeu (bravo)', Cheer_with_Both_Hands_Up: 'Comemorar' };
+const view = document.getElementById('view'), st = document.getElementById('st');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio)); renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1.0; renderer.shadowMap.enabled = true;
+view.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+const key = new THREE.DirectionalLight(0xfff1dc, 2.0); key.position.set(1.5, 3, 2.5); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); scene.add(key);
+scene.add(new THREE.HemisphereLight(0xfff2dc, 0x3a1450, 0.6));
+const ground = new THREE.Mesh(new THREE.CircleGeometry(1.2, 48), new THREE.ShadowMaterial({ opacity: 0.35 })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const cam = new THREE.PerspectiveCamera(30, 1, 0.01, 50);
+const ctl = new OrbitControls(cam, renderer.domElement); ctl.enableDamping = true; ctl.enablePan = false;
+const fit = () => { const w = view.clientWidth, h = view.clientHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+addEventListener('resize', fit); fit();
+
+const loader = new GLTFLoader();
+const [kr, crownG, scepterG] = await Promise.all(['assets/models/king-rico-anim.glb', 'assets/models/sym-crown.glb', 'assets/models/sym-scepter.glb'].map(u => loader.loadAsync(u)));
+const root = kr.scene; scene.add(root);
+root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.frustumCulled = false; } });
+// rigid "toy puppet" skinning: every vertex follows only its strongest bone (no rubbery blending)
+const RIGID = !/soft/.test(location.search);
+if (RIGID) root.traverse(o => {
+  if (!o.isSkinnedMesh) return;
+  const si = o.geometry.attributes.skinIndex, sw = o.geometry.attributes.skinWeight;
+  for (let i = 0; i < sw.count; i++) {
+    let bj = 0, bw = -1; for (let j = 0; j < 4; j++) { const w = sw.getComponent(i, j); if (w > bw) { bw = w; bj = j; } }
+    const b = si.getComponent(i, bj); si.setXYZW(i, b, 0, 0, 0); sw.setXYZW(i, 1, 0, 0, 0);
+  }
+  si.needsUpdate = sw.needsUpdate = true;
+});
+// normalise height to 1.2 and stand on the ground
+let box = new THREE.Box3().setFromObject(root); const H = box.max.y - box.min.y, sc = 1.2 / H;
+root.scale.setScalar(sc); root.updateMatrixWorld(true); box = new THREE.Box3().setFromObject(root); root.position.y -= box.min.y; root.position.x -= (box.min.x + box.max.x) / 2; root.position.z -= (box.min.z + box.max.z) / 2;
+root.updateMatrixWorld(true); box = new THREE.Box3().setFromObject(root);
+const top = box.max.y, width = box.max.x - box.min.x;
+cam.position.set(0, 0.75, 3.1); ctl.target.set(0, 0.62, 0); ctl.update();
+
+const bone = n => { let b = null; root.traverse(o => { if (!b && o.isBone && o.name === n) b = o; }); return b; };
+const head = bone('Head'), hand = bone('RightHand'), chest = bone('Spine02') || bone('Spine01');
+
+// attach a rigid prop to a bone, keeping a target world size/position measured in bind pose
+function attach(gltf, boneObj, worldPos, worldSize, axis, euler) {
+  const p = gltf.scene; const g = new THREE.Group(); g.add(p);
+  const b0 = new THREE.Box3().setFromObject(p), s = b0.getSize(new THREE.Vector3()), c = b0.getCenter(new THREE.Vector3());
+  p.position.sub(c); g.scale.setScalar(worldSize / s[axis]);
+  if (euler) g.rotation.set(...euler);
+  g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+  boneObj.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(boneObj.matrixWorld).invert();
+  const m = new THREE.Matrix4().compose(worldPos, new THREE.Quaternion().setFromEuler(g.rotation), new THREE.Vector3().setScalar(g.scale.x));
+  m.premultiply(inv); m.decompose(g.position, g.quaternion, g.scale);
+  boneObj.add(g); return g;
+}
+const hp = new THREE.Vector3(); head.getWorldPosition(hp);
+attach(crownG, head, new THREE.Vector3(hp.x + 0.02, top + 0.02, hp.z + 0.02), width * 0.36, 'x', [0, 0, -0.12]);
+// scepter: grip the handle (15% up the shaft) in the fist; shaft follows the hand bone's own axis
+{
+  const p = scepterG.scene; p.updateMatrixWorld(true);
+  const pts = []; p.traverse(o => { if (o.isMesh) { const a = o.geometry.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < a.count; i += 3) { v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld); pts.push(v.clone()); } } });
+  const bb = new THREE.Box3().setFromPoints(pts), sz = bb.getSize(new THREE.Vector3()), ctr = bb.getCenter(new THREE.Vector3());
+  // long axis by PCA-lite: farthest pair direction from the centre
+  let far = pts[0]; pts.forEach(q => { if (q.distanceToSquared(ctr) > far.distanceToSquared(ctr)) far = q; });
+  let dir = far.clone().sub(ctr).normalize(), lo = 1e9, hi = -1e9;
+  pts.forEach(q => { const t = q.clone().sub(ctr).dot(dir); lo = Math.min(lo, t); hi = Math.max(hi, t); });
+  // the thin end is the handle: compare spread near each end
+  const spread = (t0, t1) => { let m = 0; pts.forEach(q => { const d = q.clone().sub(ctr), t = d.dot(dir); if (t > t0 && t < t1) m = Math.max(m, d.sub(dir.clone().multiplyScalar(t)).length()); }); return m; };
+  const L = hi - lo; if (spread(hi - L * .25, hi) < spread(lo, lo + L * .25)) { dir.negate(); [lo, hi] = [-hi, -lo]; }
+  const grip = ctr.clone().add(dir.clone().multiplyScalar(lo + L * 0.15));
+  const scale = 0.52 / L;
+  // which local axis of the hand points most "up" in bind pose → shaft goes along it
+  hand.updateMatrixWorld(true); const hq = hand.getWorldQuaternion(new THREE.Quaternion());
+  const axes = [new THREE.Vector3(1,0,0), new THREE.Vector3(-1,0,0), new THREE.Vector3(0,0,1), new THREE.Vector3(0,0,-1), new THREE.Vector3(0,1,0), new THREE.Vector3(0,-1,0)];
+  let up = axes[0], best = -2; axes.forEach(a => { const w = a.clone().applyQuaternion(hq).y; if (w > best) { best = w; up = a; } });
+  const g = new THREE.Group(); g.name = 'scepter-grip'; p.position.copy(grip).multiplyScalar(-1); g.add(p);
+  const holder = new THREE.Group(); holder.add(g);
+  g.quaternion.setFromUnitVectors(dir, up);
+  // undo the bone's world scale so the prop keeps its intended size
+  const ws = hand.getWorldScale(new THREE.Vector3()); holder.scale.setScalar(scale / ws.x);
+  holder.position.set(0, 0, 0); hand.add(holder);
+  holder.traverse(o => { if (o.isMesh) { o.castShadow = true; o.frustumCulled = false; } });
+}
+
+// procedural cape: curved cloth hanging from the shoulders, red with gold trim, follows the chest bone
+const cp = new THREE.Vector3(); chest.getWorldPosition(cp);
+const ls = bone('LeftShoulder') || bone('LeftArm'), rs = bone('RightShoulder') || bone('RightArm');
+const lp = new THREE.Vector3(), rp = new THREE.Vector3(); ls.getWorldPosition(lp); rs.getWorldPosition(rp);
+// back surface depth at shoulder height, measured on the skinned mesh in bind pose
+let backZ = 1e9; root.traverse(o => { if (!o.isMesh) return; const a = o.geometry.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < a.count; i += 2) { v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld); if (Math.abs(v.y - lp.y) < 0.06 && Math.abs(v.x - cp.x) < Math.abs(lp.x - rp.x) * 0.45) backZ = Math.min(backZ, v.z); } });
+const shoulderW = Math.abs(lp.x - rp.x), capeW = shoulderW * 1.25, capeH = Math.max(0.32, (lp.y - box.min.y) * 0.62), seg = 24;
+const capeTop = new THREE.Vector3((lp.x + rp.x) / 2, Math.max(lp.y, rp.y) + 0.02, backZ - 0.015);
+const geo = new THREE.PlaneGeometry(capeW, capeH, seg, seg); geo.translate(0, -capeH / 2, 0);
+const P = geo.attributes.position, base = P.array.slice();
+// top edge wraps around the neck/shoulders (ends come forward), lower part flares and hangs back
+for (let i = 0; i < P.count; i++) { const x = P.getX(i), y = P.getY(i), u = x / (capeW / 2), k = -y / capeH, wrap = Math.max(0, 1 - k * 3); P.setZ(i, 0.09 * u * u * wrap - 0.035 * k); P.setX(i, x * (1 + 0.28 * k)); }
+P.needsUpdate = true; geo.computeVertexNormals(); const rest = P.array.slice();
+const cv = document.createElement('canvas'); cv.width = 256; cv.height = 256; const cx = cv.getContext('2d');
+cx.fillStyle = '#d4141c'; cx.fillRect(0, 0, 256, 256); cx.fillStyle = '#f5b81c'; cx.fillRect(0, 0, 16, 256); cx.fillRect(240, 0, 16, 256); cx.fillRect(0, 238, 256, 18);
+const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+const capeMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.55, side: THREE.DoubleSide }); capeMat.name = 'cape-red';
+const cape = new THREE.Mesh(geo, capeMat); cape.name = 'cape'; cape.castShadow = true;
+const capeHolder = new THREE.Group(); capeHolder.add(cape);
+{ chest.updateMatrixWorld(true); const inv = new THREE.Matrix4().copy(chest.matrixWorld).invert();
+  const m = new THREE.Matrix4().makeTranslation(capeTop.x, capeTop.y, capeTop.z); m.premultiply(inv); m.decompose(capeHolder.position, capeHolder.quaternion, capeHolder.scale); chest.add(capeHolder); }
+// brooch at the front of the neck, on the chest bone
+{ let frontZ = -1e9; root.traverse(o => { if (!o.isMesh || o.name === 'cape') return; const a = o.geometry.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < a.count; i += 2) { v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld); if (Math.abs(v.y - lp.y) < 0.05 && Math.abs(v.x - cp.x) < 0.06) frontZ = Math.max(frontZ, v.z); } });
+  const brooch = new THREE.Mesh(new THREE.SphereGeometry(0.028, 20, 14), new THREE.MeshPhysicalMaterial({ color: '#1f6dff', roughness: 0.1, clearcoat: 1 })); brooch.name = 'brooch';
+  const bh = new THREE.Group(); bh.add(brooch); const inv = new THREE.Matrix4().copy(chest.matrixWorld).invert();
+  const m = new THREE.Matrix4().makeTranslation(cp.x, lp.y - 0.03, frontZ + 0.01); m.premultiply(inv); m.decompose(bh.position, bh.quaternion, bh.scale); chest.add(bh); }
+
+// animations
+const mixer = new THREE.AnimationMixer(root); const actions = {}; let cur = null;
+kr.animations.forEach(c => { actions[c.name] = mixer.clipAction(c); });
+const bar = document.getElementById('bar');
+function play(n) {
+  const a = actions[n]; if (!a || a === cur) return;
+  a.reset().setEffectiveWeight(1).fadeIn(0.25).play(); if (cur) cur.fadeOut(0.25); cur = a;
+  bar.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.n === n)));
+}
+Object.keys(actions).forEach(n => { const b = document.createElement('button'); b.textContent = LABELS[n] || n; b.dataset.n = n; b.onclick = () => play(n); bar.appendChild(b); });
+play('Idle');
+window.KingRico = { play, actions: Object.keys(actions) };
+st.textContent = 'Arraste para girar. Coroa (cabeça), cetro (mão direita) e capa (peito) acompanham o esqueleto.';
+
+const clock = new THREE.Clock(); let t = 0;
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(0.05, clock.getDelta()); t += dt; mixer.update(dt);
+  for (let i = 0; i < P.count; i++) { const y = rest[i * 3 + 1], k = -y / capeH; P.setZ(i, rest[i * 3 + 2] - 0.025 * k * k * (1 + Math.sin(t * 2.2 + rest[i * 3] * 6))); }
+  P.needsUpdate = true; ctl.update(); renderer.render(scene, cam);
+});
+</script>
+</body>
+</html>

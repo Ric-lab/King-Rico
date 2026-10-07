@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fortune Circus — Biblioteca 3D</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js",
+    "three/addons/loaders/GLTFLoader.js": "https://unpkg.com/three@0.184.0/examples/jsm/loaders/GLTFLoader.js",
+    "three/addons/environments/RoomEnvironment.js": "https://unpkg.com/three@0.184.0/examples/jsm/environments/RoomEnvironment.js",
+    "three/addons/utils/BufferGeometryUtils.js": "https://unpkg.com/three@0.184.0/examples/jsm/utils/BufferGeometryUtils.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #1d0733; color: #f6e8ff; font-family: 'Baloo 2', system-ui, sans-serif; }
+  a { color: #ffd257; } a:hover { color: #fff1b8; }
+  three-d-stage:not(:defined) { visibility: hidden; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 24px 20px 40px; display: grid; gap: 18px; }
+  h1 { margin: 0; font-size: 28px; font-weight: 800; color: #ffd257; }
+  .sub { margin: 0; font-size: 15px; color: #c9a8e6; }
+  .main { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 880px) { .main { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: #2a0d48; border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .cap { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #ffd257; opacity: .8; margin: 0 0 10px; }
+  three-d-stage { display: block; width: 100%; height: 520px; border-radius: 12px; overflow: hidden; }
+  .lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+  .tile { border: 0; padding: 0; cursor: pointer; background: none; font: inherit; color: inherit; display: flex; flex-direction: column; gap: 4px; }
+  .thumb { aspect-ratio: 1; border-radius: 10px; background: radial-gradient(66% 66% at 50% 44%, #f8ecdf 0%, #f3e0cc 50%, #ebd0b5 85%, #dfbc9c 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; outline: 3px solid transparent; transition: outline-color .15s; }
+  .tile[aria-pressed="true"] .thumb { outline-color: #4fd97a; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .name { font-size: 13px; font-weight: 700; text-align: center; color: #e9d2fa; }
+  .meta { font-size: 13px; color: #c9a8e6; margin-top: 8px; }
+  .views { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .views .thumb { outline: none; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  button.act { white-space: nowrap; font: 800 13px 'Baloo 2', sans-serif; color: #062c14; background: #4fd97a; border: 0; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+  button.act:hover { filter: brightness(1.08); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Biblioteca 3D — Fortune Circus</h1>
+    <p class="sub">King Rico e símbolos orgânicos gerados no Meshy; diamante, moeda e trevo modelados em código (geometria exata dos dois lados). Clique num item para girar e exportar.</p>
+  </div>
+  <div class="main">
+    <div class="card">
+      <p class="cap" id="title">Modelo</p>
+      <three-d-stage name="fc-asset" background="#f3e0cc" autorotate></three-d-stage>
+      <p class="meta" id="meta">Carregando…</p>
+      <div class="views" id="views"></div>
+      <div class="row"><button class="act" id="dl">Baixar renders (PNG 1024)</button></div>
+    </div>
+    <div class="card">
+      <p class="cap">Assets</p>
+      <div class="lib" id="lib"></div>
+    </div>
+  </div>
+</div>
+<script src="three-d-stage.js"></script>
+<script type="module">
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import * as PROC from './assets/models/procedural.js?v=34';
+const ASSETS = [
+  ['king-rico', 'King Rico', 'assets/models/king-rico.glb', 'assets/king-rico/view-front.png'],
+  ['peach', 'Happeach', 'assets/models/sym-peach.glb', 'assets/symbols/sym-peach.png'],
+  ['wild', 'Curinga', 'assets/models/sym-wild.glb', 'assets/symbols/sym-wild.png'],
+  ['gem', 'Diamante', 'proc:gem', 'assets/symbols/sym-gem.png'],
+  ['crown', 'Coroa', 'assets/models/sym-crown.glb', 'assets/symbols/sym-crown.png'],
+  ['coin', 'Moeda', 'proc:coin', 'assets/symbols/sym-coin.png'],
+  ['scepter', 'Cetro', 'assets/models/sym-scepter.glb', 'assets/symbols/sym-scepter.png'],
+  ['clover', 'Trevo', 'proc:clover', 'assets/symbols/sym-clover.png'],
+  ['candy', 'Nuvem', 'assets/models/sym-candy.glb', 'assets/symbols/sym-candy.png'],
+  ['tent', 'Tenda', 'assets/models/sym-tent.glb', 'assets/symbols/sym-tent.png'],
+  ['drum', 'Tambor', 'assets/models/sym-drum.glb', 'assets/symbols/sym-drum.png'],
+  ['curtain', 'Capa', 'assets/models/sym-curtain.glb', 'assets/symbols/sym-curtain.png']
+];
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+const sr = stage._renderer, sScene = stage._scene, sCam = stage._camera;
+const env = new THREE.PMREMGenerator(sr).fromScene(new RoomEnvironment(), 0.04).texture;
+sScene.environment = env;
+// the stage's neutral rig + our env map double-lights untextured materials — tone it down to the studio look
+// viewer uses the exact studio rig from the renders; stage key light kept only for the ground shadow
+sScene.traverse(o => { if (o.isHemisphereLight) o.intensity = 0; else if (o.isDirectionalLight && !o.castShadow) o.intensity = 0; else if (o.isDirectionalLight) { o.intensity = 0; o.castShadow = false; } });
+[[0xffe8c4, 1.6, [1.2, 2.6, 3.2]], [0xffc98a, 0.6, [-2.8, 0.6, 2.2]], [0xfff2d8, 1.4, [0.4, 2.2, -3]]].forEach(([c, i, p]) => { const l = new THREE.DirectionalLight(c, i); l.position.set(...p); sScene.add(l); });
+sScene.add(new THREE.HemisphereLight(0xfff2dc, 0x6a2a08, 0.35));
+sr.toneMapping = THREE.NeutralToneMapping; sr.toneMappingExposure = 0.9;
+const refit = () => { const w = stage.clientWidth || 600, h = stage.clientHeight || 520; sr.setSize(w, h); sCam.aspect = w / h; sCam.updateProjectionMatrix(); };
+
+// Toy material + studio rig — the fixed house look for every asset.
+const FINISH = {
+  smoothtex: { metalness: 0.9, roughness: 0.24, dropRough: true, normalScale: 0, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.2, smooth: 22, nsmooth: 12, blurTex: 4 },
+  polished: { metalness: 1, roughness: 0.2, dropRough: true, normalScale: 0, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.3, smooth: 28, nsmooth: 14, flatColor: '#ffae26' }
+};
+// Taubin smoothing (volume-preserving) on welded positions; UV seams kept, normals shared across seams.
+function smoothGeo(geo, iters) {
+  const P = geo.attributes.position, n = P.count, key = new Map(), id = new Int32Array(n);
+  for (let i = 0; i < n; i++) { const k = Math.round(P.getX(i) * 1e4) + ',' + Math.round(P.getY(i) * 1e4) + ',' + Math.round(P.getZ(i) * 1e4); let v = key.get(k); if (v === undefined) { v = key.size; key.set(k, v); } id[i] = v; }
+  const m = key.size, pos = new Float32Array(m * 3), nb = Array.from({ length: m }, () => new Set());
+  for (let i = 0; i < n; i++) { const v = id[i]; pos[v * 3] = P.getX(i); pos[v * 3 + 1] = P.getY(i); pos[v * 3 + 2] = P.getZ(i); }
+  const I = geo.index ? geo.index.array : Array.from({ length: n }, (_, i) => i);
+  for (let t = 0; t < I.length; t += 3) { const a = id[I[t]], b = id[I[t + 1]], c = id[I[t + 2]]; nb[a].add(b).add(c); nb[b].add(a).add(c); nb[c].add(a).add(b); }
+  const nbA = nb.map(s => Int32Array.from(s)), tmp = new Float32Array(m * 3);
+  const pass = f => { for (let v = 0; v < m; v++) { const L = nbA[v]; if (!L.length) { tmp.set(pos.subarray(v * 3, v * 3 + 3), v * 3); continue; } let x = 0, y = 0, z = 0; for (const u of L) { x += pos[u * 3]; y += pos[u * 3 + 1]; z += pos[u * 3 + 2]; } const k = 1 / L.length; tmp[v * 3] = pos[v * 3] + f * (x * k - pos[v * 3]); tmp[v * 3 + 1] = pos[v * 3 + 1] + f * (y * k - pos[v * 3 + 1]); tmp[v * 3 + 2] = pos[v * 3 + 2] + f * (z * k - pos[v * 3 + 2]); } pos.set(tmp); };
+  for (let it = 0; it < iters; it++) { pass(0.5); pass(-0.53); }
+  const nrm = new Float32Array(m * 3), A = new THREE.Vector3(), B = new THREE.Vector3(), C = new THREE.Vector3();
+  for (let t = 0; t < I.length; t += 3) { const a = id[I[t]], b = id[I[t + 1]], c = id[I[t + 2]]; A.fromArray(pos, a * 3); B.fromArray(pos, b * 3).sub(A); C.fromArray(pos, c * 3).sub(A); B.cross(C); for (const v of [a, b, c]) { nrm[v * 3] += B.x; nrm[v * 3 + 1] += B.y; nrm[v * 3 + 2] += B.z; } }
+  // extra normal-only smoothing: removes the crinkled reflections without moving the shape
+  for (let v = 0; v < m; v++) { A.fromArray(nrm, v * 3).normalize(); nrm[v * 3] = A.x; nrm[v * 3 + 1] = A.y; nrm[v * 3 + 2] = A.z; }
+  const nt = new Float32Array(m * 3);
+  for (let it = 0; it < (geo.userData.nsmooth || 0); it++) {
+    for (let v = 0; v < m; v++) { let x = nrm[v * 3], y = nrm[v * 3 + 1], z = nrm[v * 3 + 2]; for (const u of nbA[v]) { x += nrm[u * 3]; y += nrm[u * 3 + 1]; z += nrm[u * 3 + 2]; } const l = Math.hypot(x, y, z) || 1; nt[v * 3] = x / l; nt[v * 3 + 1] = y / l; nt[v * 3 + 2] = z / l; }
+    nrm.set(nt);
+  }
+  const N = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const v = id[i]; P.setXYZ(i, pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2]); A.fromArray(nrm, v * 3).normalize(); N[i * 3] = A.x; N[i * 3 + 1] = A.y; N[i * 3 + 2] = A.z; }
+  P.needsUpdate = true; geo.setAttribute('normal', new THREE.BufferAttribute(N, 3)); geo.computeBoundingBox(); geo.computeBoundingSphere();
+}
+function toy(root, finish) {
+  const F = FINISH[finish] || {};
+  root.traverse(o => {
+    if (!o.isMesh) return;
+    if (F.smooth) { o.geometry.userData.nsmooth = F.nsmooth || 0; smoothGeo(o.geometry, F.smooth); }
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    o.material = mats.map(m => {
+      if (!m || !m.isMeshStandardMaterial) return m;
+      const ns = F.normalScale ?? 0.6;
+      const n = new THREE.MeshPhysicalMaterial({ map: F.flatColor ? null : m.map, color: F.flatColor || '#ffffff', normalMap: ns ? m.normalMap : null, normalScale: new THREE.Vector2(ns, ns),
+        metalnessMap: F.metalness ? null : m.metalnessMap, roughnessMap: F.dropRough ? null : m.roughnessMap,
+        metalness: F.metalness ?? (m.metalnessMap ? 0.6 : 0.1), roughness: F.roughness ?? 0.34,
+        clearcoat: F.clearcoat ?? 0.7, clearcoatRoughness: F.clearcoatRoughness ?? 0.15, envMapIntensity: F.envMapIntensity ?? 1.1 });
+      if (n.map) n.map.colorSpace = THREE.SRGBColorSpace;
+      if (n.map && F.blurTex && n.map.image) {
+        const im = n.map.image, c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
+        const x = c.getContext('2d'); x.filter = 'blur(' + F.blurTex + 'px)'; x.drawImage(im, 0, 0);
+        const t = new THREE.CanvasTexture(c); t.flipY = n.map.flipY; t.colorSpace = THREE.SRGBColorSpace; t.wrapS = n.map.wrapS; t.wrapT = n.map.wrapT; t.channel = n.map.channel; n.map = t;
+      }
+      return n;
+    });
+    if (o.material.length === 1) o.material = o.material[0];
+  });
+  return root;
+}
+const studio = new THREE.Scene(); studio.environment = env;
+const key = new THREE.DirectionalLight(0xffe8c4, 1.6); key.position.set(1.2, 2.6, 3.2); studio.add(key);
+const fill = new THREE.DirectionalLight(0xffc98a, 0.6); fill.position.set(-2.8, 0.6, 2.2); studio.add(fill);
+const rim = new THREE.DirectionalLight(0xfff2d8, 1.4); rim.position.set(0.4, 2.2, -3); studio.add(rim);
+studio.add(new THREE.HemisphereLight(0xfff2dc, 0x6a2a08, 0.35));
+const cam = new THREE.PerspectiveCamera(22, 1, 0.01, 100);
+
+function stats(src) {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); x.drawImage(src, 0, 0, 256, 256);
+  const d = x.getImageData(0, 0, 256, 256).data; const s = [0, 0, 0], q = [0, 0, 0]; let n = 0;
+  for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 200) continue; if (d[i] > 245 && d[i + 1] > 245 && d[i + 2] > 245) continue;
+    for (let k = 0; k < 3; k++) { s[k] += d[i + k]; q[k] += d[i + k] * d[i + k]; } n++; }
+  return s.map((v, k) => { const m = v / n; return { m, sd: Math.sqrt(Math.max(1, q[k] / n - m * m)) }; });
+}
+const RS = 1536, OUT = 1024, FILL = 0.86;
+function raw(holder, dist, yaw, pitch) {
+  const y = THREE.MathUtils.degToRad(yaw), p = THREE.MathUtils.degToRad(pitch);
+  // turn the object, not the camera, so every view gets the same key light
+  holder.rotation.set(0, -y, 0);
+  cam.position.set(0, Math.sin(p) * dist, Math.cos(p) * dist); cam.lookAt(0, 0, 0);
+  const ps = sr.getSize(new THREE.Vector2()), pr = sr.getPixelRatio(), pa = sr.getClearAlpha(), sh = sr.shadowMap.enabled;
+  sr.setPixelRatio(1); sr.setSize(RS, RS, false); sr.setClearColor(0x000000, 0); sr.shadowMap.enabled = false;
+  studio.add(holder); sr.render(studio, cam); studio.remove(holder);
+  const c = document.createElement('canvas'); c.width = c.height = RS; c.getContext('2d').drawImage(sr.domElement, 0, 0);
+  sr.setPixelRatio(pr); sr.setSize(ps.x, ps.y); sr.setClearAlpha(pa); sr.shadowMap.enabled = sh; return c;
+}
+function bbox(c) {
+  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) if (d[(y * c.width + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return { x0, y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+}
+const loader = new GLTFLoader();
+const cache = {};
+const idle = () => new Promise(r => setTimeout(r, 30));
+async function load(id) {
+  if (cache[id]) return cache[id];
+  return load2(id);
+}
+async function load2(id) {
+  const [, label, url, ref, finish] = ASSETS.find(a => a[0] === id);
+  const root = url.startsWith('proc:') ? await PROC[url.slice(5)](THREE) : toy((await loader.loadAsync(url)).scene, finish);
+  const box = new THREE.Box3().setFromObject(root), size = box.getSize(new THREE.Vector3());
+  let tris = 0; root.traverse(o => { if (o.isMesh) tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
+  // Studio renders, color-matched to the 2D reference.
+  const shotRoot = root.clone(true); const sb = new THREE.Box3().setFromObject(shotRoot); shotRoot.position.sub(sb.getCenter(new THREE.Vector3()));
+  const holder = new THREE.Group(); holder.add(shotRoot);
+  const dist = new THREE.Box3().setFromObject(holder).getBoundingSphere(new THREE.Sphere()).radius / Math.sin(THREE.MathUtils.degToRad(11)) * 1.02;
+  const angles = { front: [0, 6], l: [-32, 8], r: [32, 8], back: [180, 6] };
+  const raws = {}; for (const [n, [yw, pt]] of Object.entries(angles)) { raws[n] = raw(holder, dist, yw, pt); await idle(); }
+  const refImg = await new Promise(res => { const i = new Image(); i.onload = () => res(i); i.src = ref; });
+  const tC = stats(refImg), sC = stats(raws.front), proc = url.startsWith('proc:');
+  // procedural materials are authored to final color — no correction, so viewer == renders
+  const LUT = [0, 1, 2].map(k => { const a = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) a[v] = proc ? v : (v - sC[k].m) * (tC[k].sd / sC[k].sd) + tC[k].m; return a; });
+  const fb = bbox(raws.front), scale = OUT * FILL / Math.max(fb.w, fb.h);
+  const shots = {};
+  for (const [n, c] of Object.entries(raws)) {
+    const cx = c.getContext('2d'), id2 = cx.getImageData(0, 0, RS, RS), d = id2.data;
+    for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; d[i] = LUT[0][d[i]]; d[i + 1] = LUT[1][d[i + 1]]; d[i + 2] = LUT[2][d[i + 2]]; }
+    cx.putImageData(id2, 0, 0);
+    const b = bbox(c), o = document.createElement('canvas'); o.width = o.height = OUT; const ox = o.getContext('2d'); ox.imageSmoothingQuality = 'high';
+    const w = b.w * scale, h = b.h * scale; ox.drawImage(c, b.x0, b.y0, b.w, b.h, (OUT - w) / 2, (OUT - h) / 2, w, h);
+    shots[n] = o.toDataURL('image/png');
+    await idle();
+  }
+  return (cache[id] = { label, root, tris, size, shots });
+}
+const lib = document.getElementById('lib');
+ASSETS.forEach(([id, label]) => {
+  const b = document.createElement('button'); b.className = 'tile'; b.dataset.id = id; b.setAttribute('aria-pressed', 'false');
+  b.innerHTML = `<div class="thumb"><img alt=""></div><div class="name">${label}</div>`;
+  b.onclick = () => show(id); lib.appendChild(b);
+});
+let current = null;
+async function show(id) {
+  document.getElementById('meta').textContent = 'Carregando…';
+  lib.querySelectorAll('.tile').forEach(t => t.setAttribute('aria-pressed', String(t.dataset.id === id)));
+  const a = await load(id); current = id;
+  const model = new THREE.Group(); model.name = id;
+  const r = a.root.clone(true); const k = 0.3 / Math.max(a.size.x, a.size.y, a.size.z);
+  const bx = new THREE.Box3().setFromObject(r), c = bx.getCenter(new THREE.Vector3());
+  r.position.sub(c).multiplyScalar(k); r.scale.setScalar(k); r.position.y += a.size.y * k / 2; model.add(r);
+  stage.setObject(model); refit();
+  sCam.position.sub(stage._controls ? stage._controls.target : new THREE.Vector3()).multiplyScalar(1.3).add(stage._controls ? stage._controls.target : new THREE.Vector3()); sCam.updateProjectionMatrix();
+  document.getElementById('title').textContent = a.label;
+  document.getElementById('meta').textContent = `${Math.round(a.tris).toLocaleString('pt-BR')} triângulos · renders calibrados pela arte 2D`;
+  const labels = { front: 'Frente', l: '3/4 esq.', r: '3/4 dir.', back: 'Costas' };
+  document.getElementById('views').innerHTML = Object.entries(a.shots).map(([n, u]) => `<div><div class="thumb"><img src="${u}" alt=""></div><div class="name">${labels[n]}</div></div>`).join('');
+  lib.querySelector(`[data-id="${id}"] img`).src = a.shots.front;
+}
+document.getElementById('dl').onclick = () => {
+  const a = cache[current]; if (!a) return;
+  Object.entries(a.shots).forEach(([n, u]) => { const l = document.createElement('a'); l.href = u; l.download = `fc-${current}-${n}.png`; l.click(); });
+};
+await show('coin');
+for (const [id] of [...ASSETS.filter(a => a[0] !== 'king-rico'), ASSETS[0]]) { await idle(); if (!cache[id]) { const a = await load(id); lib.querySelector(`[data-id="${id}"] img`).src = a.shots.front; } }
+refit();
+</script>
+</body>
+</html>

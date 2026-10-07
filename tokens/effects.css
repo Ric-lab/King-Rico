@@ -1,0 +1,32 @@
+/* Fortune Circus — gold rims, glows, bevels, text shadows.
+   Everything metallic is a gradient + a light rim + a dark bottom edge.
+   Nothing in this brand is flat. */
+:root {
+  --fc-grad-gold: linear-gradient(180deg, #ffe9a8 0%, var(--fc-gold-400) 38%, var(--fc-gold-600) 72%, #a05e08 100%);
+  --fc-grad-gold-rail: linear-gradient(180deg, var(--fc-gold-300) 0%, var(--fc-gold-600) 55%, #8a5208 100%);
+  --fc-grad-cream: linear-gradient(180deg, #fffdf7 0%, var(--fc-cream-200) 60%, var(--fc-cream-300) 100%);
+  --fc-grad-cta: linear-gradient(180deg, #4ddc7a 0%, var(--fc-green-500) 45%, var(--fc-green-700) 100%);
+  --fc-grad-curtain: linear-gradient(180deg, var(--fc-red-400) 0%, var(--fc-red-600) 60%, var(--fc-red-700) 100%);
+  --fc-grad-reel-face: radial-gradient(66% 66% at 50% 44%, #f8ecdf 0%, #f3e0cc 50%, #ebd0b5 85%, #dfbc9c 100%);
+  --fc-reel-face-shadow: inset 0 0 9px rgba(105, 48, 12, 0.35);
+  --fc-grad-stage: radial-gradient(90% 70% at 50% 0%, var(--fc-purple-300) 0%, var(--fc-purple-500) 55%, var(--fc-purple-800) 100%);
+
+  --fc-bevel-up: inset 0 2px 0 rgba(255, 255, 255, 0.55), inset 0 -3px 0 rgba(0, 0, 0, 0.32);
+  --fc-bevel-down: inset 0 3px 6px rgba(0, 0, 0, 0.45);
+  --fc-rim-gold: 0 0 0 2px var(--fc-gold-600), 0 0 0 3px rgba(255, 229, 138, 0.6);
+  --fc-rim-cream: 0 0 0 2px rgba(255, 248, 234, 0.85);
+
+  --fc-shadow-frame: 0 24px 60px rgba(0, 0, 0, 0.55);
+  --fc-shadow-panel: 0 12px 28px rgba(12, 2, 24, 0.55);
+  --fc-shadow-button: 0 4px 0 rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.35);
+
+  --fc-glow-gold: 0 0 16px 4px rgba(255, 200, 60, 0.8);
+  --fc-glow-win: 0 0 0 3px rgba(255, 229, 138, 0.9), inset 0 0 24px 8px rgba(255, 200, 60, 0.6);
+  --fc-glow-lock: 0 0 0 3px rgba(120, 255, 170, 0.85), inset 0 0 18px 5px rgba(60, 220, 120, 0.45);
+  --fc-glow-antic: 0 0 0 3px rgba(255, 90, 90, 0.8), inset 0 0 26px 10px rgba(255, 120, 40, 0.4);
+  --fc-glow-cta: 0 0 18px 4px rgba(60, 220, 120, 0.55);
+
+  --fc-text-shadow-ink: 0 2px 2px rgba(0, 0, 0, 0.45);
+  --fc-text-shadow-win: 0 0 10px rgba(110, 232, 110, 0.55), 0 1px 2px rgba(0, 0, 0, 0.55);
+  --fc-text-outline-gold: -1px -1px 0 #8a5208, 1px -1px 0 #8a5208, -1px 1px 0 #8a5208, 1px 1px 0 #8a5208, 0 3px 0 #5e3504;
+}

@@ -1,0 +1,85 @@
+<!-- @dsCard group="Slot game" viewport="900x860" -->
+<!-- @startingPoint section="Slot game" subtitle="Fortune Circus — tela de jogo real, menu e paytable" viewport="900x860" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fortune Circus — UI kit</title>
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: var(--fc-bg-app); font-family: var(--fc-font-ui); overflow: hidden; }
+  a { color: var(--fc-text-link); }
+  a:hover { color: var(--fc-text-link-hover); }
+  #root { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .frame {
+    position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden;
+    border-radius: var(--fc-radius-lg); background: var(--fc-bg-frame);
+    box-shadow: var(--fc-shadow-frame); user-select: none; -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent; transform-origin: center center;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const FILES = [
+  "../../components/core/Switch.jsx",
+  "../../components/core/ToggleRow.jsx",
+  "../../components/core/LevelSelector.jsx",
+  "../../components/core/Panel.jsx",
+  "../../components/game/ReelCell.jsx",
+  "../../components/game/PressZone.jsx",
+  "audio.js",
+  "GameScreen.jsx",
+  "MenuSheet.jsx",
+  "PaytableSheet.jsx"
+];
+
+const APP = `
+const audio = createAudio();
+
+function useFit() {
+  const [s, setS] = React.useState(1);
+  React.useEffect(() => {
+    const fit = () => setS(Math.min((innerWidth - 24) / 453, (innerHeight - 24) / 802, 1.6));
+    fit(); addEventListener("resize", fit); return () => removeEventListener("resize", fit);
+  }, []);
+  return s;
+}
+
+function App() {
+  const scale = useFit();
+  const [sheet, setSheet] = React.useState(null);
+  const [sfx, setSfx] = React.useState(2);
+  const [vib, setVib] = React.useState(2);
+  const onSfx = (v) => { audio.setLevel(v); setSfx(v); if (v) setTimeout(() => audio.click(true), 20); };
+  const onVib = (v) => { setVib(v); buzz(18, v); };
+  return (
+    <div className="frame" style={{ transform: "scale(" + scale + ")" }}>
+      <GameScreen assetBase="../../" audio={audio} sfxLevel={sfx} vibLevel={vib} onMenu={() => setSheet("menu")} />
+      {sheet === "menu" && (
+        <MenuSheet audio={audio} sfxLevel={sfx} onSfx={onSfx} vibLevel={vib} onVib={onVib}
+          onClose={() => setSheet(null)} onPaytable={() => setSheet("paytable")} />
+      )}
+      {sheet === "paytable" && <PaytableSheet assetBase="../../" onClose={() => setSheet("menu")} />}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+`;
+
+(async () => {
+  const sources = await Promise.all(FILES.map((f) => fetch(f).then((r) => r.text())));
+  const code =
+    "const { useState, useEffect, useRef, useMemo, useCallback } = React;\n" +
+    sources.join("\n\n").replace(/^\s*import[^\n]*\n/gm, "").replace(/^export\s+/gm, "") +
+    "\n" + APP;
+  new Function(Babel.transform(code, { presets: ["react"] }).code)();
+})();
+</script>
+</body>
+</html>

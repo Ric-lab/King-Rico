@@ -1,0 +1,24 @@
+<!-- @dsCard group="Brand" viewport="700x260" name="Stage background" subtitle="Portrait big-top plate behind the game frame" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Stage</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin:0; padding:18px 20px; background: var(--fc-purple-800); font-family: var(--fc-font-ui); color: var(--fc-text-on-dark); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+  .sw { width:104px; }
+  .chip { height:56px; border-radius:10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .nm { display:block; font:var(--fc-weight-bold) 11px/1.4 var(--fc-font-ui); letter-spacing:.3px; margin-top:6px; color:var(--fc-cream-100); }
+  .hx { display:block; font:var(--fc-weight-regular) 10px/1.3 var(--fc-font-text); color:var(--fc-text-muted); }
+</style>
+</head>
+<body>
+<div class="row" style="gap:18px;align-items:flex-start">
+  <div style="width:150px;height:220px;border-radius:12px;background:url('../assets/brand/bg-circus-stage.png') center/cover;box-shadow:var(--fc-shadow-panel)"></div>
+  <div style="width:124px;height:220px;border-radius:12px;background:url('../assets/stage-hd.png') center/cover;box-shadow:var(--fc-shadow-panel)"></div>
+  <div style="width:150px;height:220px;border-radius:12px;background:var(--fc-bg-app);box-shadow:var(--fc-shadow-panel)"></div>
+  <span class="hx" style="max-width:300px">Circus plate for splash moments; the game stage (stage-hd.png, 453 × 802 @3x) is the only game screen — UI sits on it at locked coordinates; radial purple for everything else.</span>
+</div></body>
+</html>

@@ -1,0 +1,78 @@
+<!-- @dsCard group="Components" viewport="700x560" name="Game" subtitle="Reel cells, 3×3 grid, bet rail, spin bar, PressZone on the stage art" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  body { margin: 0; padding: 20px; background: var(--fc-bg-app); font-family: var(--fc-font-ui); }
+  .wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .cap { font: var(--fc-weight-bold) 11px/1 var(--fc-font-ui); letter-spacing: var(--fc-tracking-label); text-transform: uppercase; color: var(--fc-gold-200); opacity: .7; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const NS = (() => {
+  for (const k of Object.keys(window)) {
+    const v = window[k];
+    if (v && typeof v === "object" && v.ReelGrid && v.SpinButton) return v;
+  }
+  return {};
+})();
+const { ReelCell, ReelGrid, BetStepper, SpinButton, PressZone } = NS;
+
+function Strip({ sunk }) {
+  return (
+    <div style={{ position: "relative", overflow: "hidden", borderRadius: 12, width: 453 * 0.62, height: 160 * 0.62 }}>
+      <div style={{ position: "absolute", left: 0, top: -600 * 0.62, width: 453, height: 802, transform: "scale(.62)", transformOrigin: "0 0",
+        background: 'url("../../assets/stage-hd.png") 0 0 / 453px 802px no-repeat' }}>
+        <PressZone left={55} top={693} width={337} height={60.5} radius={13} strength="strong" sunk={sunk} assetBase="../../" label="Girar" />
+        <PressZone left={23.5} top={613.2} width={37} height={37} strength="soft" sunk={sunk} assetBase="../../" label="Turbo" />
+        <PressZone left={391.4} top={614.1} width={37} height={37} strength="soft" assetBase="../../" label="Auto" />
+      </div>
+    </div>
+  );
+}
+
+const cells = [
+  { symbol: "tent" }, { symbol: "gem" }, { symbol: "crown" },
+  { symbol: "coin", state: "win" }, { symbol: "coin", state: "win" }, { symbol: "coin", state: "win" },
+  { symbol: "curtain", state: "dim" }, { symbol: "clover", state: "dim" }, { symbol: "scepter", state: "dim" }
+];
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div className="wrap">
+    <ReelGrid cells={cells} cellSize={84} paylines={[1]} assetBase="../../" />
+    <div className="col">
+      <span className="cap">Cell states</span>
+      <div className="row">
+        <ReelCell symbol="crown" size={64} assetBase="../../" />
+        <ReelCell symbol="gem" state="spinning" size={64} assetBase="../../" />
+        <ReelCell symbol="wild" state="win" size={64} assetBase="../../" />
+        <ReelCell symbol="clover" state="lock" size={64} assetBase="../../" />
+        <ReelCell symbol="drum" state="dim" size={64} assetBase="../../" />      </div>
+      <span className="cap">Bet rail &amp; spin</span>
+      <BetStepper value="1.000" width={248} />
+      <SpinButton state="ready" width={248} />
+      <SpinButton state="spinning" width={248} />
+    </div>
+    <div className="col">
+      <span className="cap">PressZone — idle (press it)</span>
+      <Strip sunk={false} />
+    </div>
+    <div className="col">
+      <span className="cap">PressZone — sunk (spinning / turbo on)</span>
+      <Strip sunk={true} />
+    </div>
+  </div>
+);
+</script>
+</body>
+</html>

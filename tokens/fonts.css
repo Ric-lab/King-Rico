@@ -1,0 +1,4 @@
+/* Webfonts — Baloo 2 (display/UI) + Nunito (long-form text).
+   Fortune Circus has no licensed brand font files; these are the Google Fonts
+   stand-ins that match the rounded, heavy circus lettering of the logo. */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap");

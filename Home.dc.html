@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #0e0618; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes hmFloat { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
+@keyframes hmShine { 0% { transform: translateX(-140%) skewX(-18deg); } 100% { transform: translateX(340%) skewX(-18deg); } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; justify-content: center; background: radial-gradient(120% 60% at 50% 0%, #2a1145 0%, #160a26 55%, #0e0618 100%);">
+  <div data-screen-label="Home" style="position: relative; width: 100%; max-width: 453px; min-height: 100vh; display: flex; flex-direction: column; box-sizing: border-box; padding: 14px 16px 28px; gap: 18px;">
+
+    <div style="position: relative; height: 62px; margin: -14px -16px 0;">
+      <div style="position: absolute; left: 19.333px; top: 22px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+        <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+        </div>
+      </div>
+      <div onClick="{{ toggleSettings }}" role="button" aria-label="Menu" style="position: absolute; right: 20.167px; top: 21.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.84) saturate(1.08);"></div>
+    </div>
+
+    <div style="display: flex; align-items: flex-end; gap: 12px; padding: 0 4px;">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; padding-bottom: 10px;">
+        <span style="font-size: 15px; font-weight: 700; color: #c9a8e6;">Olá! Eu sou o</span>
+        <span style="font-size: 34px; font-weight: 800; line-height: .95; color: #ffd257; text-shadow: 0 3px 0 #7a3c00, 0 0 18px rgba(255,190,60,.35);">King Rico</span>
+        <span style="font-size: 15px; font-weight: 700; line-height: 1.3; color: #f3e2ff; text-wrap: pretty;">Escolha um jogo e boa sorte!</span>
+      </div>
+      <img src="assets/king-rico/king-rico-cut.png" alt="King Rico" style="width: 118px; height: auto; filter: drop-shadow(0 8px 10px rgba(0,0,0,.5)); animation: hmFloat 3.2s ease-in-out infinite; transform-origin: 50% 90%;">
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <a href="Fortune Circus.dc.html" style="position: relative; display: block; height: 168px; border-radius: 22px; overflow: hidden; background-color: #3b0d55; background-image: url('assets/stage-hd-c.png'); background-size: 130% auto; background-position: 50% 15%; box-shadow: 0 0 0 3px #f0b41f, 0 0 0 5px rgba(255,236,160,.25), 0 14px 30px rgba(0,0,0,.55); cursor: pointer;" style-active="transform: scale(.98);">
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,4,34,0) 35%, rgba(20,4,34,.92) 100%);"></div>
+        <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 70px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.28), rgba(255,255,255,0)); animation: hmShine 3.6s ease-in-out infinite; pointer-events: none;"></div>
+        <div style="position: absolute; left: 16px; right: 16px; bottom: 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 0;">
+            <span style="font-size: 26px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 2px 0 rgba(0,0,0,.5);">Fortune Circus</span>
+            <span style="font-size: 14px; font-weight: 700; color: #ffd9a8;">Junte 5 Happeach!</span>
+          </div>
+          <span style="flex: 0 0 auto; padding: 9px 20px; border-radius: 999px; background: linear-gradient(180deg, #5ce68a, #2ec962); box-shadow: 0 4px 0 #147a36, inset 0 1px 0 rgba(255,255,255,.5); font-size: 17px; font-weight: 800; letter-spacing: 1px; color: #fff;">JOGAR</span>
+        </div>
+      </a>
+
+      <sc-for list="{{ soon }}" as="g" hint-placeholder-count="2">
+        <div style="position: relative; height: 120px; border-radius: 22px; overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.1); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 21px; font-weight: 800; color: rgba(243,226,255,.75);">Novo jogo do King Rico</span>
+            <span style="font-size: 14px; font-weight: 700; color: rgba(201,168,230,.8);">Em breve</span>
+          </div>
+          <div style="flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,.3); display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(243,226,255,.7)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ settings }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ toggleSettings }}" style="position: fixed; inset: 0; z-index: 20; background: rgba(10,2,20,.7); display: flex; align-items: flex-end; justify-content: center;">
+        <div onClick="{{ stop }}" style="width: 100%; max-width: 453px; box-sizing: border-box; padding: 20px 20px 30px; border-radius: 24px 24px 0 0; background: linear-gradient(180deg, #3a1260, #22083a); box-shadow: 0 -2px 0 #f0b41f; display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 22px; font-weight: 800; color: #ffd257;">Configurações</span>
+          <span style="font-size: 16px; font-weight: 700; line-height: 1.4; color: #f3e2ff; text-wrap: pretty;">Som e vibração ficam dentro de cada jogo, no menu. Aqui vão entrar conta e privacidade.</span>
+          <div onClick="{{ toggleSettings }}" role="button" style="align-self: stretch; text-align: center; padding: 12px; border-radius: 14px; background: #2ec962; box-shadow: 0 4px 0 #147a36; font-size: 18px; font-weight: 800; color: #fff; cursor: pointer;">OK</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { settings: false, balance: null };
+  componentDidMount() {
+    try { const sv = JSON.parse(localStorage.getItem('fortuneCircus.slot.v3')); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
+  }
+  renderVals() {
+    const b = this.state.balance ?? 1000;
+    return {
+      balanceText: b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }),
+      balanceSize: (() => { const l = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
+      soon: [{ id: 1 }, { id: 2 }],
+      settings: this.state.settings,
+      toggleSettings: () => this.setState(s => ({ settings: !s.settings })),
+      stop: e => e.stopPropagation()
+    };
+  }
+}
+</script>
+</body>
+</html>

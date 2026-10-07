@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coroa 3D — piloto Meshy</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js",
+    "three/addons/loaders/GLTFLoader.js": "https://unpkg.com/three@0.184.0/examples/jsm/loaders/GLTFLoader.js",
+    "three/addons/environments/RoomEnvironment.js": "https://unpkg.com/three@0.184.0/examples/jsm/environments/RoomEnvironment.js",
+    "three/addons/utils/BufferGeometryUtils.js": "https://unpkg.com/three@0.184.0/examples/jsm/utils/BufferGeometryUtils.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #1d0733; color: #f6e8ff; font-family: 'Baloo 2', system-ui, sans-serif; }
+  a { color: #ffd257; } a:hover { color: #fff1b8; }
+  three-d-stage:not(:defined) { visibility: hidden; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 48px; display: grid; gap: 22px; }
+  h1 { margin: 0; font-size: 28px; font-weight: 800; color: #ffd257; }
+  .sub { margin: 2px 0 0; font-size: 15px; color: #c9a8e6; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: #2a0d48; border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .cap { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #ffd257; opacity: .8; margin: 0 0 10px; }
+  three-d-stage { display: block; width: 100%; height: 460px; border-radius: 12px; overflow: hidden; }
+  .shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .cell { background: radial-gradient(66% 66% at 50% 44%, #f8ecdf 0%, #f3e0cc 50%, #ebd0b5 85%, #dfbc9c 100%); border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .cell img { width: 100%; height: 100%; object-fit: contain; }
+  .lbl { font-size: 12px; color: #c9a8e6; text-align: center; margin-top: 4px; }
+  .cmp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  button { font: 800 13px 'Baloo 2', sans-serif; letter-spacing: .5px; color: #062c14; background: #4fd97a; border: 0; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+  button:hover { filter: brightness(1.08); }
+  .status { font-size: 13px; color: #c9a8e6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Coroa — piloto 2D → 3D</h1>
+    <p class="sub">Conceito remasterizado (1024 px) → modelo Meshy 7.1 → renders de estúdio com luz fixa. Arraste o modelo para girar.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <p class="cap">Modelo 3D (GLB)</p>
+      <three-d-stage name="fc-crown" background="#f3e0cc" autorotate></three-d-stage>
+      <p class="status" id="status">Carregando modelo…</p>
+    </div>
+    <div class="card">
+      <p class="cap">Renders para o jogo (PNG transparente, 1024 px)</p>
+      <div class="shots">
+        <div><div class="cell"><img id="r-front" alt="Frente"></div><div class="lbl">Frente — rolo</div></div>
+        <div><div class="cell"><img id="r-l" alt="3/4 esquerda"></div><div class="lbl">3/4 esquerda</div></div>
+        <div><div class="cell"><img id="r-r" alt="3/4 direita"></div><div class="lbl">3/4 direita</div></div>
+      </div>
+      <p class="cap" style="margin-top:16px">Comparação no rolo</p>
+      <div class="cmp">
+        <div><div class="cell"><img src="assets/symbols/sym-crown.png" alt="Atual"></div><div class="lbl">Atual (Canva)</div></div>
+        <div><div class="cell"><img src="assets/meshy/crown-concept-v2.png" alt="Conceito"></div><div class="lbl">Conceito 2D</div></div>
+        <div><div class="cell"><img id="r-front2" alt="Render 3D"></div><div class="lbl">Render 3D</div></div>
+      </div>
+      <div class="row">
+        <button id="dl">Baixar renders</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="three-d-stage.js"></script>
+<script type="module">
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+const status = document.getElementById('status');
+
+const gltf = await new GLTFLoader().loadAsync('assets/meshy/crown.glb');
+const root = gltf.scene;
+const box = new THREE.Box3().setFromObject(root);
+const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+const k = 0.3 / Math.max(size.x, size.y, size.z);
+root.position.sub(center).multiplyScalar(k); root.scale.setScalar(k);
+root.position.y += size.y * k / 2;
+const model = new THREE.Group(); model.name = 'crown'; model.add(root);
+let tris = 0; root.traverse(o => { if (o.isMesh) { o.castShadow = true; tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+// Toy look: saturated base color, glossy clear-coat-like highlights, strong env reflections.
+root.traverse(o => {
+  if (!o.isMesh) return;
+  const mats = Array.isArray(o.material) ? o.material : [o.material];
+  mats.forEach(m => {
+    if (!m || !m.isMeshStandardMaterial) return;
+    const n = new THREE.MeshPhysicalMaterial({
+      map: m.map, normalMap: m.normalMap, normalScale: new THREE.Vector2(0.6, 0.6),
+      metalnessMap: m.metalnessMap, roughnessMap: m.roughnessMap,
+      metalness: 0.6, roughness: 0.32, clearcoat: 0.7, clearcoatRoughness: 0.15,
+      envMapIntensity: 1.1, color: new THREE.Color(1.0, 0.88, 0.7)
+    });
+    if (n.map) n.map.colorSpace = THREE.SRGBColorSpace;
+    o.material = n;
+  });
+});
+stage.setObject(model);
+const sr = stage._renderer, sScene = stage._scene, sCam = stage._camera;
+const pm = new THREE.PMREMGenerator(sr);
+const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+sScene.environment = env;
+sr.toneMapping = THREE.ACESFilmicToneMapping; sr.toneMappingExposure = 0.95;
+if (sr.domElement) sr.domElement.style.filter = 'saturate(1.25) contrast(1.06)';
+const refit = () => { const w = stage.clientWidth || 450, h = stage.clientHeight || 460; sr.setSize(w, h); sCam.aspect = w / h; sCam.updateProjectionMatrix(); };
+refit(); requestAnimationFrame(refit); setTimeout(refit, 300);
+status.textContent = `Meshy 7.1 · ${Math.round(tris).toLocaleString('pt-BR')} triângulos · textura PBR 2K`;
+
+// Studio renders reuse the stage renderer (one WebGL context), at 2048 then fitted to 1024.
+const scene = new THREE.Scene();
+scene.environment = env;
+// Toy studio: warm soft key, cool-free warm fill, bright rim, strong sky bounce.
+const key = new THREE.DirectionalLight(0xffe8c4, 1.6); key.position.set(1.2, 2.6, 3.2); scene.add(key);
+const fill = new THREE.DirectionalLight(0xffc98a, 0.6); fill.position.set(-2.8, 0.6, 2.2); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xfff2d8, 1.4); rim.position.set(0.4, 2.2, -3); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xfff2dc, 0x6a2a08, 0.35));
+const subject = root.clone(true); subject.position.set(0, 0, 0);
+const sb = new THREE.Box3().setFromObject(subject); subject.position.sub(sb.getCenter(new THREE.Vector3()));
+scene.add(subject);
+const sphere = new THREE.Box3().setFromObject(subject).getBoundingSphere(new THREE.Sphere());
+const cam = new THREE.PerspectiveCamera(22, 1, 0.01, 100);
+const dist = sphere.radius / Math.sin(THREE.MathUtils.degToRad(11)) * 1.02;
+const RS = 2048, OUT = 1024, FILL = 0.86;
+let EXPO = 0.95, SAT = 1.2;
+// Grade stats on opaque pixels: mean luminance + mean HSV saturation + share of deep shadows.
+function stats(src, w, h) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = Math.round(256 * h / w);
+  const x = c.getContext('2d'); x.drawImage(src, 0, 0, c.width, c.height);
+  const d = x.getImageData(0, 0, c.width, c.height).data; let L = 0, S = 0, dark = 0, n = 0;
+  for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 200) continue; const r = d[i], g = d[i + 1], b = d[i + 2];
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b); L += 0.3 * r + 0.59 * g + 0.11 * b; S += mx ? (mx - mn) / mx : 0; if (mx < 140) dark++; n++; }
+  return { L: L / n, S: S / n, dark: dark / n };
+}
+const conceptImg = await new Promise(res => { const i = new Image(); i.onload = () => res(i); i.src = 'assets/meshy/crown-concept-v2.png'; });
+const target = stats(conceptImg, conceptImg.width, conceptImg.height);
+
+function raw(yawDeg, pitchDeg = 8) {
+  const y = THREE.MathUtils.degToRad(yawDeg), p = THREE.MathUtils.degToRad(pitchDeg);
+  cam.position.set(Math.sin(y) * Math.cos(p) * dist, Math.sin(p) * dist, Math.cos(y) * Math.cos(p) * dist);
+  cam.lookAt(0, 0, 0);
+  const prevSize = sr.getSize(new THREE.Vector2()), prevPR = sr.getPixelRatio(), prevClear = sr.getClearAlpha(), prevShadow = sr.shadowMap.enabled;
+  const prevTM = sr.toneMapping, prevExp = sr.toneMappingExposure;
+  sr.setPixelRatio(1); sr.setSize(RS, RS, false); sr.setClearColor(0x000000, 0); sr.shadowMap.enabled = false;
+  sr.toneMapping = THREE.ACESFilmicToneMapping; sr.toneMappingExposure = EXPO;
+  sr.render(scene, cam);
+  sr.toneMapping = prevTM; sr.toneMappingExposure = prevExp;
+  const c = document.createElement('canvas'); c.width = c.height = RS; c.getContext('2d').drawImage(sr.domElement, 0, 0);
+  sr.setPixelRatio(prevPR); sr.setSize(prevSize.x, prevSize.y); sr.setClearAlpha(prevClear); sr.shadowMap.enabled = prevShadow;
+  return c;
+}
+function bbox(c) {
+  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) if (d[(y * c.width + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return { x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+}
+// Calibrate exposure to the concept's luminance, then saturation to its saturation.
+let best = null;
+for (const e of [0.6, 0.7, 0.8, 0.9, 1.0, 1.1]) { EXPO = e; const s = stats(raw(0), RS, RS); const err = Math.abs(s.L - target.L); if (!best || err < best.err) best = { e, err, s }; }
+EXPO = best.e;
+SAT = Math.min(1.8, Math.max(1, target.S / Math.max(0.05, best.s.S)));
+const raws = { front: raw(0), l: raw(-32), r: raw(32) };
+// Color transfer: match per-channel mean/std (opaque pixels) of the front render to the 2D concept.
+function chan(src, w, h) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = Math.round(256 * h / w);
+  const x = c.getContext('2d'); x.drawImage(src, 0, 0, c.width, c.height);
+  const d = x.getImageData(0, 0, c.width, c.height).data; const s = [0, 0, 0], q = [0, 0, 0]; let n = 0;
+  for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 200) continue; for (let k = 0; k < 3; k++) { s[k] += d[i + k]; q[k] += d[i + k] * d[i + k]; } n++; }
+  return s.map((v, k) => { const m = v / n; return { m, sd: Math.sqrt(Math.max(1, q[k] / n - m * m)) }; });
+}
+const tC = chan(conceptImg, conceptImg.width, conceptImg.height), sC = chan(raws.front, RS, RS);
+const LUT = [0, 1, 2].map(k => { const a = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) a[v] = (v - sC[k].m) * (tC[k].sd / sC[k].sd) + tC[k].m; return a; });
+function grade(c) {
+  const x = c.getContext('2d'), id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+  for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; d[i] = LUT[0][d[i]]; d[i + 1] = LUT[1][d[i + 1]]; d[i + 2] = LUT[2][d[i + 2]]; }
+  x.putImageData(id, 0, 0); return c;
+}
+Object.values(raws).forEach(grade);
+const fb = bbox(raws.front);
+const scale = (OUT * FILL) / Math.max(fb.w, fb.h);   // one scale for every angle = consistent size
+const shots = {};
+for (const [n, c] of Object.entries(raws)) {
+  const b = bbox(c), o = document.createElement('canvas'); o.width = o.height = OUT;
+  const x = o.getContext('2d'); x.imageSmoothingQuality = 'high';
+
+  const w = b.w * scale, h = b.h * scale;
+  x.drawImage(c, b.x0, b.y0, b.w, b.h, (OUT - w) / 2, (OUT - h) / 2, w, h);
+  shots[n] = o.toDataURL('image/png');
+}
+refit();
+const fin = await new Promise(res => { const i = new Image(); i.onload = () => res(stats(i, OUT, OUT)); i.src = shots.front; });
+status.textContent += ` · grade: exposição ${EXPO} · sat ×${SAT.toFixed(2)} · render L${fin.L.toFixed(0)}/S${fin.S.toFixed(2)} vs conceito L${target.L.toFixed(0)}/S${target.S.toFixed(2)}`;
+document.getElementById('r-front').src = shots.front;
+document.getElementById('r-front2').src = shots.front;
+document.getElementById('r-l').src = shots.l;
+document.getElementById('r-r').src = shots.r;
+document.getElementById('dl').onclick = () => {
+  Object.entries(shots).forEach(([n, u]) => { const a = document.createElement('a'); a.href = u; a.download = `fc-crown-${n}.png`; a.click(); });
+};
+window.__crownShots = shots;
+</script>
+</body>
+</html>

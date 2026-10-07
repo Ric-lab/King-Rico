@@ -1,0 +1,31 @@
+/* Fortune Circus — type.
+   Baloo 2 carries all game UI: heavy, rounded, high-contrast at small sizes.
+   Nunito handles settings/legal/long-form copy where Baloo gets shouty. */
+:root {
+  --fc-font-display: "Baloo 2", system-ui, sans-serif;
+  --fc-font-ui: "Baloo 2", system-ui, sans-serif;
+  --fc-font-text: "Nunito", system-ui, sans-serif;
+  --fc-font-numeric: "Baloo 2", system-ui, sans-serif;
+
+  --fc-weight-regular: 400;
+  --fc-weight-medium: 600;
+  --fc-weight-bold: 700;
+  --fc-weight-black: 800;
+
+  /* Sizes are authored against the 414 × 736 game frame */
+  --fc-size-display: 34px;   /* win celebration, jackpot */
+  --fc-size-title: 29px;     /* bet value, screen titles */
+  --fc-size-value: 24px;     /* win counter, balance */
+  --fc-size-body: 16px;
+  --fc-size-label: 13px;     /* uppercase meter labels */
+  --fc-size-caption: 11px;
+
+  --fc-leading-tight: 1;     /* all numerics and meters */
+  --fc-leading-snug: 1.2;
+  --fc-leading-body: 1.45;
+
+  --fc-tracking-tight: -0.4px;
+  --fc-tracking-normal: 0;
+  --fc-tracking-wide: 0.5px;
+  --fc-tracking-label: 1.2px; /* uppercase labels only */
+}

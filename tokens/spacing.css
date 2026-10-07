@@ -1,0 +1,34 @@
+/* Fortune Circus — spacing, radii, layout constants.
+   The grid is a 4px base; the game geometry below is fixed by the stage art
+   (assets/stage-hd.png, authored at 453 × 802 in Canva, shipped at 3x). */
+:root {
+  --fc-space-1: 4px;
+  --fc-space-2: 8px;
+  --fc-space-3: 12px;
+  --fc-space-4: 16px;
+  --fc-space-5: 20px;
+  --fc-space-6: 24px;
+  --fc-space-8: 32px;
+  --fc-space-10: 40px;
+
+  --fc-radius-cell: 6px;
+  --fc-radius-sm: 10px;
+  --fc-radius-spin: 13px;  /* the green spin bar is a soft rectangle, not a pill */
+  --fc-radius-md: 14px;
+  --fc-radius-lg: 20px;    /* game frame when shown inset on large screens */
+  --fc-radius-pill: 999px;
+
+  --fc-frame-w: 453px;
+  --fc-frame-h: 802px;
+  --fc-symbol-frame: 124px; /* one sprite frame; centered in every reel cell */
+  --fc-reel-col-1: 126.5px;
+  --fc-reel-col-2: 122.5px;
+  --fc-reel-col-3: 130px;
+  --fc-reel-row-1: 127.5px;
+  --fc-reel-row-2: 126px;
+  --fc-reel-row-3: 120px;
+  --fc-coin-hit: 37px;      /* turbo / auto dark ring */
+  --fc-hit-min: 44px;       /* never ship a tap target smaller than this */
+  --fc-border-hairline: 2px;
+  --fc-border-frame: 4px;
+}

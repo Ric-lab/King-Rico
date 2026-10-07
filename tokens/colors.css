@@ -1,0 +1,81 @@
+/* Fortune Circus — color system.
+   Base ramps are sampled from the game art (stage background, curtain, gold
+   frame, reel cells, King Rico). Semantic aliases below are what UI should use. */
+:root {
+  /* Purple — the big top, backdrops, everything behind the frame */
+  --fc-purple-900: #16042a;
+  --fc-purple-800: #1d0733;
+  --fc-purple-700: #2b0a4d;
+  --fc-purple-600: #35085c;
+  --fc-purple-500: #4a1076;
+  --fc-purple-400: #5a1290;
+  --fc-purple-300: #7b2fbf;
+  --fc-purple-200: #9b51e0;
+
+  /* Red — curtains, pennants, ring skirt */
+  --fc-red-700: #7a0e1c;
+  --fc-red-600: #a3121f;
+  --fc-red-500: #c8102e;
+  --fc-red-400: #e0243c;
+  --fc-red-300: #f2596a;
+
+  /* Gold — every frame, rim, bulb and number */
+  --fc-gold-700: #8f5a0a;
+  --fc-gold-600: #c77a16;
+  --fc-gold-500: #fdab1e;
+  --fc-gold-400: #f0b41f;
+  --fc-gold-300: #ffd257;
+  --fc-gold-200: #ffe58a;
+  --fc-gold-100: #fff3c4;
+
+  /* Cream — reel cells, button faces, panel surfaces */
+  --fc-cream-100: #fff8ea;
+  --fc-cream-200: #f6e8cf;
+  --fc-cream-300: #e8d3ae;
+
+  /* King Rico — the mascot's own ramp; never use as UI surface */
+  --fc-rico-500: #6e5be6;
+  --fc-rico-400: #8e7df2;
+  --fc-rico-600: #4b39b8;
+  --fc-rico-tusk: #faf4ec;
+
+  /* Green — wins and the primary call to action */
+  --fc-green-700: #0b6b2e;
+  --fc-green-500: #1fa84a;
+  --fc-green-300: #7ae26e;
+  --fc-green-200: #b6ffa8;
+
+  /* Gem blue — crown jewel, scepter, cool sparkle accents */
+  --fc-blue-500: #2fa8e8;
+  --fc-blue-300: #7fd8ff;
+
+  /* Ink — dark browns that sit on gold and cream */
+  --fc-ink-900: #4a1208;
+  --fc-ink-700: #6c1f10;
+  --fc-ink-500: #8c3a1e;
+
+  /* ---- Semantic aliases ---- */
+  --fc-bg-app: radial-gradient(120% 90% at 50% 12%, var(--fc-purple-400) 0%, var(--fc-purple-600) 55%, var(--fc-purple-900) 100%);
+  --fc-bg-frame: var(--fc-purple-800);
+  --fc-surface-cell: var(--fc-cream-200);
+  --fc-surface-panel: var(--fc-cream-100);
+  --fc-surface-panel-dark: var(--fc-purple-700);
+  --fc-surface-rail: linear-gradient(180deg, var(--fc-red-700) 0%, var(--fc-ink-900) 100%);
+
+  --fc-border-gold: var(--fc-gold-600);
+  --fc-border-gold-hi: var(--fc-gold-200);
+
+  --fc-text-ink: var(--fc-ink-700);
+  --fc-text-on-dark: var(--fc-cream-100);
+  --fc-text-muted: #b79ad6;
+  --fc-text-value: var(--fc-gold-500);
+  --fc-text-link: var(--fc-gold-300);
+  --fc-text-link-hover: var(--fc-gold-100);
+
+  --fc-accent: var(--fc-gold-400);
+  --fc-cta: var(--fc-green-500);
+  --fc-cta-deep: var(--fc-green-700);
+  --fc-win: var(--fc-green-300);
+  --fc-lock: #78ffaa;
+  --fc-danger: var(--fc-red-400);
+}

@@ -1,0 +1,40 @@
+<!-- @dsCard group="Components" viewport="700x300" name="Brand" subtitle="Wordmark and King Rico poses" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  body { margin: 0; padding: 20px; background: var(--fc-bg-app); font-family: var(--fc-font-ui); }
+  .wrap { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const NS = (() => {
+  for (const k of Object.keys(window)) {
+    const v = window[k];
+    if (v && typeof v === "object" && v.Mascot && v.Logo) return v;
+  }
+  return {};
+})();
+const { Logo, Mascot } = NS;
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div className="wrap">
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <Logo width={240} assetBase="../../" />
+      <Mascot pose="sitting" width={200} assetBase="../../" />
+    </div>
+    <Mascot pose="hero" width={180} assetBase="../../" float />
+    <Mascot pose="turnaround" width={200} assetBase="../../" />
+  </div>
+);
+</script>
+</body>
+</html>

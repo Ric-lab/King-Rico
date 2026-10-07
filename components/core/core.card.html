@@ -1,0 +1,75 @@
+<!-- @dsCard group="Components" viewport="700x360" name="Core" subtitle="Buttons, coin buttons, plaques, switches, OFF · 50% · 100% levels" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  body { margin: 0; padding: 20px; background: var(--fc-bg-app); font-family: var(--fc-font-ui); }
+  .row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .cap { font: var(--fc-weight-bold) 11px/1 var(--fc-font-ui); letter-spacing: var(--fc-tracking-label); text-transform: uppercase; color: var(--fc-gold-200); opacity: .7; width: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const NS = (() => {
+  for (const k of Object.keys(window)) {
+    const v = window[k];
+    if (v && typeof v === "object" && v.Button && v.IconButton) return v;
+  }
+  return {};
+})();
+const { Button, IconButton, ValuePlaque, Switch, ToggleRow, Panel, LevelRow } = NS;
+
+function Demo() {
+  const [on, setOn] = React.useState(true);
+  const [sfx, setSfx] = React.useState(1);
+  const [vib, setVib] = React.useState(2);
+  return (
+    <div>
+      <div className="row">
+        <span className="cap">Buttons</span>
+        <Button variant="cta" size="lg">King Rico</Button>
+        <Button variant="gold">Comprar</Button>
+        <Button variant="ghost">Sair</Button>
+        <Button variant="cta" disabled>Girar</Button>
+      </div>
+      <div className="row">
+        <span className="cap">Coin buttons &amp; plaques</span>
+        <IconButton icon="home" size={56} assetBase="../../" label="Início" />
+        <IconButton icon="menu" size={56} assetBase="../../" label="Menu" />
+        <IconButton glyph="＋" size={44} />
+        <IconButton glyph="−" size={44} />
+        <IconButton glyph="»" size={44} active />
+        <ValuePlaque label="Saldo" value="1.000" />
+        <ValuePlaque value="+250" tone="win" />
+      </div>
+      <div className="row">
+        <span className="cap">Settings</span>
+        <div style={{ width: 300 }}>
+          <Panel tone="light" width="100%">
+            <ToggleRow label="Sound Effects" hint="MAX" checked={on} onChange={setOn} />
+            <ToggleRow label="Music" hint="OFF" checked={false} />
+          </Panel>
+        </div>
+        <div style={{ width: 320 }}>
+          <Panel width="100%">
+            <div style={{ padding: "4px 18px" }}>
+              <LevelRow icon="♫" label="Efeitos sonoros" value={sfx} onChange={setSfx} divider />
+              <LevelRow icon="≈" label="Vibração" value={vib} onChange={setVib} />
+            </div>
+          </Panel>
+        </div>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>
