@@ -9,20 +9,23 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Luckiest+Guy&amp;family=Rammetto+One&amp;display=swap" rel="stylesheet">
 <style>
-html, body { margin: 0; padding: 0; background: #0e0618; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
-@keyframes hmFloat { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
-@keyframes hmShine { 0% { transform: translateX(-140%) skewX(-18deg); } 100% { transform: translateX(340%) skewX(-18deg); } }
+@keyframes hmShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(420%) skewX(-18deg); } }
+@keyframes hmBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes hmGlow { 0%, 100% { box-shadow: 0 0 0 3px #f0b41f, 0 0 0 6px rgba(255,236,160,.22), 0 0 26px rgba(255,190,60,.35), 0 16px 30px rgba(0,0,0,.6); } 50% { box-shadow: 0 0 0 3px #ffd257, 0 0 0 6px rgba(255,236,160,.35), 0 0 40px rgba(255,200,80,.6), 0 16px 30px rgba(0,0,0,.6); } }
 </style>
 </helmet>
 
-<div style="min-height: 100vh; display: flex; justify-content: center; background: radial-gradient(120% 60% at 50% 0%, #2a1145 0%, #160a26 55%, #0e0618 100%);">
-  <div data-screen-label="Home" style="position: relative; width: 100%; max-width: 453px; min-height: 100vh; display: flex; flex-direction: column; box-sizing: border-box; padding: 14px 16px 28px; gap: 18px;">
+<div style="min-height: 100vh; display: flex; justify-content: center; background: #45157a;">
+  <div data-screen-label="Home" style="position: relative; width: 100%; max-width: 453px; min-height: 100vh; overflow: hidden; background-color: #45157a; background-image: url('assets/brand/bg-circus-stage.png'); background-size: 100% auto; background-position: 50% -40px; background-repeat: no-repeat;">
 
-    <div style="position: relative; height: 62px; margin: -14px -16px 0;">
-      <div style="position: absolute; left: 19.333px; top: 22px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+    <div style="position: absolute; left: 0; right: 0; top: 470px; bottom: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,190,90,.22), rgba(255,190,90,0) 60%), linear-gradient(180deg, rgba(122,47,176,0) 0%, rgba(122,47,176,.9) 90px, #6b2a9e 180px, #45157a 100%); pointer-events: none;"></div>
+
+    <div style="position: relative; height: 62px;">
+      <div ref="{{ rPlaque }}" style="position: absolute; left: 19.333px; top: 22px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
         <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
           <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
         </div>
@@ -30,40 +33,68 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div onClick="{{ toggleSettings }}" role="button" aria-label="Menu" style="position: absolute; right: 20.167px; top: 21.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.84) saturate(1.08);"></div>
     </div>
 
-    <div style="display: flex; align-items: flex-end; gap: 12px; padding: 0 4px;">
-      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; padding-bottom: 10px;">
-        <span style="font-size: 15px; font-weight: 700; color: #c9a8e6;">Olá! Eu sou o</span>
-        <span style="font-size: 34px; font-weight: 800; line-height: .95; color: #ffd257; text-shadow: 0 3px 0 #7a3c00, 0 0 18px rgba(255,190,60,.35);">King Rico</span>
-        <span style="font-size: 15px; font-weight: 700; line-height: 1.3; color: #f3e2ff; text-wrap: pretty;">Escolha um jogo e boa sorte!</span>
+    <div style="position: relative; display: flex; justify-content: center; margin-top: 34px;">
+      <div role="img" aria-label="Fortune Circus" style="display: flex; flex-direction: column; align-items: center; gap: 2px; transform: rotate(-2deg);">
+        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 42px; line-height: 1.05; letter-spacing: 0;">
+          <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 10px #8a1c06; text-shadow: 0 3px 0 #6a1404, 0 6px 0 #4e0c02, 0 8px 0 #3a0802, 0 12px 14px rgba(30,0,40,.55);">FORTUNE</span>
+          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7)); background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">FORTUNE</span>
+        </div>
+        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 40px; line-height: 1.05; letter-spacing: 0;">
+          <span aria-hidden="true" style="grid-area: 1 / 1; color: #4a1580; -webkit-text-stroke: 10px #4a1580; text-shadow: 0 3px 0 #361060, 0 6px 0 #260845, 0 8px 0 #1a0532, 0 12px 14px rgba(30,0,40,.55);">CIRCUS</span>
+          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #ffffff 0%, #f1ddff 55%, #c9a6ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">CIRCUS</span>
+        </div>
       </div>
-      <img src="assets/king-rico/king-rico-cut.png" alt="King Rico" style="width: 118px; height: auto; filter: drop-shadow(0 8px 10px rgba(0,0,0,.5)); animation: hmFloat 3.2s ease-in-out infinite; transform-origin: 50% 90%;">
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 14px;">
-      <a href="Fortune Circus.dc.html" style="position: relative; display: block; height: 168px; border-radius: 22px; overflow: hidden; background-color: #3b0d55; background-image: url('assets/stage-hd-c.png'); background-size: 130% auto; background-position: 50% 15%; box-shadow: 0 0 0 3px #f0b41f, 0 0 0 5px rgba(255,236,160,.25), 0 14px 30px rgba(0,0,0,.55); cursor: pointer;" style-active="transform: scale(.98);">
-        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,4,34,0) 35%, rgba(20,4,34,.92) 100%);"></div>
-        <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 70px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.28), rgba(255,255,255,0)); animation: hmShine 3.6s ease-in-out infinite; pointer-events: none;"></div>
-        <div style="position: absolute; left: 16px; right: 16px; bottom: 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;">
-          <div style="display: flex; flex-direction: column; gap: 0;">
-            <span style="font-size: 26px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 2px 0 rgba(0,0,0,.5);">Fortune Circus</span>
-            <span style="font-size: 14px; font-weight: 700; color: #ffd9a8;">Junte 5 Happeach!</span>
-          </div>
-          <span style="flex: 0 0 auto; padding: 9px 20px; border-radius: 999px; background: linear-gradient(180deg, #5ce68a, #2ec962); box-shadow: 0 4px 0 #147a36, inset 0 1px 0 rgba(255,255,255,.5); font-size: 17px; font-weight: 800; letter-spacing: 1px; color: #fff;">JOGAR</span>
+    <div style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 18px 18px 32px;">
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 2px 4px 0;">
+        <span style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #ffd257;">JOGOS</span>
+        <div style="flex: 1; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,210,87,.6), rgba(255,210,87,0));"></div>
+      </div>
+
+      <a href="Fortune Circus.dc.html" onClick="{{ tapPlay }}" aria-label="Jogar Fortune Circus" style="position: relative; display: block; padding-bottom: 8px; cursor: pointer;" style-active="transform: scale(.985);">
+        <div style="position: relative; height: 176px; border-radius: 56px / 44px; overflow: hidden; background-color: #ff8a3d; background-image: url('assets/brand/cover.png'); background-size: cover; background-position: 50% 38%; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f;">
+          <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 70px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.35), rgba(255,255,255,0)); animation: hmShine 4.2s ease-in-out infinite; pointer-events: none;"></div>
+        </div>
+        <div style="position: absolute; left: 4px; right: 4px; bottom: 0; height: 52px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 6px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 10px 16px rgba(30,0,50,.35); display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 21px; letter-spacing: .5px; color: #fff; text-shadow: 0 2px 0 #147a36; white-space: nowrap;">FORTUNE CIRCUS</span>
         </div>
       </a>
 
-      <sc-for list="{{ soon }}" as="g" hint-placeholder-count="2">
-        <div style="position: relative; height: 120px; border-radius: 22px; overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.1); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; gap: 12px;">
-          <div style="display: flex; flex-direction: column; gap: 2px;">
-            <span style="font-size: 21px; font-weight: 800; color: rgba(243,226,255,.75);">Novo jogo do King Rico</span>
-            <span style="font-size: 14px; font-weight: 700; color: rgba(201,168,230,.8);">Em breve</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+        <sc-for list="{{ soon }}" as="g" hint-placeholder-count="2">
+          <div style="position: relative; height: 128px; border-radius: 18px; overflow: hidden; background: linear-gradient(160deg, {{ g.c1 }}, {{ g.c2 }}); box-shadow: inset 0 0 0 2px rgba(255,255,255,.12), 0 8px 16px rgba(0,0,0,.35); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px;">
+            <div style="position: absolute; right: -10px; top: -6px; width: 92px; height: 92px; background-image: url('{{ g.img }}'); background-size: contain; background-repeat: no-repeat; background-position: center; filter: brightness(0) opacity(.35);"></div>
+            <div style="position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f3e2ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+            </div>
+            <span style="position: relative; font-size: 17px; font-weight: 800; line-height: 1.1; color: #f3e2ff;">{{ g.name }}</span>
+            <span style="position: relative; font-size: 13px; font-weight: 700; color: rgba(243,226,255,.75);">Em breve</span>
           </div>
-          <div style="flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,.3); display: flex; align-items: center; justify-content: center;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(243,226,255,.7)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-          </div>
-        </div>
-      </sc-for>
+        </sc-for>
+      </div>
     </div>
+
+    <sc-if value="{{ bonusOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position: fixed; inset: 0; z-index: 30; background: rgba(20,4,40,.82); display: flex; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box;">
+        <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 22px 18px 20px; box-sizing: border-box; border-radius: 26px; background: linear-gradient(180deg, #8a35c4, #5c1f8f); box-shadow: 0 0 0 3px #f0b41f, 0 18px 40px rgba(0,0,0,.6);">
+          <span style="font-size: 26px; font-weight: 800; line-height: 1.1; color: #ffd257; text-align: center;">Presente do dia!</span>
+          <div style="width: 96px; height: 96px; background-image: url('assets/symbols/sym-coin.png'); background-size: 120% 120%; background-position: center; filter: drop-shadow(0 6px 8px rgba(0,0,0,.45));"></div>
+          <span style="font-size: 44px; font-weight: 800; line-height: 1; color: #fff6df; font-variant-numeric: tabular-nums;">+{{ bonusAmt }}</span>
+          <span style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #ffe7b8; text-align: center;">moedas · {{ bonusDay }}</span>
+          <div style="width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+            <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
+              <div style="grid-column: {{ d.span }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; padding: 6px 4px; box-sizing: border-box; border-radius: 14px; background: {{ d.bg }}; box-shadow: {{ d.sh }}; opacity: {{ d.op }};">
+                <span style="font-size: 13px; font-weight: 800; line-height: 1; color: {{ d.lc }};">{{ d.label }}</span>
+                <span style="font-size: {{ d.fs }}; font-weight: 800; line-height: 1.1; color: {{ d.vc }}; font-variant-numeric: tabular-nums;">{{ d.val }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div onClick="{{ collectBonus }}" role="button" style="align-self: stretch; text-align: center; padding: 16px; border-radius: 18px; background: linear-gradient(180deg, #6cf096, #2ec962); box-shadow: 0 5px 0 #147a36; font-size: 24px; font-weight: 800; letter-spacing: 1px; color: #fff; cursor: pointer; user-select: none;" style-active="transform: translateY(3px); box-shadow: 0 2px 0 #147a36;">PEGAR MOEDAS</div>
+        </div>
+      </div>
+    </sc-if>
 
     <sc-if value="{{ settings }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ toggleSettings }}" style="position: fixed; inset: 0; z-index: 20; background: rgba(10,2,20,.7); display: flex; align-items: flex-end; justify-content: center;">
@@ -78,19 +109,77 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+const SAVE = 'fortuneCircus.slot.v3', BONUS_KEY = 'fortuneCircus.home.bonus';
+const WEEK = [50, 100, 150, 200, 250, 500, 1000];
+const dayKey = t => { const d = new Date(t); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
+const dayDiff = (a, b) => Math.round((new Date(Math.floor(b / 10000), Math.floor(b / 100) % 100 - 1, b % 100) - new Date(Math.floor(a / 10000), Math.floor(a / 100) % 100 - 1, a % 100)) / 864e5);
+const TAP_MOODS = ['happy', 'wave', 'cheer', 'dance', 'tap', 'surprise'];
+const QUIPS = {
+  wave: 'Olá! Bem-vindo ao meu circo!', happy: 'Hoje é dia de sorte!', cheer: 'Uhuul! Bora jogar!',
+  dance: 'Vem dançar comigo!', tap: 'Atenção, respeitável público!', surprise: 'Opa! Que susto!',
+  idle: 'Escolha um jogo e boa sorte!', bonus: 'Moedas na conta!'
+};
 class Component extends DCLogic {
-  state = { settings: false, balance: null };
+  state = { settings: false, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
+  rPlaque = React.createRef();
   componentDidMount() {
-    try { const sv = JSON.parse(localStorage.getItem('fortuneCircus.slot.v3')); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
+    try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
+    try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
+    this.setState({ loaded: true });
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 30000);
+    this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3200);
   }
+  componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.idleT); }
+  buzz(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+  react(mood, quip) {
+    clearTimeout(this.idleT);
+    this.setState(s => ({ mood, key: s.key + 1, quip: quip || QUIPS[mood] }));
+    this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3600);
+  }
+  tapKing = () => { this.buzz(8); const n = this.state.tapN; this.setState({ tapN: n + 1 }); this.react(TAP_MOODS[n % TAP_MOODS.length]); };
+  // weekly cycle: claim once per calendar day; consecutive days advance 50→1000, a missed day restarts, after day 7 it loops
+  cycle() { const s = this.state, today = dayKey(Date.now()); const gap = s.last ? dayDiff(s.last, today) : 99;
+    const claimed = gap === 0, idx = claimed ? (s.streak + 6) % 7 : gap === 1 ? s.streak % 7 : 0; return { claimed, idx, today }; }
+  collectBonus = () => {
+    const c = this.cycle(); if (c.claimed) { this.buzz(4); return; }
+    const amt = WEEK[c.idx], b = (this.state.balance ?? 1000) + amt, streak = c.idx + 1;
+    try { const sv = JSON.parse(localStorage.getItem(SAVE)) || {}; sv.balance = b; localStorage.setItem(SAVE, JSON.stringify(sv)); localStorage.setItem(BONUS_KEY, JSON.stringify({ d: c.today, s: streak })); } catch (e) {}
+    this.setState({ balance: b, last: c.today, streak, now: Date.now() });
+    this.buzz([12, 40, 18]);
+    this.react('cheer', '+' + amt.toLocaleString('pt-BR') + ' moedas pra você!');
+    const pl = this.rPlaque.current;
+    if (pl && pl.animate) pl.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.6) saturate(1.3)', offset: .3 }, { filter: 'brightness(1)' }], { duration: 700 });
+  };
+  tapPlay = () => { this.buzz(10); };
   renderVals() {
-    const b = this.state.balance ?? 1000;
+    const s = this.state, b = s.balance ?? 1000, txt = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+    const cy = this.cycle(), ready = !cy.claimed;
     return {
-      balanceText: b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }),
-      balanceSize: (() => { const l = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
-      soon: [{ id: 1 }, { id: 2 }],
-      settings: this.state.settings,
-      toggleSettings: () => this.setState(s => ({ settings: !s.settings })),
+      rPlaque: this.rPlaque,
+      balanceText: txt,
+      balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
+      quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
+      collectBonus: this.collectBonus, tapPlay: this.tapPlay,
+      // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
+      bonusOpen: !!(s.loaded && ready), bonusAmt: WEEK[cy.idx].toLocaleString('pt-BR'), bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
+      bonusSub: ready ? 'Dia ' + (cy.idx + 1) + ': ganhe ' + WEEK[cy.idx].toLocaleString('pt-BR') + ' moedas' : 'Volte amanhã: ' + WEEK[(cy.idx + 1) % 7].toLocaleString('pt-BR') + ' moedas',
+      bonusBtn: ready ? 'PEGAR' : 'AMANHÃ',
+      week: WEEK.map((v, i) => { const done = cy.claimed ? i <= cy.idx : i < cy.idx, now = ready && i === cy.idx, big = i === 6;
+        return { label: done ? '✓ DIA ' + (i + 1) : 'DIA ' + (i + 1), val: v.toLocaleString('pt-BR'), op: done ? .5 : 1, span: big ? 'span 2' : 'auto', fs: big ? '22px' : '18px',
+          bg: now ? 'linear-gradient(180deg, #ffe07a, #f0b41f)' : done ? 'rgba(255,255,255,.12)' : big ? 'linear-gradient(180deg, #ff7ab8, #d63a7c)' : 'rgba(255,255,255,.18)',
+          sh: now ? '0 0 0 2px #fff6df, 0 0 14px rgba(255,210,87,.8)' : 'none',
+          lc: now ? '#7a3a00' : '#ffe7b8', vc: now ? '#5a2400' : '#fff6df' }; }),
+      bonusBg: ready ? 'linear-gradient(180deg, rgba(122,34,150,.96), rgba(70,14,96,.96))' : 'linear-gradient(180deg, rgba(70,26,92,.9), rgba(44,12,62,.9))',
+      bonusBtnBg: ready ? 'linear-gradient(180deg, #ffe07a, #f0b41f)' : 'rgba(255,255,255,.12)',
+      bonusBtnSh: ready ? '0 3px 0 #a86a00, inset 0 1px 0 rgba(255,255,255,.6)' : 'none',
+      bonusBtnColor: ready ? '#5a2a00' : 'rgba(255,240,210,.7)',
+      bonusCursor: ready ? 'pointer' : 'default',
+      soon: [
+        { id: 1, name: 'Roda do Rico', img: 'assets/symbols/sym-crown.png', c1: '#5a1c7a', c2: '#2a0b40' },
+        { id: 2, name: 'Bingo do Circo', img: 'assets/symbols/sym-tent.png', c1: '#7a1c3a', c2: '#3a0b22' }
+      ],
+      settings: s.settings,
+      toggleSettings: () => this.setState(x => ({ settings: !x.settings })),
       stop: e => e.stopPropagation()
     };
   }

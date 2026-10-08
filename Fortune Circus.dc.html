@@ -322,7 +322,7 @@ a:hover { color: #fff3c4; }
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#4a1076"></rect><circle cx="100" cy="100" r="52" fill="#f0b41f"></circle><text x="100" y="118" font-family="Georgia, serif" font-size="46" font-weight="bold" fill="#4a1076" text-anchor="middle">FC</text></svg></template>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:453,&quot;height&quot;:802},&quot;startingBalance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1000,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:50,&quot;max&quot;:100000,&quot;step&quot;:50,&quot;section&quot;:&quot;Jogo&quot;},&quot;defaultBet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:10,&quot;options&quot;:[1,2.5,5,10,25,50],&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;},&quot;featureChance&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:9,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:453,&quot;height&quot;:802},&quot;startingBalance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1000,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:50,&quot;max&quot;:100000,&quot;step&quot;:50,&quot;section&quot;:&quot;Jogo&quot;},&quot;defaultBet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:10,&quot;options&quot;:[1,2.5,5,10,25,50],&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;},&quot;featureChance&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;}}">
 const SYMBOLS = [
   { id: 'curtain', pay: 5, w: 24 },
   { id: 'drum', pay: 6, w: 19 },
@@ -576,7 +576,8 @@ class Component extends DCLogic {
     try {
       const n = Math.round(HOLD / 38);
       for (let i = 0; i < n; i++) this.burst(i % 2 ? 1700 : 1300, 3, 0.012 + 0.018 * i / n, 0.04, (UP + i * 38) / 1000);
-      [523, 659, 784, 988, 1175, 1397].forEach((q, i) => this.pluck(q, 0.045, 0.16, (t0 + FD * (i / 6)) / 1000));
+      [523, 659, 784, 988, 1175, 1397].forEach((q, i) => this.pluck(q, 0.03, 0.16, (t0 + FD * (i / 6)) / 1000));
+      this.wheee((t0 - 60) / 1000, FD * 1.0 / 1000);
     } catch (e) {}
     // dust puff on the rim at take-off + sparkle trail
     const puff = el('left:' + (sx - 22) + 'px;top:' + (rimY - 6) + 'px;width:44px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,240,200,.9),rgba(255,240,200,0));opacity:0;');
@@ -865,6 +866,27 @@ class Component extends DCLogic {
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     src.connect(bp); bp.connect(g); g.connect(out);
     src.start(t); src.stop(t + dur + 0.05);
+  }
+  // cartoon "Eeeee!" voice: glottal sawtooth through /i/ formants, pitch jumps up, holds with vibrato, dips at the end
+  wheee(when, dur) {
+    const ac = this.ac(), out = this.out(); if (!ac || !this.gate()) return;
+    const t = ac.currentTime + (when || 0), d = Math.max(.5, dur || 1);
+    const src = ac.createOscillator(); src.type = 'sawtooth';
+    const f = src.frequency;
+    f.setValueAtTime(420, t); f.exponentialRampToValueAtTime(760, t + .14); f.setValueAtTime(760, t + .14);
+    f.exponentialRampToValueAtTime(820, t + d * .6); f.exponentialRampToValueAtTime(560, t + d);
+    const vib = ac.createOscillator(), vg = ac.createGain(); vib.frequency.value = 6.5; vg.gain.value = 0;
+    vg.gain.setValueAtTime(0, t + .2); vg.gain.linearRampToValueAtTime(22, t + .5); vib.connect(vg); vg.connect(f);
+    const mix = ac.createGain(); mix.gain.value = 1;
+    [[340, 6, 1], [2600, 9, .55], [3300, 10, .3]].forEach(([fr, q, g]) => {
+      const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = fr; bp.Q.value = q;
+      const gg = ac.createGain(); gg.gain.value = g; src.connect(bp); bp.connect(gg); gg.connect(mix);
+    });
+    const env = ac.createGain(); env.gain.setValueAtTime(0, t);
+    // bandpass formants eat most of the energy → much higher gain so the "eeee" is clearly heard over the music
+    env.gain.linearRampToValueAtTime(1.1, t + .06); env.gain.setValueAtTime(1.1, t + d * .8); env.gain.linearRampToValueAtTime(0, t + d);
+    mix.connect(env); env.connect(out);
+    src.start(t); vib.start(t); src.stop(t + d + .05); vib.stop(t + d + .05);
   }
   pluck(freq, vol, dur, when) {
     const ac = this.ac(), out = this.out(); if (!ac || !this.gate()) return;
