@@ -20,6 +20,8 @@ a:hover { color: #fff3c4; }
 @keyframes fcDrop { 0% { transform: translateY(-78%); filter: blur(1.5px); } 50% { transform: translateY(8%); filter: blur(0); } 76% { transform: translateY(-3%); } 100% { transform: translateY(0); } }
 @keyframes fcPop { 0% { transform: scale(.62); opacity: 0; } 55% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes fcBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+@keyframes fcShimmer { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes fcHalo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes fcWin { 0%, 100% { box-shadow: 0 0 0 3px rgba(255,229,138,.9), 0 0 24px 8px rgba(255,200,60,.6) inset; } 50% { box-shadow: 0 0 0 5px rgba(255,247,200,1), 0 0 38px 15px rgba(255,180,30,.9) inset; } }
 @keyframes fcLock { 0%, 100% { box-shadow: 0 0 0 3px rgba(120,255,170,.85), 0 0 18px 5px rgba(60,220,120,.45) inset; } 50% { box-shadow: 0 0 0 4px rgba(200,255,220,1), 0 0 26px 9px rgba(60,220,120,.7) inset; } }
 @keyframes fcRing { 0%, 100% { box-shadow: 0 0 0 2px rgba(255,246,190,.95), 0 0 16px 4px rgba(255,200,60,.8); } 50% { box-shadow: 0 0 0 3px #fff, 0 0 26px 9px rgba(255,200,60,1); } }
@@ -48,7 +50,7 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
   <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.png'); background-size: 100% 100%; pointer-events: none;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
-    <div style="position: absolute; left: 85px; top: 22px; width: 160px; height: 124px; background-image: url('assets/symbols/sym-candy.png'); background-size: 100% 100%; opacity: .9;"></div>
+    <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.png'); background-size: 100% 100%; opacity: .9;"></div>
     <div style="position: absolute; left: 80px; top: 24px; width: 170px; height: 210px;">
       <dc-import name="King Rico" mood="{{ kingMood }}" mood-key="{{ kingKey }}" size="{{ 170 }}" demo="{{ false }}" hint-size="170px,210px"></dc-import>
     </div>
@@ -61,54 +63,63 @@ a:hover { color: #fff3c4; }
     <sc-if value="{{ c0.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="0" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c0.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c0.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 219.5px; width: 122.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="1" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c1.pos }}; opacity: {{ c1.dim }}; animation: {{ c1.anim }};"></div>
     <sc-if value="{{ c1.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="1" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c1.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c1.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="2" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c2.pos }}; opacity: {{ c2.dim }}; animation: {{ c2.anim }};"></div>
     <sc-if value="{{ c2.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="2" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c2.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c2.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 351px; width: 126.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="3" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c3.pos }}; opacity: {{ c3.dim }}; animation: {{ c3.anim }};"></div>
     <sc-if value="{{ c3.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="3" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c3.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c3.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 351px; width: 122.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="4" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c4.pos }}; opacity: {{ c4.dim }}; animation: {{ c4.anim }};"></div>
     <sc-if value="{{ c4.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="4" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c4.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c4.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 351px; width: 130px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="5" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c5.pos }}; opacity: {{ c5.dim }}; animation: {{ c5.anim }};"></div>
     <sc-if value="{{ c5.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="5" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c5.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c5.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 481px; width: 126.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="6" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c6.pos }}; opacity: {{ c6.dim }}; animation: {{ c6.anim }};"></div>
     <sc-if value="{{ c6.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="6" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c6.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c6.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 481px; width: 122.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="7" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c7.pos }}; opacity: {{ c7.dim }}; animation: {{ c7.anim }};"></div>
     <sc-if value="{{ c7.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="7" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c7.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c7.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 481px; width: 130px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="8" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c8.pos }}; opacity: {{ c8.dim }}; animation: {{ c8.anim }};"></div>
     <sc-if value="{{ c8.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="8" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c8.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
 
   <sc-if value="{{ antic }}" hint-placeholder-val="{{ false }}">
@@ -168,6 +179,12 @@ a:hover { color: #fff3c4; }
     <span style="font-size: 13px; font-weight: 700; color: #e9d2fa; text-shadow: 0 1px 3px rgba(0,0,0,.65);">{{ hint }}</span>
   </div>
 
+  <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; left: 106.5px; top: -22px; width: 240px; height: 240px; pointer-events: none; border-radius: 50%; mix-blend-mode: screen; background: repeating-conic-gradient(from 0deg, rgba(255,214,90,.5) 0deg 9deg, rgba(255,214,90,0) 9deg 22.5deg); -webkit-mask-image: radial-gradient(circle, #000 28%, transparent 68%); mask-image: radial-gradient(circle, #000 28%, transparent 68%); animation: fcHalo 14s linear infinite;"></div>
+  </sc-if>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
   <sc-if value="{{ peachShow }}" hint-placeholder-val="{{ true }}">
     <div title="Junte 5 Happeach para abrir a Rodada Especial" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 96px; height: 96px; transform: scale({{ peachScale }}); transform-origin: 50% 50%; transition: right .55s cubic-bezier(.3,1.25,.5,1), top .55s cubic-bezier(.3,1.25,.5,1), transform .55s cubic-bezier(.3,1.25,.5,1); pointer-events: none;">
       <div style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 70%;">
@@ -576,7 +593,7 @@ class Component extends DCLogic {
     try {
       const n = Math.round(HOLD / 38);
       for (let i = 0; i < n; i++) this.burst(i % 2 ? 1700 : 1300, 3, 0.012 + 0.018 * i / n, 0.04, (UP + i * 38) / 1000);
-      [523, 659, 784, 988, 1175, 1397].forEach((q, i) => this.pluck(q, 0.03, 0.16, (t0 + FD * (i / 6)) / 1000));
+      [1397, 1175, 988, 784, 659].forEach((q, i) => this.pluck(q, 0.022, 0.14, (t0 + 140 + (FD - 200) * (i / 5)) / 1000));
       this.wheee((t0 - 60) / 1000, FD * 1.0 / 1000);
     } catch (e) {}
     // dust puff on the rim at take-off + sparkle trail
@@ -867,26 +884,31 @@ class Component extends DCLogic {
     src.connect(bp); bp.connect(g); g.connect(out);
     src.start(t); src.stop(t + dur + 0.05);
   }
-  // cartoon "Eeeee!" voice: glottal sawtooth through /i/ formants, pitch jumps up, holds with vibrato, dips at the end
+  // happy cartoon fall: slide whistle "whoop… wheeee" gliding down (pure tone, same family as the game's bells/plucks),
+  // then a soft cushion "boing" + puff when the peach sits on the button
   wheee(when, dur) {
     const ac = this.ac(), out = this.out(); if (!ac || !this.gate()) return;
     const t = ac.currentTime + (when || 0), d = Math.max(.5, dur || 1);
-    const src = ac.createOscillator(); src.type = 'sawtooth';
-    const f = src.frequency;
-    f.setValueAtTime(420, t); f.exponentialRampToValueAtTime(760, t + .14); f.setValueAtTime(760, t + .14);
-    f.exponentialRampToValueAtTime(820, t + d * .6); f.exponentialRampToValueAtTime(560, t + d);
-    const vib = ac.createOscillator(), vg = ac.createGain(); vib.frequency.value = 6.5; vg.gain.value = 0;
-    vg.gain.setValueAtTime(0, t + .2); vg.gain.linearRampToValueAtTime(22, t + .5); vib.connect(vg); vg.connect(f);
-    const mix = ac.createGain(); mix.gain.value = 1;
-    [[340, 6, 1], [2600, 9, .55], [3300, 10, .3]].forEach(([fr, q, g]) => {
-      const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = fr; bp.Q.value = q;
-      const gg = ac.createGain(); gg.gain.value = g; src.connect(bp); bp.connect(gg); gg.connect(mix);
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200; lp.connect(out);
+    const g = ac.createGain(); g.connect(lp);
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), g2 = ac.createGain(); o.type = 'sine'; o2.type = 'triangle'; g2.gain.value = .18;
+    const f0 = o.frequency, f1 = o2.frequency;
+    [[f0, 1], [f1, 2]].forEach(([p, k]) => {
+      p.setValueAtTime(820 * k, t); p.exponentialRampToValueAtTime(1480 * k, t + .14);
+      p.setValueAtTime(1480 * k, t + .2); p.exponentialRampToValueAtTime(430 * k, t + d * .96);
     });
-    const env = ac.createGain(); env.gain.setValueAtTime(0, t);
-    // bandpass formants eat most of the energy → much higher gain so the "eeee" is clearly heard over the music
-    env.gain.linearRampToValueAtTime(1.1, t + .06); env.gain.setValueAtTime(1.1, t + d * .8); env.gain.linearRampToValueAtTime(0, t + d);
-    mix.connect(env); env.connect(out);
-    src.start(t); vib.start(t); src.stop(t + d + .05); vib.stop(t + d + .05);
+    const vib = ac.createOscillator(), vd = ac.createGain(); vib.frequency.value = 6.5; vd.gain.setValueAtTime(8, t); vd.gain.linearRampToValueAtTime(26, t + d);
+    vib.connect(vd); vd.connect(f0); const vd2 = ac.createGain(); vd2.gain.setValueAtTime(16, t); vd2.gain.linearRampToValueAtTime(52, t + d); vib.connect(vd2); vd2.connect(f1);
+    o.connect(g); o2.connect(g2); g2.connect(g);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.11, t + .05); g.gain.setValueAtTime(.11, t + d * .85); g.gain.linearRampToValueAtTime(0, t + d);
+    [o, o2, vib].forEach(x => { x.start(t); x.stop(t + d + .05); });
+    // cushion boing on impact
+    const ti = t + d + .05, bo = ac.createOscillator(), bg = ac.createGain(), bv = ac.createOscillator(), bvd = ac.createGain();
+    bo.type = 'sine'; bo.frequency.setValueAtTime(300, ti); bo.frequency.exponentialRampToValueAtTime(120, ti + .32);
+    bv.frequency.value = 16; bvd.gain.setValueAtTime(40, ti); bvd.gain.exponentialRampToValueAtTime(1, ti + .35); bv.connect(bvd); bvd.connect(bo.frequency);
+    bg.gain.setValueAtTime(0, ti); bg.gain.linearRampToValueAtTime(.16, ti + .01); bg.gain.exponentialRampToValueAtTime(.001, ti + .4);
+    bo.connect(bg); bg.connect(out); [bo, bv].forEach(x => { x.start(ti); x.stop(ti + .45); });
+    this.burst(220, .8, .05, .12, (when || 0) + d + .05);
   }
   pluck(freq, vol, dur, when) {
     const ac = this.ac(), out = this.out(); if (!ac || !this.gate()) return;
@@ -1030,15 +1052,15 @@ class Component extends DCLogic {
   }
   countUp(total, title, modal) {
     clearInterval(this.counter);
-    const steps = 22; let i = 0;
+    const steps = 28; let i = 0;
     this.setState({ displayWin: 0, showWin: !!modal, winTitle: title, winBigText: null });
     this.counter = setInterval(() => {
       if (this._paused) return;
       i++;
       if (i % 2) this.sfxRoll(i);
-      this.setState({ displayWin: Math.round(total * (i / steps) * 100) / 100 });
+      this.setState({ displayWin: Math.round(total * (1 - Math.pow(1 - i / steps, 2.2)) * 100) / 100 });
       if (i >= steps) clearInterval(this.counter);
-    }, 45);
+    }, 46);
   }
 
   /* ---------- base spin ---------- */
@@ -1047,6 +1069,7 @@ class Component extends DCLogic {
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
     if (!this._pressed && !this._autoSpin) { this.hap('press'); this.click(true); }
     this._spinQueued = true; this.setState({ queued: true });
+    if (!this.state.free) { this.spinFx(false); this._fxFired = true; }
     setTimeout(() => { this._spinQueued = false; this.setState({ queued: false }); this.doSpin(); }, 280);
   };
   doSpin = () => {
@@ -1067,8 +1090,10 @@ class Component extends DCLogic {
       balance: fr ? bal : Math.round((bal - bet) * 100) / 100, free: fr ? Object.assign({}, fr, { left: fr.left - 1 }) : null, betIdx: this.state.betIdx ?? this.startIdx(),
       spinning: true, featReady: false, spinCells: STOP_ORDER.slice(), stopped: [], locked: [], winCells: [], winLines: [], antic: false,
       kingMood: 'root', kingKey: Date.now(),
-      winAmount: 0, displayWin: 0, showWin: false, coins: false, shake: 'none', hint: fr ? 'Giro grátis ' + (fr.total - fr.left + 1) + ' de ' + fr.total : 'Girando…'
+      winAmount: 0, displayWin: 0, showWin: false, coins: false, shake: 'none', hint: fr ? 'Giro grátis ' + (fr.total - fr.left + 1) + ' de ' + fr.total : 'Girando…', barWin: 0, lineLbl: null, winDim: false
     });
+    if (!fr && !this._fxFired) this.spinFx(true);
+    this._fxFired = false;
     try { this.sfxWhoosh(); this.startWhirr(); } catch (e) {}
 
     clearInterval(this.ticker);
@@ -1092,7 +1117,8 @@ class Component extends DCLogic {
 
   kingSet(m) { this.setState({ kingMood: m, kingKey: Date.now() }); }
   payout(res, bet, trigger) {
-    { const w = res.win, bg = w >= bet * 12; this.kingSet(bg ? 'cheer' : w > 0 ? 'happy' : res.peach.length ? 'surprise' : 'sad'); this.later(() => { if (!this.state.spinning) this.kingSet('idle'); }, w > 0 ? 3400 : 2200); }
+    { const w = res.win; this._dry = w > 0 || res.peach.length ? 0 : (this._dry || 0) + 1;
+      this.kingSet(w >= bet ? 'cheer' : w > 0 ? 'happy' : res.peach.length ? 'surprise' : this._dry >= 4 ? 'sad' : 'idle'); this.later(() => { if (!this.state.spinning) this.kingSet('idle'); }, w > 0 ? 3400 : 2200); }
     const big = res.win >= bet * 12, fr = this.state.free, got = res.peach.length;
     const tot = (this.state.peaches || 0) + got, pc = Math.min(PEACH_GOAL, tot), peach = pc >= PEACH_GOAL;
     this._celebHold = !!(got || res.win > 0); this._holdWin = res.win > 0; this.syncCeleb();
@@ -1100,7 +1126,7 @@ class Component extends DCLogic {
     if (got) { const prev = this.state.peaches || 0; let n = 0; this._peachLand = c => { n++; this.setState(s => ({ peachShownAdd: n, peachBump: Date.now(), winCells: s.winCells.filter(x => x !== c) })); }; this.setState({ peachShownBase: prev, peachShownAdd: 0 }); }
     this.setState({
       peaches: pc,
-      spinning: false, winCells: got ? res.cells.concat(res.peach) : res.cells, winLines: res.lines, winAmount: res.win,
+      spinning: false, winCells: got ? res.cells.concat(res.peach) : res.cells, winLines: res.lines, winAmount: res.win, winDim: res.win > 0,
       coins: big, shake: big ? 'fcShake .5s ease-in-out 2' : 'none',
       balance: Math.round((this.balance() + res.win) * 100) / 100, balPending: Math.round(((this.state.balPending || 0) + res.win) * 100) / 100,
       free: fr ? Object.assign({}, fr, { won: Math.round((fr.won + res.win) * 100) / 100 }) : fr,
@@ -1120,8 +1146,63 @@ class Component extends DCLogic {
       if (trigger) { this.setState({ featLock: true }); return this.later(() => this.startFeature(bet), 300); }
       if (this.state.auto) this.later(() => { if (this.state.auto && !this.state.feature) this.doSpin(); }, 500);
     };
-    if (res.win > 0) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, peach || !!trigger || !!fr), wait);
+    // modal only for big prizes; regular prizes count up inside the message bar
+    const lbls = res.win > 0 ? this.lineLabels(res, bet, this.state.grid) : null, modal = res.win >= bet * 5 || res.full;
+    if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, peach || !!trigger || !!fr), wait); }
+    else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250);
     else this.later(next, got ? wait + 200 : 800);
+  }
+  lineLabels(res, bet, grid) {
+    const sum = {};
+    res.lines.forEach(li => { const L = LINES[li], s = this.lineSymbol(grid, L); if (s < 0) return; let a = bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay / 5 * LINE_K); if (res.full) a *= 10; sum[L[1]] = (sum[L[1]] || 0) + a; });
+    const out = {}; Object.keys(sum).forEach(c => { out[c] = '+R$ ' + this.money(Math.round(sum[c] * 100) / 100); }); return out;
+  }
+  barPrize(amount, bet, then, lbls) {
+    this.setState({ barWin: amount, barGreen: amount >= bet });
+    this.countUp(amount, '', false);
+    if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 1350);
+    this.later(() => {
+      const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ barWin: 0, lineLbl: null, winDim: false }); if (then) then(); };
+      const pend = this.state.balPending || 0; if (pend > 0) this.coinFly(pend, finish); else finish();
+    }, 2700);
+  }
+  spinFx(late) {
+    const layer = this.fxRef.current; if (!layer || !layer.animate) return;
+    // energy pulse, synced to the reels: the wave travels during the 280ms press delay and HITS the frame
+    // exactly when the reels start; then two light comets run the frame bottom→top and it's over (~.75s).
+    // transform/opacity only, no clip-path / overflow / blend layers (those caused the black flicker).
+    const D = late ? 0 : 280;
+    const mk = (css, life) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; layer.appendChild(d); this.later(() => d.remove(), life || 1300); return d; };
+    if (!late) mk('left:223.5px;top:722px;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(255,240,180,0) 40%,rgba(255,236,160,.95) 53%,rgba(255,190,70,.55) 63%,rgba(255,190,70,0) 74%);')
+      .animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(2)', opacity: 1, offset: .2 }, { transform: 'scale(9)', opacity: .9, offset: .85 }, { transform: 'scale(10.5)', opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
+    // impact: frame flashes the instant the reels start, then fades
+    mk('left:28px;top:212px;width:398px;height:396px;border-radius:12px;opacity:0;box-shadow:0 0 0 3px rgba(255,222,110,1),0 0 30px 10px rgba(255,190,70,.85);')
+      .animate([{ opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: .55, offset: .5 }, { opacity: 0 }], { duration: 650, delay: D, easing: 'ease-out', fill: 'forwards' });
+    // two comets: bottom-centre → corner → up the side → top-centre (mirrored)
+    const L = 28, T = 212, R = 426, B = 608, CX = 227, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
+    [1, -1].forEach(side => {
+      const X = v => CX + (v - CX) * side, P = (x, y, o, op) => ({ offset: o, transform: 'translate(' + (X(x) - 9) + 'px,' + (y - 9) + 'px)', opacity: op });
+      mk('left:0;top:0;width:18px;height:18px;border-radius:50%;opacity:0;transform:scale(1.9);background:radial-gradient(circle,#fffbe8 0%,#ffe08a 22%,rgba(255,214,100,.7) 40%,rgba(255,200,80,0) 70%);')
+        .animate([P(CX, B, 0, 0), P(CX + 30, B, .04, 1), P(R, B, o1, 1), P(R, T, o2, 1), P(CX + 8, T, .97, 1), P(CX, T, 1, 0)], { duration: 520, delay: D + 30, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' });
+    });
+    const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722;
+    for (let i = 0; i < 12; i++) {
+      const a = Math.PI + (i / 11) * Math.PI, r = 40 + Math.random() * 50, s = 6 + Math.random() * 6, ox = (Math.random() - .5) * 220;
+      const st = document.createElement('div');
+      st.style.cssText = 'position:absolute;pointer-events:none;opacity:0;left:' + (bx + ox - s / 2) + 'px;top:' + (by - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:' + cols[i % 4] + ';clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);';
+      layer.appendChild(st);
+      st.animate([{ transform: 'translate(0,0) scale(.3)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * r * .5 + 'px,' + Math.sin(a) * r * .5 + 'px) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(' + Math.cos(a) * r + 'px,' + (Math.sin(a) * r + 8) + 'px) scale(0) rotate(160deg)', opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
+      this.later(() => st.remove(), 700);
+    }
+  }
+  featBanner() {
+    const layer = this.fxRef.current; if (!layer || !layer.animate) return;
+    const d = document.createElement('div');
+    d.style.cssText = "position:absolute;left:50%;top:330px;z-index:5;pointer-events:none;padding:14px 28px;border-radius:20px;background:linear-gradient(180deg,#ff6aa2,#c2185b);border:4px solid #ffd257;box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 40px rgba(255,200,80,.6);font:800 32px/1.05 'Baloo 2',sans-serif;color:#fff;text-align:center;white-space:nowrap;text-shadow:0 3px 0 rgba(120,0,40,.6);";
+    d.innerHTML = 'RODADA<br>ESPECIAL!'; layer.appendChild(d);
+    d.animate([{ transform: 'translate(-50%,-260%) scale(.6)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1.12)', opacity: 1, offset: .28 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .4 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .8 }, { transform: 'translate(-50%,-50%) scale(1.4)', opacity: 0 }], { duration: 1600, easing: 'cubic-bezier(.3,.8,.3,1)', fill: 'forwards' });
+    try { this.sfxWin(false); } catch (e) {}
+    this.later(() => d.remove(), 1700);
   }
   showPrize(amount, title, then, chains) {
     this._afterWin = then; this._afterWinChains = !!chains;
@@ -1136,7 +1217,7 @@ class Component extends DCLogic {
     clearInterval(this.counter);
     this.setState(s => ({ showWin: false, coins: false, shake: 'none', displayWin: s.winBigText ? s.displayWin : s.winAmount }));
     const fn = this._afterWin; this._afterWin = null;
-    const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); if (fn) fn(); if (this._spinAfterFly) { this._spinAfterFly = false; this.later(() => this.spin(), 60); } };
+    const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ winDim: false, lineLbl: null, barWin: 0, goldGrid: false }); if (fn) fn(); if (this._spinAfterFly) { this._spinAfterFly = false; this.later(() => this.spin(), 60); } };
     const pend = this.state.balPending || 0;
     if (pend > 0) this.coinFly(pend, finish); else finish();
   };
@@ -1201,7 +1282,7 @@ class Component extends DCLogic {
     try { this.sfxWin(true); } catch (e) {}
     this.hap('feature');
     this._afterWinChains = true;
-    this._afterWin = () => this.later(() => { this.startFeature(bet); if (this._peachWasAuto) this.setState({ auto: true }); }, 300);
+    this._afterWin = () => this.later(() => { this.featBanner(); this.later(() => { this.startFeature(bet); if (this._peachWasAuto) this.setState({ auto: true }); }, 1300); }, 300);
     if (this._peachWasAuto) this.later(this.dismissWin, 2000);
   }
   startFree(bet) {
@@ -1278,7 +1359,7 @@ class Component extends DCLogic {
     if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
     const big = res.win >= bet * 12;
     this.setState({
-      feature: null, featLock: false, featReady: false, locked: [], winCells: res.cells, winLines: res.lines, winAmount: res.win,
+      feature: null, featLock: false, featReady: false, locked: [], winCells: res.cells, winLines: res.lines, winAmount: res.win, winDim: true, goldGrid: !!res.full,
       coins: big, shake: big ? 'fcShake .5s ease-in-out 2' : 'none',
       balance: Math.round((this.balance() + res.win) * 100) / 100, balPending: Math.round(((this.state.balPending || 0) + res.win) * 100) / 100,
       hint: res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Rodada especial paga!') : 'A rodada especial terminou'
@@ -1288,11 +1369,18 @@ class Component extends DCLogic {
       if (big) this.sfxCoins();
       this.hap(res.full ? 'jackpot' : big ? 'winBig' : 'winMid');
     }
+    this.kingSet('cheer');
+    const lbls = this.lineLabels(res, bet, grid);
     const after = () => {
-      const g = this.state.grid.map(v => (v < 0 ? this.pick() : v));
-      this.setState({ grid: g, winCells: [], winLines: [] });
-      this.save();
-      if (this.state.auto) this.later(() => this.doSpin(), 400);
+      this._celebHold = true; this.syncCeleb();
+      this.setState({ lineLbl: lbls, winDim: true });
+      this.later(() => {
+        const g = this.state.grid.map(v => (v < 0 ? this.pick() : v));
+        this.setState({ grid: g, winCells: [], winLines: [], lineLbl: null, winDim: false, goldGrid: false });
+        this._celebHold = false; this.syncCeleb(); this.kingSet('idle');
+        this.save();
+        if (this.state.auto) this.later(() => this.doSpin(), 400);
+      }, 1800);
     };
     if (res.win > 0) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : 'RODADA ESPECIAL', after), 950);
     else this.later(after, 900);
@@ -1385,6 +1473,11 @@ class Component extends DCLogic {
       testEvents: s.spinning || s.feature || s.free || s.showWin ? 'none' : 'auto',
       spinZ: s.showWin && !s.auto && !s.free && !s.feature && !s.featLock ? 31 : 'auto',
       pageDim: !!(s.showWin || s.menu || s.pays),
+      msgText: s.barWin ? (s.barGreen ? 'VOCÊ GANHOU R$ ' : 'GANHOU R$ ') + this.money(s.displayWin || 0) : (s.hint || ''),
+      msgBg: s.barWin ? (s.barGreen ? 'linear-gradient(180deg, #34c95f, #13853a)' : 'linear-gradient(180deg, #e2384f, #a3162c)') : 'rgba(30,6,50,.6)',
+      msgSh: s.barWin ? (s.barGreen ? '0 0 16px rgba(70,230,120,.75), 0 2px 0 #0b5a26' : '0 0 12px rgba(255,80,100,.6), 0 2px 0 #6e0d1d') : 'none',
+      msgSize: s.barWin ? '17px' : '14px',
+      goldGrid: !!s.goldGrid,
       pageDimBg: s.pays ? 'rgba(12,2,24,.93)' : s.menu ? 'rgba(10,2,20,.78)' : 'rgba(18,2,34,.62)',
       pageDimClick: s.pays ? this.togglePays : s.menu ? this.closeMenu : this.dismissTap,
       peachShow: !s.free || feat || pv >= PEACH_GOAL,
@@ -1422,7 +1515,8 @@ class Component extends DCLogic {
       vals['c' + i] = {
         pos: (v < 0 ? 10 : v) * 100 / 11 + '%',
         win, lock,
-        dim: spinning ? 0 : (feat && !lock && v < 0 ? 0.75 : 1),
+        dim: spinning ? 0 : (feat && !lock && v < 0 ? 0.75 : (s.winDim && !win ? 0.42 : 1)),
+        lbl: (s.lineLbl && s.lineLbl[i]) || '', empty: !!(feat && v < 0 && !spinning),
         spin: spinning,
         anim: spinning || s.stopped.indexOf(i) >= 0 ? 'none'
           : win ? 'fcBeat .5s ease-in-out infinite' : 'none'

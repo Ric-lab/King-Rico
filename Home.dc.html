@@ -24,24 +24,19 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <div style="position: absolute; left: 0; right: 0; top: 470px; bottom: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,190,90,.22), rgba(255,190,90,0) 60%), linear-gradient(180deg, rgba(122,47,176,0) 0%, rgba(122,47,176,.9) 90px, #6b2a9e 180px, #45157a 100%); pointer-events: none;"></div>
 
-    <div style="position: relative; height: 62px;">
-      <div ref="{{ rPlaque }}" style="position: absolute; left: 19.333px; top: 22px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+    <div style="position: relative; height: {{ hdrH }};">
+      <div ref="{{ rPlaque }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: {{ plqL }}; top: {{ plqT }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale({{ gs }}); transform-origin: 0 0;">
         <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
           <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
         </div>
       </div>
-      <div onClick="{{ toggleSettings }}" role="button" aria-label="Menu" style="position: absolute; right: 20.167px; top: 21.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.84) saturate(1.08);"></div>
     </div>
 
-    <div style="position: relative; display: flex; justify-content: center; margin-top: 34px;">
-      <div role="img" aria-label="Fortune Circus" style="display: flex; flex-direction: column; align-items: center; gap: 2px; transform: rotate(-2deg);">
-        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 42px; line-height: 1.05; letter-spacing: 0;">
-          <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 10px #8a1c06; text-shadow: 0 3px 0 #6a1404, 0 6px 0 #4e0c02, 0 8px 0 #3a0802, 0 12px 14px rgba(30,0,40,.55);">FORTUNE</span>
-          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7)); background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">FORTUNE</span>
-        </div>
-        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 40px; line-height: 1.05; letter-spacing: 0;">
-          <span aria-hidden="true" style="grid-area: 1 / 1; color: #4a1580; -webkit-text-stroke: 10px #4a1580; text-shadow: 0 3px 0 #361060, 0 6px 0 #260845, 0 8px 0 #1a0532, 0 12px 14px rgba(30,0,40,.55);">CIRCUS</span>
-          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #ffffff 0%, #f1ddff 55%, #c9a6ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">CIRCUS</span>
+    <div style="position: relative; display: flex; justify-content: center; margin-top: 14px; padding: 0 12px;">
+      <div role="img" aria-label="King Rico" style="position: relative; transform: rotate(-3deg);">
+        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 50px; line-height: 1.1; white-space: nowrap;">
+          <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 11px #8a1c06; text-shadow: 0 4px 0 #6a1404, 0 7px 0 #4e0c02, 0 10px 0 #3a0802, 0 14px 16px rgba(30,0,40,.55);">KING RICO</span>
+          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7));">KING RICO</span>
         </div>
       </div>
     </div>
@@ -49,7 +44,6 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 18px 18px 32px;">
 
       <div style="display: flex; align-items: center; gap: 10px; padding: 2px 4px 0;">
-        <span style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #ffd257;">JOGOS</span>
         <div style="flex: 1; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,210,87,.6), rgba(255,210,87,0));"></div>
       </div>
 
@@ -123,6 +117,7 @@ class Component extends DCLogic {
   state = { settings: false, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
   rPlaque = React.createRef();
   componentDidMount() {
+    this._rs = () => this.forceUpdate(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
     try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
     this.setState({ loaded: true });
@@ -152,10 +147,13 @@ class Component extends DCLogic {
   };
   tapPlay = () => { this.buzz(10); };
   renderVals() {
-    const s = this.state, b = s.balance ?? 1000, txt = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+    const s = this.state, b = s.balance ?? 1000, txt = Math.floor(b).toLocaleString('pt-BR');
     const cy = this.cycle(), ready = !cy.claimed;
     return {
       rPlaque: this.rPlaque,
+      // same on-screen size as in the game: the game stage is 453×802 scaled to fit the viewport
+      ...(() => { const w = window.innerWidth || 453, h = window.innerHeight || 802, gs = Math.max(.25, Math.min(w / 453, h / 802, 1.6));
+        return { gs, plqL: 19.333 * gs + 'px', plqT: 30 * gs + 'px', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px' }; })(),
       balanceText: txt,
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
