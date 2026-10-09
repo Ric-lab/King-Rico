@@ -57,6 +57,8 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 | set/2026 | Happeach vistas lado+costas | Meshy image-to-image (1 lote, mesma ref.) | ~14 | Coerentes |
 | set/2026 | Happeach 3D | Meshy multi-view (frente+lado+costas) | ~40 | Ver biblioteca |
 | out/2026 | King Rico vistas c/ coroa+capa (frente/lado/costas) | Meshy image-to-image, 1 lote, mesmas 3 refs | ~145 | Coerentes; broche das costas removido à mão |
+| out/2026 | 64 WebP faltantes (jogo publicado referenciava .webp que nunca subiram ao repo) | PNG aprovado → WebP q0,86, mesma resolução (código) | 0 | 63 MB → 5,7 MB; 0 referências quebradas |
+| out/2026 | Ícone e splash do app Android (provisórios) | Recorte do King Rico mestre + fundo roxo (código, `app/scripts/icons.py`) | 0 | Legível a 48 px; arte final pendente |
 | Saldo atual | | | 1808 | |
 
 
