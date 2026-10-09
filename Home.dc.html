@@ -19,13 +19,14 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </style>
 </helmet>
 
-<div style="min-height: max(100vh, 100%); display: flex; justify-content: center; background: #45157a;">
-  <div data-screen-label="Home" style="position: relative; width: 100%; max-width: 453px; min-height: max(100vh, 100%); overflow: hidden; background-color: #45157a; background-image: url('{{ imgBg }}'); background-size: 100% auto; background-position: 50% -40px; background-repeat: no-repeat;">
-
-    <div style="position: absolute; left: 0; right: 0; top: 470px; bottom: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,190,90,.22), rgba(255,190,90,0) 60%), linear-gradient(180deg, rgba(122,47,176,0) 0%, rgba(122,47,176,.9) 90px, #6b2a9e 180px, #45157a 100%); pointer-events: none;"></div>
+<div style="position: relative; height: 100%; min-height: {{ rootMinH }}; overflow: hidden; background: #2a0a4a;">
+  <!-- mesmo palco do jogo como fundo (tela inteira) + escurecido no topo para o título -->
+  <div style="position: absolute; inset: 0; background-image: url('{{ imgBleed }}'); background-size: cover; background-position: 50% 100%; pointer-events: none;"></div>
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 64%; background: linear-gradient(180deg, rgba(36,8,64,.9) 0%, rgba(36,8,64,.6) 55%, rgba(36,8,64,0) 100%); pointer-events: none;"></div>
+  <div data-screen-label="Home" style="position: absolute; left: 50%; top: 0; bottom: 0; width: min(453px, 100%); transform: translateX(-50%); display: flex; flex-direction: column; padding-top: {{ padTop }}; box-sizing: border-box;">
 
     <div style="position: relative; height: {{ hdrH }};">
-      <div ref="{{ rPlaque }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: {{ plqL }}; top: {{ plqT }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('{{ imgStage }}'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale({{ gs }}); transform-origin: 0 0;">
+      <div ref="{{ rPlaque }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: {{ plqL }}; top: {{ plqT }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('{{ imgStage }}'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale({{ plqS }}); transform-origin: {{ plqO }};">
         <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
           <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
         </div>
@@ -41,7 +42,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
 
-    <div style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 18px 18px 32px;">
+    <div style="position: relative; flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 18px 18px 48px;">
 
       <div style="display: flex; align-items: center; gap: 10px; padding: 2px 4px 0;">
         <div style="flex: 1; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,210,87,.6), rgba(255,210,87,0));"></div>
@@ -70,8 +71,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
 
+  </div>
+
     <sc-if value="{{ bonusOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position: fixed; inset: 0; z-index: 30; background: rgba(20,4,40,.82); display: flex; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box;">
+      <div style="position: absolute; inset: 0; z-index: 30; background: rgba(20,4,40,.82); display: flex; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box;">
         <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 22px 18px 20px; box-sizing: border-box; border-radius: 26px; background: linear-gradient(180deg, #8a35c4, #5c1f8f); box-shadow: 0 0 0 3px #f0b41f, 0 18px 40px rgba(0,0,0,.6);">
           <span style="font-size: 26px; font-weight: 800; line-height: 1.1; color: #ffd257; text-align: center;">Presente do dia!</span>
           <div style="width: 96px; height: 96px; background-image: url('{{ imgCoin }}'); background-size: 120% 120%; background-position: center; filter: drop-shadow(0 6px 8px rgba(0,0,0,.45));"></div>
@@ -91,7 +94,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-if>
 
     <sc-if value="{{ settings }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ toggleSettings }}" style="position: fixed; inset: 0; z-index: 20; background: rgba(10,2,20,.7); display: flex; align-items: flex-end; justify-content: center;">
+      <div onClick="{{ toggleSettings }}" style="position: absolute; inset: 0; z-index: 20; background: rgba(10,2,20,.7); display: flex; align-items: flex-end; justify-content: center;">
         <div onClick="{{ stop }}" style="width: 100%; max-width: 453px; box-sizing: border-box; padding: 20px 20px 30px; border-radius: 24px 24px 0 0; background: linear-gradient(180deg, #3a1260, #22083a); box-shadow: 0 -2px 0 #f0b41f; display: flex; flex-direction: column; gap: 14px;">
           <span style="font-size: 22px; font-weight: 800; color: #ffd257;">Configurações</span>
           <span style="font-size: 16px; font-weight: 700; line-height: 1.4; color: #f3e2ff; text-wrap: pretty;">Som e vibração ficam dentro de cada jogo, no menu. Aqui vão entrar conta e privacidade.</span>
@@ -99,7 +102,6 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         </div>
       </div>
     </sc-if>
-  </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -158,16 +160,19 @@ class Component extends DCLogic {
     const cy = this.cycle(), ready = !cy.claimed;
     return {
       rPlaque: this.rPlaque,
-      // same on-screen size as in the game: the game stage is 453×802 scaled to fit the viewport
-      ...(() => { const w = window.innerWidth || 453, h = window.innerHeight || 802, gs = Math.max(.25, Math.min(w / 453, h / 802, 1.6));
-        return { gs, plqL: 19.333 * gs + 'px', plqT: 30 * gs + 'px', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px' }; })(),
+      // Dentro do jogo (window.__fcLayout): mesma escala e mesma área segura do jogo; o saldo fica no mesmo ponto do saldo do jogo.
+      // Arquivo avulso no navegador: tamanho em px do próprio navegador.
+      ...(() => { const L = typeof window !== 'undefined' && window.__fcLayout;
+        if (L) return { rootMinH: '0px', padTop: L.safeTopU + 'px', plqS: 1.25, plqO: '17.5px 18px', plqL: '19.333px', plqT: '30px', mnuR: '20.167px', mnuT: '29.5px', hdrH: '70px' };
+        const w = window.innerWidth || 453, h = window.innerHeight || 802, gs = Math.max(.25, Math.min(w / 453, h / 802, 1.6));
+        return { gs, rootMinH: '100vh', padTop: 'env(safe-area-inset-top, 0px)', plqS: gs, plqO: '0 0', plqL: 19.333 * gs + 'px', plqT: 30 * gs + 'px', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px' }; })(),
       balanceText: txt,
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
       collectBonus: this.collectBonus, tapPlay: this.tapPlay,
       // published single-file build: images resolve through the host game's asset registry
       ...(() => { const A = p => (typeof window !== 'undefined' && window.__fcAsset ? window.__fcAsset(p) : p);
-        return { imgBg: A('assets/brand/bg-circus-stage.webp'), imgStage: A('assets/stage-hd-c.webp?v=2'), imgCover: A('assets/brand/cover.webp'), imgCoin: A('assets/symbols/sym-coin.webp') }; })(),
+        return { imgBleed: A('assets/bleed/stage-bleed.webp'), imgStage: A('assets/stage-hd-c.webp?v=2'), imgCover: A('assets/brand/cover.webp'), imgCoin: A('assets/symbols/sym-coin.webp') }; })(),
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: WEEK[cy.idx].toLocaleString('pt-BR'), bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
       bonusSub: ready ? 'Dia ' + (cy.idx + 1) + ': ganhe ' + WEEK[cy.idx].toLocaleString('pt-BR') + ' moedas' : 'Volte amanhã: ' + WEEK[(cy.idx + 1) % 7].toLocaleString('pt-BR') + ' moedas',
