@@ -41,7 +41,8 @@ def main():
     log['balance_before'] = bal.get('balance', bal)
     print('saldo antes:', log['balance_before'])
 
-    data_uri = 'data:image/png;base64,' + base64.b64encode(open(src, 'rb').read()).decode()
+    mime = {'.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg'}.get(os.path.splitext(src)[1].lower(), 'image/png')
+    data_uri = f'data:{mime};base64,' + base64.b64encode(open(src, 'rb').read()).decode()
     body = {'ai_model': model, 'prompt': prompt, 'reference_image_urls': [data_uri]}
     if aspect:
         body['aspect_ratio'] = aspect

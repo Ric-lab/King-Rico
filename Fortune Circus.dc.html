@@ -459,7 +459,8 @@ const SKEY = 'fortuneCircus.slot.v3';
 const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
 // Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
-// Faixa reservada no topo para o banner de anúncio (AdMob banner = 50 dp + respiro).
+// Faixa do banner de anúncio no topo (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
+// (window.__fcAdBanner = true, a ser ligado pela integração do AdMob); sem anúncio, o HUD encosta na barra de status.
 const FC_AD_BAND = 60;
 // Áreas seguras (barra de status / navegação). No app Android o Capacitor injeta --safe-area-inset-*; no navegador vale env().
 const FC_SAFE_AREA = () => {
@@ -549,7 +550,7 @@ class Component extends DCLogic {
     // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
     // ao redor, o palco com sangria (assets/bleed/stage-bleed.webp) continua o cenário. Tela deitada (computador) = moldura centralizada.
     const inset = w > h;
-    const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset ? 0 : FC_AD_BAND;
+    const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
     const avail = h - safe.top - band - safe.bottom;
     const sc = Math.max(0.25, Math.floor(Math.min(w / 453, avail / 802) * 1000) / 1000);
     const top = Math.round(inset ? (h - 802 * sc) / 2 : safe.top + band);
