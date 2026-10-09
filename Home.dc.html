@@ -145,7 +145,8 @@ class Component extends DCLogic {
     const pl = this.rPlaque.current;
     if (pl && pl.animate) pl.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.6) saturate(1.3)', offset: .3 }, { filter: 'brightness(1)' }], { duration: 700 });
   };
-  tapPlay = () => { this.buzz(10); };
+  // embedded inside the game (published single file): stay in-page and let the host swap screens
+  tapPlay = e => { this.buzz(10); if (this.props.onPlay) { if (e && e.preventDefault) e.preventDefault(); this.props.onPlay(); } };
   renderVals() {
     const s = this.state, b = s.balance ?? 1000, txt = Math.floor(b).toLocaleString('pt-BR');
     const cy = this.cycle(), ready = !cy.claimed;

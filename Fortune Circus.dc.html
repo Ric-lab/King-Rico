@@ -220,6 +220,11 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
 
+  <sc-if value="{{ homeOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 60; background: #2a0a4a; overflow: hidden;">
+      <dc-import name="Home" on-play="{{ closeHome }}" hint-size="100%,100%" style="position: absolute; inset: 0;"></dc-import>
+    </div>
+  </sc-if>
   <div ref="{{ fxRef }}" style="position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: visible;"></div>
 
   <sc-if value="{{ showWin }}" hint-placeholder-val="{{ false }}">
@@ -459,7 +464,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     // entry point is the Home screen: a direct top-level open of the game goes to Home first
-    try { if (window.self === window.top && !/from=home|play|no3d/.test(location.search + location.hash)) { fetch('Home.dc.html', { method: 'HEAD' }).then(r => { if (r.ok) location.replace('Home.dc.html'); }).catch(() => {}); } } catch (e) {}
+    // entry point is the Home screen, rendered INSIDE this file (published builds are a single file)
+    try { if (!/from=home|play|no3d/.test(location.search + location.hash)) this.setState({ homeOpen: true }); } catch (e) {}
     // pre-build the spin pulse bitmaps after load (was built on the 1st spin → lag when the reels started)
     setTimeout(() => { try { this.spinFx('prebuild'); } catch (e) {} }, 900);
     Object.values(HP_FRAMES).map(FC_ASSET).concat([FC_ASSET('assets/fx/peach-plain.webp'), FC_ASSET('assets/fx/basket.webp'), FC_ASSET('assets/fx/basket-front.webp'), FC_ASSET('assets/symbols/sym-coin.webp')])
@@ -1646,7 +1652,8 @@ class Component extends DCLogic {
         o[k + 'Filter'] = on ? 'brightness(.84) saturate(1.08)' : 'none';
         o[k + 'Shadow'] = on ? 'inset 0 2px 6px rgba(0,0,0,.32)' : 'none'; }); return o; })(),
       spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, incBet: this.incBet, decBet: this.decBet,
-      goHome: () => { this.save(); this.later(() => { location.href = 'Home.dc.html'; }, 120); },
+      goHome: () => { this.save(); if (this.state.auto) this.setState({ auto: false }); this.later(() => this.setState({ homeOpen: true }), 120); },
+      homeOpen: !!s.homeOpen, closeHome: () => { const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); },
       toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto, toggleSound: this.toggleSound, togglePays: this.togglePays,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu, openPays: this.openPays,
       toggleVibe: this.toggleVibe, soon: this.soon
