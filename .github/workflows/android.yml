@@ -13,6 +13,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # publicar o APK no branch apk-builds
     defaults:
       run:
         working-directory: app
@@ -54,3 +56,18 @@ jobs:
           name: king-rico-debug-apk
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
+      # Branch órfão com só o APK mais recente (force-push: não acumula histórico).
+      # Permite baixar o APK sem login no GitHub Actions e puxá-lo por git.
+      - name: Publicar APK no branch apk-builds
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          out=$(mktemp -d)
+          cp android/app/build/outputs/apk/debug/app-debug.apk "$out/king-rico-teste.apk"
+          cd "$out"
+          printf 'APK de teste gerado a partir do commit %s (%s).\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" > LEIA-ME.txt
+          git init -q -b apk-builds
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add . && git commit -qm "APK de teste ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" apk-builds
