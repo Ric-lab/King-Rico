@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      apk:
+        description: Gerar o APK de teste (publicado no branch apk-builds)
+        type: boolean
+        default: true
 
 concurrency:
   group: android-${{ github.ref }}
@@ -40,18 +45,22 @@ jobs:
         env:
           CHROMIUM_PATH: /usr/bin/google-chrome
 
+      # APK só sob demanda (Actions → App Android → Run workflow); testes e fumaça rodam em todo push.
       - uses: actions/setup-java@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.apk
         with:
           distribution: temurin
           java-version: 21
           cache: gradle
 
       - name: APK de teste
+        if: github.event_name == 'workflow_dispatch' && inputs.apk
         run: |
           npx cap sync android
           cd android && ./gradlew assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.apk
         with:
           name: king-rico-debug-apk
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
@@ -60,7 +69,7 @@ jobs:
       # Branch órfão com só o APK mais recente (force-push: não acumula histórico).
       # Permite baixar o APK sem login no GitHub Actions e puxá-lo por git.
       - name: Publicar APK no branch apk-builds
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name == 'workflow_dispatch' && inputs.apk
         run: |
           out=$(mktemp -d)
           cp android/app/build/outputs/apk/debug/app-debug.apk "$out/king-rico-teste.apk"

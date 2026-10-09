@@ -30,11 +30,13 @@ nativo, vibração confiável, ícone na loja e, mais tarde, Play Billing.
 - `android/`: projeto Capacitor 8 (minSdk 24 = Android 7+, targetSdk 36), travado em retrato, com permissão de
   vibração (sem ela o `navigator.vibrate` do jogo não funciona no WebView).
 - Ícones e splash provisórios gerados por código a partir do King Rico mestre (`npm run icons`).
-- CI (`.github/workflows/android.yml`): testes → build → teste de fumaça → **APK de teste** como artefato
+- CI (`.github/workflows/android.yml`): em todo push roda testes → build → teste de fumaça. O **APK de teste** só é
+  gerado sob demanda (Actions → App Android → Run workflow) e fica no branch `apk-builds` (só o mais recente)
   para baixar e instalar no celular.
 
 ### Como instalar o APK de teste
-1. GitHub → aba **Actions** → execução mais recente de "App Android" → artefato `king-rico-debug-apk`.
+1. GitHub → aba **Actions** → "App Android" → **Run workflow** (APK marcado); ao terminar, o arquivo fica no branch
+   `apk-builds` (`king-rico-teste.apk`) e no artefato `king-rico-debug-apk` da execução.
 2. Passe o `app-debug.apk` para o celular e abra. O Android pede para permitir "instalar apps desta fonte".
 
 ### Rodar localmente
