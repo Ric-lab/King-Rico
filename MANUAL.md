@@ -35,6 +35,7 @@ continuar e publicar sem refazer os erros.
 | `guidelines/asset-pipeline.md` | Regras de geração de asset + log de custos. **Ler antes de gastar créditos.** |
 | `guidelines/benchmark-*.md` | Análise quadro a quadro de vídeos de referência e plano de melhorias. |
 | `components/`, `ui_kits/`, `tokens/` | Design system (tokens, componentes, kit de UI do jogo). |
+| `app/` | App Android (Capacitor): engine com teste de RTP, build offline, projeto `android/`. Ver `docs/ANDROID.md`. |
 | `CLAUDE.md` | Regras de trabalho que qualquer IA deve seguir neste projeto. |
 | `github.md` | Registro de sincronização com este repositório. |
 
@@ -169,6 +170,10 @@ Parâmetros úteis na URL: `?from=home` (pula a Home), `?no3d=1` (não carrega n
 O runtime `support.js` é necessário ao lado dos `.dc.html`.
 
 ## 9. Infra para a publicação oficial (roteiro para Claude Code ou dev)
+
+> **Atualização out/2026:** o alvo definitivo é app Android na Google Play. A ordem das fases e o que já foi feito
+> (engine + teste de RTP, build offline, projeto Capacitor, CI que gera APK) estão em `docs/ANDROID.md`, que tem precedência
+> sobre esta seção.
 
 ### Fase 1 — Portar para um projeto web padrão
 1. Criar projeto **Vite + React + TypeScript**.

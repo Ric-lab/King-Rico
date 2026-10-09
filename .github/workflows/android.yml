@@ -1,0 +1,56 @@
+name: App Android
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm ci
+
+      - name: Regras e matemática (RTP 96–99%, acerto ≥ 20%)
+        run: npm run typecheck && npm test
+
+      - name: Build offline do jogo
+        run: npm run build:www
+
+      - name: Teste de fumaça (Home + 3 giros, sem internet)
+        run: npm run smoke
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: APK de teste
+        run: |
+          npx cap sync android
+          cd android && ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: king-rico-debug-apk
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
