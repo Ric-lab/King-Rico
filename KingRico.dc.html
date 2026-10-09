@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&amp;display=swap" rel="stylesheet">
+<style>html, body { margin: 0; background: #1d0733; font-family: 'Baloo 2', system-ui, sans-serif; } a { color: #ffd257; } a:hover { color: #fff1b8; }</style>
+</helmet>
+<div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; box-sizing: border-box;">
+  <div ref="{{ rStage }}" style="position: relative; width: 100%; max-width: {{ size }}; aspect-ratio: 1; flex: 0 0 auto; margin-top: 15%;">
+    <div data-k="shadow" style="position: absolute; left: 24%; right: 24%; top: 93.5%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse, rgba(10,0,20,.5), rgba(10,0,20,0) 70%); will-change: transform, opacity;"></div>
+    <div data-k="ring" style="position: absolute; left: 4%; top: 93%; width: 20%; height: 6%; border-radius: 50%; border: 3px solid rgba(255,220,120,.95); box-shadow: 0 0 10px rgba(255,190,80,.9); opacity: 0; will-change: transform, opacity;"></div>
+    <img data-k="coin1" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
+    <img data-k="coin2" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
+    <div data-k="body" style="position: absolute; inset: 0; transform-origin: 50% 97%; will-change: transform;">
+      <img data-k="coin0" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 6.5%; height: 6.5%; opacity: 0; z-index: 5; will-change: transform;">
+      <img data-f="master" src="assets/king-rico/fw/master.webp" alt="King Rico" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 1; transition: opacity .16s linear;">
+      <img data-f="happy" src="assets/king-rico/fw/happy.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sad" src="assets/king-rico/fw/sad.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="surprised" src="assets/king-rico/fw/surprised.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave" src="assets/king-rico/fw/wave.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance1" src="assets/king-rico/fw/dance1.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance2" src="assets/king-rico/fw/dance2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheer" src="assets/king-rico/fw/cheer.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tap" src="assets/king-rico/fw/tap.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave2" src="assets/king-rico/fw/wave2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="land" src="assets/king-rico/fw/land.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="raise" src="assets/king-rico/fw/raise.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="startle" src="assets/king-rico/fw/startle.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sad2" src="assets/king-rico/fw/sad2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance3" src="assets/king-rico/fw/dance3.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="crouch2" src="assets/king-rico/fw/crouch2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheerRise" src="assets/king-rico/fw/cheerRise.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheerFall" src="assets/king-rico/fw/cheerFall.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave3" src="assets/king-rico/fw/wave3.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tapMid" src="assets/king-rico/fw/tapMid.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="danceL" src="assets/king-rico/fw/danceL.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="happy2" src="assets/king-rico/fw/happy2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveIn" src="assets/king-rico/fw/waveIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveOut" src="assets/king-rico/fw/waveOut.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinHold" src="assets/king-rico/fw/coinHold.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinToss" src="assets/king-rico/fw/coinToss.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLowerA" src="assets/king-rico/fw/coinLowerA.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLowerB" src="assets/king-rico/fw/coinLowerB.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLook" src="assets/king-rico/fw/coinLook.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="jugToss" src="assets/king-rico/fw/jugToss.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="jugCatch" src="assets/king-rico/fw/jugCatch.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="blink" src="assets/king-rico/fw/blink.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="hope" src="assets/king-rico/fw/hope.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="look" src="assets/king-rico/fw/look.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="nail" src="assets/king-rico/fw/nail.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="danceR2" src="assets/king-rico/fw/danceR2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance2b" src="assets/king-rico/fw/dance2b.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveUp" src="assets/king-rico/fw/waveUp.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveDown" src="assets/king-rico/fw/waveDown.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="happyIn" src="assets/king-rico/fw/happyIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sadIn" src="assets/king-rico/fw/sadIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="surpriseLand" src="assets/king-rico/fw/surpriseLand.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tapRecover" src="assets/king-rico/fw/tapRecover.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+    </div>
+  </div>
+  <sc-if value="{{ demo }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 12px 16px;">
+      <sc-for list="{{ moods }}" as="m" hint-placeholder-count="8">
+        <div onClick="{{ m.go }}" role="button" style="padding: 8px 14px; border-radius: 10px; background: {{ m.bg }}; color: #062c14; font-size: 15px; font-weight: 800; white-space: nowrap; cursor: pointer; user-select: none;">{{ m.label }}</div>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mood&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;idle&quot;,&quot;happy&quot;,&quot;wave&quot;,&quot;cheer&quot;,&quot;dance&quot;,&quot;tap&quot;,&quot;surprise&quot;,&quot;sad&quot;,&quot;root&quot;],&quot;default&quot;:&quot;idle&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;size&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:520,&quot;min&quot;:120,&quot;max&quot;:1024,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;demo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+// King Rico — pose-to-pose cartoon animation. Every pose is a full drawing (aligned on the same feet line);
+// motion comes from timed pose swaps + whole-body squash/stretch, hops and a ground shadow. Nothing is warped.
+const MOODS = [['idle', 'Cara ou coroa'], ['happy', 'Feliz'], ['wave', 'Acenar'], ['cheer', 'Comemorar'], ['dance', 'Dançar'], ['tap', 'Bater o cetro'], ['surprise', 'Surpresa'], ['sad', 'Triste'], ['root', 'Torcendo']];
+const JB = .42; // juggling beat (s)
+const COIN_C = 4.4; // heads-or-tails cycle (s)
+// palm positions measured on the 1024 frames
+// coin center sits on the palm top (palm top − coin radius*0.6) — measured: toss palm top 375 @x863, catch palm top 389 @x864
+const PALM_TOSS = [846, 386], PALM_CATCH = [848, 398], PAINTED = [774, 597], APEX = 40;
+const BACK_TO_IDLE = { wave: 2.6, surprise: 2.4, tap: 3.6 };
+class Component extends DCLogic {
+  state = { mood: null };
+  rStage = React.createRef();
+  componentDidMount() {
+    this.t0 = this.mt = performance.now();
+    // decode every pose up front: first-time pose swaps (e.g. "torcendo" when the reels start) decoded mid-spin → lag
+    const st0 = this.rStage.current;
+    if (st0 && window.__fcAsset) st0.querySelectorAll('img').forEach(i => { const s = i.getAttribute('src'); if (s && /^assets\//.test(s)) { const u = window.__fcAsset(s); if (u && u !== s) i.src = u; } });
+    if (st0) st0.querySelectorAll('img').forEach(i => { i.loading = 'eager'; i.decode && i.decode().catch(() => {}); });
+    window.KingRico = { play: m => this.play(m) };
+    const loop = now => { this.frame(now); this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); }
+  componentDidUpdate(pp) { if ((pp.mood !== this.props.mood || pp.moodKey !== this.props.moodKey) && this.props.mood) this.play(this.props.mood); }
+  mood() { return this.state.mood || this.props.mood || 'idle'; }
+  play(m) { this.mt = performance.now(); this.setState({ mood: m }); }
+  pose(t, u, m) {
+    const S = Math.sin, P = Math.PI, cl = x => Math.max(0, Math.min(1, x)), ease = x => 1 - Math.pow(1 - cl(x), 3);
+    const br = S(t * 2.2);
+    let f = 'master', y = 0, r = .5 * S(t * 1.1), sx = 1 - .008 * br, sy = 1 + .012 * br, sh = 1, ring = -1;
+    // idle blink: ~120 ms every 3.4 s (plus a quick double-blink every third time)
+    const bp = t % 3.4, bn = Math.floor(t / 3.4) % 3;
+    // idle = juggling 3 coins with the trunk (coins are drawn in frame())
+    // idle = 3-coin cascade juggled with the trunk: each beat the trunk flicks (toss) then scoops (catch)
+    // idle = one drawing only (no pose swaps → no size flicker); life comes from breathing + slight sway
+    // idle = heads or tails: hold (1.4s) → flick (.2s) → watch it fly (1.6s) → catch (.6s). 3 slow pose swaps per 3.8s.
+    // 0–1.2 hold · 1.2–1.4 flick · 1.4–3.0 flight · 3.0–3.4 caught high · 3.4–3.9 lower (slow dissolve + coin tween) · 3.9–4.4 hold
+    if (m === 'idle') { const p = t % COIN_C; f = p < 1.2 || p >= 3.55 ? 'coinHold' : p < 1.4 ? 'coinToss' : p < 3.25 ? 'coinLook' : 'coinLowerA'; // lowerB dropped: it went below the hold pose and came back up
+      if (p >= 1.2 && p < 1.35) { const k2 = Math.sin((p - 1.2) / .15 * Math.PI); sy = 1 - .03 * k2; sx = 1 + .02 * k2; }
+      if (p >= 3.0 && p < 3.2) { const k2 = Math.sin((p - 3.0) / .2 * Math.PI); sy = 1 - .025 * k2; sx = 1 + .018 * k2; } }
+    if (m === 'root') {
+      // rooting while the reels spin: hope → watching → (late) nail-biting suspense; small anxious bounce
+      // hope ↔ look only (nail-biting read as nervous, not rooting)
+      f = u < 1.1 ? 'hope' : ((u - 1.1) % 3) < 1.8 ? 'look' : 'hope';
+      const jit = f === 'nail' ? 1.2 * S(t * 31) : 0;
+      y = -3 * Math.max(0, S(t * 7)) ; r = (f === 'look' ? 1.5 : 0) + jit; sy = 1 + .01 * S(t * 7); sx = 2 - sy;
+      if (f === 'hope') { const k = Math.max(0, 1 - u / .18); sy = 1 - .04 * k; sx = 1 + .03 * k; }
+    } else
+    if (m === 'happy') {
+      // bounce: settle (happy) ↔ lift (happy2 laughing)
+      const p = (u * 1.8) % 1, h = S(p * P); f = u < .14 ? 'happyIn' : p > .2 && p < .8 ? 'happy2' : 'happy';
+      y = -10 * h; sy = 1 + .02 * h - .03 * Math.max(0, 1 - p * 6); sx = 2 - sy; sh = 1 - .2 * h;
+    } else if (m === 'wave') {
+      // ping-pong: wave → wave3 → wave2 → wave3 …
+      // raise → ping-pong wave → lower
+      const end = BACK_TO_IDLE.wave;
+      if (u < .1) { f = 'happyIn'; sy = 1 - .04 * S(u / .1 * P); sx = 1 + .03 * S(u / .1 * P); }
+      else if (u < .22) f = 'waveIn';
+      else if (u > end - .32) f = u > end - .14 ? 'happyIn' : 'waveOut';
+      else { const seq = ['wave', 'wave3', 'wave2', 'wave3'], ph = Math.floor((u - .22) / .13) % 4; f = seq[ph]; r = [1.6, 0, -1.6, 0][ph]; }
+    } else if (m === 'cheer') {
+      // crouch → rise → peak → fall → land → laugh
+      const c = 1.25, p = (u % c) / c;
+      if (p < .15) { f = 'crouch2'; const k = S(p / .15 * P / 2); sy = 1 - .02 * k; sx = 1 + .015 * k; }
+      else if (p < .64) {
+        const a = (p - .15) / .49, h = S(a * P); y = -120 * h; sh = 1 - .55 * h; r = 2.5 * S(a * P * 2);
+        f = a < .22 ? 'cheerRise' : a < .7 ? 'cheer' : 'cheerFall';
+        sy = 1 + .04 * (a < .22 ? 1 - a / .22 : 0); sx = 2 - sy;
+      }
+      else if (p < .78) { f = 'land'; const k = S((p - .64) / .14 * P); sy = 1 - .03 * k; sx = 1 + .02 * k; }
+      else f = 'happy2';
+    } else if (m === 'dance') {
+      // 6-count with weight-shift in-betweens
+      const seq = ['dance1', 'danceL', 'dance3', 'danceR2', 'dance2', 'dance2b', 'dance3', 'danceL'], sides = [-1, -.5, 0, .5, 1, .5, 0, -.5];
+      const beat = .17, n = Math.floor(u / beat), p = (u % beat) / beat, h = S(p * P), st = n % 8, side = sides[st];
+      f = seq[st]; y = -(Math.abs(side) > .9 ? 14 : 6) * h; r = 4 * side * (1 - .4 * h);
+      const land = Math.max(0, 1 - p * 5); sy = 1 - .04 * land + .015 * h; sx = 1 + .03 * land; sh = 1 - .2 * h;
+    } else if (m === 'tap') {
+      // raise → mid-swing → strike → hold
+      const c = 1.6, p = (u % c) / c;
+      if (p > .78) { f = 'tapRecover'; }
+      else if (p < .26) { f = 'tapMid'; /* 'raise' frame has the scepter head cropped at the top */ const k = ease(p / .26); y = -8 * k; sy = 1 + .02 * k; sx = 1 - .015 * k; }
+      else if (p < .32) { f = 'tapMid'; y = -4; }
+      else { f = 'tap'; const k = Math.max(0, 1 - (p - .32) / .1); sy = 1 - .07 * k; sx = 1 + .05 * k; y = 2 * k; ring = (p - .32) / .3; }
+    } else if (m === 'surprise') {
+      // flinch → hop with wide eyes → settle
+      if (u < .2) { f = 'startle'; const k = S(u / .2 * P / 2); sy = 1 - .05 * k; sx = 1 + .03 * k; r = -2 * k; }
+      else if (u > .54 && u < .7) { f = 'surpriseLand'; const k = S((u - .54) / .16 * P); sy = 1 - .03 * k; sx = 1 + .02 * k; }
+      else { f = 'surprised'; const a = (u - .2) / .34, h = a < 1 ? S(a * P) : 0; y = -55 * h; sy = 1 + .06 * h - (a >= 1 && a < 1.35 ? .07 * S((a - 1) / .35 * P) : 0); sx = 2 - sy; sh = 1 - .4 * h; r = 2.2 * S(u * 38) * Math.max(0, 1 - u * 1.4); }
+    } else if (m === 'sad') {
+      // deflate into a deeper slump, then sigh between the two
+      f = u < .2 ? 'sadIn' : u < .55 ? 'sad' : (Math.floor((u - .55) / 1.6) % 2 ? 'sad' : 'sad2');
+      const k = ease(u / .9), sb = S(t * 1.1); y = 4 * k; sy = 1 - .015 * k - .008 * sb; sx = 1 + .01 * k + .005 * sb; r = .8 * S(t * .7);
+    }
+    return { f, y, r, sx, sy, sh, ring };
+  }
+  frame(now) {
+    const st = this.rStage.current; if (!st) return;
+    const t = (now - this.t0) / 1000, u = (now - this.mt) / 1000, m = this.mood();
+    if (BACK_TO_IDLE[m] && u > BACK_TO_IDLE[m]) { this.play('idle'); return; }
+    const q = this.pose(t, u, m), W = st.clientWidth || 1, k = W / 1024;
+    // spring-smooth the body transform so phase boundaries never jump
+    const dt = Math.min(.05, (now - (this._last || now)) / 1000); this._last = now;
+    const S0 = this._sm || (this._sm = { y: q.y, r: q.r, sx: q.sx, sy: q.sy, sh: q.sh }), a = 1 - Math.exp(-dt * 22);
+    ['y', 'r', 'sx', 'sy', 'sh'].forEach(key => { S0[key] += (q[key] - S0[key]) * a; q[key] = S0[key]; });
+    if (!this._els) { this._els = { body: st.querySelector('[data-k="body"]'), shadow: st.querySelector('[data-k="shadow"]'), ring: st.querySelector('[data-k="ring"]'), f: {} }; st.querySelectorAll('[data-f]').forEach(e => { this._els.f[e.dataset.f] = e; }); }
+    const E = this._els;
+    if (!E.coins) E.coins = [0, 1, 2].map(i => st.querySelector('[data-k="coin' + i + '"]'));
+    E.coins.forEach((el, i) => {
+      if (!el) return;
+      if (i > 0 || this.mood() !== 'idle') { el.style.opacity = '0'; return; }
+      const p = t % COIN_C, C = W * .065;
+      let x, y, flip = 1, sc = .5; // matches the coin painted in the hand frames (~28px)
+      // coin lives inside the body layer (same squash/breath as the drawing); in the hold phase it sits exactly over the painted coin
+      // frames with a painted coin (hold / lowerA / lowerB) show it themselves; our coin only flies
+      // big coin always visible (covers the small painted one) so it never shrinks in the hand
+      sc = 1.15;
+      // In-hand phases: the coin painted in the frame IS the coin (no overlay → never two coins, no erased-palm stain).
+      // The animated coin exists only while the hand is empty (toss → flight → catch), timed past the .16s cross-fades.
+      if (p < 1.3 || p >= 3.33) { el.style.opacity = '0'; return; }
+      if (p < 1.4) { [x, y] = PALM_TOSS; }
+      else if (p < 3.0) { const a = (p - 1.4) / 1.6, x0 = PALM_TOSS[0], y0 = PALM_TOSS[1], x1 = PALM_CATCH[0], y1 = PALM_CATCH[1];
+        x = x0 + (x1 - x0) * a; const h = Math.min(y0, y1) - APEX; y = y0 + (y1 - y0) * a - 4 * (Math.min(y0, y1) - APEX + 0) * 0 - 4 * (Math.min(y0,y1) - APEX) * a * (1 - a) * 0;
+        y = (1 - a) * (1 - a) * y0 + 2 * (1 - a) * a * (2 * APEX - (y0 + y1) / 2) + a * a * y1;
+        flip = Math.cos(a * Math.PI * 9); sc = 1.15 + .45 * Math.sin(a * Math.PI); } // grows toward the apex, back to painted size in the palm
+      else { [x, y] = PALM_CATCH; const s2 = Math.max(0, 1 - (p - 3.0) / .2); y += 6 * Math.sin(s2 * Math.PI); }
+      el.style.opacity = '1';
+      el.style.transform = `translate(${(x * W / 1024 - C / 2).toFixed(1)}px, ${(y * W / 1024 - C / 2).toFixed(1)}px) scale(${sc.toFixed(3)}, ${(sc * Math.max(.08, Math.abs(flip))).toFixed(3)})`;
+      el.style.filter = flip < 0 ? 'brightness(.82)' : 'none';
+      return;
+      // coin i is tossed on beats n ≡ i (mod 3): flies 2.6 beats (toss tip → apex → catch scoop), then rides the trunk back up
+      const u3 = ((t / JB) - i + 300) % 3, side = (Math.floor((t / JB - i + 300) / 3) + i) % 2 ? 1 : -1;
+      const TX = .544, TY = .06, CX = .575, CY = .5;
+      let lx, ly;
+      if (u3 < 2.6) { const a = u3 / 2.6; lx = TX + (CX - TX) * a + side * .13 * Math.sin(a * Math.PI); ly = TY + (CY - TY) * a - .2 * Math.sin(a * Math.PI); }
+      else { const a = (u3 - 2.6) / .4, e = a * a * (3 - 2 * a); lx = CX + (TX - CX) * e; ly = CY + (TY - CY) * e; }
+      ly += (q.y * k) / W;
+      el.style.opacity = '1';
+      el.style.transform = 'translate(' + ((lx - .05) * W).toFixed(1) + 'px,' + ((ly - .05) * W).toFixed(1) + 'px) rotateY(' + ((t * 540 + i * 120) % 360).toFixed(0) + 'deg)';
+    });
+    // pose swap: tiny pop so the cut reads as a drawn key pose
+    // pose swap with a 70ms dissolve: new pose underneath at full opacity, old pose fades out on top (no see-through dip)
+    if (q.f !== this._cur) {
+      const nw = E.f[q.f], od = this._cur && E.f[this._cur];
+      Object.values(E.f).forEach(e => { if (e !== nw && e !== od) { e.style.transition = 'none'; e.style.opacity = '0'; e.style.zIndex = '0'; } });
+      if (nw) { nw.style.transition = 'none'; nw.style.opacity = '1'; nw.style.zIndex = '1'; }
+      if (od) { od.style.zIndex = '2'; od.style.transition = 'opacity ' + 110 + 'ms ease-out'; void od.offsetWidth; od.style.opacity = '0'; }
+      this._cur = q.f; this._pop = now;
+    }
+    const pop = this._pop ? Math.max(0, 1 - (now - this._pop) / 120) : 0;
+    E.body.style.transform = `translateY(${(q.y * k).toFixed(2)}px) rotate(${q.r.toFixed(2)}deg) scale(${q.sx.toFixed(4)}, ${q.sy.toFixed(4)})`;
+    E.shadow.style.transform = `scale(${q.sh.toFixed(3)})`; E.shadow.style.opacity = (.35 + .65 * q.sh).toFixed(3);
+    if (q.ring >= 0 && q.ring <= 1) { E.ring.style.opacity = (1 - q.ring).toFixed(3); E.ring.style.transform = `scale(${(.4 + 1.4 * q.ring).toFixed(3)})`; } else E.ring.style.opacity = '0';
+  }
+  renderVals() {
+    const cur = this.mood();
+    return { rStage: this.rStage, size: (this.props.size ?? 520) + 'px', demo: this.props.demo ?? true,
+      moods: MOODS.map(([k, label]) => ({ label, bg: k === cur ? '#ffd257' : '#4fd97a', go: () => this.play(k) })) };
+  }
+}
+</script>
+</body>
+</html>

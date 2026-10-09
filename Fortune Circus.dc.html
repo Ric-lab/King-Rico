@@ -43,80 +43,80 @@ a:hover { color: #fff3c4; }
 </style>
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: manipulation; background: #1d0733;">
- <div style="position: absolute; inset: -60px; background-image: url('assets/stage-hd-c.png?v=2'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
+ <div style="position: absolute; inset: -60px; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
  <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: #1d0733; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: center center; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
- <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.png'); background-size: 100% 100%; pointer-events: none;"></div>
+ <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
+  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
-    <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.png'); background-size: 100% 100%; opacity: .9;"></div>
+    <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.webp'); background-size: 100% 100%; opacity: .9;"></div>
     <div style="position: absolute; left: 80px; top: 24px; width: 170px; height: 210px;">
-      <dc-import name="King Rico" mood="{{ kingMood }}" mood-key="{{ kingKey }}" size="{{ 170 }}" demo="{{ false }}" hint-size="170px,210px"></dc-import>
+      <dc-import name="KingRico" mood="{{ kingMood }}" mood-key="{{ kingKey }}" size="{{ 170 }}" demo="{{ false }}" hint-size="170px,210px"></dc-import>
     </div>
   </div>
-  <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.png'); background-size: 100% 100%; pointer-events: none;"></div>
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.png'); background-size: 100% 100%; pointer-events: none;"></div>
+  <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
 
   <div style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="0" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
-    <sc-if value="{{ c0.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="0" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="0" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
+    <sc-if value="{{ c0.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="0" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c0.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c0.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 219.5px; width: 122.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="1" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c1.pos }}; opacity: {{ c1.dim }}; animation: {{ c1.anim }};"></div>
-    <sc-if value="{{ c1.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="1" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="1" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c1.pos }}; opacity: {{ c1.dim }}; animation: {{ c1.anim }};"></div>
+    <sc-if value="{{ c1.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c1.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c1.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="2" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c2.pos }}; opacity: {{ c2.dim }}; animation: {{ c2.anim }};"></div>
-    <sc-if value="{{ c2.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="2" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="2" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c2.pos }}; opacity: {{ c2.dim }}; animation: {{ c2.anim }};"></div>
+    <sc-if value="{{ c2.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="2" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c2.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c2.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 351px; width: 126.5px; height: 126px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="3" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c3.pos }}; opacity: {{ c3.dim }}; animation: {{ c3.anim }};"></div>
-    <sc-if value="{{ c3.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="3" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="3" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c3.pos }}; opacity: {{ c3.dim }}; animation: {{ c3.anim }};"></div>
+    <sc-if value="{{ c3.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="3" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c3.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c3.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 351px; width: 122.5px; height: 126px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="4" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c4.pos }}; opacity: {{ c4.dim }}; animation: {{ c4.anim }};"></div>
-    <sc-if value="{{ c4.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="4" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="4" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c4.pos }}; opacity: {{ c4.dim }}; animation: {{ c4.anim }};"></div>
+    <sc-if value="{{ c4.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="4" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c4.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c4.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 351px; width: 130px; height: 126px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="5" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c5.pos }}; opacity: {{ c5.dim }}; animation: {{ c5.anim }};"></div>
-    <sc-if value="{{ c5.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="5" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="5" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c5.pos }}; opacity: {{ c5.dim }}; animation: {{ c5.anim }};"></div>
+    <sc-if value="{{ c5.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="5" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c5.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c5.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 481px; width: 126.5px; height: 120px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="6" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c6.pos }}; opacity: {{ c6.dim }}; animation: {{ c6.anim }};"></div>
-    <sc-if value="{{ c6.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="6" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="6" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c6.pos }}; opacity: {{ c6.dim }}; animation: {{ c6.anim }};"></div>
+    <sc-if value="{{ c6.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="6" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c6.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c6.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 481px; width: 122.5px; height: 120px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="7" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c7.pos }}; opacity: {{ c7.dim }}; animation: {{ c7.anim }};"></div>
-    <sc-if value="{{ c7.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="7" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="7" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c7.pos }}; opacity: {{ c7.dim }}; animation: {{ c7.anim }};"></div>
+    <sc-if value="{{ c7.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="7" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c7.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c7.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 481px; width: 130px; height: 120px; overflow: hidden; border-radius: 6px;">
-    <div data-sym="8" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c8.pos }}; opacity: {{ c8.dim }}; animation: {{ c8.anim }};"></div>
-    <sc-if value="{{ c8.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.png'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 1;"></div><div data-rh="8" style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
+    <div data-sym="8" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c8.pos }}; opacity: {{ c8.dim }}; animation: {{ c8.anim }};"></div>
+    <sc-if value="{{ c8.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="8" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
     <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
@@ -132,7 +132,7 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
 
-  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
   </div>
@@ -153,18 +153,18 @@ a:hover { color: #fff3c4; }
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">+</span>
   </div>
 
-  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; z-index: {{ spinZ }}; left: 58.333px; top: 693px; width: 337px; height: 60.5px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }}; border-radius: 13px; overflow: hidden; background-color: #04561f; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: {{ spinBgPos }}; background-repeat: no-repeat; filter: {{ spinFilter }}; box-shadow: {{ spinShadow }}; transition: {{ spinTrans }};">
+  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; z-index: {{ spinZ }}; left: 58.333px; top: 693px; width: 337px; height: 60.5px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }}; border-radius: 13px; overflow: hidden; background-color: #04561f; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ spinBgPos }}; background-repeat: no-repeat; filter: {{ spinFilter }}; box-shadow: {{ spinShadow }}; transition: {{ spinTrans }};">
     <div style="position: absolute; top: 0; bottom: 0; width: 48px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.45), rgba(255,255,255,0)); animation: fcShineSpin 2.8s ease-in-out infinite; opacity: {{ spinShine }}; transition: opacity .3s;"></div>
   </div>
 
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
+  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
   </div>
   <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 19.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
       <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">TURBO</span>
     </div>
   </sc-if>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
+  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
   </div>
   <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 387.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
@@ -172,11 +172,11 @@ a:hover { color: #fff3c4; }
     </div>
   </sc-if>
 
-  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
-  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.png?v=2'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
+  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
+  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
 
   <div style="position: absolute; left: 0; right: 0; top: 770px; display: flex; align-items: center; justify-content: center; height: 22px;">
-    <span style="font-size: 13px; font-weight: 700; color: #e9d2fa; text-shadow: 0 1px 3px rgba(0,0,0,.65);">{{ hint }}</span>
+    <span style="flex: 0 0 auto; white-space: nowrap; font-size: 13px; font-weight: 700; color: #e9d2fa; text-shadow: 0 1px 3px rgba(0,0,0,.65);">{{ hint }}</span>
   </div>
 
   <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
@@ -190,13 +190,13 @@ a:hover { color: #fff3c4; }
       <div style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 70%;">
         <div style="position: absolute; left: -34px; top: -26px; width: 164px; height: 150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,2,26,.72) 0%, rgba(16,2,26,.5) 45%, rgba(16,2,26,0) 100%); pointer-events: none;"></div>
         <div style="position: absolute; left: 8px; top: 84px; width: 80px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(10,0,18,.7), rgba(10,0,18,0)); pointer-events: none;"></div>
-        <img src="assets/fx/basket.png" alt="Cesta de Happeach" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; filter: drop-shadow(0 4px 5px rgba(0,0,0,.55)) drop-shadow(0 0 1px rgba(0,0,0,.6));">
+        <img src="assets/fx/basket.webp" alt="Cesta de Happeach" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; filter: drop-shadow(0 4px 5px rgba(0,0,0,.55)) drop-shadow(0 0 1px rgba(0,0,0,.6));">
         <sc-for list="{{ basketLow }}" as="p" hint-placeholder-count="0">
-          <img src="assets/fx/peach-plain.png" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
+          <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
         </sc-for>
-        <img src="assets/fx/basket-front.png" alt="" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; pointer-events: none;">
+        <img src="assets/fx/basket-front.webp" alt="" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; pointer-events: none;">
         <sc-for list="{{ basketTop }}" as="p" hint-placeholder-count="0">
-          <img src="assets/fx/peach-plain.png" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
+          <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
         </sc-for>
         
         <div style="position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 2px 9px 3px; border-radius: 999px; background: linear-gradient(180deg, rgba(74,10,106,.96), rgba(36,4,58,.96)); border: 2px solid #f0b41f; box-shadow: 0 3px 8px rgba(0,0,0,.5); white-space: nowrap;">
@@ -214,12 +214,11 @@ a:hover { color: #fff3c4; }
 
   <sc-if value="{{ free }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 50%; top: 660px; transform: translateX(-50%); width: max-content; white-space: nowrap; display: flex; align-items: center; gap: 8px; padding: 3px 14px 3px 6px; border-radius: 14px; background: linear-gradient(180deg, rgba(214,70,110,.97), rgba(140,24,70,.97)); border: 2px solid #ffd257; box-shadow: 0 6px 18px rgba(0,0,0,.55); animation: fcPop .3s ease-out; pointer-events: none;">
-      <div style="width: 24px; height: 24px; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
+      <div style="width: 24px; height: 24px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
       <span style="font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #fff3c4;">{{ freeText }}</span>
     </div>
   </sc-if>
 
-  <div onClick="{{ testFill }}" role="button" title="Teste: enche a cesta e abre a Rodada Especial" style="position: absolute; z-index: 26; left: 12px; top: 92px; padding: 4px 9px; border-radius: 999px; background: rgba(20,4,34,.82); border: 1.5px dashed #ffd257; color: #ffd257; font-size: 10.5px; font-weight: 800; letter-spacing: .6px; cursor: pointer; opacity: {{ testOpacity }}; pointer-events: {{ testEvents }};">TESTE · 5 HAPPEACH</div>
 
   <div ref="{{ fxRef }}" style="position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: visible;"></div>
 
@@ -313,7 +312,7 @@ a:hover { color: #fff3c4; }
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
       
       <div style="display: flex; align-items: center; gap: 12px; width: 286px; box-sizing: border-box; padding: 6px 12px 6px 8px; border-radius: 12px; background: linear-gradient(180deg, rgba(214,70,110,.55), rgba(140,24,70,.55)); border: 1.5px solid #ffd257;">
-        <div style="flex: 0 0 auto; width: 46px; height: 46px; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
+        <div style="flex: 0 0 auto; width: 46px; height: 46px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 1px;">
           <span style="font-size: 15px; font-weight: 800; color: #fff3c4;">Happeach</span>
           <span style="font-size: 10px; font-weight: 700; line-height: 1.3; color: #ffd9e6">Ou Junte 5 para Rodada Especial</span>
@@ -322,7 +321,7 @@ a:hover { color: #fff3c4; }
       </div><div style="display: grid; grid-template-columns: repeat(2, 132px); gap: 8px 22px;">
         <sc-for list="{{ payList }}" as="row" hint-placeholder-count="10">
           <div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,.06);">
-            <div style="width: 34px; height: 34px; border-radius: 5px; background-image: url('assets/symbols-v7.png'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ row.pos }};"></div>
+            <div style="width: 34px; height: 34px; border-radius: 5px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ row.pos }};"></div>
             <span style="font-size: 15px; font-weight: 800; color: #fff3c4;">{{ row.mult }}</span>
           </div>
         </sc-for>
@@ -335,6 +334,70 @@ a:hover { color: #fff3c4; }
  </div>
 </div>
 
+
+  <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;">
+    <img data-asset="assets|symbols|sym-coin.webp" src="assets/symbols/sym-coin.webp" alt="">
+    <img data-asset="assets|king-rico|fw|master.webp" src="assets/king-rico/fw/master.webp" alt="">
+    <img data-asset="assets|king-rico|fw|happy.webp" src="assets/king-rico/fw/happy.webp" alt="">
+    <img data-asset="assets|king-rico|fw|sad.webp" src="assets/king-rico/fw/sad.webp" alt="">
+    <img data-asset="assets|king-rico|fw|surprised.webp" src="assets/king-rico/fw/surprised.webp" alt="">
+    <img data-asset="assets|king-rico|fw|wave.webp" src="assets/king-rico/fw/wave.webp" alt="">
+    <img data-asset="assets|king-rico|fw|dance1.webp" src="assets/king-rico/fw/dance1.webp" alt="">
+    <img data-asset="assets|king-rico|fw|dance2.webp" src="assets/king-rico/fw/dance2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|cheer.webp" src="assets/king-rico/fw/cheer.webp" alt="">
+    <img data-asset="assets|king-rico|fw|tap.webp" src="assets/king-rico/fw/tap.webp" alt="">
+    <img data-asset="assets|king-rico|fw|wave2.webp" src="assets/king-rico/fw/wave2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|land.webp" src="assets/king-rico/fw/land.webp" alt="">
+    <img data-asset="assets|king-rico|fw|raise.webp" src="assets/king-rico/fw/raise.webp" alt="">
+    <img data-asset="assets|king-rico|fw|startle.webp" src="assets/king-rico/fw/startle.webp" alt="">
+    <img data-asset="assets|king-rico|fw|sad2.webp" src="assets/king-rico/fw/sad2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|dance3.webp" src="assets/king-rico/fw/dance3.webp" alt="">
+    <img data-asset="assets|king-rico|fw|crouch2.webp" src="assets/king-rico/fw/crouch2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|cheerRise.webp" src="assets/king-rico/fw/cheerRise.webp" alt="">
+    <img data-asset="assets|king-rico|fw|cheerFall.webp" src="assets/king-rico/fw/cheerFall.webp" alt="">
+    <img data-asset="assets|king-rico|fw|wave3.webp" src="assets/king-rico/fw/wave3.webp" alt="">
+    <img data-asset="assets|king-rico|fw|tapMid.webp" src="assets/king-rico/fw/tapMid.webp" alt="">
+    <img data-asset="assets|king-rico|fw|danceL.webp" src="assets/king-rico/fw/danceL.webp" alt="">
+    <img data-asset="assets|king-rico|fw|happy2.webp" src="assets/king-rico/fw/happy2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|waveIn.webp" src="assets/king-rico/fw/waveIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw|waveOut.webp" src="assets/king-rico/fw/waveOut.webp" alt="">
+    <img data-asset="assets|king-rico|fw|coinHold.webp" src="assets/king-rico/fw/coinHold.webp" alt="">
+    <img data-asset="assets|king-rico|fw|coinToss.webp" src="assets/king-rico/fw/coinToss.webp" alt="">
+    <img data-asset="assets|king-rico|fw|coinLowerA.webp" src="assets/king-rico/fw/coinLowerA.webp" alt="">
+    <img data-asset="assets|king-rico|fw|coinLowerB.webp" src="assets/king-rico/fw/coinLowerB.webp" alt="">
+    <img data-asset="assets|king-rico|fw|coinLook.webp" src="assets/king-rico/fw/coinLook.webp" alt="">
+    <img data-asset="assets|king-rico|fw|jugToss.webp" src="assets/king-rico/fw/jugToss.webp" alt="">
+    <img data-asset="assets|king-rico|fw|jugCatch.webp" src="assets/king-rico/fw/jugCatch.webp" alt="">
+    <img data-asset="assets|king-rico|fw|blink.webp" src="assets/king-rico/fw/blink.webp" alt="">
+    <img data-asset="assets|king-rico|fw|hope.webp" src="assets/king-rico/fw/hope.webp" alt="">
+    <img data-asset="assets|king-rico|fw|look.webp" src="assets/king-rico/fw/look.webp" alt="">
+    <img data-asset="assets|king-rico|fw|nail.webp" src="assets/king-rico/fw/nail.webp" alt="">
+    <img data-asset="assets|king-rico|fw|danceR2.webp" src="assets/king-rico/fw/danceR2.webp" alt="">
+    <img data-asset="assets|king-rico|fw|dance2b.webp" src="assets/king-rico/fw/dance2b.webp" alt="">
+    <img data-asset="assets|king-rico|fw|waveUp.webp" src="assets/king-rico/fw/waveUp.webp" alt="">
+    <img data-asset="assets|king-rico|fw|waveDown.webp" src="assets/king-rico/fw/waveDown.webp" alt="">
+    <img data-asset="assets|king-rico|fw|happyIn.webp" src="assets/king-rico/fw/happyIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw|sadIn.webp" src="assets/king-rico/fw/sadIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw|surpriseLand.webp" src="assets/king-rico/fw/surpriseLand.webp" alt="">
+    <img data-asset="assets|king-rico|fw|tapRecover.webp" src="assets/king-rico/fw/tapRecover.webp" alt="">
+    <img data-asset="assets|happeach|f-ready.webp" src="assets/happeach/f-ready.webp" alt="">
+    <img data-asset="assets|happeach|f-crouch.webp" src="assets/happeach/f-crouch.webp" alt="">
+    <img data-asset="assets|happeach|f-launch.webp" src="assets/happeach/f-launch.webp" alt="">
+    <img data-asset="assets|happeach|f-tuck.webp" src="assets/happeach/f-tuck.webp" alt="">
+    <img data-asset="assets|happeach|f-drop.webp" src="assets/happeach/f-drop.webp" alt="">
+    <img data-asset="assets|happeach|f-victory.webp" src="assets/happeach/f-victory.webp" alt="">
+    <img data-asset="assets|happeach|f-danceA.webp" src="assets/happeach/f-danceA.webp" alt="">
+    <img data-asset="assets|happeach|f-danceB.webp" src="assets/happeach/f-danceB.webp" alt="">
+    <img data-asset="assets|fx|peach-plain.webp" src="assets/fx/peach-plain.webp" alt="">
+    <img data-asset="assets|fx|basket.webp" src="assets/fx/basket.webp" alt="">
+    <img data-asset="assets|fx|basket-front.webp" src="assets/fx/basket-front.webp" alt="">
+    <img data-asset="assets|reel-strip.webp" src="assets/reel-strip.webp" alt="">
+    <img data-asset="assets|reel-strip-blur.webp" src="assets/reel-strip-blur.webp" alt="">
+    <img data-asset="assets|symbols-v7.webp" src="assets/symbols-v7.webp" alt="">
+    <img data-asset="assets|stage-hd-c.webp" src="assets/stage-hd-c.webp" alt="">
+    <img data-asset="assets|fx|peach-body.webp" src="assets/fx/peach-body.webp" alt="">
+    <img data-asset="assets|fx|peach-leaf.webp" src="assets/fx/peach-leaf.webp" alt="">
+  </div>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#4a1076"></rect><circle cx="100" cy="100" r="52" fill="#f0b41f"></circle><text x="100" y="118" font-family="Georgia, serif" font-size="46" font-weight="bold" fill="#4a1076" text-anchor="middle">FC</text></svg></template>
 
@@ -368,6 +431,8 @@ const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
 const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
 // Balance (sim 500k spins): RTP ≈ 98%, base ≈ 76%, hit ≈ 24%, Special Round ≈ 1 in 70, avg ≈ 16x
 const LINE_K = 1.9, FEAT_P_SYM = 0.15, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
+// every Happeach frame as a literal path (dynamic 'f-'+name paths were missing from published builds)
+const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
 const PEACH = 11, PEACH_P = 0.008, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 20, FEAT_SPINS = 5;
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
@@ -375,6 +440,10 @@ const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];
 const NOTES = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33, 659.25, 784];
 const SKEY = 'fortuneCircus.slot.v3';
 
+// Asset resolver: published/bundled builds only rewrite URLs that appear in the template, so every image the code
+// creates at runtime is looked up in the hidden registry (img[data-asset]) and uses that element's resolved src.
+const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
+if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
 class Component extends DCLogic {
   fxRef = React.createRef();
   state = {
@@ -389,12 +458,26 @@ class Component extends DCLogic {
   timers = [];
 
   componentDidMount() {
+    // entry point is the Home screen: a direct top-level open of the game goes to Home first
+    try { if (window.self === window.top && !/from=home|play|no3d/.test(location.search + location.hash)) { fetch('Home.dc.html', { method: 'HEAD' }).then(r => { if (r.ok) location.replace('Home.dc.html'); }).catch(() => {}); } } catch (e) {}
+    // pre-build the spin pulse bitmaps after load (was built on the 1st spin → lag when the reels started)
+    setTimeout(() => { try { this.spinFx('prebuild'); } catch (e) {} }, 900);
+    Object.values(HP_FRAMES).map(FC_ASSET).concat([FC_ASSET('assets/fx/peach-plain.webp'), FC_ASSET('assets/fx/basket.webp'), FC_ASSET('assets/fx/basket-front.webp'), FC_ASSET('assets/symbols/sym-coin.webp')])
+      .forEach(u => { const i = new Image(); i.src = u; i.decode && i.decode().catch(() => {}); });
+    // keep the reel strips decoded: the strip layers mount on spin start (mid-pulse); an undecoded image painted
+    // an empty (dark) cell for one frame. A permanent 1px holder keeps the decoded bitmaps resident.
+    if (!document.getElementById('fc-decode-hold')) {
+      const h = document.createElement('div'); h.id = 'fc-decode-hold';
+      h.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none;background-image:url(' + FC_ASSET('assets/reel-strip.webp') + '),url(' + FC_ASSET('assets/reel-strip-blur.webp') + '),url(' + FC_ASSET('assets/symbols-v7.webp') + ');background-size:2px 2px;';
+      document.body.appendChild(h);
+      [FC_ASSET('assets/reel-strip.webp'), FC_ASSET('assets/reel-strip-blur.webp'), FC_ASSET('assets/symbols-v7.webp')].forEach(u => { const i = new Image(); i.src = u; i.decode && i.decode().catch(() => {}); });
+    }
     if (!navigator.vibrate && !document.getElementById('fc-ios-hap')) {
       const l = document.createElement('label'); l.id = 'fc-ios-hap'; l.style.cssText = 'position:fixed;left:-99px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;';
       l.innerHTML = '<input type="checkbox" switch tabindex="-1" aria-hidden="true">'; document.body.appendChild(l); this._iosHap = l;
     } else this._iosHap = document.getElementById('fc-ios-hap');
     let n = 0; const done = () => { if (++n >= 2) this.setState({ ready: true }); };
-    ['assets/stage-hd-c.png', 'assets/symbols-v7.png'].forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
+    [FC_ASSET('assets/stage-hd-c.webp'), FC_ASSET('assets/symbols-v7.webp')].forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
     this.later(() => this.setState({ ready: true }), 2500);
     const sv = this.loadSave();
     if (sv) this.setState({
@@ -435,9 +518,7 @@ class Component extends DCLogic {
       // Heavy 3D setup is deferred off the critical path: wait for first paint + idle time, then load
       // one module at a time (coins first, peach after). Until ready, the game uses its 2D fallbacks.
       const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 4000 }) : setTimeout(fn, 300));
-      const load3d = () => idle(() => import('./assets/fx/coinfly3d.js').then(m => m.init(this.fxRef.current)).then(o => { this._cf = o; })
-        .catch(e => console.warn('coinfly3d', e))
-);
+      const load3d = () => idle(() => { try { this._cf = this.coinCanvas(this.fxRef.current); } catch (e) { console.warn('coin2d', e); } });
       setTimeout(load3d, 2500);
     }
   }
@@ -461,6 +542,17 @@ class Component extends DCLogic {
     this._dances = [];
     if (this.state.celeb && !this.isCeleb()) this.setState({ celeb: false });
   }
+  // glowing star sprites baked once (cheap <div> backgrounds instead of clip-path + drop-shadow per particle)
+  starUrls() {
+    if (this._stars) return this._stars;
+    this._stars = ['#fff6c8', '#ffd257', '#ff8cc0', '#ffffff', '#ffb347'].map(col => {
+      const c = document.createElement('canvas'); c.width = c.height = 48; const x = c.getContext('2d');
+      const g = x.createRadialGradient(24, 24, 0, 24, 24, 24); g.addColorStop(0, 'rgba(255,230,140,.55)'); g.addColorStop(1, 'rgba(255,220,120,0)'); x.fillStyle = g; x.fillRect(0, 0, 48, 48);
+      x.fillStyle = col; x.beginPath(); [[24, 4], [29, 19], [44, 24], [29, 29], [24, 44], [19, 29], [4, 24], [19, 19]].forEach(([u, v], k) => k ? x.lineTo(u, v) : x.moveTo(u, v)); x.closePath(); x.fill();
+      return c.toDataURL();
+    });
+    return this._stars;
+  }
   dance(cell) {
     const layer = this.fxRef.current, sym = document.querySelector('[data-sym="' + cell + '"]');
     if (!layer || !sym || !sym.animate) return;
@@ -469,15 +561,15 @@ class Component extends DCLogic {
     const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
     const T = 2400;
     // glow behind
-    const glow = el('left:' + (cx - 110) + 'px;top:' + (cy - 118) + 'px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,170,.95) 0%,rgba(255,120,170,.55) 38%,rgba(255,120,170,0) 70%);mix-blend-mode:screen;');
+    const glow = el('left:' + (cx - 110) + 'px;top:' + (cy - 118) + 'px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,170,.95) 0%,rgba(255,120,170,.55) 38%,rgba(255,120,170,0) 70%);will-change:transform,opacity;');
     glow.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1.1)', opacity: 1, offset: .2 }, { transform: 'scale(.9)', opacity: .7, offset: .55 }, { transform: 'scale(1.25)', opacity: .9, offset: .8 }, { transform: 'scale(1.5)', opacity: 0 }], { duration: T, easing: 'ease-out', fill: 'forwards' });
     // ground shadow
     const sh = el('left:' + (cx - 40) + 'px;top:' + (feetY - 7) + 'px;width:80px;height:14px;border-radius:50%;background:radial-gradient(ellipse,rgba(40,6,30,.55),rgba(40,6,30,0) 70%);');
     // dancer
-    const w = el('left:' + (cx - S / 2) + 'px;top:' + (cy - S / 2) + 'px;width:' + S + 'px;height:' + S + 'px;transform-origin:50% 93%;will-change:transform;filter:drop-shadow(0 3px 4px rgba(60,10,40,.45));');
+    const w = el('left:' + (cx - S / 2) + 'px;top:' + (cy - S / 2) + 'px;width:' + S + 'px;height:' + S + 'px;transform-origin:50% 93%;will-change:transform;');
     const img = (src, css) => { const i = document.createElement('img'); i.src = src; i.alt = ''; i.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;' + (css || ''); w.appendChild(i); return i; };
     // drawn dance frames alternate on the beat (same approach as King Rico)
-    const dA = img('assets/happeach/f-danceA.png'), dB = img('assets/happeach/f-danceB.png', 'opacity:0;'), dV = img('assets/happeach/f-victory.png', 'opacity:0;');
+    const dA = img(FC_ASSET('assets/happeach/f-danceA.webp')), dB = img(FC_ASSET('assets/happeach/f-danceB.webp'), 'opacity:0;'), dV = img(FC_ASSET('assets/happeach/f-victory.webp'), 'opacity:0;');
     const sw = (a, b, c) => { dA.style.opacity = a; dB.style.opacity = b; dV.style.opacity = c; };
     [[.13, 0, 0, 1], [.37, 1, 0, 0], [.54, 0, 1, 0], [.66, 1, 0, 0], [.78, 0, 1, 0], [.88, 0, 0, 1]].forEach(([o, a, b, c]) => this.later(() => sw(a, b, c), T * o));
     const leaf = { animate() {} };
@@ -503,22 +595,22 @@ class Component extends DCLogic {
     const ring = el('left:' + (cx - 50) + 'px;top:' + (feetY - 16) + 'px;width:100px;height:32px;border-radius:50%;border:3px solid rgba(255,230,150,.95);box-shadow:0 0 12px rgba(255,190,90,.9);opacity:0;');
     ring.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(.4)', opacity: 1, offset: .05 }, { transform: 'scale(2)', opacity: 0 }], { duration: 520, delay: T * .37, easing: 'ease-out', fill: 'forwards' });
     // sparkles at launch/turn
-    const cols = ['#fff6c8', '#ffd257', '#ff8cc0', '#ffffff', '#ffb347'];
-    for (let i = 0; i < 14; i++) {
-      const a = (i / 14) * Math.PI * 2 + Math.random() * .3, r = 55 + Math.random() * 45, s = 9 + Math.random() * 9;
-      const st = el('left:' + (cx - s / 2) + 'px;top:' + (cy - 55 - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:' + cols[i % cols.length] + ';clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);filter:drop-shadow(0 0 3px rgba(255,220,120,.9));opacity:0;');
+    const stars = this.starUrls();
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * Math.PI * 2 + Math.random() * .3, r = 55 + Math.random() * 45, s = 12 + Math.random() * 8;
+      const st = el('left:' + (cx - s / 2) + 'px;top:' + (cy - 55 - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:url(' + stars[i % stars.length] + ') center/100% 100% no-repeat;will-change:transform,opacity;opacity:0;');
       st.animate([{ transform: 'translate(0,0) scale(.2) rotate(0)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * r * .5 + 'px,' + Math.sin(a) * r * .5 + 'px) scale(1.2) rotate(90deg)', opacity: 1, offset: .35 }, { transform: 'translate(' + Math.cos(a) * r + 'px,' + (Math.sin(a) * r + 14) + 'px) scale(0) rotate(200deg)', opacity: 0 }],
         { duration: 760 + Math.random() * 240, delay: T * .16 + i * 12, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
     }
     // music notes during samba
     ['\u266A', '\u266B', '\u266A', '\u266B'].forEach((g, i) => {
-      const side = i % 2 ? 1 : -1, n = el('left:' + (cx + side * 38 - 9) + 'px;top:' + (cy - 30) + 'px;font:800 22px/1 \'Baloo 2\',sans-serif;color:#fff;text-shadow:0 0 0 #000,-1.5px 0 #d6336c,1.5px 0 #d6336c,0 -1.5px #d6336c,0 1.5px #d6336c,0 0 8px rgba(255,120,170,.9);opacity:0;', g);
+      const side = i % 2 ? 1 : -1, n = el('left:' + (cx + side * 38 - 9) + 'px;top:' + (cy - 30) + 'px;font:800 22px/1 \'Baloo 2\',sans-serif;color:#fff;-webkit-text-stroke:3px #d6336c;paint-order:stroke fill;will-change:transform,opacity;opacity:0;', g);
       n.animate([{ transform: 'translate(0,0) rotate(' + (-side * 10) + 'deg) scale(.5)', opacity: 0 }, { transform: 'translate(' + side * 8 + 'px,-24px) rotate(' + (side * 12) + 'deg) scale(1)', opacity: 1, offset: .3 }, { transform: 'translate(' + side * 22 + 'px,-72px) rotate(' + (-side * 8) + 'deg) scale(.9)', opacity: 0 }],
         { duration: 1000, delay: T * .44 + i * 230, easing: 'ease-out', fill: 'forwards' });
     });
     // after the samba: shrink + fly in an arc into the counter icon
     const tx = 394.333, ty = 138, dx = tx - cx, dy = ty - cy;
-    const fly = el('left:' + (cx - 30) + 'px;top:' + (cy - 30) + 'px;width:60px;height:60px;opacity:0;filter:drop-shadow(0 0 8px rgba(255,200,120,.95));', '<img src="assets/fx/peach-body.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;"><img src="assets/fx/peach-leaf.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
+    const fly = el('left:' + (cx - 30) + 'px;top:' + (cy - 30) + 'px;width:60px;height:60px;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/fx/peach-plain.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
     const arc = [];
     for (let i = 0; i <= 10; i++) { const u = i / 10, e = u * u * (3 - 2 * u), lift = -70 * Math.sin(Math.PI * u); arc.push({ offset: u, opacity: u < .05 ? u * 20 : 1, transform: 'translate(' + (dx * e).toFixed(1) + 'px,' + (dy * e + lift).toFixed(1) + 'px) rotate(' + (360 * e).toFixed(0) + 'deg) scale(' + (1.3 - 0.5 * e).toFixed(2) + ')' }); }
     const FD = 620, FS = T - 80;
@@ -529,7 +621,7 @@ class Component extends DCLogic {
       const u0 = .1 + i * .1, e = u0 * u0 * (3 - 2 * u0);
       tr.animate([{ opacity: 0, transform: 'translate(' + (dx * e) + 'px,' + (dy * e - 70 * Math.sin(Math.PI * u0)) + 'px) scale(1.4)' }, { opacity: .9, offset: .15 }, { opacity: 0, transform: 'translate(' + (dx * e) + 'px,' + (dy * e - 70 * Math.sin(Math.PI * u0) + 10) + 'px) scale(.2)' }], { duration: 420, delay: FS + FD * u0, fill: 'forwards' });
     }
-    const pop = el('left:' + (tx - 34) + 'px;top:' + (ty - 34) + 'px;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,140,90,0) 70%);mix-blend-mode:screen;opacity:0;');
+    const pop = el('left:' + (tx - 34) + 'px;top:' + (ty - 34) + 'px;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,140,90,0) 70%);will-change:transform,opacity;opacity:0;');
     pop.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(1.2)', opacity: 1, offset: .3 }, { transform: 'scale(1.8)', opacity: 0 }], { duration: 480, delay: FS + FD, fill: 'forwards' });
     this.later(() => { this._peachLand && this._peachLand(cell); try { this.bell(1760, 0.4, 0.07, 0.04); this.pluck(880, 0.06, 0.25); } catch (e) {} this.hap('basketIn'); }, FS + FD);
     const rec = { nodes, sym, t: 0 };
@@ -560,8 +652,8 @@ class Component extends DCLogic {
     // drawn-frame Happeach (same approach as King Rico): pose swaps per phase; the flip spins the side-view tucked
     // frame IN the screen plane = a true forward somersault.
     const PS = 92, FR = ['ready', 'crouch', 'launch', 'tuck', 'drop', 'victory'];
-    const p = el('left:' + (sx - PS / 2) + 'px;top:' + (rimY - PS * 0.9) + 'px;width:' + PS + 'px;height:' + PS + 'px;transform-origin:50% 55%;filter:drop-shadow(0 0 8px rgba(255,200,120,.9)) drop-shadow(0 3px 3px rgba(60,10,40,.5));opacity:0;z-index:3;',
-      FR.map(n => '<img data-hf="' + n + '" src="assets/happeach/f-' + n + '.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;">').join(''));
+    const p = el('left:' + (sx - PS / 2) + 'px;top:' + (rimY - PS * 0.9) + 'px;width:' + PS + 'px;height:' + PS + 'px;transform-origin:50% 55%;) drop-shadow(0 3px 3px rgba(60,10,40,.5));opacity:0;z-index:3;',
+      FR.map(n => '<img data-hf="' + n + '" src="' + FC_ASSET(HP_FRAMES[n]) + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;">').join(''));
     const show = n => p.querySelectorAll('[data-hf]').forEach(i => { i.style.opacity = i.dataset.hf === n ? '1' : '0'; });
     const K = (t, x, y, r, a, b, o) => ({ offset: Math.min(1, t / D), opacity: o == null ? 1 : o, transform: 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + r.toFixed(1) + 'deg) scale(' + a.toFixed(3) + ',' + b.toFixed(3) + ')' });
     const fr = [K(0, 0, 26, 0, .5, .5, 0), K(UP * .45, 0, -14, 0, .92, 1.12), K(UP * .75, 0, 2, 0, 1.12, .88), K(UP, 0, 0, 0, 1, 1),
@@ -583,7 +675,7 @@ class Component extends DCLogic {
     for (let i = 2; i <= 1; i++) {
       const u = i / 6, e = Math.pow(u, 1.7), gx = dx * e, gy = dy * e - 150 * Math.sin(Math.PI * Math.pow(u, 0.85)) * (1 - u * .35), ru = Math.min(1, Math.max(0, (u - .12) / .7)), gr = -360 * (ru * ru * (3 - 2 * ru));
       const gh = el('left:' + (sx - PS / 2) + 'px;top:' + (rimY - PS * 0.9) + 'px;width:' + PS + 'px;height:' + PS + 'px;transform-origin:50% 55%;opacity:0;filter:sepia(1) saturate(4) hue-rotate(' + (300 + i * 22) + 'deg) brightness(1.15);mix-blend-mode:screen;transform:translate(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px) rotate(' + gr.toFixed(0) + 'deg) scale(' + (1 + .3 * u).toFixed(2) + ');',
-        '<img src="assets/happeach/f-tuck.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
+        '<img src="' + FC_ASSET('assets/happeach/f-tuck.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
       gh.animate([{ opacity: 0 }, { opacity: .5, offset: .1 }, { opacity: 0 }], { duration: 420, delay: tf(u), fill: 'forwards' });
     }
     // climax staging: dim the stage, rotating rays behind the rim during the wind-up
@@ -1168,32 +1260,49 @@ class Component extends DCLogic {
   }
   spinFx(late) {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
-    // energy pulse, synced to the reels: the wave travels during the 280ms press delay and HITS the frame
-    // exactly when the reels start; then two light comets run the frame bottom→top and it's over (~.75s).
-    // transform/opacity only, no clip-path / overflow / blend layers (those caused the black flicker).
+    // energy pulse, synced to the reels: wave travels during the 280ms press delay and HITS the frame when the
+    // reels start; then two comets run the frame. Anti-flicker: all layers are pre-rendered bitmaps (no CSS
+    // gradients/box-shadows re-rastered per frame), created ONCE and kept composited (persistent will-change),
+    // then reused every spin — creating/destroying GPU layers mid-animation is what flashed black on mobile.
     const D = late ? 0 : 280;
-    const mk = (css, life) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; layer.appendChild(d); this.later(() => d.remove(), life || 1300); return d; };
-    if (!late) mk('left:223.5px;top:722px;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(255,240,180,0) 40%,rgba(255,236,160,.95) 53%,rgba(255,190,70,.55) 63%,rgba(255,190,70,0) 74%);')
-      .animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(2)', opacity: 1, offset: .2 }, { transform: 'scale(9)', opacity: .9, offset: .85 }, { transform: 'scale(10.5)', opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
-    // impact: frame flashes the instant the reels start, then fades
-    mk('left:28px;top:212px;width:398px;height:396px;border-radius:12px;opacity:0;box-shadow:0 0 0 3px rgba(255,222,110,1),0 0 30px 10px rgba(255,190,70,.85);')
-      .animate([{ opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: .55, offset: .5 }, { opacity: 0 }], { duration: 650, delay: D, easing: 'ease-out', fill: 'forwards' });
-    // two comets: bottom-centre → corner → up the side → top-centre (mirrored)
-    const L = 28, T = 212, R = 426, B = 608, CX = 227, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
-    [1, -1].forEach(side => {
-      const X = v => CX + (v - CX) * side, P = (x, y, o, op) => ({ offset: o, transform: 'translate(' + (X(x) - 9) + 'px,' + (y - 9) + 'px)', opacity: op });
-      mk('left:0;top:0;width:18px;height:18px;border-radius:50%;opacity:0;transform:scale(1.9);background:radial-gradient(circle,#fffbe8 0%,#ffe08a 22%,rgba(255,214,100,.7) 40%,rgba(255,200,80,0) 70%);')
-        .animate([P(CX, B, 0, 0), P(CX + 30, B, .04, 1), P(R, B, o1, 1), P(R, T, o2, 1), P(CX + 8, T, .97, 1), P(CX, T, 1, 0)], { duration: 520, delay: D + 30, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' });
+    const P = this._pulse || (this._pulse = (() => {
+      const bmp = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); return c.toDataURL('image/png'); };
+      const wave = bmp(256, 256, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
+        g.addColorStop(0, 'rgba(255,240,180,0)'); g.addColorStop(.4, 'rgba(255,240,180,0)'); g.addColorStop(.53, 'rgba(255,236,160,.95)'); g.addColorStop(.63, 'rgba(255,190,70,.55)'); g.addColorStop(.74, 'rgba(255,190,70,0)'); g.addColorStop(1, 'rgba(255,190,70,0)');
+        x.fillStyle = g; x.fillRect(0, 0, w, w); });
+      const PAD = 34, glow = bmp(398 + PAD * 2, 396 + PAD * 2, (x, w, h) => { x.shadowColor = 'rgba(255,190,70,.9)'; x.shadowBlur = 26;
+        x.strokeStyle = 'rgba(255,222,110,1)'; x.lineWidth = 3; const r = 12, X = PAD - 1.5, Y = PAD - 1.5, W = 401, H = 399;
+        for (let k = 0; k < 3; k++) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); x.stroke(); } });
+      const comet = bmp(64, 64, (x, w) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0, '#fffbe8'); g.addColorStop(.22, '#ffe08a'); g.addColorStop(.4, 'rgba(255,214,100,.7)'); g.addColorStop(.7, 'rgba(255,200,80,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
+      const host = document.createElement('div'); host.style.cssText = 'position:absolute;inset:0;pointer-events:none;isolation:isolate;z-index:4;'; layer.appendChild(host);
+      const img = (src, css) => { const i = new Image(); i.src = src; i.alt = ''; i.decoding = 'sync';
+        i.style.cssText = 'position:absolute;left:0;top:0;pointer-events:none;opacity:0;will-change:transform,opacity;backface-visibility:hidden;transform:translateZ(0);' + css; host.appendChild(i); return i; };
+      const star = c0 => bmp(24, 24, x => { x.fillStyle = c0; x.beginPath(); [[12,0],[15,9],[24,12],[15,15],[12,24],[9,15],[0,12],[9,9]].forEach(([u, v], k) => k ? x.lineTo(u, v) : x.moveTo(u, v)); x.closePath(); x.fill(); });
+      const stars = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'].map(star);
+      const sparks = Array.from({ length: 8 }, (_, k) => { const s = 7 + (k % 3) * 3, d = img(stars[k % 4], 'width:' + s + 'px;height:' + s + 'px;'); d._s = s; return d; });
+      return { sparks, PAD, wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (398 + PAD * 2) + 'px;height:' + (396 + PAD * 2) + 'px;'),
+        c1: img(comet, 'width:34px;height:34px;'), c2: img(comet, 'width:34px;height:34px;') };
+    })());
+    if (late === 'prebuild') return; // built at load so the first spin has no build/decode hitch
+    [P.wave, P.glow, P.c1, P.c2, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
+    const WX = 223.5 - 30, WY = 722 - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
+    if (!late) P.wave.animate([{ transform: wt(.3), opacity: 0 }, { transform: wt(2), opacity: 1, offset: .2 }, { transform: wt(9), opacity: .9, offset: .85 }, { transform: wt(10.5), opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
+    const gt = 'translate3d(' + (28 - P.PAD) + 'px,' + (212 - P.PAD) + 'px,0)';
+    P.glow.animate([{ transform: gt, opacity: 0 }, { transform: gt, opacity: 1, offset: .12 }, { transform: gt, opacity: .55, offset: .5 }, { transform: gt, opacity: 0 }], { duration: 650, delay: D + 34, easing: 'ease-out', fill: 'forwards' });
+    const T = 212, R = 426, B = 608, CX = 227, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
+    [[P.c1, 1], [P.c2, -1]].forEach(([el, side]) => {
+      const X = v => CX + (v - CX) * side, K = (x, y, o, op) => ({ offset: o, transform: 'translate3d(' + (X(x) - 17) + 'px,' + (y - 17) + 'px,0)', opacity: op });
+      el.animate([K(CX, B, 0, 0), K(CX + 30, B, .04, 1), K(R, B, o1, 1), K(R, T, o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: 520, delay: D + 50, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' });
     });
     const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722;
-    for (let i = 0; i < 12; i++) {
-      const a = Math.PI + (i / 11) * Math.PI, r = 40 + Math.random() * 50, s = 6 + Math.random() * 6, ox = (Math.random() - .5) * 220;
-      const st = document.createElement('div');
-      st.style.cssText = 'position:absolute;pointer-events:none;opacity:0;left:' + (bx + ox - s / 2) + 'px;top:' + (by - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:' + cols[i % 4] + ';clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);';
-      layer.appendChild(st);
-      st.animate([{ transform: 'translate(0,0) scale(.3)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * r * .5 + 'px,' + Math.sin(a) * r * .5 + 'px) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(' + Math.cos(a) * r + 'px,' + (Math.sin(a) * r + 8) + 'px) scale(0) rotate(160deg)', opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
-      this.later(() => st.remove(), 700);
-    }
+    // sparks reuse the persistent pool (no per-spin DOM churn)
+    P.sparks.forEach((st, i) => {
+      const a = Math.PI + (i / 7) * Math.PI, r = 40 + Math.random() * 50, s = st._s, x0 = bx + (Math.random() - .5) * 220 - s / 2, y0 = by - s / 2;
+
+      const tr = (dx, dy, sc, rot) => 'translate3d(' + (x0 + dx).toFixed(1) + 'px,' + (y0 + dy).toFixed(1) + 'px,0) scale(' + sc + ') rotate(' + (rot || 0) + 'deg)';
+      st.animate([{ transform: tr(0, 0, .3), opacity: 0 }, { transform: tr(Math.cos(a) * r * .5, Math.sin(a) * r * .5, 1.1), opacity: 1, offset: .3 }, { transform: tr(Math.cos(a) * r, Math.sin(a) * r + 8, 0, 160), opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
+    });
   }
   featBanner() {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
@@ -1223,6 +1332,43 @@ class Component extends DCLogic {
   };
   shownBalance() { return Math.max(0, Math.round((this.balance() - (this.state.balPending || 0)) * 100) / 100); }
   // after the prize modal: 3D coins burst from the prize and fly into the balance pill; balance ticks up per coin
+  // 2D coin renderer (same draw() interface the old 3D module had): one canvas, pre-baked face/back/edge bitmaps,
+  // spin faked by horizontal squash + edge band. No filters, no WebGL → smooth on low-end phones.
+  coinCanvas(layer) {
+    if (!layer) return null;
+    const W = 453, H = 802, B = 96;
+    const cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;left:0;top:0;width:453px;height:802px;pointer-events:none;z-index:6;display:none;';
+    layer.appendChild(cv); const ctx = cv.getContext('2d');
+    const src = new Image(); src.src = FC_ASSET('assets/symbols/sym-coin.webp');
+    const bake = (fn) => { const c = document.createElement('canvas'); c.width = c.height = B; fn(c.getContext('2d')); return c; };
+    let face = null, back = null, edge = null;
+    const ready = () => {
+      if (face) return true; if (!src.complete || !src.naturalWidth) return false;
+      face = bake(x => x.drawImage(src, 0, 0, B, B));
+      back = bake(x => { x.drawImage(src, 0, 0, B, B); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(120,58,0,.38)'; x.fillRect(0, 0, B, B); });
+      edge = bake(x => { x.drawImage(src, 0, 0, B, B); x.globalCompositeOperation = 'source-atop'; x.fillStyle = '#a8600a'; x.fillRect(0, 0, B, B); });
+      return true;
+    };
+    const fit = () => { const k = (layer.getBoundingClientRect().width / W) || 1, d = Math.min(2, (window.devicePixelRatio || 1) * k); cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0); cv._d = d; };
+    fit();
+    return {
+      ready: true, fit, max: 32,
+      draw(coins) {
+        if (!coins.length) { cv.style.display = 'none'; return; }
+        cv.style.display = 'block';
+        const d = cv._d || 1; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W, H);
+        if (!ready()) return;
+        for (const c of coins) {
+          if (c.rad < 1) continue;
+          const s = c.rad * 2.32, cs = Math.cos(c.ry), sx = Math.max(.06, Math.abs(cs)), th = (1 - sx) * c.rad * .32;
+          ctx.setTransform(d, 0, 0, d, c.x * d, c.y * d); ctx.rotate(c.rz);
+          if (th > .4) { ctx.save(); ctx.scale(sx, 1); ctx.drawImage(edge, -s / 2 + th / sx * (cs > 0 ? -1 : 1), -s / 2, s, s); ctx.restore(); }
+          ctx.scale(sx, 1); ctx.drawImage(cs >= 0 ? face : back, -s / 2, -s / 2, s, s);
+        }
+        ctx.setTransform(d, 0, 0, d, 0, 0);
+      }
+    };
+  }
   coinFly(amount, done) {
     const P = this._cf, layer = this.fxRef.current;
     if (!P || !P.ready || !layer) { this.setState({ balPending: 0 }); done(); return; }
@@ -1257,7 +1403,7 @@ class Component extends DCLogic {
             try { this.bell(1760 + landed * 70, 0.12, 0.035); } catch (e) {}
             if (pill && pill.animate) pill.animate([{ transform: 'scale(1.25)' }, { transform: 'scale(1.34)', filter: 'brightness(1.25)' }, { transform: 'scale(1.25)' }], { duration: 160, easing: 'ease-out' });
             const fl = document.createElement('div');
-            fl.style.cssText = 'position:absolute;pointer-events:none;left:' + (tx - 26) + 'px;top:' + (ty - 26) + 'px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,190,.95),rgba(255,190,80,0) 70%);mix-blend-mode:screen;z-index:7;';
+            fl.style.cssText = 'position:absolute;pointer-events:none;left:' + (tx - 26) + 'px;top:' + (ty - 26) + 'px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,190,.95),rgba(255,190,80,0) 70%);z-index:7;will-change:transform,opacity;';
             layer.appendChild(fl);
             const an = fl.animate([{ transform: 'scale(.4)', opacity: 1 }, { transform: 'scale(1.4)', opacity: 0 }], { duration: 300, easing: 'ease-out', fill: 'forwards' });
             an.onfinish = () => fl.remove();
@@ -1275,15 +1421,13 @@ class Component extends DCLogic {
     const carry = this._peachCarry || 0; this._peachCarry = 0;
     this.setState({ peaches: carry, peachShownBase: null, peachShownAdd: 0 }, this.save);
     this.setState({
-      featLock: true, auto: false, hint: 'HAPPEACH! Rodada Especial', shake: 'fcShake .5s ease-in-out 1',
-      showWin: true, winTitle: 'HAPPEACH!', winBigText: 'RODADA ESPECIAL', winSub: this.state.auto ? '' : 'COMEÇAR', displayWin: 0
+      featLock: true, auto: false, hint: 'HAPPEACH! Rodada Especial', shake: 'fcShake .5s ease-in-out 1'
     });
     this._peachWasAuto = this.state.auto;
     try { this.sfxWin(true); } catch (e) {}
     this.hap('feature');
-    this._afterWinChains = true;
-    this._afterWin = () => this.later(() => { this.featBanner(); this.later(() => { this.startFeature(bet); if (this._peachWasAuto) this.setState({ auto: true }); }, 1300); }, 300);
-    if (this._peachWasAuto) this.later(this.dismissWin, 2000);
+    // single intro: the pink banner only (the gold "HAPPEACH! RODADA ESPECIAL" modal was removed)
+    this.later(() => { this.featBanner(); this.later(() => { this.startFeature(bet); if (this._peachWasAuto) this.setState({ auto: true }); }, 1300); }, 300);
   }
   startFree(bet) {
     const fr = this.state.free, add = FREE_SPINS;
@@ -1448,7 +1592,7 @@ class Component extends DCLogic {
       stageOpacity: s.ready ? 1 : 0,
       balanceSize: (() => { const l = this.shownBalance().toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
       balanceText: this.shownBalance().toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
-      ...(() => { const b = this.bet(), t = Number.isInteger(b) ? b.toLocaleString('pt-BR') : this.money(b); return { betText: t, betSize: (t.length <= 4 ? 36 : t.length <= 5 ? 32 : 28) + 'px' }; })(),
+      ...(() => { const b = this.bet(), t = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }); return { betText: t, betSize: (t.length <= 4 ? 36 : t.length <= 5 ? 32 : 28) + 'px' }; })(),
       winText: s.displayWin > 0 ? this.money(s.displayWin) : '',
       winAnim: s.displayWin > 0 ? 'fcBeat .5s ease-in-out infinite' : 'none',
       bigWinText: s.winBigText || '+' + this.money(s.displayWin),
