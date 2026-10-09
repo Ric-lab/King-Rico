@@ -1,0 +1,16 @@
+{
+  "id": "01a12173-f142-70ad-9cc9-efaa4e667fdb",
+  "type": "image-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Remove the slot machine, the elephant character and its colorful smoke cloud from this image. Show only the empty circus stage behind them: the same curtains, the same string lights, the same backdrop and the same wooden stage floor, with the same composition, same camera angle and same style as the reference. The center of the stage must be empty. No objects, no characters, no smoke, no text, no UI. Portrait 2:3.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1791562609742,
+  "started_at": 1791562609754,
+  "finished_at": 1791562636013,
+  "expires_at": 1791821836013,
+  "image_urls": [
+    "https://assets.meshy.ai/ed3a0998-c9b2-40fa-b141-455dcbdcbd34/uploads/image_01a12173-f142-70ad-9cc9-efaa4e667fdb_0.png?Expires=1791821836&Signature=B4lFeYD~4BDWGpDn3H63c3f0S3gNIKfaDfVzlnZkL9~34aSkjJYEHtSV9jdcl1F0CylecNvJ0rQ9eM~-kBpVzQu-299qSN525CZrUSxljwI6HF1lMIjgbip2B2lESzF5AhmY7l~ZBIY3qRMUNkNkOMGEafZ5UFF0KLV4BjgdLNJ6sBoF5FLWTcMpbRqnN1sB0q3bSWvooxhph3m2NQHbHVscaCb8v8er7PVcT7qXd3kH7jOoXeKm75JCpS2y7PLBMdz1JqIRYo7id3OwXrWXNCIN~7etEyohfGfgq6hulXRPmR-LVUGwRlEBraTa86Sz60-hF7j7tHbd~L98kFpcnQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 12
+}
