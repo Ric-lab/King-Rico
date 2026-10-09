@@ -60,6 +60,7 @@ a:hover { color: #fff3c4; }
     </div>
   </div>
   <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+  <div ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
   <div style="position: absolute; left: 0; top: 0; margin-top: {{ hudLift }}; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
 
   <div style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
@@ -491,6 +492,7 @@ const FC_NATIVE_HAP = () => { try { const C = window.Capacitor; return !!(C && C
 class Component extends DCLogic {
   fxRef = React.createRef();
   lightsRef = React.createRef();
+  lightsTopRef = React.createRef(); // lâmpadas dos pilares: acima da crista (machine-front3 cobre a de cima)
   state = {
     balance: null, betIdx: null,
     grid: [2, 8, 7, 1, 3, 6, 0, 4, 5],
@@ -580,6 +582,7 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    clearTimeout(this._flashT);
     this.stopAll(); clearInterval(this._arpTimer);
     if (this._ro) this._ro.disconnect();
     window.removeEventListener('resize', this.fit);
@@ -1289,6 +1292,7 @@ class Component extends DCLogic {
       hint: peach ? 'HAPPEACH!' : res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Linha premiada!') : (fr ? 'Giro grátis' : 'Tente de novo!')
     });
     if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); this.later(() => this.lightsFlash(big || res.win >= bet * 4), 120); }
+    else this.lightsRest(); // sem prêmio: luzes voltam à meia luz quando o último rolo para
     this.save();
     // all reels have stopped: each Happeach dances, then flies to the counter
     // sequence: win lines + sound first, short beat, peaches dance one after another, short beat, then the prize modal
@@ -1374,7 +1378,7 @@ class Component extends DCLogic {
      a partir do botão (junto com o pulso) e um brilho acende; depois voltam devagar. Em prêmio: as luzes piscam
      alternadas. Na Rodada Especial: ficam acesas. Só opacity/transform em bitmaps pré-desenhados (regra anti-piscada). */
   buildLights() {
-    const host = this.lightsRef.current; if (!host || this._lights || !host.animate) return this._lights;
+    const host = this.lightsRef.current, hostTop = this.lightsTopRef.current; if (!host || !hostTop || this._lights || !host.animate) return this._lights;
     const bmp = (stops) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
       stops.forEach(([o, col]) => g.addColorStop(o, col)); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return c.toDataURL('image/png'); };
     const dimSrc = bmp([[0, 'rgba(36,10,6,.84)'], [.3, 'rgba(36,10,6,.72)'], [.55, 'rgba(26,6,22,.38)'], [1, 'rgba(26,6,22,0)']]);
@@ -1386,27 +1390,43 @@ class Component extends DCLogic {
       x.shadowColor = 'rgba(255,214,90,1)'; x.shadowBlur = 14; x.fillStyle = '#fff6c2'; x.beginPath();
       for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 26; x.lineTo(48 + Math.cos(a) * r, 48 + Math.sin(a) * r); }
       x.closePath(); x.fill(); x.fill(); return c.toDataURL('image/png'); })();
-    const make = (src, x, y, d, op) => { const i = new Image(); i.src = src; i.alt = ''; i.decoding = 'sync';
+    const make = (src, x, y, d, op, h) => { const i = new Image(); i.src = src; i.alt = ''; i.decoding = 'sync';
       i.style.cssText = 'position:absolute;left:' + (x - d / 2).toFixed(1) + 'px;top:' + (y - d / 2).toFixed(1) + 'px;width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;opacity:' + op + ';pointer-events:none;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0);';
-      host.appendChild(i); return i; };
+      (h || host).appendChild(i); return i; };
     // tamanho do abafador/brilho por grupo: pilar é estreito (não pode escurecer as casas dos rolos)
     const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7] }, list = [];
     Object.keys(FC_BULBS).forEach(g => FC_BULBS[g].forEach(([x, y, r]) => {
-      const dim = make(dimSrc, x, y, r * 2 * K[g][0], FC_LIGHT_IDLE), glow = make(g === 'star' ? starSrc : glowSrc, x, y, r * 2 * K[g][1], 0);
+      const h = g === 'stage' ? hostTop : host;
+      const dim = make(dimSrc, x, y, r * 2 * K[g][0], FC_LIGHT_IDLE, h), glow = make(g === 'star' ? starSrc : glowSrc, x, y, r * 2 * K[g][1], 0, h);
       list.push({ x, y, dim, glow, i: list.length });
     }));
-    this._lightIdle = FC_LIGHT_IDLE;
+    this._lightIdle = FC_LIGHT_IDLE; this._glowIdle = 0;
     return (this._lights = list);
   }
   lightsPulse(delay) {
     const L = this.buildLights(); if (!L) return;
-    const I = this._lightIdle, bx = 223.5, by = 722;
+    const I = this._lightIdle, G = this._glowIdle, bx = 223.5, by = 722;
+    this._lightsHeld = true; clearTimeout(this._flashT);
     L.forEach(b => {
       const d = (delay || 0) + Math.hypot(b.x - bx, b.y - by) / 0.9; // onda saindo do botão (~0,9 unidade/ms)
-      b.dim.getAnimations().forEach(a => a.cancel()); b.glow.getAnimations().forEach(a => a.cancel());
-      b.dim.animate([{ opacity: I }, { opacity: 0, offset: .1 }, { opacity: 0, offset: .45 }, { opacity: I }], { duration: 1800, delay: d, easing: 'ease-out' });
-      b.glow.animate([{ opacity: 0, transform: 'translateZ(0) scale(.6)' }, { opacity: 1, transform: 'translateZ(0) scale(1.15)', offset: .1 },
-        { opacity: .75, transform: 'translateZ(0) scale(1)', offset: .45 }, { opacity: 0, transform: 'translateZ(0) scale(.9)' }], { duration: 1800, delay: d, easing: 'ease-out' });
+      this.lightStop(b);
+      // acende na onda e fica aceso até os rolos pararem (lightsRest)
+      b.dA = b.dim.animate([{ opacity: I }, { opacity: 0 }], { duration: 180, delay: d, easing: 'ease-out', fill: 'forwards' });
+      b.gA = b.glow.animate([{ opacity: G, transform: 'translateZ(0) scale(.6)' }, { opacity: 1, transform: 'translateZ(0) scale(1.15)', offset: .3 },
+        { opacity: .85, transform: 'translateZ(0) scale(1)' }], { duration: 600, delay: d, easing: 'ease-out', fill: 'forwards' });
+    });
+  }
+  // cancela pelas referências guardadas: o Chrome pode não listar em getAnimations() uma animação terminada com fill
+  lightStop(b) { [b.dA, b.gA].forEach(a => a && a.cancel()); b.dA = b.gA = null; b.dim.getAnimations().forEach(a => a.cancel()); b.glow.getAnimations().forEach(a => a.cancel()); }
+  lightsRest() {
+    const L = this._lights; if (!L || !this._lightsHeld) return;
+    this._lightsHeld = false;
+    const I = this._lightIdle, G = this._glowIdle;
+    L.forEach(b => {
+      const od = +getComputedStyle(b.dim).opacity, og = +getComputedStyle(b.glow).opacity; // parte de onde está (a onda pode não ter chegado)
+      this.lightStop(b);
+      b.dA = b.dim.animate([{ opacity: od }, { opacity: I }], { duration: 900, easing: 'ease-in-out' });
+      b.gA = b.glow.animate([{ opacity: og }, { opacity: G }], { duration: 900, easing: 'ease-in-out' });
     });
   }
   lightsFlash(big) {
@@ -1414,16 +1434,19 @@ class Component extends DCLogic {
     const I = this._lightIdle, n = big ? 6 : 3;
     L.forEach(b => {
       const off = (b.i % 2) * 190; // metade pisca enquanto a outra metade apaga (corre pela moldura)
-      b.dim.getAnimations().forEach(a => a.cancel()); b.glow.getAnimations().forEach(a => a.cancel());
-      b.dim.animate([{ opacity: I }, { opacity: 0, offset: .3 }, { opacity: I }], { duration: 380, delay: off, iterations: n });
-      b.glow.animate([{ opacity: 0 }, { opacity: 1, offset: .3 }, { opacity: 0 }], { duration: 380, delay: off, iterations: n });
+      this.lightStop(b);
+      // parte aceso (o giro deixou tudo aceso), pisca e termina aceso; depois lightsRest leva à meia luz
+      b.dA = b.dim.animate([{ opacity: 0 }, { opacity: I, offset: .5 }, { opacity: 0 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
+      b.gA = b.glow.animate([{ opacity: .85 }, { opacity: .1, offset: .5 }, { opacity: .85 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
     });
+    this._lightsHeld = true;
+    clearTimeout(this._flashT); this._flashT = setTimeout(() => this.lightsRest(), n * 380 + 190 + 150);
   }
   lightsLevel(lit) {
     const L = this.buildLights(); if (!L) return;
     const I = lit ? 0.08 : FC_LIGHT_IDLE; if (I === this._lightIdle) return;
-    this._lightIdle = I;
-    L.forEach(b => { b.dim.style.transition = 'opacity .7s ease'; b.dim.style.opacity = I; b.glow.style.transition = 'opacity .7s ease'; b.glow.style.opacity = lit ? 0.55 : 0; });
+    this._lightIdle = I; this._glowIdle = lit ? 0.55 : 0; this._lightsHeld = false; clearTimeout(this._flashT);
+    L.forEach(b => { this.lightStop(b); b.dim.style.transition = 'opacity .7s ease'; b.dim.style.opacity = I; b.glow.style.transition = 'opacity .7s ease'; b.glow.style.opacity = lit ? 0.55 : 0; });
   }
   featBanner() {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
@@ -1611,7 +1634,7 @@ class Component extends DCLogic {
       });
     });
     this._respinEnd = () => {
-      this.stopWhirr();
+      this.stopWhirr(); this.lightsRest();
       const newLocks = result.filter(r => r.v >= 0).length;
       this.setState({ spinning: false, spinCells: [] });
       if (this.state.featLeft > 0 && this.state.locked.length < 9) { this.setState({ featReady: true }); this.later(() => this.peachPress(() => this.respin(sym, bet)), 500 * sp); }
@@ -1743,7 +1766,7 @@ class Component extends DCLogic {
           o[k + 'C' + i] = on ? '#fff' : '#b98fd6'; }); }); return o; })(),
       feature: feat,
       featurePos: (feat ? s.feature.sym : 10) * 100 / 11 + '%',
-      fxRef: this.fxRef, lightsRef: this.lightsRef, testFill: this.testFill,
+      fxRef: this.fxRef, lightsRef: this.lightsRef, lightsTopRef: this.lightsTopRef, testFill: this.testFill,
       testOpacity: s.spinning || s.feature || s.free || s.showWin ? 0.35 : 1,
       testEvents: s.spinning || s.feature || s.free || s.showWin ? 'none' : 'auto',
       spinZ: s.showWin && !s.auto && !s.free && !s.feature && !s.featLock ? 31 : 'auto',
