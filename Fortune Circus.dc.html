@@ -42,11 +42,12 @@ a:hover { color: #fff3c4; }
 @keyframes fcC7 { 0% { transform: translate(0,0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(35px,-245px) scale(1); opacity: 0; } }
 </style>
 </helmet>
-<div style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: manipulation; background: #1d0733;">
+<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #1d0733;">
  <div style="position: absolute; inset: -60px; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
+ <div style="position: absolute; left: 0; right: 0; top: {{ fillTop }}; bottom: 0; background: {{ fillBg }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
- <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: #1d0733; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: center center; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
+ <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
   <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
@@ -455,6 +456,25 @@ const SKEY = 'fortuneCircus.slot.v3';
 const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
 // Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
+// Faixa reservada no topo para o banner de anúncio (AdMob banner = 50 dp + respiro).
+const FC_AD_BAND = 60;
+// Áreas seguras (barra de status / navegação). No app Android o Capacitor injeta --safe-area-inset-*; no navegador vale env().
+const FC_SAFE_AREA = () => {
+  try {
+    let probe = document.getElementById('fc-safe-probe');
+    if (!probe) {
+      probe = document.createElement('div'); probe.id = 'fc-safe-probe';
+      probe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+      document.body.appendChild(probe);
+    }
+    const cs = getComputedStyle(probe), root = getComputedStyle(document.documentElement);
+    const v = (env, name) => Math.max(parseFloat(env) || 0, parseFloat(root.getPropertyValue('--safe-area-inset-' + name)) || 0);
+    return { top: v(cs.paddingTop, 'top'), bottom: v(cs.paddingBottom, 'bottom') };
+  } catch (e) { return { top: 0, bottom: 0 }; }
+};
+// Continuação da última linha de pixels da arte (jogo: stage-hd-c; Home: fundo #1c0737), escurecendo para baixo.
+const FC_FILL_GAME = 'linear-gradient(180deg, rgba(12,0,10,0) 0%, rgba(12,0,10,.45) 100%), linear-gradient(90deg, #44012f 0%, #4b0034 12%, #53003c 25%, #52003d 38%, #4f003b 50%, #4d0037 62%, #4e0034 75%, #480030 88%, #41012c 100%)';
+const FC_FILL_HOME = 'linear-gradient(180deg, #1c0737 0%, #14042a 100%)';
 const FC_NATIVE_HAP = () => { try { const C = window.Capacitor; return !!(C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')); } catch (e) { return false; } };
 class Component extends DCLogic {
   fxRef = React.createRef();
@@ -517,10 +537,17 @@ class Component extends DCLogic {
     const w = Math.max(window.innerWidth || 0, de.clientWidth || 0, (vv && vv.width) || 0);
     const h = Math.max(window.innerHeight || 0, de.clientHeight || 0, (vv && vv.height) || 0);
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
-    const sc = Math.max(0.25, Math.floor(Math.min(w / 453, h / 802) * 1000) / 1000);
+    const safe = FC_SAFE_AREA(), avail = h - safe.top - safe.bottom;
+    const sc = Math.max(0.25, Math.floor(Math.min(w / 453, avail / 802) * 1000) / 1000);
     const inset = (w - 453 * sc > 20) && (h - 802 * sc > 20);
-    if (sc === this.state.scale && inset === this.state.inset) return; // avoid resize↔render feedback loop
-    this.setState({ scale: sc, inset });
+    // Celular alto: topo = barra de status + faixa do anúncio (FC_AD_BAND); o que sobrar vai para baixo, preenchido com o roxo da arte.
+    // Tela larga (inset, moldura arredondada): centralizado como antes.
+    const free = Math.max(0, avail - 802 * sc);
+    const top = Math.round(inset ? safe.top + free / 2 : safe.top + Math.min(free, FC_AD_BAND));
+    const fillTop = inset ? h : Math.floor(top + 802 * sc) - 1; // 1 px de sobreposição: sem fresta entre arte e preenchimento
+    const st = this.state;
+    if (sc === st.scale && inset === st.inset && top === st.stageTop && fillTop === st.fillTop) return; // avoid resize↔render feedback loop
+    this.setState({ scale: sc, inset, stageTop: top, fillTop });
   };
   componentDidUpdate() {
     const open = !!(this.state.menu || this.state.pays);
@@ -1606,7 +1633,7 @@ class Component extends DCLogic {
     const cv = s.feature ? (s.featLeft ?? FEAT_SPINS) : pv;
     const feat = !!s.feature;
     const vals = {
-      scale: s.scale ?? 1,
+      scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', fillTop: (s.fillTop ?? 99999) + 'px', fillBg: s.homeOpen ? FC_FILL_HOME : FC_FILL_GAME, stageBg: s.inset ? '#1d0733' : (s.homeOpen ? '#1c0737' : '#51003e') /* borda fracionária do quadro escalado = cor da emenda */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
       stageOpacity: s.ready ? 1 : 0,
