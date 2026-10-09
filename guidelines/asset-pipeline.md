@@ -61,7 +61,8 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 | out/2026 | 64 WebP faltantes (jogo publicado referenciava .webp que nunca subiram ao repo) | PNG aprovado → WebP q0,86, mesma resolução (código) | 0 | 63 MB → 5,7 MB; 0 referências quebradas |
 | out/2026 | Ícone e splash do app Android (provisórios) | Recorte do King Rico mestre + fundo roxo (código, `app/scripts/icons.py`) | 0 | Legível a 48 px; arte final pendente |
 | out/2026 | Palco com sangria (bleed) para todos os formatos de tela | Meshy gpt-image-2 via GitHub Actions, 1 tentativa | 12 | Não estendeu: redesenhou a cena (máquina menor, chão de madeira). Serviu como fundo: arte original por cima, recortada pela forma da máquina (máscara SVG) |
-| Saldo atual (Meshy, 09/out) | | | 927 | O log anterior dizia 1808; o saldo real antes desta geração era 939 |
+| out/2026 | Palco vazio (só o fundo, sem máquina/personagem/nuvem) | Meshy gpt-image-2 com o palco anterior como referência | 12 | Aprovado: mesmo enquadramento, centro vazio; virou assets/bleed/stage-bleed.webp |
+| Saldo atual (Meshy, 09/out) | | | 915 | O log anterior dizia 1808; o saldo real antes das gerações de out/2026 era 939 |
 
 
 ## Lição — animação de personagem (out/2026)

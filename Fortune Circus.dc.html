@@ -48,7 +48,7 @@ a:hover { color: #fff3c4; }
  <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
  <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed.webp'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
- <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
+ <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
   <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect; pointer-events: none;"></div>
   <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
@@ -59,7 +59,7 @@ a:hover { color: #fff3c4; }
     </div>
   </div>
   <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+  <div style="position: absolute; left: 0; top: 0; margin-top: {{ hudLift }}; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
 
   <div style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="0" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
@@ -135,7 +135,7 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
 
-  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
   </div>
@@ -175,8 +175,8 @@ a:hover { color: #fff3c4; }
     </div>
   </sc-if>
 
-  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
-  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
+  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
+  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
 
   <div style="position: absolute; left: 0; right: 0; top: 770px; display: flex; align-items: center; justify-content: center; height: 22px;">
     <span style="flex: 0 0 auto; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff3df; text-shadow: 0 1px 2px rgba(0,0,0,.6); background: rgba(34,8,52,.72); padding: 1px 12px; border-radius: 11px; box-shadow: 0 0 0 1px rgba(255,210,120,.25);">{{ hint }}</span>
@@ -224,14 +224,14 @@ a:hover { color: #fff3c4; }
 
 
   <sc-if value="{{ homeOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; inset: 0; z-index: 60; background: #2a0a4a; overflow: hidden; -webkit-mask-image: {{ homeMask }}; mask-image: {{ homeMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;">
+    <div style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 60; background: #2a0a4a; overflow: hidden; -webkit-mask-image: {{ homeMask }}; mask-image: {{ homeMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;">
       <dc-import name="Home" on-play="{{ closeHome }}" hint-size="100%,100%" style="position: absolute; inset: 0;"></dc-import>
     </div>
   </sc-if>
   <div ref="{{ fxRef }}" style="position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: visible;"></div>
 
   <sc-if value="{{ showWin }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ dismissWin }}" role="button" style="position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(18,2,34,.62); cursor: pointer; animation: fcFade .2s ease-out;">
+    <div onClick="{{ dismissWin }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(18,2,34,.62); cursor: pointer; animation: fcFade .2s ease-out;">
       <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 22px 34px 18px; margin: 0 22px; border-radius: 22px; background: linear-gradient(180deg, rgba(74,10,106,.98), rgba(30,4,50,.98)); border: 4px solid #f0b41f; box-shadow: 0 0 0 2px rgba(255,236,160,.35), 0 18px 50px rgba(0,0,0,.7), 0 0 60px rgba(255,200,60,.35); text-align: center; overflow: hidden; animation: fcPop .4s cubic-bezier(.2,1.4,.4,1);">
         <div style="position: absolute; top: 0; bottom: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: fcShine 1.8s linear infinite; pointer-events: none;"></div>
         <div style="font-size: 20px; font-weight: 800; letter-spacing: 3px; color: #ffd257; text-shadow: 0 2px 0 rgba(0,0,0,.4);">{{ winTitle }}</div>
@@ -262,7 +262,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-    <div data-overlay="menu" style="position: absolute; inset: 0; z-index: 40; background: rgba(10,2,20,.78); animation: fcFade .2s ease-out;">
+    <div data-overlay="menu" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; background: rgba(10,2,20,.78); animation: fcFade .2s ease-out;">
       <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
       <div style="position: absolute; left: 16px; top: 70px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
 
@@ -316,7 +316,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
-    <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(12,2,24,.93); cursor: pointer; animation: fcFade .2s ease-out;">
+    <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(12,2,24,.93); cursor: pointer; animation: fcFade .2s ease-out;">
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
       
       <div style="display: flex; align-items: center; gap: 12px; width: 286px; box-sizing: border-box; padding: 6px 12px 6px 8px; border-radius: 12px; background: linear-gradient(180deg, rgba(214,70,110,.55), rgba(140,24,70,.55)); border: 1.5px solid #ffd257;">
@@ -553,10 +553,13 @@ class Component extends DCLogic {
     const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
     const avail = h - safe.top - band - safe.bottom;
     const sc = Math.max(0.25, Math.floor(Math.min(w / 453, avail / 802) * 1000) / 1000);
-    const top = Math.round(inset ? (h - 802 * sc) / 2 : safe.top + band);
+    // Quadro (máquina + botão) centralizado no espaço livre, um pouco acima do meio; o HUD sobe de volta hudD unidades
+    // e fica preso logo abaixo da barra de status / faixa do anúncio.
+    const hudD = inset ? 0 : Math.round(Math.max(0, avail / sc - 802) * 0.42);
+    const top = Math.round(inset ? (h - 802 * sc) / 2 : safe.top + band + hudD * sc);
     const st = this.state;
-    if (sc === st.scale && inset === st.inset && top === st.stageTop && w === st.vw) return; // avoid resize↔render feedback loop
-    this.setState({ scale: sc, inset, stageTop: top, vw: w });
+    if (sc === st.scale && inset === st.inset && top === st.stageTop && w === st.vw && h === st.vh) return; // avoid resize↔render feedback loop
+    this.setState({ scale: sc, inset, stageTop: top, vw: w, vh: h, hudD });
   };
   componentDidUpdate() {
     const open = !!(this.state.menu || this.state.pays);
@@ -1644,7 +1647,12 @@ class Component extends DCLogic {
     const vals = {
       ...(() => { const sc = s.scale ?? 1, left = ((s.vw || 453 * sc) - 453 * sc) / 2;
         return { bleedL: (left - 151 * sc) + 'px', bleedT: ((s.stageTop ?? 0) - 130 * sc) + 'px', bleedW: 755 * sc + 'px', bleedH: 1132 * sc + 'px', bleedOn: s.inset ? 0 : 1,
-          edgeMask: s.inset ? 'none' : FC_EDGE_MASK, topMask: s.inset ? 'none' : FC_TOP_MASK, homeMask: s.inset ? 'none' : FC_HOME_MASK }; })(),
+          edgeMask: s.inset ? 'none' : FC_EDGE_MASK,
+          // janelas (prêmio, menu, tabela, Home) cobrem a tela inteira, não só o quadro
+          ovX: s.inset ? '0px' : -Math.ceil(((s.vw || 453 * sc) / sc - 453) / 2) + 'px',
+          ovT: s.inset ? '0px' : -Math.ceil((s.stageTop ?? 0) / sc) + 'px',
+          ovB: s.inset ? '0px' : -Math.ceil(((s.vh || 802 * sc) - (s.stageTop ?? 0)) / sc - 802) + 'px',
+          hudLift: -(s.hudD || 0) + 'px', topMask: s.inset ? 'none' : FC_TOP_MASK, homeMask: s.inset ? 'none' : FC_HOME_MASK }; })(),
       scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', stageBg: s.inset ? '#1d0733' : 'transparent' /* o palco com sangria aparece pelas bordas suaves */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
@@ -1684,7 +1692,7 @@ class Component extends DCLogic {
       pageDimBg: s.pays ? 'rgba(12,2,24,.93)' : s.menu ? 'rgba(10,2,20,.78)' : 'rgba(18,2,34,.62)',
       pageDimClick: s.pays ? this.togglePays : s.menu ? this.closeMenu : this.dismissTap,
       peachShow: !s.free || feat || pv >= PEACH_GOAL,
-      peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : '84px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
+      peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : (84 - (s.hudD || 0)) + 'px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
       peachDots: Array.from({ length: PEACH_GOAL }, (_, i) => ({ bg: i < cv ? '#ff9a5a' : 'rgba(255,255,255,.18)', sh: i < cv ? '0 0 6px rgba(255,150,90,.9)' : 'none' })),
       peachText: cv + '/' + PEACH_GOAL,
       basketLow: [[18, 46, -6, 1], [48, 47, 3, 0], [78, 46, 7, 2]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
