@@ -46,10 +46,18 @@ let paid = 0;
 for (let i = 0; i < 3; i++) {
   await g.evaluate(() => window.__fc.spin());
   await g.waitForFunction(() => window.__fc.state.spinning, null, { timeout: 5000 });
-  await g.waitForFunction(() => !window.__fc.state.spinning && !window.__fc.isCeleb(), null, { timeout: 60000 });
-  if (await g.evaluate(() => window.__fc.state.feature || window.__fc.state.featLock)) break; // Rodada Especial: encerra o teste aqui
-  paid += await g.evaluate(() => window.__fc.state.winAmount || 0);
-  if (await g.evaluate(() => window.__fc.state.showWin)) await g.evaluate(() => window.__fc.dismissWin());
+  // espera o giro terminar; prêmio grande abre a janela que exige um toque (regra do jogo): o teste toca como o jogador
+  let settled = false, won = 0;
+  for (const t0 = Date.now(); Date.now() - t0 < 60000;) {
+    const st = await g.evaluate(() => { const f = window.__fc, s = f.state; return { spin: s.spinning, celeb: f.isCeleb(), win: s.showWin, amt: s.winAmount || 0, feat: !!(s.feature || s.featLock) }; });
+    if (st.feat) { settled = 'feature'; break; } // Rodada Especial: encerra o teste aqui
+    if (st.win) { won = Math.max(won, st.amt); await g.evaluate(() => window.__fc.dismissWin()); }
+    else if (!st.spin && !st.celeb) { won = Math.max(won, st.amt); settled = true; break; }
+    await g.waitForTimeout(300);
+  }
+  if (!settled) { problems.push('giro ' + (i + 1) + ' não terminou em 60 s: ' + JSON.stringify(await g.evaluate(() => { const f = window.__fc, s = f.state; return { spinning: s.spinning, showWin: s.showWin, celebHold: !!f._celebHold, dances: (f._dances || []).length, coinFly: !!f._cfRun, hint: s.hint }; }))); break; }
+  if (settled === 'feature') break;
+  paid += won;
   await g.waitForTimeout(800);
 }
 const end = await g.evaluate(() => window.__fc.balance());
