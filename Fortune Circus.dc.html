@@ -46,6 +46,16 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: -60px; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
  <div style="position: absolute; left: 0; right: 0; top: {{ fillTop }}; bottom: 0; background: {{ fillBg }}; pointer-events: none;"></div>
+ <div style="position: absolute; left: 0; top: {{ sideTop }}; width: {{ sideW }}; height: {{ sideH }}; overflow: hidden; pointer-events: none;">
+  <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: {{ clampW }} 100%; background-position: left top; background-repeat: no-repeat; filter: blur(10px) saturate(.9); transform: scale(1.15);"></div>
+  <div style="position: absolute; inset: 0; background: #1c0737; opacity: {{ sideHome }};"></div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(270deg, rgba(14,2,24,.35) 0%, rgba(14,2,24,.85) 100%);"></div>
+ </div>
+ <div style="position: absolute; right: 0; top: {{ sideTop }}; width: {{ sideW }}; height: {{ sideH }}; overflow: hidden; pointer-events: none;">
+  <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: {{ clampW }} 100%; background-position: right top; background-repeat: no-repeat; filter: blur(10px) saturate(.9); transform: scale(1.15);"></div>
+  <div style="position: absolute; inset: 0; background: #1c0737; opacity: {{ sideHome }};"></div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14,2,24,.35) 0%, rgba(14,2,24,.85) 100%);"></div>
+ </div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
  <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
@@ -537,17 +547,18 @@ class Component extends DCLogic {
     const w = Math.max(window.innerWidth || 0, de.clientWidth || 0, (vv && vv.width) || 0);
     const h = Math.max(window.innerHeight || 0, de.clientHeight || 0, (vv && vv.height) || 0);
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
-    const safe = FC_SAFE_AREA(), avail = h - safe.top - safe.bottom;
+    // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
+    // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
+    // sobra embaixo = roxo da arte; sobra nas laterais = arte espelhada. Tela deitada (computador) = moldura centralizada.
+    const inset = w > h;
+    const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset ? 0 : FC_AD_BAND;
+    const avail = h - safe.top - band - safe.bottom;
     const sc = Math.max(0.25, Math.floor(Math.min(w / 453, avail / 802) * 1000) / 1000);
-    const inset = (w - 453 * sc > 20) && (h - 802 * sc > 20);
-    // Celular alto: topo = barra de status + faixa do anúncio (FC_AD_BAND); o que sobrar vai para baixo, preenchido com o roxo da arte.
-    // Tela larga (inset, moldura arredondada): centralizado como antes.
-    const free = Math.max(0, avail - 802 * sc);
-    const top = Math.round(inset ? safe.top + free / 2 : safe.top + Math.min(free, FC_AD_BAND));
+    const top = Math.round(inset ? (h - 802 * sc) / 2 : safe.top + band);
     const fillTop = inset ? h : Math.floor(top + 802 * sc) - 1; // 1 px de sobreposição: sem fresta entre arte e preenchimento
     const st = this.state;
-    if (sc === st.scale && inset === st.inset && top === st.stageTop && fillTop === st.fillTop) return; // avoid resize↔render feedback loop
-    this.setState({ scale: sc, inset, stageTop: top, fillTop });
+    if (sc === st.scale && inset === st.inset && top === st.stageTop && fillTop === st.fillTop && w === st.vw) return; // avoid resize↔render feedback loop
+    this.setState({ scale: sc, inset, stageTop: top, fillTop, vw: w });
   };
   componentDidUpdate() {
     const open = !!(this.state.menu || this.state.pays);
@@ -1633,6 +1644,9 @@ class Component extends DCLogic {
     const cv = s.feature ? (s.featLeft ?? FEAT_SPINS) : pv;
     const feat = !!s.feature;
     const vals = {
+      ...(() => { const sc = s.scale ?? 1, sw = 453 * sc, side = s.inset ? 0 : Math.max(0, Math.ceil(((s.vw || sw) - sw) / 2) + 1); // +1 px: cobre a borda fracionária
+        // laterais = borda da arte esticada (2 px da coluna da ponta viram a faixa inteira): continua as cores sem repetir objetos
+        return { sideW: side + 'px', sideTop: (s.stageTop ?? 0) + 'px', sideH: Math.ceil(802 * sc) + 'px', stageW: sw + 'px', clampW: Math.max(1, 453 * side / 2) + 'px', sideHome: s.homeOpen ? 1 : 0 }; })(),
       scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', fillTop: (s.fillTop ?? 99999) + 'px', fillBg: s.homeOpen ? FC_FILL_HOME : FC_FILL_GAME, stageBg: s.inset ? '#1d0733' : (s.homeOpen ? '#1c0737' : '#51003e') /* borda fracionária do quadro escalado = cor da emenda */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
