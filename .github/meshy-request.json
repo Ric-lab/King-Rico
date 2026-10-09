@@ -1,0 +1,7 @@
+{
+  "input": "assets/bleed/stage-bleed-input.png",
+  "prompt": "Extend this circus stage scene outward to fill the transparent areas: continue the curtains, the string lights and the stage floor naturally all the way to the edges. Keep the existing center artwork exactly as it is, same style and same colors as the reference. Flat even lighting, no new objects, no characters, no text, no UI elements in the extended areas. Portrait 2:3 output.",
+  "model": "gpt-image-2",
+  "aspect": "2:3",
+  "name": "stage-bleed-1"
+}
