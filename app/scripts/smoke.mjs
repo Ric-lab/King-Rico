@@ -19,8 +19,9 @@ const base = `http://localhost:${server.address().port}/index.html`;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 const problems = [];
-async function open(url) {
+async function open(url, init) {
   const p = await browser.newPage({ viewport: { width: 453, height: 802 } });
+  if (init) await p.addInitScript(init);
   await p.route(/^https?:\/\/(?!localhost)/, r => { problems.push('externa: ' + r.request().url()); r.abort(); });
   p.on('response', r => { if (r.status() >= 400) problems.push(r.status() + ' ' + r.url()); });
   p.on('pageerror', e => problems.push('js: ' + e.message));
@@ -32,7 +33,13 @@ async function open(url) {
 }
 
 await (await open(base)).close(); // Home
-const g = await open(base + '?from=home');
+// Simula o bridge do app Android para conferir que a vibração vai para o plugin nativo FcHaptics
+const fakeBridge = () => {
+  window.__hap = [];
+  window.Capacitor = { PluginHeaders: [{ name: 'FcHaptics', methods: [{ name: 'vibrate', rtype: 'promise' }] }],
+    nativePromise: (plugin, method, opts) => { window.__hap.push({ plugin, method, opts }); return Promise.resolve(); } };
+};
+const g = await open(base + '?from=home', fakeBridge);
 const start = await g.evaluate(() => window.__fc.balance());
 const bet = await g.evaluate(() => window.__fc.bet());
 let paid = 0;
@@ -48,6 +55,12 @@ for (let i = 0; i < 3; i++) {
 const end = await g.evaluate(() => window.__fc.balance());
 console.log(`saldo ${start} → ${end} (aposta ${bet}, prêmios ${paid})`);
 if (end === start) problems.push('saldo não mudou após 3 giros');
+const hap = await g.evaluate(() => window.__hap);
+const pulses = hap.flatMap(h => h.opts.pattern.filter((_, i) => i % 2 === 0));
+console.log(`vibração nativa: ${hap.length} chamadas, pulsos ${Math.min(...pulses)}–${Math.max(...pulses)} ms`);
+if (!hap.length) problems.push('nenhuma vibração chegou ao plugin nativo FcHaptics');
+if (hap.some(h => h.plugin !== 'FcHaptics' || h.method !== 'vibrate')) problems.push('chamada nativa errada: ' + JSON.stringify(hap[0]));
+if (pulses.some(v => v < 15)) problems.push('pulso de vibração abaixo de 15 ms (o motor não sente)');
 
 await browser.close();
 server.close();

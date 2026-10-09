@@ -428,13 +428,14 @@ const WILD = 9;
 // Haptics: one table for the whole game. Web can't set amplitude, so "intensity" = pulse length (ms).
 // Rule: touch confirms touch (short), outcomes scale with value, nothing buzzes continuously or on passive repeats.
 const HAPTIC = {
-  tap: 8,                       // menu items, +/-, modal OK — light confirmation
-  press: 14,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
-  reelStop: 5, lastStop: 11,    // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
-  tease: [10, 70, 10, 70, 14],  // C1 suspense in auto (rising heartbeat)
-  win: 18, winMid: [22, 50, 22], winBig: [40, 60, 40, 60, 90], jackpot: [60, 40, 60, 40, 60, 40, 140],
-  peachLand: 12, danceLand: 14, basketIn: 16, feature: [40, 60, 40, 60, 90], impact: [26, 40, 16], lock: 10,
-  error: [18, 70, 18], preview: 18
+  // Motores de celular quase não giram abaixo de ~20 ms: nenhum pulso fica abaixo disso.
+  tap: 22,                      // menu items, +/-, modal OK — light confirmation
+  press: 35,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
+  reelStop: 18, lastStop: 35,   // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
+  tease: [25, 70, 25, 70, 35],  // C1 suspense in auto (rising heartbeat)
+  win: 45, winMid: [45, 60, 45], winBig: [70, 70, 70, 70, 130], jackpot: [90, 50, 90, 50, 90, 50, 220],
+  peachLand: 28, danceLand: 32, basketIn: 38, feature: [70, 70, 70, 70, 130], impact: [55, 40, 35], lock: 25,
+  error: [40, 80, 40], preview: 35
 };
 const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
 const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
@@ -453,6 +454,8 @@ const SKEY = 'fortuneCircus.slot.v3';
 // creates at runtime is looked up in the hidden registry (img[data-asset]) and uses that element's resolved src.
 const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
+// Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
+const FC_NATIVE_HAP = () => { try { const C = window.Capacitor; return !!(C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')); } catch (e) { return false; } };
 class Component extends DCLogic {
   fxRef = React.createRef();
   state = {
@@ -870,18 +873,25 @@ class Component extends DCLogic {
   };
   vib(p) {
     const k = this.state.vibLvl === 1 ? 0.5 : 1;
-    if (Array.isArray(p)) return p.map((v, i) => i % 2 === 0 ? Math.max(4, Math.round(v * k)) : Math.round(v * (k < 1 ? 1.4 : 1)));
-    return Math.max(4, Math.round(p * k));
+    if (Array.isArray(p)) return p.map((v, i) => i % 2 === 0 ? Math.max(15, Math.round(v * k)) : Math.round(v * (k < 1 ? 1.4 : 1)));
+    return Math.max(15, Math.round(p * k)); // abaixo de ~15 ms o motor não chega a girar
   }
   hap(name) {
     const s = this.state; if (!s.vibrate || !(s.vibLvl > 0)) return;
     if (HAP_PASSIVE_SKIP[name] && (s.auto || s.free || s.feature)) return;
     const p = HAPTIC[name]; if (p == null) return;
     const now = performance.now(); if (!Array.isArray(p) && now - (this._hapAt || 0) < 35) return; this._hapAt = now;
-    if (navigator.vibrate) this.buzz(p);
+    if (navigator.vibrate || FC_NATIVE_HAP()) this.buzz(p);
     else if (HAP_TOUCH[name] && this._iosHap) { try { this._iosHap.click(); } catch (e) {} } // iOS 18+: switch toggle = system tick (touch only)
   }
-  buzz(p) { try { if (this.state.vibrate && this.state.vibLvl > 0 && navigator.vibrate) navigator.vibrate(this.vib(p)); } catch (e) {} }
+  buzz(p) {
+    try {
+      if (!this.state.vibrate || !(this.state.vibLvl > 0)) return;
+      // App Android: plugin nativo FcHaptics controla a força (50% = metade da força, não metade da duração)
+      if (FC_NATIVE_HAP()) { window.Capacitor.nativePromise('FcHaptics', 'vibrate', { pattern: [].concat(p), strength: this.state.vibLvl === 1 ? 0.55 : 1 }).catch(() => {}); return; }
+      if (navigator.vibrate) navigator.vibrate(this.vib(p));
+    } catch (e) {}
+  }
   gate() { return this.state.sound; }
 
   /* ---------- audio ---------- */

@@ -125,28 +125,34 @@ class Component extends DCLogic {
     this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3200);
   }
   componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.idleT); }
-  buzz(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+  buzz(p) {
+    try {
+      const C = window.Capacitor; // app Android: plugin nativo com força máxima
+      if (C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')) { C.nativePromise('FcHaptics', 'vibrate', { pattern: [].concat(p), strength: 1 }).catch(() => {}); return; }
+      navigator.vibrate && navigator.vibrate(p);
+    } catch (e) {}
+  }
   react(mood, quip) {
     clearTimeout(this.idleT);
     this.setState(s => ({ mood, key: s.key + 1, quip: quip || QUIPS[mood] }));
     this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3600);
   }
-  tapKing = () => { this.buzz(8); const n = this.state.tapN; this.setState({ tapN: n + 1 }); this.react(TAP_MOODS[n % TAP_MOODS.length]); };
+  tapKing = () => { this.buzz(22); const n = this.state.tapN; this.setState({ tapN: n + 1 }); this.react(TAP_MOODS[n % TAP_MOODS.length]); };
   // weekly cycle: claim once per calendar day; consecutive days advance 50→1000, a missed day restarts, after day 7 it loops
   cycle() { const s = this.state, today = dayKey(Date.now()); const gap = s.last ? dayDiff(s.last, today) : 99;
     const claimed = gap === 0, idx = claimed ? (s.streak + 6) % 7 : gap === 1 ? s.streak % 7 : 0; return { claimed, idx, today }; }
   collectBonus = () => {
-    const c = this.cycle(); if (c.claimed) { this.buzz(4); return; }
+    const c = this.cycle(); if (c.claimed) { this.buzz(18); return; }
     const amt = WEEK[c.idx], b = (this.state.balance ?? 1000) + amt, streak = c.idx + 1;
     try { const sv = JSON.parse(localStorage.getItem(SAVE)) || {}; sv.balance = b; localStorage.setItem(SAVE, JSON.stringify(sv)); localStorage.setItem(BONUS_KEY, JSON.stringify({ d: c.today, s: streak })); } catch (e) {}
     this.setState({ balance: b, last: c.today, streak, now: Date.now() });
-    this.buzz([12, 40, 18]);
+    this.buzz([35, 50, 45]);
     this.react('cheer', '+' + amt.toLocaleString('pt-BR') + ' moedas pra você!');
     const pl = this.rPlaque.current;
     if (pl && pl.animate) pl.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.6) saturate(1.3)', offset: .3 }, { filter: 'brightness(1)' }], { duration: 700 });
   };
   // embedded inside the game (published single file): stay in-page and let the host swap screens
-  tapPlay = e => { this.buzz(10); if (this.props.onPlay) { if (e && e.preventDefault) e.preventDefault(); this.props.onPlay(); } };
+  tapPlay = e => { this.buzz(30); if (this.props.onPlay) { if (e && e.preventDefault) e.preventDefault(); this.props.onPlay(); } };
   renderVals() {
     const s = this.state, b = s.balance ?? 1000, txt = Math.floor(b).toLocaleString('pt-BR');
     const cy = this.cycle(), ready = !cy.claimed;
