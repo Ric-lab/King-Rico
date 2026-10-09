@@ -1,0 +1,83 @@
+name: Gerar imagem no Meshy
+
+# Cada execução gasta créditos do Meshy (CLAUDE.md: estimar e confirmar antes de gerar).
+# Dispara (a) manualmente, ou (b) por push que altere .github/meshy-request.json (um pedido = uma geração);
+# (b) existe porque o disparo manual só aparece depois que o workflow estiver na main.
+on:
+  push:
+    paths: ['.github/meshy-request.json']
+  workflow_dispatch:
+    inputs:
+      input:
+        description: Imagem de referência (caminho no repositório)
+        default: assets/bleed/stage-bleed-input.png
+      prompt:
+        description: Prompt (inglês; não descrever cores)
+        required: true
+      model:
+        description: Modelo do Meshy (gpt-image-2 ≈ 12 créditos; nano-banana-pro ≈ 9)
+        default: gpt-image-2
+      aspect_ratio:
+        description: Proporção da saída (vazio = da referência)
+        default: '2:3'
+      name:
+        description: Nome da pasta de saída no branch asset-builds
+        default: stage-bleed
+
+concurrency:
+  group: meshy
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # publicar o resultado no branch asset-builds
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler pedido
+        id: req
+        env:
+          IN_INPUT: ${{ inputs.input }}
+          IN_PROMPT: ${{ inputs.prompt }}
+          IN_MODEL: ${{ inputs.model }}
+          IN_ASPECT: ${{ inputs.aspect_ratio }}
+          IN_NAME: ${{ inputs.name }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          if os.environ.get('GITHUB_EVENT_NAME') == 'push':
+              r = json.load(open('.github/meshy-request.json'))
+          else:
+              r = {k: os.environ.get('IN_' + k.upper(), '') for k in ('input', 'prompt', 'model', 'aspect', 'name')}
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              for k in ('input', 'prompt', 'model', 'aspect', 'name'):
+                  f.write(f"{k}<<EOF\n{r.get(k, '')}\nEOF\n")
+          print(json.dumps({k: v for k, v in r.items()}, ensure_ascii=False, indent=1))
+          PY
+
+      - name: Gerar
+        env:
+          MESHY_API_KEY: ${{ secrets.MESHY_API_KEY }}
+          INPUT: ${{ steps.req.outputs.input }}
+          PROMPT: ${{ steps.req.outputs.prompt }}
+          MODEL: ${{ steps.req.outputs.model }}
+          ASPECT: ${{ steps.req.outputs.aspect }}
+        run: python3 app/scripts/meshy_image.py "$INPUT" "$RUNNER_TEMP/out" "$PROMPT" "$MODEL" "$ASPECT"
+
+      # Branch órfão só com o resultado da última geração (force-push), para baixar por git.
+      - name: Publicar no branch asset-builds
+        if: always()
+        env:
+          NAME: ${{ steps.req.outputs.name || 'meshy' }}
+        run: |
+          [ -d "$RUNNER_TEMP/out" ] || exit 0
+          dir=$(mktemp -d)
+          mkdir -p "$dir/$NAME" && cp -r "$RUNNER_TEMP/out/." "$dir/$NAME/"
+          cd "$dir"
+          git init -q -b asset-builds
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add . && git commit -qm "Meshy: $NAME (${GITHUB_SHA::7})"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" asset-builds
