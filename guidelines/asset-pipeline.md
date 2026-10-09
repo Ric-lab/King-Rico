@@ -64,6 +64,7 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 | out/2026 | Palco com sangria (bleed) para todos os formatos de tela | Meshy gpt-image-2 via GitHub Actions, 1 tentativa | 12 | Não estendeu: redesenhou a cena (máquina menor, chão de madeira). Serviu como fundo: arte original por cima, recortada pela forma da máquina (máscara SVG) |
 | out/2026 | Palco vazio (só o fundo, sem máquina/personagem/nuvem) | Meshy gpt-image-2 com o palco anterior como referência | 12 | Aprovado: mesmo enquadramento, centro vazio; virou assets/bleed/stage-bleed.webp |
 | out/2026 | Cor A (roxo-magenta festivo) + mapa de lâmpadas (60) das artes do cenário | Código (`app/scripts/stage_art.py`), arte original preservada | 0 | Aprovado. Apagar a luz pintada na própria arte borrava o tecido; a meia luz é um "abafador" desenhado pelo jogo |
+| out/2026 | Estrelas: 2 da placa do topo removidas; 4 dos pilares viram luzes | Código (`stage_art.py`: preenchimento com o vermelho liso do lóbulo; mapa `star`) | 0 | Aprovado |
 | Saldo atual (Meshy, 09/out) | | | 915 | O log anterior dizia 1808; o saldo real antes das gerações de out/2026 era 939 |
 
 

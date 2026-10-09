@@ -11,6 +11,7 @@ Entradas (originais, não são alteradas):
 Saídas:
   assets/stage-hd-c.webp, assets/fx/top-layer3.webp     (cor A)
   assets/bleed/stage-bleed.webp                          (palco, cor A; jogo e Home)
+  assets/fx/machine-front3.webp                          (placa do topo sem as 2 estrelas)
   app/scripts/bulbs.json                                 (lâmpadas em unidades do quadro 453×802)
 Uso: python3 app/scripts/stage_art.py [--preview pasta]
 """
@@ -115,6 +116,58 @@ def halo_mask(shape, bulbs, k):
     return np.asarray(m.filter(ImageFilter.GaussianBlur(rmax * 1.2))).astype(np.float32) / 255
 
 
+def gold_blobs(rgba, k, region, minpx=150):
+    """Manchas douradas saturadas (estrelas, aros) dentro de region (unidades): [(cx, cy, w, h)] em unidades."""
+    rgb, a = rgba[..., :3], rgba[..., 3]
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    sat = (mx - mn) / np.maximum(mx, 1e-4)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    gold = (mx > 0.72) & (sat > 0.45) & (r >= g) & (g > b * 1.25) & (r - g < 0.45) & (a > 0.5)
+    H, W = gold.shape
+    yy, xx = np.mgrid[0:H, 0:W]
+    x0, y0, x1, y1 = [v * k for v in region]
+    gold &= (xx >= x0) & (xx <= x1) & (yy >= y0) & (yy <= y1)
+    seen = np.zeros_like(gold)
+    out = []
+    for sy, sx in zip(*np.nonzero(gold)):
+        if seen[sy, sx]:
+            continue
+        q, pts = deque([(sy, sx)]), []
+        seen[sy, sx] = True
+        while q:
+            y, x = q.popleft()
+            pts.append((y, x))
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                Y, X = y + dy, x + dx
+                if 0 <= Y < H and 0 <= X < W and gold[Y, X] and not seen[Y, X]:
+                    seen[Y, X] = True
+                    q.append((Y, X))
+        if len(pts) > minpx:
+            ys, xs = np.array(pts).T
+            out.append((xs.mean() / k, ys.mean() / k, (xs.max() - xs.min()) / k, (ys.max() - ys.min()) / k))
+    return out
+
+
+def fill_disks(rgba, centers, k, r_in, r_out):
+    """Apaga o que há dentro de cada disco (raio r_in, unidades) preenchendo com a média do anel até r_out
+    ponderada pela distância: serve para superfícies lisas (placa vermelha), não para tecido."""
+    out = rgba.copy()
+    H, W = rgba.shape[:2]
+    yy, xx = np.mgrid[0:H, 0:W]
+    for cx, cy in centers:
+        X, Y = cx * k, cy * k
+        d = np.hypot(xx - X, yy - Y)
+        inner, ring = d <= r_in * k, (d > r_in * k) & (d <= r_out * k)
+        rr = rgba[..., :3][ring]
+        # só o vermelho do lóbulo entra na média (o aro dourado não)
+        keep = (rr[:, 0] > rr[:, 1] * 1.6) & (rr.max(-1) < 0.8)
+        rr = rr[keep] if keep.sum() > 20 else rr
+        col = np.median(rr, 0)
+        soft = np.clip((r_in * k + 2.5 - d) / 5, 0, 1)[..., None]  # borda suave
+        out[..., :3] = out[..., :3] * (1 - soft) + col * soft
+    return out
+
+
 def load(path):
     return np.asarray(Image.open(P(path)).convert('RGBA')).astype(np.float32) / 255
 
@@ -140,6 +193,16 @@ def main():
     b = find_bulbs(a, 41, 600, 1600, region)  # lâmpadas dos pilares têm raio ≈ 6 unidades; brilho de estrelas/ornamentos fica abaixo de 4,5
     save(grade_a(a[..., :3]), None, 'assets/stage-hd-c.webp')
     out['stage'] = [[round(x / k, 1), round(y / k, 1), round(r / k, 2)] for x, y, r in b]
+    # estrelas douradas dos pilares (≈ 18×22 unidades): também acendem e apagam
+    st = [blob for side in ((0, 300, 45, 520), (408, 300, 453, 520)) for blob in gold_blobs(a, k, side) if 14 < blob[2] < 26 and 18 < blob[3] < 28]
+    out['star'] = [[round(x, 1), round(y, 1), round(max(w, h) / 2, 1)] for x, y, w, h in st]
+
+    # placa do topo (mostra o valor ganho): as 2 estrelas saem
+    a = load('assets/fx/machine-front3.png'); k = a.shape[1] / 453
+    cs = [(x, y) for x, y, w, h in gold_blobs(a, k, (140, 35, 320, 70), 80) if 9 < w < 15 and 9 < h < 15]
+    assert len(cs) == 2, cs
+    f = fill_disks(a, cs, k, 8.5, 11.5)
+    save(f[..., :3], f[..., 3], 'assets/fx/machine-front3.webp')
 
     # 2) cortina do topo (3 px por unidade, 453×235): varal de luzes
     a = load('assets/fx/top-layer3.png'); H, W = a.shape[:2]; k = W / 453
