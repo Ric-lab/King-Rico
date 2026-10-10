@@ -52,7 +52,6 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
   <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect; pointer-events: none;"></div>
   <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
-  <div ref="{{ lightsRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
     <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.webp'); background-size: 100% 100%; opacity: .9;"></div>
     <div style="position: absolute; left: 80px; top: 24px; width: 170px; height: 210px;">
@@ -60,7 +59,6 @@ a:hover { color: #fff3c4; }
     </div>
   </div>
   <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
-  <div ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
   <div style="position: absolute; left: 0; top: 0; margin-top: {{ hudLift }}; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
 
   <div style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
@@ -484,15 +482,9 @@ const FC_SAFE_AREA = () => {
 const FC_FRAME_SVG = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 453 802\' preserveAspectRatio=\'none\'%3E%3Cfilter id=\'f\' x=\'-0.1\' y=\'-0.1\' width=\'1.2\' height=\'1.2\'%3E%3CfeGaussianBlur stdDeviation=\'5\'/%3E%3C/filter%3E%3Cg filter=\'url%28%23f%29\' fill=\'%23fff\'%3E%3Crect x=\'5\' y=\'-40\' width=\'443\' height=\'708\'/%3E%3Crect x=\'47\' y=\'681\' width=\'359\' height=\'84\' rx=\'40\'/%3E%3C/g%3E%3C/svg%3E")';
 const FC_EDGE_MASK = FC_FRAME_SVG + ', linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
 const FC_TOP_MASK = 'linear-gradient(to right, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
-// Lâmpadas do cenário em unidades do quadro 453×802 [x, y, raio] (gerado por app/scripts/stage_art.py → bulbs.json).
-// Meia luz das lâmpadas em repouso (opacidade do abafador: 0 = acesa, 1 = apagada).
-const FC_LIGHT_IDLE = 0.72;
-const FC_BULBS = {"stage":[[16.4,235.1,5.95],[435.6,235.7,5.97],[16.0,283.7,6.21],[436.1,284.0,6.29],[15.7,384.6,6.44],[436.9,384.7,6.39],[437.0,440.2,6.31],[15.3,440.2,6.29],[15.1,553.3,6.23],[437.6,553.3,6.22]],"star":[[15.9,334.3,11.3],[15.0,498.1,11.7],[436.3,334.5,11.0],[437.1,498.2,11.7]],"top":[[103.8,50.0,2.3],[91.1,67.4,2.42],[71.8,80.9,2.49],[25.9,87.7,2.61],[48.4,87.5,2.52],[5.6,94.4,2.53]],"bleed":[[13.3,-124.7,3.33],[436.4,-124.5,3.6],[-5.1,-105.1,3.55],[454.9,-105.1,3.81],[476.5,-86.3,3.6],[-26.5,-86.1,3.51],[500.0,-70.3,3.77],[-49.5,-70.2,3.65],[-75.8,-56.6,3.67],[526.1,-56.5,3.77],[-106.8,-47.2,3.7],[557.1,-46.9,3.9],[-140.5,-41.1,3.51],[590.6,-40.9,3.58],[602.3,73.9,2.43],[-35.7,86.3,4.38],[-2.9,86.4,4.2],[575.9,86.5,3.84],[-125.3,86.6,3.43],[453.4,86.7,4.14],[486.6,86.5,3.77],[-62.5,89.3,4.24],[513.1,89.3,3.81],[-94.1,91.6,3.84],[544.2,91.6,3.65],[452.2,203.7,3.97],[-3.3,204.3,4.03],[-28.7,215.4,3.72],[478.8,215.3,3.84],[-99.4,295.8,3.65],[549.6,295.6,3.63],[479.2,303.7,4.05],[-28.3,305.3,4.03],[-62.4,306.6,4.1],[512.8,306.7,3.92],[553.4,873.9,5.42],[-101.0,873.9,5.38],[-30.7,885.7,5.5],[483.7,885.5,5.53],[52.3,895.7,5.67],[400.2,895.8,5.72],[139.0,901.0,5.41],[312.2,901.6,5.82],[224.5,903.1,5.73]]};
 const FC_NATIVE_HAP = () => { try { const C = window.Capacitor; return !!(C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')); } catch (e) { return false; } };
 class Component extends DCLogic {
   fxRef = React.createRef();
-  lightsRef = React.createRef();
-  lightsTopRef = React.createRef(); // lâmpadas dos pilares: acima da crista (machine-front3 cobre a de cima)
   state = {
     balance: null, betIdx: null,
     grid: [2, 8, 7, 1, 3, 6, 0, 4, 5],
@@ -582,7 +574,6 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
-    clearTimeout(this._flashT);
     this.stopAll(); clearInterval(this._arpTimer);
     if (this._ro) this._ro.disconnect();
     window.removeEventListener('resize', this.fit);
@@ -1291,8 +1282,7 @@ class Component extends DCLogic {
       free: fr ? Object.assign({}, fr, { won: Math.round((fr.won + res.win) * 100) / 100 }) : fr,
       hint: peach ? 'HAPPEACH!' : res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Linha premiada!') : (fr ? 'Giro grátis' : 'Tente de novo!')
     });
-    if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); this.later(() => this.lightsFlash(big || res.win >= bet * 4), 120); }
-    else this.lightsRest(); // sem prêmio: luzes voltam à meia luz quando o último rolo para
+    if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); }
     this.save();
     // all reels have stopped: each Happeach dances, then flies to the counter
     // sequence: win lines + sound first, short beat, peaches dance one after another, short beat, then the prize modal
@@ -1352,8 +1342,7 @@ class Component extends DCLogic {
       return { sparks, PAD, wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (398 + PAD * 2) + 'px;height:' + (396 + PAD * 2) + 'px;'),
         c1: img(comet, 'width:34px;height:34px;'), c2: img(comet, 'width:34px;height:34px;') };
     })());
-    if (late === 'prebuild') { this.buildLights(); return; } // built at load so the first spin has no build/decode hitch
-    this.lightsPulse(D);
+    if (late === 'prebuild') return; // built at load so the first spin has no build/decode hitch
     [P.wave, P.glow, P.c1, P.c2, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
     const WX = 223.5 - 30, WY = 722 - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
     if (!late) P.wave.animate([{ transform: wt(.3), opacity: 0 }, { transform: wt(2), opacity: 1, offset: .2 }, { transform: wt(9), opacity: .9, offset: .85 }, { transform: wt(10.5), opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
@@ -1372,81 +1361,6 @@ class Component extends DCLogic {
       const tr = (dx, dy, sc, rot) => 'translate3d(' + (x0 + dx).toFixed(1) + 'px,' + (y0 + dy).toFixed(1) + 'px,0) scale(' + sc + ') rotate(' + (rot || 0) + 'deg)';
       st.animate([{ transform: tr(0, 0, .3), opacity: 0 }, { transform: tr(Math.cos(a) * r * .5, Math.sin(a) * r * .5, 1.1), opacity: 1, offset: .3 }, { transform: tr(Math.cos(a) * r, Math.sin(a) * r + 8, 0, 160), opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
     });
-  }
-  /* ---------- luzes do cenário ----------
-     Em repouso: cada lâmpada tem um "abafador" (disco escuro suave) em meia luz. No giro: os abafadores saem em onda
-     a partir do botão (junto com o pulso) e um brilho acende; depois voltam devagar. Em prêmio: as luzes piscam
-     alternadas. Na Rodada Especial: ficam acesas. Só opacity/transform em bitmaps pré-desenhados (regra anti-piscada). */
-  buildLights() {
-    const host = this.lightsRef.current, hostTop = this.lightsTopRef.current; if (!host || !hostTop || this._lights || !host.animate) return this._lights;
-    const bmp = (stops) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-      stops.forEach(([o, col]) => g.addColorStop(o, col)); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return c.toDataURL('image/png'); };
-    const dimSrc = bmp([[0, 'rgba(36,10,6,.84)'], [.3, 'rgba(36,10,6,.72)'], [.55, 'rgba(26,6,22,.38)'], [1, 'rgba(26,6,22,0)']]);
-    const glowSrc = bmp([[0, '#fffbe8'], [.16, 'rgba(255,238,175,1)'], [.36, 'rgba(255,204,92,.7)'], [.68, 'rgba(255,150,40,.2)'], [1, 'rgba(255,140,30,0)']]);
-    // estrela dourada do pilar: brilho em forma de estrela de 5 pontas
-    const starSrc = (() => { const c = document.createElement('canvas'); c.width = c.height = 96; const x = c.getContext('2d');
-      const g = x.createRadialGradient(48, 48, 0, 48, 48, 48); g.addColorStop(0, 'rgba(255,236,160,.85)'); g.addColorStop(.35, 'rgba(255,200,80,.45)'); g.addColorStop(1, 'rgba(255,160,40,0)');
-      x.fillStyle = g; x.fillRect(0, 0, 96, 96);
-      x.shadowColor = 'rgba(255,214,90,1)'; x.shadowBlur = 14; x.fillStyle = '#fff6c2'; x.beginPath();
-      for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 26; x.lineTo(48 + Math.cos(a) * r, 48 + Math.sin(a) * r); }
-      x.closePath(); x.fill(); x.fill(); return c.toDataURL('image/png'); })();
-    const make = (src, x, y, d, op, h) => { const i = new Image(); i.src = src; i.alt = ''; i.decoding = 'sync';
-      i.style.cssText = 'position:absolute;left:' + (x - d / 2).toFixed(1) + 'px;top:' + (y - d / 2).toFixed(1) + 'px;width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;opacity:' + op + ';pointer-events:none;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0);';
-      (h || host).appendChild(i); return i; };
-    // tamanho do abafador/brilho por grupo: pilar é estreito (não pode escurecer as casas dos rolos)
-    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7] }, list = [];
-    Object.keys(FC_BULBS).forEach(g => FC_BULBS[g].forEach(([x, y, r]) => {
-      const h = g === 'stage' ? hostTop : host;
-      const dim = make(dimSrc, x, y, r * 2 * K[g][0], FC_LIGHT_IDLE, h), glow = make(g === 'star' ? starSrc : glowSrc, x, y, r * 2 * K[g][1], 0, h);
-      list.push({ x, y, dim, glow, i: list.length });
-    }));
-    this._lightIdle = FC_LIGHT_IDLE; this._glowIdle = 0;
-    return (this._lights = list);
-  }
-  lightsPulse(delay) {
-    const L = this.buildLights(); if (!L) return;
-    const I = this._lightIdle, G = this._glowIdle, bx = 223.5, by = 722;
-    this._lightsHeld = true; clearTimeout(this._flashT);
-    L.forEach(b => {
-      const d = (delay || 0) + Math.hypot(b.x - bx, b.y - by) / 0.9; // onda saindo do botão (~0,9 unidade/ms)
-      this.lightStop(b);
-      // acende na onda e fica aceso até os rolos pararem (lightsRest)
-      b.dA = b.dim.animate([{ opacity: I }, { opacity: 0 }], { duration: 180, delay: d, easing: 'ease-out', fill: 'forwards' });
-      b.gA = b.glow.animate([{ opacity: G, transform: 'translateZ(0) scale(.6)' }, { opacity: 1, transform: 'translateZ(0) scale(1.15)', offset: .3 },
-        { opacity: .85, transform: 'translateZ(0) scale(1)' }], { duration: 600, delay: d, easing: 'ease-out', fill: 'forwards' });
-    });
-  }
-  // cancela pelas referências guardadas: o Chrome pode não listar em getAnimations() uma animação terminada com fill
-  lightStop(b) { [b.dA, b.gA].forEach(a => a && a.cancel()); b.dA = b.gA = null; b.dim.getAnimations().forEach(a => a.cancel()); b.glow.getAnimations().forEach(a => a.cancel()); }
-  lightsRest() {
-    const L = this._lights; if (!L || !this._lightsHeld) return;
-    this._lightsHeld = false;
-    const I = this._lightIdle, G = this._glowIdle;
-    L.forEach(b => {
-      const od = +getComputedStyle(b.dim).opacity, og = +getComputedStyle(b.glow).opacity; // parte de onde está (a onda pode não ter chegado)
-      this.lightStop(b);
-      b.dA = b.dim.animate([{ opacity: od }, { opacity: I }], { duration: 900, easing: 'ease-in-out' });
-      b.gA = b.glow.animate([{ opacity: og }, { opacity: G }], { duration: 900, easing: 'ease-in-out' });
-    });
-  }
-  lightsFlash(big) {
-    const L = this.buildLights(); if (!L) return;
-    const I = this._lightIdle, n = big ? 6 : 3;
-    L.forEach(b => {
-      const off = (b.i % 2) * 190; // metade pisca enquanto a outra metade apaga (corre pela moldura)
-      this.lightStop(b);
-      // parte aceso (o giro deixou tudo aceso), pisca e termina aceso; depois lightsRest leva à meia luz
-      b.dA = b.dim.animate([{ opacity: 0 }, { opacity: I, offset: .5 }, { opacity: 0 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
-      b.gA = b.glow.animate([{ opacity: .85 }, { opacity: .1, offset: .5 }, { opacity: .85 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
-    });
-    this._lightsHeld = true;
-    clearTimeout(this._flashT); this._flashT = setTimeout(() => this.lightsRest(), n * 380 + 190 + 150);
-  }
-  lightsLevel(lit) {
-    const L = this.buildLights(); if (!L) return;
-    const I = lit ? 0.08 : FC_LIGHT_IDLE; if (I === this._lightIdle) return;
-    this._lightIdle = I; this._glowIdle = lit ? 0.55 : 0; this._lightsHeld = false; clearTimeout(this._flashT);
-    L.forEach(b => { this.lightStop(b); b.dim.style.transition = 'opacity .7s ease'; b.dim.style.opacity = I; b.glow.style.transition = 'opacity .7s ease'; b.glow.style.opacity = lit ? 0.55 : 0; });
   }
   featBanner() {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
@@ -1601,7 +1515,6 @@ class Component extends DCLogic {
     let r = Math.random() * total, sym = 0;
     for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) { sym = i; break; } }
     this.sfxFeature();
-    this.lightsLevel(true); // Rodada Especial: palco todo aceso
     this.setState({
       feature: { sym, round: 0 }, featLeft: FEAT_SPINS, bet, grid: [-1,-1,-1,-1,-1,-1,-1,-1,-1], locked: [],
       winCells: [], winLines: [], showWin: false, displayWin: 0, hint: 'RODADA ESPECIAL!',
@@ -1634,7 +1547,7 @@ class Component extends DCLogic {
       });
     });
     this._respinEnd = () => {
-      this.stopWhirr(); this.lightsRest();
+      this.stopWhirr();
       const newLocks = result.filter(r => r.v >= 0).length;
       this.setState({ spinning: false, spinCells: [] });
       if (this.state.featLeft > 0 && this.state.locked.length < 9) { this.setState({ featReady: true }); this.later(() => this.peachPress(() => this.respin(sym, bet)), 500 * sp); }
@@ -1658,7 +1571,6 @@ class Component extends DCLogic {
       if (big) this.sfxCoins();
       this.hap(res.full ? 'jackpot' : big ? 'winBig' : 'winMid');
     }
-    this.lightsLevel(false); this.later(() => this.lightsFlash(true), 120);
     this.kingSet('cheer');
     const lbls = this.lineLabels(res, bet, grid);
     const after = () => {
@@ -1766,7 +1678,7 @@ class Component extends DCLogic {
           o[k + 'C' + i] = on ? '#fff' : '#b98fd6'; }); }); return o; })(),
       feature: feat,
       featurePos: (feat ? s.feature.sym : 10) * 100 / 11 + '%',
-      fxRef: this.fxRef, lightsRef: this.lightsRef, lightsTopRef: this.lightsTopRef, testFill: this.testFill,
+      fxRef: this.fxRef, testFill: this.testFill,
       testOpacity: s.spinning || s.feature || s.free || s.showWin ? 0.35 : 1,
       testEvents: s.spinning || s.feature || s.free || s.showWin ? 'none' : 'auto',
       spinZ: s.showWin && !s.auto && !s.free && !s.feature && !s.featLock ? 31 : 'auto',

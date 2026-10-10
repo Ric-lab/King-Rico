@@ -36,7 +36,6 @@ não compensam para nosso volume. Imagens 2D: preferir ChatGPT do usuário (já 
 - Suavizar malha do Meshy com metal polido → vira "derretido"; melhor corpo em código + só o relevo do Meshy.
 - Usar o asset errado (Happeach antigo) → 30 cr perdidos. Sempre confirmar a fonte.
 - Nuvem via 3D → impossível com casca; ficou 2D.
-- Apagar luzes pintadas preenchendo o halo por código (inpaint por desfoque) → borra tecido e fio. Não mexer na arte: abafar por cima.
 - Pedir "estenda as margens, mantenha o centro" ao gpt-image-2 → ele redesenha tudo (centro muda de lugar e escala). Para sangria, usar o resultado só como fundo e sobrepor a arte original com borda suave.
 
 ## 5. Quando corrigir o usuário
@@ -63,8 +62,6 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 | out/2026 | Ícone e splash do app Android (provisórios) | Recorte do King Rico mestre + fundo roxo (código, `app/scripts/icons.py`) | 0 | Legível a 48 px; arte final pendente |
 | out/2026 | Palco com sangria (bleed) para todos os formatos de tela | Meshy gpt-image-2 via GitHub Actions, 1 tentativa | 12 | Não estendeu: redesenhou a cena (máquina menor, chão de madeira). Serviu como fundo: arte original por cima, recortada pela forma da máquina (máscara SVG) |
 | out/2026 | Palco vazio (só o fundo, sem máquina/personagem/nuvem) | Meshy gpt-image-2 com o palco anterior como referência | 12 | Aprovado: mesmo enquadramento, centro vazio; virou assets/bleed/stage-bleed.webp |
-| out/2026 | Cor A (roxo-magenta festivo) + mapa de lâmpadas (60) das artes do cenário | Código (`app/scripts/stage_art.py`), arte original preservada | 0 | Aprovado. Apagar a luz pintada na própria arte borrava o tecido; a meia luz é um "abafador" desenhado pelo jogo |
-| out/2026 | Estrelas: 2 da placa do topo removidas; 4 dos pilares viram luzes | Código (`stage_art.py`: preenchimento com o vermelho liso do lóbulo; mapa `star`) | 0 | Aprovado |
 | Saldo atual (Meshy, 09/out) | | | 915 | O log anterior dizia 1808; o saldo real antes das gerações de out/2026 era 939 |
 
 

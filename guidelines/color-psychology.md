@@ -29,10 +29,3 @@ Público: jogador casual, inclusive idoso (a "vó" é a usuária piloto). Objeti
 | Rosa (especial) | `#ff5fa2` → `#d63a7c` |
 | Turquesa (acento) | `#3fd8e0` |
 | Texto claro | `#fff6df` |
-
-## Medição contra a referência (out/2026)
-Fortune Tiger: brilho médio 0,74 · 73% tons quentes · dourado vivo 14% (22% na rodada) · nenhum quase-preto.
-King Rico antes: jogo 0,67 / 6% dourado / 23% quase-preto; Home 0,50 / 41% quase-preto.
-Aplicado: cor A (roxos do cenário puxados para violeta-magenta e clareados, `app/scripts/stage_art.py`), Home sem
-escurecido pesado, e luzes em meia luz que acendem em dourado a cada giro / piscam nos prêmios / ficam acesas na
-Rodada Especial (o contraste calmo → explosão dourada é o mecanismo visual da referência).
