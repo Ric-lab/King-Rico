@@ -1,0 +1,7 @@
+{
+  "input": "assets/bleed/stage-bleed.webp",
+  "prompt": "Remove the slot machine, the elephant character and its colorful smoke cloud from this image. Show only the empty circus stage behind them: the same curtains, the same string lights, the same backdrop and the same wooden stage floor, with the same composition, same camera angle and same style as the reference. The center of the stage must be empty. No objects, no characters, no smoke, no text, no UI. Portrait 2:3.",
+  "model": "gpt-image-2",
+  "aspect": "2:3",
+  "name": "stage-bleed-2"
+}

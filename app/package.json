@@ -1,0 +1,34 @@
+{
+  "name": "king-rico-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "sim": "tsx scripts/sim.ts",
+    "build:www": "node scripts/build-www.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "icons": "python3 scripts/icons.py && npx @capacitor/assets@3 generate --android --iconBackgroundColor \"#45157a\" --splashBackgroundColor \"#1e0838\"",
+    "android:sync": "npm run build:www && npx cap sync android",
+    "android:apk": "npm run android:sync && cd android && ./gradlew assembleDebug"
+  },
+  "devDependencies": {
+    "@babel/standalone": "^7.29.0",
+    "@capacitor/cli": "^8.5.3",
+    "@fontsource/baloo-2": "^5.3.0",
+    "@fontsource/luckiest-guy": "^5.3.0",
+    "@fontsource/rammetto-one": "^5.3.0",
+    "@types/node": "^22.20.5",
+    "playwright-core": "^1.64.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3"
+  }
+}
