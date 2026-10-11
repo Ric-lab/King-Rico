@@ -1,0 +1,17 @@
+[
+  {
+    "_nota": "Confirmado pelo dono (09/out): face verde, moldura dourada, texto KING RICO (o texto entra por código, legível e igual nos dois estados). Gerar o 1º; o 2º usa o RESULTADO do 1º como referência para casar pixel a pixel.",
+    "input": "assets/spin/spin-ref.png",
+    "prompt": "Faithful remaster of this exact game button: same rectangular rounded shape, same proportions, same colors as reference, only improve sharpness and material quality. Remove all text from the button face (blank face). Flat even lighting, no glow, no lens flare, no sparkles, no cast shadow, transparent background outside the button. Same framing and size as the reference.",
+    "model": "gpt-image-2",
+    "aspect": "",
+    "name": "spin-base"
+  },
+  {
+    "input": "assets/spin/spin-base.png",
+    "prompt": "Exactly the same button as the reference, same shape, same framing, same size, same colors, in its ENERGIZED state: the metal frame and the face are lit from inside as if charged with energy, a bright inner edge light running along the frame, the face glowing from its center. Blank face, no text. Nothing outside the button, no sparkles, no lens flare, transparent background.",
+    "model": "gpt-image-2",
+    "aspect": "",
+    "name": "spin-lit"
+  }
+]

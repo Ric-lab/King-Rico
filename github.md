@@ -2,6 +2,13 @@ repo: Ric-lab/King-Rico
 branch: main
 
 ## Last sync
+commit: 44b568056e6470c078d2402c43da97082d93f6fc
+date: 2026-10-11T19:56:24.510Z
+### Updated in this project
+- Tela de carregamento nova no game.html (moeda girando, barra de progresso, textos em PT)
+
+### Sync
+commit: 9f809aa5caafc83e83d223727fab425c2ae60623
 date: 2026-10-11T19:27:19.449Z
 ### Updated in this project
 - Botão de giro com asset limpo (base/apertado/aro apagado); luzes acendem no toque e apagam de uma vez
