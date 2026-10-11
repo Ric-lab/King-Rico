@@ -8,7 +8,7 @@ export async function init(layer) {
   const PROC = await import('../models/procedural.js');
   const W = 453, H = 802;
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:absolute;left:0;top:0;width:453px;height:802px;pointer-events:none;z-index:6;opacity:0;filter:drop-shadow(0 3px 3px rgba(60,10,20,.45));';
+  canvas.style.cssText = 'position:absolute;left:0;top:0;width:453px;height:802px;pointer-events:none;z-index:6;display:none;';
   const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   r.setClearColor(0x000000, 0); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.NeutralToneMapping; r.toneMappingExposure = 1.1;
   const scene = new THREE.Scene();
@@ -31,7 +31,7 @@ export async function init(layer) {
         const c = coins[i]; g.visible = !!c; if (!c) return;
         g.position.set(c.x, -c.y, 0); g.rotation.set(c.rx, c.ry, c.rz); g.scale.setScalar(c.rad / R0);
       });
-      canvas.style.opacity = coins.length ? '1' : '0';
+      canvas.style.display = coins.length ? 'block' : 'none'; // display:none (not opacity) → no idle WebGL layer to flash black
       r.render(scene, cam);
     }
   };

@@ -35,6 +35,7 @@ continuar e publicar sem refazer os erros.
 | `guidelines/asset-pipeline.md` | Regras de geração de asset + log de custos. **Ler antes de gastar créditos.** |
 | `guidelines/benchmark-*.md` | Análise quadro a quadro de vídeos de referência e plano de melhorias. |
 | `components/`, `ui_kits/`, `tokens/` | Design system (tokens, componentes, kit de UI do jogo). |
+| `app/` | App Android (Capacitor): engine com teste de RTP, build offline, projeto `android/`. Ver `docs/ANDROID.md`. |
 | `CLAUDE.md` | Regras de trabalho que qualquer IA deve seguir neste projeto. |
 | `github.md` | Registro de sincronização com este repositório. |
 
@@ -152,6 +153,15 @@ ou pela Home precisa entrar nesse registro.** Sintoma de esquecer: tela publicad
 12. **Números para idosos**: "1.000", nunca "1 mil"; "2,5", não "2,50".
 13. **Modal importante (bônus diário)** = obrigatório tocar. Nada que o idoso possa perder sem ver.
 14. **Personagem decorativo fica atrás da máquina** — a máquina é sempre a camada principal.
+15. **Botão recortado de arte com fundo** deixa borda colorida (roxo do palco). Use o asset-fonte limpo do botão
+    (`assets/spin/spin-base.webp` + `spin-pressed.webp` + `rim-off.webp`), nunca um recorte do palco.
+16. **Luzes apagam todas de uma vez.** Nada de transição em cascata de cima para baixo; acendem no toque, apagam juntas.
+17. **Linha premiada pisca até as moedas saírem dela**: as moedas voam do centro da linha para o saldo, e só então a
+    linha some. Spin bloqueado do resultado até o saldo computar (inclusive antes da Rodada Especial).
+18. **Ajuste pedido = só aquilo.** Mexer em layout vizinho (ex.: posição relativa de blocos da Home) para "ajudar"
+    quebra a tela. Para mover um elemento sem afetar o resto use `transform: translateY()`.
+19. **Publicação**: `index.html` do GitHub Pages é o pacote único gerado de `Fortune Circus.dc.html` (abre na Home).
+    Sempre regerar o pacote depois de qualquer mudança; arquivo antigo = tela antiga/sem imagens.
 
 ## 7. Custos de referência (Meshy, set–out/2026)
 - Meshy Pro ≈ US$ 20/mês = 1.000 créditos.
@@ -169,6 +179,10 @@ Parâmetros úteis na URL: `?from=home` (pula a Home), `?no3d=1` (não carrega n
 O runtime `support.js` é necessário ao lado dos `.dc.html`.
 
 ## 9. Infra para a publicação oficial (roteiro para Claude Code ou dev)
+
+> **Atualização out/2026:** o alvo definitivo é app Android na Google Play. A ordem das fases e o que já foi feito
+> (engine + teste de RTP, build offline, projeto Capacitor, CI que gera APK) estão em `docs/ANDROID.md`, que tem precedência
+> sobre esta seção.
 
 ### Fase 1 — Portar para um projeto web padrão
 1. Criar projeto **Vite + React + TypeScript**.

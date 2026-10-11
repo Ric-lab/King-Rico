@@ -8,60 +8,59 @@
 <body>
 <x-dc>
 <helmet>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&amp;display=swap" rel="stylesheet">
 <style>html, body { margin: 0; background: #1d0733; font-family: 'Baloo 2', system-ui, sans-serif; } a { color: #ffd257; } a:hover { color: #fff1b8; }</style>
 </helmet>
 <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; box-sizing: border-box;">
   <div ref="{{ rStage }}" style="position: relative; width: 100%; max-width: {{ size }}; aspect-ratio: 1; flex: 0 0 auto; margin-top: 15%;">
     <div data-k="shadow" style="position: absolute; left: 24%; right: 24%; top: 93.5%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse, rgba(10,0,20,.5), rgba(10,0,20,0) 70%); will-change: transform, opacity;"></div>
     <div data-k="ring" style="position: absolute; left: 4%; top: 93%; width: 20%; height: 6%; border-radius: 50%; border: 3px solid rgba(255,220,120,.95); box-shadow: 0 0 10px rgba(255,190,80,.9); opacity: 0; will-change: transform, opacity;"></div>
-    <img data-k="coin1" src="assets/symbols/sym-coin.png" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
-    <img data-k="coin2" src="assets/symbols/sym-coin.png" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
+    <img data-k="coin1" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
+    <img data-k="coin2" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 10%; height: 10%; opacity: 0; z-index: 2; will-change: transform;">
     <div data-k="body" style="position: absolute; inset: 0; transform-origin: 50% 97%; will-change: transform;">
-      <img data-k="coin0" src="assets/symbols/sym-coin.png" alt="" style="position: absolute; left: 0; top: 0; width: 6.5%; height: 6.5%; opacity: 0; z-index: 5; will-change: transform;">
-      <img data-f="master" src="assets/king-rico/frames/master.png" alt="King Rico" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 1; transition: opacity .16s linear;">
-      <img data-f="happy" src="assets/king-rico/frames/happy.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="sad" src="assets/king-rico/frames/sad.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="surprised" src="assets/king-rico/frames/surprised.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="wave" src="assets/king-rico/frames/wave.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="dance1" src="assets/king-rico/frames/dance1.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="dance2" src="assets/king-rico/frames/dance2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="cheer" src="assets/king-rico/frames/cheer.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="tap" src="assets/king-rico/frames/tap.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="wave2" src="assets/king-rico/frames/wave2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="land" src="assets/king-rico/frames/land.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="raise" src="assets/king-rico/frames/raise.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="startle" src="assets/king-rico/frames/startle.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="sad2" src="assets/king-rico/frames/sad2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="dance3" src="assets/king-rico/frames/dance3.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="crouch2" src="assets/king-rico/frames/crouch2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="cheerRise" src="assets/king-rico/frames/cheerRise.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="cheerFall" src="assets/king-rico/frames/cheerFall.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="wave3" src="assets/king-rico/frames/wave3.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="tapMid" src="assets/king-rico/frames/tapMid.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="danceL" src="assets/king-rico/frames/danceL.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="happy2" src="assets/king-rico/frames/happy2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="waveIn" src="assets/king-rico/frames/waveIn.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="waveOut" src="assets/king-rico/frames/waveOut.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="coinHold" src="assets/king-rico/frames/coinHold.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="coinToss" src="assets/king-rico/frames/coinToss.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="coinLowerA" src="assets/king-rico/frames/coinLowerA.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="coinLowerB" src="assets/king-rico/frames/coinLowerB.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="coinLook" src="assets/king-rico/frames/coinLook.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="jugToss" src="assets/king-rico/frames/jugToss.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="jugCatch" src="assets/king-rico/frames/jugCatch.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="blink" src="assets/king-rico/frames/blink.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="hope" src="assets/king-rico/frames/hope.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="look" src="assets/king-rico/frames/look.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="nail" src="assets/king-rico/frames/nail.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="danceR2" src="assets/king-rico/frames/danceR2.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="dance2b" src="assets/king-rico/frames/dance2b.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="waveUp" src="assets/king-rico/frames/waveUp.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="waveDown" src="assets/king-rico/frames/waveDown.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="happyIn" src="assets/king-rico/frames/happyIn.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="sadIn" src="assets/king-rico/frames/sadIn.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="surpriseLand" src="assets/king-rico/frames/surpriseLand.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
-      <img data-f="tapRecover" src="assets/king-rico/frames/tapRecover.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-k="coin0" src="assets/symbols/sym-coin.webp" alt="" style="position: absolute; left: 0; top: 0; width: 6.5%; height: 6.5%; opacity: 0; z-index: 5; will-change: transform;">
+      <img data-f="master" src="assets/king-rico/fw6/master.webp" alt="King Rico" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 1; transition: opacity .16s linear;">
+      <img data-f="happy" src="assets/king-rico/fw6/happy.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sad" src="assets/king-rico/fw6/sad.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="surprised" src="assets/king-rico/fw6/surprised.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave" src="assets/king-rico/fw6/wave.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance1" src="assets/king-rico/fw6/dance1.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance2" src="assets/king-rico/fw6/dance2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheer" src="assets/king-rico/fw6/cheer.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tap" src="assets/king-rico/fw6/tap.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave2" src="assets/king-rico/fw6/wave2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="land" src="assets/king-rico/fw6/land.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="raise" src="assets/king-rico/fw6/raise.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="startle" src="assets/king-rico/fw6/startle.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sad2" src="assets/king-rico/fw6/sad2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance3" src="assets/king-rico/fw6/dance3.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="crouch2" src="assets/king-rico/fw6/crouch2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheerRise" src="assets/king-rico/fw6/cheerRise.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="cheerFall" src="assets/king-rico/fw6/cheerFall.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="wave3" src="assets/king-rico/fw6/wave3.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tapMid" src="assets/king-rico/fw6/tapMid.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="danceL" src="assets/king-rico/fw6/danceL.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="happy2" src="assets/king-rico/fw6/happy2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveIn" src="assets/king-rico/fw6/waveIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveOut" src="assets/king-rico/fw6/waveOut.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinHold" src="assets/king-rico/fw6/coinHold.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinToss" src="assets/king-rico/fw6/coinToss.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLowerA" src="assets/king-rico/fw6/coinLowerA.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLowerB" src="assets/king-rico/fw6/coinLowerB.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="coinLook" src="assets/king-rico/fw6/coinLook.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="jugToss" src="assets/king-rico/fw6/jugToss.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="jugCatch" src="assets/king-rico/fw6/jugCatch.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="blink" src="assets/king-rico/fw6/blink.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="hope" src="assets/king-rico/fw6/hope.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="look" src="assets/king-rico/fw6/look.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="nail" src="assets/king-rico/fw6/nail.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="danceR2" src="assets/king-rico/fw6/danceR2.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="dance2b" src="assets/king-rico/fw6/dance2b.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveUp" src="assets/king-rico/fw6/waveUp.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="waveDown" src="assets/king-rico/fw6/waveDown.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="happyIn" src="assets/king-rico/fw6/happyIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="sadIn" src="assets/king-rico/fw6/sadIn.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="surpriseLand" src="assets/king-rico/fw6/surpriseLand.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
+      <img data-f="tapRecover" src="assets/king-rico/fw6/tapRecover.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .16s linear;">
     </div>
   </div>
   <sc-if value="{{ demo }}" hint-placeholder-val="{{ true }}">
@@ -88,6 +87,8 @@ class Component extends DCLogic {
   rStage = React.createRef();
   componentDidMount() {
     this.t0 = this.mt = performance.now();
+    // decode every pose up front: first-time pose swaps (e.g. "torcendo" when the reels start) decoded mid-spin → lag
+    const st0 = this.rStage.current; if (st0) st0.querySelectorAll('img').forEach(i => { i.loading = 'eager'; i.decode && i.decode().catch(() => {}); });
     window.KingRico = { play: m => this.play(m) };
     const loop = now => { this.frame(now); this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);

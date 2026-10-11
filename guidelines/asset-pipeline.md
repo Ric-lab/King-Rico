@@ -36,6 +36,8 @@ não compensam para nosso volume. Imagens 2D: preferir ChatGPT do usuário (já 
 - Suavizar malha do Meshy com metal polido → vira "derretido"; melhor corpo em código + só o relevo do Meshy.
 - Usar o asset errado (Happeach antigo) → 30 cr perdidos. Sempre confirmar a fonte.
 - Nuvem via 3D → impossível com casca; ficou 2D.
+- Apagar luzes pintadas preenchendo o halo por código (inpaint por desfoque) → borra tecido e fio. Não mexer na arte: abafar por cima.
+- Pedir "estenda as margens, mantenha o centro" ao gpt-image-2 → ele redesenha tudo (centro muda de lugar e escala). Para sangria, usar o resultado só como fundo e sobrepor a arte original com borda suave.
 
 ## 5. Quando corrigir o usuário
 Dizer claramente, antes de gastar, se o pedido:
@@ -57,7 +59,13 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 | set/2026 | Happeach vistas lado+costas | Meshy image-to-image (1 lote, mesma ref.) | ~14 | Coerentes |
 | set/2026 | Happeach 3D | Meshy multi-view (frente+lado+costas) | ~40 | Ver biblioteca |
 | out/2026 | King Rico vistas c/ coroa+capa (frente/lado/costas) | Meshy image-to-image, 1 lote, mesmas 3 refs | ~145 | Coerentes; broche das costas removido à mão |
-| Saldo atual | | | 1808 | |
+| out/2026 | 64 WebP faltantes (jogo publicado referenciava .webp que nunca subiram ao repo) | PNG aprovado → WebP q0,86, mesma resolução (código) | 0 | 63 MB → 5,7 MB; 0 referências quebradas |
+| out/2026 | Ícone e splash do app Android (provisórios) | Recorte do King Rico mestre + fundo roxo (código, `app/scripts/icons.py`) | 0 | Legível a 48 px; arte final pendente |
+| out/2026 | Palco com sangria (bleed) para todos os formatos de tela | Meshy gpt-image-2 via GitHub Actions, 1 tentativa | 12 | Não estendeu: redesenhou a cena (máquina menor, chão de madeira). Serviu como fundo: arte original por cima, recortada pela forma da máquina (máscara SVG) |
+| out/2026 | Palco vazio (só o fundo, sem máquina/personagem/nuvem) | Meshy gpt-image-2 com o palco anterior como referência | 12 | Aprovado: mesmo enquadramento, centro vazio; virou assets/bleed/stage-bleed.webp |
+| out/2026 | Cor A (roxo-magenta festivo) + mapa de lâmpadas (60) das artes do cenário | Código (`app/scripts/stage_art.py`), arte original preservada | 0 | Aprovado. Apagar a luz pintada na própria arte borrava o tecido; a meia luz é um "abafador" desenhado pelo jogo |
+| out/2026 | Estrelas: 2 da placa do topo removidas; 4 dos pilares viram luzes | Código (`stage_art.py`: preenchimento com o vermelho liso do lóbulo; mapa `star`) | 0 | Aprovado |
+| Saldo atual (Meshy, 09/out) | | | 915 | O log anterior dizia 1808; o saldo real antes das gerações de out/2026 era 939 |
 
 
 ## Lição — animação de personagem (out/2026)
@@ -65,3 +73,10 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 - **Por quê:** corpo de mascote cartoon (cabeça/orelhas/tromba/barriga grandes) não tem proporção humana; skinning automático + mocap humano não serve.
 - **Regra:** personagem de UI/menu no estilo toy = **2D em camadas (estilo Spine)** a partir da arte oficial, com trocas de olhos/boca para expressões. 3D com rig só se feito à mão por animador (Blender).
 - Custo desperdiçado nessa tentativa: ~30 créditos (rig + 8 clipes).
+
+- 2026-10-09 · Botão de giro (KING RICO) · Meshy image-to-image gpt-image-2, ref = recorte do botão original (spin-ref.png) · 3 tarefas, 36 cr (915→879). Base: fiel, ok de 1ª. Energizada 1ª gerada da ref original: moldura com outra espessura, não encaixa (descartada). Energizada 2ª gerada DO RESULTADO base: mesma caixa exata, encaixa pixel a pixel. Lição: estado 2 sempre a partir do resultado do estado 1. Fundo magenta sólido + chroma key = recorte limpo. Texto por código.
+- 2026-10-09 · Moldura apagada · Meshy image-to-image gpt-image-2 sobre recorte da moldura · 12 cr (879→867) · FALHOU: Meshy redesenhou o enquadramento (colunas mais finas, lâmpadas em outras posições), não encaixa para troca acesa/apagada. Feito por código a partir da arte original (vermelho ×0,4, lâmpadas → vidro fosco), alinhado pixel a pixel, 0 cr. Lição: "versão apagada" de arte existente = processamento de pixel, não geração.
+- 2026-10-09 · Pilar da moldura aceso/apagado · Meshy gpt-image-2 · 2 tarefas, 24 cr (867→843) · OK. Receita: recortar SÓ o pilar, centralizado em fundo magenta 1024×1536 (aspect 2:3); 1ª = "faithful copy" trocando estrelas por lâmpadas; 2ª = gerada DO RESULTADO da 1ª, "only change the lighting: OFF". As duas saíram no mesmo enquadramento → recorte pela mesma caixa, encaixa direto. Pilar direito = espelho do esquerdo (+5 px). Lição: objeto isolado no fundo chapado mantém posição; quadro inteiro a IA reenquadra.
+- 2026-10-09 · Palco inteiro aceso/apagado · Meshy gpt-image-2, aspect 9:16 · 2 tarefas, 24 cr (843→819) · OK. 1ª: "faithful copy" da tela inteira trocando estrelas por lâmpadas → mesmo layout (sobreposição sem fantasma). 2ª: gerada DO RESULTADO da 1ª, "only change: frame OFF" → encaixe exato. No jogo: stage-lit.webp é o fundo; stage-off.webp por cima, some de baixo para cima no toque. Substitui o remendo de pilares (descartado). Lição: com aspect certo + "identical composition", o Meshy mantém o quadro inteiro; nada de remendo por código.
+- 2026-10-09 · Topo da moldura apagado (machine-front3-off) · Meshy gpt-image-2 a partir do próprio machine-front3 em fundo magenta · 12 cr · OK. Motivo: o topo é camada separada (fica na frente do King Rico) e continuava aceso sobre o palco apagado = emenda. Regra: TODA camada da moldura precisa do par aceso/apagado, trocado pela mesma máscara.
+- 2026-10-09 · Slot machine INTEIRA (1 imagem: topo+laterais+base+botão) acesa/apagada · Meshy gpt-image-2 · 2 tarefas, 24 cr (795→759; ~12 cr de uma tentativa de tela cheia antes) · OK. Receita: ref = palco+topo; pedir "keep ONLY the slot machine, everything else flat magenta, remove stars"; apagada gerada DO RESULTADO aceso → encaixa 100%. Fundo = stage-bleed-src (palco vazio). Atenção: a IA deixou a grade ~20 px mais alta (y 195–606 vs 215–605): o jogo tem que seguir a geometria da imagem nova, não o contrário.

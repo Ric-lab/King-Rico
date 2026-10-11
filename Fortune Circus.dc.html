@@ -163,19 +163,18 @@ a:hover { color: #fff3c4; }
     <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
   </div>
 
-  <div style="position: absolute; left: 151.333px; top: 612px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
+  <div style="position: absolute; left: 151.333px; top: 614.5px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ betSize }}; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); letter-spacing: 1.5px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ betText }}</span>
   </div>
 
-  <div onClick="{{ decBet }}" role="button" style="position: absolute; left: 99.333px; top: 611px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
+  <div onClick="{{ decBet }}" role="button" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">−</span>
   </div>
-  <div onClick="{{ incBet }}" role="button" style="position: absolute; left: 308.333px; top: 611px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
+  <div onClick="{{ incBet }}" role="button" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">+</span>
   </div>
 
   <!-- botão de giro: a arte original (escura) + pontos de luz no aro dourado que piscam em volta -->
-  <div style="position: absolute; left: 28px; top: 664px; width: 397px; height: 120px; pointer-events: none; background-image: url('assets/bleed/stage-bleed.webp?v=3'); background-size: 755px 1132px; background-position: -179px -794px; background-repeat: no-repeat; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%); mask-composite: intersect;"></div>
   <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 48px; top: 685px; width: 357px; height: 78px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
     <img src="assets/spin/spin-base.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none;">
     <img src="assets/spin/spin-pressed.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ spinPressedOp }}; transition: {{ spinTrans }};">
@@ -350,8 +349,8 @@ a:hover { color: #fff3c4; }
         <div style="flex: 0 0 auto; width: 46px; height: 46px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 1px;">
           <span style="font-size: 15px; font-weight: 800; color: #fff3c4;">Happeach</span>
-          <span style="font-size: 10px; font-weight: 700; line-height: 1.3; color: #ffd9e6">Ou Junte 5 para Rodada Especial</span>
-        </div><span style="font-size: 22px; font-weight: 800; color: #fff3c4; width: 42px; height: 28px">x20</span>
+          <span style="font-size: 11px; font-weight: 700; line-height: 1.3; color: #ffd9e6">Junte 5 para ganhar a Rodada Especial</span>
+        </div>
         
       </div><div style="display: grid; grid-template-columns: repeat(2, 132px); gap: 8px 22px;">
         <sc-for list="{{ payList }}" as="row" hint-placeholder-count="10">
@@ -361,7 +360,7 @@ a:hover { color: #fff3c4; }
           </div>
         </sc-for>
       </div>
-      <div style="max-width: 300px; text-align: center; font-size: 11.5px; font-weight: 700; line-height: 1.45; color: #d9b6f0;">5 linhas fixas · 3 horizontais e 2 diagonais. O elefante é curinga e substitui qualquer símbolo, menos o Happeach. 3 Happeach na linha pagam x20. Tela cheia do mesmo símbolo paga x10.</div>
+      <div style="max-width: 300px; text-align: center; font-size: 11.5px; font-weight: 700; line-height: 1.45; color: #d9b6f0;">5 linhas fixas · 3 horizontais e 2 diagonais. O elefante é curinga e substitui qualquer símbolo, menos o Happeach. Happeach não paga prêmio: junte 5 para a Rodada Especial. Tela cheia do mesmo símbolo paga x10.</div>
       <div style="font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #ffd257;">TOQUE PARA FECHAR</div>
     </div>
   </sc-if>
@@ -449,16 +448,16 @@ a:hover { color: #fff3c4; }
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:453,&quot;height&quot;:802},&quot;startingBalance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1000,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:50,&quot;max&quot;:100000,&quot;step&quot;:50,&quot;section&quot;:&quot;Jogo&quot;},&quot;defaultBet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:10,&quot;options&quot;:[1,2.5,5,10,25,50],&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;},&quot;featureChance&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;}}">
 const SYMBOLS = [
-  { id: 'curtain', pay: 5, w: 24 },
-  { id: 'drum', pay: 6, w: 19 },
-  { id: 'tent', pay: 8, w: 14 },
-  { id: 'candy', pay: 10, w: 10 },
-  { id: 'clover', pay: 14, w: 7 },
-  { id: 'scepter', pay: 18, w: 5 },
-  { id: 'coin', pay: 24, w: 4 },
-  { id: 'crown', pay: 32, w: 3 },
-  { id: 'gem', pay: 50, w: 2 },
-  { id: 'wild', pay: 80, w: 4 }
+  { id: 'curtain', pay: 10, w: 3 },
+  { id: 'drum', pay: 1, w: 30 },
+  { id: 'tent', pay: 2.5, w: 20 },
+  { id: 'candy', pay: 7.5, w: 8 },
+  { id: 'clover', pay: 5, w: 12 },
+  { id: 'scepter', pay: 12.5, w: 5 },
+  { id: 'coin', pay: 15, w: 4 },
+  { id: 'crown', pay: 17.5, w: 3 },
+  { id: 'gem', pay: 20, w: 2 },
+  { id: 'wild', pay: 33.3, w: 2.85 }
 ];
 const WILD = 9;
 // Haptics: one table for the whole game. Web can't set amplitude, so "intensity" = pulse length (ms).
@@ -475,11 +474,12 @@ const HAPTIC = {
 };
 const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
 const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
-// Balance (sim 500k spins): RTP ≈ 98%, base ≈ 76%, hit ≈ 24%, Special Round ≈ 1 in 70, avg ≈ 16x
-const LINE_K = 1.9, FEAT_P_SYM = 0.15, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
+// Balance (sim 700k giros): RTP ≈ 96,5–97% (ref. Fortune Tiger 96,81%), acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros.
+// pay = multiplicador da aposta por linha. Sessão típica (saldo = 100 apostas): zera em ~600–1.900 giros; ~17% chegam a dobrar o saldo.
+const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
 // every Happeach frame as a literal path (dynamic 'f-'+name paths were missing from published builds)
 const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
-const PEACH = 11, PEACH_P = 0.008, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 20, FEAT_SPINS = 5;
+const PEACH = 11, PEACH_P = 0.008, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];
@@ -1239,8 +1239,7 @@ class Component extends DCLogic {
   lineSymbol(g, line) {
     const v = line.map(i => g[i]);
     if (v.some(s => s === undefined || s < 0)) return -1;
-    if (v.every(s => s === PEACH)) return PEACH;
-    if (v.some(s => s === PEACH)) return -1;
+    if (v.some(s => s === PEACH)) return -1; // Happeach não paga linha: só conta para a Rodada Especial
     const base = v.find(s => s !== WILD);
     if (base === undefined) return WILD;
     return v.every(s => s === base || s === WILD) ? base : -1;
@@ -1249,7 +1248,7 @@ class Component extends DCLogic {
     let win = 0; const cells = {}, lines = [];
     LINES.forEach((line, li) => {
       const s = this.lineSymbol(g, line);
-      if (s >= 0) { win += bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay / 5 * LINE_K); lines.push(li); line.forEach(i => { cells[i] = true; }); }
+      if (s >= 0) { win += bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay); lines.push(li); line.forEach(i => { cells[i] = true; }); }
     });
     const base = g.find(v => v !== WILD);
     const peach = g.map((v, i) => (v === PEACH ? i : -1)).filter(i => i >= 0);
@@ -1288,6 +1287,7 @@ class Component extends DCLogic {
     if (!fr && bet > bal) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
 
     const target = Array.from({ length: 9 }, () => this.pick());
+    { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
     const near = (a, b) => a === b || a === WILD || b === WILD;
     const anticipate = near(target[0], target[1]) || near(target[4], target[6]);
@@ -1364,7 +1364,7 @@ class Component extends DCLogic {
   }
   lineLabels(res, bet, grid) {
     const sum = {};
-    res.lines.forEach(li => { const L = LINES[li], s = this.lineSymbol(grid, L); if (s < 0) return; let a = bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay / 5 * LINE_K); if (res.full) a *= 10; sum[L[1]] = (sum[L[1]] || 0) + a; });
+    res.lines.forEach(li => { const L = LINES[li], s = this.lineSymbol(grid, L); if (s < 0) return; let a = bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay); if (res.full) a *= 10; sum[L[1]] = (sum[L[1]] || 0) + a; });
     const out = {}; Object.keys(sum).forEach(c => { out[c] = '+R$ ' + this.money(Math.round(sum[c] * 100) / 100); }); return out;
   }
   barPrize(amount, bet, then, lbls) {
@@ -1849,7 +1849,7 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: SYMBOLS.map((sy, i) => ({ i, sy })).reverse().map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + Math.round(o.sy.pay / 5 * LINE_K * 10) / 10 })),
+      payList: SYMBOLS.map((sy, i) => ({ i, sy })).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1,
