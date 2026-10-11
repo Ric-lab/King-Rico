@@ -121,13 +121,14 @@ class Component extends DCLogic {
   rPlaque = React.createRef();
   componentDidMount() {
     this._rs = () => this.forceUpdate(); window.addEventListener('resize', this._rs);
+    [0, 60, 300, 1000, 2500].forEach(t => setTimeout(() => { if (!this._dead) this.forceUpdate(); }, t));
     try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
     try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
     this.setState({ loaded: true });
     this.tick = setInterval(() => this.setState({ now: Date.now() }), 30000);
     this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3200);
   }
-  componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.idleT); }
+  componentWillUnmount() { this._dead = true; clearInterval(this.tick); clearTimeout(this.idleT); }
   buzz(p) {
     try {
       const C = window.Capacitor; // app Android: plugin nativo com força máxima
