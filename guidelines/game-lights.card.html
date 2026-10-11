@@ -1,0 +1,24 @@
+<!-- @dsCard group="Game" viewport="760x420" name="Luz da máquina" subtitle="Apagada em repouso, acende no giro, apaga de uma vez" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Lights</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin:0; padding:18px 20px; background: var(--fc-purple-800); font-family: var(--fc-font-ui); color: var(--fc-text-on-dark); }
+  a { color: var(--fc-text-link); } a:hover { color: var(--fc-text-link-hover); }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
+  .nm { display:block; font:var(--fc-weight-bold) 12px/1.4 var(--fc-font-ui); letter-spacing:.3px; margin-top:6px; color:var(--fc-cream-100); }
+  .hx { display:block; font:var(--fc-weight-regular) 11px/1.35 var(--fc-font-text); color:var(--fc-text-muted); max-width:200px; }
+  .spr { background-image:url('../assets/symbols-v7.webp'); background-size:1200% 100%; background-repeat:no-repeat; }
+</style>
+</head>
+<body>
+<div class="row">
+<div><div style="width:226px;height:401px;border-radius:12px;background:url('../assets/stage-off6.webp') center/cover"></div><span class="nm">Repouso — apagada</span><span class="hx">Moldura, lâmpadas, rolos, aro do botão e anéis de turbo/auto ficam em meia-luz.</span></div>
+<div><div style="width:226px;height:401px;border-radius:12px;background:url('../assets/stage-lit.webp') center/cover"></div><span class="nm">Giro — acesa</span><span class="hx">No toque tudo acende junto + pulso de energia correndo pela moldura.</span></div>
+<div style="max-width:250px"><span class="nm">Regras</span><span class="hx" style="max-width:none">1. Acende no toque (30 ms), sem esperar o "tec".<br>2. Apaga <b>de uma vez</b>, toda a máquina no mesmo quadro — nunca de cima para baixo.<br>3. Botão de giro: verde escuro em repouso, verde claro (aceso, "vidro" com luz atrás das letras KING RICO) enquanto gira.<br>4. Turbo/Auto: anel apagado; acende quando ligado.<br>5. Prêmio: a linha premiada pisca até as moedas saírem do centro dela para o saldo; aí some.<br>6. Durante Happeach/Rodada Especial o botão acende e apaga só como efeito — não aceita toque nem toca o "tec".</span></div>
+</div>
+</body>
+</html>

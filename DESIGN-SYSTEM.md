@@ -5,23 +5,26 @@ estrelado por **King Rico**, um elefante violeta coroado de capa vermelha. O pro
 jogo casual de moedas virtuais em pt-BR: gira, ganha, sobe de nível. Não há dinheiro real,
 e a comunicação deixa isso explícito.
 
-Hoje existe **um único produto**: o jogo mobile (tela de jogo, folha de menu, tabela de
-pagamentos). Não há site, painel administrativo nem app de loja neste material.
+Produto atual (out/2026): **Home** (`Home.dc.html` — escolha de jogo, saldo, bônus semanal)
+e o primeiro jogo, **Fortune Circus** (`Fortune Circus.dc.html` — rolos, menu, tabela,
+Happeach, Rodada Especial). Publicado como web app em GitHub Pages
+(https://ric-lab.github.io/King-Rico/) e empacotado para Android (`docs/ANDROID.md`).
+Público piloto: **terceira idade** — tudo grande, legível e impossível de perder.
 
-A tela de jogo é uma **placa única de arte** (`assets/stage-hd.png`, 453 × 802 unidades,
-entregue em 3x) com a UI sobreposta em coordenadas fixas. O layout não é recomposto em CSS —
-a arte manda, e as coordenadas estão travadas em `ui_kits/slot-game/README.md`.
-Na tela, o quadro escala para caber (sem barras vazias: no celular preenche a largura; em
-telas grandes aparece com cantos de 20px sobre uma cópia desfocada da própria arte).
+A tela de jogo é uma **placa única de arte** 453 × 802 em dois estados — apagada
+(`assets/stage-off6.webp`) e acesa (`assets/stage-lit.webp`), 3x — com a UI sobreposta em
+coordenadas fixas (travadas em `ui_kits/slot-game/README.md`). Em telas mais altas o palco
+continua para cima e para baixo por `assets/bleed/stage-bleed.webp`; a máquina nunca é
+esticada nem recomposta em CSS.
 
 ## Fontes deste design system
 
-Tudo aqui foi extraído de material fornecido pelo autor do jogo dentro deste projeto —
-não há repositório Git, arquivo Figma ou base de código externa associada.
+Tudo aqui foi extraído de material do autor do jogo. Repositório: **Ric-lab/King-Rico**
+(`github.md` guarda o último commit). Processo de geração de assets e custos: `guidelines/asset-pipeline.md`;
+manual completo do projeto: `MANUAL.md`.
 
 - Arte do personagem e da marca enviada em `uploads/` e copiada para `assets/brand/`
-  (wordmark, King Rico hero, King Rico sentado, **vista anatômica / turnaround de 4 vistas**,
-  placa do palco de circo).
+  (wordmark, King Rico hero, King Rico sentado, turnaround de 4 vistas, placa do palco).
 - Ícones-moeda enviados (`assets/icons/btn-home.png`, `btn-menu.png`).
 - **Arte do palco no Canva** — design `DAHVx_wVh7E`
   (https://www.canva.com/design/DAHVx_wVh7E), página 453 × 802. Dela saíram o palco
@@ -29,10 +32,11 @@ não há repositório Git, arquivo Figma ou base de código externa associada.
   `assets/symbols/sym-*.png`). As camadas do Canva são nativas em 1x; as versões 3x foram
   ampliadas (Lanczos) e realçadas com um filtro de borda para arte cartoon — não há fonte
   de maior resolução.
-- Implementação ao vivo do jogo: `Fortune Circus.dc.html` (e as versões `v1 (emoji)`,
-  `v2 (arte antiga)`, além de `Fortune Circus (offline).html`). Foi dela que saíram os
-  valores exatos de cor, tamanho, geometria de rolo e animações.
-- Referências de tela em `assets/reference/` (tela de jogo v1 e folha de menu).
+- Símbolos remasterizados (`assets/symbols-v7.webp`, 12 quadros) e modelos 3D (`assets/models/*.glb`)
+  gerados com Meshy a partir das artes do Canva; fontes de geração em `assets/meshy/`.
+- King Rico animado: 40+ quadros desenhados em `assets/king-rico/fw6/` (registro em `reg.json`).
+- Implementação ao vivo: `Fortune Circus.dc.html` e `Home.dc.html` são a **fonte de verdade**
+  de cor, tamanho, geometria, tempos e matemática.
 
 ## CONTENT FUNDAMENTALS
 
@@ -49,8 +53,14 @@ normal, com ponto final.
 **Tamanho:** rótulo = 1 palavra; botão = 1–3 palavras (`Jogar`, `Comprar moedas`);
 parágrafo = no máximo duas frases.
 
-**Números:** formato pt-BR com ponto de milhar (`8.420`, `1.000`). Ganhos sempre com sinal
-(`+250`). Nunca abreviar para `8.4k`.
+**Números:** formato pt-BR com ponto de milhar (`8.420`, `1.000`) e vírgula decimal sem zero
+inútil (`2,5`, nunca `2,50`). Nunca abreviar (`8.4k`, `1 mil`). Multiplicadores com uma casa:
+`x1,0`, `x33,3`. Ganhos com sinal (`+250`).
+
+**Para quem joga:** a pessoa de referência é uma avó de primeira viagem. Prêmio sempre em
+**modal** (nunca só um número piscando); bônus semanal da Home é **modal obrigatório** de
+coletar; contador da Rodada Especial grande (`GIRO 2 / 5`); nada de balões de fala nem
+textos soltos sobre a máquina — o espaço de ganho já mostra o valor.
 
 **Sem emoji.** Nenhum. A alegria vem da arte, não de emoji — a versão `v1 (emoji)` existe
 justamente como o antes de um depois.
@@ -62,7 +72,7 @@ Nunca prometer ganho, sorte ou retorno.
 
 **Exemplos reais:**
 - `SALDO 8.420` · `GANHO +250` · `APOSTA 1.000`
-- `KING RICO` (barra de giro) · `Jogar` · `Comprar moedas`
+- `KING RICO` (barra de giro) · `FORTUNE CIRCUS` (card do jogo na Home) · `Coletar`
 - `Moedas e níveis são salvos automaticamente neste aparelho.`
 
 ## VISUAL FOUNDATIONS
@@ -79,12 +89,15 @@ vibração 50% = pulsos pela metade (navegadores só controlam duração, não f
 do botão fica bem abaixo do zumbido do giro — nunca mais alto que o jogo.
 
 **Tipografia.** Baloo 2 (800/700) carrega tudo que é jogo: números, rótulos, botões —
-gorda, arredondada, com sombra de texto escura. Nunito (400/700) só em copy longa
-(configurações, progresso, textos legais). Entrelinha 1 em números e rótulos, 1.45 em corpo.
+gorda, arredondada, com sombra de texto escura. **Rammetto One** (`--fc-font-brand`) só em
+títulos de marca com poucas letras (KING RICO, FORTUNE CIRCUS), grande, com degradê dourado e
+contorno grosso. **Luckiest Guy** em letreiros de celebração. Nunito (400/700) só em copy longa.
+Todas locais em `assets/fonts/` (exceto Nunito). Entrelinha 1 em números e rótulos, 1.45 em corpo.
 Números sempre `tabular-nums`. Nada abaixo de 19px nos números do quadro (saldo encolhe até 14px só quando o valor é longo); rótulos em caixa alta com tracking 1.2px.
 
-**Fundos.** Duas opções: a placa fotográfica do circo (`bg-circus-stage.png`) em tela cheia
-para splash e momentos de celebração; e o gradiente radial roxo (`--fc-bg-app`) para o resto.
+**Fundos.** No jogo, o palco é a própria placa + sangria (`stage-bleed.webp`), com o topo limpo
+para o King Rico e a cesta. Home e carregamento: gradiente radial roxo (`--fc-bg-app`) com
+raios dourados suaves. A nuvem colorida atrás do King Rico é **2D** (gás/fumaça não vira 3D).
 Sem padrões repetidos, sem textura de grão, sem ilustração desenhada à mão em CSS — toda
 imagem é arte renderizada em 3D, quente, saturada, com luz de palco.
 
@@ -105,20 +118,31 @@ quase-ganho, e eles pulsam em loop enquanto o estado dura.
 `rgba(12,2,24,.62)` atrás de um painel modal, e o `blur(2px)` do rolo girando. Nunca
 glassmorphism, nunca texto em opacidade reduzida (contraste vem de cor cheia).
 
-**Hover / press.** Hover = `brightness(1.06–1.1)`, nunca mudança de cor. Botões que fazem
-parte da arte (barra de giro, turbo, auto) **afundam na própria arte** (`PressZone`): o
-recorte desce 2px (giro) ou 1px (moedas) e escurece — `brightness(.6)` no giro,
-`brightness(.84)` nas moedas — com sombra interna no topo. O escuro entra em **30ms** e
-sai em **300–350ms**: pressionar é instantâneo, soltar é suave. A barra de giro fica
-afundada e sem aceitar toque enquanto os rolos giram; turbo/auto ficam afundados enquanto
-ligados. Todo press toca o "tec" (aperta grave, solta agudo) e o giro espera **280ms**
-depois do clique para o som respirar. Home/menu também afundam na arte (suave, como as moedas).
+**Luz é o feedback (regra atual).** Em repouso a máquina inteira fica **apagada** (meia-luz:
+moldura, lâmpadas, rolos, aro do botão, anéis de turbo/auto). O toque **acende**: o botão de
+giro passa de verde escuro para verde claro com luz "atrás do vidro" das letras KING RICO,
+a borda dourada acende, e um pulso de energia corre pela moldura. Turbo/auto acendem quando
+ligados. Ao terminar, **tudo apaga no mesmo quadro** — nunca em cascata de cima para baixo.
+A luz entra em ~30ms; o botão fica aceso e sem aceitar toque até o saldo terminar de contar.
+Todo toque real toca o "tec" e o giro espera **280ms** para o som respirar. Na Rodada
+Especial o botão acende/apaga só como efeito (o Happeach "aperta"), sem tec e sem aceitar toque.
+Home/menu afundam suave na arte (`brightness(.84)`). Ver `guidelines/game-lights.card.html`.
 Só botões CSS fora da arte encolhem para 0.88–0.9. Desabilitado = opacidade 0.45; jamais remover o botão da tela.
 
 **Animação.** Presses são rápidos e secos; celebração e queda de símbolo dão overshoot e
-assentam (`fcDrop`, `fcPop`, `fcBeat`). Linhas de pagamento varrem em 1.6s e desaparecem
-sozinhas. O brilho diagonal (`fcShine`) corre na barra de giro só enquanto ela é clicável.
-Única animação linear do sistema é o blur do rolo girando. Tudo em `tokens/motion.css`.
+assentam (`fcDrop`, `fcPop`, `fcBeat`). Rolos partem juntos com curva lenta → rápida →
+lenta e param escalonados (C1 por último, às vezes um "tiquinho a mais"). Sequência de prêmio,
+sempre com uma pausa curta entre etapas e **sem poder ser interrompida**: modal de ganho →
+linha premiada piscando → moedas 3D saem do centro da linha e voam ao saldo → linha some.
+Happeach: espera todos os rolos pararem → dança → voa para a cesta (`guidelines/game-happeach.card.html`).
+King Rico: quadros desenhados em crossfade, sem mudar de tamanho, sempre atrás da máquina
+(`guidelines/brand-king-rico-anim.card.html`). Menu aberto **pausa** tudo.
+
+**Jogo e matemática.** 3 × 3, 5 linhas, apostas 1 → 1.000. Tabela (multiplicador por linha):
+Bumbo 1,0 · Circo 2,5 · Trevo 5,0 · Nuvem 7,5 · Capa 10,0 · Cetro 12,5 · Moeda 15,0 · Coroa 17,5 ·
+Diamante 20,0 · King Rico (coringa) 33,3. Happeach não paga: máx. 2 por jogada, 5 na cesta =
+Rodada Especial de 5 giros; o excedente já conta. RTP ≈ 96,5–97% (simulação de 700 mil giros) —
+o saldo oscila e tende a zerar em centenas de giros, não em um dia. Ver `guidelines/game-paytable.card.html`.
 
 **Layout.** Coluna única, ancorada: cabeçalho em cima, ação em baixo, rolos ao centro; nada
 rola. O trilho de aposta fica sempre imediatamente acima da barra de giro. Alvo de toque
@@ -132,11 +156,11 @@ com aro dourado) e **painéis** (superfície creme com borda `--fc-cream-300` e 
 O jogo não usa biblioteca de ícones, fonte de ícones nem SVG. O sistema de ícones é
 **arte rasterizada em formato de moeda dourada**:
 
-- `assets/icons/btn-home.png` e `assets/icons/btn-menu.png` — as duas únicas moedas de
-  ícone que existem como arte. Use-as como imagem, nunca redesenhe em SVG.
+- `assets/icons/btn-home.png` e `assets/icons/btn-menu.png` — as moedas de ícone (Home =
+  casinha, Menu). Usadas iguais na Home e no jogo. Nunca redesenhe em SVG.
 - Onde não há arte, o ícone é um **glifo tipográfico na face dourada** do `IconButton`:
   `＋`, `−`, `»`, `▶`, `✕`. É uma adição intencional (ver abaixo), não um padrão importado.
-- Os 10 símbolos de rolo (`assets/symbols/sym-*.png`) são ilustração, não iconografia:
+- Os 11 símbolos de rolo (`assets/symbols-v7.webp`) são ilustração, não iconografia:
   nunca reduza um símbolo a ícone de interface nem o recolora.
 - Emoji nunca são usados como ícone. Unicode só nos glifos listados acima.
 
@@ -158,7 +182,7 @@ glifo laranja/marrom, luz no topo). Não improvise em SVG — destoa na hora.
   `+`, `−` e turbo. O componente reproduz a moeda em CSS e recebe um caractere.
 - `ValuePlaque`: a placa de número aparece três vezes na arte do jogo (saldo, ganho, aposta)
   sem existir como componente no código atual; foi extraída para não ser recriada à mão.
-- `PressZone`: padrão do jogo atual — hotspot que reusa o recorte da arte para afundar/escurecer o botão pintado.
+- `PressZone`: hotspot que reusa o recorte da arte para afundar o botão pintado (hoje só Home/Menu e +/−; giro/turbo/auto usam luz).
 - `LevelSelector` / `LevelRow`: o menu atual usa OFF · 50% · 100% para som e vibração.
 - `Switch` / `ToggleRow`: existem na folha de menu de referência
   (`assets/reference/menu-panel.png`), aqui reconstruídos sobre a paleta da marca.
@@ -167,23 +191,28 @@ glifo laranja/marrom, luz no topo). Não improvise em SVG — destoa na hora.
 
 | Caminho | O que é |
 | --- | --- |
+| `Home.dc.html` | Tela inicial real (cards de jogos, saldo, bônus semanal) |
+| `Fortune Circus.dc.html` | O jogo real — fonte de verdade de comportamento e matemática |
+| `King Rico.dc.html` | Visualizador das animações do King Rico |
+| `3D Library.html` | Modelos 3D dos símbolos e personagens |
+| `MANUAL.md` | Manual do projeto: lições, pipeline, publicação |
 | `styles.css` | Entrada única de CSS — só `@import`s |
-| `tokens/fonts.css` | Webfonts (Baloo 2, Nunito) |
-| `tokens/colors.css` | Rampas + aliases semânticos |
-| `tokens/typography.css` | Famílias, pesos, escala, tracking |
-| `tokens/spacing.css` | Escala 4px, raios, geometria do jogo |
-| `tokens/effects.css` | Gradientes metálicos, biséis, aros, glows, sombras de texto |
-| `tokens/motion.css` | Durações, easings e todos os `@keyframes` do jogo |
+| `tokens/` | Fontes, cores, tipo, espaço, efeitos, movimento |
 | `components/core/` | `Button`, `IconButton`, `Panel`, `Switch`, `ToggleRow`, `LevelSelector`/`LevelRow`, `ValuePlaque` |
 | `components/game/` | `ReelCell`, `ReelGrid`, `BetStepper`, `SpinButton`, `PressZone` |
-| `Fortune Circus.dc.html` | O jogo real, jogável — fonte de verdade de comportamento |
-| `assets/stage-hd.png` | Placa do palco 3x (1359 × 2406), faces de célula vazias |
-| `assets/symbols-v6.png` | Sprite de 11 quadros × 512px (último = vazio), remaster Meshy/GPT Image 2 dos símbolos originais |
 | `components/brand/` | `Logo`, `Mascot` |
-| `ui_kits/slot-game/` | Recriação fiel da tela real: jogo → menu → tabela de pagamentos |
-| `guidelines/*.card.html` | Cartões de fundamentos (cores, tipo, espaço, marca) |
-| `assets/brand/` | Wordmark, King Rico (hero, sentado, turnaround), placa de palco |
-| `assets/icons/` | Moedas de ícone (home, menu) |
-| `assets/symbols/` | 10 símbolos de rolo em 1024 × 1024, transparentes, 86% de preenchimento |
-| `assets/reference/` | Capturas do jogo v1 e da folha de menu |
+| `ui_kits/slot-game/` | Abre o jogo real + geometria travada e regras de comportamento |
+| `guidelines/*.card.html` | Cartões: cores, tipo, espaço, marca, símbolos, luz, Happeach, King Rico, tabela, Home |
+| `guidelines/asset-pipeline.md` | Como gerar assets (2D/3D/Meshy), custos e log |
+| `guidelines/haptics.md` | Tabela de vibração |
+| `assets/stage-off6.webp` / `stage-lit.webp` | Placa da máquina apagada / acesa (3x) |
+| `assets/bleed/stage-bleed.webp` | Continuação do palco para telas altas |
+| `assets/symbols-v7.webp` | Sprite de 12 quadros (10 símbolos, vazio, Happeach) |
+| `assets/spin/` | Botão de giro (base, aceso, aro apagado) |
+| `assets/fx/` | Cesta, pêssego, camadas da máquina e do topo |
+| `assets/happeach/` | Quadros do Happeach (dança, salto, queda) |
+| `assets/king-rico/fw6/` | Quadros do King Rico |
+| `assets/models/` | GLB dos símbolos e do King Rico |
+| `assets/fonts/` | Baloo 2, Rammetto One, Luckiest Guy |
+| `assets/brand/`, `assets/icons/` | Logo, King Rico, moedas de ícone |
 | `SKILL.md` | Empacotamento para uso como Agent Skill |

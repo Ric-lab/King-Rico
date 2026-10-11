@@ -1,38 +1,34 @@
 # UI kit — Fortune Circus (jogo mobile)
 
-Recriação **fiel** da tela real do jogo (`Fortune Circus.dc.html`), não um layout novo.
-A arte é uma placa única de 453 × 802 unidades (`assets/stage-hd.png`, entregue em 3x =
-1359 × 2406) vinda do Canva, com as faces creme das células já pintadas. A UI são
-sobreposições e `PressZone`s nas coordenadas exatas da arte.
+O UI kit **é o jogo real**: `index.html` abre `Fortune Circus.dc.html` (e a Home por `Home.dc.html`).
+As recriações em JSX da primeira versão (`GameScreen`, `MenuSheet`, `PaytableSheet`, `audio.js`)
+foram removidas em out/2026 porque tinham ficado para trás — não existe mais uma segunda cópia
+para desatualizar. Para protótipos, copie trechos do jogo real.
 
-| Arquivo | O que é |
-| --- | --- |
-| `GameScreen.jsx` | Tela de jogo: placa HD + 9 células, saldo, ganho, aposta, PressZones de giro/turbo/auto, hotspots de recarregar/menu, dica |
-| `audio.js` | WebAudio sem arquivos: "tec" de aperta/solta, zumbido, notas de parada, arpejo; `setLevel(0/1/2)` e `buzz(padrão, nível)` |
-| `MenuSheet.jsx` | Folha de menu: efeitos sonoros e vibração em OFF · 50% · 100%, tabela, progresso, links |
-| `PaytableSheet.jsx` | Tabela de pagamentos: 10 símbolos com multiplicador e regras de linha |
-| `index.html` | Protótipo clicável, escala para caber na tela |
+A arte é uma placa de 453 × 802 unidades em dois estados: `assets/stage-off6.webp` (apagada,
+repouso) e `assets/stage-lit.webp` (acesa, giro), em 3x (1359 × 2406). Em telas mais altas o
+palco continua por `assets/bleed/stage-bleed.webp` (parte de cima e de baixo); a máquina
+nunca é esticada.
 
 ## Geometria travada pela arte (unidades de 453 × 802)
 
-- **Células** `[left, top, w, h]`:
-  colunas `33 / 163 / 289` com larguras `126.5 / 122.5 / 130`;
-  linhas `219.5 / 351 / 481` com alturas `127.5 / 126 / 120`.
-  Símbolo = quadro de 124 × 124 centrado na célula (`symbols-v6.png`, 11 quadros, `1100% 100%`).
-- **Paylines:** `left 33 · width 386`, tops `280.75 / 411.5 / 538.5`.
-  Diagonais: `left -34 · top 407.75 · 520 × 5`, `±44.66°`.
-- **Saldo** `57, 28 · 88 × 39` (mesma altura e centro da moeda, y = 47.5), fonte 19 → 16.5 → 14px conforme o comprimento, `translateY(.05em)`.
-- **Ganho** `164, 180 · 125 × 32`. **Aposta** `150, 612 · 143 × 42`. **−** `98, 611` / **+** `307, 611` (44 × 44).
-- **Barra de giro** `55, 693 · 337 × 60.5`, raio **13** (retângulo suave, não pílula).
-- **Turbo** `23.5, 613.2 · 37` / **Auto** `391.4, 614.1 · 37` (o anel escuro interno da moeda, não o aro dourado).
-- **Recarregar** `340.5, 29.5 · 41` / **Menu** `390.5, 29.5 · 41` (disco inteiro com o aro dourado; centros y = 50). **Dica** `top 770`.
+- **Células** colunas `34.3 / 164.3 / 290.3`, larguras `126.5 / 122.5 / 130`;
+  linhas `219.5 / 351 / 481`, alturas `127.5 / 126 / 120`. Símbolo = quadro 124 × 124 de
+  `symbols-v7.webp` (12 quadros, `1200% 100%`; índice 10 = vazio, 11 = Happeach).
+- **5 linhas**: 3 horizontais + 2 diagonais (`LINES` no jogo).
+- **Saldo** ao lado da moeda do topo, centralizado na altura da moeda; fonte 19 → 16.5 → 14px conforme o comprimento.
+- **Aposta** `150, 612 · 143 × 42`, número descido 2,5px (a fonte desenha acima do centro); **−/+** idem.
+- **Botão de giro** `48, 685 · 357 × 78` com recorte próprio (`assets/spin/`).
+- **Turbo / Auto** nos discos dos cantos sobre a aposta. **Home / Menu** no topo direito.
+- **Cesta do Happeach** no topo direito; na Rodada Especial vai para o centro no lugar do King Rico.
 
 ## Comportamento que não é cosmético
 
-- **Afundar é na arte:** a PressZone mostra o mesmo recorte de `stage-hd.png`, desloca 2px (giro) ou 1px (moedas) e escurece — `brightness(.6)` no giro, `.84` nas moedas. Entra em 30ms, volta em 300–350ms.
-- **Giro:** "tec" no toque, **280ms** de espera e só então os rolos começam. A barra fica afundada e ignora toques até parar.
-- **Home/Menu:** mesma PressZone suave das moedas (afunda 1px, `brightness(.84)`), só enquanto pressionados.
-- **Turbo/Auto:** ficam afundados enquanto ligados e continuam clicáveis para desligar. O auto encadeia sem "tec" e sem espera.
-- **Giro de verdade:** cada célula troca de símbolo a cada 70ms (`fcBlur` por cima). Parada na ordem `6,3,0,7,4,1,8,5,2`.
+- **Luz:** tudo apagado em repouso; no toque acende tudo junto; ao parar apaga **de uma vez**. Ver `guidelines/game-lights.card.html`.
+- **Giro:** "tec" no toque, **280ms** e os rolos partem juntos; param escalonados (`6,3,0,7,4,1,8,5,2`), C1 por último, às vezes com um "tiquinho a mais" de suspense (mais marcado no auto).
+- **Botão travado** do toque até o saldo terminar de contar — prêmio, dança e voo do Happeach não podem ser interrompidos.
+- **Prêmio:** modal de ganho (OK ou girar de novo; no auto fecha sozinho em ~2s) → linha premiada pisca → moedas 3D saem do centro da linha para o saldo → linha some.
+- **Happeach:** máx. 2 por jogada, não paga, conta até 5 na cesta; excedente já conta para a próxima.
+- **Menu aberto pausa o jogo** inteiro (timers, rolos, efeitos).
+- **Som / vibração** em OFF · 50% · 100%. Tabela de vibração em `guidelines/haptics.md`.
 - **Placa de ganho vazia sem prêmio**, nunca `0`.
-- **Som/vibração em 3 níveis:** som 50% = ganho 0.35; vibração 50% = pulsos pela metade.

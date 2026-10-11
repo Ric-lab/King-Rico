@@ -6,6 +6,8 @@ Slot game (cassino social, sem dinheiro real) com King Rico e Happeach.
 - `Fortune Circus.dc.html` — o jogo
 - `King Rico.dc.html` — animações do King Rico
 - `3D Library.html` — biblioteca 3D
+- `DESIGN-SYSTEM.md` — guia do design system (cores, tipo, luz, animação, tabela, regras para terceira idade)
+- `MANUAL.md` — manual completo do projeto (lições, geração de assets, publicação)
 
 App Android (Capacitor), testes da matemática e APK de teste: veja `docs/ANDROID.md`.
 

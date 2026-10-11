@@ -1,0 +1,25 @@
+<!-- @dsCard group="Game" viewport="760x330" name="Happeach e a cesta" subtitle="Cai no rolo → dança → voa para a cesta → 5 = Rodada Especial" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Happeach</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin:0; padding:18px 20px; background: var(--fc-purple-800); font-family: var(--fc-font-ui); color: var(--fc-text-on-dark); }
+  a { color: var(--fc-text-link); } a:hover { color: var(--fc-text-link-hover); }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
+  .nm { display:block; font:var(--fc-weight-bold) 12px/1.4 var(--fc-font-ui); letter-spacing:.3px; margin-top:6px; color:var(--fc-cream-100); }
+  .hx { display:block; font:var(--fc-weight-regular) 11px/1.35 var(--fc-font-text); color:var(--fc-text-muted); max-width:200px; }
+  .spr { background-image:url('../assets/symbols-v7.webp'); background-size:1200% 100%; background-repeat:no-repeat; }
+</style>
+</head>
+<body>
+<div class="row" style="align-items:flex-end">
+<div><div style="width:150px;height:130px;background:url('../assets/fx/basket.webp') center/contain no-repeat"></div><span class="nm">Cesta de piquenique</span><span class="hx">Fica à direita do topo. Começa vazia; pêssegos simples (sem braços) se empilham 3 embaixo + 2 em cima.</span></div>
+<div><div style="width:56px;height:56px;background:url('../assets/fx/peach-plain.webp') center/contain no-repeat"></div><span class="nm">Pêssego da cesta</span></div>
+<div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-ready.webp') center bottom/contain no-repeat"></div><span class="hx">ready</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-crouch.webp') center bottom/contain no-repeat"></div><span class="hx">crouch</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-launch.webp') center bottom/contain no-repeat"></div><span class="hx">launch</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-tuck.webp') center bottom/contain no-repeat"></div><span class="hx">tuck</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-drop.webp') center bottom/contain no-repeat"></div><span class="hx">drop</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-victory.webp') center bottom/contain no-repeat"></div><span class="hx">victory</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-danceA.webp') center bottom/contain no-repeat"></div><span class="hx">danceA</span></div><div style="text-align:center"><div style="width:64px;height:80px;background:url('../assets/happeach/f-danceB.webp') center bottom/contain no-repeat"></div><span class="hx">danceB</span></div>
+</div>
+<p class="hx" style="max-width:700px;margin-top:14px">Sequência: espera todos os rolos pararem → dancinha no lugar → voa para a cesta (a célula para de piscar dourado). Com 5: o King Rico do topo dá lugar à cesta centralizada; em cada um dos 5 giros um pêssego sai da cesta e cai sentado no botão de giro, braços para cima ("eeee" de montanha-russa). Bateu, sumiu — sem atraso. Nada disso pode ser interrompido por toque.</p>
+</body>
+</html>

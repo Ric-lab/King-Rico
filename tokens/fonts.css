@@ -1,4 +1,7 @@
-/* Webfonts — Baloo 2 (display/UI) + Nunito (long-form text).
-   Fortune Circus has no licensed brand font files; these are the Google Fonts
-   stand-ins that match the rounded, heavy circus lettering of the logo. */
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap");
+/* Webfonts — locais em assets/fonts (funcionam offline e no app).
+   Baloo 2 = UI e números · Rammetto One = títulos de marca (KING RICO, FORTUNE CIRCUS)
+   · Luckiest Guy = letreiros de celebração · Nunito = texto longo (Google Fonts). */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+@font-face { font-family: "Baloo 2"; font-style: normal; font-weight: 400 800; font-display: swap; src: url("../assets/fonts/baloo2-latin.woff2") format("woff2"); }
+@font-face { font-family: "Rammetto One"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/rammettoone-latin.woff2") format("woff2"); }
+@font-face { font-family: "Luckiest Guy"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/luckiestguy-latin.woff2") format("woff2"); }

@@ -3,6 +3,8 @@
    Nunito handles settings/legal/long-form copy where Baloo gets shouty. */
 :root {
   --fc-font-display: "Baloo 2", system-ui, sans-serif;
+  --fc-font-brand: "Rammetto One", "Baloo 2", sans-serif;   /* KING RICO, FORTUNE CIRCUS — poucas letras, grandes */
+  --fc-font-celebrate: "Luckiest Guy", "Baloo 2", sans-serif;
   --fc-font-ui: "Baloo 2", system-ui, sans-serif;
   --fc-font-text: "Nunito", system-ui, sans-serif;
   --fc-font-numeric: "Baloo 2", system-ui, sans-serif;
@@ -12,7 +14,7 @@
   --fc-weight-bold: 700;
   --fc-weight-black: 800;
 
-  /* Sizes are authored against the 414 × 736 game frame */
+  /* Sizes are authored against the 453 × 802 game frame */
   --fc-size-display: 34px;   /* win celebration, jackpot */
   --fc-size-title: 29px;     /* bet value, screen titles */
   --fc-size-value: 24px;     /* win counter, balance */
