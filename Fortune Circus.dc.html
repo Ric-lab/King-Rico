@@ -53,7 +53,7 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: -60px; background-image: url('assets/stage-lit.webp'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
  <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
- <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed.webp?v=3'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
+ <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v4.png'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
  <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
@@ -435,7 +435,7 @@ a:hover { color: #fff3c4; }
     <img data-asset="assets|spin|spin-base.webp" src="assets/spin/spin-base.webp" alt="">
     <img data-asset="assets|spin|spin-pressed.webp" src="assets/spin/spin-pressed.webp" alt="">
     <img data-asset="assets|stage-off6.webp" src="assets/stage-off6.webp" alt="">
-    <img data-asset="assets|bleed|stage-bleed.webp" src="assets/bleed/stage-bleed.webp?v=3" alt="">
+    <img data-asset="assets|bleed|stage-bleed-v4.png" src="assets/bleed/stage-bleed-v4.png" alt="">
     <img data-asset="assets|stage-hd-c.webp" src="assets/stage-hd-c.webp" alt="">
     <img data-asset="assets|symbols|sym-crown.png" src="assets/symbols/sym-crown.png" alt="">
     <img data-asset="assets|symbols|sym-tent.png" src="assets/symbols/sym-tent.png" alt="">
@@ -588,7 +588,7 @@ class Component extends DCLogic {
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
     // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
     // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
-    // ao redor, o palco com sangria (assets/bleed/stage-bleed.webp?v=3) continua o cenário. Tela deitada (computador) = moldura centralizada.
+    // ao redor, o palco com sangria (assets/bleed/stage-bleed-v4.png) continua o cenário. Tela deitada (computador) = moldura centralizada.
     const inset = w > h;
     const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
     const avail = h - safe.top - band - safe.bottom;
