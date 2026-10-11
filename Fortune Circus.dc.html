@@ -9,10 +9,8 @@
 <x-dc>
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&amp;display=swap" rel="stylesheet">
 <style>
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; height: 100%; background: #1d0733; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
 a { color: #ffd257; }
 a:hover { color: #fff3c4; }
@@ -28,9 +26,16 @@ a:hover { color: #fff3c4; }
 @keyframes fcAntic { 0%, 100% { box-shadow: 0 0 0 3px rgba(255,90,90,.8), 0 0 26px 10px rgba(255,120,40,.4) inset; } 50% { box-shadow: 0 0 0 5px rgba(255,190,90,1), 0 0 44px 18px rgba(255,120,40,.7) inset; } }
 @keyframes fcShake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-3px, 2px); } 40% { transform: translate(3px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
 @keyframes fcLine { 0% { opacity: 0; transform: scaleX(.2); } 25% { opacity: 1; transform: scaleX(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes fcLineIn { 0% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes fcLineD { 0% { opacity: 0; } 25% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes fcShine { 0% { transform: translateX(-140%) skewX(-18deg); } 100% { transform: translateX(260%) skewX(-18deg); } }
 @keyframes fcPulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+@keyframes fcGlint { 0%, 100% { opacity: .45; transform: scale(.75) rotate(0deg); } 12% { opacity: 1; transform: scale(1.3) rotate(45deg); } 30% { opacity: .45; transform: scale(.75) rotate(90deg); } }
+@keyframes fcInRimFast { 0%, 100% { opacity: .35; } 50% { opacity: .85; } }
+@keyframes fcGlass { 0% { background-position: 100% 0, 0 0; } 100% { background-position: 0% 0, 0 0; } }
+@keyframes fcLed { 0%, 100% { opacity: .12; } 10% { opacity: 1; } 32% { opacity: .12; } }
+@keyframes fcInFlash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: .15; } }
+@keyframes fcGlintOn { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: 1; transform: scale(1.4); } 100% { opacity: .9; transform: scale(1); } }
 @keyframes fcShineSpin { 0% { transform: translateX(-160%) skewX(-18deg); } 100% { transform: translateX(660%) skewX(-18deg); } }
 @keyframes fcC0 { 0% { transform: translate(0,0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(-120px,-170px) scale(1); opacity: 0; } }
 @keyframes fcC1 { 0% { transform: translate(0,0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(120px,-160px) scale(1); opacity: 0; } }
@@ -42,82 +47,96 @@ a:hover { color: #fff3c4; }
 @keyframes fcC7 { 0% { transform: translate(0,0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(35px,-245px) scale(1); opacity: 0; } }
 </style>
 </helmet>
-<div style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: manipulation; background: #1d0733;">
- <div style="position: absolute; inset: -60px; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
+<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #1d0733;">
+ <div style="position: absolute; inset: -60px; background-image: url('assets/stage-lit.webp'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
+ <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
+ <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed.webp?v=3'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
- <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: hidden; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: #1d0733; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: center center; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
- <div style="position: absolute; inset: 0; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-repeat: no-repeat; animation: {{ shake }};">
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+ <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
+ <div style="position: absolute; inset: 0; animation: {{ shake }};">
+  <div style="position: absolute; inset: 0; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect; pointer-events: none;"></div>
+  <!-- palco APAGADO (Meshy: stage-off gerado de stage-lit, mesmo enquadramento). Parado = apagado; o toque acende de baixo para cima -->
+  <div style="position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};">
+    <div style="position: absolute; inset: 0; background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
+  </div>
+  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
+  <div ref="{{ lightsBleedRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible; opacity: {{ bleedOn }};"></div>
+  <div ref="{{ lightsRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
     <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.webp'); background-size: 100% 100%; opacity: .9;"></div>
     <div style="position: absolute; left: 80px; top: 24px; width: 170px; height: 210px;">
       <dc-import name="KingRico" mood="{{ kingMood }}" mood-key="{{ kingKey }}" size="{{ 170 }}" demo="{{ false }}" hint-size="170px,210px"></dc-import>
     </div>
   </div>
-  <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front3.webp'); background-size: 100% 100%; pointer-events: none;"></div>
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+  <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front5.webp'); background-size: 100% 100%; pointer-events: none;"></div>
+  <!-- topo da moldura APAGADO (Meshy, gerado do próprio machine-front3); mesma máscara do palco = apaga/acende junto, sem emenda -->
+  <div style="position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};">
+    <div style="position: absolute; left: 0; top: 150px; width: 453px; height: 85px; background-image: url('assets/fx/machine-front6-off.webp'); background-size: 100% 100%;"></div>
+  </div>
+  <div ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
+  <div style="position: absolute; left: 0; top: 0; margin-top: {{ hudLift }}; width: 453px; height: 80px; background-image: url('assets/fx/ui-top.webp'); background-size: 100% 100%; pointer-events: none;"></div>
 
   <div style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="0" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
     <sc-if value="{{ c0.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="0" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c0.winFx }};"></div></sc-if>
     <sc-if value="{{ c0.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c0.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 219.5px; width: 122.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="1" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c1.pos }}; opacity: {{ c1.dim }}; animation: {{ c1.anim }};"></div>
     <sc-if value="{{ c1.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c1.winFx }};"></div></sc-if>
     <sc-if value="{{ c1.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c1.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="2" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c2.pos }}; opacity: {{ c2.dim }}; animation: {{ c2.anim }};"></div>
     <sc-if value="{{ c2.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="2" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c2.winFx }};"></div></sc-if>
     <sc-if value="{{ c2.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c2.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 351px; width: 126.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="3" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c3.pos }}; opacity: {{ c3.dim }}; animation: {{ c3.anim }};"></div>
     <sc-if value="{{ c3.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="3" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c3.winFx }};"></div></sc-if>
     <sc-if value="{{ c3.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c3.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 351px; width: 122.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="4" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c4.pos }}; opacity: {{ c4.dim }}; animation: {{ c4.anim }};"></div>
     <sc-if value="{{ c4.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="4" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c4.winFx }};"></div></sc-if>
     <sc-if value="{{ c4.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c4.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 351px; width: 130px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="5" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c5.pos }}; opacity: {{ c5.dim }}; animation: {{ c5.anim }};"></div>
     <sc-if value="{{ c5.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="5" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c5.winFx }};"></div></sc-if>
     <sc-if value="{{ c5.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c5.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 34.333px; top: 481px; width: 126.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="6" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c6.pos }}; opacity: {{ c6.dim }}; animation: {{ c6.anim }};"></div>
     <sc-if value="{{ c6.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="6" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c6.winFx }};"></div></sc-if>
     <sc-if value="{{ c6.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c6.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 164.333px; top: 481px; width: 122.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="7" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c7.pos }}; opacity: {{ c7.dim }}; animation: {{ c7.anim }};"></div>
     <sc-if value="{{ c7.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="7" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c7.winFx }};"></div></sc-if>
     <sc-if value="{{ c7.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c7.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
   <div style="position: absolute; left: 290.333px; top: 481px; width: 130px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="8" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c8.pos }}; opacity: {{ c8.dim }}; animation: {{ c8.anim }};"></div>
     <sc-if value="{{ c8.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="8" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcWin .7s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c8.winFx }};"></div></sc-if>
     <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
@@ -126,13 +145,13 @@ a:hover { color: #fff3c4; }
     <div style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; border-radius: 6px; animation: fcAntic .45s ease-in-out infinite; pointer-events: none;"></div>
   </sc-if>
 
-  <sc-if value="{{ l0 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 280.75px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLine 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l1 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 411.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLine 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l2 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 538.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLine 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineD 1.6s ease-out forwards; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l0 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 280.75px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l1 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 411.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l2 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 538.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
 
-  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+  <div data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
   </div>
@@ -153,35 +172,44 @@ a:hover { color: #fff3c4; }
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">+</span>
   </div>
 
-  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; z-index: {{ spinZ }}; left: 58.333px; top: 693px; width: 337px; height: 60.5px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }}; border-radius: 13px; overflow: hidden; background-color: #04561f; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ spinBgPos }}; background-repeat: no-repeat; filter: {{ spinFilter }}; box-shadow: {{ spinShadow }}; transition: {{ spinTrans }};">
-    <div style="position: absolute; top: 0; bottom: 0; width: 48px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.45), rgba(255,255,255,0)); animation: fcShineSpin 2.8s ease-in-out infinite; opacity: {{ spinShine }}; transition: opacity .3s;"></div>
+  <!-- botão de giro: a arte original (escura) + pontos de luz no aro dourado que piscam em volta -->
+  <div style="position: absolute; left: 28px; top: 664px; width: 397px; height: 120px; pointer-events: none; background-image: url('assets/bleed/stage-bleed.webp?v=3'); background-size: 755px 1132px; background-position: -179px -794px; background-repeat: no-repeat; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%); mask-composite: intersect;"></div>
+  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 48px; top: 685px; width: 357px; height: 78px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
+    <img src="assets/spin/spin-base.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none;">
+    <img src="assets/spin/spin-pressed.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ spinPressedOp }}; transition: {{ spinTrans }};">
+    <img src="assets/spin/rim-off.webp?v=3" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ rimOffOp }}; transition: {{ glassTrans }};">
+    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: #4fbf55; text-shadow: 0 -1px 0 rgba(0,40,10,.55), 0 1.5px 0 rgba(170,255,170,.35); opacity: {{ spinTextOp }}; transition: {{ spinTrans }};">KING RICO</div>
+    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: transparent; text-shadow: 0 0 10px rgba(255,214,80,.95), 0 0 22px rgba(255,180,40,.7); opacity: {{ glassOp }}; transition: {{ glassTrans }};">KING RICO</div>
+    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: transparent; background-image: linear-gradient(100deg, #ffd23c 0%, #ffd23c 38%, #fffbe6 48%, #ffffff 50%, #fffbe6 52%, #ffd23c 62%, #ffd23c 100%), linear-gradient(180deg, #fff6c8 0%, #ffcf3a 55%, #f39a10 100%); background-size: 300% 100%, 100% 100%; background-blend-mode: soft-light; -webkit-background-clip: text; background-clip: text; animation: {{ glassAnim }}; opacity: {{ glassOp }}; transition: {{ glassTrans }};">KING RICO</div>
   </div>
 
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
+  <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
+  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
   </div>
+  <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
   <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 19.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
       <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">TURBO</span>
     </div>
   </sc-if>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
+  <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
+  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
   </div>
+  <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
   <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 387.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
       <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">AUTO</span>
     </div>
   </sc-if>
 
-  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
-  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-hd-c.webp?v=2'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
+  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
+  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
 
-  <div style="position: absolute; left: 0; right: 0; top: 770px; display: flex; align-items: center; justify-content: center; height: 22px;">
-    <span style="flex: 0 0 auto; white-space: nowrap; font-size: 13px; font-weight: 700; color: #e9d2fa; text-shadow: 0 1px 3px rgba(0,0,0,.65);">{{ hint }}</span>
-  </div>
 
   <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 106.5px; top: -22px; width: 240px; height: 240px; pointer-events: none; border-radius: 50%; mix-blend-mode: screen; background: repeating-conic-gradient(from 0deg, rgba(255,214,90,.5) 0deg 9deg, rgba(255,214,90,0) 9deg 22.5deg); -webkit-mask-image: radial-gradient(circle, #000 28%, transparent 68%); mask-image: radial-gradient(circle, #000 28%, transparent 68%); animation: fcHalo 14s linear infinite;"></div>
   </sc-if>
+  <div style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
   <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
   </sc-if>
@@ -221,14 +249,14 @@ a:hover { color: #fff3c4; }
 
 
   <sc-if value="{{ homeOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; inset: 0; z-index: 60; background: #2a0a4a; overflow: hidden;">
+    <div style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 60; background: #2a0a4a; overflow: hidden;">
       <dc-import name="Home" on-play="{{ closeHome }}" hint-size="100%,100%" style="position: absolute; inset: 0;"></dc-import>
     </div>
   </sc-if>
   <div ref="{{ fxRef }}" style="position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: visible;"></div>
 
   <sc-if value="{{ showWin }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ dismissWin }}" role="button" style="position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(18,2,34,.62); cursor: pointer; animation: fcFade .2s ease-out;">
+    <div onClick="{{ dismissWin }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(18,2,34,.62); cursor: pointer; animation: fcFade .2s ease-out;">
       <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 22px 34px 18px; margin: 0 22px; border-radius: 22px; background: linear-gradient(180deg, rgba(74,10,106,.98), rgba(30,4,50,.98)); border: 4px solid #f0b41f; box-shadow: 0 0 0 2px rgba(255,236,160,.35), 0 18px 50px rgba(0,0,0,.7), 0 0 60px rgba(255,200,60,.35); text-align: center; overflow: hidden; animation: fcPop .4s cubic-bezier(.2,1.4,.4,1);">
         <div style="position: absolute; top: 0; bottom: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: fcShine 1.8s linear infinite; pointer-events: none;"></div>
         <div style="font-size: 20px; font-weight: 800; letter-spacing: 3px; color: #ffd257; text-shadow: 0 2px 0 rgba(0,0,0,.4);">{{ winTitle }}</div>
@@ -259,7 +287,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-    <div data-overlay="menu" style="position: absolute; inset: 0; z-index: 40; background: rgba(10,2,20,.78); animation: fcFade .2s ease-out;">
+    <div data-overlay="menu" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; background: rgba(10,2,20,.78); animation: fcFade .2s ease-out;">
       <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
       <div style="position: absolute; left: 16px; top: 70px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
 
@@ -313,7 +341,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
-    <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(12,2,24,.93); cursor: pointer; animation: fcFade .2s ease-out;">
+    <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(12,2,24,.93); cursor: pointer; animation: fcFade .2s ease-out;">
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
       
       <div style="display: flex; align-items: center; gap: 12px; width: 286px; box-sizing: border-box; padding: 6px 12px 6px 8px; border-radius: 12px; background: linear-gradient(180deg, rgba(214,70,110,.55), rgba(140,24,70,.55)); border: 1.5px solid #ffd257;">
@@ -342,49 +370,49 @@ a:hover { color: #fff3c4; }
 
   <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;">
     <img data-asset="assets|symbols|sym-coin.webp" src="assets/symbols/sym-coin.webp" alt="">
-    <img data-asset="assets|king-rico|fw|master.webp" src="assets/king-rico/fw/master.webp" alt="">
-    <img data-asset="assets|king-rico|fw|happy.webp" src="assets/king-rico/fw/happy.webp" alt="">
-    <img data-asset="assets|king-rico|fw|sad.webp" src="assets/king-rico/fw/sad.webp" alt="">
-    <img data-asset="assets|king-rico|fw|surprised.webp" src="assets/king-rico/fw/surprised.webp" alt="">
-    <img data-asset="assets|king-rico|fw|wave.webp" src="assets/king-rico/fw/wave.webp" alt="">
-    <img data-asset="assets|king-rico|fw|dance1.webp" src="assets/king-rico/fw/dance1.webp" alt="">
-    <img data-asset="assets|king-rico|fw|dance2.webp" src="assets/king-rico/fw/dance2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|cheer.webp" src="assets/king-rico/fw/cheer.webp" alt="">
-    <img data-asset="assets|king-rico|fw|tap.webp" src="assets/king-rico/fw/tap.webp" alt="">
-    <img data-asset="assets|king-rico|fw|wave2.webp" src="assets/king-rico/fw/wave2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|land.webp" src="assets/king-rico/fw/land.webp" alt="">
-    <img data-asset="assets|king-rico|fw|raise.webp" src="assets/king-rico/fw/raise.webp" alt="">
-    <img data-asset="assets|king-rico|fw|startle.webp" src="assets/king-rico/fw/startle.webp" alt="">
-    <img data-asset="assets|king-rico|fw|sad2.webp" src="assets/king-rico/fw/sad2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|dance3.webp" src="assets/king-rico/fw/dance3.webp" alt="">
-    <img data-asset="assets|king-rico|fw|crouch2.webp" src="assets/king-rico/fw/crouch2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|cheerRise.webp" src="assets/king-rico/fw/cheerRise.webp" alt="">
-    <img data-asset="assets|king-rico|fw|cheerFall.webp" src="assets/king-rico/fw/cheerFall.webp" alt="">
-    <img data-asset="assets|king-rico|fw|wave3.webp" src="assets/king-rico/fw/wave3.webp" alt="">
-    <img data-asset="assets|king-rico|fw|tapMid.webp" src="assets/king-rico/fw/tapMid.webp" alt="">
-    <img data-asset="assets|king-rico|fw|danceL.webp" src="assets/king-rico/fw/danceL.webp" alt="">
-    <img data-asset="assets|king-rico|fw|happy2.webp" src="assets/king-rico/fw/happy2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|waveIn.webp" src="assets/king-rico/fw/waveIn.webp" alt="">
-    <img data-asset="assets|king-rico|fw|waveOut.webp" src="assets/king-rico/fw/waveOut.webp" alt="">
-    <img data-asset="assets|king-rico|fw|coinHold.webp" src="assets/king-rico/fw/coinHold.webp" alt="">
-    <img data-asset="assets|king-rico|fw|coinToss.webp" src="assets/king-rico/fw/coinToss.webp" alt="">
-    <img data-asset="assets|king-rico|fw|coinLowerA.webp" src="assets/king-rico/fw/coinLowerA.webp" alt="">
-    <img data-asset="assets|king-rico|fw|coinLowerB.webp" src="assets/king-rico/fw/coinLowerB.webp" alt="">
-    <img data-asset="assets|king-rico|fw|coinLook.webp" src="assets/king-rico/fw/coinLook.webp" alt="">
-    <img data-asset="assets|king-rico|fw|jugToss.webp" src="assets/king-rico/fw/jugToss.webp" alt="">
-    <img data-asset="assets|king-rico|fw|jugCatch.webp" src="assets/king-rico/fw/jugCatch.webp" alt="">
-    <img data-asset="assets|king-rico|fw|blink.webp" src="assets/king-rico/fw/blink.webp" alt="">
-    <img data-asset="assets|king-rico|fw|hope.webp" src="assets/king-rico/fw/hope.webp" alt="">
-    <img data-asset="assets|king-rico|fw|look.webp" src="assets/king-rico/fw/look.webp" alt="">
-    <img data-asset="assets|king-rico|fw|nail.webp" src="assets/king-rico/fw/nail.webp" alt="">
-    <img data-asset="assets|king-rico|fw|danceR2.webp" src="assets/king-rico/fw/danceR2.webp" alt="">
-    <img data-asset="assets|king-rico|fw|dance2b.webp" src="assets/king-rico/fw/dance2b.webp" alt="">
-    <img data-asset="assets|king-rico|fw|waveUp.webp" src="assets/king-rico/fw/waveUp.webp" alt="">
-    <img data-asset="assets|king-rico|fw|waveDown.webp" src="assets/king-rico/fw/waveDown.webp" alt="">
-    <img data-asset="assets|king-rico|fw|happyIn.webp" src="assets/king-rico/fw/happyIn.webp" alt="">
-    <img data-asset="assets|king-rico|fw|sadIn.webp" src="assets/king-rico/fw/sadIn.webp" alt="">
-    <img data-asset="assets|king-rico|fw|surpriseLand.webp" src="assets/king-rico/fw/surpriseLand.webp" alt="">
-    <img data-asset="assets|king-rico|fw|tapRecover.webp" src="assets/king-rico/fw/tapRecover.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|master.webp" src="assets/king-rico/fw6/master.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|happy.webp" src="assets/king-rico/fw6/happy.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|sad.webp" src="assets/king-rico/fw6/sad.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|surprised.webp" src="assets/king-rico/fw6/surprised.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|wave.webp" src="assets/king-rico/fw6/wave.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|dance1.webp" src="assets/king-rico/fw6/dance1.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|dance2.webp" src="assets/king-rico/fw6/dance2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|cheer.webp" src="assets/king-rico/fw6/cheer.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|tap.webp" src="assets/king-rico/fw6/tap.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|wave2.webp" src="assets/king-rico/fw6/wave2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|land.webp" src="assets/king-rico/fw6/land.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|raise.webp" src="assets/king-rico/fw6/raise.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|startle.webp" src="assets/king-rico/fw6/startle.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|sad2.webp" src="assets/king-rico/fw6/sad2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|dance3.webp" src="assets/king-rico/fw6/dance3.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|crouch2.webp" src="assets/king-rico/fw6/crouch2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|cheerRise.webp" src="assets/king-rico/fw6/cheerRise.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|cheerFall.webp" src="assets/king-rico/fw6/cheerFall.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|wave3.webp" src="assets/king-rico/fw6/wave3.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|tapMid.webp" src="assets/king-rico/fw6/tapMid.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|danceL.webp" src="assets/king-rico/fw6/danceL.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|happy2.webp" src="assets/king-rico/fw6/happy2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|waveIn.webp" src="assets/king-rico/fw6/waveIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|waveOut.webp" src="assets/king-rico/fw6/waveOut.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|coinHold.webp" src="assets/king-rico/fw6/coinHold.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|coinToss.webp" src="assets/king-rico/fw6/coinToss.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|coinLowerA.webp" src="assets/king-rico/fw6/coinLowerA.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|coinLowerB.webp" src="assets/king-rico/fw6/coinLowerB.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|coinLook.webp" src="assets/king-rico/fw6/coinLook.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|jugToss.webp" src="assets/king-rico/fw6/jugToss.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|jugCatch.webp" src="assets/king-rico/fw6/jugCatch.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|blink.webp" src="assets/king-rico/fw6/blink.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|hope.webp" src="assets/king-rico/fw6/hope.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|look.webp" src="assets/king-rico/fw6/look.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|nail.webp" src="assets/king-rico/fw6/nail.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|danceR2.webp" src="assets/king-rico/fw6/danceR2.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|dance2b.webp" src="assets/king-rico/fw6/dance2b.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|waveUp.webp" src="assets/king-rico/fw6/waveUp.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|waveDown.webp" src="assets/king-rico/fw6/waveDown.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|happyIn.webp" src="assets/king-rico/fw6/happyIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|sadIn.webp" src="assets/king-rico/fw6/sadIn.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|surpriseLand.webp" src="assets/king-rico/fw6/surpriseLand.webp" alt="">
+    <img data-asset="assets|king-rico|fw6|tapRecover.webp" src="assets/king-rico/fw6/tapRecover.webp" alt="">
     <img data-asset="assets|happeach|f-ready.webp" src="assets/happeach/f-ready.webp" alt="">
     <img data-asset="assets|happeach|f-crouch.webp" src="assets/happeach/f-crouch.webp" alt="">
     <img data-asset="assets|happeach|f-launch.webp" src="assets/happeach/f-launch.webp" alt="">
@@ -397,18 +425,24 @@ a:hover { color: #fff3c4; }
     <img data-asset="assets|fx|basket.webp" src="assets/fx/basket.webp" alt="">
     <img data-asset="assets|fx|basket-front.webp" src="assets/fx/basket-front.webp" alt="">
     <img data-asset="assets|brand|bg-circus-stage.webp" src="assets/brand/bg-circus-stage.webp" alt="">
-    <img data-asset="assets|stage-hd-c.webp?v=2" src="assets/stage-hd-c.webp?v=2" alt="">
+    <img data-asset="assets|stage-lit.webp" src="assets/stage-lit.webp" alt="">
     <img data-asset="assets|brand|cover.webp" src="assets/brand/cover.webp" alt="">
     <img data-asset="assets|symbols|sym-coin.webp" src="assets/symbols/sym-coin.webp" alt="">
     <img data-asset="assets|reel-strip.webp" src="assets/reel-strip.webp" alt="">
     <img data-asset="assets|reel-strip-blur.webp" src="assets/reel-strip-blur.webp" alt="">
     <img data-asset="assets|symbols-v7.webp" src="assets/symbols-v7.webp" alt="">
+    <img data-asset="assets|spin|spin-base.webp" src="assets/spin/spin-base.webp" alt="">
+    <img data-asset="assets|spin|spin-pressed.webp" src="assets/spin/spin-pressed.webp" alt="">
+    <img data-asset="assets|stage-off6.webp" src="assets/stage-off6.webp" alt="">
+    <img data-asset="assets|bleed|stage-bleed.webp" src="assets/bleed/stage-bleed.webp?v=3" alt="">
     <img data-asset="assets|stage-hd-c.webp" src="assets/stage-hd-c.webp" alt="">
+    <img data-asset="assets|symbols|sym-crown.png" src="assets/symbols/sym-crown.png" alt="">
+    <img data-asset="assets|symbols|sym-tent.png" src="assets/symbols/sym-tent.png" alt="">
     <img data-asset="assets|fx|peach-body.webp" src="assets/fx/peach-body.webp" alt="">
     <img data-asset="assets|fx|peach-leaf.webp" src="assets/fx/peach-leaf.webp" alt="">
   </div>
 
-<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#4a1076"></rect><circle cx="100" cy="100" r="52" fill="#f0b41f"></circle><text x="100" y="118" font-family="Georgia, serif" font-size="46" font-weight="bold" fill="#4a1076" text-anchor="middle">FC</text></svg></template>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="lbg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#6a1fa0"></stop><stop offset=".55" stop-color="#3a0d62"></stop><stop offset="1" stop-color="#1d0733"></stop></radialGradient><linearGradient id="lgd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a8"></stop><stop offset=".5" stop-color="#f0b41f"></stop><stop offset="1" stop-color="#b8650c"></stop></linearGradient><linearGradient id="lbar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd257"></stop><stop offset="1" stop-color="#ff9f1c"></stop></linearGradient></defs><rect x="-600" y="-600" width="1400" height="1600" fill="url(#lbg)"></rect><g><animateTransform attributeName="transform" type="rotate" from="0 100 178" to="360 100 178" dur="1.6s" repeatCount="indefinite"></animateTransform><circle cx="144.0" cy="178.0" r="4.5" fill="#ffd257" opacity="0.25"></circle><circle cx="131.1" cy="209.1" r="4.5" fill="#ffd257" opacity="0.35"></circle><circle cx="100.0" cy="222.0" r="4.5" fill="#ffd257" opacity="0.45"></circle><circle cx="68.9" cy="209.1" r="4.5" fill="#ffd257" opacity="0.55"></circle><circle cx="56.0" cy="178.0" r="4.5" fill="#ffd257" opacity="0.65"></circle><circle cx="68.9" cy="146.9" r="4.5" fill="#ffd257" opacity="0.75"></circle><circle cx="100.0" cy="134.0" r="4.5" fill="#ffd257" opacity="0.85"></circle><circle cx="131.1" cy="146.9" r="4.5" fill="#ffd257" opacity="0.95"></circle></g><circle cx="100" cy="178" r="30" fill="url(#lgd)" stroke="#7a3d06" stroke-width="2.5"></circle><circle cx="100" cy="178" r="22" fill="none" stroke="#fff3c4" stroke-width="2" opacity=".8"></circle><text x="100" y="186" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#7a3d06">$</text><text x="100" y="262" text-anchor="middle" font-family="'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif" font-size="21" font-weight="800" fill="#ffd257" stroke="#5a1a00" stroke-width="3" paint-order="stroke" letter-spacing="1">FORTUNE CIRCUS</text><rect x="45" y="282" width="110" height="10" rx="5" fill="#1d0733" stroke="#ffd257" stroke-width="1.5"></rect><rect x="47" y="284" width="20" height="6" rx="3" fill="url(#lbar)"><animate attributeName="width" values="8;106;106" keyTimes="0;.85;1" dur="2.4s" repeatCount="indefinite"></animate></rect><text x="100" y="314" text-anchor="middle" font-family="'Trebuchet MS', sans-serif" font-size="12" font-weight="700" fill="#f3e2ff">Abrindo o circo…</text></svg></template>
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:453,&quot;height&quot;:802},&quot;startingBalance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1000,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:50,&quot;max&quot;:100000,&quot;step&quot;:50,&quot;section&quot;:&quot;Jogo&quot;},&quot;defaultBet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:10,&quot;options&quot;:[1,2.5,5,10,25,50],&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;},&quot;featureChance&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;}}">
@@ -428,13 +462,14 @@ const WILD = 9;
 // Haptics: one table for the whole game. Web can't set amplitude, so "intensity" = pulse length (ms).
 // Rule: touch confirms touch (short), outcomes scale with value, nothing buzzes continuously or on passive repeats.
 const HAPTIC = {
-  tap: 8,                       // menu items, +/-, modal OK — light confirmation
-  press: 14,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
-  reelStop: 5, lastStop: 11,    // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
-  tease: [10, 70, 10, 70, 14],  // C1 suspense in auto (rising heartbeat)
-  win: 18, winMid: [22, 50, 22], winBig: [40, 60, 40, 60, 90], jackpot: [60, 40, 60, 40, 60, 40, 140],
-  peachLand: 12, danceLand: 14, basketIn: 16, feature: [40, 60, 40, 60, 90], impact: [26, 40, 16], lock: 10,
-  error: [18, 70, 18], preview: 18
+  // Motores de celular quase não giram abaixo de ~20 ms: nenhum pulso fica abaixo disso.
+  tap: 22,                      // menu items, +/-, modal OK — light confirmation
+  press: 35,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
+  reelStop: 18, lastStop: 35,   // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
+  tease: [25, 70, 25, 70, 35],  // C1 suspense in auto (rising heartbeat)
+  win: 45, winMid: [45, 60, 45], winBig: [70, 70, 70, 70, 130], jackpot: [90, 50, 90, 50, 90, 50, 220],
+  peachLand: 28, danceLand: 32, basketIn: 38, feature: [70, 70, 70, 70, 130], impact: [55, 40, 35], lock: 25,
+  error: [40, 80, 40], preview: 35
 };
 const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
 const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
@@ -451,10 +486,44 @@ const SKEY = 'fortuneCircus.slot.v3';
 
 // Asset resolver: published/bundled builds only rewrite URLs that appear in the template, so every image the code
 // creates at runtime is looked up in the hidden registry (img[data-asset]) and uses that element's resolved src.
-const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
+const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).split('?')[0].replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
+// Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
+// Faixa do banner de anúncio no topo (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
+// (window.__fcAdBanner = true, a ser ligado pela integração do AdMob); sem anúncio, o HUD encosta na barra de status.
+const FC_AD_BAND = 60;
+// Áreas seguras (barra de status / navegação). No app Android o Capacitor injeta --safe-area-inset-*; no navegador vale env().
+const FC_SAFE_AREA = () => {
+  try {
+    let probe = document.getElementById('fc-safe-probe');
+    if (!probe) {
+      probe = document.createElement('div'); probe.id = 'fc-safe-probe';
+      probe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+      document.body.appendChild(probe);
+    }
+    const cs = getComputedStyle(probe), root = getComputedStyle(document.documentElement);
+    const v = (env, name) => Math.max(parseFloat(env) || 0, parseFloat(root.getPropertyValue('--safe-area-inset-' + name)) || 0);
+    return { top: v(cs.paddingTop, 'top'), bottom: v(cs.paddingBottom, 'bottom') };
+  } catch (e) { return { top: 0, bottom: 0 }; }
+};
+// Bordas suaves do quadro sobre o palco com sangria (12 px no espaço do quadro 453×802).
+// Recorte do quadro sobre o palco com sangria (espaço 453×802): fica a máquina (até a barra de aposta) + o botão;
+// o chão roxo ao redor some e a máquina se apoia no palco. Borda suave via desfoque do SVG; topo com transição de 40 px.
+const FC_FRAME_SVG = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 453 802\' preserveAspectRatio=\'none\'%3E%3Cfilter id=\'f\' x=\'-0.1\' y=\'-0.1\' width=\'1.2\' height=\'1.2\'%3E%3CfeGaussianBlur stdDeviation=\'5\'/%3E%3C/filter%3E%3Cg filter=\'url%28%23f%29\' fill=\'%23fff\'%3E%3Crect x=\'5\' y=\'-40\' width=\'443\' height=\'708\'/%3E%3Crect x=\'47\' y=\'681\' width=\'359\' height=\'84\' rx=\'40\'/%3E%3C/g%3E%3C/svg%3E")';
+const FC_EDGE_MASK = FC_FRAME_SVG + ', linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
+const FC_TOP_MASK = 'linear-gradient(to right, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
+// Lâmpadas do cenário em unidades do quadro 453×802 [x, y, raio] (gerado por app/scripts/stage_art.py → bulbs.json).
+// Meia luz das lâmpadas em repouso (opacidade do abafador: 0 = acesa, 1 = apagada).
+const FC_LIGHT_IDLE = 0.72;
+// pontos de luz no aro dourado do botão de giro (coords locais 357×78), em ordem pela volta
+const FC_SPIN_GLINTS = [[60, 15, 0], [120, 14, 0], [178, 14, 0], [236, 14, 0], [296, 15, 0], [336, 39, 90], [296, 63, 0], [236, 64, 0], [178, 64, 0], [120, 64, 0], [60, 63, 0], [21, 39, 90]];
+const FC_BULBS = {"stage":[[16.4,235.1,5.95],[435.6,235.7,5.97],[16.0,283.7,6.21],[436.1,284.0,6.29],[15.7,384.6,6.44],[436.9,384.7,6.39],[437.0,440.2,6.31],[15.3,440.2,6.29],[15.1,553.3,6.23],[437.6,553.3,6.22]],"star":[[15.9,334.3,11.3],[15.0,498.1,11.7],[436.3,334.5,11.0],[437.1,498.2,11.7]],"top":[[103.8,50.0,2.3],[91.1,67.4,2.42],[71.8,80.9,2.49],[25.9,87.7,2.61],[48.4,87.5,2.52],[5.6,94.4,2.53]],"bleed":[[13.3,-124.7,3.33],[436.4,-124.5,3.6],[-5.1,-105.1,3.55],[454.9,-105.1,3.81],[476.5,-86.3,3.6],[-26.5,-86.1,3.51],[500.0,-70.3,3.77],[-49.5,-70.2,3.65],[-75.8,-56.6,3.67],[526.1,-56.5,3.77],[-106.8,-47.2,3.7],[557.1,-46.9,3.9],[-140.5,-41.1,3.51],[590.6,-40.9,3.58],[602.3,73.9,2.43],[-35.7,86.3,4.38],[-2.9,86.4,4.2],[575.9,86.5,3.84],[-125.3,86.6,3.43],[453.4,86.7,4.14],[486.6,86.5,3.77],[-62.5,89.3,4.24],[513.1,89.3,3.81],[-94.1,91.6,3.84],[544.2,91.6,3.65],[452.2,203.7,3.97],[-3.3,204.3,4.03],[-28.7,215.4,3.72],[478.8,215.3,3.84],[-99.4,295.8,3.65],[549.6,295.6,3.63],[479.2,303.7,4.05],[-28.3,305.3,4.03],[-62.4,306.6,4.1],[512.8,306.7,3.92],[553.4,873.9,5.42],[-101.0,873.9,5.38],[-30.7,885.7,5.5],[483.7,885.5,5.53],[52.3,895.7,5.67],[400.2,895.8,5.72],[139.0,901.0,5.41],[312.2,901.6,5.82],[224.5,903.1,5.73]]};
+const FC_NATIVE_HAP = () => { try { const C = window.Capacitor; return !!(C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')); } catch (e) { return false; } };
 class Component extends DCLogic {
   fxRef = React.createRef();
+  lightsRef = React.createRef();
+  lightsBleedRef = React.createRef(); // lâmpadas fora do quadro: somem quando não há palco com sangria
+  lightsTopRef = React.createRef(); // lâmpadas dos pilares: acima da crista (machine-front3 cobre a de cima)
   state = {
     balance: null, betIdx: null,
     grid: [2, 8, 7, 1, 3, 6, 0, 4, 5],
@@ -467,6 +536,7 @@ class Component extends DCLogic {
   timers = [];
 
   componentDidMount() {
+    this._glintIv = setInterval(() => this.glintSync(), 1000);
     // entry point is the Home screen: a direct top-level open of the game goes to Home first
     // entry point is the Home screen, rendered INSIDE this file (published builds are a single file)
     try { if (!/from=home|play|no3d/.test(location.search + location.hash)) this.setState({ homeOpen: true }); } catch (e) {}
@@ -487,7 +557,7 @@ class Component extends DCLogic {
       l.innerHTML = '<input type="checkbox" switch tabindex="-1" aria-hidden="true">'; document.body.appendChild(l); this._iosHap = l;
     } else this._iosHap = document.getElementById('fc-ios-hap');
     let n = 0; const done = () => { if (++n >= 2) this.setState({ ready: true }); };
-    [FC_ASSET('assets/stage-hd-c.webp'), FC_ASSET('assets/symbols-v7.webp')].forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
+    [FC_ASSET('assets/stage-lit.webp'), FC_ASSET('assets/symbols-v7.webp')].forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
     this.later(() => this.setState({ ready: true }), 2500);
     const sv = this.loadSave();
     if (sv) this.setState({
@@ -514,12 +584,37 @@ class Component extends DCLogic {
     const w = Math.max(window.innerWidth || 0, de.clientWidth || 0, (vv && vv.width) || 0);
     const h = Math.max(window.innerHeight || 0, de.clientHeight || 0, (vv && vv.height) || 0);
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
-    const sc = Math.max(0.25, Math.floor(Math.min(w / 453, h / 802) * 1000) / 1000);
-    const inset = (w - 453 * sc > 20) && (h - 802 * sc > 20);
-    if (sc === this.state.scale && inset === this.state.inset) return; // avoid resize↔render feedback loop
-    this.setState({ scale: sc, inset });
+    // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
+    // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
+    // ao redor, o palco com sangria (assets/bleed/stage-bleed.webp?v=3) continua o cenário. Tela deitada (computador) = moldura centralizada.
+    const inset = w > h;
+    const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
+    const avail = h - safe.top - band - safe.bottom;
+    const sc = Math.max(0.25, Math.floor(Math.min(w / 453, avail / 802) * 1000) / 1000);
+    // Quadro (máquina + botão) centralizado no espaço livre, um pouco acima do meio; o HUD sobe de volta hudD unidades
+    // e fica preso logo abaixo da barra de status / faixa do anúncio.
+    const hudD = inset ? 0 : Math.round(Math.max(0, avail / sc - 802) * 0.42);
+    const top = inset ? Math.round((h - 802 * sc) / 2) : safe.top + band + hudD * sc; // sem arredondar: o HUD (top − hudD) cai no mesmo pixel do saldo da Home
+    const st = this.state;
+    if (sc === st.scale && inset === st.inset && top === st.stageTop && w === st.vw && h === st.vh) return; // avoid resize↔render feedback loop
+    window.__fcLayout = { sc, safeTopU: safe.top / sc }; // a Home embutida usa a mesma escala/área segura
+    this.setState({ scale: sc, inset, stageTop: top, vw: w, vh: h, hudD });
   };
+  // luzes em volta do botão de giro, por Web Animations (as CSS não estavam rodando no repouso)
+  glintSync() {
+    const s = this.state, on = s.pressed === 'spin' || s.queued, busy = !!(s.spinning || s.feature || s.free || s.queued);
+    const mode = on ? 'on' : busy ? 'fast' : 'idle', els = document.querySelectorAll('[data-glint]');
+    if (!els.length || (mode === this._glintMode && els[0] === this._glintEl && els[0].getAnimations().length)) return;
+    this._glintMode = mode; this._glintEl = els[0];
+    const T = mode === 'fast' ? 900 : 2400;
+    els.forEach((el, i) => { el.getAnimations().forEach(a => a.cancel());
+      if (mode === 'idle') { el.animate([{ opacity: 0 }, { opacity: 0 }], { duration: 1000, fill: 'forwards' }); return; } // parado: apagadas
+      if (mode === 'on') el.animate([{ opacity: .2, transform: 'scale(.92)' }, { opacity: 1, transform: 'scale(1.08)', offset: .35 }, { opacity: 1, transform: 'scale(1)' }], { duration: 400, easing: 'ease-out', fill: 'forwards' });
+      else el.animate([{ opacity: .14, transform: 'scale(.92)' }, { opacity: 1, transform: 'scale(1.06)', offset: .1 }, { opacity: .14, transform: 'scale(.92)', offset: .34 }, { opacity: .14, transform: 'scale(.92)' }], { duration: T, delay: -(els.length - i) * T / els.length, iterations: Infinity });
+    });
+  }
   componentDidUpdate() {
+    this.glintSync();
     const open = !!(this.state.menu || this.state.pays);
     if (open) this.pauseGame(); else this.resumeGame();
     window.__fcDance = c => this.dance(c); window.__fc = this;
@@ -533,6 +628,7 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    clearTimeout(this._flashT);
     this.stopAll(); clearInterval(this._arpTimer);
     if (this._ro) this._ro.disconnect();
     window.removeEventListener('resize', this.fit);
@@ -870,18 +966,25 @@ class Component extends DCLogic {
   };
   vib(p) {
     const k = this.state.vibLvl === 1 ? 0.5 : 1;
-    if (Array.isArray(p)) return p.map((v, i) => i % 2 === 0 ? Math.max(4, Math.round(v * k)) : Math.round(v * (k < 1 ? 1.4 : 1)));
-    return Math.max(4, Math.round(p * k));
+    if (Array.isArray(p)) return p.map((v, i) => i % 2 === 0 ? Math.max(15, Math.round(v * k)) : Math.round(v * (k < 1 ? 1.4 : 1)));
+    return Math.max(15, Math.round(p * k)); // abaixo de ~15 ms o motor não chega a girar
   }
   hap(name) {
     const s = this.state; if (!s.vibrate || !(s.vibLvl > 0)) return;
     if (HAP_PASSIVE_SKIP[name] && (s.auto || s.free || s.feature)) return;
     const p = HAPTIC[name]; if (p == null) return;
     const now = performance.now(); if (!Array.isArray(p) && now - (this._hapAt || 0) < 35) return; this._hapAt = now;
-    if (navigator.vibrate) this.buzz(p);
+    if (navigator.vibrate || FC_NATIVE_HAP()) this.buzz(p);
     else if (HAP_TOUCH[name] && this._iosHap) { try { this._iosHap.click(); } catch (e) {} } // iOS 18+: switch toggle = system tick (touch only)
   }
-  buzz(p) { try { if (this.state.vibrate && this.state.vibLvl > 0 && navigator.vibrate) navigator.vibrate(this.vib(p)); } catch (e) {} }
+  buzz(p) {
+    try {
+      if (!this.state.vibrate || !(this.state.vibLvl > 0)) return;
+      // App Android: plugin nativo FcHaptics controla a força (50% = metade da força, não metade da duração)
+      if (FC_NATIVE_HAP()) { window.Capacitor.nativePromise('FcHaptics', 'vibrate', { pattern: [].concat(p), strength: this.state.vibLvl === 1 ? 0.55 : 1 }).catch(() => {}); return; }
+      if (navigator.vibrate) navigator.vibrate(this.vib(p));
+    } catch (e) {}
+  }
   gate() { return this.state.sound; }
 
   /* ---------- audio ---------- */
@@ -1167,6 +1270,7 @@ class Component extends DCLogic {
 
   /* ---------- base spin ---------- */
   spin = () => {
+    if (this._featPending || this.state.featLock) { if (this.state.showWin) { this._spinAfterFly = false; this.dismissWin(); } return; }
     if (this.state.showWin) { const manual = !this.state.auto && !this.state.free && !this._afterWinChains; this._spinAfterFly = manual; this.dismissWin(); return; }
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
     if (!this._pressed && !this._autoSpin) { this.hap('press'); this.click(true); }
@@ -1175,7 +1279,7 @@ class Component extends DCLogic {
     setTimeout(() => { this._spinQueued = false; this.setState({ queued: false }); this.doSpin(); }, 280);
   };
   doSpin = () => {
-    if (this.state.spinning || this.state.feature) return;
+    if (this.state.spinning || this.state.feature || this._featPending) return;
     if (this.state.showWin) return;
     const fr = this.state.free;
     const bet = fr ? fr.bet : this.bet(), bal = this.balance();
@@ -1190,7 +1294,7 @@ class Component extends DCLogic {
     this.danceClear();
     this.setState({
       balance: fr ? bal : Math.round((bal - bet) * 100) / 100, free: fr ? Object.assign({}, fr, { left: fr.left - 1 }) : null, betIdx: this.state.betIdx ?? this.startIdx(),
-      spinning: true, featReady: false, spinCells: STOP_ORDER.slice(), stopped: [], locked: [], winCells: [], winLines: [], antic: false,
+      spinning: true, winCalm: false, lineGone: false, featReady: false, spinCells: STOP_ORDER.slice(), stopped: [], locked: [], winCells: [], winLines: [], antic: false,
       kingMood: 'root', kingKey: Date.now(),
       winAmount: 0, displayWin: 0, showWin: false, coins: false, shake: 'none', hint: fr ? 'Giro grátis ' + (fr.total - fr.left + 1) + ' de ' + fr.total : 'Girando…', barWin: 0, lineLbl: null, winDim: false
     });
@@ -1228,19 +1332,21 @@ class Component extends DCLogic {
     if (got) { const prev = this.state.peaches || 0; let n = 0; this._peachLand = c => { n++; this.setState(s => ({ peachShownAdd: n, peachBump: Date.now(), winCells: s.winCells.filter(x => x !== c) })); }; this.setState({ peachShownBase: prev, peachShownAdd: 0 }); }
     this.setState({
       peaches: pc,
-      spinning: false, winCells: got ? res.cells.concat(res.peach) : res.cells, winLines: res.lines, winAmount: res.win, winDim: res.win > 0,
+      spinning: false, winCalm: false, lineGone: false, winCells: got ? res.cells.concat(res.peach) : res.cells, winLines: res.lines, winAmount: res.win, winDim: res.win > 0,
       coins: big, shake: big ? 'fcShake .5s ease-in-out 2' : 'none',
       balance: Math.round((this.balance() + res.win) * 100) / 100, balPending: Math.round(((this.state.balPending || 0) + res.win) * 100) / 100,
       free: fr ? Object.assign({}, fr, { won: Math.round((fr.won + res.win) * 100) / 100 }) : fr,
       hint: peach ? 'HAPPEACH!' : res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Linha premiada!') : (fr ? 'Giro grátis' : 'Tente de novo!')
     });
-    if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); }
+    if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); this.later(() => this.lightsFlash(big || res.win >= bet * 4), 120); }
+    else this.lightsRest(); // sem prêmio: luzes voltam à meia luz quando o último rolo para
     this.save();
     // all reels have stopped: each Happeach dances, then flies to the counter
     // sequence: win lines + sound first, short beat, peaches dance one after another, short beat, then the prize modal
     const dStart = got && res.win > 0 ? 1100 : 250, STAG = 480, LAND = 2940;
     res.peach.forEach((c, k) => this.later(() => this.dance(c), dStart + k * STAG));
     const wait = got ? dStart + LAND + STAG * (got - 1) + 650 : 950; // plain win: show the line first, then the modal
+    if (peach || trigger) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
     const next = () => {
       if (peach) return this.later(() => this.startPeachFeature(bet), 300);
       const f2 = this.state.free;
@@ -1265,7 +1371,7 @@ class Component extends DCLogic {
     if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 1350);
     this.later(() => {
       const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ barWin: 0, lineLbl: null, winDim: false }); if (then) then(); };
-      const pend = this.state.balPending || 0; if (pend > 0) this.coinFly(pend, finish); else finish();
+      const calm = () => { if (this.state.winCells.length) this.setState({ winCalm: true }); }; const pend = this.state.balPending || 0; if (pend > 0) { this.setState({ lineGone: true }); this.coinFly(pend, () => { calm(); finish(); }); } else { calm(); finish(); }
     }, 2700);
   }
   spinFx(late) {
@@ -1291,19 +1397,32 @@ class Component extends DCLogic {
       const star = c0 => bmp(24, 24, x => { x.fillStyle = c0; x.beginPath(); [[12,0],[15,9],[24,12],[15,15],[12,24],[9,15],[0,12],[9,9]].forEach(([u, v], k) => k ? x.lineTo(u, v) : x.moveTo(u, v)); x.closePath(); x.fill(); });
       const stars = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'].map(star);
       const sparks = Array.from({ length: 8 }, (_, k) => { const s = 7 + (k % 3) * 3, d = img(stars[k % 4], 'width:' + s + 'px;height:' + s + 'px;'); d._s = s; return d; });
-      return { sparks, PAD, wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (398 + PAD * 2) + 'px;height:' + (396 + PAD * 2) + 'px;'),
+      // luz própria do botão de giro (337×60,5 em 58,3/693, raio 13): aro dourado + clarão interno, ambos bitmaps
+      const BW = 337, BH = 60.5, rr = (x, X, Y, W, H, r) => { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); };
+      const core = bmp(BW * 2, Math.ceil(BH * 2), x => { x.scale(2, 2); rr(x, 0, 0, BW, BH, 13); x.clip();
+        const g = x.createRadialGradient(BW / 2, BH / 2, 0, BW / 2, BH / 2, BW / 2); g.addColorStop(0, 'rgba(255,252,225,.95)'); g.addColorStop(.35, 'rgba(255,230,140,.55)'); g.addColorStop(1, 'rgba(255,200,80,0)');
+        x.fillStyle = g; x.fillRect(0, 0, BW, BH); });
+      const bc = 'translate3d(58.333px,693px,0)';
+      return { sparks, PAD, bc, core: img(core, 'width:337px;height:60.5px;'), wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (398 + PAD * 2) + 'px;height:' + (396 + PAD * 2) + 'px;'),
         c1: img(comet, 'width:34px;height:34px;'), c2: img(comet, 'width:34px;height:34px;') };
     })());
-    if (late === 'prebuild') return; // built at load so the first spin has no build/decode hitch
-    [P.wave, P.glow, P.c1, P.c2, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
+    if (late === 'prebuild') { this.buildLights(); return; } // built at load so the first spin has no build/decode hitch
+    this.lightsPulse(D);
+    [P.wave, P.glow, P.c1, P.c2, P.core, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
+    // a luz nasce no botão: clarão interno + aro acende no toque, depois a energia sai pelas pontas do botão
+    P.core.animate([{ transform: P.bc, opacity: 0 }, { transform: P.bc, opacity: .9, offset: .15 }, { transform: P.bc, opacity: 0 }], { duration: D + 160, easing: 'ease-out', fill: 'forwards' });
     const WX = 223.5 - 30, WY = 722 - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
     if (!late) P.wave.animate([{ transform: wt(.3), opacity: 0 }, { transform: wt(2), opacity: 1, offset: .2 }, { transform: wt(9), opacity: .9, offset: .85 }, { transform: wt(10.5), opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
     const gt = 'translate3d(' + (28 - P.PAD) + 'px,' + (212 - P.PAD) + 'px,0)';
     P.glow.animate([{ transform: gt, opacity: 0 }, { transform: gt, opacity: 1, offset: .12 }, { transform: gt, opacity: .55, offset: .5 }, { transform: gt, opacity: 0 }], { duration: 650, delay: D + 34, easing: 'ease-out', fill: 'forwards' });
     const T = 212, R = 426, B = 608, CX = 227, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
+    // cometas: saem do meio do botão, correm o aro dele até a ponta, sobem para o canto da moldura e dão a volta nela
     [[P.c1, 1], [P.c2, -1]].forEach(([el, side]) => {
       const X = v => CX + (v - CX) * side, K = (x, y, o, op) => ({ offset: o, transform: 'translate3d(' + (X(x) - 17) + 'px,' + (y - 17) + 'px,0)', opacity: op });
-      el.animate([K(CX, B, 0, 0), K(CX + 30, B, .04, 1), K(R, B, o1, 1), K(R, T, o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: 520, delay: D + 50, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' });
+      if (late) { el.animate([K(CX, B, 0, 0), K(CX + 30, B, .04, 1), K(R, B, o1, 1), K(R, T, o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: 520, delay: 50, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' }); return; }
+      const BY = 694, BR = 390, lead = D + 50, tt = lead + 520, f = t => t / tt;
+      el.animate([K(CX, BY, 0, 0), K(CX + 20, BY, f(30), 1), K(BR, BY, f(lead * .7), 1), K(R - 6, B + 6, f(lead), 1),
+        K(R, B, f(lead) + (1 - f(lead)) * o1 * .15, 1), K(R, T, f(lead) + (1 - f(lead)) * o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: tt, easing: 'linear', fill: 'forwards' });
     });
     const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722;
     // sparks reuse the persistent pool (no per-spin DOM churn)
@@ -1313,6 +1432,79 @@ class Component extends DCLogic {
       const tr = (dx, dy, sc, rot) => 'translate3d(' + (x0 + dx).toFixed(1) + 'px,' + (y0 + dy).toFixed(1) + 'px,0) scale(' + sc + ') rotate(' + (rot || 0) + 'deg)';
       st.animate([{ transform: tr(0, 0, .3), opacity: 0 }, { transform: tr(Math.cos(a) * r * .5, Math.sin(a) * r * .5, 1.1), opacity: 1, offset: .3 }, { transform: tr(Math.cos(a) * r, Math.sin(a) * r + 8, 0, 160), opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });
     });
+  }
+  /* ---------- luzes do cenário ----------
+     Em repouso: cada lâmpada tem um "abafador" (disco escuro suave) em meia luz. No giro: os abafadores saem em onda
+     a partir do botão (junto com o pulso) e um brilho acende; depois voltam devagar. Em prêmio: as luzes piscam
+     alternadas. Na Rodada Especial: ficam acesas. Só opacity/transform em bitmaps pré-desenhados (regra anti-piscada). */
+  buildLights() {
+    const host = this.lightsRef.current, hostTop = this.lightsTopRef.current; if (!host || !hostTop || this._lights || !host.animate) return this._lights;
+    const bmp = (stops) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+      stops.forEach(([o, col]) => g.addColorStop(o, col)); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return c.toDataURL('image/png'); };
+    const dimSrc = bmp([[0, 'rgba(36,10,6,.84)'], [.3, 'rgba(36,10,6,.72)'], [.55, 'rgba(26,6,22,.38)'], [1, 'rgba(26,6,22,0)']]);
+    const glowSrc = bmp([[0, '#fffbe8'], [.16, 'rgba(255,238,175,1)'], [.36, 'rgba(255,204,92,.7)'], [.68, 'rgba(255,150,40,.2)'], [1, 'rgba(255,140,30,0)']]);
+    // estrela dourada do pilar: brilho em forma de estrela de 5 pontas
+    const starSrc = (() => { const c = document.createElement('canvas'); c.width = c.height = 96; const x = c.getContext('2d');
+      const g = x.createRadialGradient(48, 48, 0, 48, 48, 48); g.addColorStop(0, 'rgba(255,236,160,.85)'); g.addColorStop(.35, 'rgba(255,200,80,.45)'); g.addColorStop(1, 'rgba(255,160,40,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 96, 96);
+      x.shadowColor = 'rgba(255,214,90,1)'; x.shadowBlur = 14; x.fillStyle = '#fff6c2'; x.beginPath();
+      for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 26; x.lineTo(48 + Math.cos(a) * r, 48 + Math.sin(a) * r); }
+      x.closePath(); x.fill(); x.fill(); return c.toDataURL('image/png'); })();
+    const make = (src, x, y, d, op, h) => { const i = new Image(); i.src = src; i.alt = ''; i.decoding = 'sync';
+      i.style.cssText = 'position:absolute;left:' + (x - d / 2).toFixed(1) + 'px;top:' + (y - d / 2).toFixed(1) + 'px;width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;opacity:' + op + ';pointer-events:none;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0);';
+      (h || host).appendChild(i); return i; };
+    // tamanho do abafador/brilho por grupo: pilar é estreito (não pode escurecer as casas dos rolos)
+    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7] }, list = [];
+    const hostBleed = this.lightsBleedRef.current || host;
+    // pilares: a luz vem das imagens acesa/apagada — sem abafador/brilho de código por cima das lâmpadas deles
+    Object.keys(FC_BULBS).filter(g => g !== 'star').forEach(g => FC_BULBS[g].filter(([x, y]) => !(g === 'stage' && (x < 40 || x > 413) && y > 190 && y < 625)).forEach(([x, y, r]) => {
+      const h = g === 'stage' ? hostTop : g === 'bleed' ? hostBleed : host;
+      const dim = make(dimSrc, x, y, r * 2 * K[g][0], FC_LIGHT_IDLE, h), glow = make(glowSrc, x, y, r * 2 * K[g][1], 0, h);
+      list.push({ x, y, dim, glow, i: list.length });
+    }));
+    this._lightIdle = FC_LIGHT_IDLE; this._glowIdle = 0;
+    return (this._lights = list);
+  }
+  lightsPulse(delay) {
+    const L = this.buildLights(); if (!L) return;
+    const I = this._lightIdle, G = this._glowIdle, bx = 223.5, by = 722;
+    this._lightsHeld = true; clearTimeout(this._flashT);
+    L.forEach(b => {
+      const d = (delay || 0) + Math.hypot(b.x - bx, b.y - by) / 2.2; // onda saindo do botão (~0,9 unidade/ms)
+      this.lightStop(b);
+      // acende na onda e fica aceso até os rolos pararem (lightsRest)
+      b.dA = b.dim.animate([{ opacity: I }, { opacity: 0 }], { duration: 180, delay: d, easing: 'ease-out', fill: 'forwards' });
+      b.gA = b.glow.animate(b.rect ? [{ opacity: G }, { opacity: 1, offset: .3 }, { opacity: .85 }] : [{ opacity: G, transform: 'translateZ(0) scale(.6)' }, { opacity: 1, transform: 'translateZ(0) scale(1.15)', offset: .3 },
+        { opacity: .85, transform: 'translateZ(0) scale(1)' }], { duration: 600, delay: d, easing: 'ease-out', fill: 'forwards' });
+    });
+  }
+  // cancela pelas referências guardadas: o Chrome pode não listar em getAnimations() uma animação terminada com fill
+  lightStop(b) { [b.dA, b.gA].forEach(a => a && a.cancel()); b.dA = b.gA = null; b.dim.getAnimations().forEach(a => a.cancel()); b.glow.getAnimations().forEach(a => a.cancel()); }
+  lightsRest() {
+    const L = this._lights; if (!L || !this._lightsHeld) return;
+    this._lightsHeld = false;
+    const I = this._lightIdle, G = this._glowIdle;
+    // apaga tudo no mesmo frame, sem fade
+    L.forEach(b => { this.lightStop(b); b.dim.style.transition = b.glow.style.transition = 'none'; b.dim.style.opacity = I; b.glow.style.opacity = G; });
+  }
+  lightsFlash(big) {
+    const L = this.buildLights(); if (!L) return;
+    const I = this._lightIdle, n = big ? 6 : 3;
+    L.forEach(b => {
+      const off = (b.i % 2) * 190; // metade pisca enquanto a outra metade apaga (corre pela moldura)
+      this.lightStop(b);
+      // parte aceso (o giro deixou tudo aceso), pisca e termina aceso; depois lightsRest leva à meia luz
+      b.dA = b.dim.animate([{ opacity: 0 }, { opacity: I, offset: .5 }, { opacity: 0 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
+      b.gA = b.glow.animate([{ opacity: .85 }, { opacity: .1, offset: .5 }, { opacity: .85 }], { duration: 380, delay: off, iterations: n, fill: 'both' });
+    });
+    this._lightsHeld = true;
+    clearTimeout(this._flashT); this._flashT = setTimeout(() => this.lightsRest(), n * 380 + 190 + 150);
+  }
+  lightsLevel(lit) {
+    const L = this.buildLights(); if (!L) return;
+    const I = lit ? 0.08 : FC_LIGHT_IDLE; if (I === this._lightIdle) return;
+    this._lightIdle = I; this._glowIdle = lit ? 0.55 : 0; this._lightsHeld = false; clearTimeout(this._flashT);
+    L.forEach(b => { this.lightStop(b); b.dim.style.transition = 'none'; b.dim.style.opacity = I; b.glow.style.transition = 'none'; b.glow.style.opacity = lit ? 0.55 : 0; });
   }
   featBanner() {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
@@ -1337,8 +1529,8 @@ class Component extends DCLogic {
     this.setState(s => ({ showWin: false, coins: false, shake: 'none', displayWin: s.winBigText ? s.displayWin : s.winAmount }));
     const fn = this._afterWin; this._afterWin = null;
     const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ winDim: false, lineLbl: null, barWin: 0, goldGrid: false }); if (fn) fn(); if (this._spinAfterFly) { this._spinAfterFly = false; this.later(() => this.spin(), 60); } };
-    const pend = this.state.balPending || 0;
-    if (pend > 0) this.coinFly(pend, finish); else finish();
+    const calm = () => { if (this.state.winCells.length) this.setState({ winCalm: true }); }; const pend = this.state.balPending || 0;
+    if (pend > 0) { this.setState({ lineGone: true }); this.coinFly(pend, () => { calm(); finish(); }); } else { calm(); finish(); }
   };
   shownBalance() { return Math.max(0, Math.round((this.balance() - (this.state.balPending || 0)) * 100) / 100); }
   // after the prize modal: 3D coins burst from the prize and fly into the balance pill; balance ticks up per coin
@@ -1385,7 +1577,8 @@ class Component extends DCLogic {
     P.fit();
     const bet = this.bet(), sp = this.state.turbo ? 0.7 : 1;
     const n = Math.min(P.max, amount >= bet * 12 ? 32 : amount >= bet * 4 ? 22 : 14);
-    const sx = 226.5, sy = 400, tx = 36.8, ty = 48, STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
+    const LC = [283.25, 414, 541, 410.25, 410.25], wl = (this.state.winLines || [])[0];
+    const sx = 227.3, sy = wl != null ? LC[wl] : 400, tx = 36.8, ty = 48, STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
     const coins = Array.from({ length: n }, (_, i) => {
       const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.6, rr = 45 + Math.random() * 55;
       return { d: i * STG, bx: sx + Math.cos(a) * rr, by: sy + Math.sin(a) * rr * 0.8, cx: 60 + Math.random() * 90, cy: 120 + Math.random() * 120,
@@ -1428,6 +1621,7 @@ class Component extends DCLogic {
     requestAnimationFrame(loop);
   }
   startPeachFeature(bet) {
+    this._featPending = false;
     const carry = this._peachCarry || 0; this._peachCarry = 0;
     this.setState({ peaches: carry, peachShownBase: null, peachShownAdd: 0 }, this.save);
     this.setState({
@@ -1462,11 +1656,13 @@ class Component extends DCLogic {
 
   /* ---------- respin feature ---------- */
   startFeature(bet) {
+    this._featPending = false;
     const pool = SYMBOLS.slice(0, WILD);
     const total = pool.reduce((a, s) => a + s.w, 0);
     let r = Math.random() * total, sym = 0;
     for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) { sym = i; break; } }
     this.sfxFeature();
+    this.lightsLevel(true); // Rodada Especial: palco todo aceso
     this.setState({
       feature: { sym, round: 0 }, featLeft: FEAT_SPINS, bet, grid: [-1,-1,-1,-1,-1,-1,-1,-1,-1], locked: [],
       winCells: [], winLines: [], showWin: false, displayWin: 0, hint: 'RODADA ESPECIAL!',
@@ -1499,7 +1695,7 @@ class Component extends DCLogic {
       });
     });
     this._respinEnd = () => {
-      this.stopWhirr();
+      this.stopWhirr(); this.lightsRest();
       const newLocks = result.filter(r => r.v >= 0).length;
       this.setState({ spinning: false, spinCells: [] });
       if (this.state.featLeft > 0 && this.state.locked.length < 9) { this.setState({ featReady: true }); this.later(() => this.peachPress(() => this.respin(sym, bet)), 500 * sp); }
@@ -1523,6 +1719,7 @@ class Component extends DCLogic {
       if (big) this.sfxCoins();
       this.hap(res.full ? 'jackpot' : big ? 'winBig' : 'winMid');
     }
+    this.lightsLevel(false); this.later(() => this.lightsFlash(true), 120);
     this.kingSet('cheer');
     const lbls = this.lineLabels(res, bet, grid);
     const after = () => {
@@ -1596,7 +1793,15 @@ class Component extends DCLogic {
     const cv = s.feature ? (s.featLeft ?? FEAT_SPINS) : pv;
     const feat = !!s.feature;
     const vals = {
-      scale: s.scale ?? 1,
+      ...(() => { const sc = s.scale ?? 1, left = ((s.vw || 453 * sc) - 453 * sc) / 2;
+        return { bleedL: (left - 151 * sc) + 'px', bleedT: ((s.stageTop ?? 0) - 130 * sc) + 'px', bleedW: 755 * sc + 'px', bleedH: 1132 * sc + 'px', bleedOn: s.inset ? 0 : 1,
+          edgeMask: s.inset ? 'none' : FC_EDGE_MASK,
+          // janelas (prêmio, menu, tabela, Home) cobrem a tela inteira, não só o quadro
+          ovX: s.inset ? '0px' : -Math.ceil(((s.vw || 453 * sc) / sc - 453) / 2) + 'px',
+          ovT: s.inset ? '0px' : -Math.ceil((s.stageTop ?? 0) / sc) + 'px',
+          ovB: s.inset ? '0px' : -Math.ceil(((s.vh || 802 * sc) - (s.stageTop ?? 0)) / sc - 802) + 'px',
+          hudLift: -(s.hudD || 0) + 'px', topMask: s.inset ? 'none' : FC_TOP_MASK }; })(),
+      scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', stageBg: s.inset ? '#1d0733' : 'transparent' /* o palco com sangria aparece pelas bordas suaves */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
       stageOpacity: s.ready ? 1 : 0,
@@ -1622,7 +1827,7 @@ class Component extends DCLogic {
           o[k + 'C' + i] = on ? '#fff' : '#b98fd6'; }); }); return o; })(),
       feature: feat,
       featurePos: (feat ? s.feature.sym : 10) * 100 / 11 + '%',
-      fxRef: this.fxRef, testFill: this.testFill,
+      fxRef: this.fxRef, lightsRef: this.lightsRef, lightsBleedRef: this.lightsBleedRef, lightsTopRef: this.lightsTopRef, testFill: this.testFill,
       testOpacity: s.spinning || s.feature || s.free || s.showWin ? 0.35 : 1,
       testEvents: s.spinning || s.feature || s.free || s.showWin ? 'none' : 'auto',
       spinZ: s.showWin && !s.auto && !s.free && !s.feature && !s.featLock ? 31 : 'auto',
@@ -1635,7 +1840,7 @@ class Component extends DCLogic {
       pageDimBg: s.pays ? 'rgba(12,2,24,.93)' : s.menu ? 'rgba(10,2,20,.78)' : 'rgba(18,2,34,.62)',
       pageDimClick: s.pays ? this.togglePays : s.menu ? this.closeMenu : this.dismissTap,
       peachShow: !s.free || feat || pv >= PEACH_GOAL,
-      peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : '84px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
+      peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : (84 - (s.hudD || 0)) + 'px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
       peachDots: Array.from({ length: PEACH_GOAL }, (_, i) => ({ bg: i < cv ? '#ff9a5a' : 'rgba(255,255,255,.18)', sh: i < cv ? '0 0 6px rgba(255,150,90,.9)' : 'none' })),
       peachText: cv + '/' + PEACH_GOAL,
       basketLow: [[18, 46, -6, 1], [48, 47, 3, 0], [78, 46, 7, 2]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
@@ -1645,16 +1850,32 @@ class Component extends DCLogic {
       payList: SYMBOLS.map((sy, i) => ({ i, sy })).reverse().map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + Math.round(o.sy.pay / 5 * LINE_K * 10) / 10 })),
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
-        spinFilter: busy ? 'brightness(.6) saturate(1.2)' : 'none',
-        spinBgPos: busy ? '-58.333px -691px' : '-58.333px -693px',
-        spinShadow: busy ? 'inset 0 4px 12px rgba(0,0,0,.6), inset 0 -1px 0 rgba(255,255,255,.08)' : 'none',
+        spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1,
+        spinBgPos: busy ? '-48px -683px' : '-48px -685px',
+        spinShadow: busy ? 'inset 0 14px 16px -6px rgba(0,0,0,.55)' : 'none',
+        // pontos de luz no aro: em repouso correm devagar; no toque acendem juntos; girando correm rápido
+        // moldura: parada = apagada; toque/giro/prêmio/rodada = acesa (acende rápido, apaga devagar)
+        // posição da máscara: 0% = apagada inteira; 100% = acesa inteira; a transição varre de baixo (botão) para cima
+        frameOff: (s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '100%' : '0%',
+        turboDim: (s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
+        turboDimT: (s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
+        autoDim: (s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
+        autoDimT: (s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
+        frameOffT: (s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '-webkit-mask-position .2s cubic-bezier(.2,.7,.3,1), mask-position .2s cubic-bezier(.2,.7,.3,1)' : 'none',
+        // luzes girando em volta do botão: sempre correndo; no toque acendem juntas; girando correm rápido
+        ...(() => { const run = busy || s.pressed === 'spin' || s.queued;
+          return { rimOffOp: run ? 0 : 1, glassOp: run ? 1 : 0, glassTrans: 'none', glassAnim: run ? 'fcGlass .9s linear infinite' : 'none' }; })(),
+        glints: (() => { const on = s.pressed === 'spin' || s.queued, T = busy ? .9 : 2.4;
+          return FC_SPIN_GLINTS.map(([x, y, r], i) => ({ x: x + 'px', y: y + 'px', rot: (r || 0) + 'deg',
+            anim: on ? 'fcGlintOn .5s ease-out both' : 'fcGlint ' + T + 's ease-in-out ' + (i * T / FC_SPIN_GLINTS.length).toFixed(3) + 's infinite' })); })(),
         spinShine: busy ? 0 : 1,
-        spinTrans: busy ? 'filter .03s, box-shadow .03s, background-position .03s' : 'filter .35s ease, box-shadow .35s ease, background-position .18s ease' }; })(),
+        spinTrans: 'none' }; })(),
       ...(() => { const o = {}; [['turbo', 24.833, 613.2, s.turbo || s.pressed === 'turbo'], ['auto', 392.733, 614.1, s.auto || s.pressed === 'auto'], ['home', 341.833, 29.5, s.pressed === 'home'], ['menu', 391.833, 29.5, s.pressed === 'menu']].forEach(([k, l, t, on]) => {
-        o[k + 'Trans'] = on ? 'filter .03s, box-shadow .03s, background-position .03s' : 'filter .3s ease, box-shadow .3s ease, background-position .15s ease';
-        o[k + 'BgPos'] = '-' + l + 'px -' + (on ? t - 1 : t) + 'px';
-        o[k + 'Filter'] = on ? 'brightness(.84) saturate(1.08)' : 'none';
-        o[k + 'Shadow'] = on ? 'inset 0 2px 6px rgba(0,0,0,.32)' : 'none'; }); return o; })(),
+        o[k + 'Trans'] = 'none';
+        const glow = k === 'turbo' || k === 'auto';
+        o[k + 'BgPos'] = '-' + l + 'px -' + (on && !glow ? t - 1 : t) + 'px';
+        o[k + 'Filter'] = on ? (glow ? 'brightness(1.22) saturate(1.15)' : 'brightness(.84) saturate(1.08)') : 'none';
+        o[k + 'Shadow'] = on ? (glow ? 'none' : 'inset 0 2px 6px rgba(0,0,0,.32)') : 'none'; }); return o; })(),
       spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, incBet: this.incBet, decBet: this.decBet,
       goHome: () => { this.save(); if (this.state.auto) this.setState({ auto: false }); this.later(() => this.setState({ homeOpen: true }), 120); },
       homeOpen: !!s.homeOpen, closeHome: () => { const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); },
@@ -1662,7 +1883,7 @@ class Component extends DCLogic {
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu, openPays: this.openPays,
       toggleVibe: this.toggleVibe, soon: this.soon
     };
-    LINES.forEach((l, i) => { vals['l' + i] = s.winLines.indexOf(i) >= 0; });
+    LINES.forEach((l, i) => { vals['l' + i] = !s.winCalm && !s.lineGone && s.winLines.indexOf(i) >= 0; });
     s.grid.forEach((v, i) => {
       const spinning = s.spinCells.indexOf(i) >= 0;
       const win = s.winCells.indexOf(i) >= 0;
@@ -1674,7 +1895,8 @@ class Component extends DCLogic {
         lbl: (s.lineLbl && s.lineLbl[i]) || '', empty: !!(feat && v < 0 && !spinning),
         spin: spinning,
         anim: spinning || s.stopped.indexOf(i) >= 0 ? 'none'
-          : win ? 'fcBeat .5s ease-in-out infinite' : 'none'
+          : win && !s.winCalm ? 'fcBeat .5s ease-in-out infinite' : 'none',
+        winFx: s.winCalm ? 'none' : 'fcWin .7s ease-in-out infinite'
       };
     });
     return vals;
