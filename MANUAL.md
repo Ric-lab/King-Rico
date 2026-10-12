@@ -234,3 +234,11 @@ O runtime `support.js` é necessário ao lado dos `.dc.html`.
 5. Depois de cada mudança visível no jogo, teste no tamanho de celular (453 × 802 é o palco de referência) e no
    arquivo publicado (arquivo único), não só no editor.
 6. Registre custo e resultado de cada geração no log.
+
+
+## Fortune Wheel (Roda da Fortuna)
+- Arquivo: `Fortune Wheel.dc.html`. Acesso pela Home (card FORTUNE WHEEL, abaixo do Fortune Circus).
+- 12 casas: os 11 símbolos do slot + o 0 (verde). O jogador escolhe 1 símbolo, depois gira com swipe (força do gesto = força do giro, sensação de controle; resultado é sorteado).
+- Pagamento: acertar o símbolo paga x10. Casas alternam vermelho #e8352b / creme #fff1d6, 0 = #1f9a4a.
+- Ponteiro em gota dourada (SVG), balança a cada casa. Botões casa/menu = mesmo recorte da arte do Fortune Circus (stage-lit.webp).
+- Saldo compartilhado com o slot (localStorage).

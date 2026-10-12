@@ -14,3 +14,8 @@ App Android (Capacitor), testes da matemática e APK de teste: veja `docs/ANDROI
 Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mesma pasta). Para servir localmente: `npx serve .`
 
 > A chave da API do Meshy foi removida dos scripts (`MESHY_API_KEY`).
+
+
+## Jogos
+- **Fortune Circus** — slot 3×3 (`Fortune Circus.dc.html`)
+- **Fortune Wheel** — roda de 12 casas, escolha 1 símbolo e gire com swipe; paga x10 (`Fortune Wheel.dc.html`)

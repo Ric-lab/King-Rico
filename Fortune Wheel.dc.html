@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
+html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes rrChase { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
+@keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rrBlink { 0%, 100% { box-shadow: 0 0 0 3px #ffd257, 0 0 14px rgba(255,210,87,.8); } 50% { box-shadow: 0 0 0 3px #fff3c4, 0 0 26px rgba(255,230,140,1); } }
+</style>
+</helmet>
+<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
+  <div style="position: absolute; inset: 0; background-image: url('assets/bleed/stage-bleed.webp'); background-size: cover; background-position: 50% 100%;"></div>
+  <div style="position: absolute; inset: 0; background: radial-gradient(60% 34% at 50% 34%, rgba(255,190,60,.2) 0%, rgba(42,10,74,0) 70%), linear-gradient(180deg, rgba(40,8,64,.8) 0%, rgba(40,8,64,.5) 45%, rgba(30,6,50,.85) 100%);"></div>
+
+  <div data-screen-label="Fortune Wheel" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
+
+    <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
+      <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+      </div>
+    </div>
+    <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></a>
+    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
+
+    <!-- roleta -->
+    <div style="position: absolute; left: 56.5px; top: 70px; width: 340px; height: 340px;">
+      <div style="position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(160deg, #fff3c4 0%, #f0b41f 35%, #a8620a 70%, #f0b41f 100%); box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
+      <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
+        <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
+          <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
+            <div style="position: absolute; left: -1px; top: -160px; width: 2px; height: 100px; transform: rotate(15deg); transform-origin: 50% 160px; background: rgba(255,236,170,.75);"></div>
+            <div style="position: absolute; left: -27px; top: -150px; width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));"></div>
+            <span style="position: absolute; left: -27px; top: -142px; width: 54px; text-align: center; font-size: 36px; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.5); opacity: {{ sg.zeroOp }};">0</span>
+          </div>
+        </sc-for>
+        <div style="position: absolute; left: 70px; top: 70px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3d0a63 0%, #26043f 100%); box-shadow: 0 0 0 3px #f0b41f;"></div>
+      </div>
+      <div style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #fff6e6, #f3e0cc 70%, #d8b88f); box-shadow: 0 0 0 4px #f0b41f, 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
+        <div style="position: absolute; inset: 8px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ hubPos }}; opacity: {{ hubIconOp }};"></div>
+        <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #6b2e05; opacity: {{ hubQOp }};">{{ hubChar }}</span>
+      </div>
+      <div ref="{{ ptrRef }}" style="position: absolute; left: 154px; top: -30px; width: 32px; height: 50px; transform-origin: 16px 14px; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55));">
+        <svg width="32" height="50" viewBox="0 0 32 50" style="position: absolute; left: 0; top: 0; overflow: visible;">
+          <defs>
+            <linearGradient id="fwPtrG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fff6d0"></stop>
+              <stop offset="0.35" stop-color="#ffd257"></stop>
+              <stop offset="1" stop-color="#c27a0c"></stop>
+            </linearGradient>
+          </defs>
+          <path d="M16 48 C11 37 3 27 3 15 A13 12 0 0 1 29 15 C29 27 21 37 16 48 Z" fill="url(#fwPtrG)" stroke="#4a1f03" stroke-width="2.5" stroke-linejoin="round"></path>
+          <path d="M9 12 A8 7 0 0 1 17 6" fill="none" stroke="#fffbe6" stroke-width="2.5" stroke-linecap="round" opacity="0.85"></path>
+        </svg>
+      </div>
+      <sc-if value="{{ showHint }}" hint-placeholder-val="{{ true }}">
+        <div style="position: absolute; left: 0; right: 0; top: 250px; display: flex; justify-content: center; pointer-events: none;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.88); box-shadow: 0 0 0 6px rgba(255,255,255,.3); animation: rrHint 1.4s ease-in-out infinite;"></div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- passo 2: girar -->
+    <div style="position: absolute; left: 24px; right: 24px; top: 418px; display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: {{ step2Op }};">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">2</span>
+        <span style="font-size: 22px; font-weight: 800; letter-spacing: .5px; color: #fff3c4; text-shadow: 0 2px 4px rgba(0,0,0,.6);">{{ step2Text }}</span>
+      </div>
+      <div style="width: 240px; height: 12px; border-radius: 99px; padding: 2px; background: #250842; box-shadow: inset 0 2px 4px rgba(0,0,0,.6), 0 0 0 2px #c8871a; opacity: {{ forceOp }};">
+        <div style="height: 100%; width: {{ forcePct }}; border-radius: 99px; background: linear-gradient(90deg, #ffe27a, #ff9f1c 60%, #e8401a); transition: {{ forceTrans }};"></div>
+      </div>
+    </div>
+
+    <!-- passo 1: escolher -->
+    <div style="position: absolute; left: 18px; right: 18px; top: 492px; padding: 12px; border-radius: 20px; background: rgba(20,4,36,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.55), 0 10px 24px rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 2px; opacity: {{ step1Op }};">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">1</span>
+          <span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Escolha um símbolo</span>
+        </div>
+        <span style="font-size: 20px; font-weight: 800; color: #ffd257;">paga x10</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+        <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
+          <div onClick="{{ op.pick }}" role="button" aria-label="Apostar em {{ op.name }}" style="position: relative; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: {{ op.ring }}; animation: {{ op.anim }}; opacity: {{ op.op }}; cursor: pointer;" style-active="filter: brightness(.88);">
+            <div style="width: 46px; height: 46px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
+            <span style="position: absolute; font-size: 32px; font-weight: 800; line-height: 1; color: #1f7a3e; opacity: {{ op.zeroOp }};">0</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- aposta -->
+<div style="position: absolute; left: 0; right: 0; top: 736px; display: flex; align-items: center; justify-content: center; gap: 14px;">
+      <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 5px 0 #4a1a00; font-size: 34px; font-weight: 800; line-height: 1; color: #6b2e05; cursor: pointer; opacity: {{ downOp }};" style-active="transform: translateY(3px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">−</div>
+      <div style="width: 180px; height: 58px; border-radius: 29px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a0a4a; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a;">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; line-height: 1; color: #d9b6f0;">APOSTA</span>
+        <span style="font-size: 30px; font-weight: 800; line-height: 1.05; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
+      </div>
+      <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 5px 0 #4a1a00; font-size: 34px; font-weight: 800; line-height: 1; color: #6b2e05; cursor: pointer; opacity: {{ upOp }};" style-active="transform: translateY(3px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">+</div>
+    </div>
+
+    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: rrFade .2s ease-out;">
+        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+        <div style="position: absolute; left: 416px; top: 470px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
+            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
+          </div>
+          <div style="display: flex; flex-direction: column; padding: 4px 18px 4px;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
+          </div>
+            <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 16px 0; cursor: pointer;">
+              <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
+              <span style="font-size: 28px; font-weight: 800; color: #ffd257;">›</span>
+            </div>
+          </div>
+          <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos do Fortune Circus e ficam salvos neste aparelho.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
+        <div style="width: 420px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
+          <div style="font-size: 20px; font-weight: 800; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Escolha 1 dos 12 símbolos. Se a roda parar nele, você ganha</div>
+          <div style="font-size: 56px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 3px 0 #6b2e05;">x10</div>
+          <div style="display: grid; grid-template-columns: repeat(4, 80px); gap: 10px;">
+            <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
+              <div style="position: relative; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: inset 0 -3px 0 rgba(0,0,0,.3);">
+                <div style="width: 56px; height: 56px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
+                <span style="position: absolute; font-size: 34px; font-weight: 800; color: #1f7a3e; opacity: {{ op.zeroOp }};">0</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-align: center; text-wrap: pretty;">Todos os símbolos valem o mesmo, inclusive o 0. Quanto mais forte você arrasta, mais a roda gira.</div>
+          <div style="padding: 10px 28px; border-radius: 999px; background: linear-gradient(180deg, #ffe27a, #f0a018); box-shadow: 0 4px 0 #8a4a05; font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #4a1a00;">FECHAR</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: rrFade .2s ease-out;">
+        <div style="width: 340px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: rrPop .45s cubic-bezier(.2,1.4,.4,1);">
+          <span style="font-size: 26px; font-weight: 800; letter-spacing: 1px; color: #ffd257;">VOCÊ GANHOU!</span>
+          <span style="font-size: 22px; font-weight: 800; color: #f0dcff;">{{ winMult }}</span>
+          <span style="font-size: 54px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
+          <div style="margin-top: 10px; padding: 12px 54px; border-radius: 999px; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36; font-size: 24px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;">OK</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+// 12 casas, sem zero. Vermelho = ímpar, preto = par. Cor paga x1,9 (RTP 95%), número paga x10 (RTP 95,8%).
+// 12 casas: 11 símbolos do slot + o 0. Acertar a casa escolhida paga x10 (RTP 83,3%).
+const POCKETS = [[-1, 'Zero'], [9, 'King Rico'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [6, 'Moeda'], [3, 'Nuvem'], [5, 'Cetro'], [0, 'Capa'], [11, 'Happeach']];
+const ORDER = POCKETS.map((_, i) => i);
+const N = POCKETS.length, SEG = 360 / N, PAY_COLOR = 1.9, PAY_NUM = 10;
+const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
+const PBG = i => i === 0 ? '#1f9a4a' : i % 2 ? '#e8352b' : '#fff1d6';
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const SKEY = 'fortuneCircus.slot.v3', WKEY = 'fortuneCircus.wheel.v2';
+const fmt = n => (Math.round(n * 10) / 10).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+const isRed = n => n % 2 === 1;
+const RED = '#c8261e', BLACK = '#1c1020';
+const WHEEL_BG = 'conic-gradient(' + ORDER.map(i => PBG(i) + ' ' + (i * SEG) + 'deg ' + ((i + 1) * SEG) + 'deg').join(', ') + ')';
+const SEGS = ORDER.map(i => ({ t: 'rotate(' + (i * SEG + SEG / 2) + 'deg)', pos: POS(i), zero: i === 0, iconOp: i === 0 ? 0 : 1, zeroOp: i === 0 ? 1 : 0 }));
+const RING_ON = '0 0 0 4px #ffd257, 0 0 16px rgba(255,210,87,.85)', RING_OFF = 'inset 0 -3px 0 rgba(150,90,40,.25), 0 2px 0 rgba(0,0,0,.25)';
+class Component extends DCLogic {
+  state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null };
+  wheelRef = React.createRef(); ptrRef = React.createRef(); rot = 0;
+  componentDidMount() {
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
+    try { const w = JSON.parse(localStorage.getItem(WKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
+  save(balance) { try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(WKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
+  ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
+  openMenu = () => { if (this.state.spinning) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
+  closeMenu = () => this.setState({ menu: false });
+  openPays = () => this.setState({ menu: false, pays: true });
+  closePays = () => this.setState({ pays: false, menu: true });
+  setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(this.state.balance); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
+  tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
+  tick(sp) { this.tone(1800 + sp * 600, 0.025, 'square', 0.035); }
+  buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(15, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
+  bet() { return BETS[this.state.betIdx]; }
+  setRot(r) { this.rot = r; const el = this.wheelRef.current; if (el) el.style.transform = 'rotate(' + r + 'deg)'; }
+  kick(amt) { const p = this.ptrRef.current; if (!p) return; p.style.transition = 'none'; p.style.transform = 'rotate(' + amt + 'deg)'; requestAnimationFrame(() => { p.style.transition = 'transform .12s ease-out'; p.style.transform = 'rotate(0deg)'; }); }
+  angleAt(e) { const r = this.wheelRef.current.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; }
+  choose(p) { if (this.state.spinning) return; this.ac(); this.buzz(22); this.tone(1100, 0.04, 'square', 0.04); this.setState({ pick: p, landed: null, hint: 'Arraste a roda com força' }); }
+  pickRed = () => this.choose({ t: 'c', v: 'red' });
+  pickBlack = () => this.choose({ t: 'c', v: 'black' });
+  down = e => {
+    if (this.state.spinning || this.state.win || this.state.menu || this.state.pays) return;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
+    this.ac(); this.drag = { last: this.angleAt(e), samples: [[performance.now(), this.rot]] }; this._lastSeg = Math.floor(this.rot / SEG);
+    this.setState({ touched: true, forceSet: false });
+  };
+  move = e => {
+    const d = this.drag; if (!d) return;
+    const a = this.angleAt(e); let da = a - d.last; if (da > 180) da -= 360; if (da < -180) da += 360; d.last = a;
+    this.setRot(this.rot + da); const now = performance.now(); d.samples.push([now, this.rot]); while (d.samples.length > 2 && now - d.samples[0][0] > 90) d.samples.shift();
+    const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; this.tick(0); this.kick(da > 0 ? -14 : 14); }
+    const s0 = d.samples[0]; this.setState({ force: Math.min(1, Math.abs((this.rot - s0[1]) / Math.max(16, now - s0[0])) / 1.6), forceSet: true });
+  };
+  up = () => {
+    const d = this.drag; if (!d) return; this.drag = null;
+    const now = performance.now(), s0 = d.samples[0], v = (this.rot - s0[1]) / Math.max(16, now - s0[0]), force = Math.min(1, Math.abs(v) / 1.6);
+    if (!this.state.pick) { this.setState({ force, hint: 'Primeiro toque em um símbolo.' }); return; }
+    if (force < 0.2) { this.setState({ force, hint: 'Mais forte! Arraste e solte' }); return; }
+    const bet = this.bet();
+    if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
+    const bal = this.state.balance - bet; this.save(bal); this.buzz(35); this.tone(180, 0.18, 'sine', 0.12, 90);
+    // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
+    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, total = dir * turns * 360, t0 = performance.now();
+    this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e);
+      const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; const sp = Math.pow(1 - k, 2); this.tick(sp); this.kick(dir > 0 ? -10 - sp * 10 : 10 + sp * 10); }
+      if (k < 1) this._raf = requestAnimationFrame(step); else this.finish(bet);
+    };
+    this._raf = requestAnimationFrame(step);
+  };
+  finish(bet) {
+    const a = ((-this.rot % 360) + 360) % 360, n = ORDER[Math.floor(a / SEG) % N], p = this.state.pick;
+    const hit = p.v === n, m = hit ? PAY_NUM : 0;
+    const where = 'Deu ' + POCKETS[n][1] + '.';
+    if (m > 0) {
+      const w = Math.round(bet * m * 10) / 10, bal = Math.round((this.state.balance + w) * 10) / 10; this.save(bal);
+      [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90));
+      this.buzz(m > 2 ? [70, 70, 70, 70, 130] : 45);
+      setTimeout(() => this.setState({ spinning: false, balance: bal, landed: n, win: { w, m }, hint: where + ' Gire de novo' }), 350);
+    } else {
+      this.tone(220, 0.3, 'sine', 0.08, 150);
+      this.setState({ spinning: false, landed: n, hint: where + ' Gire de novo' });
+    }
+  }
+  closeWin = () => this.setState({ win: null });
+  betDown = () => { if (this.state.spinning) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save(this.state.balance)); };
+  betUp = () => { if (this.state.spinning) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save(this.state.balance)); };
+  goHome = e => { if (this.state.spinning && e) e.preventDefault(); };
+  renderVals() {
+    const s = this.state, txt = fmt(Math.floor(s.balance * 10) / 10), lit = s.spinning, p = s.pick;
+    const sel = q => p && p.t === q.t && p.v === q.v;
+    return {
+      scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
+      wheelRef: this.wheelRef, ptrRef: this.ptrRef, down: this.down, move: this.move, up: this.up,
+      wheelBg: WHEEL_BG, segs: SEGS, glow: lit ? '34px' : '0px',
+      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-148px)', op: lit ? 1 : 0.35, anim: lit ? 'rrChase .5s ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
+      showHint: !s.touched && !!p,
+      forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
+      forceLabel: !s.forceSet ? '' : s.force > 0.85 ? 'MÁXIMA' : s.force > 0.55 ? 'FORTE' : s.force > 0.2 ? 'BOA' : 'FRACA',
+      pickRed: this.pickRed, pickBlack: this.pickBlack,
+      redRing: sel({ t: 'c', v: 'red' }) ? RING_ON : RING_OFF, blackRing: sel({ t: 'c', v: 'black' }) ? RING_ON : RING_OFF,
+      redAnim: sel({ t: 'c', v: 'red' }) && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none', blackAnim: sel({ t: 'c', v: 'black' }) && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none',
+      opts: [1, 2, 4, 6, 8, 10, 11, 9, 7, 5, 3, 0].map(n => { const on = sel({ t: 'n', v: n }); return { n, name: POCKETS[n][1], pos: POS(n), iconOp: n === 0 ? 0 : 1, zeroOp: n === 0 ? 1 : 0, pick: () => this.choose({ t: 'n', v: n }), bg: 'linear-gradient(180deg, #fff6e6, #f3e0cc)', ring: on ? RING_ON : s.landed === n ? '0 0 0 3px #fff' : RING_OFF, anim: on && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none', op: p && !on && !lit ? 0.5 : 1 }; }),
+      betText: fmt(this.bet()), downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
+      betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
+      menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
+      ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
+      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p || p.v === 0 ? 1 : 0, hubChar: p ? '0' : '?',
+      step1Op: p && !lit ? 0.7 : 1, step2Op: p ? 1 : 0.45, forceOp: s.forceSet ? 1 : 0.5,
+      step2Text: !p ? 'Depois, arraste a roda' : s.hint,
+      win: !!s.win, winText: s.win ? '+' + fmt(s.win.w) : '', winMult: s.win ? 'x' + fmt(s.win.m) + ' da aposta' : '', closeWin: this.closeWin
+    };
+  }
+}
+</script>
+</body>
+</html>
