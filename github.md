@@ -2,8 +2,34 @@ repo: Ric-lab/King-Rico
 branch: main
 
 ## Last sync
+commit: b04818a2f19681b19cc381ee89aa2328a9020657
+date: 2026-10-12T01:12:36.449Z
+### Updated in this project
+- Fortune Wheel publicado (capa na Home, x10, ponteiro gota, botões do Fortune Circus); MANUAL/README atualizados
+
+### Sync
+commit: 6888433f3a6a4d42ef0943837d91da06b176fded
+date: 2026-10-11T23:09:19.651Z
+### Updated in this project
+- Tabela de pagamentos maior; game.html republicado; design system alinhado
+
+### Sync
+commit: 2511f95dc6b4fa1f600662b8ad18d1a28299c953
+### Updated in this project
+- Design system atualizado (guia, cartões, fontes, UI kit)
+
+### Sync
+commit: 871137b5afed2defbbbfe16843c690da5efc09aa
+### Updated in this project
+- Limpeza: removidos ~300 arquivos de desenvolvimento não usados (poses PNG, quadros fw/web, referências da moldura, palcos antigos)
+
+### Sync
+commit: 675ab635e8d0f2f8680305481778b937f4f15323
+### Updated in this project
+- Sincronização completa: 110 arquivos novos (quadros do King Rico, máquina/luzes, botão de giro, sangria)
+
+### Sync
 commit: 44b568056e6470c078d2402c43da97082d93f6fc
-date: 2026-10-11T19:56:24.510Z
 ### Updated in this project
 - Tela de carregamento nova no game.html (moeda girando, barra de progresso, textos em PT)
 
@@ -38,6 +64,7 @@ commit: 31bd99882a8e685e04c2a87c8b76b549fde0e280
 |---|---|
 | Home | Home.dc.html |
 | Jogo | Fortune Circus.dc.html |
+| Roda | Fortune Wheel.dc.html |
 | King Rico (animações) | King Rico.dc.html |
 | Biblioteca 3D | 3D Library.html |
 ### Sync
