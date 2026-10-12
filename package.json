@@ -1,0 +1,31 @@
+{
+  "name": "king-rico",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:emulator": "node scripts/build.mjs --emulator",
+    "test": "node --test tests/*.test.cjs tests/*.test.mjs",
+    "emulators": "npm run build:emulator && node scripts/emulators.mjs",
+    "test:integration": "npm run build:emulator && node scripts/emulators.mjs --test"
+  },
+  "dependencies": {
+    "firebase": "12.19.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@babel/standalone": "7.29.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "esbuild": "0.28.2",
+    "firebase-tools": "15.33.0"
+  },
+  "overrides": {
+    "@firebase/firestore": {
+      "@grpc/grpc-js": "1.13.6"
+    }
+  },
+  "engines": {
+    "node": ">=22.23.3 <23"
+  }
+}

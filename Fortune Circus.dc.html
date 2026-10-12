@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./cloud/firebase-config.js"></script>
+<script defer src="./cloud/client.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -329,14 +331,21 @@ a:hover { color: #fff3c4; }
 
         <div style="padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 7px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22);">
           <span style="font-size: 19px; font-weight: 800; color: #fff3c4;">Seu progresso</span>
-          <span style="font-size: 15px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Moedas, aposta e ajustes são salvos automaticamente neste aparelho. A rodada em andamento não é salva.</span>
-          <span style="font-size: 15px; font-weight: 800; line-height: 1.45; color: #f0dcff;">Backup na nuvem indisponível nesta versão.</span>
+          <span style="font-size: 15px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">{{ progressText }}</span>
+          <span style="font-size: 15px; font-weight: 800; line-height: 1.45; color: #f0dcff;">{{ cloudText }}</span>
           <div style="display: flex; gap: 16px; padding-top: 4px;">
             <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Privacidade</span>
             <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Termos</span>
             <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Suporte</span>
           </div>
         </div>
+
+          <sc-if value="{{ cloudEnabled }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,210,87,.22);">
+              <button data-cloud-signout style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Sair da conta</button>
+              <button data-cloud-analytics style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Dados de uso: {{ analyticsLabel }}</button>
+            </div>
+          </sc-if>
       </div>
     </div>
   </sc-if>
@@ -538,6 +547,11 @@ class Component extends DCLogic {
   timers = [];
 
   componentDidMount() {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
+      this._cloudDeferred = p;
+      if (!this.cloudBusy()) this.applyCloudPlayer();
+    });
     this._glintIv = setInterval(() => this.glintSync(), 1000);
     // entry point is the Home screen: a direct top-level open of the game goes to Home first
     // entry point is the Home screen, rendered INSIDE this file (published builds are a single file)
@@ -615,7 +629,15 @@ class Component extends DCLogic {
       else el.animate([{ opacity: .14, transform: 'scale(.92)' }, { opacity: 1, transform: 'scale(1.06)', offset: .1 }, { opacity: .14, transform: 'scale(.92)', offset: .34 }, { opacity: .14, transform: 'scale(.92)' }], { duration: T, delay: -(els.length - i) * T / els.length, iterations: Infinity });
     });
   }
+  cloudBusy() { return this._cloudRequest || this.state.spinning || this.state.queued || this.state.feature || this.state.featLock || this.isCeleb(); }
+  applyCloudPlayer() {
+    const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
+    const first = this._cloudUid !== window.KingRicoCloud.uid; this._cloudUid = window.KingRicoCloud.uid;
+    this.setState({ balance: p.balance, peaches: p.peaches, ...(first ? { betIdx: p.settings.slotBetIdx,
+      sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, sound: p.settings.sfxLvl > 0, vibrate: p.settings.vibLvl > 0 } : {}) });
+  }
   componentDidUpdate() {
+    if (this._cloudDeferred && !this.cloudBusy()) this.applyCloudPlayer();
     this.glintSync();
     const open = !!(this.state.menu || this.state.pays);
     if (open) this.pauseGame(); else this.resumeGame();
@@ -630,6 +652,7 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    this._unwatchCloud && this._unwatchCloud();
     clearTimeout(this._flashT);
     this.stopAll(); clearInterval(this._arpTimer);
     if (this._ro) this._ro.disconnect();
@@ -739,6 +762,7 @@ class Component extends DCLogic {
   }
   // TEST: fill the basket one by one, then open the Special Round
   testFill = () => {
+    if (window.KingRicoCloud && window.KingRicoCloud.enabled) return;
     const s = this.state;
     if (s.spinning || s.feature || s.free || s.showWin || this._testing) return;
     this._testing = true; this.click(true);
@@ -958,6 +982,9 @@ class Component extends DCLogic {
   /* ---------- progresso + feedback ---------- */
   loadSave() { try { return JSON.parse(localStorage.getItem(SKEY)) || null; } catch (e) { return null; } }
   save = () => {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) { cloud.settings({ sfxLvl: this.state.sfxLvl ?? 2, vibLvl: this.state.vibLvl ?? 2,
+      slotBetIdx: this.state.betIdx ?? this.startIdx() }); return; }
     try {
       localStorage.setItem(SKEY, JSON.stringify({
         balance: this.balance(), betIdx: this.state.betIdx ?? this.startIdx(),
@@ -1279,14 +1306,22 @@ class Component extends DCLogic {
     if (!this.state.free) { this.spinFx(false); this._fxFired = true; }
     setTimeout(() => { this._spinQueued = false; this.setState({ queued: false }); this.doSpin(); }, 280);
   };
-  doSpin = () => {
+  doSpin = async () => {
     if (this.state.spinning || this.state.feature || this._featPending) return;
     if (this.state.showWin) return;
     const fr = this.state.free;
-    const bet = fr ? fr.bet : this.bet(), bal = this.balance();
+    const bet = fr ? fr.bet : this.bet(); let bal = this.balance(), cloudResult = null;
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) {
+      if (this._cloudRequest) return;
+      this._cloudRequest = true; this.setState({ spinning: true, hint: 'Confirmando giro…' });
+      try { cloudResult = await cloud.spin('circus', bet); this._cloudSpin = cloudResult; bal = cloudResult.balanceBefore; }
+      catch (e) { this.setState({ spinning: false, auto: false, hint: 'Não foi possível confirmar o giro' }); cloud.error(e); return; }
+      finally { this._cloudRequest = false; }
+    }
     if (!fr && bet > bal) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
 
-    const target = Array.from({ length: 9 }, () => this.pick());
+    const target = cloudResult ? cloudResult.outcome.grid : Array.from({ length: 9 }, () => this.pick());
     { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
     const near = (a, b) => a === b || a === WILD || b === WILD;
@@ -1317,7 +1352,7 @@ class Component extends DCLogic {
         onDone: () => {
           this.setState(s => ({ spinCells: s.spinCells.filter(c => c !== cell), antic: k === 6 ? anticipate : (k === 8 ? false : s.antic) }));
           if (k === 6 && anticipate) this.later(() => this.sfxAntic(), 40);
-          if (--left === 0) this.later(() => { this.stopWhirr(); this.payout(this.evaluate(target, bet), bet, trigger); }, 240);
+          if (--left === 0) this.later(() => { this.stopWhirr(); this.payout(cloudResult ? cloudResult.outcome.res : this.evaluate(target, bet), bet, trigger); }, 240);
         }
       });
     });
@@ -1663,6 +1698,8 @@ class Component extends DCLogic {
     const total = pool.reduce((a, s) => a + s.w, 0);
     let r = Math.random() * total, sym = 0;
     for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) { sym = i; break; } }
+    if (window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature) sym = this._cloudSpin.outcome.feature.sym;
+    this._cloudFeatureRound = 0;
     this.sfxFeature();
     this.lightsLevel(true); // Rodada Especial: palco todo aceso
     this.setState({
@@ -1681,7 +1718,8 @@ class Component extends DCLogic {
     this.startWhirr();
 
     clearInterval(this.ticker);
-    const result = open.map(i => { const r = Math.random(); return { i, v: r < FEAT_P_SYM ? sym : (r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1) }; });
+    const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
+    const result = plan ? plan.rounds[this._cloudFeatureRound++].result : open.map(i => { const r = Math.random(); return { i, v: r < FEAT_P_SYM ? sym : (r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1) }; });
     const spT = this.state.turbo ? 0.6 : 1; let left = result.length;
     this.reelsStart(open);
     result.forEach((o, k) => {
@@ -1707,7 +1745,8 @@ class Component extends DCLogic {
 
   endFeature(bet) {
     const grid = this.state.grid;
-    const res = this.evaluate(grid, bet);
+    const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
+    const res = plan ? plan.res : this.evaluate(grid, bet);
     if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
     const big = res.win >= bet * 12;
     this.setState({
@@ -1740,7 +1779,14 @@ class Component extends DCLogic {
   }
 
   /* ---------- controls ---------- */
-  recharge = () => {
+  recharge = async () => {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) {
+      try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance,
+        hint: r.amount ? 'Bônus diário recebido!' : 'Seu bônus de hoje já foi recebido' }); }
+      catch (e) { cloud.error(e); }
+      return;
+    }
     this.stopAll();
     this.setState({
       balance: this.props.startingBalance ?? 1000, balPending: 0, spinning: false, spinCells: [], feature: null, featLock: false, featReady: false,
@@ -1818,6 +1864,9 @@ class Component extends DCLogic {
       winTitle: s.winTitle,
       showWin: s.showWin, coins: s.coins, shake: s.shake, antic: s.antic,
       broke: !s.spinning && !feat && this.balance() < BETS[0],
+      progressText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Saldo e progresso são salvos na sua conta. Uma jogada confirmada fica registrada mesmo se você fechar o jogo.' : 'Moedas, aposta e ajustes são salvos automaticamente neste aparelho.',
+      cloudText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Google conectado · moedas virtuais, sem dinheiro real.' : 'Progresso salvo apenas neste aparelho.',
+      cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
       hint: s.hint, turbo: s.turbo, auto: s.auto, pays: s.pays, menu: s.menu,
       soundIcon: s.sound ? '♪' : '✕',
       sound: s.sound, soundOff: !s.sound, vibrate: s.vibrate, vibrateOff: !s.vibrate,
@@ -1879,8 +1928,8 @@ class Component extends DCLogic {
         o[k + 'Filter'] = on ? (glow ? 'brightness(1.22) saturate(1.15)' : 'brightness(.84) saturate(1.08)') : 'none';
         o[k + 'Shadow'] = on ? (glow ? 'none' : 'inset 0 2px 6px rgba(0,0,0,.32)') : 'none'; }); return o; })(),
       spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, incBet: this.incBet, decBet: this.decBet,
-      goHome: () => { this.save(); if (this.state.auto) this.setState({ auto: false }); this.later(() => this.setState({ homeOpen: true }), 120); },
-      homeOpen: !!s.homeOpen, closeHome: () => { const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); },
+      goHome: () => { this.save(); if (this.state.auto) this.setState({ auto: false }); this.later(() => { this.setState({ homeOpen: true }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'home'}); }, 120); },
+      homeOpen: !!s.homeOpen, closeHome: () => { const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'circus'}); },
       toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto, toggleSound: this.toggleSound, togglePays: this.togglePays,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu, openPays: this.openPays,
       toggleVibe: this.toggleVibe, soon: this.soon

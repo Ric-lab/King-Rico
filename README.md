@@ -19,3 +19,9 @@ Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mes
 ## Jogos
 - **Fortune Circus** — slot 3×3 (`Fortune Circus.dc.html`)
 - **Fortune Wheel** — roda de 12 casas, escolha 1 símbolo e gire com swipe; paga x10 (`Fortune Wheel.dc.html`)
+
+## Login e dados
+Login Google, saldo/progresso no Firestore e Google Analytics usam o plano gratuito Firebase Spark. A integração está em `cloud/`. Os sorteios são calculados no navegador: esta versão usa moedas virtuais e não garante proteção contra resultados adulterados.
+Preparação, emuladores e ativação real: [docs/FIREBASE.md](docs/FIREBASE.md).
+Indicadores e eventos iniciais: [docs/ANALYTICS.md](docs/ANALYTICS.md).
+Sem a configuração Firebase (`enabled: true`), o jogo continua sendo o protótipo local.

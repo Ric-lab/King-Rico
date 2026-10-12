@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) {
+      return request.auth != null && request.auth.uid == uid
+        && request.auth.token.firebase.sign_in_provider == 'google.com';
+    }
+    function dayIndex(t) { return int((t.toMillis() - 10800000) / 86400000); }
+    function settings(s) {
+      return s.keys().hasAll(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
+        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
+        && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
+        && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
+        && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
+        && s.wheelBetIdx is int && s.wheelBetIdx >= 0 && s.wheelBetIdx <= 9;
+    }
+    function profile(p) {
+      return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
+        && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
+        && p.analyticsConsent is bool && p.analyticsFromCreation is bool
+        && p.revision is int && p.revision >= 0 && p.updatedAt == request.time
+        && p.bonus.keys().hasAll(['day','dayIndex','streak']) && p.bonus.keys().hasOnly(['day','dayIndex','streak'])
+        && (p.bonus.day == null || p.bonus.day is string && p.bonus.day.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'))
+        && p.bonus.dayIndex is int && p.bonus.dayIndex >= -1
+        && p.bonus.streak is int && p.bonus.streak >= 0 && p.bonus.streak <= 7;
+    }
+    function initial(p) {
+      return profile(p) && p.balanceUnits == 100000 && p.peaches == 0
+        && p.bonus == {'day':null,'dayIndex':-1,'streak':0}
+        && p.settings == {'sfxLvl':2,'vibLvl':2,'slotBetIdx':3,'wheelBetIdx':3}
+        && p.analyticsFromCreation == p.analyticsConsent && p.revision == 0
+        && p.createdAt == request.time && p.firstSpinAt == null && p.lastSpinAt == null && p.lastOperationId == null;
+    }
+    function operationPath(uid, id) { return /databases/$(database)/documents/players/$(uid)/operations/$(id); }
+    function operation(o) {
+      return o.keys().hasAll(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
+        && o.keys().hasOnly(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
+        && o.createdAt == request.time && o.rulesVersion == '2026-10-12-spark-v1'
+        && o.fingerprint is string && o.fingerprint.size() <= 500
+        && o.betUnits is int && o.winUnits is int && o.winUnits >= 0 && o.result is map;
+    }
+    function spin(p, old, o) {
+      return o.action == 'spin' && o.game in ['circus','wheel']
+        && o.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000]
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
+        && p.bonus == old.bonus && p.analyticsConsent == old.analyticsConsent
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
+        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= 11
+            && o.winUnits in [0, o.betUnits * 10] && p.peaches == old.peaches
+          : o.selected == -1 && o.winUnits <= o.betUnits * 3330)
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0
+        && o.result.balanceDebited == (old.balanceUnits - o.betUnits) / 100.0
+        && o.result.outcome.winUnits == o.winUnits;
+    }
+    function bonus(p, old, o) {
+      let today = dayIndex(request.time);
+      let streak = today - old.bonus.dayIndex == 1 ? old.bonus.streak % 7 + 1 : 1;
+      let amount = [5000,10000,15000,20000,25000,50000,100000][streak - 1];
+      return o.action == 'bonus' && o.game == 'home' && o.selected == -1 && o.betUnits == 0
+        && today > old.bonus.dayIndex && p.bonus.dayIndex == today && p.bonus.streak == streak && p.bonus.day is string
+        && o.winUnits == amount && p.balanceUnits == old.balanceUnits + amount
+        && p.peaches == old.peaches && p.settings == old.settings && p.analyticsConsent == old.analyticsConsent
+        && p.firstSpinAt == old.firstSpinAt && p.lastSpinAt == old.lastSpinAt
+        && o.result.keys().hasOnly(['player','amount']) && o.result.amount == amount / 100.0;
+    }
+    function financial(uid, p, old) {
+      let path = operationPath(uid, p.lastOperationId);
+      let o = getAfter(path).data;
+      return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
+        && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
+        && o.result.player.keys().hasOnly(['balance','peaches','bonus','settings','analyticsConsent','revision'])
+        && o.result.player.balance == p.balanceUnits / 100.0 && o.result.player.peaches == p.peaches
+        && o.result.player.bonus == p.bonus && o.result.player.settings == p.settings
+        && o.result.player.analyticsConsent == p.analyticsConsent && o.result.player.revision == p.revision
+        && (spin(p, old, o) || bonus(p, old, o));
+    }
+    match /players/{uid} {
+      allow read: if owner(uid);
+      allow create: if owner(uid) && initial(request.resource.data);
+      allow update: if owner(uid) && profile(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.analyticsFromCreation == resource.data.analyticsFromCreation
+        && request.resource.data.revision == resource.data.revision + 1
+        && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['settings','analyticsConsent','revision','updatedAt'])
+          || financial(uid, request.resource.data, resource.data));
+      match /operations/{operationId} {
+        allow read: if owner(uid);
+        allow create: if owner(uid) && operation(request.resource.data)
+          && getAfter(/databases/$(database)/documents/players/$(uid)).data.lastOperationId == operationId
+          && getAfter(/databases/$(database)/documents/players/$(uid)).data.revision
+             == get(/databases/$(database)/documents/players/$(uid)).data.revision + 1;
+      }
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

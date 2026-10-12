@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./cloud/firebase-config.js"></script>
+<script defer src="./cloud/client.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -137,6 +139,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             </div>
           </div>
           <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos do Fortune Circus e ficam salvos neste aparelho.</div>
+
+          <sc-if value="{{ cloudEnabled }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,210,87,.22);">
+              <button data-cloud-signout style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Sair da conta</button>
+              <button data-cloud-analytics style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Dados de uso: {{ analyticsLabel }}</button>
+            </div>
+          </sc-if>
         </div>
       </div>
     </sc-if>
@@ -184,7 +193,7 @@ const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#1f9a4a' : i % 2 ? '#e8352b' : '#fff1d6';
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', WKEY = 'fortuneCircus.wheel.v2';
-const fmt = n => (Math.round(n * 10) / 10).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const isRed = n => n % 2 === 1;
 const RED = '#c8261e', BLACK = '#1c1020';
 const WHEEL_BG = 'conic-gradient(' + ORDER.map(i => PBG(i) + ' ' + (i * SEG) + 'deg ' + ((i + 1) * SEG) + 'deg').join(', ') + ')';
@@ -194,12 +203,26 @@ class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null };
   wheelRef = React.createRef(); ptrRef = React.createRef(); rot = 0;
   componentDidMount() {
+    window.__fw = this;
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
+      this._cloudDeferred = p; if (!this.state.spinning && !this._cloudRequest) this.applyCloudPlayer();
+    });
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const w = JSON.parse(localStorage.getItem(WKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
-  save(balance) { try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(WKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
+  applyCloudPlayer() {
+    const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
+    const first = this._cloudUid !== window.KingRicoCloud.uid; this._cloudUid = window.KingRicoCloud.uid;
+    this.setState({ balance: p.balance, ...(first ? {betIdx: p.settings.wheelBetIdx, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl} : {}) });
+  }
+  componentDidUpdate() { if(this._cloudDeferred && !this.state.spinning && !this._cloudRequest) this.applyCloudPlayer(); }
+  componentWillUnmount() { this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
+  save(balance) {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) { cloud.settings({wheelBetIdx:this.state.betIdx, sfxLvl:this.state.sfxLvl ?? 2, vibLvl:this.state.vibLvl ?? 2}); return; }
+    try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(WKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
   ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   openMenu = () => { if (this.state.spinning) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
@@ -229,18 +252,27 @@ class Component extends DCLogic {
     const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; this.tick(0); this.kick(da > 0 ? -14 : 14); }
     const s0 = d.samples[0]; this.setState({ force: Math.min(1, Math.abs((this.rot - s0[1]) / Math.max(16, now - s0[0])) / 1.6), forceSet: true });
   };
-  up = () => {
+  up = async () => {
     const d = this.drag; if (!d) return; this.drag = null;
     const now = performance.now(), s0 = d.samples[0], v = (this.rot - s0[1]) / Math.max(16, now - s0[0]), force = Math.min(1, Math.abs(v) / 1.6);
     if (!this.state.pick) { this.setState({ force, hint: 'Primeiro toque em um símbolo.' }); return; }
     if (force < 0.2) { this.setState({ force, hint: 'Mais forte! Arraste e solte' }); return; }
     const bet = this.bet();
     if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
-    const bal = this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
+    let cloudResult = null;
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) {
+      if(this._cloudRequest) return;
+      this._cloudRequest = true; this.setState({spinning:true,hint:'Confirmando giro…'});
+      try { cloudResult = await cloud.spin('wheel', bet, this.state.pick.v); this._cloudSpin = cloudResult; }
+      catch(e) { this.setState({spinning:false,hint:'Não foi possível confirmar o giro'}); cloud.error(e); return; }
+      finally { this._cloudRequest = false; }
+    }
+    const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
     const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, t0 = performance.now();
     // RTP 95%: acerto paga x10, então a casa escolhida sai com chance 9,5% (as outras 11 dividem o resto igualmente)
-    const pv = this.state.pick.v, others = ORDER.filter(n => n !== pv), target = Math.random() < HIT_P ? pv : others[Math.floor(Math.random() * others.length)];
+    const pv = this.state.pick.v, others = ORDER.filter(n => n !== pv), target = cloudResult ? cloudResult.outcome.target : Math.random() < HIT_P ? pv : others[Math.floor(Math.random() * others.length)];
     const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
     this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
@@ -255,7 +287,9 @@ class Component extends DCLogic {
     const hit = p.v === n, m = hit ? PAY_NUM : 0;
     const where = 'Deu ' + POCKETS[n][1] + '.';
     if (m > 0) {
-      const w = Math.round(bet * m * 10) / 10, bal = Math.round((this.state.balance + w) * 10) / 10; this.save(bal);
+      const cloud = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin;
+      const w = cloud ? cloud.outcome.winUnits / 100 : Math.round(bet * m * 100) / 100;
+      const bal = cloud ? cloud.player.balance : Math.round((this.state.balance + w) * 100) / 100; this.save(bal);
       [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90));
       this.buzz(m > 2 ? [70, 70, 70, 70, 130] : 45);
       setTimeout(() => this.setState({ spinning: false, balance: bal, landed: n, win: { w, m }, hint: where + ' Gire de novo' }), 350);
@@ -269,7 +303,7 @@ class Component extends DCLogic {
   betUp = () => { if (this.state.spinning) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save(this.state.balance)); };
   goHome = e => { if (this.state.spinning && e) e.preventDefault(); };
   renderVals() {
-    const s = this.state, txt = fmt(Math.floor(s.balance * 10) / 10), lit = s.spinning, p = s.pick;
+    const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
     const sel = q => p && p.t === q.t && p.v === q.v;
     return {
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
@@ -285,6 +319,7 @@ class Component extends DCLogic {
       opts: [1, 2, 4, 6, 8, 10, 11, 9, 7, 5, 3, 0].map(n => { const on = sel({ t: 'n', v: n }); return { n, name: POCKETS[n][1], pos: POS(n), iconOp: n === 0 ? 0 : 1, zeroOp: n === 0 ? 1 : 0, pick: () => this.choose({ t: 'n', v: n }), bg: 'linear-gradient(180deg, #fff6e6, #f3e0cc)', ring: on ? RING_ON : s.landed === n ? '0 0 0 3px #fff' : RING_OFF, anim: on && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none', op: p && !on && !lit ? 0.5 : 1 }; }),
       betText: fmt(this.bet()), downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
+      cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p ? 1 : 0, hubChar: '?', hubGirOp: p && p.v === 0 ? 1 : 0,

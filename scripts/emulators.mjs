@@ -1,0 +1,14 @@
+import { spawn } from 'node:child_process';
+import path from 'node:path';
+import { mkdir } from 'node:fs/promises';
+const root=path.resolve(import.meta.dirname,'..');
+const cache=path.join(root,'.firebase-cache');
+await mkdir(cache,{recursive:true});
+const environment={...process.env,XDG_CONFIG_HOME:cache,FIREBASE_EMULATORS_PATH:path.join(cache,'emulators'),CI:'true'};
+const binary=path.join(root,'node_modules/firebase-tools/lib/bin/firebase.js');
+const test=process.argv.includes('--test');
+const args=[binary,test?'emulators:exec':'emulators:start','--project','demo-king-rico','--only','auth,firestore,hosting'];
+if(test) args.push('node --test tests/integration.mjs && python3 tests/browser.py');
+const child=spawn(process.execPath,args,{cwd:root,env:environment,stdio:'inherit'});
+for(const signal of ['SIGINT','SIGTERM']) process.on(signal,()=>child.kill(signal));
+child.on('exit',code=>process.exit(code ?? 1));

@@ -3,3 +3,12 @@ node_modules/
 screenshots/
 assets/meshy/
 uploads/
+
+dist/
+runtime/
+cloud/client.js
+cloud/firebase-config.js
+.firebase/
+.firebase-cache/
+*-debug.log
+__pycache__/
