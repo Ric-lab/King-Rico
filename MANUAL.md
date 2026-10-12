@@ -257,5 +257,4 @@ RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prê
 
 **Fortune Circus:** simulação de 700 mil giros → RTP ≈ 96,5–97%, acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros; saldo de 100 apostas zera em ~600–1.900 giros (ver comentário em `Fortune Circus.dc.html`, perto de `FEAT_P_SYM`).
 
-**Fortune Wheel:** 12 casas iguais (11 símbolos + 0), jogador escolhe 1 símbolo, acerto paga x10.
-RTP = 1/12 × 10 = **83,3%** (abaixo da meta). Opções com número inteiro: x11 → 91,7%; x12 → 100% (empate). Para ~97% com inteiros: manter x10 e reduzir para 11 casas sem o 0 não basta (90,9%); a alternativa é x12 com uma casa extra de 0 (13 casas → 92,3%) ou x12 com 0 devolvendo metade. Decisão pendente com o dono do jogo.
+**Fortune Wheel:** 12 casas (11 símbolos + 0), jogador escolhe 1 símbolo, acerto paga x10. Com casas sorteadas por igual o RTP seria 1/12 × 10 = 83,3%. Para fechar em **95%** a casa escolhida sai com chance `HIT_P = 9,5%` (as outras 11 dividem o resto); RTP = 0,095 × 10 = 95%. A roda gira com a força do swipe e o ângulo final é ajustado (menos de 1 volta) para parar na casa sorteada — visualmente natural. Para mudar o RTP, altere só `HIT_P` (RTP ÷ prêmio).

@@ -179,7 +179,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // 12 casas: 11 símbolos do slot + o 0. Acertar a casa escolhida paga x10 (RTP 83,3%).
 const POCKETS = [[-1, 'Zero'], [9, 'King Rico'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [6, 'Moeda'], [3, 'Nuvem'], [5, 'Cetro'], [0, 'Capa'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
-const N = POCKETS.length, SEG = 360 / N, PAY_COLOR = 1.9, PAY_NUM = 10;
+const N = POCKETS.length, SEG = 360 / N, PAY_COLOR = 1.9, PAY_NUM = 10, HIT_P = 0.095; // RTP = HIT_P × PAY_NUM = 95%
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#1f9a4a' : i % 2 ? '#e8352b' : '#fff1d6';
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
@@ -238,7 +238,10 @@ class Component extends DCLogic {
     if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
     const bal = this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
-    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, total = dir * turns * 360, t0 = performance.now();
+    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, t0 = performance.now();
+    // RTP 95%: acerto paga x10, então a casa escolhida sai com chance 9,5% (as outras 11 dividem o resto igualmente)
+    const pv = this.state.pick.v, others = ORDER.filter(n => n !== pv), target = Math.random() < HIT_P ? pv : others[Math.floor(Math.random() * others.length)];
+    const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
     this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
       const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e);
