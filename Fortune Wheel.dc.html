@@ -42,14 +42,14 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
             <div style="position: absolute; left: -1px; top: -160px; width: 2px; height: 100px; transform: rotate(15deg); transform-origin: 50% 160px; background: rgba(255,236,170,.75);"></div>
             <div style="position: absolute; left: -27px; top: -150px; width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));"></div>
-            <span style="position: absolute; left: -27px; top: -142px; width: 54px; text-align: center; font-size: 36px; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.5); opacity: {{ sg.zeroOp }};">0</span>
+            <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; left: -27px; top: -150px; width: 54px; height: 54px; object-fit: contain; opacity: {{ sg.zeroOp }};">
           </div>
         </sc-for>
         <div style="position: absolute; left: 70px; top: 70px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3d0a63 0%, #26043f 100%); box-shadow: 0 0 0 3px #f0b41f;"></div>
       </div>
       <div style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #fff6e6, #f3e0cc 70%, #d8b88f); box-shadow: 0 0 0 4px #f0b41f, 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
         <div style="position: absolute; inset: 8px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ hubPos }}; opacity: {{ hubIconOp }};"></div>
-        <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #6b2e05; opacity: {{ hubQOp }};">{{ hubChar }}</span>
+        <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #6b2e05; opacity: {{ hubQOp }};">{{ hubChar }}</span><img src="assets/girafa/girafa.webp" alt="" draggable="false" style="position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; object-fit: contain; opacity: {{ hubGirOp }};">
       </div>
       <div ref="{{ ptrRef }}" style="position: absolute; left: 154px; top: -30px; width: 32px; height: 50px; transform-origin: 16px 14px; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55));">
         <svg width="32" height="50" viewBox="0 0 32 50" style="position: absolute; left: 0; top: 0; overflow: visible;">
@@ -95,7 +95,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
           <div onClick="{{ op.pick }}" role="button" aria-label="Apostar em {{ op.name }}" style="position: relative; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: {{ op.ring }}; animation: {{ op.anim }}; opacity: {{ op.op }}; cursor: pointer;" style-active="filter: brightness(.88);">
             <div style="width: 46px; height: 46px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
-            <span style="position: absolute; font-size: 32px; font-weight: 800; line-height: 1; color: #1f7a3e; opacity: {{ op.zeroOp }};">0</span>
+            <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; width: 46px; height: 46px; object-fit: contain; opacity: {{ op.zeroOp }};">
           </div>
         </sc-for>
       </div>
@@ -151,7 +151,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
               <div style="position: relative; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: inset 0 -3px 0 rgba(0,0,0,.3);">
                 <div style="width: 56px; height: 56px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
-                <span style="position: absolute; font-size: 34px; font-weight: 800; color: #1f7a3e; opacity: {{ op.zeroOp }};">0</span>
+                <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; width: 56px; height: 56px; object-fit: contain; opacity: {{ op.zeroOp }};">
               </div>
             </sc-for>
           </div>
@@ -176,8 +176,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 // 12 casas, sem zero. Vermelho = ímpar, preto = par. Cor paga x1,9 (RTP 95%), número paga x10 (RTP 95,8%).
-// 12 casas: 11 símbolos do slot + o 0. Acertar a casa escolhida paga x10 (RTP 83,3%).
-const POCKETS = [[-1, 'Zero'], [9, 'King Rico'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [6, 'Moeda'], [3, 'Nuvem'], [5, 'Cetro'], [0, 'Capa'], [11, 'Happeach']];
+// 12 casas: 11 símbolos do slot + a Girafa. Acertar a casa escolhida paga x10 (RTP 83,3%).
+const POCKETS = [[-1, 'Girafa'], [9, 'King Rico'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [6, 'Moeda'], [3, 'Nuvem'], [5, 'Cetro'], [0, 'Capa'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
 const N = POCKETS.length, SEG = 360 / N, PAY_COLOR = 1.9, PAY_NUM = 10, HIT_P = 0.095; // RTP = HIT_P × PAY_NUM = 95%
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
@@ -287,7 +287,7 @@ class Component extends DCLogic {
       betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
-      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p || p.v === 0 ? 1 : 0, hubChar: p ? '0' : '?',
+      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p ? 1 : 0, hubChar: '?', hubGirOp: p && p.v === 0 ? 1 : 0,
       step1Op: p && !lit ? 0.7 : 1, step2Op: p ? 1 : 0.45, forceOp: s.forceSet ? 1 : 0.5,
       step2Text: !p ? 'Depois, arraste a roda' : s.hint,
       win: !!s.win, winText: s.win ? '+' + fmt(s.win.w) : '', winMult: s.win ? 'x' + fmt(s.win.m) + ' da aposta' : '', closeWin: this.closeWin
