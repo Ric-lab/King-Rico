@@ -25,3 +25,5 @@ Login Google, saldo/progresso no Firestore e Google Analytics usam o plano gratu
 Preparação, emuladores e ativação real: [docs/FIREBASE.md](docs/FIREBASE.md).
 Indicadores e eventos iniciais: [docs/ANALYTICS.md](docs/ANALYTICS.md).
 Sem a configuração Firebase (`enabled: true`), o jogo continua sendo o protótipo local.
+
+Atualizações do site pelo GitHub: [docs/PUBLICACAO.md](docs/PUBLICACAO.md). Depois da conexão inicial, alterações em `main` passam pelos testes e são publicadas no Firebase Hosting.

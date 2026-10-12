@@ -69,7 +69,7 @@ with sync_playwright() as p:
     page.goto(BASE+'/Fortune%20Wheel.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player && window.__fw',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==before
-    page.get_by_role('button',name='Apostar em Zero',exact=True).click()
+    page.get_by_role('button',name='Apostar em Girafa',exact=True).click()
     swipe(page)
     page.wait_for_function('window.__fw.state.spinning',timeout=10000)
     page.wait_for_function('!window.__fw.state.spinning',timeout=15000)

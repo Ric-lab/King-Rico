@@ -25,6 +25,8 @@ npx firebase deploy --project SEU_PROJECT_ID --only firestore,hosting
 
 8. Conferir login Google real, saldo depois de recarregar, outro navegador com a mesma conta, conta diferente, ambos os jogos, bônus diário e revogação de analytics. Esta etapa ainda exige um projeto real e acesso do dono; não foi publicada automaticamente.
 
+Para atualizações automáticas do site a partir de `main`, seguir [PUBLICACAO.md](PUBLICACAO.md). A configuração pública real está em `cloud/firebase-config.production.js`; `npm run build:production` a utiliza explicitamente. O workflow publica apenas Hosting; as regras e índices do Firestore são implantados separadamente.
+
 ## Cotas e consumo
 
 O Spark oferece cotas gratuitas, não capacidade ilimitada. No Firestore, a cota gratuita usual é 1 GiB de armazenamento, 50 mil leituras e 20 mil escritas por dia para um banco elegível por projeto. Conferir os valores atuais e as regras de elegibilidade na [documentação de cotas](https://firebase.google.com/docs/firestore/quotas) e no [preço oficial](https://firebase.google.com/pricing).

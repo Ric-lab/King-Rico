@@ -4,6 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "king-rico",
     "public": "dist",
     "ignore": [
       "firebase.json",
@@ -11,6 +12,10 @@
       "**/node_modules/**"
     ],
     "headers": [
+      {
+        "source": "**/*.js",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
       {
         "source": "**/*.html",
         "headers": [

@@ -12,3 +12,4 @@ cloud/firebase-config.js
 .firebase-cache/
 *-debug.log
 __pycache__/
+gha-creds-*.json

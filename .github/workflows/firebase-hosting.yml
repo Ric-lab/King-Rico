@@ -1,0 +1,74 @@
+name: Publicar King Rico no Firebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Instalar dependências do lockfile
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Testar lógica e telas
+        run: npm test
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Testar regras e transações no Firestore emulado
+        run: npm run test:rules
+      - name: Compilar o jogo com a configuração de produção
+        run: npm run build:production
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: king-rico-site
+          path: dist/
+          if-no-files-found: error
+          retention-days: 3
+
+  publicar:
+    needs: verificar
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    concurrency:
+      group: king-rico-hosting-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: king-rico-site
+          path: dist/
+      - name: Autorizar GitHub no Google sem chave privada
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          project_id: king-rico
+          workload_identity_provider: projects/776388739192/locations/global/workloadIdentityPools/king-rico-github/providers/github
+          service_account: king-rico-hosting@king-rico.iam.gserviceaccount.com
+      - name: Publicar o site
+        run: npx --no-install firebase deploy --project king-rico --only hosting --non-interactive
+      - name: Endereço publicado
+        run: |
+          printf '%s\n' 'Site publicado: https://king-rico.web.app' >> "$GITHUB_STEP_SUMMARY"
