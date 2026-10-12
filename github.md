@@ -2,6 +2,12 @@ repo: Ric-lab/King-Rico
 branch: main
 
 ## Last sync
+commit: 4216424c66fbf5991f7826d6fa9953817706bdde
+date: 2026-10-12T01:29:29.855Z
+### Updated in this project
+- Háptico no giro da Fortune Wheel; docs de háptica e cálculo de RTP
+
+### Sync
 commit: b04818a2f19681b19cc381ee89aa2328a9020657
 date: 2026-10-12T01:12:36.449Z
 ### Updated in this project
