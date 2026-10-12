@@ -9,6 +9,31 @@ task_provider=github
 task_account=king-rico-hosting
 task_email="$task_account@$task_project.iam.gserviceaccount.com"
 
+# A newly created account can be visible to IAM before project policies accept
+# it. Retry only that propagation error; other failures still stop immediately.
+task_grant_hosting_role() {
+  local task_output task_status task_attempt=1 task_delay
+  local -a task_delays=(2 4 8 16 30 30)
+  while true; do
+    if task_output=$(gcloud projects add-iam-policy-binding "$task_project" \
+      --member="serviceAccount:$task_email" --role=roles/firebasehosting.admin --condition=None --quiet 2>&1); then
+      return 0
+    else
+      task_status=$?
+    fi
+    if [[ "$task_output" != *"Service account $task_email does not exist"* ]] || \
+      (( task_attempt > ${#task_delays[@]} )); then
+      printf '%s\n' "$task_output" >&2
+      return "$task_status"
+    fi
+    task_delay=${task_delays[task_attempt-1]}
+    printf 'O Google ainda está propagando a conta de publicação. Nova tentativa em %ss (%s/%s).\n' \
+      "$task_delay" "$task_attempt" "${#task_delays[@]}"
+    sleep "$task_delay"
+    task_attempt=$((task_attempt+1))
+  done
+}
+
 command -v gcloud >/dev/null || { printf '%s\n' 'Execute este script no Google Cloud Shell.' >&2; exit 1; }
 task_number=$(gcloud projects describe "$task_project" --format='value(projectNumber)')
 if [ "$task_number" != "$task_expected_number" ]; then
@@ -23,8 +48,7 @@ if ! gcloud iam service-accounts describe "$task_email" --project="$task_project
   gcloud iam service-accounts create "$task_account" --project="$task_project" \
     --display-name='Publicação do King Rico pelo GitHub' --quiet
 fi
-gcloud projects add-iam-policy-binding "$task_project" \
-  --member="serviceAccount:$task_email" --role=roles/firebasehosting.admin --condition=None --quiet >/dev/null
+task_grant_hosting_role
 
 if ! gcloud iam workload-identity-pools describe "$task_pool" --project="$task_project" --location=global >/dev/null 2>&1; then
   gcloud iam workload-identity-pools create "$task_pool" --project="$task_project" --location=global \

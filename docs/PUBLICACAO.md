@@ -19,6 +19,15 @@ bash scripts/setup-github-hosting.sh
 
 Se o repositório for privado, autorize primeiro o GitHub pelo fluxo oficial da CLI `gh auth login --web --git-protocol https` e use `gh repo clone Ric-lab/King-Rico`. Não usar senha como credencial de Git nem colar tokens no chat. Se já houver um checkout, use `git fetch origin` e selecione a branch com o script, preservando alterações locais.
 
+Se a conta de publicação acabou de ser criada, o Google pode responder que ela ainda não existe ao aplicar a permissão. O script repete apenas esse erro, com até 90 segundos de espera total. Outros erros interrompem a configuração. Para atualizar o script e retomar uma execução interrompida, no mesmo checkout da branch `codex/firebase-spark`:
+
+```sh
+git pull --ff-only
+bash scripts/setup-github-hosting.sh
+```
+
+O script reutiliza a conta e a conexão já criadas. Só considere a configuração concluída quando aparecer `Conexão GitHub → Firebase configurada.`
+
 Depois de revisar as alterações, incorpore a branch em `main`. O workflow inicia a primeira publicação. Para repetir sem mudar o código: GitHub → Actions → Publicar King Rico no Firebase → Run workflow → main. Uma autorização recém-criada pode levar alguns minutos para propagar; se esse for o erro confirmado, repita o job após a propagação.
 
 Essa conexão não foi executada no projeto real por este ambiente: requer o login do dono do projeto no Google. Não considerar o site publicado até o job de publicação terminar com sucesso e testar o endereço.
