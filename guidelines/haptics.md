@@ -32,3 +32,18 @@ partida do giro (o aperto já vibrou), paradas de rolo no auto / giros grátis /
 
 **iPhone:** Safari não tem API de vibração. No iOS 18+ usamos o truque do interruptor do sistema — só um
 toque leve e só quando o jogador toca (botões). Eventos do jogo (prêmio, Happeach) não vibram no iPhone.
+
+
+## Fortune Wheel (Roda da Fortuna)
+Mesmo `buzz()` e mesmo nível do menu (0 / 50% / 100%).
+
+| Evento | Padrão (ms) | Por quê |
+|---|---|---|
+| Escolher símbolo | 22 | confirma o toque |
+| Soltar o swipe | 25 + força×35 (25–60) | quanto mais forte o swipe, mais forte o empurrão |
+| Cada casa que passa no ponteiro | 8–18 (curto com a roda rápida, mais forte quando ela freia) | "tec" da lingueta; com intervalo mínimo de 40–70 ms entre um toque e outro, para não virar zumbido contínuo |
+| Roda para | 28 | fecha a jogada |
+| Acertou (x10) | 70·70·70·70·130 | grande prêmio |
+| Saldo insuficiente | 40·80·40 | "não" duplo |
+
+**Regra geral:** vibrar só em evento que o jogador sente como físico (toque, impacto, parada, prêmio). Nunca em animação decorativa, luzes ou moedas voando. iPhone no navegador não vibra (só no app nativo).

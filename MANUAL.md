@@ -242,3 +242,20 @@ O runtime `support.js` é necessário ao lado dos `.dc.html`.
 - Pagamento: acertar o símbolo paga x10. Casas alternam vermelho #e8352b / creme #fff1d6, 0 = #1f9a4a.
 - Ponteiro em gota dourada (SVG), balança a cada casa. Botões casa/menu = mesmo recorte da arte do Fortune Circus (stage-lit.webp).
 - Saldo compartilhado com o slot (localStorage).
+
+
+## Como calcular o retorno (RTP) — sempre antes de mudar pagamento
+RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prêmio de cada resultado, dividida pela aposta). 100% = empate; abaixo disso o saldo cai devagar com o tempo.
+
+**Passo a passo (vale para qualquer jogo novo):**
+1. Liste todos os resultados possíveis e a probabilidade real de cada um (pesos dos rolos, casas da roda etc.).
+2. Para cada um, o prêmio TOTAL devolvido em múltiplos da aposta (a aposta já foi descontada ao girar).
+3. RTP = Σ (probabilidade × prêmio). Jogos com rodada bônus: some o valor esperado do bônus × chance de cair nele.
+4. Confirme com simulação (≥500 mil jogadas) dentro do próprio arquivo, sem animação, e anote no código: RTP, taxa de acerto e em quantas jogadas o saldo inicial zera.
+5. Meta da casa: RTP 96–97% (referência de mercado ~96,8%). Saldo não pode zerar rápido demais — o jogador deve ganhar e perder bastante antes, para não parecer "roubado".
+6. Multiplicadores sempre inteiros ou ",5" fáceis de ler (x10, x2,5). Nunca 11,5.
+
+**Fortune Circus:** simulação de 700 mil giros → RTP ≈ 96,5–97%, acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros; saldo de 100 apostas zera em ~600–1.900 giros (ver comentário em `Fortune Circus.dc.html`, perto de `FEAT_P_SYM`).
+
+**Fortune Wheel:** 12 casas iguais (11 símbolos + 0), jogador escolhe 1 símbolo, acerto paga x10.
+RTP = 1/12 × 10 = **83,3%** (abaixo da meta). Opções com número inteiro: x11 → 91,7%; x12 → 100% (empate). Para ~97% com inteiros: manter x10 e reduzir para 11 casas sem o 0 não basta (90,9%); a alternativa é x12 com uma casa extra de 0 (13 casas → 92,3%) ou x12 com 0 devolvendo metade. Decisão pendente com o dono do jogo.

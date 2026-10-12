@@ -207,7 +207,7 @@ class Component extends DCLogic {
   closePays = () => this.setState({ pays: false, menu: true });
   setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(this.state.balance); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
   tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
-  tick(sp) { this.tone(1800 + sp * 600, 0.025, 'square', 0.035); }
+  tick(sp) { this.tone(1800 + sp * 600, 0.025, 'square', 0.035); const now = performance.now(), gap = 40 + (1 - sp) * 30; if (now - (this._lastBuzz || 0) < gap) return; this._lastBuzz = now; this.buzz(Math.round(8 + (1 - sp) * 10)); }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(15, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
   bet() { return BETS[this.state.betIdx]; }
   setRot(r) { this.rot = r; const el = this.wheelRef.current; if (el) el.style.transform = 'rotate(' + r + 'deg)'; }
@@ -236,14 +236,14 @@ class Component extends DCLogic {
     if (force < 0.2) { this.setState({ force, hint: 'Mais forte! Arraste e solte' }); return; }
     const bet = this.bet();
     if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
-    const bal = this.state.balance - bet; this.save(bal); this.buzz(35); this.tone(180, 0.18, 'sine', 0.12, 90);
+    const bal = this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
     const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, total = dir * turns * 360, t0 = performance.now();
     this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
       const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e);
       const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; const sp = Math.pow(1 - k, 2); this.tick(sp); this.kick(dir > 0 ? -10 - sp * 10 : 10 + sp * 10); }
-      if (k < 1) this._raf = requestAnimationFrame(step); else this.finish(bet);
+      if (k < 1) this._raf = requestAnimationFrame(step); else { this.buzz(28); this.finish(bet); }
     };
     this._raf = requestAnimationFrame(step);
   };
