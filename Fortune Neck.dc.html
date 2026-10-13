@@ -39,7 +39,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-if>
     <!-- cena -->
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 86px; width: 453px; height: 546px; overflow: hidden; touch-action: none; border-top: 3px solid #f0b41f; border-bottom: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
-      <div style="position: absolute; left: 0; bottom: 0; width: 445px; height: 2600px; transform: translateY({{ camY }}px); transition: transform .55s cubic-bezier(.3,.7,.3,1); background: #00002f url('assets/neck/bg-sky.webp?v=2') center bottom / 445px 2600px no-repeat;">
+      <div style="position: absolute; left: 0; bottom: 0; width: 445px; height: 2600px; transform: translateY({{ camY }}px); transition: transform .55s cubic-bezier(.3,.7,.3,1); background: #00002f url('assets/neck/bg-sky.webp?v=3') center bottom / 445px 2600px no-repeat;">
         <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(180deg, rgba(74,140,40,0) 0%, rgba(58,112,30,.75) 45%, #3f6e1e 100%);"></div>
         <div style="position: absolute; left: 408px; bottom: 30px; width: 64px; height: 2500px; border-radius: 32px 32px 0 0; background: url('assets/neck/trunk-tile.webp') 0 0 / 64px 220px repeat-y; filter: saturate({{ trunkSat }}) drop-shadow(-4px 0 6px rgba(40,10,30,.35));"></div>
         <sc-for list="{{ floors }}" as="f" hint-placeholder-count="20">
