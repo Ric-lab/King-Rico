@@ -267,3 +267,5 @@ RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prê
 - Happeach: em 1 de cada 8 rodadas aparece num andar entre 4 e 12 (visível desde o início). Comer garante o valor daquele andar.
 - RTP: chance de chegar ao andar k = T / M[k], T = 0,922. Depois do Happeach cada subida tem chance × G (0,85). Melhor estratégia possível = 95,0%; parar num andar fixo = 92,2–94,6%.
 - Assets: `assets/neck/` — g-head/g-body/g-neck (girafa fatiada; pescoço = ladrilho repetido), branch, apple-*.
+
+- Fortune Neck: nenhum multiplicador usa o dígito 6 (regra do dono do jogo).
