@@ -4,6 +4,8 @@ Quando a conexão inicial estiver configurada, cada atualização em `main` no r
 
 O fluxo usa Firebase Hosting estático no Spark. Não há Cloud Functions nem App Hosting. Google e GitHub mantêm suas próprias cotas gratuitas. O workflow publica as regras do Firestore antes do site, para que o Neck e os outros jogos usem a mesma carteira. Se as regras falharem, o site novo não é publicado. A publicação não apaga os dados dos jogadores. Índices exigem implantação separada.
 
+As regras são compiladas e publicadas pela API REST oficial de Firebase Rules, com as mesmas credenciais temporárias do workflow. O script `scripts/publish-firestore-rules.mjs` verifica a versão ativa após a atualização e reutiliza uma versão idêntica. Esse caminho usa Firebase Rules Admin diretamente e dispensa a consulta de ativação de serviços que a CLI faz antes de publicar regras. Não altera APIs habilitadas ou permissões IAM. Erros de autorização interrompem a publicação e aparecem nas anotações do GitHub, sem credenciais ou respostas completas.
+
 ## Conexão inicial, uma vez
 
 O GitHub precisa de autorização para publicar no Google. O script `scripts/setup-github-hosting.sh` configura Workload Identity Federation: a branch `main` deste repositório recebe credenciais temporárias de uma conta com as funções Firebase Hosting Admin e Firebase Rules Admin. Não recebe acesso administrativo direto aos documentos dos jogadores e não cria chaves privadas ou secrets permanentes no GitHub. Executar o script não vincula faturamento.

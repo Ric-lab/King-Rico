@@ -70,7 +70,7 @@ jobs:
       - name: Publicar as regras compatíveis antes do site
         run: |
           set -o pipefail
-          npx --no-install firebase deploy --project king-rico --only firestore:rules --non-interactive 2>&1 | tee "$RUNNER_TEMP/king-rico-rules.log"
+          node scripts/publish-firestore-rules.mjs 2>&1 | tee "$RUNNER_TEMP/king-rico-rules.log"
       - name: Mostrar diagnóstico da publicação das regras
         if: failure()
         run: |
