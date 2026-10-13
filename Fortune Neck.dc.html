@@ -152,7 +152,7 @@ const SKEY = 'fortuneCircus.slot.v3', NKEY = 'fortuneCircus.neck.v1';
 const fmt = n => (Math.round(n * 10) / 10).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const ml = m => 'x' + String(m).replace('.', ',');
 const TIER = k => k <= 4 ? 'green' : k <= 7 ? 'yellow' : k <= 11 ? 'red' : k <= 14 ? 'silver' : k <= 17 ? 'gold' : 'diamond';
-const SRC = k => 'assets/neck/apple-' + TIER(k) + '.webp';
+const SRC = k => 'assets/neck/apple-f' + Math.min(20, Math.max(1, k)) + '.webp'; // degradê verde → amarelo → vermelho (20 tons)
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, round: false, busy: false, floor: 0, reach: 0, peachAt: 0, saved: 0, fr: {}, headRot: 0, headSc: 1, msg: null, vw: 453, vh: 802 };
   componentDidMount() {
