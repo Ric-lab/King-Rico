@@ -39,10 +39,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-if>
     <!-- cena -->
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 86px; width: 453px; height: 546px; overflow: hidden; touch-action: none; border-top: 3px solid #f0b41f; border-bottom: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
-      <div style="position: absolute; left: 0; bottom: 0; width: 445px; height: 2600px; transform: translateY({{ camY }}px); transition: transform .55s cubic-bezier(.3,.7,.3,1); background: #00002f url('assets/neck/bg-sky.webp?v=3') center bottom / 445px 2600px no-repeat;">
+      <div style="position: absolute; left: 0; bottom: 0; width: 445px; height: 3700px; transform: translateY({{ camY }}px); transition: transform .55s cubic-bezier(.3,.7,.3,1); background: #00002f url('assets/neck/bg-sky33.webp') center bottom / 445px 3700px no-repeat;">
         <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(180deg, rgba(74,140,40,0) 0%, rgba(58,112,30,.75) 45%, #3f6e1e 100%);"></div>
-        <div style="position: absolute; left: 408px; bottom: 30px; width: 64px; height: 2500px; border-radius: 32px 32px 0 0; background: url('assets/neck/trunk-tile.webp') 0 0 / 64px 220px repeat-y; filter: saturate({{ trunkSat }}) drop-shadow(-4px 0 6px rgba(40,10,30,.35));"></div>
-        <sc-for list="{{ floors }}" as="f" hint-placeholder-count="20">
+        <div style="position: absolute; left: 408px; bottom: 30px; width: 64px; height: 3600px; border-radius: 32px 32px 0 0; background: url('assets/neck/trunk-tile.webp') 0 0 / 64px 220px repeat-y; filter: saturate({{ trunkSat }}) drop-shadow(-4px 0 6px rgba(40,10,30,.35));"></div>
+        <sc-for list="{{ floors }}" as="f" hint-placeholder-count="33">
           <div style="position: absolute; left: 0; bottom: {{ f.y }}px; width: 453px; height: 0;">
             <img src="assets/neck/branch-v2.webp" alt="" draggable="false" style="position: absolute; left: 230px; bottom: -64px; width: 200px; height: 58px; filter: {{ f.filter }};">
             <div style="position: absolute; left: 260px; top: -40px; width: 56px; height: 56px; transform: {{ f.tf }}; opacity: {{ f.op }}; transition: {{ f.tr }};">
@@ -126,8 +126,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
           <div style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Cada andar que a girafa sobe multiplica a aposta. Errou, perde a aposta. Pegue o prêmio quando quiser.</div>
           <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%;">
-            <sc-for list="{{ payList }}" as="pl" hint-placeholder-count="20">
-              <div style="height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,.08);">
+            <sc-for list="{{ payList }}" as="pl" hint-placeholder-count="33">
+              <div style="height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,.08);">
                 <div style="width: 30px; height: 30px; background-image: url('{{ pl.src }}'); background-size: contain; background-position: center; background-repeat: no-repeat;"></div>
                 <span style="font-size: 19px; font-weight: 800; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ pl.label }}</span>
               </div>
@@ -146,16 +146,16 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;nuncaErra&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Teste&quot;}}">
 // Fortune Neck: 20 andares. Base: chance de chegar no andar k = T / M[k] (RTP T em qualquer andar).
-// Happeach (1 em 8 rodadas, andar 4–12) garante o valor daquele andar; depois dele cada subida tem chance × G.
+// 33 andares (x1,1 → x50). Happeach (1 em 8 rodadas, andar 6–20) garante o valor daquele andar; depois dele cada subida tem chance × G.
 // T = 0,922 e G = 0,85 => melhor estratégia possível = 95,0%; parar num andar fixo = 92,2–94,6%.
-const M = [1.1, 1.2, 1.3, 1.5, 1.7, 2, 2.5, 3, 3.33, 4, 4.5, 5, 5.5, 7, 8, 9, 10, 15, 25, 50];
+const M = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2, 2.2, 2.5, 2.8, 3, 3.33, 3.6, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50];
 const T = 0.922, G = 0.85, PEACH_Q = 1 / 8, STEP = 96, MOUTH0 = 318.8;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', NKEY = 'fortuneCircus.neck.v1';
 const fmt = n => (Math.round(n * 10) / 10).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const ml = m => 'x' + String(m).replace('.', ',');
-const TIER = k => k <= 4 ? 'green' : k <= 7 ? 'yellow' : k <= 11 ? 'red' : k <= 14 ? 'silver' : k <= 17 ? 'gold' : 'diamond';
-const SRC = k => 'assets/neck/apple-f' + Math.min(20, Math.max(1, k)) + '.webp'; // degradê verde → amarelo → vermelho (20 tons)
+const TIER = k => k <= 7 ? 'green' : k <= 12 ? 'yellow' : k <= 18 ? 'red' : k <= 23 ? 'silver' : k <= 28 ? 'gold' : 'diamond';
+const SRC = k => 'assets/neck/apple-f' + (1 + Math.round((Math.min(M.length, Math.max(1, k)) - 1) * 19 / (M.length - 1))) + '.webp'; // degradê verde → amarelo → vermelho (20 tons espalhados nos 33 andares)
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, round: false, busy: false, floor: 0, reach: 0, peachAt: 0, saved: 0, fr: {}, headRot: 0, headSc: 1, msg: null, vw: 453, vh: 802 };
   componentDidMount() {
@@ -183,7 +183,7 @@ class Component extends DCLogic {
     if (!s.round) {
       const b = this.bet(); if (bal < b) { this.buzz([40, 80, 40]); this.setState({ msg: { t: 'Saldo baixo', s: 'Diminua a aposta', bg: '#7a1c3a' } }); this.later(() => this.setState({ msg: null }), 1400); return; }
       bal = Math.round((bal - b) * 10) / 10; this.save(bal);
-      peachAt = Math.random() < PEACH_Q ? 4 + Math.floor(Math.random() * 9) : 0;
+      peachAt = Math.random() < PEACH_Q ? 6 + Math.floor(Math.random() * 15) : 0;
       this.setState({ round: true, balance: bal, floor: 0, saved: 0, peachAt, fr: {}, msg: null, roundBet: b });
     }
     const k = (s.round ? s.floor : 0) + 1, p = (k === 1 ? T / M[0] : M[k - 2] / M[k - 1]) * (s.saved > 0 ? G : 1), ok = this.state.nuncaErra || this.props.nuncaErra === true || Math.random() < p; // botão de teste: só aparece fora do site publicado
@@ -232,7 +232,7 @@ class Component extends DCLogic {
       showTeste: !/github\.io$/.test(location.hostname), toggleTeste: this.toggleTeste, testeLbl: s.nuncaErra ? 'TESTE: NUNCA ERRA ✓' : 'TESTE: NUNCA ERRA', testeBg: s.nuncaErra ? '#2fbf62' : 'rgba(20,4,36,.85)',
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome,
       camY: Math.max(0, mouth - 290), neckH: 34 + e, headB: 281.4 + e, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot: s.headRot, headSc: s.headSc,
-      trunkSat: 0.85 + s.floor / 130,
+      trunkSat: 0.85 + s.floor / 215,
       floors: M.map((m, i) => { const k = i + 1, t = k / M.length, st = s.fr[k], peach = s.round && s.peachAt === k, cur = s.round && k === s.floor + 1;
         return { y: MOUTH0 + k * STEP, label: ml(m), src: peach ? 'assets/fx/peach-plain.webp' : SRC(k), glow: peach ? 1 : cur ? 0.6 : 0,
           filter: 'saturate(' + (0.25 + 0.75 * t).toFixed(2) + ') sepia(' + (0.65 * (1 - t)).toFixed(2) + ') brightness(' + (0.78 + 0.22 * t).toFixed(2) + ')',
