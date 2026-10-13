@@ -68,7 +68,31 @@ jobs:
           workload_identity_provider: projects/776388739192/locations/global/workloadIdentityPools/king-rico-github/providers/github
           service_account: king-rico-hosting@king-rico.iam.gserviceaccount.com
       - name: Publicar as regras compatíveis antes do site
-        run: npx --no-install firebase deploy --project king-rico --only firestore:rules --non-interactive
+        run: |
+          set -o pipefail
+          npx --no-install firebase deploy --project king-rico --only firestore:rules --non-interactive 2>&1 | tee "$RUNNER_TEMP/king-rico-rules.log"
+      - name: Mostrar diagnóstico da publicação das regras
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, re, urllib.parse
+          log = pathlib.Path(os.environ['RUNNER_TEMP']) / 'king-rico-rules.log'
+          if log.exists():
+              report = ['### Falha ao publicar as regras do Firestore']
+              for line in log.read_text().splitlines():
+                  match = re.search(r'Request to (https://\S+) had HTTP Error: (\d{3})', line)
+                  if match:
+                      endpoint = urllib.parse.urlsplit(match.group(1))
+                      # Only public endpoint metadata; no query parameters,
+                      # credentials, full logs or token-bearing response bodies.
+                      report.append(f'- API: `{endpoint.hostname}`; HTTP: **{match.group(2)}**.')
+                      if re.search(r'permission|PERMISSION_DENIED', line, re.I):
+                          report.append('- O Google recusou a permissão da conta de publicação.')
+              if len(report) == 1:
+                  report.append('Consulte o log da etapa de regras no GitHub para identificar a falha.')
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+                  summary.write('\n'.join(report) + '\n')
+          PY
       - name: Publicar o site
         run: npx --no-install firebase deploy --project king-rico --only hosting --non-interactive
       - name: Endereço publicado
