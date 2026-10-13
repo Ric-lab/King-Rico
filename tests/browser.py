@@ -79,6 +79,41 @@ with sync_playwright() as p:
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player !== null',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after
+    page.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
+    page.wait_for_function('window.KingRicoCloud.player !== null',timeout=20000)
+    page.get_by_role('link',name='Jogar Fortune Neck',exact=True).click()
+    page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    assert page.evaluate('window.KingRicoCloud.player.balance')==after
+    # Deterministic emulator-only outcomes exercise a resumable successful
+    # round. Production continues using the untouched Web Crypto generator.
+    page.evaluate('''() => {
+      const original=crypto.getRandomValues.bind(crypto);
+      crypto.getRandomValues=array => array instanceof Uint32Array && array.length===1
+        ? (array[0]=2147483648,array) : original(array);
+    }''')
+    bet=page.evaluate('window.__fn.bet()')
+    page.get_by_role('button',name='JOGAR',exact=True).click()
+    page.wait_for_function('window.KingRicoCloud.player.neckRound?.floor===1 && !window.__fn.state.busy',timeout=20000)
+    assert page.evaluate('window.KingRicoCloud.player.balance')==after-bet
+    page.get_by_role('button',name='SUBIR',exact=True).click()
+    page.wait_for_function('window.KingRicoCloud.player.neckRound?.floor===2 && !window.__fn.state.busy',timeout=20000)
+    page.reload(wait_until='domcontentloaded')
+    page.wait_for_function('window.KingRicoCloud?.player?.neckRound?.floor===2 && window.__fn?.state.floor===2',timeout=20000)
+    assert page.evaluate('window.KingRicoCloud.player.balance')==after-bet
+    device=context.new_page()
+    device.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
+    device.wait_for_function('window.KingRicoCloud?.player?.neckRound?.floor===2 && window.__fn?.state.floor===2',timeout=20000)
+    device.get_by_role('button',name='Pegar o prêmio',exact=True).click()
+    device.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.player.neckRound===null',timeout=20000)
+    page.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.player.neckRound===null',timeout=20000)
+    final=page.evaluate('window.KingRicoCloud.player.balance')
+    assert round(final,2)==round(after-bet+round(bet*1.2,1),2)
+    assert device.evaluate('window.KingRicoCloud.player.balance')==final
+    device.close()
+    page.reload(wait_until='domcontentloaded')
+    page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    assert page.evaluate('window.KingRicoCloud.player.balance')==final
+    assert page.evaluate('window.__fn.state.round') is False
     page.get_by_role('button',name='Abrir menu',exact=True).click()
     page.get_by_role('button',name='Sair da conta',exact=True).click()
     page.locator('[data-cloud-login]').wait_for(state='visible')
@@ -86,6 +121,8 @@ with sync_playwright() as p:
     assert page.evaluate('window.KingRicoCloud.player.balance')==1000,'Account balances leaked'
     assert not errors,errors
     assert not http_errors,http_errors
-    print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel'],
-                      'legacy_backup':True,'reload':True,'account_isolation':True}))
+    assert page.evaluate('window.KingRicoCloud.player.neckRound') is None
+    assert page.evaluate('window.__fn.state.balance')==1000
+    print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
+                      'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,'account_isolation':True}))
     browser.close()

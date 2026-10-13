@@ -58,6 +58,8 @@ test('identity setup limits temporary publishing access to this repository and m
   assert.ok(binding.some(arg=>arg.includes('/attribute.repository/Ric-lab/King-Rico')));
   const projectRole=commands.find(args=>args.slice(0,2).join(' ')==='projects add-iam-policy-binding');
   assert.ok(projectRole.includes('--role=roles/firebasehosting.admin'));
+  assert.deepEqual(commands.filter(args=>args[0]==='projects' && args[1]==='add-iam-policy-binding')
+    .map(args=>args.find(arg=>arg.startsWith('--role='))).sort(),['--role=roles/firebasehosting.admin','--role=roles/firebaserules.admin']);
   assert.ok(commands.every(args=>!args.includes('keys') && !args.includes('billing')));
 });
 test('repeating identity setup updates the existing provider instead of creating another',async()=>{
@@ -67,7 +69,7 @@ test('repeating identity setup updates the existing provider instead of creating
 });
 test('identity setup waits for a newly created account to propagate and then continues',async()=>{
   const {result,commands}=await setup({propagationFailures:3});assert.equal(result.status,0,result.stderr);
-  assert.equal(commands.filter(args=>args[0]==='projects' && args[1]==='add-iam-policy-binding').length,4);
+  assert.equal(commands.filter(args=>args.includes('--role=roles/firebasehosting.admin')).length,4);
   assert.deepEqual(commands.filter(args=>args[0]==='sleep').map(args=>args[1]),['2','4','8']);
   assert.match(result.stdout,/ainda está propagando/);
   assert.match(result.stdout,/Conexão GitHub → Firebase configurada/);

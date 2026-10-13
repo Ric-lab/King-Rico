@@ -3,7 +3,7 @@ import engine from './engine.cjs';
 
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,
+export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,
   settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
@@ -20,6 +20,7 @@ export function createGameStore(db, uid, dependencies={}) {
   const playerRef = reference(['players',uid]);
   return async data => {
     const allowed={bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected'],
+      neck:['action','requestId','game','bet','move','roundId','floor'],
       bonus:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
@@ -27,11 +28,14 @@ export function createGameStore(db, uid, dependencies={}) {
     if (data.action==='spin' && (!engine.BETS.includes(data.bet) || !['circus','wheel'].includes(data.game) ||
       (data.game==='wheel' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>11 : data.selected!==undefined)))
       fail('king-rico/invalid-argument','Aposta inválida.');
+    if(data.action==='neck' && (data.game!=='neck' || !engine.BETS.includes(data.bet) || !['start','climb','collect'].includes(data.move)
+      || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.floor) || data.floor<0 || data.floor>32 || data.move==='start' && data.floor!==0))
+      fail('king-rico/invalid-argument','Rodada inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus'].includes(data.action);
+    const financial = ['spin','bonus','neck'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -45,7 +49,7 @@ export function createGameStore(db, uid, dependencies={}) {
       }
       const time=now(), isNew=!player.exists();
       if (isNew && data.action!=='bootstrap') fail('king-rico/failed-precondition','Conecte sua conta novamente.');
-      const p=isNew ? {balanceUnits:100000,peaches:0,settings:{sfxLvl:2,vibLvl:2,slotBetIdx:3,wheelBetIdx:3},
+      const p=isNew ? {balanceUnits:100000,peaches:0,settings:{sfxLvl:2,vibLvl:2,slotBetIdx:3,wheelBetIdx:3,neckBetIdx:3},
         bonus:{day:null,dayIndex:-1,streak:0},analyticsConsent:data.analyticsConsent===true,
         analyticsFromCreation:data.analyticsConsent===true,createdAt:stamp(),updatedAt:stamp(),
         firstSpinAt:null,lastSpinAt:null,revision:0,lastOperationId:null} : player.data();
@@ -63,6 +67,20 @@ export function createGameStore(db, uid, dependencies={}) {
         p.settings[data.game==='circus'?'slotBetIdx':'wheelBetIdx']=engine.BETS.indexOf(data.bet);
         result={game:data.game,bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,
           baseBalance:(before-betUnits+(data.game==='circus'?engine.units(outcome.res.win):winUnits))/100};
+      } else if(data.action==='neck') {
+        const round=p.neckRound || null;
+        if(round && (data.move==='start' || round.id!==data.roundId || round.floor!==data.floor || round.betUnits!==engine.units(data.bet)) || !round && data.move!=='start')
+          fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
+        if(round && data.move==='collect' && round.floor<1) fail('king-rico/invalid-argument','Prêmio indisponível.');
+        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
+        betUnits=round ? 0 : engine.units(data.bet);
+        if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const outcome=engine.neck(data.bet,round,data.move,data.roundId,rng),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
+        p.neckRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,floor:outcome.floor,
+          peachAt:outcome.peachAt,savedUnits:outcome.savedUnits};
+        p.settings.neckBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+        result={game:'neck',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if (data.action==='bonus') {
         const today=dayIndex(time), gap=today-p.bonus.dayIndex;
         if (gap===0) return {amount:0,player:publicPlayer(p)};

@@ -1,6 +1,6 @@
 # Firebase gratuito: login Google, saldo e métricas
 
-Esta versão usa o plano **Spark**, sem vincular faturamento. Fortune Circus e Fortune Wheel compartilham uma conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
+Esta versão usa o plano **Spark**, sem vincular faturamento. Fortune Circus, Fortune Wheel e Fortune Neck compartilham uma conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente regras do Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
 
 ## Limite de proteção
 
@@ -25,7 +25,7 @@ npx firebase deploy --project SEU_PROJECT_ID --only firestore,hosting
 
 8. Conferir login Google real, saldo depois de recarregar, outro navegador com a mesma conta, conta diferente, ambos os jogos, bônus diário e revogação de analytics. Esta etapa ainda exige um projeto real e acesso do dono; não foi publicada automaticamente.
 
-Para atualizações automáticas do site a partir de `main`, seguir [PUBLICACAO.md](PUBLICACAO.md). A configuração pública real está em `cloud/firebase-config.production.js`; `npm run build:production` a utiliza explicitamente. O workflow publica apenas Hosting; as regras e índices do Firestore são implantados separadamente.
+Para atualizações automáticas do site a partir de `main`, seguir [PUBLICACAO.md](PUBLICACAO.md). A configuração pública real está em `cloud/firebase-config.production.js`; `npm run build:production` a utiliza explicitamente. O workflow publica primeiro regras compatíveis e depois Hosting. Índices continuam sendo implantados separadamente.
 
 ## Cotas e consumo
 
@@ -56,10 +56,13 @@ O primeiro uso baixa o JAR oficial do Firestore de `storage.googleapis.com`; ess
 ## Dados e recuperação
 
 - `players/{uid}`: saldo em centésimos inteiros de moeda, cesta Happeach, ajustes/apostas, bônus, consentimento, revisão e datas de servidor.
+- `players/{uid}.neckRound`: rodada ativa do Neck, com ID, aposta, andar, Happeach e prêmio garantido. Perfis antigos sem esse campo continuam válidos. Cada início, subida ou coleta confirma uma transação antes da animação; só o início debita a aposta. Recarregar ou abrir outro aparelho retoma a mesma rodada. Coleta, queda ou andar 33 encerram a rodada e creditam o prêmio uma única vez.
 - `players/{uid}/operations/{requestId}`: parâmetros, versão das regras e resultado do pedido financeiro, incluindo a Rodada Especial inteira. Uma repetição retorna o mesmo registro; parâmetros diferentes com o mesmo ID são recusados. Alteração e exclusão pelo cliente são negadas.
 - GA4: eventos consentidos, sem documentos de eventos no Firestore. Ver [ANALYTICS.md](ANALYTICS.md).
 
 Conta nova recebe 1.000 moedas. O saldo antigo do aparelho fica em `kingRico.legacyBackup`, sem importação automática. O pedido é salvo localmente antes do envio; uma resposta perdida é recuperada com o mesmo ID no próximo acesso. Sem conexão, a versão de nuvem aguarda confirmação e não inicia a animação nem aplica um crédito local. Fechar uma Rodada Especial perde a animação; seu prêmio inteiro já foi persistido. Mudanças de outro aparelho são aplicadas quando termina a animação atual.
+
+O Neck preserva os 33 multiplicadores do design, de x1,1 a x50, sem o dígito 6. Seus prêmios são arredondados a uma casa decimal, como no protótipo; o saldo compartilhado mantém os centésimos vindos dos outros jogos. Happeach garante o prêmio do andar 6–20 onde aparece. As mesmas limitações de sorteio no cliente do Spark também se aplicam ao Neck.
 
 O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, uma vez por dia em São Paulo (UTC−3), validado pelo relógio do Firestore. O navegador propõe o dia; relógios incorretos podem causar recusa, sem crédito extra. O botão de recarga usa esse bônus e não concede saldo ilimitado.
 

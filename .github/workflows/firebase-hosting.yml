@@ -67,6 +67,8 @@ jobs:
           project_id: king-rico
           workload_identity_provider: projects/776388739192/locations/global/workloadIdentityPools/king-rico-github/providers/github
           service_account: king-rico-hosting@king-rico.iam.gserviceaccount.com
+      - name: Publicar as regras compatíveis antes do site
+        run: npx --no-install firebase deploy --project king-rico --only firestore:rules --non-interactive
       - name: Publicar o site
         run: npx --no-install firebase deploy --project king-rico --only hosting --non-interactive
       - name: Endereço publicado

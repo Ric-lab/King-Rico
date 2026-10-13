@@ -71,7 +71,7 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>King Rico</title>
 <script>location.replace("Fortune%20Circus.dc.html"+location.search+location.hash);</script>
 </head><body><a href="Fortune%20Circus.dc.html">Abrir King Rico</a></body></html>\n`);
-for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html']) {
+for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html']) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';

@@ -30,4 +30,6 @@ test('demo emulators never send analytics and free-text personal fields are reje
   assert.equal(eventParams('client_error',{...data,errorCode:'a free-text stack trace'}),null);
   assert.equal(eventParams('engagement',{...data,seconds:1000}),null);
   assert.ok(eventParams('spin_settled',{...data,bet:2.5,payout:83.25,specialRound:false}));
+  assert.ok(eventParams('neck_step',{...data,game:'neck',move:'climb',floor:6,success:true}));
+  assert.equal(eventParams('neck_step',{...data,game:'neck',move:'climb',floor:34,success:true}),null);
 });

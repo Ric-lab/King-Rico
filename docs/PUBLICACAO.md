@@ -2,11 +2,19 @@
 
 Quando a conexão inicial estiver configurada, cada atualização em `main` no repositório `Ric-lab/King-Rico` executa os testes, compila e publica o site em `https://king-rico.web.app`. Alterações em outra branch ou em um pull request executam a verificação, sem publicar. O painel Actions do GitHub mostra progresso e falhas. Uma falha nos testes impede a publicação; o site continua com a última versão publicada.
 
-O fluxo usa Firebase Hosting estático no Spark. Não há Cloud Functions nem App Hosting. Google e GitHub mantêm suas próprias cotas gratuitas. A publicação do site não apaga os dados dos jogadores no Firestore. Novas regras ou mudanças na estrutura dos dados exigem uma implantação compatível separada; este workflow publica somente Hosting.
+O fluxo usa Firebase Hosting estático no Spark. Não há Cloud Functions nem App Hosting. Google e GitHub mantêm suas próprias cotas gratuitas. O workflow publica as regras do Firestore antes do site, para que o Neck e os outros jogos usem a mesma carteira. Se as regras falharem, o site novo não é publicado. A publicação não apaga os dados dos jogadores. Índices exigem implantação separada.
 
 ## Conexão inicial, uma vez
 
-O GitHub precisa de autorização para publicar no Google. O script `scripts/setup-github-hosting.sh` configura Workload Identity Federation: a branch `main` deste repositório recebe credenciais temporárias de uma conta com a função Firebase Hosting Admin. Não cria chaves privadas ou secrets permanentes no GitHub. Executar o script não vincula faturamento.
+O GitHub precisa de autorização para publicar no Google. O script `scripts/setup-github-hosting.sh` configura Workload Identity Federation: a branch `main` deste repositório recebe credenciais temporárias de uma conta com as funções Firebase Hosting Admin e Firebase Rules Admin. Não recebe acesso administrativo direto aos documentos dos jogadores e não cria chaves privadas ou secrets permanentes no GitHub. Executar o script não vincula faturamento.
+
+Quem configurou a publicação antiga, que incluía somente Hosting, precisa executar uma vez no Google Cloud Shell:
+
+```sh
+gcloud projects add-iam-policy-binding king-rico --member=serviceAccount:king-rico-hosting@king-rico.iam.gserviceaccount.com --role=roles/firebaserules.admin --condition=None --quiet
+```
+
+Isso autoriza o workflow a publicar regras. Não habilita Blaze nem concede leitura dos saldos pela API administrativa. Após conceder, repetir o job de publicação se uma execução falhou por falta dessa permissão.
 
 No [Google Cloud Shell](https://shell.cloud.google.com/?project=king-rico), com a conta dona do projeto, obtenha o repositório:
 

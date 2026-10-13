@@ -34,6 +34,7 @@ function accept(player) {
     sfxLvl: player.settings.sfxLvl, vibLvl: player.settings.vibLvl,
     sound: player.settings.sfxLvl > 0, vibrate: player.settings.vibLvl > 0 });
   storage.set('fortuneCircus.wheel.v2', { betIdx: player.settings.wheelBetIdx });
+  storage.set('fortuneCircus.neck.v1', { betIdx: player.settings.neckBetIdx ?? 3 });
   storage.set('fortuneCircus.home.bonus', { d: player.bonus.day ? Number(player.bonus.day.replaceAll('-','')) : 0, s: player.bonus.streak });
   watchers.forEach(handler => handler(player));
 }
@@ -50,6 +51,7 @@ Cloud.error = error => {
   notify(code.includes('failed-precondition') ? 'Saldo insuficiente ou conta desconectada.' :
     code.includes('resource-exhausted') ? 'Aguarde um instante e tente novamente.' :
     code.includes('recovered') ? 'Jogada anterior recuperada. Você já pode jogar novamente.' :
+    code.includes('round-conflict') ? 'A rodada mudou em outro aparelho. Atualizando seu progresso.' :
     'Não foi possível confirmar. Verifique a conexão e tente novamente.');
 };
 if (!Cloud.enabled) resolveReady(null);
@@ -73,6 +75,11 @@ else {
       if (response.isNew) Cloud.track?.('account_created');
       if (data.action==='spin') Cloud.track?.('spin_settled',{game:data.game,bet:data.bet,payout:response.outcome.winUnits/100,
         specialRound:!!response.outcome.feature,operationId:data.requestId});
+      if(data.action==='neck') {
+        Cloud.track?.('neck_step',{game:'neck',floor:response.outcome.floor,move:data.move,success:response.outcome.ok,operationId:data.requestId});
+        if(response.outcome.ended) Cloud.track?.('spin_settled',{game:'neck',bet:data.bet,payout:response.outcome.winUnits/100,
+          specialRound:response.outcome.savedUnits>0,operationId:data.roundId});
+      }
       if (data.action==='bonus' && response.amount) Cloud.track?.('daily_bonus_claimed',{amount:response.amount,operationId:data.requestId});
     }
     return response;
@@ -80,7 +87,8 @@ else {
   async function mutate(payload) {
     await Cloud.ready;
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
-    const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected;
+    const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
+      && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
@@ -90,11 +98,12 @@ else {
     storage.set(key, data);
     try { const result = await call(data); localStorage.removeItem(key); return result; }
     catch (error) {
-      if (['king-rico/invalid-argument','king-rico/failed-precondition','king-rico/resource-exhausted','permission-denied','king-rico/already-exists'].includes(error.code)) localStorage.removeItem(key);
+      if (['king-rico/invalid-argument','king-rico/failed-precondition','king-rico/resource-exhausted','king-rico/round-conflict','permission-denied','king-rico/already-exists'].includes(error.code)) localStorage.removeItem(key);
       throw error;
     }
   }
   Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {}) });
+  Cloud.neck = (move,bet,roundId,floor) => mutate({action:'neck',game:'neck',move,bet,roundId,floor});
   Cloud.bonus = () => mutate({ action:'bonus' });
   let settingsTimer, changes = {};
   Cloud.settings = settings => {
@@ -110,7 +119,7 @@ else {
       catch (error) { Cloud.error(error); }
     }, 400);
   };
-  const game = /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
+  const game = /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
   Cloud.track = (name, extra={}) => {
@@ -183,8 +192,8 @@ else {
   }
   document.addEventListener('click', async event=>{
     if(event.target.closest('[data-cloud-signout]')) {
-      const g=window.__fc, w=window.__fw;
-      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning) { notify('Espere a jogada terminar para sair.'); return; }
+      const g=window.__fc, w=window.__fw, n=window.__fn;
+      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest) { notify('Espere a jogada terminar para sair.'); return; }
       unsubscribe?.(); selectedConsent=undefined; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
       localStorage.removeItem(SKEY); localStorage.removeItem('fortuneCircus.home.bonus');
       await signOut(auth); showLogin();

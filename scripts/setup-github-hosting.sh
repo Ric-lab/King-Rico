@@ -11,12 +11,12 @@ task_email="$task_account@$task_project.iam.gserviceaccount.com"
 
 # A newly created account can be visible to IAM before project policies accept
 # it. Retry only that propagation error; other failures still stop immediately.
-task_grant_hosting_role() {
-  local task_output task_status task_attempt=1 task_delay
+task_grant_role() {
+  local task_role=$1 task_output task_status task_attempt=1 task_delay
   local -a task_delays=(2 4 8 16 30 30)
   while true; do
     if task_output=$(gcloud projects add-iam-policy-binding "$task_project" \
-      --member="serviceAccount:$task_email" --role=roles/firebasehosting.admin --condition=None --quiet 2>&1); then
+      --member="serviceAccount:$task_email" --role="$task_role" --condition=None --quiet 2>&1); then
       return 0
     else
       task_status=$?
@@ -41,14 +41,15 @@ if [ "$task_number" != "$task_expected_number" ]; then
   exit 1
 fi
 
-gcloud services enable iam.googleapis.com iamcredentials.googleapis.com sts.googleapis.com firebasehosting.googleapis.com \
+gcloud services enable iam.googleapis.com iamcredentials.googleapis.com sts.googleapis.com firebasehosting.googleapis.com firebaserules.googleapis.com \
   --project="$task_project" --quiet
 
 if ! gcloud iam service-accounts describe "$task_email" --project="$task_project" >/dev/null 2>&1; then
   gcloud iam service-accounts create "$task_account" --project="$task_project" \
     --display-name='Publicação do King Rico pelo GitHub' --quiet
 fi
-task_grant_hosting_role
+task_grant_role roles/firebasehosting.admin
+task_grant_role roles/firebaserules.admin
 
 if ! gcloud iam workload-identity-pools describe "$task_pool" --project="$task_project" --location=global >/dev/null 2>&1; then
   gcloud iam workload-identity-pools create "$task_pool" --project="$task_project" --location=global \

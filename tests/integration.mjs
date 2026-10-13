@@ -13,13 +13,13 @@ before(async()=>{
 });
 after(async()=>{await Promise.all(apps.map(deleteApp));await environment?.cleanup();});
 const request=data=>({requestId:randomUUID(),...data});
-async function client(name,identity=name){
+async function client(name,identity=name,dependencies={}){
   const app=initializeApp({apiKey:'demo-key',projectId:'demo-king-rico',appId:'demo-app'},name);apps.push(app);
   const auth=getAuth(app);connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});
   const credential=GoogleAuthProvider.credential(JSON.stringify({sub:identity,email:`${identity}@example.test`,email_verified:true}));
   const signed=await signInWithCredential(auth,credential);
   const db=getFirestore(app);connectFirestoreEmulator(db,'127.0.0.1',8085);
-  const store=createGameStore(db,signed.user.uid);
+  const store=createGameStore(db,signed.user.uid,dependencies);
   return {auth,db,uid:signed.user.uid,call:async data=>{
     try {return await store(data);}
     catch(error) {error.message=`${data.action}/${data.game || 'home'}: ${error.message}`;throw error;}
@@ -46,6 +46,58 @@ test('Spark wallet survives relogin and rules forbid unauthorized reads and arbi
   await signOut(c.auth);await assertFails(getDoc(ref));
   const again=await client(name+'-device',name);
   assert.equal((await again.call(request({action:'bootstrap'}))).player.balance,slot.player.balance);
+});
+test('Neck Rules preserve a legacy account, resume another device and pay collection once',async()=>{
+  const identity='neck-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid);
+  await environment.withSecurityRulesDisabled(async context=>{
+    const legacy=doc(context.firestore(),'players',c.uid),p=(await getDoc(legacy)).data();
+    delete p.settings.neckBetIdx;delete p.neckRound;await setDoc(legacy,{...p,balanceUnits:100025});
+  });
+  const roundId=randomUUID(),start=request({action:'neck',game:'neck',move:'start',bet:2.5,roundId,floor:0});
+  const [a,b]=await Promise.all([c.call(start),c.call(start)]);
+  assert.equal(a.player.balance,997.75);assert.equal(a.player.neckRound.floor,1);assert.ok(a.replayed || b.replayed);
+  const other=await client(identity+'-device',identity,{rng:()=>0});
+  assert.equal((await other.call(request({action:'bootstrap'}))).player.neckRound.id,roundId);
+  await new Promise(r=>setTimeout(r,350));
+  const step=await other.call(request({action:'neck',game:'neck',move:'climb',bet:2.5,roundId,floor:1}));assert.equal(step.player.neckRound.floor,2);
+  await new Promise(r=>setTimeout(r,350));
+  const collect=request({action:'neck',game:'neck',move:'collect',bet:2.5,roundId,floor:2});
+  const [paid,replay]=await Promise.all([c.call(collect),other.call(collect)]);
+  assert.equal(paid.player.balance,1000.75);assert.equal(replay.player.balance,1000.75);assert.equal(paid.player.neckRound,null);
+  await assert.rejects(other.call(request({action:'neck',game:'neck',move:'climb',bet:2.5,roundId,floor:1})),{code:'king-rico/round-conflict'});
+});
+test('Neck Rules reject arbitrary guarantees, free progression and unbound credits',async()=>{
+  const c=await client('neck-forgery-'+randomUUID());await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),p=(await getDoc(ref)).data();
+  await assertFails(updateDoc(ref,{neckRound:{id:randomUUID(),betUnits:1000,floor:10,peachAt:6,savedUnits:999999},updatedAt:serverTimestamp(),revision:1}));
+  await assertFails(updateDoc(ref,{neckRound:{id:randomUUID(),betUnits:1000,floor:1,peachAt:0,savedUnits:0},updatedAt:serverTimestamp(),revision:1}));
+  await assertFails(updateDoc(ref,{settings:{...p.settings,neckBetIdx:10},updatedAt:serverTimestamp(),revision:1}));
+  const id=randomUUID(),roundId=randomUUID(),b=writeBatch(c.db);
+  const next={...p,neckRound:null,balanceUnits:p.balanceUnits+50000,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp(),revision:1,lastOperationId:id};
+  const outcome={move:'collect',roundId,betUnits:1000,peachAt:0,floor:33,savedUnits:0,ok:true,ended:true,winUnits:50000};
+  b.set(ref,next);b.set(doc(c.db,'players',c.uid,'operations',id),{action:'neck',game:'neck',selected:-1,fingerprint:'forged',betUnits:0,winUnits:50000,
+    result:{player:{balance:1500,peaches:0,bonus:p.bonus,settings:p.settings,analyticsConsent:false,revision:1,neckRound:null},
+      game:'neck',bet:10,balanceBefore:1000,balanceDebited:1000,outcome,baseBalance:1500},createdAt:serverTimestamp(),rulesVersion:'2026-10-13-spark-v2'});
+  await assertFails(b.commit());
+});
+test('Neck Rules validate Happeach guarantee, misses and automatic final-floor settlement',async()=>{
+  const identity='neck-guarantee-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+  const roundId=randomUUID();let r;
+  for(let floor=1;floor<=6;floor++) {
+    r=await c.call(request({action:'neck',game:'neck',move:floor===1?'start':'climb',bet:10,roundId,floor:floor-1}));
+    assert.equal(r.player.neckRound.floor,floor);await new Promise(resolve=>setTimeout(resolve,320));
+  }
+  assert.equal(r.player.neckRound.savedUnits,1550);
+  const failing=await client(identity+'-fail',identity,{rng:()=>.99});
+  r=await failing.call(request({action:'neck',game:'neck',move:'climb',bet:10,roundId,floor:6}));
+  assert.equal(r.player.balance,1005.5);assert.equal(r.player.neckRound,null);
+  await environment.withSecurityRulesDisabled(async context=>{
+    const ref=doc(context.firestore(),'players',c.uid),p=(await getDoc(ref)).data();
+    await setDoc(ref,{...p,lastSpinAt:null,neckRound:{id:roundId,betUnits:1000,floor:32,peachAt:6,savedUnits:1550}});
+  });
+  r=await c.call(request({action:'neck',game:'neck',move:'climb',bet:10,roundId,floor:32}));
+  assert.equal(r.outcome.floor,33);assert.equal(r.outcome.winUnits,50000);assert.equal(r.player.balance,1505.5);assert.equal(r.player.neckRound,null);
 });
 test('Spark rules validate creation, settings, timestamps, balances, operation binding and providers',async()=>{
   const c=await client('rules-'+randomUUID());await c.call(request({action:'bootstrap'}));

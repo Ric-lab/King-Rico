@@ -1,6 +1,6 @@
 # Medir o King Rico no plano gratuito
 
-Objetivo inicial: descobrir se a pessoa começa, volta e encontra uma experiência estável. Os dois jogos usam moedas virtuais e têm um público piloto de terceira idade. Ainda não há dados de produção nem metas medidas.
+Objetivo inicial: descobrir se a pessoa começa, volta e encontra uma experiência estável. Os três jogos usam moedas virtuais e têm um público piloto de terceira idade. Ainda não há dados de produção nem metas medidas.
 
 Google Analytics 4 recebe eventos do navegador **depois do consentimento**, sem escritas de analytics no Firestore. O SDK só é inicializado quando há consentimento e `measurementId`. O UID interno do Firebase vira `user_id`; não enviar nome, e-mail ou telefone. Os emuladores nunca enviam eventos reais.
 
@@ -24,11 +24,14 @@ Todos são emitidos pelo cliente. Os três eventos financeiros são enviados **a
 |---|---|---|
 | `account_created` | Criação com consentimento | — |
 | `spin_settled` | Giro persistido, com prêmio especial incluído | `game`, `bet`, `payout`, `special_round`, `operation_id` |
+| `neck_step` | Início, subida ou coleta do Neck persistidos | `floor` (0–33), `move` (`start`, `climb`, `collect`), `success`, `operation_id` |
 | `daily_bonus_claimed` | Bônus persistido com valor positivo | `amount`, `operation_id` |
 | `session_started` | Primeira conexão da conta na aba | — |
 | `screen_viewed` | Tela Home, Circus ou Wheel | `game` |
 | `engagement` | Amostra de aba visível com interação nos últimos cinco minutos | `seconds` (30) |
 | `client_error` | Falha tratada no cliente autenticado | `error_code` (`auth`, `network` ou `service`) |
+
+`game` aceita `home`, `circus`, `wheel` e `neck`. No Neck, `spin_settled` representa a rodada inteira encerrada por coleta, queda ou chegada ao andar 33; subidas intermediárias não contam como outra aposta. `special_round` indica um prêmio garantido pelo Happeach. `operation_id` desse evento é o ID da rodada. Pedidos repetidos recuperam a transação e não reenviam eventos financeiros.
 
 Todos levam `game`, `tab_session_id` e `rules_version`. `tab_session_id` representa uma aba, não o modelo automático de sessão do GA4. Não registrar IDs de operação/sessão como dimensões personalizadas comuns: a cardinalidade é alta. `operation_id` serve para deduplicação quando houver acesso aos eventos individuais; as contagens padrão do GA4 não a fazem automaticamente. Pedidos recuperados não emitem o evento financeiro de novo.
 

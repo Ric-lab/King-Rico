@@ -15,7 +15,22 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-12-spark-v1';
+const RULES_VERSION = '2026-10-13-spark-v2';
+const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
+const NECK_BASE = .922, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
+// Preserve the design's one-decimal prizes, without rounding the shared wallet.
+const neckPrize = (bet, floor) => Math.round(bet * NECK_MULTIPLIERS[floor-1] * 10) * 10;
+function neck(bet, previous, move, roundId, rng = random) {
+  const peachAt = previous ? previous.peachAt : rng()<NECK_PEACH_PROBABILITY ? 6+Math.floor(rng()*15) : 0;
+  const floor = previous?.floor || 0, savedUnits = previous?.savedUnits || 0;
+  if(move==='collect') return {move,roundId,betUnits:units(bet),peachAt,floor,savedUnits,ok:true,ended:true,winUnits:neckPrize(bet,floor)};
+  const next = floor+1;
+  const chance = (next===1 ? NECK_BASE/NECK_MULTIPLIERS[0] : NECK_MULTIPLIERS[next-2]/NECK_MULTIPLIERS[next-1]) * (savedUnits>0 ? NECK_GUARANTEED_FACTOR : 1);
+  const ok = rng()<chance, saved = ok && next===peachAt ? neckPrize(bet,next) : savedUnits;
+  const ended = !ok || next===NECK_MULTIPLIERS.length;
+  return {move,roundId,betUnits:units(bet),peachAt,floor:ok?next:floor,savedUnits:saved,ok,ended,
+    winUnits:ended ? ok ? neckPrize(bet,next) : saved : 0};
+}
 function weighted(pool, rng) {
   let r = rng() * pool.reduce((a, s) => a + s.w, 0);
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
@@ -85,4 +100,5 @@ function bonusFor(last, streak, now) {
   return { day: today, streak: index + 1, amount: [50,100,150,200,250,500,1000][index] };
 }
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
-  FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
+  NECK_PEACH_PROBABILITY, neckPrize, neck, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

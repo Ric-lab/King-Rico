@@ -2,11 +2,14 @@ import { initializeAnalytics, isSupported, logEvent, setUserId, setConsent, setA
 import engine from './engine.cjs';
 
 const definitions={account_created:[],spin_settled:['bet','payout','specialRound','operationId'],
-  daily_bonus_claimed:['amount','operationId'],session_started:[],screen_viewed:[],engagement:['seconds'],client_error:['errorCode']};
+  neck_step:['floor','move','success','operationId'],daily_bonus_claimed:['amount','operationId'],session_started:[],screen_viewed:[],engagement:['seconds'],client_error:['errorCode']};
 const uuid=/^[0-9a-f-]{36}$/i;
 export function eventParams(name,data) {
   if (!definitions[name] || Object.keys(data).some(k=>!['sessionId','game',...definitions[name]].includes(k)) ||
-    !uuid.test(data.sessionId || '') || !['home','circus','wheel'].includes(data.game)) return null;
+    !uuid.test(data.sessionId || '') || !['home','circus','wheel','neck'].includes(data.game)) return null;
+  if(data.floor!==undefined && (!Number.isInteger(data.floor) || data.floor<0 || data.floor>33)) return null;
+  if(data.move!==undefined && !['start','climb','collect'].includes(data.move)) return null;
+  if(data.success!==undefined && typeof data.success!=='boolean') return null;
   if (data.operationId!==undefined && !uuid.test(data.operationId)) return null;
   if (data.errorCode!==undefined && !['auth','network','service'].includes(data.errorCode)) return null;
   if (data.seconds!==undefined && (!Number.isInteger(data.seconds) || data.seconds<1 || data.seconds>60)) return null;
@@ -14,6 +17,7 @@ export function eventParams(name,data) {
   return {game:data.game,tab_session_id:data.sessionId,rules_version:engine.RULES_VERSION,
     ...(data.bet!==undefined?{bet:data.bet}:{}),...(data.payout!==undefined?{payout:data.payout}:{}),
     ...(data.amount!==undefined?{amount:data.amount}:{}),...(data.specialRound!==undefined?{special_round:data.specialRound?1:0}:{}),
+    ...(data.floor!==undefined?{floor:data.floor}:{}),...(data.move!==undefined?{move:data.move}:{}),...(data.success!==undefined?{success:data.success?1:0}:{}),
     ...(data.operationId?{operation_id:data.operationId}:{}),...(data.seconds?{seconds:data.seconds}:{}),
     ...(data.errorCode?{error_code:data.errorCode}:{})};
 }
