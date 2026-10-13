@@ -57,7 +57,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div style="position: absolute; left: 0; right: 0; top: 150px; display: flex; justify-content: center; pointer-events: none;">
           <div style="width: 340px; box-sizing: border-box; padding: 16px 20px 18px; border-radius: 24px; display: grid; justify-items: center; gap: 4px; background: {{ msgBg }}; box-shadow: 0 0 0 3px #ffd257, 0 14px 30px rgba(0,0,0,.5); animation: rrPop .35s ease-out;">
             <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 25px; color: #fff; text-align: center; white-space: nowrap; text-shadow: 0 3px 0 rgba(0,0,0,.35);">{{ msgTitle }}</span>
-            <span style="font-size: 34px; font-weight: 800; line-height: 1.1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ msgSub }}</span>
+            <span style="font-size: 28px; font-weight: 800; line-height: 1.1; color: #fff3c4; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums;">{{ msgSub }}</span>
           </div>
         </div>
       </sc-if>
@@ -79,7 +79,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div style="position: absolute; left: 14px; right: 14px; top: 704px; height: 86px; display: flex; gap: 10px;">
       <div onClick="{{ collect }}" role="button" aria-label="Pegar o prêmio" style="flex: 0 0 {{ pegarW }}; overflow: hidden; height: 86px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; cursor: pointer; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 6px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6); opacity: {{ pegarOp }}; transition: flex-basis .3s ease, opacity .2s;" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #8a4a05;">
         <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 24px; color: #4a1a00;">PEGAR</span>
-        <span style="font-size: 22px; font-weight: 800; color: #5a2a00; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ prizeText }}</span>
+        <span style="font-size: 22px; font-weight: 800; color: #5a2a00; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ pegarText }}</span>
       </div>
       <div onClick="{{ climb }}" role="button" aria-label="{{ goLbl }}" style="flex: 1; height: 86px; border-radius: 26px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background: {{ goBg }}; box-shadow: 0 6px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); transition: background .2s;" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #147a36;">
         <span style="font-size: 34px; font-weight: 800; color: #fff; opacity: {{ arrowOp }};">↑</span>
@@ -236,7 +236,7 @@ class Component extends DCLogic {
           pillBg: k <= s.floor && s.round ? '#2fbf62' : cur ? '#ffd257' : 'rgba(30,8,50,.82)', pillRing: cur ? '#fff3c4' : 'rgba(255,210,87,.6)', pillC: cur ? '#4a1a00' : '#fff3c4' }; }),
       msg: !!s.msg, msgTitle: s.msg ? s.msg.t : '', msgSub: s.msg ? s.msg.s : '', msgBg: s.msg ? s.msg.bg : '#3a0b5e',
       betText: fmt(s.round ? s.roundBet : this.bet()), downOp: s.round || s.betIdx === 0 ? 0.4 : 1, upOp: s.round || s.betIdx === BETS.length - 1 ? 0.4 : 1, betDown: this.betDown, betUp: this.betUp,
-      prizeLbl: s.round && s.floor > 0 ? 'PRÊMIO ' + ml(M[s.floor - 1]) : 'PRÓXIMO ' + ml(nextM), prizeText: s.round && s.floor > 0 ? fmt(pr) : fmt((s.round ? s.roundBet : this.bet()) * nextM),
+      pegarText: fmt(pr), prizeLbl: 'SE SUBIR ' + ml(nextM), prizeText: fmt((s.round ? s.roundBet : this.bet()) * nextM),
       savedOp: s.saved > 0 ? 1 : 0, savedText: fmt(s.saved),
       collect: this.collect, climb: this.climb, swDown: this.swDown, swUp: this.swUp,
       pegarW: s.round && s.floor > 0 ? '44%' : '0%', pegarOp: s.round && s.floor > 0 && !s.busy ? 1 : 0.0,
