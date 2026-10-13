@@ -34,6 +34,9 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></a>
     <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
 
+    <sc-if value="{{ showTeste }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ toggleTeste }}" role="button" style="position: absolute; left: 18px; top: 72px; z-index: 50; height: 32px; padding: 0 14px; border-radius: 16px; display: flex; align-items: center; cursor: pointer; background: {{ testeBg }}; box-shadow: inset 0 0 0 2px #ffd257; font-size: 14px; font-weight: 800; color: #fff; white-space: nowrap;">{{ testeLbl }}</div>
+    </sc-if>
     <!-- cena -->
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 86px; width: 453px; height: 546px; overflow: hidden; touch-action: none; border-top: 3px solid #f0b41f; border-bottom: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
       <div style="position: absolute; left: 0; bottom: 0; width: 445px; height: 2600px; transform: translateY({{ camY }}px); transition: transform .55s cubic-bezier(.3,.7,.3,1); background: #070535 url('assets/neck/bg-savana.webp') center bottom / 445px 2200px no-repeat;">
@@ -183,7 +186,7 @@ class Component extends DCLogic {
       peachAt = Math.random() < PEACH_Q ? 4 + Math.floor(Math.random() * 9) : 0;
       this.setState({ round: true, balance: bal, floor: 0, saved: 0, peachAt, fr: {}, msg: null, roundBet: b });
     }
-    const k = (s.round ? s.floor : 0) + 1, p = (k === 1 ? T / M[0] : M[k - 2] / M[k - 1]) * (s.saved > 0 ? G : 1), ok = this.props.nuncaErra === true || Math.random() < p; // nuncaErra: só no painel Tweaks (teste)
+    const k = (s.round ? s.floor : 0) + 1, p = (k === 1 ? T / M[0] : M[k - 2] / M[k - 1]) * (s.saved > 0 ? G : 1), ok = this.state.nuncaErra || this.props.nuncaErra === true || Math.random() < p; // botão de teste: só aparece fora do site publicado
     this.setState({ busy: true }); this.tone(320, 0.32, 'sine', 0.06, 760); this.buzz(18);
     if (ok) {
       this.setState({ reach: k });
@@ -221,10 +224,12 @@ class Component extends DCLogic {
   betDown = () => { if (this.state.round) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.saveBet()); };
   betUp = () => { if (this.state.round) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.saveBet()); };
   goHome = e => { if ((this.state.round || this.state.busy) && e) e.preventDefault(); };
+  toggleTeste = () => this.setState(st => ({ nuncaErra: !st.nuncaErra }));
   renderVals() {
     const s = this.state, txt = fmt(Math.floor(s.balance * 10) / 10), e = s.reach * STEP, mouth = MOUTH0 + e;
     const pr = s.round && s.floor > 0 ? Math.round(s.roundBet * M[s.floor - 1] * 10) / 10 : 0, nextM = M[Math.min(M.length, (s.round ? s.floor : 0) + 1) - 1];
     return {
+      showTeste: !/github\.io$/.test(location.hostname), toggleTeste: this.toggleTeste, testeLbl: s.nuncaErra ? 'TESTE: NUNCA ERRA ✓' : 'TESTE: NUNCA ERRA', testeBg: s.nuncaErra ? '#2fbf62' : 'rgba(20,4,36,.85)',
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome,
       camY: Math.max(0, mouth - 290), neckH: 34 + e, headB: 281.4 + e, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot: s.headRot, headSc: s.headSc,
       trunkSat: 0.85 + s.floor / 130,
