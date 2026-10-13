@@ -258,3 +258,12 @@ RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prê
 **Fortune Circus:** simulação de 700 mil giros → RTP ≈ 96,5–97%, acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros; saldo de 100 apostas zera em ~600–1.900 giros (ver comentário em `Fortune Circus.dc.html`, perto de `FEAT_P_SYM`).
 
 **Fortune Wheel:** 12 casas (11 símbolos + 0), jogador escolhe 1 símbolo, acerto paga x10. Com casas sorteadas por igual o RTP seria 1/12 × 10 = 83,3%. Para fechar em **95%** a casa escolhida sai com chance `HIT_P = 9,5%` (as outras 11 dividem o resto); RTP = 0,095 × 10 = 95%. A roda gira com a força do swipe e o ângulo final é ajustado (menos de 1 volta) para parar na casa sorteada — visualmente natural. Para mudar o RTP, altere só `HIT_P` (RTP ÷ prêmio).
+
+
+## Fortune Neck (Girafa)
+- Arquivo: `Fortune Neck.dc.html`. Card na Home abaixo da Fortune Wheel.
+- Escada de 20 andares: x1,1 · 1,2 · 1,3 · 1,5 · 1,7 · 2 · 2,5 · 3 · 3,33 · 4 · 4,5 · 5 · 5,5 · 7 · 8 · 9 · 10 · 15 · 25 · 50. JOGAR desconta a aposta e já tenta o 1º andar; SUBIR (toque ou deslizar para cima) tenta o próximo; PEGAR recebe o prêmio. Errou = perde a aposta.
+- Maçã por faixa: verde (1–4), amarela (5–7), vermelha (8–11), prata (12–14), dourada (15–17), diamante (18–20). Galhos ficam mais vivos e o céu clareia conforme sobe.
+- Happeach: em 1 de cada 8 rodadas aparece num andar entre 4 e 12 (visível desde o início). Comer garante o valor daquele andar.
+- RTP: chance de chegar ao andar k = T / M[k], T = 0,922. Depois do Happeach cada subida tem chance × G (0,85). Melhor estratégia possível = 95,0%; parar num andar fixo = 92,2–94,6%.
+- Assets: `assets/neck/` — g-head/g-body/g-neck (girafa fatiada; pescoço = ladrilho repetido), branch, apple-*.
