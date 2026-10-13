@@ -79,7 +79,8 @@ jobs:
           log = pathlib.Path(os.environ['RUNNER_TEMP']) / 'king-rico-rules.log'
           if log.exists():
               report = ['### Falha ao publicar as regras do Firestore']
-              for line in log.read_text().splitlines():
+              contents = re.sub(r'\x1b\[[0-9;]*m', '', log.read_text())
+              for line in contents.splitlines():
                   match = re.search(r'Request to (https://\S+) had HTTP Error: (\d{3})', line)
                   if match:
                       endpoint = urllib.parse.urlsplit(match.group(1))
@@ -88,10 +89,27 @@ jobs:
                       report.append(f'- API: `{endpoint.hostname}`; HTTP: **{match.group(2)}**.')
                       if re.search(r'permission|PERMISSION_DENIED', line, re.I):
                           report.append('- O Google recusou a permissão da conta de publicação.')
+              # Annotations are visible on public runs even when GitHub requires
+              # login to read job summaries. Export only fixed categories and
+              # public API/role names, never complete error messages or logs.
+              for reason in ('SERVICE_DISABLED', 'USER_PROJECT_DENIED', 'CONSUMER_INVALID',
+                             'ACCESS_TOKEN_SCOPE_INSUFFICIENT', 'PERMISSION_DENIED',
+                             'INVALID_ARGUMENT', 'UNAUTHENTICATED'):
+                  if reason in contents:
+                      report.append(f'- Código do Google: `{reason}`.')
+              for role in sorted(set(re.findall(r'roles/[A-Za-z][A-Za-z0-9.]*', contents))):
+                  report.append(f'- Papel citado pelo Google: `{role}`.')
+              if re.search(r'Compilation errors? in firestore\.rules', contents):
+                  positions = re.findall(r'\[E\] (\d+:\d+) -', contents)
+                  report.append('- Erro de compilação nas regras; posições: ' + ', '.join(positions) + '.')
+              if 'Failed to authenticate' in contents:
+                  report.append('- A CLI não conseguiu autenticar a conta de publicação.')
               if len(report) == 1:
                   report.append('Consulte o log da etapa de regras no GitHub para identificar a falha.')
               with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
                   summary.write('\n'.join(report) + '\n')
+              detail = ' '.join(report[1:]).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              print(f'::error title=Diagnóstico Firebase Rules::{detail}')
           PY
       - name: Publicar o site
         run: npx --no-install firebase deploy --project king-rico --only hosting --non-interactive
