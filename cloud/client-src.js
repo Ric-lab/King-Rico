@@ -128,15 +128,33 @@ else {
   };
   ['pointerdown','keydown'].forEach(name=>document.addEventListener(name,()=>lastInteraction=Date.now(),{passive:true}));
   setInterval(()=>{ if (!document.hidden && Date.now()-lastInteraction < 300000) Cloud.track('engagement',{seconds:30}); },30000);
-  let dialog;
-  function showLogin(message='Entre para salvar seu progresso') {
+  let dialog, loginBusy=false, loginLoading=false, persistentLogin=true;
+  const redirectKey='kingRico.googleRedirect';
+  function refreshLogin() {
+    if(!dialog) return;
+    const button=dialog.querySelector('[data-cloud-google]');
+    button.disabled=loginBusy || loginLoading;
+    button.setAttribute('aria-busy',String(loginBusy || loginLoading));
+    button.style.opacity=button.disabled ? '.75' : '1';
+    button.textContent=loginLoading ? 'Carregando…' : loginBusy ? 'Entrando…' : auth.currentUser
+      ? 'Tentar novamente' : config.emulators ? 'Entrar com conta de teste' : 'Jogar';
+    dialog.querySelector('[data-cloud-preferences]').hidden=loginLoading || !!auth.currentUser;
+    dialog.querySelector('[data-cloud-preferences]').inert=loginBusy;
+    const testAccount=dialog.querySelector('[data-cloud-test-label]');
+    if(testAccount) testAccount.hidden=loginLoading || !!auth.currentUser;
+    dialog.querySelector('[data-cloud-login-note]').textContent=persistentLogin
+      ? 'Depois, é só abrir o jogo neste navegador.' : 'Neste navegador, pode ser preciso entrar novamente ao reabrir.';
+  }
+  function showLogin(message='Vamos jogar?', loading=false) {
+    loginLoading=loading;
     if (!dialog) {
       dialog=document.createElement('div'); dialog.dataset.cloudLogin=''; dialog.setAttribute('role','dialog'); dialog.setAttribute('aria-modal','true');
       dialog.style.cssText='position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:#12051fed;color:#fff3c4;font:700 20px system-ui';
-      dialog.innerHTML='<div style="box-sizing:border-box;width:360px;max-width:100%;padding:26px;border-radius:24px;background:#3d0a63;border:3px solid #f0b41f"><h2 style="margin-top:0" data-cloud-heading></h2><p style="font-size:17px;line-height:1.5">Sua conta guarda saldo e progresso entre aparelhos. Contas novas recebem 1.000 moedas. O saldo anterior deste aparelho fica preservado como backup.</p><label style="display:flex;gap:12px;font-size:16px;line-height:1.5;margin:20px 0"><input type="checkbox" data-cloud-consent style="width:24px;height:24px;flex-shrink:0">Permitir dados de uso para melhorar o jogo</label><button data-cloud-google style="width:100%;min-height:54px;border:0;border-radius:16px;background:#fff3c4;color:#4a1a00;font:700 20px system-ui">Entrar com Google</button><button data-cloud-retry hidden style="width:100%;min-height:54px;margin-top:12px;font:700 18px system-ui">Tentar novamente</button></div>';
+      dialog.innerHTML='<div style="box-sizing:border-box;width:380px;max-width:100%;padding:28px 24px;border-radius:24px;background:#3d0a63;border:3px solid #f0b41f;text-align:center"><p style="margin:0 0 16px;color:#f0b41f;font-size:22px">KING RICO</p><h2 style="margin:0 0 14px;font-size:28px" data-cloud-heading></h2><p style="font-size:19px;line-height:1.5;margin:0 0 24px">Toque no botão para começar.<br>Suas moedas ficam guardadas.</p><button type="button" data-cloud-google style="width:100%;min-height:68px;padding:14px;border:0;border-radius:18px;background:#fff3c4;color:#4a1a00;font:700 24px system-ui;cursor:pointer">Jogar</button><p data-cloud-login-note style="font-size:16px;line-height:1.5;margin:18px 0"></p><details data-cloud-preferences style="text-align:left;font-size:16px;line-height:1.5"><summary style="min-height:44px;cursor:pointer;text-align:center">Dados de uso (opcional)</summary><label style="display:flex;gap:12px;margin-top:12px"><input type="checkbox" data-cloud-consent style="width:24px;height:24px;flex-shrink:0">Permitir dados de uso para melhorar o jogo</label></details></div>';
       document.body.append(dialog);
       if (config.emulators) {
         const label=document.createElement('label');
+        label.dataset.cloudTestLabel='';
         label.style.cssText='display:block;font-size:16px;margin:12px 0';
         label.textContent='Emulador local · conta fictícia para teste';
         const input=document.createElement('input');input.dataset.cloudTestAccount='';input.value='piloto';
@@ -145,8 +163,15 @@ else {
         dialog.querySelector('[data-cloud-google]').textContent='Entrar com conta de teste';
       }
       dialog.querySelector('[data-cloud-google]').onclick=async()=>{
+        if(loginBusy || loginLoading) return;
+        loginBusy=true;refreshLogin();
+        if(auth.currentUser) {
+          try { await connect(auth.currentUser); }
+          finally { loginBusy=false;refreshLogin(); }
+          return;
+        }
         selectedConsent=dialog.querySelector('[data-cloud-consent]').checked;
-        const provider = new GoogleAuthProvider(); provider.setCustomParameters({prompt:'select_account'});
+        const provider = new GoogleAuthProvider();
         try {
           if (config.emulators) {
             // Auth Emulator supports JSON Google ID tokens. This branch is only in an explicit demo build.
@@ -158,17 +183,20 @@ else {
         catch(error) {
           Cloud.lastAuthError = error.code || 'auth/unknown';
           if (error.code==='auth/popup-blocked') {
-            try { await signInWithRedirect(auth,provider); }
-            catch { showLogin('Não foi possível entrar. Tente novamente.'); }
+            try {
+              sessionStorage.setItem(redirectKey,'1');
+              await signInWithRedirect(auth,provider);
+            }
+            catch { sessionStorage.removeItem(redirectKey);showLogin('Toque no botão para tentar entrar novamente.'); }
           }
-          else showLogin('Não foi possível entrar. Tente novamente.');
+          else showLogin(error.code==='auth/popup-closed-by-user'
+            ? 'Toque no botão e escolha sua conta Google.' : 'Não foi possível entrar. Toque para tentar novamente.');
         }
+        finally { loginBusy=false;refreshLogin(); }
       };
-      dialog.querySelector('[data-cloud-retry]').onclick=()=>connect(auth.currentUser);
     }
     dialog.querySelector('[data-cloud-heading]').textContent=message;
-    dialog.querySelector('[data-cloud-retry]').hidden=!auth.currentUser;
-    dialog.querySelector('[data-cloud-google]').hidden=!!auth.currentUser;
+    refreshLogin();
     dialog.style.display='flex';
   }
   let unsubscribe, generation=0;
@@ -176,6 +204,7 @@ else {
     const current=++generation; unsubscribe?.(); clearTimeout(settingsTimer); changes={}; telemetry.clear();
     Cloud.uid=user?.uid || null; Cloud.player=null; telemetry.sync(null,null);
     if (!user) { showLogin(); return; }
+    showLogin('Carregando seu saldo…',true);
     try {
       await call({action:'bootstrap',requestId:id(),...(typeof selectedConsent==='boolean'?{analyticsConsent:selectedConsent}:{})});
       const key=`kingRico.pending.${user.uid}`, pending=storage.get(key);
@@ -185,6 +214,7 @@ else {
         if(current!==generation || !snapshot.exists() || snapshot.metadata.hasPendingWrites) return;
         accept(publicPlayer(snapshot.data()));
       },()=>notify('Não foi possível atualizar o progresso. Verifique a conexão.'));
+      selectedConsent=undefined;
       dialog && (dialog.style.display='none'); resolveReady(Cloud.player);
       Cloud.track('screen_viewed');
       if(!sessionStorage.getItem(`kingRico.sessionLogged.${user.uid}`)) { Cloud.track('session_started'); sessionStorage.setItem(`kingRico.sessionLogged.${user.uid}`,'1'); }
@@ -195,6 +225,10 @@ else {
       const g=window.__fc, w=window.__fw, n=window.__fn;
       if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest) { notify('Espere a jogada terminar para sair.'); return; }
       unsubscribe?.(); selectedConsent=undefined; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
+      if(dialog) {
+        dialog.querySelector('[data-cloud-consent]').checked=false;
+        dialog.querySelector('[data-cloud-preferences]').open=false;
+      }
       localStorage.removeItem(SKEY); localStorage.removeItem('fortuneCircus.home.bonus');
       await signOut(auth); showLogin();
     }
@@ -204,6 +238,18 @@ else {
       catch(error) { Cloud.error(error); }
     }
   });
-  setPersistence(auth,browserLocalPersistence).then(()=>config.emulators ? null : getRedirectResult(auth)).catch(()=>showLogin('Não foi possível manter sua conta conectada.'));
-  onAuthStateChanged(auth,connect);
+  async function restoreLogin() {
+    showLogin('Abrindo seu jogo…',true);
+    try { await setPersistence(auth,browserLocalPersistence); }
+    catch { persistentLogin=false; }
+    // Only finish a redirect initiated by this tab. An unrelated redirect
+    // check must not replace an already restored account with an error screen.
+    if(!config.emulators && sessionStorage.getItem(redirectKey)==='1') {
+      try { await getRedirectResult(auth); }
+      catch(error) { Cloud.lastAuthError=error.code || 'auth/unknown'; }
+      finally { sessionStorage.removeItem(redirectKey); }
+    }
+    onAuthStateChanged(auth,connect);
+  }
+  restoreLogin().catch(()=>showLogin('Não foi possível abrir sua conta. Toque para tentar novamente.'));
 }

@@ -2,6 +2,7 @@
 import json
 import time
 import uuid
+from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
 
 BASE = 'http://127.0.0.1:5000'
@@ -21,7 +22,11 @@ def settle(page):
     raise AssertionError('Slot round did not finish')
 
 def login(page, account):
+    page.wait_for_function('document.querySelector("[data-cloud-google]")?.disabled === false',timeout=20000)
+    assert page.locator('[data-cloud-login] button:visible').count()==1,'Login must have one primary action'
+    assert not page.locator('[data-cloud-consent]').is_checked(),'Analytics must remain optional'
     page.locator('[data-cloud-test-account]').fill(account)
+    page.locator('[data-cloud-preferences] summary').click()
     page.locator('[data-cloud-consent]').check()
     page.get_by_role('button',name='Entrar com conta de teste',exact=True).click()
     page.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.uid',timeout=20000)
@@ -123,6 +128,29 @@ with sync_playwright() as p:
     assert not http_errors,http_errors
     assert page.evaluate('window.KingRicoCloud.player.neckRound') is None
     assert page.evaluate('window.__fn.state.balance')==1000
+    # Close the browser process, then open the same regular browser profile.
+    # Returning players must get their existing Google identity and wallet
+    # without another click or a new starting balance.
+    with TemporaryDirectory(prefix='king-rico-remembered-login-') as profile:
+        saved=p.chromium.launch_persistent_context(profile,executable_path='/usr/bin/chromium',headless=True,
+            viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
+        remembered=saved.pages[0]
+        remembered.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
+        login(remembered,account+'-remembered')
+        uid=remembered.evaluate('window.KingRicoCloud.uid')
+        remembered.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
+        remembered.wait_for_function('window.KingRicoCloud.player.balance===1050')
+        saved.close()
+        reopened=p.chromium.launch_persistent_context(profile,executable_path='/usr/bin/chromium',headless=True,
+            viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
+        returned=reopened.pages[0]
+        returned.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
+        returned.wait_for_function('window.KingRicoCloud?.player && window.KingRicoCloud.uid',timeout=20000)
+        returned.locator('[data-cloud-login]').wait_for(state='hidden',timeout=20000)
+        assert returned.evaluate('window.KingRicoCloud.uid')==uid,'A reopened browser created another identity'
+        assert returned.evaluate('window.KingRicoCloud.player.balance')==1050,'A reopened browser lost the wallet'
+        reopened.close()
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
-                      'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,'account_isolation':True}))
+                      'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
+                      'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,'one_primary_login_button':True}))
     browser.close()
