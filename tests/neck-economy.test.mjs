@@ -8,11 +8,13 @@ test('collecting at the first two floors with a 10-coin stake has risk and negat
   const bet=audit.bets.find(b=>b.bet===10);
   for(const floor of bet.fixedFloors.slice(0,2)) {
     assert.ok(floor.success>0 && floor.success<1);
-    assert.ok(Math.abs(floor.rtp-.922)<1e-8);
-    assert.ok(Math.abs(floor.expectedNet+.78)<1e-7);
+    assert.ok(Math.abs(floor.rtp-.88)<1e-8);
+    assert.ok(Math.abs(floor.expectedNet+1.2)<1e-7);
   }
-  assert.ok(Math.abs(bet.fixedFloors[0].success-.922/1.1)<1e-8);
-  assert.ok(Math.abs(bet.fixedFloors[1].success-.922/1.2)<1e-8);
+  assert.ok(Math.abs(bet.fixedFloors[0].success-.8)<1e-8);
+  assert.ok(Math.abs(bet.fixedFloors[1].success-.88/1.2)<1e-8);
+  assert.equal(engine.neckPrize(10,1),1100);
+  assert.equal(engine.neckPrize(10,2),1200);
 });
 test('all legal stakes and optimal stopping policies remain below a 100% return',()=>{
   assert.equal(audit.bets.length,engine.BETS.length);
@@ -28,7 +30,7 @@ test('the audit includes rounding and a guarantee-aware strategy rather than the
   const small=audit.bets.find(b=>b.bet===2.5),ten=audit.bets.find(b=>b.bet===10);
   assert.ok(small.fixedFloors[0].rtp>ten.fixedFloors[0].rtp);
   assert.ok(ten.optimalRtp>ten.fixedFloors[0].rtp);
-  assert.ok(audit.maxOptimalRtp>.96 && audit.maxOptimalRtp<.97);
+  assert.ok(audit.maxOptimalRtp>.92 && audit.maxOptimalRtp<.93);
 });
 test('the audit detects a genuinely profitable payout regression',()=>{
   const changed={...engine,neck(...args){

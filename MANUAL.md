@@ -262,10 +262,10 @@ RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prê
 
 ## Fortune Neck (Girafa)
 - Arquivo: `Fortune Neck.dc.html`. Card na Home abaixo da Fortune Wheel.
-- Escada de 20 andares: x1,1 · 1,2 · 1,3 · 1,5 · 1,7 · 2 · 2,5 · 3 · 3,33 · 4 · 4,5 · 5 · 5,5 · 7 · 8 · 9 · 10 · 15 · 25 · 50. JOGAR desconta a aposta e já tenta o 1º andar; SUBIR (toque ou deslizar para cima) tenta o próximo; PEGAR recebe o prêmio. Errou = perde a aposta.
-- Maçã por faixa: verde (1–4), amarela (5–7), vermelha (8–11), prata (12–14), dourada (15–17), diamante (18–20). Galhos ficam mais vivos e o céu clareia conforme sobe.
-- Happeach: em 1 de cada 8 rodadas aparece num andar entre 4 e 12 (visível desde o início). Comer garante o valor daquele andar.
-- RTP: chance de chegar ao andar k = T / M[k], T = 0,922. Depois do Happeach cada subida tem chance × G (0,85). Melhor estratégia possível = 95,0%; parar num andar fixo = 92,2–94,6%.
+- Escada de 33 andares: x1,1 até x50; a tabela completa está em `cloud/engine.cjs` e `Fortune Neck.dc.html`. JOGAR desconta a aposta e já tenta o 1º andar; SUBIR (toque ou deslizar para cima) tenta o próximo; PEGAR recebe o prêmio. Errou = perde a aposta, exceto o valor já garantido pelo Happeach.
+- Maçã por faixa: verde (1–7), amarela (8–12), vermelha (13–18), prata (19–23), dourada (24–28), diamante (29–33). Galhos ficam mais vivos e o céu clareia conforme sobe.
+- Happeach: em 1 de cada 8 rodadas aparece num andar entre 6 e 20 (visível desde o início). Comer garante o valor daquele andar.
+- Primeira subida: 80% de acerto e 20% de falha para todos. Apostar 10 e sacar no primeiro andar credita 11; perda esperada de 1,20 por rodada. Sem Happeach, chance de chegar ao andar k = T / M[k], T = 0,88. Depois do Happeach cada subida tem chance × G (0,85). A auditoria do motor real, incluindo garantia e arredondamentos, dá retorno ótimo de 90,04% com aposta de 10 e máximo de 92,53% entre todas as apostas. Ver `docs/FORTUNE-NECK-MATEMATICA.md` e `npm run audit:neck`.
 - Assets: `assets/neck/` — g-head/g-body/g-neck (girafa fatiada; pescoço = ladrilho repetido), branch, apple-*.
 
 - Fortune Neck: nenhum multiplicador usa o dígito 6 (regra do dono do jogo).

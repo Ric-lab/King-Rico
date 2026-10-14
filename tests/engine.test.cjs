@@ -65,9 +65,10 @@ test('Neck preserves the design table, first-floor odds, guaranteed prize and ma
   const table=vm.runInNewContext(source.match(/const M = (\[[^;]+\]);/)[1]);
   assert.deepEqual(plain(table),engine.NECK_MULTIPLIERS);assert.equal(table.length,33);
   assert.ok(table.every(m=>!String(m).includes('6')));
-  let values=[.99,engine.NECK_BASE/1.1];
+  assert.equal(Number(source.match(/const T = ([0-9.]+)/)[1]),engine.NECK_BASE);
+  let values=[.99,.8];
   assert.equal(engine.neck(10,null,'start','round',()=>values.shift()).ok,false);
-  values=[.99,0];const first=engine.neck(10,null,'start','round',()=>values.shift());
+  values=[.99,.8-1/2**32];const first=engine.neck(10,null,'start','round',()=>values.shift());
   assert.equal(first.floor,1);assert.equal(first.winUnits,0);assert.equal(first.peachAt,0);
   const round={id:'round',betUnits:1000,floor:6,peachAt:6,savedUnits:1550};
   const miss=engine.neck(10,round,'climb','round',()=>.99);assert.equal(miss.winUnits,1550);assert.equal(miss.ended,true);

@@ -89,6 +89,11 @@ with sync_playwright() as p:
     page.get_by_role('link',name='Jogar Fortune Neck',exact=True).click()
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after
+    page.get_by_role('button',name='Abrir menu',exact=True).click()
+    page.get_by_text('Tabela de pagamentos',exact=True).click()
+    page.get_by_text('Na primeira subida, há 20% de chance de falhar.',exact=False).wait_for(state='visible')
+    page.get_by_text('FECHAR',exact=True).click()
+    page.get_by_role('button',name='Fechar',exact=True).click()
     # Deterministic emulator-only outcomes exercise a resumable successful
     # round. Production continues using the untouched Web Crypto generator.
     page.evaluate('''() => {
@@ -166,5 +171,6 @@ with sync_playwright() as p:
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,
-                      'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True}))
+                      'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True,
+                      'neck_first_step_odds_disclosed':True}))
     browser.close()

@@ -17,7 +17,7 @@ const units = value => Math.round(value * 100);
 const coins = value => value / 100;
 const RULES_VERSION = '2026-10-13-spark-v2';
 const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
-const NECK_BASE = .922, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
+const NECK_BASE = .88, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
 // Preserve the design's one-decimal prizes, without rounding the shared wallet.
 const neckPrize = (bet, floor) => Math.round(bet * NECK_MULTIPLIERS[floor-1] * 10) * 10;
 function neck(bet, previous, move, roundId, rng = random) {
