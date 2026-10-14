@@ -119,6 +119,19 @@ with sync_playwright() as p:
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==final
     assert page.evaluate('window.__fn.state.round') is False
+    # Reload after the first-step loss commits, before its animation finishes.
+    # Leaving the page must not refund the stake or produce another outcome.
+    page.evaluate('''() => {
+      const original=crypto.getRandomValues.bind(crypto);
+      crypto.getRandomValues=array => array instanceof Uint32Array && array.length===1
+        ? (array[0]=4252017623,array) : original(array);
+    }''')
+    page.get_by_role('button',name='JOGAR',exact=True).click()
+    page.wait_for_function('(balance)=>window.KingRicoCloud.player.balance===balance && window.KingRicoCloud.player.neckRound===null',arg=round(final-bet,2),timeout=20000)
+    page.reload(wait_until='domcontentloaded')
+    page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==round(final-bet,2),'Reload refunded a missed first step'
+    assert page.evaluate('window.__fn.state.round') is False
     page.get_by_role('button',name='Abrir menu',exact=True).click()
     page.get_by_role('button',name='Sair da conta',exact=True).click()
     page.locator('[data-cloud-login]').wait_for(state='visible')
@@ -152,5 +165,6 @@ with sync_playwright() as p:
         reopened.close()
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
-                      'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,'one_primary_login_button':True}))
+                      'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,
+                      'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True}))
     browser.close()

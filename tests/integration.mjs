@@ -47,6 +47,23 @@ test('Spark wallet survives relogin and rules forbid unauthorized reads and arbi
   const again=await client(name+'-device',name);
   assert.equal((await again.call(request({action:'bootstrap'}))).player.balance,slot.player.balance);
 });
+test('Neck Rules preserve an early loss after reentry and replay without another draw',async()=>{
+  const identity='neck-early-miss';
+  const first=await client('neck-early-miss-first',identity,{rng:()=>.99});
+  await first.call(request({action:'bootstrap'}));
+  const start=request({action:'neck',game:'neck',move:'start',bet:10,roundId:randomUUID(),floor:0});
+  const missed=await first.call(start);
+  assert.equal(missed.outcome.ok,false);assert.equal(missed.player.balance,990);
+  assert.equal(missed.player.neckRound,null);
+  await signOut(first.auth);
+  const returned=await client('neck-early-miss-returned',identity,{rng:()=>{throw Error('No redraw on replay');}});
+  assert.equal((await returned.call(request({action:'bootstrap'}))).player.balance,990);
+  const replay=await returned.call(start);
+  assert.equal(replay.replayed,true);assert.deepEqual(replay.outcome,missed.outcome);
+  assert.equal(replay.player.balance,990);
+  await assert.rejects(returned.call(request({action:'neck',game:'neck',move:'collect',bet:10,
+    roundId:start.roundId,floor:1})),{code:'king-rico/round-conflict'});
+});
 test('Neck Rules preserve a legacy account, resume another device and pay collection once',async()=>{
   const identity='neck-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid);

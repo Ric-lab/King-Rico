@@ -57,6 +57,21 @@ test('Neck persists a round between devices, debits once and deduplicates collec
   await assert.rejects(call(request({action:'neck',game:'neck',move:'climb',bet:2.5,roundId,floor:1})),{code:'king-rico/round-conflict'});
   assert.equal(m.records.get('players/neck').balanceUnits,100075);
 });
+test('leaving after a first-floor miss preserves the debit and cannot redraw a lost response',async()=>{
+  const m=memory(()=>.99),call=m.client('neck-miss');await call(request({action:'bootstrap'}));
+  const start=request({action:'neck',game:'neck',move:'start',bet:10,roundId:randomUUID(),floor:0});
+  const missed=await call(start);
+  assert.equal(missed.outcome.ok,false);assert.equal(missed.outcome.ended,true);
+  assert.equal(missed.player.balance,990);assert.equal(missed.player.neckRound,null);
+  const reopened=m.client('neck-miss');
+  assert.equal((await reopened(request({action:'bootstrap'}))).player.balance,990);
+  m.setRng(()=>{throw Error('A recovered result must not draw again');});
+  const replay=await reopened(start);
+  assert.equal(replay.replayed,true);assert.deepEqual(replay.outcome,missed.outcome);
+  assert.equal(replay.player.balance,990);assert.equal(m.records.size,2);
+  await assert.rejects(reopened(request({action:'neck',game:'neck',move:'collect',bet:10,
+    roundId:start.roundId,floor:1})),{code:'king-rico/round-conflict'});
+});
 test('Neck pays the guaranteed Happeach once after a miss and settles the final floor automatically',async()=>{
   const m=memory(()=>0),call=m.client('neck');await call(request({action:'bootstrap'}));
   let roundId=randomUUID(),response;
