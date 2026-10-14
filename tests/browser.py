@@ -4,8 +4,26 @@ import time
 import uuid
 from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
+from login_ui import check_wallet_retry
 
 BASE = 'http://127.0.0.1:5000'
+LOGIN_OBSERVER = '''(() => {
+  window.__krLoginShown=false;
+  const check=()=>{
+    const dialog=document.querySelector('[data-cloud-login]');
+    if(dialog && !dialog.hidden && getComputedStyle(dialog).display!=='none') window.__krLoginShown=true;
+  };
+  new MutationObserver(check).observe(document,{childList:true,subtree:true,attributes:true,attributeFilter:['style','hidden']});
+})();'''
+
+def restored_without_login(page, uid):
+    page.wait_for_function('window.KingRicoCloud?.player && window.KingRicoCloud.uid',timeout=20000)
+    page.evaluate('async()=>{await window.KingRicoCloud.ready}')
+    assert page.evaluate('window.KingRicoCloud.uid')==uid, 'Navigation changed the account'
+    assert not page.evaluate('window.__krLoginShown'), 'Restoring a saved session flashed the full login screen'
+    assert page.locator('[data-cloud-login]:visible').count()==0
+    assert page.locator('[data-cloud-loading]:visible').count()==0
+    assert not page.locator('.kr-menu-button').first.evaluate("el=>!!el.closest('[inert]')"), 'Restored game remains blocked'
 
 def settle(page):
     deadline=time.monotonic()+90
@@ -23,6 +41,7 @@ def settle(page):
 
 def login(page, account):
     page.wait_for_function('document.querySelector("[data-cloud-google]")?.disabled === false',timeout=20000)
+    assert page.evaluate('window.__krLoginShown === true'), 'Login observer did not record the required first login'
     assert page.locator('[data-cloud-login] button:visible').count()==1,'Login must have one primary action'
     assert not page.locator('[data-cloud-consent]').is_checked(),'Analytics must remain optional'
     page.locator('[data-cloud-test-account]').fill(account)
@@ -30,7 +49,9 @@ def login(page, account):
     page.locator('[data-cloud-consent]').check()
     page.get_by_role('button',name='Entrar com conta de teste',exact=True).click()
     page.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.uid',timeout=20000)
+    page.evaluate('async()=>{await window.KingRicoCloud.ready}')
     page.locator('[data-cloud-login]').wait_for(state='hidden',timeout=20000)
+    page.evaluate('window.__krLoginShown=false')
 
 def swipe(page):
     wheel=page.locator('[data-screen-label="Fortune Wheel"] > div').nth(0)
@@ -83,6 +104,7 @@ def check_menu(page, screen, paytable):
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True)
     context=browser.new_context(viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
+    context.add_init_script(LOGIN_OBSERVER)
     page=context.new_page();errors=[];http_errors=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
     page.on('response',lambda response:http_errors.append([response.status,response.url])
@@ -93,10 +115,37 @@ with sync_playwright() as p:
     # not the absence of network requests.
     page.goto(BASE+'/',wait_until='domcontentloaded')
     login(page,account)
+    account_uid=page.evaluate('window.KingRicoCloud.uid')
     assert page.evaluate('window.KingRicoCloud.player.balance')==1000, 'Local balance was imported'
     assert page.evaluate("JSON.parse(localStorage.getItem('kingRico.legacyBackup')).balance")==9876543
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('window.KingRicoCloud.player.balance===1050')
+    # Delay the real Firestore connection during a saved-session restore.
+    # The game stays visible, but a physical click cannot spend its old balance.
+    delayed=context.new_page();held=[];holding=[True]
+    def hold_wallet(route):
+        if holding[0]: held.append(route)
+        else: route.continue_()
+    delayed.route('http://127.0.0.1:8085/**',hold_wallet)
+    delayed.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
+    delayed.wait_for_function('(uid)=>window.KingRicoCloud?.uid===uid',arg=account_uid,timeout=20000)
+    delayed.locator('[data-cloud-loading]').wait_for(state='visible',timeout=20000)
+    assert held, 'The test did not delay a real Firestore request'
+    assert not delayed.evaluate('window.__krLoginShown'), 'Slow wallet recovery showed the login screen'
+    delayed.get_by_role('button',name='JOGAR',exact=True).wait_for(state='visible')
+    assert delayed.locator('[data-screen-label]').first.evaluate("el=>!!el.closest('[inert]')"), 'Unconfirmed wallet allows gameplay'
+    assert delayed.locator('[data-cloud-retry]:visible').count()==0, 'Loading should not expose a retry button'
+    box=delayed.get_by_role('button',name='JOGAR',exact=True).bounding_box()
+    delayed.mouse.click(box['x']+box['width']/2,box['y']+box['height']/2)
+    assert delayed.evaluate('window.KingRicoCloud.player') is None
+    assert not delayed.evaluate('!!window.__fn._cloudRequest'), 'Loading accepted a wager'
+    delayed.screenshot(path='/tmp/king-rico-silent-loading.png')
+    holding[0]=False
+    for route in held: route.continue_()
+    restored_without_login(delayed,account_uid)
+    delayed.unroute('http://127.0.0.1:8085/**',hold_wallet)
+    assert delayed.evaluate('window.KingRicoCloud.player.balance')==1050
+    delayed.close()
     page.get_by_role('button',name='Abrir menu',exact=True).click()
     menu=page.get_by_role('dialog',name='Menu — Home',exact=True)
     menu.get_by_role('group',name='Efeitos sonoros',exact=True).get_by_role('button',name='OFF',exact=True).click()
@@ -114,6 +163,7 @@ with sync_playwright() as p:
     page.set_viewport_size({'width':453,'height':802})
     page.get_by_role('link',name='Jogar Fortune Circus',exact=True).click()
     page.wait_for_function('window.__fc && window.__fc.state.ready && !window.__fc.state.homeOpen')
+    restored_without_login(page,account_uid)
     assert check_menu(page,'Fortune Circus',True)==common_menu
     page.get_by_role('button',name='Girar',exact=True).click()
     page.wait_for_function('window.__fc.state.spinning')
@@ -122,9 +172,11 @@ with sync_playwright() as p:
     before=page.evaluate('window.KingRicoCloud.player.balance')
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player !== null',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==before
     page.goto(BASE+'/Fortune%20Wheel.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player && window.__fw',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==before
     assert check_menu(page,'Fortune Wheel',True)==common_menu
     page.get_by_role('button',name='Apostar em Girafa',exact=True).click()
@@ -136,11 +188,14 @@ with sync_playwright() as p:
     assert after==expected
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player !== null',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after
     page.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player !== null',timeout=20000)
+    restored_without_login(page,account_uid)
     page.get_by_role('link',name='Jogar Fortune Neck',exact=True).click()
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after
     assert check_menu(page,'Fortune Neck',True)==common_menu
     page.get_by_role('button',name='Abrir menu',exact=True).click()
@@ -163,10 +218,12 @@ with sync_playwright() as p:
     page.wait_for_function('window.KingRicoCloud.player.neckRound?.floor===2 && !window.__fn.state.busy',timeout=20000)
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud?.player?.neckRound?.floor===2 && window.__fn?.state.floor===2',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after-bet
     device=context.new_page()
     device.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
     device.wait_for_function('window.KingRicoCloud?.player?.neckRound?.floor===2 && window.__fn?.state.floor===2',timeout=20000)
+    restored_without_login(device,account_uid)
     device.get_by_role('button',name='Pegar o prêmio',exact=True).click()
     device.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.player.neckRound===null',timeout=20000)
     page.wait_for_function('window.KingRicoCloud.player && window.KingRicoCloud.player.neckRound===null',timeout=20000)
@@ -176,6 +233,7 @@ with sync_playwright() as p:
     device.close()
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    restored_without_login(page,account_uid)
     assert page.evaluate('window.KingRicoCloud.player.balance')==final
     assert page.evaluate('window.__fn.state.round') is False
     # Reload after the first-step loss commits, before its animation finishes.
@@ -189,6 +247,7 @@ with sync_playwright() as p:
     page.wait_for_function('(balance)=>window.KingRicoCloud.player.balance===balance && window.KingRicoCloud.player.neckRound===null',arg=round(final-bet,2),timeout=20000)
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
+    restored_without_login(page,account_uid)
     assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==round(final-bet,2),'Reload refunded a missed first step'
     assert page.evaluate('window.__fn.state.round') is False
     page.get_by_role('button',name='Abrir menu',exact=True).click()
@@ -206,6 +265,7 @@ with sync_playwright() as p:
     with TemporaryDirectory(prefix='king-rico-remembered-login-') as profile:
         saved=p.chromium.launch_persistent_context(profile,executable_path='/usr/bin/chromium',headless=True,
             viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
+        saved.add_init_script(LOGIN_OBSERVER)
         remembered=saved.pages[0]
         remembered.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
         login(remembered,account+'-remembered')
@@ -215,18 +275,24 @@ with sync_playwright() as p:
         saved.close()
         reopened=p.chromium.launch_persistent_context(profile,executable_path='/usr/bin/chromium',headless=True,
             viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
+        reopened.add_init_script(LOGIN_OBSERVER)
         returned=reopened.pages[0]
         returned.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
         returned.wait_for_function('window.KingRicoCloud?.player && window.KingRicoCloud.uid',timeout=20000)
+        restored_without_login(returned,uid)
         returned.locator('[data-cloud-login]').wait_for(state='hidden',timeout=20000)
         assert returned.evaluate('window.KingRicoCloud.uid')==uid,'A reopened browser created another identity'
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1050,'A reopened browser lost the wallet'
         reopened.close()
+    check_wallet_retry(browser)
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,
                       'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True,
                       'neck_first_step_odds_disclosed':True,'shared_menu_on_all_screens':True,
                       'menu_fits_mobile_and_desktop':True,'home_settings_follow_player':True,
-                      'menu_analytics_updates_immediately':True}))
+                      'menu_analytics_updates_immediately':True,'navigation_never_shows_login_for_saved_session':True,
+                      'browser_restart_never_shows_login_for_saved_session':True,
+                      'slow_wallet_restore_keeps_game_visible_and_blocks_wagers':True,
+                      'wallet_error_retry_without_google_prompt_ui_fixture':True}))
     browser.close()

@@ -128,25 +128,69 @@ else {
   };
   ['pointerdown','keydown'].forEach(name=>document.addEventListener(name,()=>lastInteraction=Date.now(),{passive:true}));
   setInterval(()=>{ if (!document.hidden && Date.now()-lastInteraction < 300000) Cloud.track('engagement',{seconds:30}); },30000);
-  let dialog, loginBusy=false, loginLoading=false, persistentLogin=true;
+  let dialog, loginBusy=false, persistentLogin=true;
+  let loading, loadingTimer, gameplayObserver;
+  const gatedElements=new Map();
+  function gateGameplay(blocked) {
+    if(!blocked) {
+      gameplayObserver?.disconnect(); gameplayObserver=null;
+      for(const [element,previous] of gatedElements) element.inert=previous;
+      gatedElements.clear(); return;
+    }
+    const apply=()=>{
+      for(const element of document.body.children) {
+        if(element.matches('script,style,[data-cloud-login],[data-cloud-loading],[data-cloud-notice]')) continue;
+        if(!gatedElements.has(element)) {gatedElements.set(element,element.inert);element.inert=true;}
+      }
+    };
+    apply();
+    if(!gameplayObserver) {gameplayObserver=new MutationObserver(apply);gameplayObserver.observe(document.body,{childList:true});}
+  }
+  function stopLoading() {
+    clearTimeout(loadingTimer);
+    if(loading) loading.hidden=true;
+  }
+  function startLoading(message) {
+    gateGameplay(true); stopLoading();
+    if(dialog) dialog.style.display='none';
+    if(!loading) {
+      loading=document.createElement('div'); loading.dataset.cloudLoading=''; loading.hidden=true;
+      loading.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:2147483646;box-sizing:border-box;width:max-content;max-width:calc(100vw - 32px);padding:12px 16px;border-radius:16px;background:#3d0a63;color:#fff3c4;font:700 16px system-ui;text-align:center;box-shadow:0 4px 20px #0008';
+      const messageElement=document.createElement('span');messageElement.dataset.cloudLoadingMessage='';messageElement.setAttribute('role','status');messageElement.style.display='block';
+      const retry=document.createElement('button');retry.type='button';retry.dataset.cloudRetry='';retry.textContent='Tentar novamente';retry.hidden=true;
+      retry.style.cssText='min-height:44px;margin:12px auto 0;padding:10px 16px;border:0;border-radius:12px;background:#fff3c4;color:#4a1a00;font:700 17px system-ui;cursor:pointer';
+      retry.onclick=()=>auth.currentUser ? connect(auth.currentUser) : restoreLogin();
+      loading.append(messageElement,retry);document.body.append(loading);
+    }
+    loading.querySelector('[data-cloud-loading-message]').textContent=message;
+    loading.querySelector('[data-cloud-retry]').hidden=true;
+    // Fast restores do not flash any loading UI. Never infer authentication
+    // from a local flag or cached wallet; only Firebase decides the identity.
+    loadingTimer=setTimeout(()=>loading.hidden=false,250);
+  }
+  function showWalletRetry() {
+    startLoading('Não foi possível carregar seu saldo. Confira a conexão e tente novamente.');
+    clearTimeout(loadingTimer);loading.hidden=false;
+    loading.querySelector('[data-cloud-retry]').hidden=false;
+  }
   const redirectKey='kingRico.googleRedirect';
   function refreshLogin() {
     if(!dialog) return;
     const button=dialog.querySelector('[data-cloud-google]');
-    button.disabled=loginBusy || loginLoading;
-    button.setAttribute('aria-busy',String(loginBusy || loginLoading));
+    button.disabled=loginBusy;
+    button.setAttribute('aria-busy',String(loginBusy));
     button.style.opacity=button.disabled ? '.75' : '1';
-    button.textContent=loginLoading ? 'Carregando…' : loginBusy ? 'Entrando…' : auth.currentUser
+    button.textContent=loginBusy ? 'Entrando…' : auth.currentUser
       ? 'Tentar novamente' : config.emulators ? 'Entrar com conta de teste' : 'Jogar';
-    dialog.querySelector('[data-cloud-preferences]').hidden=loginLoading || !!auth.currentUser;
+    dialog.querySelector('[data-cloud-preferences]').hidden=!!auth.currentUser;
     dialog.querySelector('[data-cloud-preferences]').inert=loginBusy;
     const testAccount=dialog.querySelector('[data-cloud-test-label]');
-    if(testAccount) testAccount.hidden=loginLoading || !!auth.currentUser;
+    if(testAccount) testAccount.hidden=!!auth.currentUser;
     dialog.querySelector('[data-cloud-login-note]').textContent=persistentLogin
       ? 'Depois, é só abrir o jogo neste navegador.' : 'Neste navegador, pode ser preciso entrar novamente ao reabrir.';
   }
-  function showLogin(message='Vamos jogar?', loading=false) {
-    loginLoading=loading;
+  function showLogin(message='Vamos jogar?') {
+    stopLoading();gateGameplay(true);
     if (!dialog) {
       dialog=document.createElement('div'); dialog.dataset.cloudLogin=''; dialog.setAttribute('role','dialog'); dialog.setAttribute('aria-modal','true');
       dialog.style.cssText='position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:#12051fed;color:#fff3c4;font:700 20px system-ui';
@@ -163,7 +207,7 @@ else {
         dialog.querySelector('[data-cloud-google]').textContent='Entrar com conta de teste';
       }
       dialog.querySelector('[data-cloud-google]').onclick=async()=>{
-        if(loginBusy || loginLoading) return;
+        if(loginBusy) return;
         loginBusy=true;refreshLogin();
         if(auth.currentUser) {
           try { await connect(auth.currentUser); }
@@ -204,7 +248,7 @@ else {
     const current=++generation; unsubscribe?.(); clearTimeout(settingsTimer); changes={}; telemetry.clear();
     Cloud.uid=user?.uid || null; Cloud.player=null; telemetry.sync(null,null);
     if (!user) { showLogin(); return; }
-    showLogin('Carregando seu saldo…',true);
+    startLoading('Carregando seu saldo…');
     try {
       await call({action:'bootstrap',requestId:id(),...(typeof selectedConsent==='boolean'?{analyticsConsent:selectedConsent}:{})});
       const key=`kingRico.pending.${user.uid}`, pending=storage.get(key);
@@ -215,10 +259,11 @@ else {
         accept(publicPlayer(snapshot.data()));
       },()=>notify('Não foi possível atualizar o progresso. Verifique a conexão.'));
       selectedConsent=undefined;
+      stopLoading();gateGameplay(false);
       dialog && (dialog.style.display='none'); resolveReady(Cloud.player);
       Cloud.track('screen_viewed');
       if(!sessionStorage.getItem(`kingRico.sessionLogged.${user.uid}`)) { Cloud.track('session_started'); sessionStorage.setItem(`kingRico.sessionLogged.${user.uid}`,'1'); }
-    } catch { if(current===generation) showLogin('Não foi possível carregar seu progresso.'); }
+    } catch { if(current===generation) showWalletRetry(); }
   }
   document.addEventListener('click', async event=>{
     if(event.target.closest('[data-cloud-signout]')) {
@@ -239,7 +284,7 @@ else {
     }
   });
   async function restoreLogin() {
-    showLogin('Abrindo seu jogo…',true);
+    startLoading('Abrindo seu jogo…');
     try { await setPersistence(auth,browserLocalPersistence); }
     catch { persistentLogin=false; }
     // Only finish a redirect initiated by this tab. An unrelated redirect

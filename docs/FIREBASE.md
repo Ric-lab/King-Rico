@@ -7,6 +7,8 @@ do sorteio estão em [FORTUNE-NECK-MATEMATICA.md](FORTUNE-NECK-MATEMATICA.md).
 
 A tela inicial tem um único botão, **Jogar**. O primeiro acesso pode exigir escolher ou autorizar a conta no Google; o jogo não força a escolha da conta em cada entrada. O login é lembrado no mesmo navegador e o saldo continua no Firestore, inclusive após fechar e reabrir o navegador. Limpar os dados, usar uma janela privada ou sair da conta pode exigir novo login. A preferência de dados de uso é opcional e fica recolhida na tela de entrada; também pode ser alterada no menu dos jogos. Não há contas anônimas nem migração de saldos nesta mudança.
 
+Ao trocar de tela ou reabrir o navegador com uma sessão salva, o jogo recupera a conta em segundo plano. A tela de login só aparece quando o Firebase confirma que é preciso entrar. Enquanto o saldo é conferido, os controles do jogo ficam bloqueados; uma recuperação lenta mostra apenas um pequeno status sobre o jogo. Falhas ao carregar o saldo oferecem uma nova tentativa sem pedir outro login Google.
+
 ## Limite de proteção
 
 `cloud/engine.cjs` calcula o sorteio no navegador. Transações do Firestore salvam o resultado inteiro antes da animação, com um ID que recupera pedidos repetidos. As regras restringem acesso à própria conta, saldo inicial, tipos, apostas, limites de prêmio, histórico imutável e bônus por dia do servidor.
