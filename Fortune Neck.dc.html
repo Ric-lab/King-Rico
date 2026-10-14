@@ -279,7 +279,7 @@ class Component extends DCLogic {
       payList: M.map((m, i) => ({ label: ml(m), src: SRC(i + 1) })),
       menuButton: {onClick:this.openMenu,disabled:!!(s.busy || s.round)},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Neck',
-        details:'Suba os andares ou pegue o prêmio. Na primeira subida, há 20% de chance de falhar.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,
+        details:'Suba os andares ou pegue o prêmio.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,
         onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       storageInfo: window.KingRicoCloud?.enabled ? 'Saldo, rodada e ajustes ficam salvos na sua conta, junto dos outros jogos.' : 'Saldo e ajustes ficam salvos neste aparelho.',
