@@ -44,6 +44,42 @@ def swipe(page):
     page.mouse.move(cx,cy+r,steps=5)
     page.mouse.up()
 
+def check_menu(page, screen, paytable):
+    trigger=page.get_by_role('button',name='Abrir menu',exact=True)
+    trigger.wait_for(state='visible')
+    assert trigger.count()==1, 'The embedded Home must not duplicate the menu button'
+    trigger.click()
+    menu=page.get_by_role('dialog',name='Menu — '+screen,exact=True)
+    menu.wait_for(state='visible')
+    assert menu.get_by_role('button',name='Tabela de pagamentos',exact=True).count()==int(paytable)
+    for label,value in [('Efeitos sonoros','OFF'),('Vibração','50%')]:
+        group=menu.get_by_role('group',name=label,exact=True)
+        assert group.get_by_role('button').count()==3
+        assert group.get_by_role('button',name=value,exact=True).get_attribute('aria-pressed')=='true'
+    assert menu.get_by_role('button',name='Sair da conta',exact=True).count()==1
+    assert menu.get_by_role('button',name='Dados de uso: ligados',exact=True).count()==1
+    geometry=menu.bounding_box(); viewport=page.viewport_size
+    assert geometry['x']>=15 and geometry['y']>=0
+    assert geometry['x']+geometry['width']<=viewport['width']-15
+    assert geometry['y']+geometry['height']<=viewport['height']-15
+    assert menu.evaluate('(el)=>el.scrollWidth<=el.clientWidth+1'), 'Menu overflows horizontally'
+    appearance=menu.evaluate('''el=>{
+      const s=getComputedStyle(el),b=getComputedStyle(document.querySelector('.kr-menu-button'));
+      return {font:s.fontFamily,background:s.backgroundImage,border:s.border,radius:s.borderRadius,
+              buttonBackground:b.backgroundImage,buttonPosition:b.backgroundPosition,buttonRadius:b.borderRadius};
+    }''')
+    page.screenshot(path='/tmp/king-rico-menu-'+screen.lower().replace(' ','-')+'.png')
+    if paytable:
+        menu.get_by_role('button',name='Tabela de pagamentos',exact=True).click()
+        menu.wait_for(state='hidden')
+        page.get_by_text('TABELA DE PAGAMENTOS',exact=True).wait_for(state='visible')
+        page.get_by_text('FECHAR',exact=True).click()
+        menu.wait_for(state='visible')
+    page.keyboard.press('Escape')
+    menu.wait_for(state='hidden')
+    assert trigger.evaluate('(el)=>document.activeElement===el'), 'Closing menu must restore keyboard focus'
+    return appearance
+
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True)
     context=browser.new_context(viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
@@ -61,8 +97,24 @@ with sync_playwright() as p:
     assert page.evaluate("JSON.parse(localStorage.getItem('kingRico.legacyBackup')).balance")==9876543
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('window.KingRicoCloud.player.balance===1050')
+    page.get_by_role('button',name='Abrir menu',exact=True).click()
+    menu=page.get_by_role('dialog',name='Menu — Home',exact=True)
+    menu.get_by_role('group',name='Efeitos sonoros',exact=True).get_by_role('button',name='OFF',exact=True).click()
+    menu.get_by_role('group',name='Vibração',exact=True).get_by_role('button',name='50%',exact=True).click()
+    page.wait_for_function('window.KingRicoCloud.player.settings.sfxLvl===0 && window.KingRicoCloud.player.settings.vibLvl===1')
+    menu.get_by_role('button',name='Dados de uso: ligados',exact=True).click()
+    menu.get_by_role('button',name='Dados de uso: desligados',exact=True).wait_for(state='visible')
+    menu.get_by_role('button',name='Dados de uso: desligados',exact=True).click()
+    menu.get_by_role('button',name='Dados de uso: ligados',exact=True).wait_for(state='visible')
+    menu.get_by_role('button',name='Fechar menu',exact=True).click()
+    common_menu=check_menu(page,'Home',False)
+    for width,height in [(375,667),(1280,900)]:
+        page.set_viewport_size({'width':width,'height':height})
+        assert check_menu(page,'Home',False)==common_menu
+    page.set_viewport_size({'width':453,'height':802})
     page.get_by_role('link',name='Jogar Fortune Circus',exact=True).click()
     page.wait_for_function('window.__fc && window.__fc.state.ready && !window.__fc.state.homeOpen')
+    assert check_menu(page,'Fortune Circus',True)==common_menu
     page.get_by_role('button',name='Girar',exact=True).click()
     page.wait_for_function('window.__fc.state.spinning')
     page.wait_for_function('!window.__fc.state.spinning',timeout=20000)
@@ -74,6 +126,7 @@ with sync_playwright() as p:
     page.goto(BASE+'/Fortune%20Wheel.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.KingRicoCloud.player && window.__fw',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==before
+    assert check_menu(page,'Fortune Wheel',True)==common_menu
     page.get_by_role('button',name='Apostar em Girafa',exact=True).click()
     swipe(page)
     page.wait_for_function('window.__fw.state.spinning',timeout=10000)
@@ -89,11 +142,12 @@ with sync_playwright() as p:
     page.get_by_role('link',name='Jogar Fortune Neck',exact=True).click()
     page.wait_for_function('window.KingRicoCloud?.player && window.__fn',timeout=20000)
     assert page.evaluate('window.KingRicoCloud.player.balance')==after
+    assert check_menu(page,'Fortune Neck',True)==common_menu
     page.get_by_role('button',name='Abrir menu',exact=True).click()
     page.get_by_text('Tabela de pagamentos',exact=True).click()
     page.get_by_text('Na primeira subida, há 20% de chance de falhar.',exact=False).wait_for(state='visible')
     page.get_by_text('FECHAR',exact=True).click()
-    page.get_by_role('button',name='Fechar',exact=True).click()
+    page.get_by_role('button',name='Fechar menu',exact=True).click()
     # Deterministic emulator-only outcomes exercise a resumable successful
     # round. Production continues using the untouched Web Crypto generator.
     page.evaluate('''() => {
@@ -172,5 +226,7 @@ with sync_playwright() as p:
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,
                       'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True,
-                      'neck_first_step_odds_disclosed':True}))
+                      'neck_first_step_odds_disclosed':True,'shared_menu_on_all_screens':True,
+                      'menu_fits_mobile_and_desktop':True,'home_settings_follow_player':True,
+                      'menu_analytics_updates_immediately':True}))
     browser.close()

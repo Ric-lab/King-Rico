@@ -80,6 +80,7 @@ Rodada Especial: padrão marcado. **Não vibrar** em animações decorativas nem
 
 ### Menu
 Abrir o menu **pausa o jogo** (inclusive automático e Rodada Especial). Nunca deixar o jogo rodando atrás de um modal.
+Home e os três jogos usam o mesmo botão e painel de `ui/menu.js`. O painel aparece fora do quadro escalado do jogo, cabe na tela e permite fechar com Escape. Som, vibração, progresso e conta mantêm o mesmo padrão; cada jogo fornece sua descrição e sua tabela de pagamentos. Alterar um ajuste na Home atualiza também os jogos da conta.
 
 ## 4. Assets — o que existe e de onde veio
 

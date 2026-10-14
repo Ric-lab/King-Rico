@@ -62,6 +62,7 @@ catch(error) {
 }
 await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
+await cp('ui',path.join(destination,'ui'),{recursive:true});
 await cp('assets',path.join(destination,'assets'),{recursive:true});
 for(const file of ['support.js','KingRico.dc.html','King Rico.dc.html','index.html','version.json'])
   await copyFile(file,path.join(destination,file));
