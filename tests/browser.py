@@ -53,6 +53,19 @@ def login(page, account):
     page.locator('[data-cloud-login]').wait_for(state='hidden',timeout=20000)
     page.evaluate('window.__krLoginShown=false')
 
+def claim_gift(page):
+    canvas=page.locator('canvas[width="600"][height="600"]')
+    canvas.wait_for(state='visible')
+    box=canvas.bounding_box()
+    # Start inside the rounded card; its clipped corner cannot receive a press.
+    page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/38);page.mouse.down()
+    for row in range(19):
+        y=box['y']+box['height']*(row+.5)/19
+        x=box['x']+(box['width']-2 if row%2==0 else 2)
+        page.mouse.move(x,y,steps=6)
+    page.mouse.up()
+    page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
+
 def swipe(page):
     wheel=page.locator('[data-screen-label="Fortune Wheel"] > div').nth(0)
     # The actual draggable element is the circular wheel with cursor: grab.
@@ -118,7 +131,7 @@ with sync_playwright() as p:
     account_uid=page.evaluate('window.KingRicoCloud.uid')
     assert page.evaluate('window.KingRicoCloud.player.balance')==1000, 'Local balance was imported'
     assert page.evaluate("JSON.parse(localStorage.getItem('kingRico.legacyBackup')).balance")==9876543
-    page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
+    claim_gift(page)
     page.wait_for_function('window.KingRicoCloud.player.balance===1050')
     # Delay the real Firestore connection during a saved-session restore.
     # The game stays visible, but a physical click cannot spend its old balance.
@@ -270,7 +283,7 @@ with sync_playwright() as p:
         remembered.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
         login(remembered,account+'-remembered')
         uid=remembered.evaluate('window.KingRicoCloud.uid')
-        remembered.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
+        claim_gift(remembered)
         remembered.wait_for_function('window.KingRicoCloud.player.balance===1050')
         saved.close()
         reopened=p.chromium.launch_persistent_context(profile,executable_path='/usr/bin/chromium',headless=True,
@@ -283,6 +296,32 @@ with sync_playwright() as p:
         returned.locator('[data-cloud-login]').wait_for(state='hidden',timeout=20000)
         assert returned.evaluate('window.KingRicoCloud.uid')==uid,'A reopened browser created another identity'
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1050,'A reopened browser lost the wallet'
+        # Exhaust the real emulated wallet after its daily gift was claimed.
+        # Deterministic losing Wheel operations avoid animation timing here;
+        # the refill itself is exercised through the visible Circus button.
+        returned.evaluate('''async()=>{
+          const original=crypto.getRandomValues.bind(crypto);
+          crypto.getRandomValues=array=>array instanceof Uint32Array && array.length===1
+            ? (array[0]=4252017623,array) : original(array);
+          await window.KingRicoCloud.spin('wheel',1000,0);
+          await new Promise(resolve=>setTimeout(resolve,800));
+          await window.KingRicoCloud.spin('wheel',50,0);
+        }''')
+        assert returned.evaluate('window.KingRicoCloud.player.balance')==0
+        returned.goto(BASE+'/Fortune%20Circus.dc.html?from=home',wait_until='domcontentloaded')
+        restored_without_login(returned,uid)
+        refill=returned.get_by_role('button',name='Recarregar moedas',exact=True)
+        refill.wait_for(state='visible')
+        box=refill.bounding_box();returned.mouse.dblclick(box['x']+box['width']/2,box['y']+box['height']/2)
+        returned.wait_for_function('window.KingRicoCloud.player.balance===1000 && window.__fc.state.balance===1000',timeout=20000)
+        returned.reload(wait_until='domcontentloaded')
+        restored_without_login(returned,uid)
+        assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
+        assert returned.evaluate('window.__fc.state.balance')==1000
+        assert returned.evaluate('async()=>(await window.KingRicoCloud.bonus()).amount')==0,'Recharge reset the daily gift'
+        returned.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
+        restored_without_login(returned,uid)
+        assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
         reopened.close()
     check_wallet_retry(browser)
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck'],
@@ -294,5 +333,7 @@ with sync_playwright() as p:
                       'menu_analytics_updates_immediately':True,'navigation_never_shows_login_for_saved_session':True,
                       'browser_restart_never_shows_login_for_saved_session':True,
                       'slow_wallet_restore_keeps_game_visible_and_blocks_wagers':True,
-                      'wallet_error_retry_without_google_prompt_ui_fixture':True}))
+                      'wallet_error_retry_without_google_prompt_ui_fixture':True,
+                      'recharge_after_claimed_daily_gift':True,'recharge_survives_reload_and_game_change':True,
+                      'scratch_gift_credits_cloud_wallet':True}))
     browser.close()

@@ -71,6 +71,8 @@ Conta nova recebe 1.000 moedas. O saldo antigo do aparelho fica em `kingRico.leg
 
 O Neck preserva os 33 multiplicadores do design, de x1,1 a x50, sem o dígito 6. Seus prêmios são arredondados a uma casa decimal, como no protótipo; o saldo compartilhado mantém os centésimos vindos dos outros jogos. Happeach garante o prêmio do andar 6–20 onde aparece. As mesmas limitações de sorteio no cliente do Spark também se aplicam ao Neck.
 
-O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, uma vez por dia em São Paulo (UTC−3), validado pelo relógio do Firestore. O navegador propõe o dia; relógios incorretos podem causar recusa, sem crédito extra. O botão de recarga usa esse bônus e não concede saldo ilimitado.
+O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, uma vez por dia em São Paulo (UTC−3), validado pelo relógio do Firestore. O navegador propõe o dia; relógios incorretos podem causar recusa, sem crédito extra.
+
+Quando o saldo fica abaixo de 1 moeda e não há uma rodada ativa do Neck, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes ou progresso Happeach.
 
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.

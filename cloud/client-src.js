@@ -105,6 +105,7 @@ else {
   Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {}) });
   Cloud.neck = (move,bet,roundId,floor) => mutate({action:'neck',game:'neck',move,bet,roundId,floor});
   Cloud.bonus = () => mutate({ action:'bonus' });
+  Cloud.recharge = () => mutate({ action:'recharge' });
   let settingsTimer, changes = {};
   Cloud.settings = settings => {
     const owner = Cloud.uid;

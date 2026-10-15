@@ -112,6 +112,14 @@ service cloud.firestore {
         && p.firstSpinAt == old.firstSpinAt && p.lastSpinAt == old.lastSpinAt
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == amount / 100.0;
     }
+    function recharge(p, old, o) {
+      return o.action == 'recharge' && o.game == 'home' && o.selected == -1
+        && old.balanceUnits < 100 && old.get('neckRound',null) == null
+        && o.betUnits == 0 && o.winUnits == 100000
+        && p.balanceUnits == old.balanceUnits + 100000
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
+        && o.result.keys().hasOnly(['player','amount']) && o.result.amount == 1000;
+    }
     function financial(uid, p, old) {
       let path = operationPath(uid, p.lastOperationId);
       let o = getAfter(path).data;
@@ -121,7 +129,8 @@ service cloud.firestore {
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
         && player.diff(expected).affectedKeys().hasOnly(['neckRound'])
         && player.get('neckRound',null) == p.get('neckRound',null)
-        && (o.action == 'neck' ? neck(p, old, o) : profile(p) && (spin(p, old, o) || bonus(p, old, o)));
+        && (o.action == 'neck' ? neck(p, old, o) : profile(p)
+          && (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {
       allow read: if owner(uid);

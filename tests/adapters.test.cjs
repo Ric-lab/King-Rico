@@ -85,6 +85,31 @@ test('Home uses the persisted cloud bonus',async()=>{
  home.buzz=()=>{};home.react=()=>{};await home.collectBonus();
  assert.equal(home.state.balance,1050);assert.equal(home.state.last,20261012);assert.equal(home.state.streak,1);
 });
+test('the cloud scratch card displays the credited daily gift instead of a local cash draw',()=>{
+ const cloud={enabled:true,dayKey:()=>20261015};
+ const {instance:home}=component('Home.dc.html',cloud,()=>.99);
+ home.props.testGift=true;home.props.testDay=7;
+ const cycle=home.cycle();assert.equal(cycle.today,20261015);assert.equal(cycle.idx,0);
+ assert.equal(home.prize(cycle),50);assert.equal(home._prize.cells.filter(n=>n===50).length,3);
+ // A wallet restored after the first render may already be on a later day.
+ home.state.last=20261014;home.state.streak=3;
+ assert.equal(home.prize(home.cycle()),200);assert.equal(home._prize.cells.filter(n=>n===200).length,3);
+});
+test('Circus recharges the cloud wallet once without reusing the already claimed daily gift',async()=>{
+ let finish,calls=0;
+ const cloud={enabled:true,recharge:()=>{calls++;return new Promise(resolve=>{finish=resolve;});},
+  bonus:()=>{throw Error('Recharge must not use the daily gift');},error:()=>{throw Error('Unexpected error');}};
+ const {instance:g}=component('Fortune Circus.dc.html',cloud);g.cloudBusy=()=>false;g.state.balance=0;
+ const first=g.recharge(),second=g.recharge();assert.equal(calls,1);
+ finish({amount:1000,player:{balance:1000}});await Promise.all([first,second]);
+ assert.equal(g.state.balance,1000);assert.equal(g._recharging,false);assert.equal(g.state.auto,false);
+});
+test('Circus does not mint local coins if the cloud recharge fails',async()=>{
+ let errors=0;
+ const cloud={enabled:true,recharge:async()=>{throw Error('Offline');},error:()=>errors++};
+ const {instance:g}=component('Fortune Circus.dc.html',cloud);g.cloudBusy=()=>false;g.state.balance=0;
+ await g.recharge();assert.equal(g.state.balance,0);assert.equal(g._recharging,false);assert.equal(errors,1);
+});
 test('Home and Wheel preserve cents earned in Circus',()=>{
  const cloud={enabled:false};
  const {instance:home}=component('Home.dc.html',cloud);home.state.balance=1050.25;

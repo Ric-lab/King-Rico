@@ -29,6 +29,32 @@ function memory(rng=()=>.99) {
   return {records,client:uid=>createGameStore(null,uid,dependencies),advance:ms=>time+=ms,setRng:next=>rng=next};
 }
 const request=data=>({requestId:randomUUID(),...data});
+test('an exhausted wallet recharges after the daily gift, keeps cents and only credits once',async()=>{
+  const m=memory(),call=m.client('recharge');await call(request({action:'bootstrap'}));
+  await call(request({action:'bonus'}));
+  const original=m.records.get('players/recharge');original.balanceUnits=25;original.peaches=3;
+  const bonus=structuredClone(original.bonus),settings=structuredClone(original.settings);
+  const recharge=request({action:'recharge'});
+  const [paid,replayed]=await Promise.all([call(recharge),call(recharge)]);
+  assert.equal(paid.amount,1000);assert.equal(paid.player.balance,1000.25);assert.equal(replayed.replayed,true);
+  assert.deepEqual(paid.player.bonus,bonus);assert.deepEqual(paid.player.settings,settings);assert.equal(paid.player.peaches,3);
+  const before=m.records.size,revision=m.records.get('players/recharge').revision;
+  assert.equal((await call(request({action:'recharge'}))).amount,0);
+  assert.equal(m.records.size,before);assert.equal(m.records.get('players/recharge').revision,revision);
+  assert.equal((await call(request({action:'bonus'}))).amount,0);
+  m.records.get('players/recharge').balanceUnits=0;
+  const [a,b]=await Promise.all([call(request({action:'recharge'})),call(request({action:'recharge'}))]);
+  assert.equal(a.amount+b.amount,1000);assert.equal(m.records.get('players/recharge').balanceUnits,100000);
+});
+test('recharge rejects client-selected amounts and leaves an unfinished Neck round untouched',async()=>{
+  const m=memory(),call=m.client('recharge-guard');await call(request({action:'bootstrap'}));
+  const p=m.records.get('players/recharge-guard');p.balanceUnits=0;
+  await assert.rejects(call(request({action:'recharge',amount:999999})),{code:'king-rico/invalid-argument'});
+  p.neckRound={id:randomUUID(),betUnits:100000,floor:1,peachAt:0,savedUnits:0};
+  const blocked=await call(request({action:'recharge'}));
+  assert.equal(blocked.amount,0);assert.equal(blocked.reason,'neck-round');
+  assert.equal(m.records.size,1);assert.equal(p.balanceUnits,0);
+});
 test('Spark creates a fixed wallet, preserves consent and deduplicates concurrent spins',async()=>{
   const m=memory(),call=m.client('one');
   assert.equal((await call(request({action:'bootstrap',analyticsConsent:false}))).player.balance,1000);

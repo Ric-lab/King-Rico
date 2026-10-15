@@ -283,7 +283,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ recharge }}" role="button" style="position: absolute; left: 50%; top: 372px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer; animation: fcPop .35s ease-out;" style-active="transform: translateX(-50%) scale(.96);">
+    <div onClick="{{ recharge }}" role="button" aria-label="Recarregar moedas" style="position: absolute; left: 50%; top: 372px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer; animation: fcPop .35s ease-out;" style-active="transform: translateX(-50%) scale(.96);">
       <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">SALDO ESGOTADO</div>
       <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
     </div>
@@ -1724,9 +1724,12 @@ class Component extends DCLogic {
   recharge = async () => {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) {
-      try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance,
-        hint: r.amount ? 'Bônus diário recebido!' : 'Seu bônus de hoje já foi recebido' }); }
+      if(this._recharging || this.cloudBusy()) return;
+      this._recharging=true;
+      try { const r = await cloud.recharge(); this.setState({ balance: cloud.player?.balance ?? r.player.balance,auto:false,
+        hint: r.reason==='neck-round' ? 'Termine sua rodada do Fortune Neck antes de recarregar.' : r.replayed ? 'Recarga confirmada. Saldo atualizado.' : r.amount ? '+1.000 moedas — boa sorte!' : 'Seu saldo já está disponível.' }); }
       catch (e) { cloud.error(e); }
+      finally {this._recharging=false;}
       return;
     }
     this.stopAll();

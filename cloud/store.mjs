@@ -21,7 +21,7 @@ export function createGameStore(db, uid, dependencies={}) {
   return async data => {
     const allowed={bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected'],
       neck:['action','requestId','game','bet','move','roundId','floor'],
-      bonus:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
+      bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
     if (data.analyticsConsent !== undefined && typeof data.analyticsConsent !== 'boolean') fail('king-rico/invalid-argument','Preferência inválida.');
@@ -35,7 +35,7 @@ export function createGameStore(db, uid, dependencies={}) {
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
       Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus','neck'].includes(data.action);
+    const financial = ['spin','bonus','neck','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -89,6 +89,11 @@ export function createGameStore(db, uid, dependencies={}) {
         winUnits=[5000,10000,15000,20000,25000,50000,100000][index];p.balanceUnits+=winUnits;
         p.bonus={day:engine.dayKey(time),dayIndex:today,streak:index+1};
         result={amount:winUnits/100};
+      } else if (data.action==='recharge') {
+        if(p.neckRound) return {amount:0,reason:'neck-round',player:publicPlayer(p)};
+        if(p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
+        winUnits=100000;p.balanceUnits+=winUnits;
+        result={amount:winUnits/100};
       } else if (data.action==='settings') {
         p.settings={...p.settings,...settings};
         if (data.analyticsConsent!==undefined) p.analyticsConsent=data.analyticsConsent;
@@ -105,7 +110,7 @@ export function createGameStore(db, uid, dependencies={}) {
     try { return await execute(); }
     catch(error) {
       // A simultaneous commit can make immutable-operation Rules deny a stale
-      // write before the SDK retries. Recover only an already committed matching ID.
+      // write before the SDK retries. Recover an already committed matching ID.
       if (financial && error.code==='permission-denied') {
         let saved;
         try {saved=await read(operationRef);} catch {throw error;}
@@ -114,6 +119,9 @@ export function createGameStore(db, uid, dependencies={}) {
           if (operation.fingerprint!==fingerprint) fail('king-rico/already-exists','Pedido já utilizado.');
           return {...operation.result,replayed:true};
         }
+        // Another tab may have recharged with a different ID. Re-read in a fresh
+        // transaction once; its balance guard returns a no-op after that credit.
+        if(data.action==='recharge') return execute();
       }
       throw error;
     }

@@ -64,6 +64,45 @@ test('Neck Rules preserve an early loss after reentry and replay without another
   await assert.rejects(returned.call(request({action:'neck',game:'neck',move:'collect',bet:10,
     roundId:start.roundId,floor:1})),{code:'king-rico/round-conflict'});
 });
+test('recharge Rules credit an exhausted wallet once after the daily gift and reject forged credits',async()=>{
+  const identity='recharge-'+randomUUID(),c=await client(identity);
+  await c.call(request({action:'bootstrap'}));await c.call(request({action:'bonus'}));
+  const ref=doc(c.db,'players',c.uid);
+  async function seed(changes) {
+    await environment.withSecurityRulesDisabled(async context=>updateDoc(doc(context.firestore(),'players',c.uid),changes));
+  }
+  await seed({balanceUnits:25,peaches:3});
+  const original=(await getDoc(ref)).data(),id=request({action:'recharge'});
+  const [a,b]=await Promise.all([c.call(id),c.call(id)]);
+  assert.equal(a.player.balance,1000.25);assert.equal(b.player.balance,1000.25);assert.ok(a.replayed || b.replayed);
+  assert.deepEqual(a.player.bonus,original.bonus);assert.equal(a.player.peaches,3);
+  assert.equal((await c.call(request({action:'bonus'}))).amount,0);
+  assert.equal((await c.call(request({action:'recharge'}))).amount,0);
+  const other=await client(identity+'-device',identity);
+  assert.equal((await other.call(request({action:'bootstrap'}))).player.balance,1000.25);
+  async function forged(credit=100000,changes={}) {
+    const old=(await getDoc(ref)).data(),operationId=randomUUID(),batch=writeBatch(c.db);
+    const next={...old,balanceUnits:old.balanceUnits+credit,revision:old.revision+1,lastOperationId:operationId,
+      updatedAt:serverTimestamp(),...changes};
+    const player={balance:next.balanceUnits/100,peaches:next.peaches,settings:next.settings,bonus:next.bonus,
+      neckRound:next.neckRound || null,analyticsConsent:next.analyticsConsent,revision:next.revision};
+    batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',operationId),{action:'recharge',game:'home',selected:-1,
+      fingerprint:'forged',betUnits:0,winUnits:credit,result:{amount:credit/100,player},createdAt:serverTimestamp(),rulesVersion:'2026-10-13-spark-v2'});
+    await assertFails(batch.commit());
+  }
+  await forged(); // sufficient funds
+  await seed({balanceUnits:0});
+  await forged(999999);await forged(100000,{peaches:4});
+  await forged(100000,{bonus:{day:null,dayIndex:-1,streak:0}});
+  await seed({neckRound:{id:randomUUID(),betUnits:100000,floor:1,peachAt:0,savedUnits:0}});
+  const blocked=await c.call(request({action:'recharge'}));
+  assert.equal(blocked.amount,0);assert.equal(blocked.reason,'neck-round');
+  await forged();
+  await seed({neckRound:null});
+  const [x,y]=await Promise.all([c.call(request({action:'recharge'})),other.call(request({action:'recharge'}))]);
+  assert.equal((await getDoc(ref)).data().balanceUnits,100000);
+  assert.equal(x.amount+y.amount,1000);
+});
 test('Neck Rules preserve a legacy account, resume another device and pay collection once',async()=>{
   const identity='neck-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid);
