@@ -2,6 +2,20 @@ repo: Ric-lab/King-Rico
 branch: main
 
 ## Last sync
+date: 2026-10-15T01:33:42.723Z
+### Updated in this project
+- Fortune Penalty publicado (3D three.js, girafa-robô, escada x1,2→x10, card na Home)
+- Home: presente do dia virou raspadinha 3×3 com faixa que sobe por dias seguidos; trilha de 7 dias
+- Fortune Hoop fica só no projeto (não publicado)
+
+### Sync
+date: 2026-10-13T14:05:41Z
+### Updated in this project
+- Puxada a camada Firebase (login Google, saldo no Firestore, GA4) em Fortune Circus/Wheel + cloud/, docs, regras, workflow
+- Fortune Neck: corrigido WKEY → NKEY no save()
+- cloud/firebase-config.js e client.js locais (enabled:false; não vão ao Git)
+
+### Sync
 commit: c5eae9ef085f01a1a837413adc2261d06e903c13
 date: 2026-10-12T01:35:32.413Z
 ### Updated in this project
@@ -77,6 +91,8 @@ commit: 31bd99882a8e685e04c2a87c8b76b549fde0e280
 | Home | Home.dc.html |
 | Jogo | Fortune Circus.dc.html |
 | Roda | Fortune Wheel.dc.html |
+| Girafa | Fortune Neck.dc.html |
+| Pênalti | Fortune Penalty.dc.html + penalty3d.js |
 | King Rico (animações) | King Rico.dc.html |
 | Biblioteca 3D | 3D Library.html |
 ### Sync
