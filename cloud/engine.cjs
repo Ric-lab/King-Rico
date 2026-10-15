@@ -16,6 +16,36 @@ const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
 const RULES_VERSION = '2026-10-13-spark-v2';
+const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
+const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
+function fingo(bet, previous, move, roundId, selected, rng = random) {
+  const targets = previous?.targets || Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));
+  const marks = [...(previous?.marks || Array(5).fill(false))];
+  let used = previous?.used || 0, slots, bin = -1;
+  if(move==='roll') {
+    slots=targets.map((target,c)=>{
+      if(!marks[c] && rng()<FINGO_GOLD) return target;
+      const value=c*15+1+Math.floor(rng()*14);
+      return value>=target ? value+1 : value;
+    });
+    const missing=marks.flatMap((marked,c)=>marked?[]:[c]);
+    if(!missing.some(c=>slots[c]===targets[c])) {
+      const c=missing[Math.floor(rng()*missing.length)];slots[c]=targets[c];
+    }
+  } else {
+    slots=previous.slots;
+    const gold=slots.flatMap((n,c)=>!marks[c] && n===targets[c]?[c]:[]),onGold=gold.includes(selected);
+    const hit=gold.length>0 && rng()<FINGO_HIT*(onGold?1:.6);
+    const pool=hit?gold:[0,1,2,3,4].filter(c=>!gold.includes(c));
+    const near=pool.slice().sort((a,b)=>Math.abs(a-selected)-Math.abs(b-selected));
+    bin=hit && onGold ? selected : near[rng()<.7?0:Math.min(near.length-1,1)] ?? selected;
+    if(slots[bin]===targets[bin]) marks[bin]=true;
+    used++;
+  }
+  const complete=marks.every(Boolean),ended=complete || used===FINGO_BALLS;
+  return {move,roundId,betUnits:units(bet),targets,marks,used,slots,bin,ended,
+    winUnits:complete ? Math.round(units(bet)*FINGO_MULTIPLIERS[Math.floor((used-1)/3)]) : 0};
+}
 const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
 const NECK_BASE = .88, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
 // Preserve the design's one-decimal prizes, without rounding the shared wallet.
@@ -101,4 +131,5 @@ function bonusFor(last, streak, now) {
 }
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
-  NECK_PEACH_PROBABILITY, neckPrize, neck, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
+  units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

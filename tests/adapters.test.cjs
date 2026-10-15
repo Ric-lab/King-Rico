@@ -11,7 +11,7 @@ function component(file,cloud,random=Math.random){
   constructor(){this.props={startingBalance:1000,defaultBet:10};}
   setState(update,callback){this.state={...this.state,...(typeof update==='function'?update(this.state):update)};callback?.();}
  }
- const context={DCLogic:Base,React:{createRef:()=>({current:null})},window:{KingRicoCloud:cloud},navigator:{},
+ const context={DCLogic:Base,React:{createRef:()=>({current:null})},Image:class {},window:{KingRicoCloud:cloud},navigator:{},
   Math:Object.assign(Object.create(Math),{random}),console,Date,crypto:require('node:crypto'),performance:{now:()=>now},
   requestAnimationFrame:fn=>(frames.push(fn),frames.length),cancelAnimationFrame:()=>{},
   setTimeout:(fn,ms)=>(timers.push({fn,ms}),timers.length),clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};
@@ -84,6 +84,29 @@ test('Home uses the persisted cloud bonus',async()=>{
  const {instance:home}=component('Home.dc.html',cloud);
  home.buzz=()=>{};home.react=()=>{};await home.collectBonus();
  assert.equal(home.state.balance,1050);assert.equal(home.state.last,20261012);assert.equal(home.state.streak,1);
+});
+test('Fingo restores the cloud round and animates its committed roll without a local debit',async()=>{
+ const targets=[1,16,31,46,61],round={id:'round',betUnits:250,targets,marks:[true,false,false,false,false],used:3,slots:null};
+ const player={balance:997.75,settings:{sfxLvl:0,vibLvl:1,fingoBetIdx:1},fingoRound:round};
+ let calls=0;
+ const cloud={enabled:true,player,fingo:async(...args)=>{calls++;assert.deepEqual(args,['roll',2.5,'round',3]);return {player,outcome:{...round,roundId:'round',slots:targets}};},error:()=>{throw Error('Unexpected error');}};
+ const {instance:f}=component('Fortune Fingo.dc.html',cloud);f._cloudDeferred=player;f.applyCloudPlayer();
+ assert.equal(f.state.balance,997.75);assert.equal(f.state.balls,18);assert.equal(f.state.active,true);
+ f.roll=(slots)=>{assert.deepEqual(slots,targets);};f.tone=()=>{};f.buzz=()=>{};
+ await f.onSpin();assert.equal(calls,1);assert.equal(f.state.balance,997.75);
+});
+test('Fingo does not change the wallet or roll locally if its cloud request fails',async()=>{
+ let errors=0;
+ const player={balance:1000,settings:{},fingoRound:null};
+ const cloud={enabled:true,player,fingo:async()=>{throw Error('Offline');},error:()=>errors++};
+ const {instance:f}=component('Fortune Fingo.dc.html',cloud);f.roll=()=>{throw Error('No local fallback');};
+ await f.onSpin();assert.equal(f.state.balance,1000);assert.equal(f.state.active,false);assert.equal(errors,1);
+});
+test('Fingo shows an already committed prize without crediting it again on dismissal',()=>{
+ const cloud={enabled:true,player:{balance:1240.25,settings:{},fingoRound:null}};
+ const {instance:f}=component('Fortune Fingo.dc.html',cloud);f.state.win={w:250,title:'FINGO!'};f.state.balance=990.25;
+ f.flyCoins=done=>done();f.closeWin();assert.equal(f.state.balance,1240.25);assert.equal(f.state.win,null);
+ f.closeWin();assert.equal(f.state.balance,1240.25);
 });
 test('the cloud scratch card displays the credited daily gift instead of a local cash draw',()=>{
  const cloud={enabled:true,dayKey:()=>20261015};

@@ -48,6 +48,8 @@ Essa conexão não foi executada no projeto real por este ambiente: requer o log
 2. Revisar e incorporar em `main`.
 3. Conferir o resultado em Actions e abrir o site atualizado.
 
+Exportações do editor visual precisam preservar as ligações da Home com `KingRicoCloud` e com o menu compartilhado. Um card novo também exige incluir a página no build e integrar suas apostas, prêmios e progresso à carteira; copiar somente a tela não publica um jogo funcional na nuvem. Os testes de adaptadores e o fluxo de navegador verificam saldo, bônus, menus e retomada de sessão.
+
 Os dados públicos do Firebase estão em `cloud/firebase-config.production.js`, incluído no Git. A chave Web é um identificador público; a autorização continua nos tokens de login e nas regras do Firestore. O build de produção usa esse arquivo mesmo que um desenvolvedor tenha configuração local diferente. JavaScript usa validação de cache para que uma recarga obtenha a nova versão.
 
 Para publicar manualmente, em um terminal autenticado:

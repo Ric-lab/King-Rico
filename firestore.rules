@@ -8,12 +8,13 @@ service cloud.firestore {
     function dayIndex(t) { return int((t.toMillis() - 10800000) / 86400000); }
     function settings(s) {
       return s.keys().hasAll(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
-        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx'])
+        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx'])
         && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
         && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
         && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
         && s.wheelBetIdx is int && s.wheelBetIdx >= 0 && s.wheelBetIdx <= 9
-        && s.get('neckBetIdx',3) is int && s.get('neckBetIdx',3) >= 0 && s.get('neckBetIdx',3) <= 9;
+        && s.get('neckBetIdx',3) is int && s.get('neckBetIdx',3) >= 0 && s.get('neckBetIdx',3) <= 9
+        && s.get('fingoBetIdx',3) is int && s.get('fingoBetIdx',3) >= 0 && s.get('fingoBetIdx',3) <= 9;
     }
     function neckPrize(bet, floor) {
       let multipliers = [110,120,130,140,150,155,170,180,200,220,250,280,300,333,350,400,450,500,550,580,700,800,900,1000,1200,1400,1550,1800,2000,2500,3000,4000,5000];
@@ -23,10 +24,11 @@ service cloud.firestore {
       return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
           'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
         && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
-          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound'])
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('neckRound',null) == null || p.neckRound is map)
+        && (p.get('fingoRound',null) == null || p.fingoRound is map)
         && p.analyticsConsent is bool && p.analyticsFromCreation is bool
         && p.revision is int && p.revision >= 0 && p.updatedAt == request.time
         && p.bonus.keys().hasAll(['day','dayIndex','streak']) && p.bonus.keys().hasOnly(['day','dayIndex','streak'])
@@ -39,6 +41,7 @@ service cloud.firestore {
         && p.bonus == {'day':null,'dayIndex':-1,'streak':0}
         && p.settings.sfxLvl == 2 && p.settings.vibLvl == 2 && p.settings.slotBetIdx == 3
         && p.settings.wheelBetIdx == 3 && p.settings.get('neckBetIdx',3) == 3 && p.get('neckRound',null) == null
+        && p.settings.get('fingoBetIdx',3) == 3 && p.get('fingoRound',null) == null
         && p.analyticsFromCreation == p.analyticsConsent && p.revision == 0
         && p.createdAt == request.time && p.firstSpinAt == null && p.lastSpinAt == null && p.lastOperationId == null;
     }
@@ -56,6 +59,7 @@ service cloud.firestore {
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
         && p.bonus == old.bonus && p.analyticsConsent == old.analyticsConsent
         && p.get('neckRound',null) == old.get('neckRound',null)
+        && p.get('fingoRound',null) == old.get('fingoRound',null)
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
         && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= 11
@@ -100,6 +104,65 @@ service cloud.firestore {
         && result.balanceBefore == old.balanceUnits / 100.0
         && result.balanceDebited == (old.balanceUnits - o.betUnits) / 100.0 && x.winUnits == o.winUnits;
     }
+    function fingoNumbers(n) {
+      let a = n[0]; let b = n[1]; let c = n[2]; let d = n[3]; let e = n[4];
+      return n is list && n.size() == 5
+        && a is int && a >= 1 && a <= 15
+        && b is int && b >= 16 && b <= 30
+        && c is int && c >= 31 && c <= 45
+        && d is int && d >= 46 && d <= 60
+        && e is int && e >= 61 && e <= 75;
+    }
+    function fingoMark(x, r, c) {
+      return x.marks[c] == (r.marks[c] || x.bin == c && r.slots[c] == r.targets[c]);
+    }
+    function fingoDrop(x, r, o) {
+      let complete = x.marks == [true,true,true,true,true];
+      let prize = int(x.betUnits * [2500,2500,800,400,200,100,40][int((x.used - 1) / 3)] / 100);
+      return r.slots != null && o.selected is int && o.selected >= 0 && o.selected <= 4 && x.bin >= 0 && x.bin <= 4
+        && x.slots == r.slots && x.used == r.used + 1
+        && fingoMark(x,r,0) && fingoMark(x,r,1) && fingoMark(x,r,2) && fingoMark(x,r,3) && fingoMark(x,r,4)
+        && x.ended == (complete || x.used == 21) && o.winUnits == (complete ? prize : 0);
+    }
+    function fingo(p, old, o) {
+      // Cache the arrays/counter to keep the full transition under Firestore's
+      // expression budget, including the operation written in the same batch.
+      let result = o.result;
+      let x = result.outcome;
+      let preferences = p.settings;
+      let targets = x.targets;
+      let marks = x.marks;
+      let slots = x.slots;
+      let used = x.used;
+      let previous = old.get('fingoRound',null);
+      let first = previous == null;
+      let r = first ? {'id':'','betUnits':x.betUnits,'targets':targets,'marks':[false,false,false,false,false],'used':0,'slots':null} : previous;
+      return o.action == 'fingo' && o.game == 'fingo'
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','fingoRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && preferences.diff(old.settings).affectedKeys().hasOnly(['fingoBetIdx'])
+        && preferences.fingoBetIdx is int && preferences.fingoBetIdx >= 0 && preferences.fingoBetIdx <= 9
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.fingoBetIdx]
+        && x.keys().hasOnly(['move','roundId','betUnits','targets','marks','used','slots','bin','ended','winUnits'])
+        && x.move in ['roll','drop'] && x.ended is bool && x.bin is int
+        && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
+        && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
+        && (first ? x.move == 'roll' && fingoNumbers(targets) : x.roundId == r.id && targets == r.targets)
+        && marks is list && marks.size() == 5 && used is int && used >= 0 && used <= 21
+        && (x.move == 'roll' ? r.slots == null && used == r.used && used < 21 && marks == r.marks && !x.ended
+            && o.selected == -1 && x.bin == -1 && o.winUnits == 0 && fingoNumbers(slots)
+            && (!r.marks[0] && slots[0] == targets[0] || !r.marks[1] && slots[1] == targets[1]
+              || !r.marks[2] && slots[2] == targets[2] || !r.marks[3] && slots[3] == targets[3] || !r.marks[4] && slots[4] == targets[4])
+          : !first && fingoDrop(x,r,o))
+        && p.get('fingoRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'targets':targets,'marks':marks,'used':used,'slots':x.move == 'roll' ? slots : null})
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(300,'ms'))
+        && result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && result.game == 'fingo' && result.bet == x.betUnits / 100.0
+        && result.balanceBefore == old.balanceUnits / 100.0
+        && result.balanceDebited == (old.balanceUnits - o.betUnits) / 100.0 && x.winUnits == o.winUnits;
+    }
     function bonus(p, old, o) {
       let today = dayIndex(request.time);
       let streak = today - old.bonus.dayIndex == 1 ? old.bonus.streak % 7 + 1 : 1;
@@ -109,12 +172,13 @@ service cloud.firestore {
         && o.winUnits == amount && p.balanceUnits == old.balanceUnits + amount
         && p.peaches == old.peaches && p.settings == old.settings && p.analyticsConsent == old.analyticsConsent
         && p.get('neckRound',null) == old.get('neckRound',null)
+        && p.get('fingoRound',null) == old.get('fingoRound',null)
         && p.firstSpinAt == old.firstSpinAt && p.lastSpinAt == old.lastSpinAt
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == amount / 100.0;
     }
     function recharge(p, old, o) {
       return o.action == 'recharge' && o.game == 'home' && o.selected == -1
-        && old.balanceUnits < 100 && old.get('neckRound',null) == null
+        && old.balanceUnits < 100 && old.get('neckRound',null) == null && old.get('fingoRound',null) == null
         && o.betUnits == 0 && o.winUnits == 100000
         && p.balanceUnits == old.balanceUnits + 100000
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
@@ -127,9 +191,10 @@ service cloud.firestore {
       let expected = {'balance':p.balanceUnits / 100.0,'peaches':p.peaches,'bonus':p.bonus,'settings':p.settings,'analyticsConsent':p.analyticsConsent,'revision':p.revision};
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
-        && player.diff(expected).affectedKeys().hasOnly(['neckRound'])
+        && player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound'])
         && player.get('neckRound',null) == p.get('neckRound',null)
-        && (o.action == 'neck' ? neck(p, old, o) : profile(p)
+        && player.get('fingoRound',null) == p.get('fingoRound',null)
+        && (o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : profile(p)
           && (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {

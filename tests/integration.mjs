@@ -6,7 +6,8 @@ import {initializeApp,deleteApp} from 'firebase/app';
 import {getAuth,connectAuthEmulator,GoogleAuthProvider,signInWithCredential,signOut} from 'firebase/auth';
 import {getFirestore,connectFirestoreEmulator,doc,getDoc,setDoc,updateDoc,deleteDoc,writeBatch,serverTimestamp} from 'firebase/firestore';
 import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/rules-unit-testing';
-import {createGameStore} from '../cloud/store.mjs';
+import {createGameStore,publicPlayer} from '../cloud/store.mjs';
+import engine from '../cloud/engine.cjs';
 const apps=[];let environment;
 before(async()=>{
   environment=await initializeTestEnvironment({projectId:'demo-king-rico',firestore:{host:'127.0.0.1',port:8085,rules:await readFile('firestore.rules','utf8')}});
@@ -63,6 +64,77 @@ test('Neck Rules preserve an early loss after reentry and replay without another
   assert.equal(replay.player.balance,990);
   await assert.rejects(returned.call(request({action:'neck',game:'neck',move:'collect',bet:10,
     roundId:start.roundId,floor:1})),{code:'king-rico/round-conflict'});
+});
+test('Fingo Rules debit once, preserve a pending roll across devices and settle one prize before animation',async()=>{
+  const identity='fingo-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));
+  // Existing players arrive with a daily gift, previous spins and legacy fields.
+  await c.call(request({action:'bonus'}));
+  await c.call(request({action:'spin',game:'wheel',bet:1,selected:0}));
+  const ref=doc(c.db,'players',c.uid);
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{balanceUnits:100025,peaches:2,neckRound:null}));
+  await new Promise(resolve=>setTimeout(resolve,350));
+  const other=await client(identity+'-device',identity,{rng:()=>0});
+  const base={action:'fingo',game:'fingo',bet:2.5,roundId:randomUUID()};
+  for(let used=0;used<5;used++) {
+    const id=request({...base,move:'roll',used}),[a,b]=await Promise.all([c.call(id),other.call(id)]);
+    assert.equal(a.player.balance,997.75);assert.ok(a.replayed || b.replayed);
+    assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.fingoRound.slots,a.outcome.slots);
+    await assert.rejects(c.call(request({...base,move:'roll',used})),{code:'king-rico/round-conflict'});
+    await new Promise(resolve=>setTimeout(resolve,350));
+    const drop=request({...base,move:'drop',used,selected:used});
+    const [paid,replay]=await Promise.all([other.call(drop),c.call(drop)]);
+    assert.ok(paid.replayed || replay.replayed);assert.equal(paid.outcome.marks[used],true);
+    assert.equal((await getDoc(ref)).data().balanceUnits,used===4?106025:99775);
+    assert.equal(paid.player.fingoRound===null,used===4);
+    await new Promise(resolve=>setTimeout(resolve,350));
+  }
+  assert.equal((await other.call(request({action:'bootstrap'}))).player.balance,1060.25);
+});
+test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and arbitrary credits',async()=>{
+  const name='fingo-forged-'+randomUUID(),c=await client(name,name,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));
+  const base={action:'fingo',game:'fingo',bet:2.5,roundId:randomUUID()};
+  await c.call(request({...base,move:'roll',used:0}));
+  const ref=doc(c.db,'players',c.uid);
+  await assertFails(updateDoc(ref,{fingoRound:null,updatedAt:serverTimestamp(),revision:2}));
+  async function forged(changes={},profileChanges={}) {
+    const old=(await getDoc(ref)).data(),id=randomUUID();
+    const x={...engine.fingo(2.5,old.fingoRound,'drop',base.roundId,0,()=>0),...changes};
+    const next={...old,balanceUnits:old.balanceUnits+x.winUnits,revision:old.revision+1,lastOperationId:id,
+      updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),
+      fingoRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,targets:x.targets,marks:x.marks,used:x.used,slots:x.move==='roll'?x.slots:null},...profileChanges};
+    const batch=writeBatch(c.db);batch.set(ref,next);
+    batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'fingo',game:'fingo',selected:x.move==='roll'?-1:0,
+      fingerprint:'forged',betUnits:0,winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+      result:{game:'fingo',bet:x.betUnits/100,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,
+        baseBalance:next.balanceUnits/100,player:publicPlayer(next),outcome:x}});
+    await assertFails(batch.commit());
+  }
+  await new Promise(resolve=>setTimeout(resolve,350));
+  await forged({move:'roll',bin:-1,used:0,marks:[false,false,false,false,false]});
+  await forged({marks:[true,true,true,true,true],ended:true,winUnits:6250});
+  await forged({used:21,ended:true});await forged({betUnits:1000});
+  await forged({targets:[2,17,32,47,62]});await forged({winUnits:999999});await forged({}, {peaches:4});
+  await assertFails(getDoc(doc(c.db,'players','another-fingo-player')));
+});
+test('Fingo Rules settle the final ball and forbid recharge while the exhausted wallet has a round',async()=>{
+  const name='fingo-last-'+randomUUID(),c=await client(name,name,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),targets=[1,16,31,46,61],roundId=randomUUID();
+  async function seed(marks) {
+    await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
+      balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:250,targets,marks,used:20,slots:targets}}));
+  }
+  await seed([true,true,true,true,false]);
+  assert.equal((await c.call(request({action:'recharge'}))).reason,'fingo-round');
+  const last=request({action:'fingo',game:'fingo',bet:2.5,roundId,move:'drop',used:20,selected:4});
+  const paid=await c.call(last);assert.equal(paid.outcome.winUnits,100);assert.equal(paid.player.balance,1);assert.equal(paid.player.fingoRound,null);
+  assert.equal((await c.call(last)).replayed,true);
+  await seed([false,false,false,false,false]);
+  const missed=await c.call({...last,requestId:randomUUID()});
+  assert.equal(missed.outcome.winUnits,0);assert.equal(missed.player.fingoRound,null);
+  assert.equal((await c.call(request({action:'recharge'}))).player.balance,1000);
 });
 test('recharge Rules credit an exhausted wallet once after the daily gift and reject forged credits',async()=>{
   const identity='recharge-'+randomUUID(),c=await client(identity);

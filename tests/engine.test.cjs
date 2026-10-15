@@ -12,6 +12,32 @@ const reference=vm.runInNewContext(`new (class {${methods}})()`,{
 });
 const plain=value=>JSON.parse(JSON.stringify(value));
 function seeded(seed=17843){ return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2**32;}; }
+test('Fingo preserves the design table and settles the five-number game by balls used',()=>{
+  const source=fs.readFileSync(path.join(__dirname,'../Fortune Fingo.dc.html'),'utf8');
+  assert.deepEqual(plain(vm.runInNewContext(source.match(/const TRIO = (\[[^\]]+\])/)[1])),engine.FINGO_MULTIPLIERS);
+  assert.equal(Number(source.match(/BALLS = (\d+)/)[1]),engine.FINGO_BALLS);
+  assert.equal(Number(source.match(/HIT = ([.\d]+)/)[1]),engine.FINGO_HIT);
+  let previous=null;
+  for(let used=0;used<5;used++) {
+    const rolled=engine.fingo(2.5,previous,'roll','round',undefined,()=>0);
+    assert.equal(rolled.winUnits,0);assert.equal(rolled.used,used);
+    const drop=engine.fingo(2.5,rolled,'drop','round',used,()=>0);
+    assert.equal(drop.used,used+1);assert.equal(drop.marks[used],true);
+    assert.equal(drop.ended,used===4);assert.equal(drop.winUnits,used===4?6250:0);
+    previous={...drop,slots:null};
+  }
+});
+test('Fingo always offers a golden target and ends an incomplete round at 21 balls',()=>{
+  let previous=null;
+  for(let used=0;used<21;used++) {
+    const rolled=engine.fingo(10,previous,'roll','round',undefined,()=>.99);
+    assert.ok(rolled.slots.some((n,c)=>!rolled.marks[c] && n===rolled.targets[c]));
+    for(let c=0;c<5;c++) assert.ok(rolled.slots[c]>=c*15+1 && rolled.slots[c]<=c*15+15);
+    const drop=engine.fingo(10,rolled,'drop','round',4,()=>.99);
+    assert.equal(drop.winUnits,0);assert.equal(drop.ended,used===20);
+    previous={...drop,slots:null};
+  }
+});
 test('shared evaluation matches the actual game on 20,000 generated grids',()=>{
   assert.deepEqual(plain(symbols),engine.SYMBOLS);
   const rng=seeded();

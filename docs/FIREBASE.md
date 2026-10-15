@@ -1,6 +1,6 @@
 # Firebase gratuito: login Google, saldo e métricas
 
-Esta versão usa o plano **Spark**, sem vincular faturamento. Fortune Circus, Fortune Wheel e Fortune Neck compartilham uma conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente regras do Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
+Esta versão usa o plano **Spark**, sem vincular faturamento. Fortune Circus, Fortune Wheel, Fortune Neck e Fortune Fingo compartilham uma conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente regras do Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
 
 A matemática do saque cedo, a garantia Happeach e os limites contra adulteração
 do sorteio estão em [FORTUNE-NECK-MATEMATICA.md](FORTUNE-NECK-MATEMATICA.md).
@@ -71,8 +71,12 @@ Conta nova recebe 1.000 moedas. O saldo antigo do aparelho fica em `kingRico.leg
 
 O Neck preserva os 33 multiplicadores do design, de x1,1 a x50, sem o dígito 6. Seus prêmios são arredondados a uma casa decimal, como no protótipo; o saldo compartilhado mantém os centésimos vindos dos outros jogos. Happeach garante o prêmio do andar 6–20 onde aparece. As mesmas limitações de sorteio no cliente do Spark também se aplicam ao Neck.
 
+O Fingo preserva a rodada de 21 bolas e os multiplicadores por trio: x25, x25, x8, x4, x2, x1 e x0,4. A primeira rolagem debita uma única aposta e salva os cinco alvos. Cada rolagem salva os canos antes de mostrá-los; cada queda salva o balde, as marcações e o uso da bola antes da animação. Uma recarga da página ou outro aparelho recupera a rodada sem novo débito, sorteio dos mesmos canos ou devolução de bola usada. Completar os cinco alvos paga uma única vez; a bola 21 encerra uma rodada incompleta sem prêmio. A física anima o resultado gravado e não cria créditos locais. As regras limitam as transições, preservam campos dos outros jogos e vinculam o prêmio à operação imutável. O sorteio continua no cliente, com a mesma limitação do protótipo Spark.
+
+Os eventos consentidos `fingo_step` registram movimento, bolas usadas e acerto; `spin_settled` registra aposta e prêmio no encerramento da rodada. Sem consentimento, a coleta permanece desativada. Matter.js e three.js são instalados pelo lockfile e servidos no próprio Hosting.
+
 O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, uma vez por dia em São Paulo (UTC−3), validado pelo relógio do Firestore. O navegador propõe o dia; relógios incorretos podem causar recusa, sem crédito extra.
 
-Quando o saldo fica abaixo de 1 moeda e não há uma rodada ativa do Neck, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes ou progresso Happeach.
+Quando o saldo fica abaixo de 1 moeda e não há uma rodada ativa do Neck ou Fingo, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes ou progresso Happeach.
 
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.

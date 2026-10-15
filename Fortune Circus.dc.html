@@ -1727,7 +1727,7 @@ class Component extends DCLogic {
       if(this._recharging || this.cloudBusy()) return;
       this._recharging=true;
       try { const r = await cloud.recharge(); this.setState({ balance: cloud.player?.balance ?? r.player.balance,auto:false,
-        hint: r.reason==='neck-round' ? 'Termine sua rodada do Fortune Neck antes de recarregar.' : r.replayed ? 'Recarga confirmada. Saldo atualizado.' : r.amount ? '+1.000 moedas — boa sorte!' : 'Seu saldo já está disponível.' }); }
+        hint: r.reason==='neck-round' ? 'Termine sua rodada do Fortune Neck antes de recarregar.' : r.reason==='fingo-round' ? 'Termine sua rodada do Fortune Fingo antes de recarregar.' : r.replayed ? 'Recarga confirmada. Saldo atualizado.' : r.amount ? '+1.000 moedas — boa sorte!' : 'Seu saldo já está disponível.' }); }
       catch (e) { cloud.error(e); }
       finally {this._recharging=false;}
       return;
