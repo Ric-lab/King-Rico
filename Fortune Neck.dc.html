@@ -3,8 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./cloud/firebase-config.js"></script>
-<script defer src="./cloud/client.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -15,6 +13,7 @@
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rrChase { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
 @keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
@@ -34,7 +33,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></a>
-    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
 
     <!-- cena -->
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 86px; width: 453px; height: 546px; overflow: hidden; touch-action: none; border-top: 3px solid #f0b41f; border-bottom: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
@@ -89,13 +88,50 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
 
-    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
+        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
+          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: rrFade .2s ease-out;">
+        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+        <div style="position: absolute; left: 416px; top: 470px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
+            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
+          </div>
+          <div style="display: flex; flex-direction: column; padding: 4px 18px 4px;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
+          </div>
+            <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 16px 0; cursor: pointer;">
+              <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
+              <span style="font-size: 28px; font-weight: 800; color: #ffd257;">›</span>
+            </div>
+          </div>
+          <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos dos outros jogos e ficam salvos neste aparelho.</div>
+        </div>
+      </div>
+    </sc-if>
 
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
         <div style="width: 425px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
           <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
-          <div style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Cada andar multiplica a aposta. Na primeira subida, há 20% de chance de falhar. Os prêmios incluem a aposta. Pegue o prêmio quando quiser.</div>
+          <div style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Cada andar que a girafa sobe multiplica a aposta. Errou, perde a aposta. Pegue o prêmio quando quiser.</div>
           <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; width: 100%;">
             <sc-for list="{{ payList }}" as="pl" hint-placeholder-count="33">
               <div style="height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,.08);">
@@ -116,45 +152,26 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script >
-// Sem Happeach e antes de arredondar, a chance de chegar ao andar k é T / M[k].
+// Fortune Neck: 20 andares. Base: chance de chegar no andar k = T / M[k] (RTP T em qualquer andar).
 // 33 andares (x1,1 → x50). Happeach (1 em 8 rodadas, andar 6–20) garante o valor daquele andar; depois dele cada subida tem chance × G.
-// Happeach e arredondamento alteram o retorno. A auditoria do motor real está em
-// npm run audit:neck; ela inclui todas as apostas e a decisão ótima de sacar/subir.
+// T = 0,922 e G = 0,85 => melhor estratégia possível = 95,0%; parar num andar fixo = 92,2–94,6%.
 const M = [1.1, 1.2, 1.3, 1.4, 1.5, 1.55, 1.7, 1.8, 2, 2.2, 2.5, 2.8, 3, 3.33, 3.5, 4, 4.5, 5, 5.5, 5.8, 7, 8, 9, 10, 12, 14, 15.5, 18, 20, 25, 30, 40, 50]; // sem o dígito 6
-const T = 0.88, G = 0.85, PEACH_Q = 1 / 8, STEP = 96, MOUTH0 = 318.8;
+const T = 0.922, G = 0.85, PEACH_Q = 1 / 8, STEP = 96, MOUTH0 = 318.8;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', NKEY = 'fortuneCircus.neck.v1';
-const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+const fmt = n => (Math.round(n * 10) / 10).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const ml = m => 'x' + String(m).replace('.', ',');
 const TIER = k => k <= 7 ? 'green' : k <= 12 ? 'yellow' : k <= 18 ? 'red' : k <= 23 ? 'silver' : k <= 28 ? 'gold' : 'diamond';
 const SRC = k => 'assets/neck/apple-f' + (1 + Math.round((Math.min(M.length, Math.max(1, k)) - 1) * 19 / (M.length - 1))) + '.webp'; // degradê verde → amarelo → vermelho (20 tons espalhados nos 33 andares)
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, round: false, busy: false, floor: 0, reach: 0, peachAt: 0, saved: 0, fr: {}, headRot: 0, headSc: 1, msg: null, vw: 453, vh: 802 };
   componentDidMount() {
-    window.__fn = this;
-    const cloud = window.KingRicoCloud;
-    if(cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
-      this._cloudDeferred = p; if(!this.state.busy && !this._cloudRequest) this.applyCloudPlayer();
-    });
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const w = JSON.parse(localStorage.getItem(NKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
   }
-  componentDidUpdate() { if(this._cloudDeferred && !this.state.busy && !this._cloudRequest) this.applyCloudPlayer(); }
-  applyCloudPlayer() {
-    const p=this._cloudDeferred; if(!p) return; this._cloudDeferred=null;
-    const r=p.neckRound;this._cloudRoundId=r?.id || null;
-    this.setState({balance:p.balance,betIdx:p.settings.neckBetIdx ?? 3,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,
-      round:!!r,floor:r?.floor || 0,reach:r?.floor || 0,roundBet:r ? r.betUnits/100 : this.bet(),
-      peachAt:r?.peachAt || 0,saved:(r?.savedUnits || 0)/100,
-      fr:r ? Object.fromEntries(Array.from({length:r.floor},(_,i)=>[i+1,'eaten'])) : {}});
-  }
-  componentWillUnmount() { this._dead=true;this._unwatchCloud?.();if(window.__fn===this) delete window.__fn;window.removeEventListener('resize', this._rs); (this._t || []).forEach(clearTimeout); }
-  save(balance) {
-    const cloud=window.KingRicoCloud;
-    if(cloud && cloud.enabled) { cloud.settings({neckBetIdx:this.state.betIdx,sfxLvl:this.state.sfxLvl ?? 2,vibLvl:this.state.vibLvl ?? 2});return; }
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(NKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {}
-  }
+  componentWillUnmount() { window.removeEventListener('resize', this._rs); (this._t || []).forEach(clearTimeout); }
+  save(balance) { try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(NKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
   ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   closeMenu = () => this.setState({ menu: false });
   openPays = () => this.setState({ menu: false, pays: true });
@@ -163,13 +180,12 @@ class Component extends DCLogic {
   tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(15, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
   openMenu = () => { if (this.state.busy || this.state.round) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
-  later(fn, ms) { (this._t = this._t || []).push(setTimeout(()=>{if(!this._dead) fn();}, ms)); }
+  later(fn, ms) { (this._t = this._t || []).push(setTimeout(fn, ms)); }
   bet() { return BETS[this.state.betIdx]; }
-  saveBet() { const cloud=window.KingRicoCloud;if(cloud && cloud.enabled) { cloud.settings({neckBetIdx:this.state.betIdx});return; }try { localStorage.setItem(NKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
+  saveBet() { try { localStorage.setItem(NKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
   shake() { [-9, 8, -6, 4, 0].forEach((r, i) => this.later(() => this.setState({ headRot: r }), i * 90)); }
   climb = () => {
     const s = this.state; if (s.busy || s.menu || s.pays) return;
-    const cloud=window.KingRicoCloud;if(cloud && cloud.enabled) return this.cloudMove('climb');
     let peachAt = s.peachAt, bal = s.balance;
     if (!s.round) {
       const b = this.bet(); if (bal < b) { this.buzz([40, 80, 40]); this.setState({ msg: { t: 'Saldo baixo', s: 'Diminua a aposta', bg: '#7a1c3a' } }); this.later(() => this.setState({ msg: null }), 1400); return; }
@@ -177,7 +193,7 @@ class Component extends DCLogic {
       peachAt = Math.random() < PEACH_Q ? 6 + Math.floor(Math.random() * 15) : 0;
       this.setState({ round: true, balance: bal, floor: 0, saved: 0, peachAt, fr: {}, msg: null, roundBet: b });
     }
-    const k = (s.round ? s.floor : 0) + 1, p = (k === 1 ? T / M[0] : M[k - 2] / M[k - 1]) * (s.saved > 0 ? G : 1), ok = Math.random() < p;
+    const k = (s.round ? s.floor : 0) + 1, p = (k === 1 ? T / M[0] : M[k - 2] / M[k - 1]) * (s.saved > 0 ? G : 1), ok = Math.random() < p; // botão de teste: só aparece fora do site publicado
     this.setState({ busy: true }); this.tone(320, 0.32, 'sine', 0.06, 760); this.buzz(18);
     if (ok) {
       this.setState({ reach: k });
@@ -204,60 +220,24 @@ class Component extends DCLogic {
   };
   collect = () => {
     const s = this.state; if (!s.round || s.busy || s.floor < 1) return;
-    const cloud=window.KingRicoCloud;if(cloud && cloud.enabled) return this.cloudMove('collect');
     const pr = Math.round(s.roundBet * M[s.floor - 1] * 10) / 10, b2 = Math.round((s.balance + pr) * 10) / 10; this.save(b2);
     [523, 659, 784, 1046].forEach((f, i) => this.later(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90)); this.buzz(s.floor >= 10 ? [70, 70, 70, 70, 130] : 45);
     this.setState({ busy: true, balance: b2, msg: { t: 'VOCÊ GANHOU', s: fmt(pr), bg: 'linear-gradient(180deg, #7a2bb8, #3a0b5e)' } });
     this.endRound();
   };
-  async cloudMove(move) {
-    const cloud=window.KingRicoCloud,s=this.state;if(s.busy || this._cloudRequest) return;
-    this._cloudRoundId ||= crypto.randomUUID();this._cloudRequest=true;this.setState({busy:true});
-    try {
-      const r=await cloud.neck(move==='climb' && !s.round?'start':move,s.round?s.roundBet:this.bet(),this._cloudRoundId,s.round?s.floor:0);
-      if(this._dead) return;
-      const o=r.outcome,k=o.ok?o.floor:o.floor+1;
-      this.setState({round:true,roundBet:o.betUnits/100,peachAt:o.peachAt,msg:null,balance:r.balanceDebited});
-      if(move==='collect') { this.cloudPrize(r);return; }
-      this.tone(320,.32,'sine',.06,760);this.buzz(18);
-      if(o.ok) {
-        this.setState({reach:k});
-        this.later(()=>{
-          this.setState(st=>({fr:{...st.fr,[k]:'eaten'},headSc:1.06}));this.tone(170,.05,'square',.07);this.buzz(25);
-          this.later(()=>{
-            this.setState({floor:k,headSc:1,saved:o.savedUnits/100,busy:o.ended});
-            if(o.peachAt===k) {this.buzz([40,60,40]);this.setState({msg:{t:'GARANTIDO!',s:fmt(o.savedUnits/100),bg:'linear-gradient(180deg, #2fbf62, #147a36)'}});this.later(()=>this.setState({msg:null}),1300);}
-            if(o.ended) this.later(()=>this.cloudPrize(r),500);
-          },160);
-        },520);
-      } else {
-        this.setState({reach:k-.55});
-        this.later(()=>{this.setState(st=>({fr:{...st.fr,[k]:'fall'}}));this.tone(420,.45,'triangle',.07,150);this.buzz([60,80,120]);this.shake();},380);
-        this.later(()=>this.setState({reach:o.floor}),700);
-        this.later(()=>{
-          this.setState({balance:r.player.balance,msg:o.winUnits>0 ? {t:'O Happeach salvou!',s:'+'+fmt(o.winUnits/100),bg:'linear-gradient(180deg, #2fbf62, #147a36)'} : {t:'A maçã caiu!',s:'Tente de novo',bg:'linear-gradient(180deg, #a3305a, #5a0f2e)'}});
-          this.endRound();
-        },1250);
-      }
-    } catch(error) {
-      this._cloudDeferred=cloud.player;this.setState({busy:false});cloud.error(error);
-    } finally {this._cloudRequest=false;if(this._cloudDeferred && !this.state.busy) this.applyCloudPlayer();}
-  }
-  cloudPrize(r) {
-    [523,659,784,1046].forEach((f,i)=>this.later(()=>this.tone(f,.22,'triangle',.09),i*90));this.buzz(45);
-    this.setState({busy:true,balance:r.player.balance,msg:{t:'VOCÊ GANHOU',s:fmt(r.outcome.winUnits/100),bg:'linear-gradient(180deg, #7a2bb8, #3a0b5e)'}});this.endRound();
-  }
-  endRound() { this.later(() => this.setState({ msg: null, reach: 0, floor: 0 }), 1600); this.later(() => {
-    this.setState({ round: false, busy: false, fr: {}, peachAt: 0, saved: 0 });
-    const cloud=window.KingRicoCloud;if(cloud && cloud.enabled) {this._cloudDeferred=cloud.player;this.applyCloudPlayer();}
-  }, 2200); }
+  endRound() { this.later(() => this.setState({ msg: null, reach: 0, floor: 0 }), 1600); this.later(() => this.setState({ round: false, busy: false, fr: {}, peachAt: 0, saved: 0 }), 2200); }
   swDown = e => { this._sy = e.clientY; };
   swUp = e => { if (this._sy != null && this._sy - e.clientY > 40) this.climb(); this._sy = null; };
   betDown = () => { if (this.state.round) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.saveBet()); };
   betUp = () => { if (this.state.round) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.saveBet()); };
   goHome = e => { if ((this.state.round || this.state.busy) && e) e.preventDefault(); };
-  renderVals() {
-    const s = this.state, txt = fmt(s.balance), e = s.reach * STEP, mouth = MOUTH0 + e;
+  rcBroke() { const s = this.state, bal = typeof s.balance === 'number' ? s.balance : 1000; return bal < 1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.paying && s.phase !== 'falling'; }
+  recharge = async () => { const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
+    this.setState({ balance: 1000 }, () => this.save(1000)); };
+  renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
+  _rv() {
+    const s = this.state, txt = fmt(Math.floor(s.balance * 10) / 10), e = s.reach * STEP, mouth = MOUTH0 + e;
     const pr = s.round && s.floor > 0 ? Math.round(s.roundBet * M[s.floor - 1] * 10) / 10 : 0, nextM = M[Math.min(M.length, (s.round ? s.floor : 0) + 1) - 1];
     return {
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome,
@@ -277,12 +257,7 @@ class Component extends DCLogic {
       pegarW: s.round && s.floor > 0 ? '44%' : '0%', pegarOp: s.round && s.floor > 0 && !s.busy ? 1 : 0.0,
       goLbl: s.round ? 'SUBIR' : 'JOGAR', arrowOp: s.round ? 1 : 0, goBg: s.busy ? 'linear-gradient(180deg, #4fa86a, #2d7a45)' : 'linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%)',
       payList: M.map((m, i) => ({ label: ml(m), src: SRC(i + 1) })),
-      menuButton: {onClick:this.openMenu,disabled:!!(s.busy || s.round)},
-      menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Neck',
-        details:'Suba os andares ou pegue o prêmio.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,
-        onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
-      storageInfo: window.KingRicoCloud?.enabled ? 'Saldo, rodada e ajustes ficam salvos na sua conta, junto dos outros jogos.' : 'Saldo e ajustes ficam salvos neste aparelho.',
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
     };
   }

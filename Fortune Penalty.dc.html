@@ -13,6 +13,7 @@
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fpPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes fpGol { 0% { transform: scale(.3) rotate(-8deg); opacity: 0; } 25% { transform: scale(1.15) rotate(3deg); opacity: 1; } 80% { transform: scale(1) rotate(0deg); opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }
 @keyframes fpHand { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 70% { transform: translate(18px, -70px); opacity: 1; } 100% { transform: translate(22px, -84px); opacity: 0; } }
@@ -35,7 +36,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
-    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
 
     <div style="position: absolute; left: 0; top: 86px; width: 453px; height: 716px; overflow: hidden; touch-action: none; border-top: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
       <div style="position: absolute; left: 0; top: -86px; width: 453px; height: 802px;">
@@ -108,7 +109,38 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
+        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
+          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: fpFade .2s ease-out;">
+        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+        <div style="position: absolute; left: 416px; top: 520px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
+            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
+          </div>
+          <div style="display: flex; flex-direction: column; padding: 4px 18px 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0;">
+              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
 
     <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: fpFade .2s ease-out;">
@@ -153,25 +185,12 @@ class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, step: 0, roundBet: 0, flying: false, touched: false, idle: false, win: null, conf: [], gol: false, noMoney: false, vw: 453, vh: 802, ballSrc: '' };
   stageRef = React.createRef(); ballRef = React.createRef(); spinRef = React.createRef(); shadowRef = React.createRef(); netRef = React.createRef();
   kcRef = React.createRef(); klRef = React.createRef(); krRef = React.createRef(); kshRef = React.createRef();
-  cloudLocked() { return this._cloudRequest || this.state.flying || this.state.paying || !!this.state.win; }
-  componentDidUpdate() { if(this._cloudDeferred && !this.cloudLocked()) this.applyCloudPlayer(); }
-  applyCloudPlayer() {
-    const p=this._cloudDeferred;if(!p) return;this._cloudDeferred=null;
-    const r=p.penaltyRound;
-    this.setState({balance:p.balance,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,
-      betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.penaltyBetIdx ?? 3,
-      roundId:r?.id || null,step:r?.step || 0,roundBet:r ? r.betUnits/100 : 0});
-  }
   componentDidMount() {
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
-    const cloud=window.KingRicoCloud;
-    if(cloud?.enabled) this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this.cloudLocked()) this.applyCloudPlayer();});
-    if(!cloud?.enabled) {
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const h = JSON.parse(localStorage.getItem(PKEY)); if (h) this.setState({ betIdx: h.betIdx ?? 3, touched: !!h.touched, step: h.step ?? 0, roundBet: h.roundBet ?? 0 }); } catch (e) {}
-    }
     this.armIdle(); this.drawNet(); window.__pen = this;
-    window.penHooks = { getStep: () => this.state.step, onSwipe: q => this.onSwipe(q), onResult: g => this.result(g), sfx: (k, a) => this.sfx(k, a) };
+    window.penHooks = { getStep: () => this.state.step, onSwipe: () => this.onSwipe(), onResult: g => this.result(g), sfx: (k, a) => this.sfx(k, a) };
   }
   drawNet() { const cv = this.netRef.current; if (!cv) return; const x = cv.getContext('2d'), k = 2, ox = 20, oy = 330; x.setTransform(k, 0, 0, k, -ox * k, -oy * k);
     const F = { l: 34, r: 419, t: 340, b: 505 }, Bk = { l: 64, r: 389, t: 356, b: 490 };
@@ -186,9 +205,8 @@ class Component extends DCLogic {
     quad(P(F.l, F.t), P(F.r, F.t), P(Bk.r, Bk.t), P(Bk.l, Bk.t), 40, 2, .5);
     x.strokeStyle = 'rgba(220,226,236,.9)'; x.lineWidth = 3; x.beginPath(); x.moveTo(F.l, F.t); x.lineTo(Bk.l, Bk.t); x.lineTo(Bk.l, Bk.b); x.moveTo(F.r, F.t); x.lineTo(Bk.r, Bk.t); x.lineTo(Bk.r, Bk.b); x.stroke();
     x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 2; x.beginPath(); x.moveTo(F.l, F.b); x.lineTo(Bk.l, Bk.b); x.lineTo(Bk.r, Bk.b); x.lineTo(F.r, F.b); x.stroke(); }
-  componentWillUnmount() { this._unwatchCloud?.();if(window.__pen===this) {delete window.__pen;delete window.penHooks;} window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._loop); cancelAnimationFrame(this._kraf); [this._to, this._it, this._ct, this._gt].forEach(clearTimeout); }
+  componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._loop); cancelAnimationFrame(this._kraf); [this._to, this._it, this._ct, this._gt].forEach(clearTimeout); }
   save(balance) { const s = this.state;
-    if(window.KingRicoCloud?.enabled) {window.KingRicoCloud.settings({sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,penaltyBetIdx:s.betIdx});return;}
     try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv));
       localStorage.setItem(PKEY, JSON.stringify({ betIdx: s.betIdx, touched: s.touched, step: s.step, roundBet: s.roundBet })); } catch (e) {} }
   armIdle() { clearTimeout(this._it); this._it = setTimeout(() => this.setState({ idle: true }), 6000); }
@@ -200,19 +218,8 @@ class Component extends DCLogic {
   restBall(op) { this.setBall(B0.x, B0.y, 1, 0, op); this.shadow(B0.x, B0.y + 28, 1, 0.8 * op); }
   anim(Tm, f, done, key = '_raf') { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / Tm); f(k); if (k < 1) this[key] = requestAnimationFrame(st); else if (done) done(); }; this[key] = requestAnimationFrame(st); }
   pt(e) { const r = this.stageRef.current.getBoundingClientRect(), sc = r.width / 453; return { x: (e.clientX - r.left) / sc, y: (e.clientY - r.top) / sc }; }
-  busy() { const s = this.state; return this._cloudRequest || s.flying || s.win || s.menu || s.paying || s.betOpen; }
-  async onSwipe(quality) { if (this.busy()) return null; const s = this.state, j = s.step; let bet = s.roundBet, bal = s.balance;
-    const cloud=window.KingRicoCloud;
-    if(cloud?.enabled) {
-      this._cloudRequest=true;
-      try {
-        const r=await cloud.penalty('shoot',j ? bet : BETS[s.betIdx],s.roundId || crypto.randomUUID(),j,quality);
-        this._cloudShot=r.outcome;clearTimeout(this._it);
-        this.setState({flying:true,balance:r.balanceDebited,roundBet:r.outcome.betUnits/100,roundId:r.outcome.roundId,touched:true,idle:false});
-        return {goal:r.outcome.goal};
-      } catch(error) {this._cloudDeferred=cloud.player;cloud.error(error);return null;}
-      finally {this._cloudRequest=false;if(!this.cloudLocked()) this.applyCloudPlayer();}
-    }
+  busy() { const s = this.state; return s.flying || s.win || s.menu || s.paying || s.betOpen; }
+  onSwipe() { if (this.busy()) return null; const s = this.state, j = s.step; let bet = s.roundBet, bal = s.balance;
     if (j === 0) { bet = BETS[s.betIdx]; if (bal < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); this.armIdle(); return null; } bal = Math.round((bal - bet) * 100) / 100; }
     this.ac(); clearTimeout(this._it); this.setState({ flying: true, balance: bal, roundBet: bet, touched: true, idle: false }, () => this.save(bal));
     return j === 0 ? T / M[0] : M[j - 1] / M[j]; }
@@ -221,7 +228,6 @@ class Component extends DCLogic {
       if (p && p.animate) { const ax = a === 't' ? 'translateY' : 'translateX'; p.animate([0, 5, -4, 3, -2, 1, 0].map(n => ({ transform: ax + '(' + n + 'px)', filter: n ? 'brightness(1.4)' : 'none' })), { duration: 420 }); } }
     else if (k === 'net') { this.tone(200, 0.2, 'triangle', 0.08, 120); const n = this.netRef.current; if (n && n.animate) n.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.035, 1.05)' }, { transform: 'scale(1)' }], { duration: 500, easing: 'ease-out' }); } else if (k === 'turn') this.tone(420, 0.05, 'square', 0.05); }
   result(goal) {
-    if(window.KingRicoCloud?.enabled) {if(!this._cloudShot) return;goal=this._cloudShot.goal;}
     const s = this.state, j = s.step;
     if (goal) {
       const nj = j + 1; this.confetti(); this.setState({ gol: true }); clearTimeout(this._gt); this._gt = setTimeout(() => this.setState({ gol: false }), 1100);
@@ -236,26 +242,11 @@ class Component extends DCLogic {
   reset(ms) { clearTimeout(this._to); this._to = setTimeout(() => { this.setState({ flying: false }); this.armIdle(); }, ms); }
   confetti() { const conf = Array.from({ length: 22 }, (_, j) => { const a = -Math.PI / 2 + (j / 21 - 0.5) * 2.8, v = 80 + (j * 37 % 70); return { x: '221px', y: '450px', dx: Math.round(Math.cos(a) * v * 1.7) + 'px', dy: Math.round(Math.sin(a) * v * 1.7 + 70) + 'px', bg: CONF[j % CONF.length] }; });
     clearTimeout(this._ct); this.setState({ conf }); this._ct = setTimeout(() => this.setState({ conf: [] }), 1000); }
-  collect(mult, title, delay = 0) { const w = window.KingRicoCloud?.enabled ? this._cloudShot.winUnits/100 : Math.round(this.state.roundBet * mult * 100) / 100;
-    this.setState({paying:true});
+  collect(mult, title, delay = 0) { const w = Math.round(this.state.roundBet * mult * 100) / 100;
     [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), delay + i * 90));
     setTimeout(() => { this.buzz(mult >= 5 ? [70, 70, 70, 70, 130] : 45); this.setState({ win: { w, title }, paying: true }); }, delay); }
-  collectBtn = async () => { const s = this.state; if (this.busy() || s.step < 1) return; this.ac();
-    const cloud=window.KingRicoCloud;
-    if(cloud?.enabled) {
-      this._cloudRequest=true;
-      try {const r=await cloud.penalty('collect',s.roundBet,s.roundId,s.step);this._cloudShot=r.outcome;this.collect(M[s.step-1],'VOCÊ GANHOU!');}
-      catch(error) {this._cloudDeferred=cloud.player;cloud.error(error);}
-      finally {this._cloudRequest=false;if(!this.cloudLocked()) this.applyCloudPlayer();}
-      return;
-    }
-    this.collect(M[s.step - 1], 'VOCÊ GANHOU!'); };
+  collectBtn = () => { const s = this.state; if (s.flying || s.win || s.step < 1) return; this.ac(); this.collect(M[s.step - 1], 'VOCÊ GANHOU!'); };
   closeWin = () => { const s = this.state; if (!s.win) return; const w = s.win.w;
-    if(window.KingRicoCloud?.enabled) {
-      if(this._paying) return;this._paying=true;
-      this.setState({win:null});this.flyCoins(()=>{this._paying=false;this._cloudShot=null;this._cloudDeferred=window.KingRicoCloud.player;
-        this.setState({paying:false,flying:false},()=>this.applyCloudPlayer());});return;
-    }
     this.setState({ win: null, step: 0, roundBet: 0 });
     this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal, paying: false }, () => this.save(bal)); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); };
   flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done();
@@ -265,15 +256,20 @@ class Component extends DCLogic {
       st.appendChild(c); const dx = (i - n / 2) * 14, mid = { x: (from.x + to.x) / 2 + dx * 3, y: from.y - 260 - (i % 3) * 30 };
       const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 760, delay: i * 55, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
       a.onfinish = () => { c.remove(); this.tone(1800 + i * 40, 0.03, 'square', 0.03); if (i === n - 1) done(); }; } }
-  openMenu = () => { if (this.busy()) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
+  openMenu = () => { if (this.state.flying) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
   setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(this.state.balance); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
   betDown = () => { if (this.state.flying || this.state.step) return; this.tone(900, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save(this.state.balance)); };
   betUp = () => { if (this.state.flying || this.state.step) return; this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save(this.state.balance)); };
-  goHome = e => { if ((this.cloudLocked() || !window.KingRicoCloud?.enabled && this.state.step) && e) e.preventDefault(); };
+  goHome = e => { if ((this.state.flying || this.state.step) && e) e.preventDefault(); };
   openBet = () => { if (this.busy() || this.state.step) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
   closeBet = () => { this.tone(1100, 0.04, 'square', 0.04); this.setState({ betOpen: false }); };
-  renderVals() {
+  rcBroke() { const s = this.state, bal = typeof s.balance === 'number' ? s.balance : 1000; return bal < 1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.paying && s.phase !== 'falling'; }
+  recharge = async () => { const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
+    this.setState({ balance: 1000 }, () => this.save(1000)); };
+  renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
+  _rv() {
     const s = this.state, j = s.step, txt = fmt(s.balance);
     const ladder = M.map((m, k) => { const done = k < j, next = k === j && !s.win;
       return { label: 'x' + fmt(m), w: next ? '74px' : '62px', h: next ? '38px' : '30px', fs: next ? '21px' : '17px',
@@ -290,8 +286,6 @@ class Component extends DCLogic {
       showBet: j === 0 && !s.paying && !s.flying, betOpen: !!s.betOpen, openBet: this.openBet, closeBet: this.closeBet, showCollect: j > 0 && j < 5, collectText: cv, collectOp: s.flying ? 0.55 : 1, collectBtn: this.collectBtn,
       betText: fmt(BETS[s.betIdx]), betBg: s.noMoney ? '#8a1010' : '#2a0a4a', betAnim: s.noMoney ? 'fpNo .6s ease-in-out' : 'none', downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1, betDown: this.betDown, betUp: this.betUp, goHome: this.goHome,
       menu: !!s.menu, openMenu: this.openMenu, closeMenu: this.closeMenu,
-      menuButton:{onClick:this.openMenu,disabled:!!this.cloudLocked(),style:{zIndex:25}},
-      menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Pênalti',details:'Arraste a bola com força para um canto do gol. Acerte até cinco chutes: x1,2, x1,8, x3, x5 e x10. Pegue o prêmio antes do próximo chute ou arrisque perder a rodada. Sua rodada fica salva na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin
     };
