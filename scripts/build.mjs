@@ -29,6 +29,7 @@ for (const [name,[key,relative]] of Object.entries(packages)) {
   tags.push(`<script src="./runtime/${name}" integrity="${expected}" crossorigin="anonymous"></script>`);
 }
 await build({entryPoints:['cloud/client-src.js'],outfile:'cloud/client.js',bundle:true,format:'iife',target:'es2022',minify:true});
+await build({entryPoints:['cloud/bounce.cjs'],outfile:'runtime/bounce-model.js',bundle:true,format:'esm',target:'es2022',minify:true});
 // Pin the Fingo physics/renderer in the lockfile and serve them with the game.
 for(const [source,name] of [['matter-js/build/matter.min.js','matter.min.js'],['three/build/three.module.js','three.module.js'],['three/build/three.core.js','three.core.js'],['matter-js/LICENSE','matter.LICENSE'],['three/LICENSE','three.LICENSE']])
   await copyFile('node_modules/'+source,'runtime/'+name);
@@ -67,7 +68,7 @@ await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
 await cp('ui',path.join(destination,'ui'),{recursive:true});
 await cp('assets',path.join(destination,'assets'),{recursive:true});
-for(const file of ['support.js','penalty3d.js','KingRico.dc.html','King Rico.dc.html','index.html','version.json'])
+for(const file of ['support.js','penalty3d.js','bounce3d.js','KingRico.dc.html','King Rico.dc.html','index.html','version.json'])
   await copyFile(file,path.join(destination,file));
 // The authoring tool can regenerate a packed game.html. Hosting always loads the
 // current source game so that Firebase login and wallet adapters remain active.
@@ -75,7 +76,7 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>King Rico</title>
 <script>location.replace("Fortune%20Circus.dc.html"+location.search+location.hash);</script>
 </head><body><a href="Fortune%20Circus.dc.html">Abrir King Rico</a></body></html>\n`);
-for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html','Fortune Fingo.dc.html','Fortune Penalty.dc.html']) {
+for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html','Fortune Fingo.dc.html','Fortune Penalty.dc.html','Fortune Bounce.dc.html']) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';

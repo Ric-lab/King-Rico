@@ -222,3 +222,28 @@ test('invalid settings, insufficient funds, fast spins and client balance fields
   await assert.rejects(call(request({action:'spin',game:'wheel',bet:10,selected:0})),{code:'king-rico/failed-precondition'});
   assert.equal(m.records.get('players/one').balanceUnits,0);
 });
+
+test('Bounce debits once, resumes the exact checkpoint and pays once across devices and retries',async()=>{
+ const m=memory(),call=m.client('bounce');await call(request({action:'bootstrap'}));
+ m.records.get('players/bounce').balanceUnits=100025;
+ const id=randomUUID(),base={action:'bounce',game:'bounce',bet:2.5,roundId:id};
+ const start={...base,requestId:id,move:'start',step:0};
+ const [a,b]=await Promise.all([call(start),call(start)]);assert.equal(a.player.balance,997.75);assert.equal(b.replayed,true);
+ const other=m.client('bounce');assert.deepEqual((await other(request({action:'bootstrap'}))).player.bounceRound,a.player.bounceRound);
+ const land=request({...base,move:'land',step:0});m.advance(650);await call(land);assert.equal((await call(land)).replayed,true);
+ assert.equal((await other(request({action:'bootstrap'}))).player.bounceRound.step,1);
+ const collect=request({...base,move:'collect',step:1});const [paid,replay]=await Promise.all([call(collect),other(collect)]);
+ assert.equal(paid.player.balance,1000.5);assert.equal(paid.player.bounceRound,null);assert.equal(replay.replayed,true);
+ assert.equal((await call(start)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,1000.5);
+ await assert.rejects(call(request({...base,move:'collect',step:1})),{code:'king-rico/round-conflict'});
+});
+test('Bounce refuses stale checkpoints, changed bets and exhausted-wallet refill during a round',async()=>{
+ const m=memory(),call=m.client('bounce-loss');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:1000,roundId};
+ await call({...base,move:'start',step:0,requestId:roundId});
+ assert.equal((await call(request({action:'recharge'}))).reason,'bounce-round');
+ for(const changes of [{step:2},{roundId:randomUUID()},{bet:10},{winUnits:99999}])
+  await assert.rejects(call(request({...base,move:'land',step:0,...changes})));
+ const fall=request({...base,move:'fall',step:0});assert.equal((await call(fall)).player.balance,0);
+ assert.equal((await call(fall)).replayed,true);assert.equal((await call(request({action:'recharge'}))).player.balance,1000);
+});

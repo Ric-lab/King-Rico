@@ -157,3 +157,18 @@ test('Home and Wheel preserve cents earned in Circus',()=>{
  const {instance:wheel}=component('Fortune Wheel.dc.html',cloud);wheel.state.balance=1050.25;
  assert.equal(wheel.renderVals().balanceText,'1.050,25');
 });
+
+test('Bounce uses the shared committed wallet, collects exactly the displayed step and cannot credit twice on close',async()=>{
+ const round={id:'round',betUnits:250,step:2,guardStep:0},calls=[];
+ const cloud={enabled:true,bounce:async(...args)=>{calls.push(args);return {player:{balance:1000.75,bounceRound:null},outcome:{step:2,guardStep:0,winUnits:300,ended:true}};}};
+ const {instance:g,context}=component('Fortune Bounce.dc.html',cloud);g.tone=()=>{};g.buzz=()=>{};context.window.Bounce3D={bank:n=>assert.equal(n,2),reset:()=>{}};
+ g.state={...g.state,round,n:2,betIdx:1,active:true,balance:997.75};
+ assert.equal(g.renderVals().collectText,'3');await g.finish('collect');
+ assert.deepEqual(calls,[['collect',2.5,'round',2]]);assert.equal(g.state.balance,1000.75);assert.equal(g.state.win.w,3);
+ g.closeWin();g.closeWin();assert.equal(g.state.balance,1000.75);assert.equal(calls.length,1);
+});
+test('Bounce refuses a local debit on network failure and keeps the failed operation available for recovery',async()=>{
+ const cloud={enabled:true,bounce:async()=>{throw Error('offline');},error:()=>{}};
+ const {instance:g}=component('Fortune Bounce.dc.html',cloud);g.state.ready=true;g.ac=()=>{};
+ await assert.rejects(g.onStart());assert.equal(g.state.balance,1000);assert.equal(g.state.round,null);assert.equal(g._failed.move,'start');assert.equal(g._request,false);
+});

@@ -15,7 +15,6 @@
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
-@keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rrChase { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
 @keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
@@ -35,7 +34,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></a>
-    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
+    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- roleta -->
     <div style="position: absolute; left: 56.5px; top: 70px; width: 340px; height: 340px;">
@@ -114,51 +113,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 5px 0 #4a1a00; font-size: 34px; font-weight: 800; line-height: 1; color: #6b2e05; cursor: pointer; opacity: {{ upOp }};" style-active="transform: translateY(3px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">+</div>
     </div>
 
-    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
-        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
-          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
-        </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: rrFade .2s ease-out;">
-        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
-        <div style="position: absolute; left: 416px; top: 470px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
-            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
-            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
-          </div>
-          <div style="display: flex; flex-direction: column; padding: 4px 18px 4px;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
-            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
-            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
-            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
-            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
-          </div>
-            <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 16px 0; cursor: pointer;">
-              <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
-              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
-              <span style="font-size: 28px; font-weight: 800; color: #ffd257;">›</span>
-            </div>
-          </div>
-          <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos do Fortune Circus e ficam salvos neste aparelho.</div>
-
-          <sc-if value="{{ cloudEnabled }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,210,87,.22);">
-              <button data-cloud-signout style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Sair da conta</button>
-              <button data-cloud-analytics style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Dados de uso: {{ analyticsLabel }}</button>
-            </div>
-          </sc-if>
-        </div>
-      </div>
-    </sc-if>
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <x-import from="./ui/menu.js" component="RechargePanel" dc-props="{{ rechargeProps }}"></x-import>
 
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
@@ -225,7 +181,8 @@ class Component extends DCLogic {
   applyCloudPlayer() {
     const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
     const first = this._cloudUid !== window.KingRicoCloud.uid; this._cloudUid = window.KingRicoCloud.uid;
-    this.setState({ balance: p.balance, ...(first ? {betIdx: p.settings.wheelBetIdx, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl} : {}) });
+    this.setState({ balance: p.balance, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl,
+      ...(first ? {betIdx: p.settings.wheelBetIdx} : {}) });
   }
   componentDidUpdate() { if(this._cloudDeferred && !this.state.spinning && !this._cloudRequest) this.applyCloudPlayer(); }
   componentWillUnmount() { this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
@@ -312,12 +269,7 @@ class Component extends DCLogic {
   betDown = () => { if (this.state.spinning) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save(this.state.balance)); };
   betUp = () => { if (this.state.spinning) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save(this.state.balance)); };
   goHome = e => { if (this.state.spinning && e) e.preventDefault(); };
-  rcBroke() { const s = this.state, bal = typeof s.balance === 'number' ? s.balance : 1000; return bal < 1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.paying && s.phase !== 'falling'; }
-  recharge = async () => { const cloud = window.KingRicoCloud;
-    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
-    this.setState({ balance: 1000 }, () => this.save(1000)); };
-  renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
-  _rv() {
+  renderVals() {
     const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
     const sel = q => p && p.t === q.t && p.v === q.v;
     return {
@@ -335,6 +287,11 @@ class Component extends DCLogic {
       betText: fmt(this.bet()), downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
+      menuButton: {onClick:this.openMenu,disabled:!!(s.spinning)},
+      rechargeProps:{available:!s.spinning && !s.menu && !s.win},
+      menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Wheel',
+        details:'Escolha um símbolo e deslize a roda. Veja os prêmios de cada aposta na tabela de pagamentos.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,
+        onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p ? 1 : 0, hubChar: '?', hubGirOp: p && p.v === 0 ? 1 : 0,

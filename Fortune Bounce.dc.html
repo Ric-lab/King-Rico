@@ -1,216 +1,154 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<style>
-@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
-@font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
-html, body { margin: 0; padding: 0; height: 100%; background: #0c0318; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
-a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
-@keyframes bnPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-@keyframes bnFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes bnBeat { 0% { transform: scale(1); } 35% { transform: scale(1.14); } 100% { transform: scale(1); } }
-@keyframes bnHand { 0%, 100% { transform: translateX(-70px); } 50% { transform: translateX(70px); } }
-@keyframes bnNo { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
-@keyframes bnShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(520%) skewX(-18deg); } }
-@keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
-</style>
-</helmet>
-<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #0c0318;">
-  <div ref="{{ stageRef }}" data-screen-label="Fortune Bounce" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
-    <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
-
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fortune Bounce · King Rico</title><script src="./support.js"></script></head><body>
+<x-dc><helmet><style>
+@font-face{font-family:Baloo;src:url('assets/fonts/baloo2-latin.woff2')}@font-face{font-family:Rammetto;src:url('assets/fonts/rammettoone-latin.woff2')}
+html,body{margin:0;height:100%;background:#10061e;color:#fff1d2;font-family:Baloo,system-ui,sans-serif;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+.bn-stage{position:relative;width:453px;height:802px;flex:0 0 auto;transform-origin:50% 0;user-select:none;-webkit-user-select:none;overflow:hidden}
+.bn-stage button{font:inherit;cursor:pointer;color:inherit;border:0}.bn-stage button:focus-visible{outline:3px solid #fff5c9;outline-offset:4px}.bn-stage button:disabled{cursor:default;opacity:.62}
+.bn-title{position:absolute;top:89px;left:0;right:0;pointer-events:none;text-align:center;font-size:13px;letter-spacing:4px;color:#dbb3f2;font-weight:800}
+.bn-mult{position:absolute;top:113px;width:100%;text-align:center;pointer-events:none;font:42px Rammetto;letter-spacing:-2px;color:#ffe5a1;text-shadow:0 3px 0 #723f2d,0 8px 22px #0008}
+.bn-caption{position:absolute;top:170px;left:0;right:0;text-align:center;font-size:14px;color:#d9c3e6;pointer-events:none}
+.bn-feedback{position:absolute;top:211px;left:0;right:0;text-align:center;font-size:19px;letter-spacing:2px;font-weight:800;color:#fff1c9;pointer-events:none;text-shadow:0 2px 10px #000;animation:bn-feedback .45s ease-out both}
+.bn-guard{position:absolute;top:252px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:4px 13px;border:1px solid #b98a3f;border-radius:14px;font-size:14px;background:#29122bce;color:#ffe2a2;pointer-events:none}
+.bn-footer{position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(0deg,#13081ff5,#13081fbd 62%,transparent);pointer-events:none}
+.bn-controls{position:absolute;bottom:21px;left:27px;right:27px;text-align:center}.bn-hint{margin:0 0 15px;line-height:1.4;font-size:17px;color:#e3cdef;pointer-events:none}.bn-hint small{display:block;font-size:13px;color:#b597c9}
+.bn-drag{display:block;font-size:24px;letter-spacing:8px;color:#f9d887;animation:bn-drag 2s ease-in-out infinite}
+.bn-start,.bn-collect{width:100%;height:68px;border-radius:24px!important;background:linear-gradient(#fff0bc,#ffd166 45%,#d9952c);box-shadow:inset 0 2px 1px #fff8d7,0 5px 0 #84451d,0 7px 16px #0005;color:#54250e!important;font-size:23px!important;font-weight:800!important;line-height:1.1;transition:filter .12s}
+.bn-start:active,.bn-collect:active{transform:translateY(3px);filter:brightness(.93)}.bn-collect span{font-size:30px}.bn-collect small{font-size:13px;display:block;letter-spacing:.7px;color:#734122}
+.bn-bet{padding:8px 19px;margin-top:13px;border-radius:16px;background:#31183c!important;box-shadow:inset 0 0 0 1px #ad794b;font-size:15px!important;color:#e4c9de!important}
+.bn-roundbet{font-size:13px;color:#bb9bcd;margin-top:11px}.bn-sync{position:absolute;bottom:140px;left:30px;right:30px;text-align:center;font-size:14px;color:#f8d997}
+.bn-shade{position:absolute;inset:0;z-index:35;background:#10071dd9;display:flex;justify-content:center;align-items:center}.bn-dialog{width:337px;border:2px solid #d5a34f;border-radius:27px;padding:26px 22px;background:linear-gradient(#592581,#2d123f);box-shadow:inset 0 0 0 3px #2e1534,0 20px 50px #0008;text-align:center;animation:bn-dialog .25s ease-out}
+.bn-dialog h2{font:22px Rammetto;color:#ffe2a3;margin:0 0 15px}.bn-dialog p{margin:8px 0 20px;line-height:1.4;color:#d9c3e6}.bn-amount{font-size:57px;font-weight:800;color:#fff0bb;line-height:1.2}.bn-choices{display:flex;align-items:center;justify-content:space-between;margin:25px 0;font-size:36px;font-weight:800}.bn-choices button{width:62px;height:62px;border-radius:50%;background:linear-gradient(#ffe8a2,#d39a35);box-shadow:0 4px 0 #7c411d;color:#592b15!important;font-size:32px!important}
+.bn-ok{width:100%;padding:13px;border-radius:18px;background:linear-gradient(#69e496,#27aa5e);box-shadow:0 4px 0 #155b38;font-size:22px!important;font-weight:800!important}.bn-stage a{color:inherit}
+@keyframes bn-drag{0%,100%{transform:translateX(-10px);opacity:.65}50%{transform:translateX(10px);opacity:1}}@keyframes bn-feedback{from{opacity:.2;transform:translateY(6px) scale(.96)}to{opacity:1;transform:none}}@keyframes bn-dialog{from{opacity:0;transform:translateY(9px) scale(.96)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.bn-drag,.bn-feedback,.bn-dialog{animation:none}}
+</style></helmet>
+<div style="position:fixed;inset:0;display:flex;justify-content:center;align-items:flex-start;overflow:hidden;">
+<div class="bn-stage" ref="{{ stageRef }}" data-screen-label="Fortune Bounce" style="transform:scale({{ scale }});">
+<x-import component-from-global-scope="bounce-3d" from="./bounce3d.js" style="position:absolute;inset:0;width:453px;height:802px;" hint-size="453px,802px"></x-import>
     <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
         <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
-    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
 
-    <!-- multiplicador atual + garantido -->
-    <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 96px; display: flex; justify-content: center; align-items: center; gap: 10px; pointer-events: none; opacity: {{ multOp }};">
-      <div key="{{ multKey }}" style="height: 56px; padding: 0 22px; border-radius: 28px; display: flex; align-items: center; background: rgba(12,3,24,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.8), 0 0 18px rgba(255,190,60,.35); animation: bnBeat .35s ease-out;">
-        <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 32px; line-height: 1; color: #ffe27a; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(255,200,80,.7);">{{ multText }}</span>
-      </div>
-      <sc-if value="{{ hasGuard }}" hint-placeholder-val="{{ false }}">
-        <div aria-label="Garantido {{ guardText }}" style="height: 40px; padding: 0 12px 0 5px; border-radius: 20px; display: flex; align-items: center; gap: 6px; background: linear-gradient(180deg, #fff1a8, #ffc93a 55%, #e8900f); box-shadow: 0 0 0 2px #6b2e05; animation: bnPop .4s ease-out;">
-          <img src="assets/fingo/coin.webp" alt="" style="width: 30px; height: 30px;">
-          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums;">{{ guardText }}</span>
-        </div>
-      </sc-if>
-    </div>
-
-    <!-- antes de começar: aposta + mão mostrando arrastar -->
-    <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
-      <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 640px; height: 70px; display: flex; justify-content: center; pointer-events: none;">
-        <div style="width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: 0 0 0 8px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.4); animation: bnHand 1.8s ease-in-out infinite;"></div>
-      </div>
-      <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 724px; display: flex; justify-content: center;">
-        <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="height: 56px; padding: 0 20px 0 8px; border-radius: 28px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(12,3,24,.85); box-shadow: inset 0 0 0 2px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.95);">
-          <img src="assets/fingo/coin.webp" alt="" style="width: 40px; height: 40px;">
-          <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
-          <span style="font-size: 20px; line-height: 1; color: #ffd257;">✎</span>
-        </div>
-      </div>
-    </sc-if>
-
-    <!-- PEGAR -->
-    <sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; z-index: 12; left: 0; right: 0; top: 702px; height: 86px; display: flex; justify-content: center; animation: bnPop .3s ease-out;">
-        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" style="position: relative; overflow: hidden; width: 300px; height: 80px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; opacity: {{ collectOp }}; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 6px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6), 0 0 0 3px #6b2e05, 0 0 30px rgba(255,190,60,.5);" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #8a4a05, 0 0 0 3px #6b2e05;">
-          <img src="assets/fingo/coin.webp" alt="" style="width: 50px; height: 50px;">
-          <span style="font-size: 42px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums;">{{ collectText }}</span>
-          <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0)); animation: bnShine 2.4s ease-in-out infinite; pointer-events: none;"></div>
-        </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ lost }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; z-index: 9; left: 0; top: 0; width: 453px; height: 802px; background: rgba(120,10,20,.28); pointer-events: none; animation: bnFade .2s ease-out;"></div>
-    </sc-if>
-
-    <sc-if value="{{ betOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.72); animation: bnFade .2s ease-out;">
-        <div onClick="{{ closeBet }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
-        <div style="position: absolute; left: 428px; top: 760px; width: 397px; padding: 22px 0 20px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 18px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: bnPop .3s ease-out;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 14px;">
-            <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00; opacity: {{ downOp }};" style-active="transform: translateY(4px);">−</div>
-            <div style="width: 170px; height: 78px; border-radius: 39px; display: flex; align-items: center; justify-content: center; background: #2a0a4a; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a;">
-              <span style="font-size: 40px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
-            </div>
-            <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00; opacity: {{ upOp }};" style-active="transform: translateY(4px);">+</div>
-          </div>
-          <div onClick="{{ closeBet }}" role="button" style="padding: 12px 64px; border-radius: 999px; cursor: pointer; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36; font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;" style-active="transform: translateY(3px);">OK</div>
-        </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: bnFade .2s ease-out;">
-        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
-        <div style="position: absolute; left: 416px; top: 480px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
-            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
-            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
-          </div>
-          <div style="display: flex; flex-direction: column; padding: 4px 18px 6px;">
-            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
-              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
-              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
-              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
-              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
-            </div>
-            <div style="padding: 14px 0 10px; font-size: 18px; font-weight: 700; line-height: 1.35; color: #f6e8ff; text-wrap: pretty;">Arraste o dedo para os lados e a bola segue. Algumas placas andam de um lado para o outro: pule na hora certa! Cada placa soma +0,1 ao prêmio. Caiu, perde a aposta. Toque no botão dourado para pegar o prêmio. Placa dourada garante o valor.</div>
-          </div>
-        </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: bnFade .2s ease-out;">
-        <div style="width: 320px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: bnPop .45s cubic-bezier(.2,1.4,.4,1);">
-          <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 28px; color: #ffd257; text-shadow: 0 3px 0 #6b2e05; white-space: nowrap;">{{ winTitle }}</span>
-          <span style="font-size: 60px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
-          <div style="margin-top: 8px; padding: 12px 60px; border-radius: 999px; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36; font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;">OK</div>
-        </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
-        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
-          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
-        </div>
-      </div>
-    </sc-if>
-  </div>
+<x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+<div class="bn-title">FORTUNE BOUNCE</div><div class="bn-mult">{{ multText }}</div>
+<div class="bn-caption">{{ caption }}</div>
+<sc-if value="{{ feedback }}" hint-placeholder-val="{{ false }}"><div class="bn-feedback" key="{{ feedbackKey }}">{{ feedback }}</div></sc-if>
+<sc-if value="{{ hasGuard }}" hint-placeholder-val="{{ false }}"><div class="bn-guard">DOURADA · {{ guardText }} moedas garantidas</div></sc-if>
+<div class="bn-footer"></div>
+<sc-if value="{{ saving }}" hint-placeholder-val="{{ false }}"><div class="bn-sync" role="status">Confirmando sua jogada…</div></sc-if>
+<div class="bn-controls">
+<sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+<p class="bn-hint">Segure e arraste para os lados<small>Cada placa aumenta o prêmio. Caiu, perde a aposta.</small></p>
+<button class="bn-start" onClick="{{ start }}" disabled="{{ notReady }}" aria-label="{{ startLabel }}">{{ startLabel }}</button>
+<button class="bn-bet" onClick="{{ openBet }}" aria-label="Aposta {{ betText }}">APOSTA · {{ betText }} moedas　⌄</button>
+</sc-if>
+<sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}"><p class="bn-hint">Rodada pausada<small>Sua aposta e seu progresso estão salvos.</small></p><button class="bn-start" onClick="{{ start }}" disabled="{{ saving }}">CONTINUAR</button></sc-if>
+<sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}"><button class="bn-collect" onClick="{{ collectBtn }}" disabled="{{ saving }}" aria-label="Pegar {{ collectText }} moedas"><small>PEGAR AGORA</small><span>{{ collectText }}</span> moedas</button><div class="bn-roundbet">Aposta {{ roundBetText }} · {{ n }} placas</div></sc-if>
+<sc-if value="{{ lost }}" hint-placeholder-val="{{ false }}"><p class="bn-hint" role="status">Fora da placa<small>Aposta encerrada. Tente um novo caminho.</small></p><button class="bn-start" onClick="{{ reset }}">JOGAR DE NOVO</button></sc-if>
 </div>
-</x-dc>
+<sc-if value="{{ error }}" hint-placeholder-val="{{ false }}"><div class="bn-shade"><section class="bn-dialog" role="alertdialog" aria-label="Jogada pausada"><h2>PAUSA NA PISTA</h2><p>Não foi possível confirmar sua jogada. Tente recuperar para continuar com segurança.</p><button class="bn-ok" onClick="{{ recover }}">RECUPERAR RODADA</button></section></div></sc-if>
+<sc-if value="{{ betOpen }}" hint-placeholder-val="{{ false }}"><div class="bn-shade"><section class="bn-dialog" role="dialog" aria-label="Escolher aposta"><h2>SUA APOSTA</h2><p>Moedas virtuais por rodada</p><div class="bn-choices"><button onClick="{{ betDown }}" aria-label="Diminuir aposta">−</button><span>{{ betText }}</span><button onClick="{{ betUp }}" aria-label="Aumentar aposta">+</button></div><button class="bn-ok" onClick="{{ closeBet }}">CONFIRMAR</button></section></div></sc-if>
+<sc-if value="{{ win }}" hint-placeholder-val="{{ false }}"><div class="bn-shade"><section class="bn-dialog" role="dialog" aria-label="Prêmio recebido"><h2>{{ winTitle }}</h2><div class="bn-amount">+{{ winText }}</div><p>Moedas já recebidas no seu saldo.</p><button class="bn-ok" onClick="{{ closeWin }}">CONTINUAR</button></section></div></sc-if>
+<sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}"><div class="bn-shade"><section class="bn-dialog" role="dialog" aria-label="Saldo esgotado"><h2>SALDO ESGOTADO</h2><p>Recarregue 1.000 moedas virtuais para continuar jogando.</p><button class="bn-ok" onClick="{{ recharge }}" disabled="{{ saving }}">RECARREGAR</button></section></div></sc-if>
+<x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+</div></div></x-dc>
 <script type="text/x-dc" data-dc-script>
-// Fortune Bounce — bola neon quica por placas; cada placa +0,1 no multiplicador (x1,1, x1,2, …, sem teto).
-// Só habilidade decide a queda. A sorte sorteia a dificuldade das placas à frente (visível); a rampa deixa quase impossível perto da 35ª.
-// Placa dourada (1 em 40) garante o valor. Retorno depende do jogador (não é fixo): calibrar frequência de placas difíceis e rampa com testes.
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
-const SKEY = 'fortuneCircus.slot.v3', BKEY = 'fortuneCircus.bounce.v1', NOTES = [523, 587, 659, 784, 880];
-const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-const multOf = n => Math.round((1 + 0.1 * n) * 10) / 10;
+const BETS=[1,2.5,5,10,25,50,100,250,500,1000],KEY='kingRico.bounce.preview.v2',NOTES=[523.25,587.33,659.25,783.99,880];
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2});
 class Component extends DCLogic {
-  state = { balance: 1000, betIdx: 3, n: 0, guard: 0, active: false, roundBet: 0, vw: 453, vh: 802 };
-  stageRef = React.createRef();
-  componentDidMount() {
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
-    try { const b = JSON.parse(localStorage.getItem(BKEY)); if (b) this.setState({ betIdx: b.betIdx ?? 3 }); } catch (e) {}
-    window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st) => this.onLand(n, g, p, st), onStopped: () => this.collect(multOf(this.state.n), 'VOCÊ GANHOU!'), onFall: () => this.onFall() };
+  state={balance:1000,betIdx:3,n:0,guard:0,round:null,active:false,paused:false,ready:false,vw:453,vh:802,sfxLvl:2,vibLvl:2};
+  stageRef=React.createRef();
+  cloudLocked(){return this._request||this.state.ending||this.state.active&&!this.state.paused;}
+  componentDidMount(){
+    window.__bn=this;this._rs=()=>this.setState({vw:innerWidth,vh:innerHeight});this._rs();window.addEventListener('resize',this._rs);
+    window.bounceHooks={onReady:()=>{this.setState({ready:true});if(this.state.round)window.Bounce3D.reset(this.state.round);},onStart:()=>this.onStart(),onLand:(...a)=>this.onLand(...a),onMiss:()=>this.miss(),onFall:()=>this.finish('fall'),onPaused:paused=>this.setState({paused}),onError:e=>this.onError(e)};
+    const cloud=window.KingRicoCloud;
+    if(cloud?.enabled)this._unwatch=cloud.watch(p=>{this._deferred=p;if(!this.cloudLocked())this.applyCloud();});
+    else{try{const s=JSON.parse(localStorage.getItem(KEY));if(s)this.setState({...s,active:!!s.round,paused:!!s.round,win:null,lost:false},()=>window.Bounce3D?.reset(this.state.round));}catch{}}
+    if(window.Bounce3D){this.setState({ready:true});if(this.state.round)window.Bounce3D.reset(this.state.round);}
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._rs); clearTimeout(this._t); }
-  save(bal) { const s = this.state; try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = bal ?? s.balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(BKEY, JSON.stringify({ betIdx: s.betIdx })); } catch (e) {} }
-  ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
-  tone(f, d, type = 'triangle', g = 0.07, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
-  buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; try { navigator.vibrate && navigator.vibrate(L === 1 ? [].concat(p).map(x => Math.max(10, x >> 1)) : p); } catch (e) {} }
-  busy() { const s = this.state; return s.win || s.menu || s.betOpen || s.paying; }
-  onStart() { const s = this.state; if (this.busy() || s.active) return false; this.ac(); const bet = BETS[s.betIdx];
-    if (s.balance < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); return false; }
-    const bal = Math.round((s.balance - bet) * 100) / 100; this.setState({ balance: bal, active: true, roundBet: bet, n: 0, guard: 0, lost: false }, () => this.save(bal)); this.tone(440, 0.08, 'square', 0.05); return true; }
-  onLand(n, gold, perfect, streak) { const s = this.state, m = multOf(n), guard = !s.guard && gold ? m : s.guard; this.setState({ n, guard });
-    const f = NOTES[(n - 1) % 5] * Math.pow(2, Math.min(2, Math.floor((n - 1) / 5)) * 0.5); this.tone(f, 0.16, 'triangle', 0.07); this.buzz(gold ? [40, 30, 60] : perfect ? [12, 25, 12] : 15);
-    if (perfect) this.tone(f * 2 * Math.min(1.5, 1 + (streak - 1) * 0.06), 0.1, 'sine', 0.05);
-    if (gold && !s.guard) [880, 1175, 1568].forEach((q, i) => setTimeout(() => this.tone(q, 0.16, 'triangle', 0.08), i * 70)); }
-  onFall() { const s = this.state; if (!s.active) return; this.setState({ stopping: false });
-    if (s.guard) return this.collect(s.guard, 'GARANTIDO!');
-    this.tone(220, 0.3, 'sine', 0.08, 150); setTimeout(() => this.tone(150, 0.4, 'sine', 0.08, 110), 260);
-    this.setState({ active: false, lost: true }); this._t = setTimeout(() => { this.setState({ lost: false, n: 0, guard: 0 }); window.Bounce3D && window.Bounce3D.reset(); }, 700); }
-  collectBtn = () => { const s = this.state; if (!s.active || s.n < 1 || s.win || s.stopping) return; this.tone(900, 0.05, 'square', 0.05); this.buzz(20); this.setState({ stopping: true }); window.Bounce3D && window.Bounce3D.stop(); };
-  collect(mult, title) { const w = Math.round(this.state.roundBet * mult * 100) / 100;
-    [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90)); this.buzz([70, 60, 70, 60, 120]);
-    this.setState({ active: false, stopping: false, paying: true, win: { w, title } }); }
-  closeWin = () => { const s = this.state; if (!s.win) return; const w = s.win.w; this.setState({ win: null });
-    this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal, paying: false, n: 0, guard: 0 }, () => this.save(bal)); window.Bounce3D && window.Bounce3D.reset(); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); };
-  flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 226, y: 742 }, to = { x: 40, y: 42 }, n = 10;
-    for (let i = 0; i < n; i++) { const c = document.createElement('img'); c.src = 'assets/fingo/coin.webp';
-      c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;pointer-events:none;filter:drop-shadow(0 0 8px rgba(255,210,87,.8))'; st.appendChild(c);
-      const dx = (i - n / 2) * 14, mid = { x: (from.x + to.x) / 2 + dx * 3, y: from.y - 260 - (i % 3) * 30 };
-      const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 760, delay: i * 55, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
-      a.onfinish = () => { c.remove(); this.tone(1800 + i * 40, 0.03, 'square', 0.03); if (i === n - 1) done(); }; } }
-  openMenu = () => { if (this.state.active) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
-  closeMenu = () => this.setState({ menu: false });
-  setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
-  openBet = () => { if (this.state.active) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
-  closeBet = () => this.setState({ betOpen: false });
-  betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save()); };
-  betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save()); };
-  goHome = e => { if (this.state.active && e) e.preventDefault(); };
-  recharge = async () => { const cloud = window.KingRicoCloud;
-    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
-    this.setState({ balance: 1000 }, () => this.save(1000)); };
-  rcBroke() { const s = this.state; return s.balance < 1 && !s.win && !s.menu && !s.active && !s.paying; }
-  renderVals() {
-    const s = this.state, txt = fmt(s.balance), m = multOf(s.n);
-    return {
-      scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
-      goHome: this.goHome, openMenu: this.openMenu, closeMenu: this.closeMenu, menu: !!s.menu,
-      multText: 'x' + fmt(m), multOp: s.n ? 1 : 0.45, multKey: 'm' + s.n, hasGuard: !!s.guard, guardText: fmt(s.roundBet * s.guard),
-      idle: !s.active && !s.win && !s.paying && !s.lost, betText: fmt(BETS[s.betIdx]), betAnim: s.noMoney ? 'bnNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
-      showCollect: s.active && s.n >= 1, collectOp: s.stopping ? 0.6 : 1, collectText: fmt(s.roundBet * m), collectBtn: this.collectBtn, lost: !!s.lost,
-      ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
-      win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin,
-      broke: this.rcBroke(), recharge: this.recharge
-    };
+  componentDidUpdate(){if(this._deferred&&!this.cloudLocked())this.applyCloud();}
+  componentWillUnmount(){window.removeEventListener('resize',this._rs);this._unwatch?.();clearTimeout(this._feedbackTimer);this._ac?.close();if(window.__bn===this){delete window.__bn;delete window.bounceHooks;}}
+  set(values){return new Promise(resolve=>this.setState(values,()=>{this.persist();resolve();}));}
+  persist(){if(window.KingRicoCloud?.enabled)return;const {balance,betIdx,n,guard,round,sfxLvl,vibLvl}=this.state;localStorage.setItem(KEY,JSON.stringify({balance,betIdx,n,guard,round,sfxLvl,vibLvl}));}
+  applyCloud(){const p=this._deferred;if(!p)return;this._deferred=null;const r=p.bounceRound;
+    const changed=(r?.id||null)!==(this.state.round?.id||null)||(r?.step||0)!==this.state.n;
+    this.setState({balance:p.balance,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,betIdx:r?BETS.indexOf(r.betUnits/100):p.settings.bounceBetIdx??3,
+      round:r,n:r?.step||0,guard:r?.guardStep||0,active:!!r,paused:!!r},()=>{if(changed)window.Bounce3D?.reset(r);});
+  }
+  async request(move,id=this.state.round?.id,step=this.state.n){
+    if(this._request)throw Error('Aguarde a confirmação.');
+    const bet=this.state.round?this.state.round.betUnits/100:BETS[this.state.betIdx];
+    this._request=true;this._failed={move,id,step};this.setState({saving:true});
+    try{
+      const cloud=window.KingRicoCloud;let result;
+      if(cloud?.enabled)result=await cloud.bounce(move,bet,id,step);
+      else{const outcome=window.Bounce3D.model.outcome(bet,this.state.round,move,id);const balance=Math.round((this.state.balance-(move==='start'?bet:0)+outcome.winUnits/100)*100)/100;
+        result={outcome,player:{balance,bounceRound:outcome.ended?null:{id,betUnits:outcome.betUnits,step:outcome.step,guardStep:outcome.guardStep}}};}
+      const r=result.player.bounceRound;await this.set({balance:result.player.balance,round:r,n:r?.step??result.outcome.step,guard:r?.guardStep??result.outcome.guardStep});
+      this._failed=null;return result;
+    }finally{this._request=false;this.setState({saving:false});}
+  }
+  async onStart(){
+    if(this.state.menu||this.state.betOpen||this.state.win||this.state.lost||this.state.error||this._request||!this.state.ready)return false;
+    this.ac();if(this.state.round){this.setState({paused:false});return this.state.round;}
+    const bet=BETS[this.state.betIdx];if(this.state.balance<bet){this.buzz([25,40,25]);this.setState({betOpen:true});return false;}
+    const result=await this.request('start',crypto.randomUUID(),0);await this.set({active:true,paused:false,lost:false,feedback:''});this.tone(220,.12,'sine',.08,440);return result.player.bounceRound;
+  }
+  async onLand(n,gold,perfect,streak){
+    // Sound and light share the contact instant; the next leap waits for its saved checkpoint.
+    this.tone(125,.075,'sine',.08,62);const note=NOTES[(n-1)%5]*Math.pow(2,Math.min(2,Math.floor((n-1)/5))*.25);
+    this.tone(note,.18,'triangle',.045);if(perfect)this.tone(note*2,.12,'sine',.028);
+    this.buzz(gold?[25,30,45]:perfect?12:8);
+    this.setState({feedback:gold?'PLACA DOURADA':perfect?(streak>1?'PERFEITO ×'+streak:'PERFEITO'):'',feedbackKey:n});
+    clearTimeout(this._feedbackTimer);this._feedbackTimer=setTimeout(()=>this.setState({feedback:''}),600);
+    const r=await this.request('land',this.state.round.id,n-1);if(r.outcome.ended){window.Bounce3D.bank(n);this.showResult(r,'collect');}
+  }
+  miss(){this.tone(190,.32,'sine',.06,65);this.buzz([18,35,30]);this.setState({feedback:'',ending:true});this._fallResult=this.request('fall').then(result=>({result}),error=>({error}));}
+  async finish(move){
+    const fall=move==='fall'?this._fallResult:null;
+    if(!fall&&(this._request||!this.state.round)||this.state.win)return;
+    this.setState({ending:true});
+    try{let result;if(fall){const saved=await fall;this._fallResult=null;if(saved.error)throw saved.error;result=saved.result;}else result=await this.request(move);this.showResult(result,move);}catch(e){this.onError(e);}finally{this.setState({ending:false});}
+  }
+  showResult(result,move){const w=result.outcome.winUnits/100;
+    this.setState({active:false,paused:false,ending:false,feedback:'',win:w?{w,title:move==='fall'?'DOURADA GARANTIDA':'PRÊMIO RECEBIDO'}:null,lost:!w},()=>this.persist());
+    if(w){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.tone(f,.18,'triangle',.05),i*75));this.buzz([25,45,50]);}
+  }
+  collectBtn=()=>{if(!this.state.round||this.state.n<1||this._request||this.state.ending)return;window.Bounce3D.bank(this.state.n);this.tone(1046,.1,'sine',.05);this.finish('collect');};
+  start=()=>window.Bounce3D?.begin();
+  reset=()=>{this.setState({active:false,paused:false,lost:false,win:null,n:0,guard:0,feedback:''});window.Bounce3D?.reset();};
+  closeWin=()=>{this.reset();this.tone(1320,.12,'sine',.04);};
+  onError(e){if(['king-rico/round-conflict','king-rico/recovered','king-rico/failed-precondition','king-rico/invalid-argument'].includes(e.code))this._failed=null;window.Bounce3D?.pause();this.setState({error:true,paused:!!this.state.round,ending:false});window.KingRicoCloud?.error(e);}
+  recover=async()=>{if(this._request)return;try{let result;if(this._failed){const {move,id,step}=this._failed;result=await this.request(move,id,step);if(result.outcome.ended){this.showResult(result,result.outcome.move);this.setState({error:false});return;}}
+      const cloud=window.KingRicoCloud;if(cloud?.enabled){await cloud.refresh();this._deferred=cloud.player;this.applyCloud();}
+      this.setState({error:false,paused:!!this.state.round,active:!!this.state.round});window.Bounce3D?.reset(this.state.round);
+    }catch(e){this.onError(e);}};
+  openMenu=()=>{window.Bounce3D?.pause();this.setState({menu:true});};
+  closeMenu=()=>this.setState({menu:false});
+  openBet=()=>{if(!this.state.active&&!this._request)this.setState({betOpen:true});};
+  closeBet=()=>this.setState({betOpen:false});
+  changeBet(d){if(this.state.active)return;this.setState(s=>({betIdx:Math.max(0,Math.min(9,s.betIdx+d))}),()=>{this.persist();window.KingRicoCloud?.settings?.({bounceBetIdx:this.state.betIdx});this.tone(660,.06,'sine',.03);});}
+  betDown=()=>this.changeBet(-1);betUp=()=>this.changeBet(1);
+  setLvl(k,v){this.setState({[k]:v},()=>{this.persist();window.KingRicoCloud?.settings?.({[k]:v});});}
+  goHome=e=>{if(this._request||this.state.ending)e.preventDefault();else window.Bounce3D?.pause();};
+  recharge=async()=>{if(this._request)return;this._request=true;this.setState({saving:true});try{const c=window.KingRicoCloud;if(c?.enabled){const r=await c.recharge();await this.set({balance:r.player.balance});}else await this.set({balance:1000});}catch(e){window.KingRicoCloud?.error(e);}finally{this._request=false;this.setState({saving:false});}};
+  ac(){if(!this._ac)try{this._ac=new(window.AudioContext||window.webkitAudioContext)();}catch{return null;}if(this._ac.state==='suspended')this._ac.resume();return this._ac;}
+  tone(f,d,type='sine',gain=.05,to){const level=[0,.35,1][this.state.sfxLvl];if(!level)return;const a=this.ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.type=type;o.frequency.setValueAtTime(f,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain*level,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.01);}
+  buzz(n){if(this.state.vibLvl)try{navigator.vibrate?.(this.state.vibLvl===1?[].concat(n).map(v=>Math.round(v*.5)):n);}catch{}}
+  renderVals(){const s=this.state,bet=s.round?s.round.betUnits/100:BETS[s.betIdx],mult=(10+s.n)/10,txt=fmt(s.balance);
+    return {scale:Math.min(s.vw/453,s.vh/802),stageRef:this.stageRef,balanceText:txt,balanceSize:txt.length<7?'19px':'16px',goHome:this.goHome,
+      menuButton:{onClick:this.openMenu,style:{zIndex:20}},menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Bounce',details:'Segure e arraste para os lados ou use as setas. Cada placa soma +0,1 ao multiplicador. Pegar encerra imediatamente pelo valor mostrado. Cair perde a aposta, mas a primeira placa dourada garante seu valor. Perfeitos são uma recompensa visual e sonora. A rodada fica salva; na placa 500 o prêmio é recebido automaticamente.',sfxLvl:s.sfxLvl,vibLvl:s.vibLvl,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      multText:'×'+fmt(mult),caption:s.active?'PRÊMIO DA RODADA':'SIGA O RITMO. ESCOLHA QUANDO PARAR.',feedback:s.feedback,feedbackKey:s.feedbackKey,
+      hasGuard:!!s.guard,guardText:fmt(bet*(10+s.guard)/10),idle:!s.active&&!s.win&&!s.lost&&!s.error,notReady:!s.ready||s.saving,startLabel:s.saving?'PREPARANDO…':'JOGAR · '+fmt(bet)+' MOEDAS',start:this.start,
+      betText:fmt(BETS[s.betIdx]),openBet:this.openBet,betOpen:!!s.betOpen,closeBet:this.closeBet,betDown:this.betDown,betUp:this.betUp,
+      paused:s.active&&s.paused,showCollect:s.active&&s.n>=1,collectText:fmt(bet*mult),roundBetText:fmt(bet),n:s.n,collectBtn:this.collectBtn,saving:!!s.saving||!!s.ending,
+      lost:!!s.lost,reset:this.reset,error:!!s.error,recover:this.recover,win:!!s.win,winTitle:s.win?.title||'',winText:fmt(s.win?.w||0),closeWin:this.closeWin,
+      broke:s.balance<1&&!s.active&&!s.win&&!s.lost&&!s.menu,recharge:this.recharge};
   }
 }
-</script>
-</body>
-</html>
+</script></body></html>

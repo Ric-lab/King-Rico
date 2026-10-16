@@ -311,3 +311,38 @@ test('Spark rules validate creation, settings, timestamps, balances, operation b
     fingerprint:'forged',betUnits:0,winUnits:5000,result:{amount:50,player:publicP},createdAt:serverTimestamp(),rulesVersion:'2026-10-12-spark-v1'});
   await assertFails(b.commit());
 });
+
+test('Bounce Rules persist the wager/checkpoint, reject forged progress and pay exactly once',async()=>{
+ const identity='bounce-'+randomUUID(),c=await client(identity);await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:2.5,roundId},start={...base,requestId:roundId,move:'start',step:0};
+ const [a,b]=await Promise.all([c.call(start),c.call(start)]);assert.equal(a.player.balance,997.5);assert.ok(a.replayed||b.replayed);
+ const other=await client(identity+'-device',identity);assert.equal((await other.call(request({action:'bootstrap'}))).player.bounceRound.step,0);
+ const ref=doc(c.db,'players',c.uid);
+ await assertFails(updateDoc(ref,{bounceRound:null,revision:2,updatedAt:serverTimestamp()}));
+ await new Promise(r=>setTimeout(r,300));
+ const land=request({...base,move:'land',step:0});await c.call(land);assert.equal((await c.call(land)).replayed,true);
+ await assert.rejects(other.call(request({...base,move:'land',step:0})),{code:'king-rico/round-conflict'});
+ async function forged(changes={},profileChanges={}) {
+   const old=(await getDoc(ref)).data(),id=randomUUID(),r=old.bounceRound;
+   const x={move:'collect',roundId,betUnits:250,step:1,guardStep:0,ended:true,winUnits:275,...changes};
+   const next={...old,balanceUnits:old.balanceUnits+x.winUnits,bounceRound:null,revision:old.revision+1,lastOperationId:id,
+     updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),...profileChanges};
+   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{
+     action:'bounce',game:'bounce',selected:-1,fingerprint:'forged',betUnits:0,winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+     result:{game:'bounce',bet:x.betUnits/100,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,baseBalance:next.balanceUnits/100,player:publicPlayer(next),outcome:x}});
+   await assertFails(batch.commit());
+ }
+ await forged({step:4,winUnits:350});await forged({winUnits:99999});await forged({betUnits:1000});await forged({guardStep:1});await forged({}, {peaches:3});
+ const collect=request({...base,move:'collect',step:1}),[paid,replay]=await Promise.all([c.call(collect),other.call(collect)]);
+ assert.equal(paid.player.balance,1000.25);assert.equal(paid.player.bounceRound,null);assert.ok(paid.replayed||replay.replayed);
+ assert.equal((await c.call(start)).replayed,true);assert.equal((await getDoc(ref)).data().balanceUnits,100025);
+});
+test('Bounce Rules keep the first golden guarantee and block refill until the round ends',async()=>{
+ const {default:bounce}=await import('../cloud/bounce.cjs');let roundId;do{roundId=randomUUID();}while(!bounce.track(roundId,2)[2].gold);
+ const c=await client('bounce-gold-'+randomUUID());await c.call(request({action:'bootstrap'}));
+ const base={action:'bounce',game:'bounce',bet:1000,roundId};await c.call({...base,requestId:roundId,move:'start',step:0});
+ assert.equal((await c.call(request({action:'recharge'}))).reason,'bounce-round');
+ for(let step=0;step<2;step++){await new Promise(r=>setTimeout(r,300));await c.call(request({...base,move:'land',step}));}
+ const fall=request({...base,move:'fall',step:2}),paid=await c.call(fall);assert.equal(paid.player.balance,1200);assert.equal((await c.call(fall)).replayed,true);
+ assert.equal((await c.call(request({action:'recharge'}))).amount,0);
+});
