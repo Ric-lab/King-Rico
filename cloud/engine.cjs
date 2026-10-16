@@ -18,6 +18,16 @@ const coins = value => value / 100;
 const RULES_VERSION = '2026-10-13-spark-v2';
 const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
+const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;
+function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
+  const before = previous?.step || 0, betUnits = previous?.betUnits || units(bet);
+  const chance = (before ? PENALTY_MULTIPLIERS[before-1] : PENALTY_BASE) / PENALTY_MULTIPLIERS[before];
+  const goal = move === 'collect' || quality > 0 && rng() < chance * quality / 1000;
+  const step = before + (move === 'shoot' && goal ? 1 : 0);
+  const ended = move === 'collect' || !goal || step === 5;
+  const winUnits = ended && goal ? Math.round(betUnits * PENALTY_MULTIPLIERS[step-1]) : 0;
+  return {move,roundId,betUnits,step,quality,goal,ended,winUnits};
+}
 function fingo(bet, previous, move, roundId, selected, rng = random) {
   const targets = previous?.targets || Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));
   const marks = [...(previous?.marks || Array(5).fill(false))];
@@ -132,4 +142,4 @@ function bonusFor(last, streak, now) {
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

@@ -14,6 +14,66 @@ before(async()=>{
 });
 after(async()=>{await Promise.all(apps.map(deleteApp));await environment?.cleanup();});
 const request=data=>({requestId:randomUUID(),...data});
+test('Penalty Rules persist shots, prevent duplicate debits/collection and share a legacy wallet',async()=>{
+  const identity='penalty-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));await c.call(request({action:'bonus'}));
+  const ref=doc(c.db,'players',c.uid);
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{balanceUnits:100025,peaches:2}));
+  const roundId=randomUUID(),base={action:'penalty',game:'penalty',bet:2.5,roundId};
+  const shot={...base,requestId:roundId,move:'shoot',step:0,quality:1000};
+  const [a,b]=await Promise.all([c.call(shot),c.call(shot)]);
+  assert.ok(a.replayed || b.replayed);assert.equal(a.player.balance,997.75);assert.equal(a.player.penaltyRound.step,1);
+  const other=await client(identity+'-device',identity,{rng:()=>{throw Error('Collection/replay cannot draw');}});
+  assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.penaltyRound,a.player.penaltyRound);
+  await new Promise(resolve=>setTimeout(resolve,350));
+  const collect=request({...base,move:'collect',step:1,quality:0});
+  const [paid,replay]=await Promise.all([other.call(collect),c.call(collect)]);
+  assert.ok(paid.replayed || replay.replayed);assert.equal(paid.player.balance,1000.75);assert.equal(paid.player.penaltyRound,null);
+  assert.equal((await c.call(shot)).replayed,true);
+  assert.equal((await getDoc(ref)).data().balanceUnits,100075);
+  await assert.rejects(c.call(request({...base,move:'collect',step:1,quality:0})),{code:'king-rico/round-conflict'});
+  await assertFails(updateDoc(doc(c.db,'players',c.uid,'operations',collect.requestId),{winUnits:99999}));
+  assert.equal((await other.call(request({action:'bootstrap'}))).player.peaches,2);
+});
+test('Penalty Rules validate losses, all five steps, automatic prize and blocked recharge',async()=>{
+  const identity='penalty-final-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
+  const base={action:'penalty',game:'penalty',bet:1000,roundId,move:'shoot',quality:1000};
+  for(let step=0;step<5;step++) {
+    const shot={...base,step,requestId:step===0?roundId:randomUUID()},result=await c.call(shot);
+    assert.equal(result.player.balance,step===4?10000:0);assert.equal((await c.call(shot)).replayed,true);
+    if(step===0) assert.equal((await c.call(request({action:'recharge'}))).reason,'penalty-round');
+    await new Promise(resolve=>setTimeout(resolve,350));
+  }
+  const id=randomUUID(),miss={...base,requestId:id,roundId:id,step:0,quality:0};
+  const loss=await c.call(miss);assert.equal(loss.player.balance,9000);assert.equal(loss.player.penaltyRound,null);
+  assert.equal((await c.call(miss)).replayed,true);
+  assert.equal((await getDoc(ref)).data().balanceUnits,900000);
+});
+test('Penalty Rules reject free progress, skipped steps, changed bets and forged credits',async()=>{
+  const identity='penalty-forged-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
+  await c.call({action:'penalty',game:'penalty',bet:2.5,roundId,requestId:roundId,step:0,move:'shoot',quality:1000});
+  await new Promise(resolve=>setTimeout(resolve,350));
+  await assertFails(updateDoc(ref,{penaltyRound:null,revision:2,updatedAt:serverTimestamp()}));
+  async function forged(changes={},profileChanges={}) {
+    const old=(await getDoc(ref)).data(),id=randomUUID();
+    const x={...engine.penalty(2.5,old.penaltyRound,'shoot',roundId,1000,()=>0),...changes};
+    const next={...old,balanceUnits:old.balanceUnits+x.winUnits,revision:old.revision+1,lastOperationId:id,
+      updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),
+      penaltyRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,step:x.step},...profileChanges};
+    const batch=writeBatch(c.db);batch.set(ref,next);
+    batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'penalty',game:'penalty',selected:-1,fingerprint:'forged',betUnits:0,
+      winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+      result:{game:'penalty',bet:x.betUnits/100,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,
+        baseBalance:next.balanceUnits/100,player:publicPlayer(next),outcome:x}});
+    await assertFails(batch.commit());
+  }
+  await forged({step:4});await forged({betUnits:1000});await forged({quality:0});
+  await forged({winUnits:99999,ended:true});await forged({}, {peaches:4});
+  await assertFails(getDoc(doc(c.db,'players','another-penalty-player')));
+});
 async function client(name,identity=name,dependencies={}){
   const app=initializeApp({apiKey:'demo-key',projectId:'demo-king-rico',appId:'demo-app'},name);apps.push(app);
   const auth=getAuth(app);connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});

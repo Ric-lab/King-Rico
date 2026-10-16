@@ -29,6 +29,39 @@ function memory(rng=()=>.99) {
   return {records,client:uid=>createGameStore(null,uid,dependencies),advance:ms=>time+=ms,setRng:next=>rng=next};
 }
 const request=data=>({requestId:randomUUID(),...data});
+test('Penalty commits one debit/outcome, resumes another device and collects exactly once',async()=>{
+  const m=memory(()=>0),call=m.client('penalty');await call(request({action:'bootstrap'}));
+  m.records.get('players/penalty').balanceUnits=100025;
+  const roundId=randomUUID(),base={action:'penalty',game:'penalty',bet:2.5,roundId};
+  const shot={...base,requestId:roundId,move:'shoot',step:0,quality:1000};
+  const [a,b]=await Promise.all([call(shot),call(shot)]);
+  assert.equal(a.player.balance,997.75);assert.equal(b.replayed,true);
+  const other=m.client('penalty');assert.equal((await other(request({action:'bootstrap'}))).player.penaltyRound.step,1);
+  m.advance(350);const collect=request({...base,move:'collect',step:1,quality:0});
+  const [paid,replay]=await Promise.all([call(collect),other(collect)]);
+  assert.equal(paid.player.balance,1000.75);assert.equal(replay.replayed,true);
+  assert.equal(paid.player.penaltyRound,null);
+  assert.equal((await call(shot)).replayed,true);
+  assert.equal((await call(request({action:'bootstrap'}))).player.balance,1000.75);
+  await assert.rejects(call(request({...base,move:'collect',step:1,quality:0})),{code:'king-rico/round-conflict'});
+});
+test('Penalty preserves losses and the final prize across retries and rejects stale rounds',async()=>{
+  const m=memory(()=>.99),call=m.client('penalty-loss');await call(request({action:'bootstrap'}));
+  const id=randomUUID(),loss={action:'penalty',game:'penalty',bet:1000,roundId:id,requestId:id,move:'shoot',step:0,quality:1000};
+  const r=await call(loss);assert.equal(r.player.balance,0);assert.equal(r.player.penaltyRound,null);
+  m.setRng(()=>{throw Error('Replay must not draw');});assert.equal((await call(loss)).replayed,true);
+  assert.equal((await call(request({action:'bootstrap'}))).player.balance,0);
+  assert.equal((await call(request({action:'recharge'}))).player.balance,1000);
+  m.advance(350);m.setRng(()=>0);const roundId=randomUUID(),base={...loss,roundId,requestId:roundId};
+  await call(base);assert.equal((await call(request({action:'recharge'}))).reason,'penalty-round');
+  for(let step=1;step<=4;step++) {
+    m.advance(350);const shot={...base,step,requestId:randomUUID()};const result=await call(shot);
+    assert.equal((await call(shot)).replayed,true);
+    assert.equal(result.player.balance,step===4?10000:0);
+  }
+  await assert.rejects(call({...base,step:4,requestId:randomUUID()}),{code:'king-rico/round-conflict'});
+  await assert.rejects(call({...base,quality:1001}),{code:'king-rico/invalid-argument'});
+});
 test('Fingo debits one bet, resumes the same targets and slots, and pays a completed round once',async()=>{
   const m=memory(()=>0),call=m.client('fingo');await call(request({action:'bootstrap'}));
   m.records.get('players/fingo').balanceUnits=100025;

@@ -85,6 +85,23 @@ test('Home uses the persisted cloud bonus',async()=>{
  home.buzz=()=>{};home.react=()=>{};await home.collectBonus();
  assert.equal(home.state.balance,1050);assert.equal(home.state.last,20261012);assert.equal(home.state.streak,1);
 });
+test('Penalty waits for the committed shot and never adds its prize locally',async()=>{
+  const requests=[],player={balance:1000.75,settings:{penaltyBetIdx:1},penaltyRound:null};
+  const cloud={enabled:true,player,penalty:async(...args)=>{
+    requests.push(args);return {balanceDebited:997.75,outcome:{goal:true,betUnits:250,roundId:'round',step:1,winUnits:args[0]==='collect'?300:0}};
+  },settings:()=>{},error:()=>{throw Error('Unexpected error');}};
+  const {instance:g}=component('Fortune Penalty.dc.html',cloud,()=>{throw Error('No local lottery');});
+  g.state={...g.state,balance:1000.25,betIdx:1,roundId:'round'};g.ac=()=>{};g.tone=()=>{};g.buzz=()=>{};g.flyCoins=done=>done();
+  assert.equal((await g.onSwipe(1000)).goal,true);assert.equal(g.state.balance,997.75);
+  assert.deepEqual(requests[0],['shoot',2.5,'round',0,1000]);
+  g.state.flying=false;g.state.step=1;await g.collectBtn();
+  g.state.win={w:3};g.closeWin();assert.equal(g.state.balance,1000.75);assert.equal(requests.length,2);
+});
+test('Penalty refuses an offline shot and preserves its wallet',async()=>{
+  let errors=0;const cloud={enabled:true,penalty:async()=>{throw Error('offline');},error:()=>errors++};
+  const {instance:g}=component('Fortune Penalty.dc.html',cloud);g.state.roundId='round';
+  assert.equal(await g.onSwipe(1000),null);assert.equal(g.state.balance,1000);assert.equal(g.state.flying,false);assert.equal(errors,1);
+});
 test('Fingo restores the cloud round and animates its committed roll without a local debit',async()=>{
  const targets=[1,16,31,46,61],round={id:'round',betUnits:250,targets,marks:[true,false,false,false,false],used:3,slots:null};
  const player={balance:997.75,settings:{sfxLvl:0,vibLvl:1,fingoBetIdx:1},fingoRound:round};

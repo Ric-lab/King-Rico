@@ -6,6 +6,7 @@ import uuid
 from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
 from login_ui import check_wallet_retry
+from penalty_browser import check_penalty
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -394,7 +395,7 @@ with sync_playwright() as p:
         restored_without_login(returned,uid)
         refill=returned.get_by_role('button',name='Recarregar moedas',exact=True)
         refill.wait_for(state='visible')
-        box=refill.bounding_box();returned.mouse.dblclick(box['x']+box['width']/2,box['y']+box['height']/2)
+        refill.dblclick()
         returned.wait_for_function('window.KingRicoCloud.player.balance===1000 && window.__fc.state.balance===1000',timeout=20000)
         returned.reload(wait_until='domcontentloaded')
         restored_without_login(returned,uid)
@@ -406,6 +407,8 @@ with sync_playwright() as p:
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
         reopened.close()
     check_wallet_retry(browser)
+    penalty_result=check_penalty(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)
+    print(json.dumps(penalty_result))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,

@@ -1,9 +1,9 @@
 // <penalty-3d> — cena 3D do Fortune Penalty (three.js). Física real: swipe → velocidade; traves, rede, chão e goleira-robô colidem de verdade.
 // O "roubo" só escolhe a pose da goleira (e, em erro de sorte perto do aro, empurra a bola alguns cm para a trave). Mira do jogador manda.
-// Ganchos (definidos pela página): window.penHooks = { onSwipe() → p|null, onResult(goal), sfx(tipo) }
+// Ganchos: onSwipe(qualidade) confirma {goal} antes de animar; onResult(goal), sfx(tipo).
 (function () {
   if (customElements.get('penalty-3d')) return;
-  const SRC = 'https://unpkg.com/three@0.184.0/build/three.module.js';
+  const SRC = './runtime/three.module.js';
   const GW = 4.345, GH = 3.845, PR = 0.11, D = 2.0, BH = 2.0, R = 0.19, BZ = 9.965, KH = 3.13, KL = 2.70, KR = 0.42, KZ = 1.465, GRAV = -9.8;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const back = k => { const c = 1.7; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
@@ -108,7 +108,7 @@
     move(e) { const d = this.drag; if (!d) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
       for (const ev of (evs.length ? evs : [e])) { const p = this.local(ev); d.pts.push({ x: p.x, y: p.y, t: performance.now() }); d.dx = p.x - d.x; d.dy = p.y - d.y; } if (d.pts.length > 80) d.pts.splice(1, d.pts.length - 80); }
     up(e) { const d = this.drag; if (d && e) { const p = this.local(e); d.dx = p.x - d.x; d.dy = p.y - d.y; } this.drag = null; if (!d || this.state !== 'ready') return;
-      if (!(d.dy < -40 && Math.hypot(d.dx, d.dy) > 50)) return; const p = hook('onSwipe'); if (p == null) return; this.shoot(d, p); }
+      if (!(d.dy < -40 && Math.hypot(d.dx, d.dy) > 50)) return; this.state = 'authorizing'; this.shoot(d).catch(error => { this.state = 'ready'; window.KingRicoCloud?.error(error); }); }
     // pose da goleira p/ cobrir o ponto (tx, ty) da linha do gol: inclina e desliza no trilho
     poseFor(tx, ty) { let th = clamp(tx * 0.25, -0.95, 0.95); const mx = Math.acos(clamp(ty / (KL + KR * 0.6), 0, 1)); th = Math.sign(th) * Math.min(Math.abs(th), mx);
       return { x: clamp(tx - ty * Math.tan(th), -GW + 0.4, GW - 0.4), th }; }
@@ -128,7 +128,7 @@
       // um movimento só, contínuo e mais lento: no instante em que a bola passa ela está em f do caminho
       const kk = f > 0.02 ? Math.acos(1 - 2 * f) / Math.PI : 0.05; this.moveKeeper(full, Math.min(1.6, tc / kk), 'smooth'); }
     moveKeeper(to, dur, ease) { this.kAnim = { t0: performance.now() / 1000, dur, ease, fx: this.kx, fth: this.kth, tx: to.x, tth: to.th }; }
-    shoot(d, p) {
+    async shoot(d) {
       const T = this.T, P = d.pts || [{ x: d.x, y: d.y, t: d.t }, { x: d.x + d.dx, y: d.y + d.dy, t: performance.now() }], last = P[P.length - 1], now = last.t; let k = P.length - 1; while (k > 0 && now - P[k - 1].t < 90) k--;
       const a0 = P[Math.max(0, Math.min(k, P.length - 2))], fx = last.x - a0.x, fy = last.y - a0.y, fl = Math.hypot(fx, fy);
       const L = Math.hypot(d.dx, d.dy), dirx = d.dx / L, diry = d.dy / L, sp = Math.min(fl / Math.max(16, now - a0.t), L / Math.max(60, now - (P.find(q => Math.hypot(q.x - d.x, q.y - d.y) > 10) || P[0]).t)); // as duas: o gesto todo E o final têm que ser rápidos
@@ -148,7 +148,13 @@
       // Progressão: a "zona da girafa" alarga e o mínimo de força sobe a cada pênalti. Nada escondido (sem penalidade por repetir canto etc.).
       const dk = clamp((hook('getStep') || 0) / 4, 0, 1), lerp = (a, b) => a + (b - a) * dk;
       const zone = lerp(0.3, 0.45), qPos = Math.abs(Tg.x - this.kx) / GW > zone || Tg.y > GH * lerp(0.86, 0.92) ? 1 : 0, qs = clamp((sp - lerp(0.25, 0.42)) / 0.15, 0, 1), q = qPos * qs;
-      this.quality = q; const lucky = Math.random() < p * q, side = Math.sign(Tg.x) || (Math.random() < 0.5 ? -1 : 1);
+      // Persist the skill-adjusted outcome before any animation. Only the
+      // committed result can advance the ladder or settle the shared wallet.
+      this.quality = q;
+      const decision = await hook('onSwipe', Math.round((inside ? q : 0) * 1000));
+      if (decision == null) { this.state = 'ready'; return; }
+      this.committedGoal = typeof decision === 'object' ? decision.goal : null;
+      const lucky = this.committedGoal ?? Math.random() < decision * q, side = Math.sign(Tg.x) || (Math.random() < 0.5 ? -1 : 1);
       // perto do aro sem sorte: alguns cm p/ fora → bate e espirra p/ fora (o jogador já mirou na trave)
       const toFrame = () => { if (GW - ax < GH - Tg.y || Tg.y < 1) Tg.x = side * (GW + PR * 0.4); else Tg.y = GH + PR * 0.5; };
       let kTarget;
@@ -168,7 +174,7 @@
     }
     flash(p, size, ring) { const T = this.T, s = new T.Sprite(new T.SpriteMaterial({ map: ring ? this.ringTex : this.fxTex, blending: T.AdditiveBlending, depthTest: false, transparent: true }));
       s.position.copy(p); s.renderOrder = 10; this.scene.add(s); this.fx.push({ s, t: 0, dur: ring ? 0.38 : 0.42, a: size * 0.25, b: size * (ring ? 1.4 : 1.2) }); }
-    finish(goal, delay) { if (this.done) return; this.done = true; setTimeout(() => { hook('onResult', goal); setTimeout(() => this.reset(), 900); }, delay); }
+    finish(goal, delay) { if (this.done) return; this.done = true; goal = this.committedGoal ?? goal; setTimeout(() => { hook('onResult', goal); setTimeout(() => this.reset(), 900); }, delay); }
     reset() { this.state = 'resetting'; this.pos.set(0, R, BZ); this.vel.set(0, 0, 0); this.ball.position.copy(this.pos); this.ball.scale.setScalar(0.01); this.bAppear = 0;
       clearTimeout(this._ld1); clearTimeout(this._ld2); this.moveKeeper({ x: 0, th: 0 }, 0.38); setTimeout(() => { this.swayT0 = null; this.state = 'ready'; }, 400); }
     collideSeg(a, b, rad, kind) { // esfera x segmento (trave/goleira)
