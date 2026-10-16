@@ -23,3 +23,11 @@ As regras validam identidade Google, propriedade, formato, sequência, valores e
 Decisões estéticas e referências: [fortune-bounce-feel.md](../guidelines/fortune-bounce-feel.md).
 
 Validação em 16/out/2026: 69 casos de código (10 arquivos), 15 testes reais de regras Firestore e suíte de navegador dos seis jogos aprovados. A prévia gráfica também confirmou setas do teclado, recebimento pelo valor mostrado e contagem estável de recursos em vinte reinícios.
+
+## Prévia visual
+
+| Antes | Depois |
+|---|---|
+| ![Protótipo anterior](media/bounce-before.png) | ![Placas e bola revisadas](media/bounce-after.png) |
+
+[Vídeo da prévia local](media/bounce-demo.webm), gravado no navegador com gestos automatizados para mostrar saltos, batidas e recebimento. Usa a carteira local de demonstração; as validações da carteira Google/Firestore foram executadas separadamente na suíte de integração.
