@@ -13,3 +13,7 @@ Resumo inegociável:
 5. Confirmar o asset correto com o usuário antes de gerar (ex.: Happeach certo = com braços e pés).
 6. Um objeto por vez; mostrar comparação lado a lado com o original antes de seguir.
 7. Registrar custo e resultado em `guidelines/asset-pipeline.md` → "Log".
+
+## Fortune Bounce: sensação e acabamento
+
+Antes de alterar movimento, câmera, luz ou som do Bounce, leia `guidelines/fortune-bounce-feel.md`. O contato deve causar a compressão da bola, a reação da placa, a luz e o som. Preserve a leitura da pista e o recebimento imediato pelo valor mostrado. Persistência e limites do Spark estão em `docs/BOUNCE.md`.

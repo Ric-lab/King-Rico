@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
 from login_ui import check_wallet_retry
 from penalty_browser import check_penalty
+from bounce_browser import check_bounce
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -423,4 +424,5 @@ with sync_playwright() as p:
                       'scratch_gift_credits_cloud_wallet':True,'fingo_home_card_and_local_physics':True,
                       'fingo_pending_roll_and_used_balls_survive_reload':True,'fingo_resumes_on_another_tab':True,
                       'fingo_payout_commits_once_and_shares_wallet':True}))
+    print(json.dumps(check_bounce(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)))
     browser.close()

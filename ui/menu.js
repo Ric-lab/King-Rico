@@ -101,3 +101,18 @@ function MenuPanel({open,onClose,onPaytable,screen,details,sfxLvl=2,vibLvl=2,onS
 }
 
 module.exports={MenuButton,MenuPanel};
+
+// The same exhausted-wallet prompt in every game. Daily gift and refill are separate.
+function RechargePanel({available=true,onLocalRecharge}) {
+  const cloud=window.KingRicoCloud;
+  const [player,setPlayer]=React.useState(cloud?.player),[busy,setBusy]=React.useState(false);
+  React.useEffect(()=>cloud?.watch(setPlayer),[cloud]);
+  if(!available||!cloud?.enabled||!player||player.balance>=1||player.neckRound||player.fingoRound||player.penaltyRound||player.bounceRound)return null;
+  return window.ReactDOM.createPortal(h('div',{className:'kr-menu-shade',style:{display:'grid',placeItems:'center'}},
+    h('section',{className:'kr-menu-dialog',role:'dialog','aria-modal':true,'aria-label':'Saldo esgotado',style:{position:'relative',left:'auto',top:'auto',transform:'none',padding:24,textAlign:'center'}},
+      h('h2',{style:{color:'#ffe2a3'}},'SALDO ESGOTADO'),h('p',null,'Recarregue 1.000 moedas virtuais para continuar.'),
+      h('button',{type:'button',disabled:busy,'aria-label':'Recarregar saldo',style:{font:'800 20px inherit',minHeight:52,padding:'12px 24px',borderRadius:18,border:'2px solid #ffd257',background:'linear-gradient(#51d77f,#168d48)',color:'#fff'},onClick:async()=>{
+        if(busy)return;setBusy(true);try{const r=await cloud.recharge();onLocalRecharge?.(r.player.balance);}catch(e){cloud.error(e);}finally{setBusy(false);}
+      }},busy?'RECARREGANDO…':'RECARREGAR'))),document.body);
+}
+module.exports.RechargePanel=RechargePanel;

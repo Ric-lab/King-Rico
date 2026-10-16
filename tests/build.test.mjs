@@ -10,6 +10,11 @@ test('production artifact serves every Home game and the Penalty renderer with l
   const home=await readFile('dist/Home.dc.html','utf8');
   const games=[...new Set([...home.matchAll(/href="(Fortune[^"#?]+\.dc\.html)/g)].map(m=>decodeURIComponent(m[1])))];
   assert.ok(games.includes('Fortune Penalty.dc.html'));
+  assert.ok(games.includes('Fortune Bounce.dc.html'));
+  const bounce=await readFile('dist/bounce3d.js','utf8');
+  assert.match(bounce,/import\('\.\/runtime\/three\.module\.js'\)/);
+  assert.doesNotMatch(bounce,/unpkg|https:/);
+  await access('dist/runtime/bounce-model.js');
   for(const game of games) {
     const html=await readFile(path.join('dist',game),'utf8');
     for(const script of ['firebase-config','client'])
