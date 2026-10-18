@@ -86,8 +86,8 @@ function rebuildLayout(next){
     }
     place(rounded(g.width+.22,.28,.16,.09,gold),0,1.25,-.39,group);
     const bg=place(rounded(g.width-.02,.18,.66,.12,dark),0,.53,-.48,group);
-    const text=label('×'+String(g.mult).replace('.',','),new THREE.Color(g.color).getStyle(),g.width*.78);text.scale.y=.47;text.material.depthTest=false;text.renderOrder=20;place(text,0,.95,-.28,group);
-    const name=label(g.name,'#efdbc0',g.width*.82);name.scale.y=.24;name.material.depthTest=false;name.renderOrder=20;place(name,0,1.66,-.44,group);name.material.opacity=.75;
+    const text=label('×'+String(g.mult).replace('.',','),new THREE.Color(g.color).getStyle(),g.width*.78);text.scale.y=1.1;text.material.depthTest=false;text.renderOrder=20;place(text,0,.95,-.28,group);
+    const name=label(g.name,'#efdbc0',g.width*.82);name.scale.y=.52;name.material.depthTest=false;name.renderOrder=20;place(name,0,1.66,-.44,group);name.material.opacity=.75;
     // Each target has its own pool of light, visible before the swipe.
     const halo=glow(g.color,g.width*1.6,g.x,.075,GOAL_Z-.15);scene.remove(halo);targetGroup.add(halo);halo.material.opacity=.18;
     targetMeshes.push({group,pad,inner,tint,halo,pulse:0,index});
