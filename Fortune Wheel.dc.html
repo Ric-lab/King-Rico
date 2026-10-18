@@ -15,17 +15,23 @@
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrChase { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrBlink { 0%, 100% { box-shadow: 0 0 0 3px #ffd257, 0 0 14px rgba(255,210,87,.8); } 50% { box-shadow: 0 0 0 3px #fff3c4, 0 0 26px rgba(255,230,140,1); } }
 </style>
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
-  <div style="position: absolute; inset: 0; background-image: url('assets/bleed/stage-bleed.webp'); background-size: cover; background-position: 50% 100%;"></div>
-  <div style="position: absolute; inset: 0; background: radial-gradient(60% 34% at 50% 34%, rgba(255,190,60,.2) 0%, rgba(42,10,74,0) 70%), linear-gradient(180deg, rgba(40,8,64,.8) 0%, rgba(40,8,64,.5) 45%, rgba(30,6,50,.85) 100%);"></div>
+  <div style="position: absolute; inset: 0; background-image: url('assets/wheel/stage-bg.webp'); background-size: cover; background-position: 50% 30%; filter: blur(5px); transform: scale(1.06);"></div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30,6,50,.35) 0%, rgba(30,6,50,0) 30%, rgba(30,6,50,0) 60%, rgba(30,6,50,.55) 100%);"></div>
 
   <div data-screen-label="Fortune Wheel" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
 
@@ -38,21 +44,32 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
 
     <!-- roleta -->
-    <div style="position: absolute; left: 56.5px; top: 70px; width: 340px; height: 340px;">
-      <div style="position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(160deg, #fff3c4 0%, #f0b41f 35%, #a8620a 70%, #f0b41f 100%); box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
+    <div style="position: absolute; left: 56.5px; top: 84px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
+      <div style="position: absolute; inset: -12px; border-radius: 50%; background: linear-gradient(160deg, #fff3c4 0%, #f0b41f 35%, #a8620a 70%, #f0b41f 100%); box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
+      <sc-for list="{{ bulbs }}" as="b" hint-placeholder-count="24">
+        <div style="position: absolute; left: 164px; top: 164px; width: 12px; height: 12px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #fff3c4 35%, #ffc93a 100%); box-shadow: 0 0 6px rgba(255,220,120,.9); opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
+      </sc-for>
       <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
         <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
           <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
-            <div style="position: absolute; left: -1px; top: -160px; width: 2px; height: 100px; transform: rotate(15deg); transform-origin: 50% 160px; background: rgba(255,236,170,.75);"></div>
-            <div style="position: absolute; left: -27px; top: -150px; width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));"></div>
-            <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; left: -27px; top: -150px; width: 54px; height: 54px; object-fit: contain; opacity: {{ sg.zeroOp }};">
+            <div style="position: absolute; left: -1px; top: -160px; width: 3px; height: 112px; transform: rotate(13.846deg); transform-origin: 50% 160px; background: linear-gradient(180deg, #fff3c4, #e0a020);"></div>
+            <div style="position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));"></div>
+            <img src="assets/girafa/head.webp" alt="Girafa" draggable="false" style="position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; object-fit: contain; opacity: {{ sg.zeroOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));">
+            <span style="position: absolute; left: -20px; top: -158px; width: 40px; display: flex; flex-direction: column; align-items: center; line-height: 1; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 11px; color: #fff; text-shadow: 0 2px 0 #147a36; opacity: {{ sg.fortOp }}; pointer-events: none;"><span style="height: 11.5px; animation: fwLetter 1.75s 0.00s ease-in-out infinite;">F</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.25s ease-in-out infinite;">O</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.50s ease-in-out infinite;">R</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.75s ease-in-out infinite;">T</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.00s ease-in-out infinite;">U</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.25s ease-in-out infinite;">N</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.50s ease-in-out infinite;">E</span></span>
           </div>
         </sc-for>
-        <div style="position: absolute; left: 70px; top: 70px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3d0a63 0%, #26043f 100%); box-shadow: 0 0 0 3px #f0b41f;"></div>
+        
       </div>
-      <div style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #fff6e6, #f3e0cc 70%, #d8b88f); box-shadow: 0 0 0 4px #f0b41f, 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
+      <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: rgba(26,4,44,.9); -webkit-mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px); mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px);"></div>
+      <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: #fffaf0; -webkit-mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px); mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px);"></div>
+      <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; --g: 0; --cap: 0; background: rgba(37,8,66,.6); -webkit-mask-image: radial-gradient(circle, transparent 56.5px, #000 57px, #000 67px, transparent 67.5px); mask-image: radial-gradient(circle, transparent 56.5px, #000 57px, #000 67px, transparent 67.5px);">
+        <div ref="{{ gaugeRef }}" style="position: absolute; inset: 0; background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: conic-gradient(#000 calc(var(--g) * 1turn), transparent 0); mask-image: conic-gradient(#000 calc(var(--g) * 1turn), transparent 0);"></div>
+          <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%);"></div>
+          <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%);"></div>
+      </div>
+      <div style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: {{ hubBg }}; transition: background .25s; box-shadow: 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
         <div style="position: absolute; inset: 8px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ hubPos }}; opacity: {{ hubIconOp }};"></div>
-        <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #6b2e05; opacity: {{ hubQOp }};">{{ hubChar }}</span><img src="assets/girafa/girafa.webp" alt="" draggable="false" style="position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; object-fit: contain; opacity: {{ hubGirOp }};">
+        <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: {{ hubFs }}; font-family: {{ hubFf }}; font-weight: 800; color: {{ hubCharC }}; opacity: {{ hubQOp }};">{{ hubChar }}</span><span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; color: #fff; opacity: {{ hubFortOp }}; pointer-events: none;"><sc-for list="{{ hubLetters }}" as="l" hint-placeholder-count="7"><span style="animation: {{ l.anim }}; text-shadow: 0 2px 0 #147a36;">{{ l.c }}</span></sc-for></span><img src="assets/girafa/head.webp" alt="" draggable="false" style="position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; object-fit: contain; opacity: {{ hubGirOp }};">
       </div>
       <div ref="{{ ptrRef }}" style="position: absolute; left: 154px; top: -30px; width: 32px; height: 50px; transform-origin: 16px 14px; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55));">
         <svg width="32" height="50" viewBox="0 0 32 50" style="position: absolute; left: 0; top: 0; overflow: visible;">
@@ -74,33 +91,35 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </sc-if>
     </div>
 
-    <!-- passo 2: girar -->
-    <div style="position: absolute; left: 24px; right: 24px; top: 418px; display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: {{ step2Op }};">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">2</span>
-        <span style="font-size: 22px; font-weight: 800; letter-spacing: .5px; color: #fff3c4; text-shadow: 0 2px 4px rgba(0,0,0,.6);">{{ step2Text }}</span>
-      </div>
-      <div style="width: 240px; height: 12px; border-radius: 99px; padding: 2px; background: #250842; box-shadow: inset 0 2px 4px rgba(0,0,0,.6), 0 0 0 2px #c8871a; opacity: {{ forceOp }};">
-        <div style="height: 100%; width: {{ forcePct }}; border-radius: 99px; background: linear-gradient(90deg, #ffe27a, #ff9f1c 60%, #e8401a); transition: {{ forceTrans }};"></div>
-      </div>
-    </div>
-
     <!-- passo 1: escolher -->
-    <div style="position: absolute; left: 18px; right: 18px; top: 492px; padding: 12px; border-radius: 20px; background: rgba(20,4,36,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.55), 0 10px 24px rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 8px;">
+    <div style="position: absolute; left: 18px; right: 18px; top: 508px; padding: 10px 12px; border-radius: 20px; background: rgba(20,4,36,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.55), 0 10px 24px rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 8px;">
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 2px; opacity: {{ step1Op }};">
         <div style="display: flex; align-items: center; gap: 10px;">
           <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">1</span>
-          <span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Escolha um símbolo</span>
+          <span style="font-size: 20px; font-weight: 800; color: #fff3c4; white-space: nowrap;">Escolha um desenho e gire</span>
         </div>
-        <span style="font-size: 20px; font-weight: 800; color: #ffd257;">paga x10</span>
+        
+        <div style="display: none;">
+        </div>
+        
       </div>
-      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
-        <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
-          <div onClick="{{ op.pick }}" role="button" aria-label="Apostar em {{ op.name }}" style="position: relative; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: {{ op.ring }}; animation: {{ op.anim }}; opacity: {{ op.op }}; cursor: pointer;" style-active="filter: brightness(.88);">
-            <div style="width: 46px; height: 46px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
-            <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; width: 46px; height: 46px; object-fit: contain; opacity: {{ op.zeroOp }};">
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px;">
+        <sc-for list="{{ redOpts }}" as="op" hint-placeholder-count="6">
+          <div onClick="{{ op.pick }}" role="button" aria-label="Apostar em {{ op.name }}" style="position: relative; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: {{ op.ring }}; animation: {{ op.anim }}; cursor: pointer;" style-active="filter: brightness(.88);">
+            <div style="width: 44px; height: 44px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
+            <img src="assets/girafa/head.webp" alt="" draggable="false" style="position: absolute; width: 44px; height: 44px; object-fit: contain; opacity: {{ op.zeroOp }};">
           </div>
         </sc-for>
+        <sc-for list="{{ creamOpts }}" as="op" hint-placeholder-count="6">
+          <div onClick="{{ op.pick }}" role="button" aria-label="Apostar em {{ op.name }}" style="position: relative; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: {{ op.ring }}; animation: {{ op.anim }}; cursor: pointer;" style-active="filter: brightness(.88);">
+            <div style="width: 44px; height: 44px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
+            <img src="assets/girafa/head.webp" alt="" draggable="false" style="position: absolute; width: 44px; height: 44px; object-fit: contain; opacity: {{ op.zeroOp }};">
+          </div>
+        </sc-for>
+        <div onClick="{{ fortPick }}" role="button" aria-label="Apostar no FORTUNE, paga 25 vezes" style="grid-column: 1 / -1; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(180deg, #4cc95a, #2fa83a 60%, #1f8a2e); box-shadow: {{ fortRing }}; animation: {{ fortAnim }}; cursor: pointer;" style-active="filter: brightness(.88);">
+          <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 22px; letter-spacing: 2px; color: #fff; text-shadow: 0 2px 0 #147a36;">FORTUNE</span>
+          <span style="font-size: 24px; font-weight: 800; color: #fff3c4; text-shadow: 0 2px 0 #147a36;">x25</span>
+        </div>
       </div>
     </div>
 
@@ -164,17 +183,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
         <div style="width: 420px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
           <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
-          <div style="font-size: 20px; font-weight: 800; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Escolha 1 dos 12 símbolos. Se a roda parar nele, você ganha</div>
-          <div style="font-size: 56px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 3px 0 #6b2e05;">x10</div>
-          <div style="display: grid; grid-template-columns: repeat(4, 80px); gap: 10px;">
-            <sc-for list="{{ opts }}" as="op" hint-placeholder-count="12">
-              <div style="position: relative; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ op.bg }}; box-shadow: inset 0 -3px 0 rgba(0,0,0,.3);">
-                <div style="width: 56px; height: 56px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ op.pos }}; opacity: {{ op.iconOp }};"></div>
-                <img src="assets/girafa/girafa.webp" alt="Girafa" draggable="false" style="position: absolute; width: 56px; height: 56px; object-fit: contain; opacity: {{ op.zeroOp }};">
-              </div>
-            </sc-for>
+          <div style="font-size: 20px; font-weight: 800; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Escolha um desenho. Quando a roda parar:</div>
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; border-radius: 8px; background: #e0321f; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="width: 26px; height: 26px; border-radius: 8px; background: #fbefd8; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Outro desenho da mesma cor</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x5</span></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-position-x: 81.8%;"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">O seu desenho</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x10</span></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; border-radius: 8px; background: #2fa83a; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Apostou no FORTUNE e deu</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x25</span></div>
           </div>
-          <div style="font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-align: center; text-wrap: pretty;">Todos os símbolos valem o mesmo, inclusive o 0. Quanto mais forte você arrasta, mais a roda gira.</div>
+          <div style="font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-align: center; text-wrap: pretty;">Quanto mais forte você arrasta, mais a roda gira.</div>
           <div style="padding: 10px 28px; border-radius: 999px; background: linear-gradient(180deg, #ffe27a, #f0a018); box-shadow: 0 4px 0 #8a4a05; font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #4a1a00;">FECHAR</div>
         </div>
       </div>
@@ -196,22 +211,27 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 <script type="text/x-dc" data-dc-script>
 // 12 casas, sem zero. Vermelho = ímpar, preto = par. Cor paga x1,9 (RTP 95%), número paga x10 (RTP 95,8%).
 // 12 casas: 11 símbolos do slot + a Girafa. Acertar a casa escolhida paga x10 (RTP 83,3%).
-const POCKETS = [[-1, 'Girafa'], [9, 'King Rico'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [6, 'Moeda'], [3, 'Nuvem'], [5, 'Cetro'], [0, 'Capa'], [11, 'Happeach']];
+// 13 casas: 0 = FORTUNE (verde, casa da banca), 1..12 alternam vermelho (ímpar) e creme (par) → 6 + 6; a girafa (cabeça) é uma das vermelhas
+const POCKETS = [[-2, 'Fortune'], [6, 'Moeda'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [-1, 'Girafa'], [9, 'King Rico'], [3, 'Nuvem'], [0, 'Capa'], [5, 'Cetro'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
-const N = POCKETS.length, SEG = 360 / N, PAY_COLOR = 1.9, PAY_NUM = 10, HIT_P = 0.095; // RTP = HIT_P × PAY_NUM = 95%
+// escolhe 1 desenho: deu ele = x10; deu outro da MESMA COR = x5; outra cor ou FORTUNE = perde. RTP 95% = 4% × 10 + 11% × 5
+const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 5, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.11, P_FORT = 0.95 / 25;
+const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
-const PBG = i => i === 0 ? '#1f9a4a' : i % 2 ? '#e8352b' : '#fff1d6';
+const PBG = i => i === 0 ? '#2fa83a' : i % 2 ? '#e0321f' : '#fbefd8';
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', WKEY = 'fortuneCircus.wheel.v2';
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const isRed = n => n % 2 === 1;
 const RED = '#c8261e', BLACK = '#1c1020';
 const WHEEL_BG = 'conic-gradient(' + ORDER.map(i => PBG(i) + ' ' + (i * SEG) + 'deg ' + ((i + 1) * SEG) + 'deg').join(', ') + ')';
-const SEGS = ORDER.map(i => ({ t: 'rotate(' + (i * SEG + SEG / 2) + 'deg)', pos: POS(i), zero: i === 0, iconOp: i === 0 ? 0 : 1, zeroOp: i === 0 ? 1 : 0 }));
+const SEGS = ORDER.map(i => ({ t: 'rotate(' + (i * SEG + SEG / 2) + 'deg)', pos: POS(i), iconOp: POCKETS[i][0] >= 0 ? 1 : 0, zeroOp: POCKETS[i][0] === -1 ? 1 : 0, fortOp: POCKETS[i][0] === -2 ? 1 : 0 }));
 const RING_ON = '0 0 0 4px #ffd257, 0 0 16px rgba(255,210,87,.85)', RING_OFF = 'inset 0 -3px 0 rgba(150,90,40,.25), 0 2px 0 rgba(0,0,0,.25)';
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null };
-  wheelRef = React.createRef(); ptrRef = React.createRef(); rot = 0;
+  wheelRef = React.createRef(); ptrRef = React.createRef(); gaugeRef = React.createRef(); rot = 0;
+  // conta-giros: carrega com a força do arraste e esvazia conforme a roda perde velocidade
+  setGauge(v) { const c = this.gaugeRef.current; if (!c) return; this._gv = v; const g = Math.max(0, Math.min(1, v)); c.style.setProperty('--g', String(g)); const p = c.parentNode; if (p) { p.style.setProperty('--g', String(g)); p.style.setProperty('--cap', g > 0.004 ? '1' : '0'); } }
   componentDidMount() {
     window.__fw = this;
     const cloud = window.KingRicoCloud;
@@ -260,7 +280,7 @@ class Component extends DCLogic {
     const a = this.angleAt(e); let da = a - d.last; if (da > 180) da -= 360; if (da < -180) da += 360; d.last = a;
     this.setRot(this.rot + da); const now = performance.now(); d.samples.push([now, this.rot]); while (d.samples.length > 2 && now - d.samples[0][0] > 90) d.samples.shift();
     const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; this.tick(0); this.kick(da > 0 ? -14 : 14); }
-    const s0 = d.samples[0]; this.setState({ force: Math.min(1, Math.abs((this.rot - s0[1]) / Math.max(16, now - s0[0])) / 1.6), forceSet: true });
+    const s0 = d.samples[0], fv = Math.min(1, Math.abs((this.rot - s0[1]) / Math.max(16, now - s0[0])) / 1.6); this.setGauge(Math.max(fv, (this._gv || 0) * 0.85)); this.setState({ force: fv, forceSet: true });
   };
   up = async () => {
     const d = this.drag; if (!d) return; this.drag = null;
@@ -282,11 +302,11 @@ class Component extends DCLogic {
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
     const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, t0 = performance.now();
     // RTP 95%: acerto paga x10, então a casa escolhida sai com chance 9,5% (as outras 11 dividem o resto igualmente)
-    const pv = this.state.pick.v, others = ORDER.filter(n => n !== pv), target = cloudResult ? cloudResult.outcome.target : Math.random() < HIT_P ? pv : others[Math.floor(Math.random() * others.length)];
+    const pk = this.state.pick, rr = Math.random(), pool = pk.v === 0 ? (rr < P_FORT ? [0] : ORDER.filter(n => n !== 0)) : rr < P_EXACT ? [pk.v] : rr < P_EXACT + P_COLOR ? ORDER.filter(n => n !== pk.v && COLOR_OF(n) === COLOR_OF(pk.v)) : ORDER.filter(n => COLOR_OF(n) !== COLOR_OF(pk.v)), target = cloudResult ? cloudResult.outcome.target : pool[Math.floor(Math.random() * pool.length)];
     const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
     this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
-      const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e);
+      const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e); this.setGauge(Math.max(force, 0.35) * Math.pow(1 - k, 2));
       const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; const sp = Math.pow(1 - k, 2); this.tick(sp); this.kick(dir > 0 ? -10 - sp * 10 : 10 + sp * 10); }
       if (k < 1) this._raf = requestAnimationFrame(step); else { this.buzz(28); this.finish(bet); }
     };
@@ -294,7 +314,7 @@ class Component extends DCLogic {
   };
   finish(bet) {
     const a = ((-this.rot % 360) + 360) % 360, n = ORDER[Math.floor(a / SEG) % N], p = this.state.pick;
-    const hit = p.v === n, m = hit ? PAY_NUM : 0;
+    const m = MULT(p, n), hit = m > 0;
     const where = 'Deu ' + POCKETS[n][1] + '.';
     if (m > 0) {
       const cloud = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin;
@@ -322,22 +342,24 @@ class Component extends DCLogic {
     const sel = q => p && p.t === q.t && p.v === q.v;
     return {
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
-      wheelRef: this.wheelRef, ptrRef: this.ptrRef, down: this.down, move: this.move, up: this.up,
+      wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,
       wheelBg: WHEEL_BG, segs: SEGS, glow: lit ? '34px' : '0px',
-      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-148px)', op: lit ? 1 : 0.35, anim: lit ? 'rrChase .5s ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
+      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit ? 1 : 0.88, anim: lit ? 'rrChase .5s ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
       showHint: !s.touched && !!p,
       forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
       forceLabel: !s.forceSet ? '' : s.force > 0.85 ? 'MÁXIMA' : s.force > 0.55 ? 'FORTE' : s.force > 0.2 ? 'BOA' : 'FRACA',
       pickRed: this.pickRed, pickBlack: this.pickBlack,
       redRing: sel({ t: 'c', v: 'red' }) ? RING_ON : RING_OFF, blackRing: sel({ t: 'c', v: 'black' }) ? RING_ON : RING_OFF,
       redAnim: sel({ t: 'c', v: 'red' }) && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none', blackAnim: sel({ t: 'c', v: 'black' }) && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none',
-      opts: [1, 2, 4, 6, 8, 10, 11, 9, 7, 5, 3, 0].map(n => { const on = sel({ t: 'n', v: n }); return { n, name: POCKETS[n][1], pos: POS(n), iconOp: n === 0 ? 0 : 1, zeroOp: n === 0 ? 1 : 0, pick: () => this.choose({ t: 'n', v: n }), bg: 'linear-gradient(180deg, #fff6e6, #f3e0cc)', ring: on ? RING_ON : s.landed === n ? '0 0 0 3px #fff' : RING_OFF, anim: on && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none', op: p && !on && !lit ? 0.5 : 1 }; }),
+      ...(() => { const mk = n => { const on = sel({ t: 'n', v: n }); return { n, name: POCKETS[n][1], pos: POS(n), iconOp: POCKETS[n][0] >= 0 ? 1 : 0, zeroOp: POCKETS[n][0] === -1 ? 1 : 0, pick: () => this.choose({ t: 'n', v: n }), bg: PBG(n), ring: on ? RING_ON : RING_OFF, anim: on && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none' }; };
+        const fo = sel({ t: 'n', v: 0 }); return { redOpts: [1, 3, 5, 7, 9, 11].map(mk), creamOpts: [2, 4, 6, 8, 10, 12].map(mk), fortPick: () => this.choose({ t: 'n', v: 0 }), fortRing: fo ? RING_ON : RING_OFF, fortAnim: fo && !lit ? 'rrBlink 1.2s ease-in-out infinite' : 'none' }; })(),
       betText: fmt(this.bet()), downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
-      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && p.v !== 0 ? 1 : 0, hubQOp: !p ? 1 : 0, hubChar: '?', hubGirOp: p && p.v === 0 ? 1 : 0,
+      hubBg: !p ? '#f0b41f' : COLOR_OF(p.v) === 'red' ? '#e0321f' : COLOR_OF(p.v) === 'cream' ? '#fbefd8' : '#2fa83a',
+      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && POCKETS[p.v][0] >= 0 ? 1 : 0, hubQOp: !p || p.v === 0 ? 1 : 0, hubChar: p && p.v === 0 ? '' : '?', hubFortOp: p && p.v === 0 ? 1 : 0, hubLetters: 'FORTUNE'.split('').map((c, i) => ({ c, anim: s.spinning ? 'fwLetter 1.05s ' + (i * 0.15).toFixed(2) + 's ease-in-out infinite' : 'none' })), hubFs: p && p.v === 0 ? '15px' : '44px', hubFf: p && p.v === 0 ? "'Rammetto One', 'Baloo 2', sans-serif" : 'inherit', hubCharC: p && p.v === 0 ? '#fff' : '#6b2e05', hubGirOp: p && POCKETS[p.v][0] === -1 ? 1 : 0,
       step1Op: p && !lit ? 0.7 : 1, step2Op: p ? 1 : 0.45, forceOp: s.forceSet ? 1 : 0.5,
       step2Text: !p ? 'Depois, arraste a roda' : s.hint,
       win: !!s.win, winText: s.win ? '+' + fmt(s.win.w) : '', winMult: s.win ? 'x' + fmt(s.win.m) + ' da aposta' : '', closeWin: this.closeWin

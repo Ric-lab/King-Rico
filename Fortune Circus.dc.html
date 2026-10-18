@@ -206,7 +206,7 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 341.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ homeBgPos }}; background-repeat: no-repeat; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; transform: translateX(-6px) scale(1.25);"></div>
-  <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+  <div onClick="{{ toggleMenu }}" onPointerDown="{{ pressMenu }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 391.833px; top: 29.5px; margin-top: {{ hudLift }}; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ menuBgPos }}; background-repeat: no-repeat; filter: {{ menuFilter }}; box-shadow: {{ menuShadow }}; transition: {{ menuTrans }}; transform: translateX(2px) scale(1.25);"></div>
 
 
   <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
@@ -283,13 +283,72 @@ a:hover { color: #fff3c4; }
   </sc-if>
 
   <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ recharge }}" role="button" aria-label="Recarregar moedas" style="position: absolute; left: 50%; top: 372px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer; animation: fcPop .35s ease-out;" style-active="transform: translateX(-50%) scale(.96);">
+    <div onClick="{{ recharge }}" role="button" style="position: absolute; left: 50%; top: 372px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer; animation: fcPop .35s ease-out;" style-active="transform: translateX(-50%) scale(.96);">
       <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">SALDO ESGOTADO</div>
       <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
     </div>
   </sc-if>
 
-  <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+  <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+    <div data-overlay="menu" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; background: rgba(10,2,20,.78); animation: fcFade .2s ease-out;">
+      <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+      <div style="position: absolute; left: 16px; top: 70px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+          <span style="font-size: 26px; font-weight: 800; color: #fff3c4; letter-spacing: .3px;">Menu</span>
+          <div onClick="{{ closeMenu }}" role="button" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 20px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);" style-active="transform: scale(.9);">✕</div>
+        </div>
+
+        <div style="padding: 14px 18px 4px; font-size: 14px; font-weight: 800; letter-spacing: 1.6px; color: #c9a3e6;">AJUSTES</div>
+
+        <div style="display: flex; flex-direction: column; padding: 0 18px;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.07);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+            <span style="flex: 1; font-size: 19px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 17px; background: rgba(255,255,255,.12);">
+              <div onClick="{{ sfx0 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ sfxC0 }}; background: {{ sfxB0 }}; transition: background .15s, color .15s;">OFF</div>
+              <div onClick="{{ sfx1 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ sfxC1 }}; background: {{ sfxB1 }}; transition: background .15s, color .15s;">50%</div>
+              <div onClick="{{ sfx2 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ sfxC2 }}; background: {{ sfxB2 }}; transition: background .15s, color .15s;">100%</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.07);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+            <span style="flex: 1; font-size: 19px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 17px; background: rgba(255,255,255,.12);">
+              <div onClick="{{ vib0 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ vibC0 }}; background: {{ vibB0 }}; transition: background .15s, color .15s;">OFF</div>
+              <div onClick="{{ vib1 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ vibC1 }}; background: {{ vibB1 }}; transition: background .15s, color .15s;">50%</div>
+              <div onClick="{{ vib2 }}" role="button" style="min-width: 46px; height: 34px; padding: 0 8px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; letter-spacing: .5px; color: {{ vibC2 }}; background: {{ vibB2 }}; transition: background .15s, color .15s;">100%</div>
+            </div>
+          </div>
+
+          <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 15px 0 16px; cursor: pointer;">
+            <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
+            <span style="flex: 1; font-size: 19px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
+            <span style="font-size: 26px; font-weight: 800; color: #ffd257;">›</span>
+          </div>
+        </div>
+
+        <div style="padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 7px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22);">
+          <span style="font-size: 19px; font-weight: 800; color: #fff3c4;">Seu progresso</span>
+          <span style="font-size: 15px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">{{ progressText }}</span>
+          <span style="font-size: 15px; font-weight: 800; line-height: 1.45; color: #f0dcff;">{{ cloudText }}</span>
+          <div style="display: flex; gap: 16px; padding-top: 4px;">
+            <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Privacidade</span>
+            <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Termos</span>
+            <span onClick="{{ soon }}" role="button" style="font-size: 15px; font-weight: 800; color: #ffd257; text-decoration: underline; cursor: pointer;">Suporte</span>
+          </div>
+        </div>
+
+          <sc-if value="{{ cloudEnabled }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,210,87,.22);">
+              <button data-cloud-signout style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Sair da conta</button>
+              <button data-cloud-analytics style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Dados de uso: {{ analyticsLabel }}</button>
+            </div>
+          </sc-if>
+      </div>
+    </div>
+  </sc-if>
 
   <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
     <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: rgba(12,2,24,.95); cursor: pointer; animation: fcFade .2s ease-out;">
@@ -513,9 +572,9 @@ class Component extends DCLogic {
       const l = document.createElement('label'); l.id = 'fc-ios-hap'; l.style.cssText = 'position:fixed;left:-99px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;';
       l.innerHTML = '<input type="checkbox" switch tabindex="-1" aria-hidden="true">'; document.body.appendChild(l); this._iosHap = l;
     } else this._iosHap = document.getElementById('fc-ios-hap');
-    let n = 0; const done = () => { if (++n >= 2) this.setState({ ready: true }); };
+    let n = 0; const done = () => { if (++n >= 2) this.goReady(); };
     [FC_ASSET('assets/stage-lit.webp'), FC_ASSET('assets/symbols-v7.webp')].forEach(src => { const im = new Image(); im.onload = done; im.onerror = done; im.src = src; });
-    this.later(() => this.setState({ ready: true }), 2500);
+    this.later(() => this.goReady(), 2500);
     const sv = this.loadSave();
     if (sv) this.setState({
       balance: typeof sv.balance === 'number' ? sv.balance : null,
@@ -574,9 +633,8 @@ class Component extends DCLogic {
   applyCloudPlayer() {
     const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
     const first = this._cloudUid !== window.KingRicoCloud.uid; this._cloudUid = window.KingRicoCloud.uid;
-    this.setState({ balance: p.balance, peaches: p.peaches,
-      sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, sound: p.settings.sfxLvl > 0, vibrate: p.settings.vibLvl > 0,
-      ...(first ? { betIdx: p.settings.slotBetIdx } : {}) });
+    this.setState({ balance: p.balance, peaches: p.peaches, ...(first ? { betIdx: p.settings.slotBetIdx,
+      sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, sound: p.settings.sfxLvl > 0, vibrate: p.settings.vibLvl > 0 } : {}) });
   }
   componentDidUpdate() {
     if (this._cloudDeferred && !this.cloudBusy()) this.applyCloudPlayer();
@@ -593,6 +651,16 @@ class Component extends DCLogic {
       setTimeout(load3d, 2500);
     }
   }
+  // primeira impressão: o relógio só começa quando o palco APARECE (ready); aceso até 2,1s, apaga até 2,6s
+  goReady() { if (this._introGo) return; this._introGo = true; this.setState({ ready: true }); if (!this.state.homeOpen) this.introLights(); }
+  // aceso ao aparecer na tela (abrir direto OU vindo da Home): 3s aceso, apaga suave até 5s
+  // lâmpadas desenhadas em código (topo, ao lado do King Rico): acesas na abertura e apagam junto, suave
+  introBulbs() { const L = this.buildLights(); if (!L) { this._ib = setTimeout(() => this.introBulbs(), 120); return; } const I = this._lightIdle, G = this._glowIdle;
+    L.forEach(b => { this.lightStop(b); b.dA = b.dim.animate([{ opacity: 0 }, { opacity: 0, offset: 0.6 }, { opacity: I }], { duration: 5000, easing: 'ease-in-out', fill: 'forwards' });
+      b.gA = b.glow.animate([{ opacity: .85 }, { opacity: .85, offset: 0.6 }, { opacity: G }], { duration: 5000, easing: 'ease-in-out', fill: 'forwards' }); });
+    this._lightsHeld = false; }
+  introLights() { clearTimeout(this._il1); clearTimeout(this._il2); clearTimeout(this._ib); this.introBulbs(); this.setState({ introLit: true, introFade: false });
+    this._il1 = setTimeout(() => this.setState({ introLit: false, introFade: true }), 3000); this._il2 = setTimeout(() => this.setState({ introFade: false }), 5100); }
   componentWillUnmount() {
     this._unwatchCloud && this._unwatchCloud();
     clearTimeout(this._flashT);
@@ -1724,12 +1792,9 @@ class Component extends DCLogic {
   recharge = async () => {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) {
-      if(this._recharging || this.cloudBusy()) return;
-      this._recharging=true;
-      try { const r = await cloud.recharge(); this.setState({ balance: cloud.player?.balance ?? r.player.balance,auto:false,
-        hint: r.reason==='neck-round' ? 'Termine sua rodada do Fortune Neck antes de recarregar.' : r.reason==='fingo-round' ? 'Termine sua rodada do Fortune Fingo antes de recarregar.' : r.reason==='penalty-round' ? 'Termine sua rodada do Fortune Pênalti antes de recarregar.' : r.replayed ? 'Recarga confirmada. Saldo atualizado.' : r.amount ? '+1.000 moedas — boa sorte!' : 'Seu saldo já está disponível.' }); }
+      try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance,
+        hint: r.amount ? 'Bônus diário recebido!' : 'Seu bônus de hoje já foi recebido' }); }
       catch (e) { cloud.error(e); }
-      finally {this._recharging=false;}
       return;
     }
     this.stopAll();
@@ -1774,7 +1839,7 @@ class Component extends DCLogic {
       this.save();
     });
   };
-  togglePays = () => { this.sfxClick(); this.setState(s => ({ pays: !s.pays, menu: !!s.pays })); };
+  togglePays = () => { this.sfxClick(); this.setState(s => ({ pays: !s.pays })); };
   toggleMenu = () => { this.sfxClick(); this.setState(s => ({ menu: !s.menu })); };
   closeMenu = () => { this.sfxClick(); this.setState({ menu: false }); };
   openPays = () => { this.sfxClick(); this.setState({ menu: false, pays: true }); };
@@ -1812,10 +1877,6 @@ class Component extends DCLogic {
       progressText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Saldo e progresso são salvos na sua conta. Uma jogada confirmada fica registrada mesmo se você fechar o jogo.' : 'Moedas, aposta e ajustes são salvos automaticamente neste aparelho.',
       cloudText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Google conectado · moedas virtuais, sem dinheiro real.' : 'Progresso salvo apenas neste aparelho.',
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
-      menuButton: {onClick:this.toggleMenu,onPointerDown:this.pressMenu,onPointerUp:this.pressUp,hidden:!!s.homeOpen,style:{marginTop:-(s.hudD || 0)+'px'}},
-      menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Circus',
-        details:'Gire os símbolos. Veja as combinações premiadas e as rodadas especiais na tabela de pagamentos.',
-        sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:this.setSfx,onVib:this.setVib},
       hint: s.hint, turbo: s.turbo, auto: s.auto, pays: s.pays, menu: s.menu,
       soundIcon: s.sound ? '♪' : '✕',
       sound: s.sound, soundOff: !s.sound, vibrate: s.vibrate, vibrateOff: !s.vibrate,
@@ -1848,7 +1909,7 @@ class Component extends DCLogic {
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
       payList: SYMBOLS.map((sy, i) => ({ i, sy })).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
-      ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin; return {
+      ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1,
         spinBgPos: busy ? '-48px -683px' : '-48px -685px',
@@ -1856,14 +1917,14 @@ class Component extends DCLogic {
         // pontos de luz no aro: em repouso correm devagar; no toque acendem juntos; girando correm rápido
         // moldura: parada = apagada; toque/giro/prêmio/rodada = acesa (acende rápido, apaga devagar)
         // posição da máscara: 0% = apagada inteira; 100% = acesa inteira; a transição varre de baixo (botão) para cima
-        frameOff: (s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '100%' : '0%',
-        turboDim: (s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
-        turboDimT: (s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
-        autoDim: (s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
-        autoDimT: (s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
-        frameOffT: (s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '-webkit-mask-position .2s cubic-bezier(.2,.7,.3,1), mask-position .2s cubic-bezier(.2,.7,.3,1)' : 'none',
+        frameOff: (intro || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '100%' : '0%',
+        turboDim: (intro || s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
+        turboDimT: iF ? 'opacity 2s ease-in-out' : (s.turbo || s.pressed === 'turbo' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
+        autoDim: (intro || s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? 0 : 1,
+        autoDimT: iF ? 'opacity 2s ease-in-out' : (s.auto || s.pressed === 'auto' || s.pressed === 'spin' || busy) ? 'opacity .12s ease-out' : 'none',
+        frameOffT: iF ? '-webkit-mask-position 2s ease-in-out, mask-position 2s ease-in-out' : (s.pressed === 'spin' || busy || s.showWin || s.barWin > 0) ? '-webkit-mask-position .2s cubic-bezier(.2,.7,.3,1), mask-position .2s cubic-bezier(.2,.7,.3,1)' : 'none',
         // luzes girando em volta do botão: sempre correndo; no toque acendem juntas; girando correm rápido
-        ...(() => { const run = busy || s.pressed === 'spin' || s.queued;
+        ...(() => { const run = intro || busy || s.pressed === 'spin' || s.queued;
           return { rimOffOp: run ? 0 : 1, glassOp: run ? 1 : 0, glassTrans: 'none', glassAnim: run ? 'fcGlass .9s linear infinite' : 'none' }; })(),
         glints: (() => { const on = s.pressed === 'spin' || s.queued, T = busy ? .9 : 2.4;
           return FC_SPIN_GLINTS.map(([x, y, r], i) => ({ x: x + 'px', y: y + 'px', rot: (r || 0) + 'deg',
@@ -1878,7 +1939,7 @@ class Component extends DCLogic {
         o[k + 'Shadow'] = on ? (glow ? 'none' : 'inset 0 2px 6px rgba(0,0,0,.32)') : 'none'; }); return o; })(),
       spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, incBet: this.incBet, decBet: this.decBet,
       goHome: () => { this.save(); if (this.state.auto) this.setState({ auto: false }); this.later(() => { this.setState({ homeOpen: true }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'home'}); }, 120); },
-      homeOpen: !!s.homeOpen, closeHome: () => { const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'circus'}); },
+      homeOpen: !!s.homeOpen, closeHome: () => { this.introLights(); const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'circus'}); },
       toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto, toggleSound: this.toggleSound, togglePays: this.togglePays,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu, openPays: this.openPays,
       toggleVibe: this.toggleVibe, soon: this.soon

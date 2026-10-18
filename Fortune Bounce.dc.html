@@ -17,6 +17,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes bnFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bnBeat { 0% { transform: scale(1); } 35% { transform: scale(1.14); } 100% { transform: scale(1); } }
 @keyframes bnHand { 0%, 100% { transform: translateX(-70px); } 50% { transform: translateX(70px); } }
+@keyframes bnPerf { 0% { transform: translateY(14px) scale(.7); opacity: 0; } 20% { transform: translateY(0) scale(1.12); opacity: 1; } 70% { transform: translateY(-6px) scale(1); opacity: 1; } 100% { transform: translateY(-18px) scale(.96); opacity: 0; } }
 @keyframes bnNo { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
 @keyframes bnShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(520%) skewX(-18deg); } }
 @keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
@@ -24,7 +25,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #0c0318;">
   <div ref="{{ stageRef }}" data-screen-label="Fortune Bounce" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
-    <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
+    <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js?v=84" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
 
     <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
@@ -35,25 +36,49 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
 
     <!-- multiplicador atual + garantido -->
+    <sc-if value="{{ perfShow }}" hint-placeholder-val="{{ false }}">
+      <div key="{{ perfKey }}" style="position: absolute; z-index: 10; left: 0; right: 0; top: 168px; display: flex; justify-content: center; pointer-events: none; animation: bnPerf .9s ease-out forwards;">
+        <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 26px; line-height: 1; color: #ffffff; text-shadow: 0 0 14px rgba(255,230,140,.95), 0 2px 0 #6b2e05; white-space: nowrap;">{{ perfText }}</span>
+      </div>
+    </sc-if>
     <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 96px; display: flex; justify-content: center; align-items: center; gap: 10px; pointer-events: none; opacity: {{ multOp }};">
       <div key="{{ multKey }}" style="height: 56px; padding: 0 22px; border-radius: 28px; display: flex; align-items: center; background: rgba(12,3,24,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.8), 0 0 18px rgba(255,190,60,.35); animation: bnBeat .35s ease-out;">
         <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 32px; line-height: 1; color: #ffe27a; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(255,200,80,.7);">{{ multText }}</span>
       </div>
       <sc-if value="{{ hasGuard }}" hint-placeholder-val="{{ false }}">
-        <div aria-label="Garantido {{ guardText }}" style="height: 40px; padding: 0 12px 0 5px; border-radius: 20px; display: flex; align-items: center; gap: 6px; background: linear-gradient(180deg, #fff1a8, #ffc93a 55%, #e8900f); box-shadow: 0 0 0 2px #6b2e05; animation: bnPop .4s ease-out;">
+        <div aria-label="Salvo {{ guardText }}" style="height: 40px; padding: 0 12px 0 5px; border-radius: 20px; display: flex; align-items: center; gap: 6px; background: linear-gradient(180deg, #fff1a8, #ffc93a 55%, #e8900f); box-shadow: 0 0 0 2px #6b2e05; animation: bnPop .4s ease-out;">
           <img src="assets/fingo/coin.webp" alt="" style="width: 30px; height: 30px;">
           <span style="font-size: 20px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums;">{{ guardText }}</span>
         </div>
       </sc-if>
+      <sc-if value="{{ showSaveLeft }}" hint-placeholder-val="{{ false }}">
+        <div aria-label="Faltam {{ saveLeft }} placas para salvar" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #6cf0b0, #1fae6e); box-shadow: 0 0 0 2px #0b5a38, 0 0 12px rgba(46,207,138,.6);">
+          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: #ffffff; font-variant-numeric: tabular-nums; text-shadow: 0 1px 0 #0b5a38;">{{ saveLeft }}</span>
+        </div>
+      </sc-if>
     </div>
+
+    <sc-if value="{{ showDragHand }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 640px; height: 70px; display: flex; justify-content: center; pointer-events: none;">
+        <div style="width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: 0 0 0 8px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.4); animation: bnHand 1.8s ease-in-out infinite;"></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ goldShow }}" hint-placeholder-val="{{ false }}">
+      <div key="{{ goldKey }}" style="position: absolute; z-index: 13; left: 0; right: 0; top: 300px; display: flex; justify-content: center; pointer-events: none; animation: bnPop .4s ease-out;">
+        <div style="height: 64px; padding: 0 24px 0 10px; border-radius: 32px; display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg, #fff1a8, #ffc93a 55%, #e8900f); box-shadow: 0 4px 0 #8a4a05, 0 0 0 2px #6b2e05, 0 0 30px rgba(255,210,87,.8);">
+          <img src="assets/fingo/coin.webp" alt="" style="width: 46px; height: 46px;">
+          <span style="font-size: 34px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums;">{{ goldText }}</span>
+        </div>
+      </div>
+    </sc-if>
 
     <!-- antes de começar: aposta + mão mostrando arrastar -->
     <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
       <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 640px; height: 70px; display: flex; justify-content: center; pointer-events: none;">
         <div style="width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: 0 0 0 8px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.4); animation: bnHand 1.8s ease-in-out infinite;"></div>
       </div>
-      <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 724px; display: flex; justify-content: center;">
-        <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="height: 56px; padding: 0 20px 0 8px; border-radius: 28px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(12,3,24,.85); box-shadow: inset 0 0 0 2px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.95);">
+      <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 724px; display: flex; justify-content: center; pointer-events: none;">
+        <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="pointer-events: auto; height: 56px; padding: 0 20px 0 8px; border-radius: 28px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(12,3,24,.85); box-shadow: inset 0 0 0 2px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.95);">
           <img src="assets/fingo/coin.webp" alt="" style="width: 40px; height: 40px;">
           <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
           <span style="font-size: 20px; line-height: 1; color: #ffd257;">✎</span>
@@ -63,8 +88,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <!-- PEGAR -->
     <sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; z-index: 12; left: 0; right: 0; top: 702px; height: 86px; display: flex; justify-content: center; animation: bnPop .3s ease-out;">
-        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" style="position: relative; overflow: hidden; width: 300px; height: 80px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; opacity: {{ collectOp }}; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 6px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6), 0 0 0 3px #6b2e05, 0 0 30px rgba(255,190,60,.5);" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #8a4a05, 0 0 0 3px #6b2e05;">
+      <div style="position: absolute; z-index: 12; left: 0; right: 0; top: 702px; height: 86px; display: flex; justify-content: center; pointer-events: none; animation: bnPop .3s ease-out;">
+        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" style="pointer-events: auto; position: relative; overflow: hidden; width: 300px; height: 80px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; opacity: {{ collectOp }}; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 6px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6), 0 0 0 3px #6b2e05, 0 0 30px rgba(255,190,60,.5);" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #8a4a05, 0 0 0 3px #6b2e05;">
           <img src="assets/fingo/coin.webp" alt="" style="width: 50px; height: 50px;">
           <span style="font-size: 42px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums;">{{ collectText }}</span>
           <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0)); animation: bnShine 2.4s ease-in-out infinite; pointer-events: none;"></div>
@@ -111,7 +136,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
               <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
               <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
             </div>
-            <div style="padding: 14px 0 10px; font-size: 18px; font-weight: 700; line-height: 1.35; color: #f6e8ff; text-wrap: pretty;">Arraste o dedo para os lados e a bola segue. Algumas placas andam de um lado para o outro: pule na hora certa! Cada placa soma +0,1 ao prêmio. Caiu, perde a aposta. Toque no botão dourado para pegar o prêmio. Placa dourada garante o valor.</div>
+            <div style="padding: 14px 0 10px; font-size: 18px; font-weight: 700; line-height: 1.35; color: #f6e8ff; text-wrap: pretty;">Arraste o dedo para os lados e a bola segue. Cada placa soma +0,05 ao prêmio. A cada 10 placas a placa verde SALVA o prêmio: se cair depois, você recebe o valor salvo. Placa dourada paga 3x a aposta na hora. Setas mostram as placas que andam.</div>
           </div>
         </div>
       </div>
@@ -140,12 +165,12 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 // Fortune Bounce — bola neon quica por placas; cada placa +0,1 no multiplicador (x1,1, x1,2, …, sem teto).
-// Só habilidade decide a queda. A sorte sorteia a dificuldade das placas à frente (visível); a rampa deixa quase impossível perto da 35ª.
+// Só habilidade decide a queda. A sorte sorteia a dificuldade das placas à frente (visível); rampa mais suave (máx. perto da 60ª); placas que andam só a partir da 13ª.
 // Placa dourada (1 em 40) garante o valor. Retorno depende do jogador (não é fixo): calibrar frequência de placas difíceis e rampa com testes.
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', BKEY = 'fortuneCircus.bounce.v1', NOTES = [523, 587, 659, 784, 880];
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-const multOf = n => Math.round((1 + 0.1 * n) * 10) / 10;
+const multOf = n => Math.round((1 + 0.05 * n) * 100) / 100, SAVE = 10, GOLD = 3;
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, n: 0, guard: 0, active: false, roundBet: 0, vw: 453, vh: 802 };
   stageRef = React.createRef();
@@ -153,23 +178,38 @@ class Component extends DCLogic {
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const b = JSON.parse(localStorage.getItem(BKEY)); if (b) this.setState({ betIdx: b.betIdx ?? 3 }); } catch (e) {}
-    window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st) => this.onLand(n, g, p, st), onStopped: () => this.collect(multOf(this.state.n), 'VOCÊ GANHOU!'), onFall: () => this.onFall() };
+    window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st, sv) => this.onLand(n, g, p, st, sv), onSteam: () => this.onSteam(), onDrag: () => this.setState({ dragged: true }), onFall: () => this.onFall() };
   }
   componentWillUnmount() { window.removeEventListener('resize', this._rs); clearTimeout(this._t); }
   save(bal) { const s = this.state; try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = bal ?? s.balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(BKEY, JSON.stringify({ betIdx: s.betIdx })); } catch (e) {} }
   ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   tone(f, d, type = 'triangle', g = 0.07, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
+  lv() { return [0, 0.35, 1][this.state.sfxLvl ?? 2]; }
+  bell(freq, dur, vol, when) { const L = this.lv(), ac = this.ac(); if (!L || !ac) return; const t = ac.currentTime + (when || 0), car = ac.createOscillator(), mod = ac.createOscillator(), mg = ac.createGain(), g = ac.createGain();
+    car.type = 'sine'; car.frequency.value = freq; mod.type = 'sine'; mod.frequency.value = freq * 2.74; mg.gain.setValueAtTime(freq * 1.5, t); mg.gain.exponentialRampToValueAtTime(freq * 0.04, t + dur * 0.55); mod.connect(mg); mg.connect(car.frequency);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * L, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); car.connect(g); g.connect(ac.destination); car.start(t); mod.start(t); car.stop(t + dur + 0.05); mod.stop(t + dur + 0.05); }
+  pluck(freq, vol, dur, when) { const L = this.lv(), ac = this.ac(); if (!L || !ac) return; const t = ac.currentTime + (when || 0), o = ac.createOscillator(), o2 = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = freq; o2.type = 'sine'; o2.frequency.value = freq * 2; const g2 = ac.createGain(); g2.gain.value = 0.28; f.type = 'lowpass'; f.frequency.setValueAtTime(freq * 6, t); f.frequency.exponentialRampToValueAtTime(freq * 1.6, t + dur * 0.7);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * L, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(f); o2.connect(g2); g2.connect(f); f.connect(g); g.connect(ac.destination); o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05); }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; try { navigator.vibrate && navigator.vibrate(L === 1 ? [].concat(p).map(x => Math.max(10, x >> 1)) : p); } catch (e) {} }
   busy() { const s = this.state; return s.win || s.menu || s.betOpen || s.paying; }
   onStart() { const s = this.state; if (this.busy() || s.active) return false; this.ac(); const bet = BETS[s.betIdx];
     if (s.balance < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); return false; }
     const bal = Math.round((s.balance - bet) * 100) / 100; this.setState({ balance: bal, active: true, roundBet: bet, n: 0, guard: 0, lost: false }, () => this.save(bal)); this.tone(440, 0.08, 'square', 0.05); return true; }
-  onLand(n, gold, perfect, streak) { const s = this.state, m = multOf(n), guard = !s.guard && gold ? m : s.guard; this.setState({ n, guard });
-    const f = NOTES[(n - 1) % 5] * Math.pow(2, Math.min(2, Math.floor((n - 1) / 5)) * 0.5); this.tone(f, 0.16, 'triangle', 0.07); this.buzz(gold ? [40, 30, 60] : perfect ? [12, 25, 12] : 15);
-    if (perfect) this.tone(f * 2 * Math.min(1.5, 1 + (streak - 1) * 0.06), 0.1, 'sine', 0.05);
-    if (gold && !s.guard) [880, 1175, 1568].forEach((q, i) => setTimeout(() => this.tone(q, 0.16, 'triangle', 0.08), i * 70)); }
-  onFall() { const s = this.state; if (!s.active) return; this.setState({ stopping: false });
-    if (s.guard) return this.collect(s.guard, 'GARANTIDO!');
+  onLand(n, gold, perfect, streak, save) { const s = this.state, bet = s.roundBet, guard = save ? multOf(n) : s.guard; this.setState({ n, guard, perf: perfect ? streak : 0, perfKey: perfect ? 'p' + n : s.perfKey });
+    // frase musical de 10 placas: 9 notas que sobem e criam expectativa (a 9ª é a sensível, pede resolução) + a verde RESOLVE na tônica.
+      // Cada frase muda de tom (I → IV → V → I), então a música avança junto com o jogo. Dourada = a nota da vez com oitava acima (brilho, mesmo instrumento).
+      const PH = [261.63, 293.66, 329.63, 392, 440, 392, 440, 493.88, 587.33], KEY = [1, 4 / 3, 3 / 2, 1][Math.floor((n - 1) / SAVE) % 4], pos = (n - 1) % SAVE, f = (pos < 9 ? PH[pos] : 523.25) * KEY * (KEY > 1.2 ? 0.75 : 1);
+      if (save) { this.pluck(f, 0.12, 0.9); this.pluck(f * 1.5, 0.055, 0.9, 0.04); this.pluck(f * 2, 0.04, 0.9, 0.08); }
+      else if (gold) { this.pluck(f, 0.1, 0.5); this.pluck(f * 2, 0.07, 0.55, 0.07); this.pluck(f * 3, 0.035, 0.5, 0.14); }
+      else this.pluck(f, 0.11, 0.45); this.buzz(gold || save ? [40, 30, 60] : perfect ? [12, 25, 12] : 15);
+    if (perfect) this.pluck(f * 2, 0.05, 0.35, 0.05);
+    
+    if (gold) { const w = Math.round(bet * GOLD * 100) / 100, bal = Math.round((this.state.balance + w) * 100) / 100; 
+      clearTimeout(this._gt); this.setState({ balance: bal, goldShow: true, goldKey: 'g' + n, goldText: '+' + fmt(w) }, () => this.save(bal)); this._gt = setTimeout(() => this.setState({ goldShow: false }), 1400); } }
+  onSteam() { this.tone(900, 0.5, 'sawtooth', 0.04, 120); this.buzz([30, 20, 60]); }
+  onFall() { const s = this.state; if (!s.active) return;
+    if (s.guard) return this.collect(s.guard, 'SALVO!');
     this.tone(220, 0.3, 'sine', 0.08, 150); setTimeout(() => this.tone(150, 0.4, 'sine', 0.08, 110), 260);
     this.setState({ active: false, lost: true }); this._t = setTimeout(() => { this.setState({ lost: false, n: 0, guard: 0 }); window.Bounce3D && window.Bounce3D.reset(); }, 700); }
   collectBtn = () => { const s = this.state; if (!s.active || s.n < 1 || s.win || s.stopping) return; this.tone(900, 0.05, 'square', 0.05); this.buzz(20); this.setState({ stopping: true }); window.Bounce3D && window.Bounce3D.stop(); };
@@ -201,10 +241,10 @@ class Component extends DCLogic {
     return {
       scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       goHome: this.goHome, openMenu: this.openMenu, closeMenu: this.closeMenu, menu: !!s.menu,
-      multText: 'x' + fmt(m), multOp: s.n ? 1 : 0.45, multKey: 'm' + s.n, hasGuard: !!s.guard, guardText: fmt(s.roundBet * s.guard),
+      perfShow: s.perf > 0 && s.active, perfKey: s.perfKey || 'p0', perfText: s.perf > 1 ? 'PERFEITO ×' + s.perf : 'PERFEITO!', multText: 'x' + fmt(m), multOp: s.n ? 1 : 0.45, multKey: 'm' + s.n, hasGuard: !!s.guard, guardText: fmt(s.roundBet * s.guard),
       idle: !s.active && !s.win && !s.paying && !s.lost, betText: fmt(BETS[s.betIdx]), betAnim: s.noMoney ? 'bnNo .6s ease-in-out' : 'none', openBet: this.openBet,
       betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
-      showCollect: s.active && s.n >= 1, collectOp: s.stopping ? 0.6 : 1, collectText: fmt(s.roundBet * m), collectBtn: this.collectBtn, lost: !!s.lost,
+      showCollect: false, showSaveLeft: s.active, saveLeft: String(SAVE - (s.n % SAVE)), showDragHand: s.active && !s.dragged && s.n < 3, goldShow: !!s.goldShow, goldKey: s.goldKey || 'g0', goldText: s.goldText || '', collectOp: s.stopping ? 0.6 : 1, collectText: fmt(s.roundBet * m), collectBtn: this.collectBtn, lost: !!s.lost,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin,
       broke: this.rcBroke(), recharge: this.recharge
