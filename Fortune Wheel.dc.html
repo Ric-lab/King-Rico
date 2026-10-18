@@ -44,7 +44,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
 
     <!-- roleta -->
-    <div style="position: absolute; left: 56.5px; top: 84px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
+    <div style="position: absolute; left: 56.5px; top: 104px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
       <div style="position: absolute; inset: -12px; border-radius: 50%; background: linear-gradient(160deg, #fff3c4 0%, #f0b41f 35%, #a8620a 70%, #f0b41f 100%); box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
       <sc-for list="{{ bulbs }}" as="b" hint-placeholder-count="24">
         <div style="position: absolute; left: 164px; top: 164px; width: 12px; height: 12px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #fff3c4 35%, #ffc93a 100%); box-shadow: 0 0 6px rgba(255,220,120,.9); opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
@@ -124,13 +124,15 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </div>
 
     <!-- aposta -->
-<div style="position: absolute; left: 0; right: 0; top: 736px; display: flex; align-items: center; justify-content: center; gap: 14px;">
+<div style="position: absolute; left: 0; right: 0; top: 736px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+<div onClick="{{ toggleTurbo }}" role="button" aria-label="Girar mais rápido" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; font-weight: 800; line-height: 1; color: #fff3c4; background: {{ turboBg }}; box-shadow: 0 0 0 2px #f0b41f, 0 4px 0 #4a1a00;" style-active="transform: translateY(3px); box-shadow: 0 0 0 2px #f0b41f, 0 1px 0 #4a1a00;">»</div>
       <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 5px 0 #4a1a00; font-size: 34px; font-weight: 800; line-height: 1; color: #6b2e05; cursor: pointer; opacity: {{ downOp }};" style-active="transform: translateY(3px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">−</div>
-      <div style="width: 180px; height: 58px; border-radius: 29px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a0a4a; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a;">
+      <div style="width: 150px; height: 58px; border-radius: 29px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a0a4a; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a;">
         <span style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; line-height: 1; color: #d9b6f0;">APOSTA</span>
         <span style="font-size: 30px; font-weight: 800; line-height: 1.05; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
       </div>
       <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 5px 0 #4a1a00; font-size: 34px; font-weight: 800; line-height: 1; color: #6b2e05; cursor: pointer; opacity: {{ upOp }};" style-active="transform: translateY(3px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">+</div>
+      <div onClick="{{ toggleAuto }}" role="button" aria-label="Girar automático" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; font-weight: 800; line-height: 1; color: #fff3c4; background: {{ autoBg }}; box-shadow: 0 0 0 2px #f0b41f, 0 4px 0 #4a1a00;" style-active="transform: translateY(3px); box-shadow: 0 0 0 2px #f0b41f, 0 1px 0 #4a1a00;">↻</div>
     </div>
 
     <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
@@ -215,7 +217,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 const POCKETS = [[-2, 'Fortune'], [6, 'Moeda'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [-1, 'Girafa'], [9, 'King Rico'], [3, 'Nuvem'], [0, 'Capa'], [5, 'Cetro'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
 // escolhe 1 desenho: deu ele = x10; deu outro da MESMA COR = x5; outra cor ou FORTUNE = perde. RTP 95% = 4% × 10 + 11% × 5
-const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 5, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.11, P_FORT = 0.95 / 25;
+const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 5, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.143, P_FORT = 0.95 / 25;
 const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#2fa83a' : i % 2 ? '#e0321f' : '#fbefd8';
@@ -300,7 +302,7 @@ class Component extends DCLogic {
     }
     const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
-    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = 3000 + force * 2800, start = this.rot, t0 = performance.now();
+    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = (3000 + force * 2800) * (this.state.turbo ? 0.5 : 1), start = this.rot, t0 = performance.now();
     // RTP 95%: acerto paga x10, então a casa escolhida sai com chance 9,5% (as outras 11 dividem o resto igualmente)
     const pk = this.state.pick, rr = Math.random(), pool = pk.v === 0 ? (rr < P_FORT ? [0] : ORDER.filter(n => n !== 0)) : rr < P_EXACT ? [pk.v] : rr < P_EXACT + P_COLOR ? ORDER.filter(n => n !== pk.v && COLOR_OF(n) === COLOR_OF(pk.v)) : ORDER.filter(n => COLOR_OF(n) !== COLOR_OF(pk.v)), target = cloudResult ? cloudResult.outcome.target : pool[Math.floor(Math.random() * pool.length)];
     const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
@@ -336,11 +338,15 @@ class Component extends DCLogic {
   recharge = async () => { const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
     this.setState({ balance: 1000 }, () => this.save(1000)); };
+  toggleTurbo = () => { this.setState(s => ({ turbo: !s.turbo })); };
+  toggleAuto = () => { this.setState(s => ({ auto: !s.auto }), () => { if (this.state.auto && !this.state.spinning) this.autoSpin(); }); };
+  autoSpin() { clearTimeout(this._at); if (!this.state.auto) return; if (this.state.spinning || this.state.win) { this._at = setTimeout(() => this.autoSpin(), 600); return; } if (this.release) { this.release(0.7); } this._at = setTimeout(() => this.autoSpin(), 900); }
   renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
   _rv() {
     const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
     const sel = q => p && p.t === q.t && p.v === q.v;
-    return {
+    const _tb = { turboBg: this.state.turbo ? "#2ec962" : "#2a0a4a", autoBg: this.state.auto ? "#2ec962" : "#2a0a4a", toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto };
+    return { ..._tb,
       scale: Math.min(s.vw / 453, s.vh / 802), balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,
       wheelBg: WHEEL_BG, segs: SEGS, glow: lit ? '34px' : '0px',
