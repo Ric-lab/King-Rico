@@ -6,11 +6,11 @@ ROOT=Path(__file__).resolve().parents[2]
 (ROOT/'work/fortune-impulso').mkdir(parents=True,exist_ok=True)
 URL=os.environ.get('IMPULSO_URL','http://127.0.0.1:5097')
 NODE=os.environ.get('IMPULSO_NODE','node')
-KEY='king-rico-impulso-demo-v1'
+KEY='king-rico-impulso-demo-v2'
 def find_shot(seed,stage,kind='hit',index=None):
     script='''import {makeLayout,simulateShot,velocityFromGesture} from './prototypes/fortune-impulso/physics.mjs';
 const [seed,stage,kind,index]=JSON.parse(process.argv[1]);let best;
-for(let dx=-120;dx<=120;dx++){const r=simulateShot(makeLayout(seed,stage),velocityFromGesture(dx,-140));if(r.kind===kind&&(index===null||r.index===index)&&(!best||r.duration<best.result.duration))best={dx,dy:-140,result:r};}console.log(JSON.stringify(best));'''
+for(let dx=-80;dx<=80;dx+=2)for(let dy=-55;dy>=-165;dy-=2){const r=simulateShot(makeLayout(seed,stage),velocityFromGesture(dx,dy));if(r.kind===kind&&(index===null||r.index===index)&&(!best||r.distance<best.result.distance))best={dx,dy,result:r};}console.log(JSON.stringify(best));'''
     return json.loads(subprocess.check_output([NODE,'--input-type=module','-e',script,json.dumps([seed,stage,kind,index])],cwd=ROOT))
 
 with sync_playwright() as w:
@@ -20,7 +20,7 @@ with sync_playwright() as w:
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('response',lambda r:failed.append([r.status,r.url]) if r.status>=400 else None)
     page.goto(URL,wait_until='networkidle');page.wait_for_function('window.impulso');page.evaluate('document.fonts.ready')
-    page.screenshot(path=str(ROOT/'work/fortune-impulso/mobile.png'))
+    page.screenshot(path=str(ROOT/'work/fortune-impulso/v2-mobile.png'))
     snapshot=lambda:page.evaluate('impulso.snapshot()')
     def swiping(shot,cancel=False):
         box=page.locator('canvas').bounding_box();scale=box['width']/390
@@ -44,7 +44,8 @@ with sync_playwright() as w:
             page.reload(wait_until='domcontentloaded');page.wait_for_function('window.impulso')
         page.wait_for_function("['choice','paid'].includes(impulso.snapshot().state.round.status)",timeout=45000)
         s=snapshot()['state'];assert s['round']['stage']==stage+1
-        print(f'PASS alvo {stage}, lance {stage+1}, {s["round"]["amount"]} moedas',flush=True)
+        print(f'PASS zona {stage}, lance {stage+1}, {s["round"]["amount"]} moedas',flush=True)
+        if stage==2:page.screenshot(path=str(ROOT/'work/fortune-impulso/v2-three-hits.png'))
         if stage<2:
             before=s['round']['amount'];page.locator('#risk').click()
             assert snapshot()['state']['round']['amount']==before
@@ -70,10 +71,17 @@ with sync_playwright() as w:
         assert page.locator('#play').is_visible();assert page.locator('#play').bounding_box()['y']<height
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
         if width==360:
-            top=page.evaluate('impulso.project(0,-5.35)');bottom=page.evaluate('impulso.project(0,5.6)');box=page.locator('canvas').bounding_box()
+            top=page.evaluate('impulso.project(0,-3.2)');bottom=page.evaluate('impulso.project(0,4.2)');box=page.locator('canvas').bounding_box()
             assert top['y']>box['y'] and bottom['y']<box['y']+box['height'],(top,bottom,box)
-        page.screenshot(path=str(ROOT/f'work/fortune-impulso/{name}.png'))
+        page.screenshot(path=str(ROOT/f'work/fortune-impulso/v2-{name}.png'))
         print(f'PASS enquadramento {width}x{height}',flush=True)
+    page.set_viewport_size({'width':390,'height':844});before=snapshot()['state']['balance'];page.locator('#practice').click()
+    assert snapshot()['state']['balance']==before
+    s=snapshot()['state'];swiping(find_shot(s['round']['seed'],0,index=2))
+    page.wait_for_function("impulso.snapshot().state.round.status==='paid'",timeout=45000)
+    assert snapshot()['state']['balance']==before
+    assert snapshot()['state']['round']['training']
+    print('PASS ensaio sem aposta, sem débito e sem prêmio em moedas',flush=True)
     assert errors==[],errors;assert failed==[],failed
     print('PASS sem erros JavaScript ou arquivos quebrados',flush=True)
     browser.close()

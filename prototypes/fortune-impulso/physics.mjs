@@ -1,53 +1,36 @@
-// Deterministic, fixed-step physics. Randomness is confined to the visible setup.
-export const DT=1/120, BALL_RADIUS=.3, START={x:0,z:4.6}, WALL=4.15, GOAL_Z=-5.35;
+// Setup varies before input. Flight and score are deterministic.
+export const DT=1/120, BALL_RADIUS=.4, START={x:0,y:.68,z:4.2};
+export const GRAVITY=15, LIFT=6.6, FLIGHT_TIME=2*LIFT/GRAVITY;
 export function random(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 export function makeLayout(seed,stage=0){
-  const rng=random((seed+stage*49157)>>>0),shift=(rng()-.5)*.3,shrink=1-stage*.1;
-  return {stage,goals:[{x:-2.6+shift,width:2.45*shrink,mult:1.25,color:0x77d4a4,name:'LIVRE'},
-    {x:.15+shift,width:1.85*shrink,mult:1.8,color:0xffcf68,name:'PRECISÃO'},
-    {x:2.8+shift,width:1.2*shrink,mult:3,color:0xf28c9a,name:'FORTUNE'}],
-    bumpers:[{x:(rng()-.5)*.7,z:-.7,r:.5},{x:-2.8+(rng()-.5)*.45,z:-2.7,r:.4},
-      ...(stage>0?[{x:2.2+(rng()-.5)*.5,z:-3,r:.4}]:[])]};
+  const rng=random((seed+stage*49157)>>>0),radius=[1.9,1.65,1.42][stage];
+  const target={x:stage?(rng()>.5?1:-1)*(1.2+rng()*.65):(rng()-.5)*.6,z:-2.1-stage*.4,radius};
+  return{stage,target,goals:[{radius,mult:1.2,color:0xb574bd,name:'ACERTO'},{radius:radius*.65,mult:1.8,color:0xf4cab7,name:'PRECISÃO'},{radius:radius*.29,mult:3,color:0xffcf67,name:'PERFEITO'}]};
 }
 export function velocityFromGesture(dx,dy,reference=390){
-  const scale=390/reference, nx=dx*scale,ny=dy*scale;
-  if(ny>-19||Math.hypot(nx,ny)<26)return null;
-  // A substantial minimum keeps ordinary thumb swipes useful; length adds impulse.
-  const angle=Math.max(-1.12,Math.min(1.12,Math.atan2(nx,-ny)));
-  const speed=9.5+Math.min(1,Math.hypot(nx,ny)/160)*6;
-  return{vx:Math.sin(angle)*speed,vz:-Math.cos(angle)*speed,power:Math.min(1,Math.hypot(nx,ny)/160)};
+  const nx=dx*390/reference,ny=dy*390/reference;
+  if(ny>-22||Math.hypot(nx,ny)<26)return null;
+  return{vx:Math.max(-9,Math.min(9,nx*.065)),vz:Math.max(-14.8,ny*.074),vy:LIFT,power:Math.min(1,-ny/180)};
 }
-export function createBall(v){return{x:START.x,z:START.z,vx:v.vx,vz:v.vz,t:0,hits:0,done:false};}
+export function simulateShot(layout,v){
+  const x=START.x+v.vx*FLIGHT_TIME,z=START.z+v.vz*FLIGHT_TIME;
+  const dx=x-layout.target.x,dz=z-layout.target.z,distance=Math.hypot(dx,dz);
+  const index=distance<=layout.goals[2].radius?2:distance<=layout.goals[1].radius?1:distance<=layout.target.radius?0:-1;
+  const points=Math.max(0,Math.round(100*(1-distance/layout.target.radius)));
+  const hint=Math.abs(dz)>Math.abs(dx)?(dz>0?'Faltou um pouco de força.':'Um pouco menos de força.'):(dx>0?'Mire um pouco mais à esquerda.':'Mire um pouco mais à direita.');
+  return{kind:index<0?'miss':'hit',index,mult:index<0?0:layout.goals[index].mult,quality:index===2?'PERFEITO':index===1?'NA MOSCA':'ACERTOU',points,x,z,dx,dz,distance,duration:FLIGHT_TIME,hint};
+}
+export function createBall(v){return{...START,vx:v.vx,vz:v.vz,vy:v.vy,t:0,done:false};}
 export function stepBall(ball,layout,dt=DT){
-  if(ball.done)return[];const events=[];ball.t+=dt;
-  ball.vx*=Math.exp(-.2*dt);ball.vz*=Math.exp(-.2*dt);ball.x+=ball.vx*dt;ball.z+=ball.vz*dt;
-  if(Math.abs(ball.x)>WALL-BALL_RADIUS){ball.x=Math.sign(ball.x)*(WALL-BALL_RADIUS);ball.vx=-ball.vx*.94;ball.hits++;events.push({kind:'wall',x:ball.x,z:ball.z});}
-  for(let i=0;i<layout.bumpers.length;i++){
-    const p=layout.bumpers[i],dx=ball.x-p.x,dz=ball.z-p.z,d=Math.hypot(dx,dz),r=p.r+BALL_RADIUS;
-    if(d<r){const nx=dx/(d||1),nz=dz/(d||1),dot=ball.vx*nx+ball.vz*nz;ball.x=p.x+nx*r;ball.z=p.z+nz*r;
-      if(dot<0){ball.vx-=1.93*dot*nx;ball.vz-=1.93*dot*nz;ball.hits++;events.push({kind:'bumper',index:i,x:ball.x,z:ball.z});}}
-  }
-  if(ball.z<=GOAL_Z){
-    const index=layout.goals.findIndex(g=>Math.abs(ball.x-g.x)<g.width/2-BALL_RADIUS*.45);
-    if(index>=0){ball.done=true;ball.result={kind:'hit',index,mult:layout.goals[index].mult,x:ball.x,z:GOAL_Z};events.push(ball.result);}
-    else {ball.z=GOAL_Z;ball.vz=Math.abs(ball.vz)*.88;ball.hits++;events.push({kind:'wall',x:ball.x,z:ball.z});}
-  }
-  if(!ball.done&&(ball.z>5.65||ball.t>7||Math.hypot(ball.vx,ball.vz)<.55)){
-    ball.done=true;ball.result={kind:'miss',reason:ball.z>5.65?'return':'stopped',x:ball.x,z:ball.z};events.push(ball.result);
-  }
-  return events;
+  if(ball.done)return[];
+  ball.t=Math.min(FLIGHT_TIME,ball.t+dt);ball.x=START.x+ball.vx*ball.t;ball.z=START.z+ball.vz*ball.t;
+  ball.y=START.y+ball.vy*ball.t-.5*GRAVITY*ball.t*ball.t;
+  if(ball.t>=FLIGHT_TIME){ball.done=true;ball.result=simulateShot(layout,ball);return[ball.result];}return[];
 }
-export function simulateShot(layout,velocity){const b=createBall(velocity);while(!b.done)stepBall(b,layout);return{...b.result,duration:b.t,hits:b.hits};}
 export function applyOutcome(state){
-  const r=state.round;if(r?.status!=='flight')return state;
-  const s=structuredClone(state),round=s.round;
-  if(round.outcome.kind==='hit'){
-    round.amount=Math.floor(round.amount*round.outcome.mult);round.stage++;
-    if(round.stage===3){s.balance+=round.amount;round.status='paid';}else round.status='choice';
-  }else round.status='lost';
-  return s;
+  if(state.round?.status!=='flight')return state;
+  const s=structuredClone(state),r=s.round;s.best=Math.max(s.best||0,r.outcome.points||0);
+  if(r.training){s.practiceLast={seed:r.seed,...r.outcome};r.amount=r.outcome.points;r.stage=1;r.status=r.outcome.kind==='hit'?'paid':'lost';return s;}
+  if(r.outcome.kind==='hit'){r.amount=Math.floor(r.amount*r.outcome.mult);r.stage++;if(r.stage===3){s.balance+=r.amount;r.status='paid';}else r.status='choice';}else r.status='lost';return s;
 }
-export function collect(state){
-  if(state.round?.status!=='choice')return state;
-  const s=structuredClone(state);s.balance+=s.round.amount;s.round.status='paid';return s;
-}
+export function collect(state){if(state.round?.status!=='choice')return state;const s=structuredClone(state);s.balance+=s.round.amount;s.round.status='paid';return s;}

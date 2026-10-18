@@ -8,6 +8,7 @@ await mkdir(path.join(out,'assets'),{recursive:true});
 for(const file of ['index.html','style.css'])await copyFile(path.join(source,file),path.join(out,file));
 for(const font of ['baloo2-latin.woff2','rammettoone-latin.woff2'])await copyFile(path.join(root,'assets/fonts',font),path.join(out,'assets',font));
 await copyFile(path.join(root,'assets/icons/btn-menu.png'),path.join(out,'assets/menu.png'));
+await copyFile(path.join(root,'assets/brand/bg-circus-stage.webp'),path.join(out,'assets/circus-stage.webp'));
 await build({entryPoints:[path.join(source,'game.js')],outfile:path.join(out,'game.js'),bundle:true,format:'esm',target:'es2022',minify:true,legalComments:'external'});
 await copyFile(path.join(root,'node_modules/three/LICENSE'),path.join(out,'assets/three.LICENSE'));
 console.log('Fortune Impulso: '+out);

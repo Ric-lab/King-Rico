@@ -1,23 +1,25 @@
-# Fortune Impulso
+# Fortune Impulso 02
 
-Protótipo de jogo solo criado sobre `main` em `aedf88d`. Não altera os seis jogos, a Home, o login, as regras Firestore ou o workflow de publicação.
+Jogo solo de precisão, desenvolvido sobre `main` em `aedf88d` e revisado a partir do feedback da primeira versão. Não altera os seis jogos oficiais, Home, login, Firestore ou workflow Firebase.
 
-Uma bola, três portais visíveis, até três lançamentos. Um swipe controla direção e força. Portais estreitos pagam mais; depois de acertar, é possível receber ou arriscar o valor acumulado. O terceiro acerto recebe automaticamente. Um erro perde a aposta da rodada. Os valores de prêmio incluem o valor apostado. A distribuição econômica ainda é experimental.
+Um gesto lança uma bola em arco até uma plataforma circular. A posição de queda define a recompensa: borda ×1,2, anel intermediário ×1,8, centro ×3. Depois de acertar, é possível receber ou arriscar o valor no próximo salto. O terceiro acerto recebe automaticamente; cair fora perde o valor da rodada. Os prêmios incluem a aposta. A economia é experimental.
 
-O cenário é gerado antes de cada lançamento. Movimento e colisões usam passo fixo de 1/120 s, sem sorteio durante o movimento. A mira mostra só o começo da trajetória. Os pinos comprimem, os portais afundam e a energia percorre as lâmpadas a partir do gesto/impacto. Som sintetizado e menu oficial compartilhado do projeto.
+O alvo varia antes de cada salto, sem desvios ou sorteios após o gesto. A animação e o prêmio usam a mesma trajetória balística. O ensaio gratuito repete a plataforma inicial, mede precisão e não movimenta moedas. Há dicas de direção/força, compressão do alvo e da bola, pequeno rebote, efeitos de impacto e som sintetizado. O menu é o componente oficial do projeto.
+
+Leia [REFERENCIAS.md](REFERENCIAS.md) para as fontes, decisões de design e perguntas de teste humano.
 
 ## Executar
 
-Com as dependências do projeto instaladas e Node 22:
+Com as dependências instaladas e Node 22:
 
 ```
-node --test prototypes/fortune-impulso/physics.test.mjs
+node prototypes/fortune-impulso/physics.test.mjs
 node scripts/build-impulso.mjs
 python -m http.server 5097 --directory work/fortune-impulso/dist
 ```
 
-Com o servidor ativo, `python prototypes/fortune-impulso/browser.test.py` executa o teste por toque com Playwright e Chromium. `IMPULSO_URL` e `IMPULSO_NODE` permitem escolher a URL e o executável Node. O teste percorre três acertos, retoma após atualização, recebe, perde, troca a aposta, abre o menu e confere telas de celular e desktop. As capturas ficam em `work/fortune-impulso/`.
+Com o servidor ativo, `python prototypes/fortune-impulso/browser.test.py` executa o teste por toque com Playwright e Chromium. `IMPULSO_URL` e `IMPULSO_NODE` permitem escolher a URL e o executável Node. Capturas em `work/fortune-impulso/`.
 
-O saldo de demonstração começa em 1.000 moedas e usa exclusivamente a chave `king-rico-impulso-demo-v1`. Não lê saldos antigos nem acessa Firebase. A aposta e o resultado calculado são persistidos antes da animação; uma atualização retoma o resultado sem apostar de novo. Os pagamentos locais são idempotentes. Esta carteira é apenas para testar a experiência; uma integração futura precisa usar a carteira Firestore existente.
+O saldo de demonstração começa em 1.000 moedas e usa exclusivamente `king-rico-impulso-demo-v2`. Não importa outros saldos nem acessa Firebase. A aposta e o resultado são persistidos antes da animação; recarregar retoma o resultado sem apostar ou pagar novamente. Essa carteira é local, apenas para testar a experiência; a integração oficial futura deve usar o Firestore existente.
 
-Geometria, materiais e texturas de luz criados por código. Fontes, botão do menu e componente de menu reutilizados do projeto. Three.js, React e ReactDOM empacotados localmente com suas licenças.
+Modelos geométricos e texturas de iluminação feitos por código, sem serviços de geração pagos. Fontes, menu e arte `assets/brand/bg-circus-stage.webp` reutilizados do projeto, sem modificar os arquivos originais. Three.js e React empacotados localmente com licenças. O site privado mantém a primeira versão em `/v1/` para comparação.
