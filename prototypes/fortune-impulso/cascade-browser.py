@@ -7,7 +7,7 @@ with sync_playwright() as w:
  b=w.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
  c=b.new_context(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
  c.add_init_script("const original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>a instanceof Uint32Array&&a.length===1?(a[0]=123,a):original(a)")
- p=c.new_page();errors=[];failed=[];p.on('pageerror',lambda e:errors.append(str(e)));p.on('response',lambda r:failed.append(r.url) if r.status>=400 else None)
+ p=c.new_page();errors=[];failed=[];p.on('pageerror',lambda e:errors.append(str(e)));p.on('console',lambda m:errors.append(m.text) if m.type=='error' else None);p.on('response',lambda r:failed.append(r.url) if r.status>=400 else None)
  p.goto(URL,wait_until='networkidle');p.wait_for_function('window.cascade');p.evaluate('document.fonts.ready');p.screenshot(path=str(OUT/'final-idle.png'))
  snap=lambda:p.evaluate('cascade.snapshot()')
  p.locator('#play').click();assert snap()['state']['balance']==975

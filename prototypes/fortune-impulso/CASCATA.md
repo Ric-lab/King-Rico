@@ -1,8 +1,8 @@
 # Fortune Cascata
 
-Protótipo 04: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor com o dedo. Três capturas consecutivas da mesma cor dão 3 pontos e abrem a reserva daquela cor, liberando uma avalanche de 12 bolinhas extras. Cada uma das três reservas abre uma vez: até 96 bolinhas na rodada.
+Protótipo 05: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor com o dedo. Três capturas consecutivas da mesma cor dão 3 pontos e abrem a reserva daquela cor, liberando uma avalanche de 12 bolinhas extras. Cada uma das três reservas abre uma vez: até 96 bolinhas na rodada.
 
-A moldura e o coletor são assets novos gerados com GPT Image a pedido do usuário. Ouro, vidro, esmalte roxo e rubis compartilham a mesma direção de arte. Os arquivos originais e a procedência estão em `assets/cascade/`. As versões anteriores continuam em `/v1/`, `/v2/` e `/v3/` no site privado.
+A moldura e o coletor são assets novos gerados com GPT Image a pedido do usuário. Ouro, vidro, esmalte roxo e rubis compartilham a mesma direção de arte. Os arquivos originais e a procedência estão em `assets/cascade/`. As versões anteriores continuam em `/v1/`, `/v2/`, `/v3/` e `/v4/` no site privado.
 
 ## Rodada e carteira
 
@@ -32,3 +32,11 @@ python prototypes/fortune-impulso/cascade-resume-browser.py
 ```
 
 Playwright/Chromium verificam toque real, bordas, cancelamento, rodada com avalanche, retomada, recebimento único, menu, ensaio e enquadramento em celular pequeno/desktop. `CASCADE_URL` altera a URL local. Capturas e logs ficam em `work/cascade/`.
+
+## Bolinhas — versão 05
+
+As bolinhas usam esferas Three.js de 32 × 24 segmentos com `MeshPhysicalMaterial`, camada de clearcoat, transmissão parcial, espessura e índice de refração de vidro. Três cartões de luz em um ambiente PMREM produzem reflexos limpos; a iluminação da cena foi equilibrada para preservar ouro, violeta e verde nas esferas pequenas.
+
+O veio do pigmento é calculado no espaço da esfera e gira com a física em três eixos. Cada bolinha tem orientação própria; sombra suave sobre a mesa dá profundidade sem alterar seu raio de colisão. Os três pontos do coletor usam o mesmo material. Esferas e sombras são renderizadas por instâncias; a passagem de transmissão usa metade da resolução para limitar o custo no celular. Sem novas imagens, serviços ou dependências externas.
+
+A verificação de navegador também captura erros de compilação WebGL no console. A validação visual inclui a esfera ampliada e o tamanho real no celular; não foi medida a taxa de quadros em um aparelho físico.

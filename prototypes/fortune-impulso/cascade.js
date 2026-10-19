@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import Matter from 'matter-js';
 import {mountMenu} from './menu-entry.js';
+import {createMarbles} from './marble-renderer.js';
 import {TOTAL,WIDTH,HEIGHT,BONUS_PER_GATE,MAX_BALLS,GATE_X,availableIds,marblePlan,begin,resolveBall,payout,settle} from './cascade-state.mjs';
 const {Engine,Bodies,Body,Composite,Events}=Matter;
 const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('pt-BR').format(n);
-const KEY='king-rico-cascade-demo-v2',COLORS=[0xffca55,0xb577f5,0x62d9b8],CSS_COLORS=['#ffca55','#b577f5','#62d9b8'],BETS=[10,25,50,100],CATCH_MIN=83,CATCH_MAX=277;
+const KEY='king-rico-cascade-demo-v2',COLORS=[0xffae18,0x8042ec,0x00c99c],CSS_COLORS=['#ffb932','#a16bff','#27dbb3'],BETS=[10,25,50,100],CATCH_MIN=83,CATCH_MAX=277;
 const fresh=()=>({version:2,balance:1000,bet:25,settings:{sfx:1,vib:1},round:null});
 let memory=fresh();
 function read(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s?.version===2&&Number.isFinite(s.balance))return s;}catch{}return memory;}
@@ -14,11 +15,11 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canvas=$('game'),arena=$('arena');
 let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});}catch{$('compatibility').hidden=false;throw Error('WebGL indisponível');}
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.04;
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.91;
 const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-190,190,260,-260,1,1800);camera.position.set(WIDTH/2,HEIGHT/2,900);camera.lookAt(WIDTH/2,HEIGHT/2,0);
-scene.add(new THREE.HemisphereLight(0xfff0dc,0x3b2051,2));
-const light=new THREE.DirectionalLight(0xffe5b4,3.5);light.position.set(-100,700,500);scene.add(light);
-const rim=new THREE.DirectionalLight(0xdec0ff,2);rim.position.set(500,200,150);scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xfff4e9,0x281536,.75));
+const light=new THREE.DirectionalLight(0xfff2da,2.1);light.position.set(-100,700,500);scene.add(light);
+const rim=new THREE.DirectionalLight(0xdfd2ff,.9);rim.position.set(500,200,150);scene.add(rim);
 const mat=(color,metalness=.2,roughness=.35,extra={})=>new THREE.MeshStandardMaterial({color,metalness,roughness,...extra});
 const gold=mat(0xf3be5c,.65,.24),darkGold=mat(0x8d582b,.6,.33),plum=mat(0x461d4e,.1,.5),cream=mat(0xffe3a4,.45,.26);
 const envCanvas=document.createElement('canvas');envCanvas.width=512;envCanvas.height=256;const ec=envCanvas.getContext('2d'),eg=ec.createLinearGradient(0,0,0,256);eg.addColorStop(0,'#fff2d6');eg.addColorStop(.45,'#8d6c9b');eg.addColorStop(.55,'#2e163e');eg.addColorStop(1,'#d7a969');ec.fillStyle=eg;ec.fillRect(0,0,512,256);ec.fillStyle='#fff9de';ec.fillRect(40,20,95,85);ec.fillRect(340,35,22,110);const env=new THREE.CanvasTexture(envCanvas);env.mapping=THREE.EquirectangularReflectionMapping;env.colorSpace=THREE.SRGBColorSpace;const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromEquirectangular(env).texture;scene.environmentIntensity=.7;env.dispose();pmrem.dispose();
@@ -47,13 +48,14 @@ const pegPositions=[];for(let row=0;row<6;row++)for(let col=0;col<7;col++){
 const pegGeo=new THREE.SphereGeometry(5.4,16,12),pegs=new THREE.InstancedMesh(pegGeo,mat(0xffffff,.65,.25),pegPositions.length),dummy=new THREE.Object3D();scene.add(pegs);
 const pegFlashes=new Float32Array(pegPositions.length),goldColor=new THREE.Color(0xd6a34f),whiteColor=new THREE.Color(0xfff0c6);
 pegPositions.forEach((p,i)=>{dummy.position.set(p.x,HEIGHT-p.y,12);dummy.scale.set(1,1,.65);dummy.updateMatrix();pegs.setMatrixAt(i,dummy.matrix);pegs.setColorAt(i,goldColor);});
-const ballsMesh=new THREE.InstancedMesh(new THREE.SphereGeometry(7.4,22,16),mat(0xffffff,.28,.16),MAX_BALLS);ballsMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);scene.add(ballsMesh);
+const marbles=createMarbles(renderer,MAX_BALLS),ballsMesh=marbles.mesh;scene.add(marbles.shadows,ballsMesh);
+const marbleColors=COLORS.map(c=>new THREE.Color(c));let marbleColorSeed=null;
 const basket=new THREE.Group();scene.add(basket);
 const cupShape=new THREE.Shape();cupShape.moveTo(-46,18);cupShape.lineTo(-43,-17);cupShape.quadraticCurveTo(-42,-25,-33,-25);cupShape.lineTo(33,-25);cupShape.quadraticCurveTo(42,-25,43,-17);cupShape.lineTo(46,18);cupShape.lineTo(38,18);cupShape.lineTo(35,-14);cupShape.quadraticCurveTo(35,-17,30,-17);cupShape.lineTo(-30,-17);cupShape.quadraticCurveTo(-35,-17,-35,-14);cupShape.lineTo(-38,18);cupShape.closePath();const fallbackCup=new THREE.Mesh(new THREE.ExtrudeGeometry(cupShape,{depth:7,bevelEnabled:true,bevelSize:1.5,bevelThickness:1.5,bevelSegments:3}),gold);basket.add(fallbackCup);
 const glass=panel(77,29,8,2,mat(0x8e4f95,.3,.2,{transparent:true,opacity:.3,depthWrite:false}));glass.position.set(0,-1,3);basket.add(glass);
 const basketTexture=textures.load('./assets/cascade/collector.webp',t=>{fallbackCup.visible=false;glass.visible=false;basketArt.scale.y=115*t.image.height/t.image.width/77;});basketTexture.colorSpace=THREE.SRGBColorSpace;
 const basketArt=new THREE.Mesh(new THREE.PlaneGeometry(115,77),new THREE.MeshBasicMaterial({map:basketTexture,transparent:true,alphaTest:.01,depthWrite:false,toneMapped:false}));basketArt.position.set(0,-3,12);basket.add(basketArt);
-const slotOrbs=[];for(let i=0;i<3;i++){const o=new THREE.Mesh(new THREE.SphereGeometry(6,16,12),mat(COLORS[0],.25,.2));o.position.set((i-1)*17,7,17);o.visible=false;basket.add(o);slotOrbs.push(o);}
+const slotOrbs=[];for(let i=0;i<3;i++){const o=new THREE.Mesh(new THREE.SphereGeometry(6,24,18),marbles.material(COLORS[0]));o.position.set((i-1)*17,7,17);o.visible=false;basket.add(o);slotOrbs.push(o);}
 const fxMesh=new THREE.InstancedMesh(new THREE.OctahedronGeometry(2.4),new THREE.MeshBasicMaterial({color:0xffdf8f}),72);scene.add(fxMesh);const fx=Array.from({length:72},()=>({life:0,x:0,y:0,vx:0,vy:0}));let fxIndex=0;
 function sparks(x,y,n=5){if(reduced)n=2;for(let i=0;i<n;i++){const p=fx[fxIndex++%fx.length],a=Math.random()*Math.PI*2;p.x=x;p.y=y;p.vx=Math.cos(a)*(20+Math.random()*50);p.vy=Math.sin(a)*(20+Math.random()*50)-30;p.life=.25+Math.random()*.35;}}
 
@@ -112,11 +114,12 @@ function resize(){const w=arena.clientWidth,h=arena.clientHeight,half=Math.max(1
 new ResizeObserver(resize).observe(arena);resize();restore();
 function frame(now){requestAnimationFrame(frame);const dt=last?Math.min((now-last)/1000,.09):0;last=now;if(paused||document.hidden){renderer.render(scene,camera);return;}clock+=dt;
   if(state.round?.phase==='playing'){acc+=dt;while(acc>=1/60&&state.round.phase==='playing'){tick();acc-=1/60;}if(clock-lastSave>.4)checkpoint();}
-  const r=state.round,roundSeed=r?.seed??12345;for(let i=0;i<MAX_BALLS;i++){const b=live.get(i),resolved=r?.resolved.includes(i);let x=0,y=0,scale=1;
+  const r=state.round,roundSeed=r?.seed??12345;if(marbleColorSeed!==roundSeed){for(let i=0;i<MAX_BALLS;i++)ballsMesh.setColorAt(i,marbleColors[marblePlan(roundSeed,i).color]);ballsMesh.instanceColor.needsUpdate=true;marbleColorSeed=roundSeed;}
+  for(let i=0;i<MAX_BALLS;i++){const b=live.get(i),resolved=r?.resolved.includes(i);let x=0,y=0,scale=1;
     if(b){x=b.position.x;y=b.position.y;}else if(i>=TOTAL){const color=Math.floor((i-TOTAL)/BONUS_PER_GATE),local=(i-TOTAL)%BONUS_PER_GATE,g=r?.gates[color];if(!g||local<BONUS_PER_GATE-g.spawned){const p=marblePlan(roundSeed,i);x=p.x;y=p.y;}else scale=0;
     }else if((!r||i>=r.spawned)&&i<(r?.spawned||0)+4){x=159+(i%4)*14;y=155;scale=.82;}else scale=0;
-    if(resolved)scale=0;dummy.position.set(x,HEIGHT-y,22);dummy.scale.setScalar(scale);dummy.rotation.z=b?.angle||0;dummy.updateMatrix();ballsMesh.setMatrixAt(i,dummy.matrix);ballsMesh.setColorAt(i,new THREE.Color(COLORS[marblePlan(roundSeed,i).color]));}
-  ballsMesh.instanceMatrix.needsUpdate=true;ballsMesh.instanceColor.needsUpdate=true;
+    if(resolved)scale=0;marbles.set(i,x,HEIGHT-y,22,scale,b?.angle||0);}
+  marbles.flush();
   pegPositions.forEach((p,i)=>{pegFlashes[i]=Math.max(0,pegFlashes[i]-dt*5);pegs.setColorAt(i,goldColor.clone().lerp(whiteColor,pegFlashes[i]));});pegs.instanceColor.needsUpdate=true;
   catchPulse=Math.max(0,catchPulse-dt*6);basket.position.set(catcher,HEIGHT-(HEIGHT-44)-catchPulse*3,22);basket.scale.set(1+catchPulse*.04,1-catchPulse*.08,1);
   chargePips.forEach((row,color)=>{const g=r?.gates[color],charge=r?.comboColor===color?r.comboCount:0;row.forEach((o,n)=>{const on=g?.openedAt!=null||n<charge;o.material.color.setHex(on?COLORS[color]:0x503c3c);o.material.emissive.setHex(on?COLORS[color]:0);o.material.emissiveIntensity=on?.6:0;});shutters[color].material.emissive.setHex(COLORS[color]);shutters[color].material.emissiveIntensity=g?.openedAt!=null?.23:charge*.13;reservoirGlass[color].material.opacity=.06+(charge*.025);});

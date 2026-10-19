@@ -16,7 +16,7 @@ with sync_playwright() as w:
  b=w.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
  c=b.new_context(viewport={'width':390,'height':844},device_scale_factor=1)
  c.add_init_script('if(!localStorage.getItem("king-rico-cascade-demo-v2"))localStorage.setItem("king-rico-cascade-demo-v2",'+json.dumps(json.dumps(fixture))+')')
- p=c.new_page();errors=[];failed=[];p.on('pageerror',lambda e:errors.append(str(e)));p.on('response',lambda r:failed.append(r.url) if r.status>=400 else None)
+ p=c.new_page();errors=[];failed=[];p.on('pageerror',lambda e:errors.append(str(e)));p.on('console',lambda m:errors.append(m.text) if m.type=='error' else None);p.on('response',lambda r:failed.append(r.url) if r.status>=400 else None)
  p.goto(URL,wait_until='networkidle');p.wait_for_function('window.cascade');before=p.evaluate('cascade.snapshot().state')
  assert before['balance']==975;assert before['round']['phase']=='playing';assert before['round']['gates'][0]['spawned']>=4
  p.reload(wait_until='domcontentloaded');p.wait_for_function('window.cascade');s=p.evaluate('cascade.snapshot()')
