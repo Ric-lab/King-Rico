@@ -29,12 +29,12 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <a href="Home.dc.html" onPointerDown="{{ stop }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
     <div onPointerDown="{{ stop }}" onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
 
-    <div style="position: absolute; left: 0; right: 0; top: 100px; display: flex; justify-content: center; gap: 6px;">
+    <div style="position: absolute; left: 50%; top: 122px; transform: translateX(-50%); padding: 7px 10px; border-radius: 22px; display: flex; justify-content: center; gap: 6px; background: #fffaf0; box-shadow: inset 0 -3px 0 rgba(160,110,40,.25), 0 0 0 2px #f0b41f, 0 4px 10px rgba(0,0,0,.35);">
       <sc-for list="{{ balls }}" as="b" hint-placeholder-count="5">
         <div style="position: relative; width: 30px; height: 30px; border-radius: 50%; box-shadow: {{ b.sh }}; transform: scale({{ b.k }}); transition: transform .2s;"><sc-if value="{{ b.img }}" hint-placeholder-val="{{ false }}"><img src="{{ b.img }}" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%;"></sc-if><sc-if value="{{ b.miss }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(20,4,36,.55); font-size: 22px; font-weight: 800; line-height: 1; color: #ff4d4d; text-shadow: 0 1px 0 #fff;">✕</div></sc-if></div>
       </sc-for>
     </div>
-    <div style="position: absolute; left: 0; right: 0; top: 132px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
+    <div style="position: absolute; left: 0; right: 0; top: 84px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
 
     <div ref="{{ faceRef }}" style="position: absolute; inset: 0; pointer-events: none; will-change: transform;">
     <img ref="{{ boardRef }}" src="assets/clown/clown.webp" alt="Palhaço" draggable="false" style="position: absolute; left: 6.5px; top: 140px; width: 440px; height: 440px; pointer-events: none; filter: drop-shadow(0 12px 16px rgba(0,0,0,.5)); transform-origin: 50% 50%;">
@@ -157,7 +157,9 @@ class Component extends DCLogic {
     let maxDev = 0; for (let i = 0; i <= 10; i++) { const dv = devAt(i / 10); maxDev = Math.max(maxDev, Math.hypot(dv.x, dv.y)); } const curve = maxDev > 6;
     const off0 = this.off, Tf = { x: T.x - off0, y: T.y }, aimed = HOLES.find(q => ((Tf.x - q.x) / q.rx) ** 2 + ((Tf.y - q.y) / q.ry) ** 2 <= 1), hits = this.state.results.filter(v => v > 0).length;
     // sorte só depois do 1º acerto: se for hora de perder, o palhaço sobe/desce durante o voo e a bola passa ao lado (a mira manda; o buraco sai do lugar)
-    const lose = aimed && hits >= 1 && Math.random() >= 0.95 / aimed.m; this.dyT = lose ? (Math.random() < 0.5 ? -1 : 1) * (aimed.ry + 26) : 0;
+    let st = { b: 0, p: 0 }; try { st = JSON.parse(localStorage.getItem('fortuneCircus.clown.rtp')) || st; } catch (e) {}
+    const rtp = st.b > 0 ? st.p / st.b : 0, hot = st.b >= 20 * BETS[0] && rtp > 0.95, adj = hot ? Math.max(0.45, 1 - (rtp - 0.95) * 3) : 1;
+    const lose = aimed && (hits >= 1 || hot) && Math.random() >= Math.min(1, 0.95 / aimed.m * adj); this.dyT = lose ? (Math.random() < 0.5 ? -1 : 1) * (aimed.ry + 26) : 0;
     const path = t => { const dv = curve ? devAt(t) : { x: 0, y: 0 }, ex = Tf.x + this.off; return { x: B0.x + (ex - B0.x) * t + dv.x * sc, y: B0.y + (T.y - B0.y) * t + dv.y * sc - 70 * Math.sin(Math.PI * t) }; };
     const kEnd = 0.4; this.ci = this.state.results.length % ((window.ClownBallColors || [1]).length); const col = (window.ClownBallColors || ['#ff3b8a'])[this.ci]; if (window.ClownBall) window.ClownBall.setColor(this.ci);
     this.tone(180, 0.12, 'sine', 0.12, 90); this.buzz(25);
@@ -178,7 +180,7 @@ class Component extends DCLogic {
     if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }, () => this.nextColor()); }, 350); return; }
     setTimeout(() => this.setState({ win: { w: sum, title: sum > 0 ? 'VOCÊ GANHOU!' : 'TENTE DE NOVO' } }), 500);
   }
-  closeWin = () => { const s = this.state; const bal = Math.round((s.balance + s.win.w) * 100) / 100; this.save(bal); if (s.win.w > 0) this.tone(1320, 0.15);
+  closeWin = () => { const s = this.state; try { const k = 'fortuneCircus.clown.rtp', st = JSON.parse(localStorage.getItem(k)) || { b: 0, p: 0 }; st.b += BETS[s.betIdx]; st.p += s.win.w; if (st.b > 2000 * BETS[s.betIdx]) { st.b /= 2; st.p /= 2; } localStorage.setItem(k, JSON.stringify(st)); } catch (e) {} const bal = Math.round((s.balance + s.win.w) * 100) / 100; this.save(bal); if (s.win.w > 0) this.tone(1320, 0.15);
     this.setState({ balance: bal, win: null, left: BALLS, sum: 0, active: false, busy: false, results: [] }, () => this.nextColor()); this.setBall(B0.x, B0.y, 1, 1); };
   betDown = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) })); this.tone(900, 0.04, 'square', 0.04); };
   betUp = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) })); this.tone(1100, 0.04, 'square', 0.04); };
@@ -189,7 +191,7 @@ class Component extends DCLogic {
       down: this.down, move: this.move, up: this.up, stop: this.stop, balanceText: fmt(s.balance),
       balls: Array.from({ length: BALLS }, (_, i) => { const C = window.ClownBallColors || ['#ff3b8a', '#2fb8ff', '#2ec962', '#a45cff'], c = C[i % C.length], used = i < s.results.length, hit = used && s.results[i] > 0, now = i === s.results.length && s.active;
         return { img: this.marker(i % 4), miss: used && !hit, sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', k: now ? 1.15 : used ? 0.85 : 1 }; }),
-      roundText: s.active ? '+' + fmt(s.sum) : '', tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.y + h.ry + 4) + 'px', m: 'x' + fmt(h.m) })),
+      roundText: '+' + fmt(s.sum), tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.y + h.ry + 4) + 'px', m: 'x' + fmt(h.m) })),
       floatOn: !!s.floatOn, floatX: s.floatX, floatY: s.floatY, floatText: s.floatText,
       showHand: !s.touched && !s.busy, showBet: !s.active, betText: fmt(BETS[s.betIdx]), betDown: this.betDown, betUp: this.betUp,
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin }; }
