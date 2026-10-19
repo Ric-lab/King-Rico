@@ -1,4 +1,8 @@
-# Fortune Impulso 02
+# Protótipos King Rico
+
+**Versão atual: [Fortune Cascata](CASCATA.md).** `scripts/build-impulso.mjs` agora gera a cascata de bolinhas. Os testes atuais são `cascade-state.test.mjs` e `cascade-browser.py`. A descrição abaixo documenta o Impulso 02, preservado no site privado em `/v2/`.
+
+## Fortune Impulso 02 — histórico
 
 Jogo solo de precisão, desenvolvido sobre `main` em `aedf88d` e revisado a partir do feedback da primeira versão. Não altera os seis jogos oficiais, Home, login, Firestore ou workflow Firebase.
 
