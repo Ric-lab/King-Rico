@@ -20,18 +20,18 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; justify-content: center; overflow: hidden; background: #2a0a4a;">
   <div style="position: absolute; inset: 0; background: url('assets/bleed/stage-bleed.webp') 50% 100% / cover; filter: blur(6px) brightness(.8);"></div>
-  <div ref="{{ stageRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" data-screen-label="Fortune Clown" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; touch-action: none;">
+  <div ref="{{ stageRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ cancel }}" data-screen-label="Fortune Clown" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; touch-action: none;">
     <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
         <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
       </div>
     </div>
     <a href="Home.dc.html" onPointerDown="{{ stop }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
-    <div onPointerDown="{{ stop }}" onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
+    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <div style="position: absolute; left: 50%; top: 110px; transform: translateX(-50%); padding: 7px 10px; border-radius: 22px; display: flex; justify-content: center; gap: 6px; background: #fffaf0; box-shadow: inset 0 -3px 0 rgba(160,110,40,.25), 0 0 0 2px #f0b41f, 0 4px 10px rgba(0,0,0,.35);">
       <sc-for list="{{ balls }}" as="b" hint-placeholder-count="5">
-        <div style="position: relative; width: 30px; height: 30px; border-radius: 50%; box-shadow: {{ b.sh }}; transform: scale({{ b.k }}); transition: transform .2s;"><sc-if value="{{ b.img }}" hint-placeholder-val="{{ false }}"><img src="{{ b.img }}" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%;"></sc-if><sc-if value="{{ b.miss }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(20,4,36,.55); font-size: 22px; font-weight: 800; line-height: 1; color: #ff4d4d; text-shadow: 0 1px 0 #fff;">✕</div></sc-if></div>
+        <div style="position: relative; width: 30px; height: 30px; border-radius: 50%; box-shadow: {{ b.sh }}; transform: scale({{ b.k }}); transition: transform .2s;"><sc-if value="{{ b.img }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 50%; background-image: url('{{ b.img }}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div></sc-if><sc-if value="{{ b.miss }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(20,4,36,.55); font-size: 22px; font-weight: 800; line-height: 1; color: #ff4d4d; text-shadow: 0 1px 0 #fff;">✕</div></sc-if></div>
       </sc-for>
     </div>
     <div style="position: absolute; left: 0; right: 0; top: 76px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
@@ -63,27 +63,16 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-      <div onPointerDown="{{ stop }}" onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; background: rgba(10,2,20,.82);">
-        <div style="width: 400px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63, #26043f); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
-            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
-            <span style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</span>
-          </div>
-          <div style="padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px;">
-            <span style="font-size: 18px; font-weight: 700; line-height: 1.35; color: #f6e8ff; text-wrap: pretty;">Arraste a bola até um buraco do palhaço. São 5 bolas por aposta. Quanto menor o buraco, maior o prêmio.</span>
-            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">
-              <sc-for list="{{ payList }}" as="p" hint-placeholder-count="4">
-                <div style="padding: 8px 2px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 3px; background: rgba(255,255,255,.08);">
-                  <span style="font-size: 15px; font-weight: 700; color: #dcc2f0;">{{ p.n }}</span>
-                  <span style="font-size: 22px; font-weight: 800; color: #ffd257;">{{ p.m }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </div>
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
+        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
+          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
         </div>
       </div>
     </sc-if>
+
     <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
       <div onPointerDown="{{ stop }}" onClick="{{ closeWin }}" role="button" style="position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72);">
         <div style="width: 300px; padding: 24px 20px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05; animation: ckPop .4s ease-out;">
@@ -97,32 +86,42 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// Fortune Clown — a "boca do palhaço" com swipe. 5 bolas por aposta; cada bola vale aposta/5 × buraco.
+// Fortune Clown — 10 bolas por aposta; cada bola vale aposta/10 × buraco.
 // Habilidade: a bola vai exatamente onde o dedo parou (e faz o arco do dedo). Errou o buraco = não pontua.
-// Sorte: bola dentro do buraco entra com chance 0,95/x (senão bate na borda e sai) → retorno ≤ 95% mesmo para quem acerta sempre.
+// Mira e esquiva preservam o design. Cada resultado é confirmado na conta antes da animação.
 const HOLES = [ // rosto 440px; área generosa: boca conta lábio e língua, olho conta a lente, nariz conta a bola vermelha
   { n: 'boca', x: 226.5, y: 442, rx: 98, ry: 60, m: 1.5 }, { n: 'nariz', x: 225.6, y: 353.6, rx: 30, ry: 30, m: 2.5 },
   { n: 'olho', x: 174.9, y: 293.4, rx: 28, ry: 28, m: 5 }, { n: 'olho', x: 276.4, y: 293.4, rx: 28, ry: 28, m: 5 },
   { n: 'orelha', x: 84.7, y: 376.8, rx: 22, ry: 24, m: 10 }, { n: 'orelha', x: 365.7, y: 376.8, rx: 22, ry: 24, m: 10 }];
-const BALLS = 10, BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000], SKEY = 'fortuneCircus.slot.v3', B0 = { x: 226, y: 670 };
+const BALLS = 10, BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000], B0 = { x: 226, y: 670 };
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, left: BALLS, sum: 0, active: false, busy: false, results: [], vw: 453, vh: 802 };
   faceRef = React.createRef(); stageRef = React.createRef(); ballRef = React.createRef(); boardRef = React.createRef(); trailRef = React.createRef();
   componentDidMount() { this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {} this.setBall(B0.x, B0.y, 1, 1); this.off = 0; this.amp = 0;
+    window.__clown=this;this.off=0;this.amp=0;this.setBall(B0.x,B0.y,1,1);
+    const cloud=window.KingRicoCloud;
+    if(cloud?.enabled) this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this.state.busy && !this._request) this.applyCloudPlayer();});
     const sw = now => { const n = this.state.results.filter(v => v > 0).length, A = this.state.active && n >= 1 ? 22 + (n - 1) * 16 : 0; this.amp += (A - this.amp) * 0.04; this.off = Math.sin(now / 1000 * 1.7) * this.amp; this.dy = (this.dy || 0) + ((this.dyT || 0) - (this.dy || 0)) * 0.14; const f = this.faceRef.current; if (f) f.style.transform = 'translate(' + this.off.toFixed(1) + 'px,' + this.dy.toFixed(1) + 'px)'; this._sw = requestAnimationFrame(sw); }; this._sw = requestAnimationFrame(sw); }
-  componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._sw); }
+  componentWillUnmount() { this._dead=true;this._unwatchCloud?.();clearInterval(this._bw);if(window.__clown===this) delete window.__clown; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._sw); }
   react(h) { const b = this.boardRef.current, f = this.faceRef.current; if (!b || !b.animate) return;
     if (h.n === 'boca') { b.animate([0, 1, 0, 1, 0, 1, 0].map(k => ({ transform: k ? 'scale(1.03, .95)' : 'scale(1)' })), { duration: 720, easing: 'ease-in-out' }); [0, 240, 480].forEach(d => setTimeout(() => this.tone(140, 0.08, 'sine', 0.1, 90), d)); }
     else if (h.n === 'nariz') { const nz = f && f.querySelector('[data-lid="nose"]'); if (nz && nz.animate) nz.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)', offset: .3 }, { transform: 'scaleY(1)', offset: .65 }, { transform: 'scaleY(0)' }], { duration: 650 }); b.animate([{ transform: 'scale(1)' }, { transform: 'scale(.97) translateY(4px)', offset: .45 }, { transform: 'scale(1.08) translateY(-10px)', offset: .6 }, { transform: 'scale(1)' }], { duration: 700 }); setTimeout(() => this.tone(900, 0.25, 'sawtooth', 0.05, 200), 380); }
     else if (h.n === 'olho') { const lid = f && f.querySelector('[data-lid="' + (h.x < 226 ? 0 : 1) + '"]'); if (lid && lid.animate) lid.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)', offset: .3 }, { transform: 'scaleY(1)', offset: .65 }, { transform: 'scaleY(0)' }], { duration: 650 }); this.tone(1500, 0.08, 'triangle', 0.06, 2200); }
     else { const s = h.x < 226 ? 1 : -1; b.animate([0, 1, -1, 1, -1, 0].map(k => ({ transform: 'rotate(' + (k * s * 3) + 'deg)' })), { duration: 600, easing: 'ease-in-out' }); [0, 120, 240].forEach(d => setTimeout(() => this.tone(1100, 0.05, 'square', 0.04), d)); } }
-  openMenu = () => this.setState({ menu: true }); closeMenu = () => this.setState({ menu: false });
-  save(b) { try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = b; localStorage.setItem(SKEY, JSON.stringify(sv)); } catch (e) {} }
+  openMenu = () => {if(!this.state.busy && !this._request){this.cancel();this.setState({menu:true});}}; closeMenu = () => this.setState({ menu: false });
+  applyCloudPlayer() {
+    const p=this._cloudDeferred;if(!p) return;this._cloudDeferred=null;const r=p.clownRound;
+    this.setState({balance:p.balance,betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.clownBetIdx ?? 3,
+      sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,roundId:r?.id || null,active:!!r,
+      left:BALLS-(r?.used || 0),sum:(r?.sumUnits || 0)/100,results:r?.results || []},()=>this.nextColor());
+  }
+  componentDidUpdate() {if(this._cloudDeferred && !this.state.busy && !this._request) this.applyCloudPlayer();}
+  setLvl(k,v) {this.setState({[k]:v});window.KingRicoCloud?.settings({[k]:v});}
+  recharge = async () => {const c=window.KingRicoCloud;if(this._request || !c?.enabled) return;this._request=true;try{await c.recharge();}catch(e){c.error(e);}finally{this._request=false;this.applyCloudPlayer();}};
   ac() { if (!this._ac) try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
-  tone(f, d, type = 'triangle', g = 0.07, f2) { const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
-  buzz(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+  tone(f, d, type = 'triangle', g = 0.07, f2) { const level=[0,.35,1][this.state.sfxLvl ?? 2];if(!level) return;g*=level;const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
+  buzz(p) {const level=this.state.vibLvl ?? 2;if(!level) return;if(level===1) p=[].concat(p).map((v,i)=>i%2 ? v : Math.max(15,Math.round(v/2)));try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
   setBall(x, y, k, op) { this._bq = [x, y, k, op]; const B = window.ClownBall; if (B) B.set(x, y, k, op); else if (!this._bw) { this._bw = setInterval(() => { if (window.ClownBall && window.ClownBall.texs) { clearInterval(this._bw); this._bw = null; window.ClownBall.set(...this._bq); this.nextColor(); this.forceUpdate(); } }, 100); } }
   // marca de tinta onde a bola bateu (fica ~3 s e some); desenhada no rosto, então balança junto
   splat(x, y, col) { const f = this.faceRef.current; if (!f) return; this._spl = this._spl || {}; let u = this._spl[col];
@@ -141,30 +140,37 @@ class Component extends DCLogic {
   pt(e) { const r = this.stageRef.current.getBoundingClientRect(), s = r.width / 453; return { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s }; }
   anim(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else done && done(); }; this._raf = requestAnimationFrame(st); }
   stop = e => e.stopPropagation();
-  down = e => { const s = this.state; if (s.busy || s.win || s.menu) return; this.ac(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} const p = this.pt(e); this.drag = { pts: [p] }; };
-  move = e => { const d = this.drag; if (!d) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; for (const ev of (evs.length ? evs : [e])) d.pts.push(this.pt(ev)); this.drawTrail(); };
-  up = e => { const d = this.drag; if (d && e && e.clientX != null) d.pts.push(this.pt(e)); this.drag = null; this.clearTrail(); if (!d || d.pts.length < 2) return; const a = d.pts[0], z = d.pts[d.pts.length - 1]; if (a.y - z.y < 60) return; this.shoot(d.pts); };
+  down = e => { const s = this.state; if (s.busy || this._request || s.win || s.menu || this.drag || e.isPrimary===false || e.button>0 || !window.KingRicoCloud?.player) return; this.ac(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} const p = this.pt(e); this.drag = { id:e.pointerId,pts: [p] }; };
+  move = e => { const d = this.drag; if (!d || d.id!==e.pointerId) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; for (const ev of (evs.length ? evs : [e])) d.pts.push(this.pt(ev)); this.drawTrail(); };
+  cancel = () => {this.drag=null;this.clearTrail();};
+  up = e => { const d = this.drag;if(d && d.id!==e.pointerId) return; if (d && e && e.clientX != null) d.pts.push(this.pt(e)); this.drag = null; this.clearTrail(); if (!d || d.pts.length < 2) return; const a = d.pts[0], z = d.pts[d.pts.length - 1]; if (a.y - z.y < 60) return; this.shoot(d.pts); };
   drawTrail() { const c = this.trailRef.current, P = this.drag && this.drag.pts; if (!c || !P) return; const x = c.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, 453, 802); x.lineCap = 'round'; x.strokeStyle = 'rgba(255,236,170,.6)'; x.lineWidth = 10; x.beginPath(); P.forEach((p, i) => i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y)); x.stroke(); const z = P[P.length - 1]; x.lineWidth = 3; x.strokeStyle = '#fff3c4'; x.beginPath(); x.arc(z.x, z.y, 14, 0, 7); x.stroke(); x.beginPath(); x.moveTo(z.x - 20, z.y); x.lineTo(z.x - 8, z.y); x.moveTo(z.x + 8, z.y); x.lineTo(z.x + 20, z.y); x.moveTo(z.x, z.y - 20); x.lineTo(z.x, z.y - 8); x.moveTo(z.x, z.y + 8); x.lineTo(z.x, z.y + 20); x.stroke(); }
   clearTrail() { const c = this.trailRef.current; if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
-  shoot(P) {
-    const s = this.state; let bal = s.balance, active = s.active, bet = BETS[s.betIdx];
-    if (!active) { if (bal < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); return; } bal = Math.round((bal - bet) * 100) / 100; active = true; this.save(bal); }
-    this.setState({ balance: bal, active, busy: true, touched: true });
+  async shoot(P) {
+    if(this._request || this.state.busy || this.state.win || this.state.menu) return;
+    const cloud=window.KingRicoCloud,s=this.state;
+    if(!cloud?.enabled || !cloud.player) return;
+    const z0=P[P.length-1],Tf0={x:z0.x-(this.off || 0),y:z0.y-(this.dy || 0)},selected=HOLES.findIndex(q=>((Tf0.x-q.x)/q.rx)**2+((Tf0.y-q.y)/q.ry)**2<=1);
+    this._request=true;this.setState({busy:true,touched:true});
+    try {
+      const r=await cloud.clown(BETS[s.betIdx],s.roundId || crypto.randomUUID(),s.results.length,selected);
+      this._shot=r.outcome;this.setState({balance:r.balanceDebited,active:true,roundId:r.outcome.roundId});
+    } catch(e) {this._cloudDeferred=cloud.player;this.setState({busy:false});cloud.error(e);return;}
+    finally {this._request=false;if(!this.state.busy) this.applyCloudPlayer();}
+    if(this._dead) return;
     const a = P[0], z = P[P.length - 1], T = { x: z.x, y: z.y }, L = [0]; for (let i = 1; i < P.length; i++) L.push(L[i - 1] + Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y));
     const tot = L[L.length - 1] || 1, chord = Math.hypot(z.x - a.x, z.y - a.y) || 1, sc = Math.hypot(T.x - B0.x, T.y - B0.y) / chord;
     const devAt = u => { const want = u * tot; let i = 1; while (i < L.length - 1 && L[i] < want) i++; const f = (want - L[i - 1]) / ((L[i] - L[i - 1]) || 1), qx = P[i - 1].x + (P[i].x - P[i - 1].x) * f, qy = P[i - 1].y + (P[i].y - P[i - 1].y) * f;
       return { x: qx - (a.x + (z.x - a.x) * u), y: qy - (a.y + (z.y - a.y) * u) }; };
     let maxDev = 0; for (let i = 0; i <= 10; i++) { const dv = devAt(i / 10); maxDev = Math.max(maxDev, Math.hypot(dv.x, dv.y)); } const curve = maxDev > 6;
-    const off0 = this.off, Tf = { x: T.x - off0, y: T.y }, aimed = HOLES.find(q => ((Tf.x - q.x) / q.rx) ** 2 + ((Tf.y - q.y) / q.ry) ** 2 <= 1), hits = this.state.results.filter(v => v > 0).length;
-    // sorte só depois do 1º acerto: se for hora de perder, o palhaço sobe/desce durante o voo e a bola passa ao lado (a mira manda; o buraco sai do lugar)
-    let st = { b: 0, p: 0 }; try { st = JSON.parse(localStorage.getItem('fortuneCircus.clown.rtp')) || st; } catch (e) {}
-    const rtp = st.b > 0 ? st.p / st.b : 0, hot = st.b >= 20 * BETS[0] && rtp > 0.95, adj = hot ? Math.max(0.45, 1 - (rtp - 0.95) * 3) : 1;
-    const lose = aimed && (hits >= 1 || hot) && Math.random() >= Math.min(1, 0.95 / aimed.m * adj); this.dyT = lose ? (Math.random() < 0.5 ? -1 : 1) * (aimed.ry + 26) : 0;
+    const off0=this.off || 0,Tf=Tf0,aimed=HOLES[selected],hit=HOLES[this._shot.hit];
+    // A committed miss moves the face; animation cannot change the stored payout.
+    const lose=aimed && !hit;this.dyT=lose ? (aimed.y>360 ? -1 : 1)*(aimed.ry+26) : 0;
     const path = t => { const dv = curve ? devAt(t) : { x: 0, y: 0 }, ex = Tf.x + this.off; return { x: B0.x + (ex - B0.x) * t + dv.x * sc, y: B0.y + (T.y - B0.y) * t + dv.y * sc - 70 * Math.sin(Math.PI * t) }; };
     const kEnd = 0.4; this.ci = this.state.results.length % ((window.ClownBallColors || [1]).length); const col = (window.ClownBallColors || ['#ff3b8a'])[this.ci]; if (window.ClownBall) window.ClownBall.setColor(this.ci);
     this.tone(180, 0.12, 'sine', 0.12, 90); this.buzz(25);
     this.anim(650, k => { const q = path(k); this.setBall(q.x, q.y, 1 + (kEnd - 1) * k, 1); }, () => {
-      const off = this.off, dy = this.dy || 0; T.x = Tf.x + off; const hole = HOLES.find(q => ((Tf.x - q.x) / q.rx) ** 2 + ((T.y - dy - q.y) / q.ry) ** 2 <= 1), inn = !!hole; setTimeout(() => { this.dyT = 0; }, 450);
+      const off = this.off, dy = this.dy || 0; T.x = Tf.x + off; const hole = hit, inn = !!hole; setTimeout(() => { this.dyT = 0; }, 450);
       if (inn) { this.react(hole); this.anim(260, k => this.setBall(T.x + (hole.x + off - T.x) * k, T.y + (hole.y + dy - T.y) * k, kEnd * (1 - k * 0.8), 1 - k), () => this.score(hole));
         return; }
       // bateu no rosto/borda: deixa a marca de tinta, quica e cai
@@ -174,21 +180,28 @@ class Component extends DCLogic {
     });
   }
   score(hole) {
-    const s = this.state, bet = BETS[s.betIdx], w = hole ? bet / BALLS * hole.m : 0, left = s.left - 1, sum = Math.round((s.sum + w) * 100) / 100;
+    const s=this.state,x=this._shot;if(!x) return;this._shot=null;
+    const left=BALLS-x.used,sum=x.sumUnits/100,w=hole ? Math.round(x.betUnits*hole.m/BALLS)/100 : 0;
     if (hole) { [784, 988, 1318].forEach((f, i) => setTimeout(() => this.tone(f + hole.m * 20, 0.16), i * 70)); this.buzz([30, 30, 50]); this.setState({ floatOn: true, floatX: (hole.x + this.off) + 'px', floatY: (hole.y - 30) + 'px', floatText: '+' + fmt(w), fk: Date.now() }); setTimeout(() => this.setState({ floatOn: false }), 900); }
-    this.setState({ left, sum, results: s.results.concat([hole ? hole.m : 0]) });
-    if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }, () => this.nextColor()); }, 350); return; }
+    this.setState({ left, sum, results: x.results });
+    if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }, () => {this.applyCloudPlayer();this.nextColor();}); }, 350); return; }
     setTimeout(() => this.setState({ win: { w: sum, title: sum > 0 ? 'VOCÊ GANHOU!' : 'TENTE DE NOVO' } }), 500);
   }
-  closeWin = () => { const s = this.state; try { const k = 'fortuneCircus.clown.rtp', st = JSON.parse(localStorage.getItem(k)) || { b: 0, p: 0 }; st.b += BETS[s.betIdx]; st.p += s.win.w; if (st.b > 2000 * BETS[s.betIdx]) { st.b /= 2; st.p /= 2; } localStorage.setItem(k, JSON.stringify(st)); } catch (e) {} try { const k = 'fortuneCircus.clown.rtp', st = JSON.parse(localStorage.getItem(k)) || { b: 0, p: 0 }; st.b += BETS[s.betIdx]; st.p += s.win.w; if (st.b > 2000 * BETS[s.betIdx]) { st.b /= 2; st.p /= 2; } localStorage.setItem(k, JSON.stringify(st)); } catch (e) {} const bal = Math.round((s.balance + s.win.w) * 100) / 100; this.save(bal); if (s.win.w > 0) this.tone(1320, 0.15);
-    this.setState({ balance: bal, win: null, left: BALLS, sum: 0, active: false, busy: false, results: [] }, () => this.nextColor()); this.setBall(B0.x, B0.y, 1, 1); };
-  betDown = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) })); this.tone(900, 0.04, 'square', 0.04); };
-  betUp = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) })); this.tone(1100, 0.04, 'square', 0.04); };
+  closeWin = () => {if(!this.state.win) return;
+    this.setState({win:null,left:BALLS,sum:0,active:false,busy:false,results:[],roundId:null},()=>{this._cloudDeferred=window.KingRicoCloud.player;this.applyCloudPlayer();this.nextColor();});
+    this.setBall(B0.x,B0.y,1,1);
+  };
+  betDown = () => { if (this.state.active || this.state.busy || this._request) return; this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }),()=>window.KingRicoCloud?.settings({clownBetIdx:this.state.betIdx})); this.tone(900, 0.04, 'square', 0.04); };
+  betUp = () => { if (this.state.active || this.state.busy || this._request) return; this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }),()=>window.KingRicoCloud?.settings({clownBetIdx:this.state.betIdx})); this.tone(1100, 0.04, 'square', 0.04); };
   renderVals() { const s = this.state;
     const bt = fmt(s.balance);
-    return { faceRef: this.faceRef, menu: !!s.menu, openMenu: this.openMenu, closeMenu: this.closeMenu, balanceSize: (bt.length <= 6 ? 19 : bt.length <= 8 ? 16.5 : 14) + 'px',
+    return {
+      menuButton:{onClick:this.openMenu,onPointerDown:this.stop,disabled:!!s.busy,style:{zIndex:25}},
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Clown',details:'Arraste a bola até um buraco. São 10 bolas por aposta; cada acerto paga um décimo da aposta vezes o multiplicador: boca x1,5, nariz x2,5, olhos x5 e orelhas x10. Depois do primeiro acerto o palhaço se move e pode esquivar. O prêmio da rodada é creditado ao terminar. Seu progresso fica salvo na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      broke:s.balance<1 && !s.active && !s.busy && !s.win && !s.menu,recharge:this.recharge,
+      faceRef: this.faceRef, menu: !!s.menu, openMenu: this.openMenu, closeMenu: this.closeMenu, balanceSize: (bt.length <= 6 ? 19 : bt.length <= 8 ? 16.5 : 14) + 'px',
       payList: [['Boca', 1.5], ['Nariz', 2.5], ['Olho', 5], ['Orelha', 10]].map(([n, m]) => ({ n, m: 'x' + fmt(m) })), scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, ballRef: this.ballRef, boardRef: this.boardRef, trailRef: this.trailRef,
-      down: this.down, move: this.move, up: this.up, stop: this.stop, balanceText: fmt(s.balance),
+      down: this.down, move: this.move, up: this.up, cancel:this.cancel, stop: this.stop, balanceText: fmt(s.balance),
       balls: Array.from({ length: BALLS }, (_, i) => { const C = window.ClownBallColors || ['#ff3b8a', '#2fb8ff', '#2ec962', '#a45cff'], c = C[i % C.length], used = i < s.results.length, hit = used && s.results[i] > 0, now = i === s.results.length && s.active;
         return { img: this.marker(i % 4), miss: used && !hit, sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', k: now ? 1.15 : used ? 0.85 : 1 }; }),
       roundText: '+' + fmt(s.sum), tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.n === 'orelha' ? h.y + h.ry + 4 : h.n === 'boca' ? h.y - h.ry * 0.3 : h.y - 10) + 'px', m: 'x' + fmt(h.m) })),

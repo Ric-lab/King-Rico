@@ -157,3 +157,12 @@ test('Home and Wheel preserve cents earned in Circus',()=>{
  const {instance:wheel}=component('Fortune Wheel.dc.html',cloud);wheel.state.balance=1050.25;
  assert.equal(wheel.renderVals().balanceText,'1.050,25');
 });
+test('Clown refuses offline throws, restores progress and never credits a dismissed prize',async()=>{
+ let errors=0;const player={balance:997.5,settings:{clownBetIdx:1,sfxLvl:0,vibLvl:0},clownRound:{id:'round',betUnits:250,used:3,sumUnits:38,results:[1.5,0,0]}};
+ const cloud={enabled:true,player,clown:async()=>{throw Error('offline');},settings:()=>{},error:()=>errors++};
+ const {instance:g}=component('Fortune Clown.dc.html',cloud);g._cloudDeferred=player;g.applyCloudPlayer();
+ assert.equal(g.state.left,7);assert.equal(g.state.sum,.38);assert.equal(g.state.betIdx,1);
+ await g.shoot([{x:226,y:670},{x:226,y:442}]);assert.equal(errors,1);assert.equal(g.state.balance,997.5);assert.equal(g.state.busy,false);
+ cloud.player={...player,clownRound:null,balance:1001.3};g.state.win={w:3.8};g.closeWin();g.closeWin();assert.equal(g.state.balance,1001.3);
+ let called=0;g.shoot=()=>called++;g.drag={id:1,pts:[{x:226,y:670},{x:226,y:442}]};g.cancel();g.up({pointerId:1});assert.equal(called,0);
+});

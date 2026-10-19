@@ -86,8 +86,8 @@ else {
         if(response.outcome.ended) Cloud.track?.('spin_settled',{game:'fingo',bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       }
-      if(data.action==='penalty' && response.outcome.ended)
-        Cloud.track?.('spin_settled',{game:'penalty',bet:data.bet,payout:response.outcome.winUnits/100,
+      if(['penalty','clown'].includes(data.action) && response.outcome.ended)
+        Cloud.track?.('spin_settled',{game:data.game,bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       if (data.action==='bonus' && response.amount) Cloud.track?.('daily_bonus_claimed',{amount:response.amount,operationId:data.requestId});
     }
@@ -98,12 +98,12 @@ else {
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
       && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
-      && pending.step===payload.step && pending.quality===payload.quality;
+      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
     }
-    const data = pending || { ...payload, requestId: payload.action==='penalty' && payload.step===0 ? payload.roundId : id() };
+    const data = pending || { ...payload, requestId: (payload.action==='penalty' && payload.step===0 || payload.action==='clown' && payload.used===0 || payload.action==='bounce' && payload.move==='start') ? payload.roundId : id() };
     // Save before sending. A lost response/reload must retry the same transaction.
     storage.set(key, data);
     try { const result = await call(data); localStorage.removeItem(key); return result; }
@@ -115,6 +115,8 @@ else {
   Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {}) });
   Cloud.neck = (move,bet,roundId,floor) => mutate({action:'neck',game:'neck',move,bet,roundId,floor});
   Cloud.fingo = (move,bet,roundId,used,selected) => mutate({action:'fingo',game:'fingo',move,bet,roundId,used,...(move==='drop'?{selected}:{})});
+  Cloud.bounce = (move,bet,roundId,n,gold=false) => mutate({action:'bounce',game:'bounce',move,bet,roundId,n,gold});
+  Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
   Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
   Cloud.bonus = () => mutate({ action:'bonus' });
   Cloud.recharge = () => mutate({ action:'recharge' });
@@ -132,7 +134,7 @@ else {
       catch (error) { Cloud.error(error); }
     }, 400);
   };
-  const game = /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
+  const game = /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
   Cloud.track = (name, extra={}) => {

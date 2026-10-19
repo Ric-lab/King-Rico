@@ -1,7 +1,7 @@
 // <clown-ball> — bola de tinta 3D (three.js) desenhada sobre o palco 453×802. API: window.ClownBall.set(x, y, k, op), .setColor(i)
 (function () {
   if (customElements.get('clown-ball')) return;
-  const SRC = 'https://unpkg.com/three@0.184.0/build/three.module.js', W = 453, H = 802;
+  const SRC = './runtime/three.module.js', W = 453, H = 802;
   const COLS = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']];
   class CB extends HTMLElement {
     connectedCallback() { if (this._i) return; this._i = 1; this.style.display = 'block'; this.style.pointerEvents = 'none'; import(SRC).then(T => this.setup(T)); }

@@ -212,7 +212,7 @@ test('invalid settings, insufficient funds, fast spins and client balance fields
   const m=memory(),call=m.client('one');await call(request({action:'bootstrap'}));
   await assert.rejects(call(request({action:'spin',game:'wheel',bet:10,selected:0,balance:999999})),{code:'king-rico/invalid-argument'});
   await assert.rejects(call(request({action:'settings',settings:{sfxLvl:3}})),{code:'king-rico/invalid-argument'});
-  await assert.rejects(call(request({action:'spin',game:'wheel',bet:10,selected:12})),{code:'king-rico/invalid-argument'});
+  await assert.rejects(call(request({action:'spin',game:'wheel',bet:10,selected:13})),{code:'king-rico/invalid-argument'});
   await call(request({action:'settings',settings:{sfxLvl:0},analyticsConsent:true}));
   assert.equal(m.records.get('players/one').analyticsConsent,true);
   assert.equal(m.records.size,1,'Settings do not create operation/event documents');
@@ -221,4 +221,41 @@ test('invalid settings, insufficient funds, fast spins and client balance fields
   m.advance(1000);
   await assert.rejects(call(request({action:'spin',game:'wheel',bet:10,selected:0})),{code:'king-rico/failed-precondition'});
   assert.equal(m.records.get('players/one').balanceUnits,0);
+});
+test('Clown commits ten throws, resumes across devices and settles the prize once',async()=>{
+ const m=memory(()=>0),call=m.client('clown');await call(request({action:'bootstrap'}));
+ m.records.get('players/clown').balanceUnits=100025;
+ const roundId=randomUUID(),base={action:'clown',game:'clown',bet:2.5,roundId,selected:0};
+ let sum=0;
+ for(let used=0;used<10;used++) {
+  const shot={...base,used,requestId:used===0?roundId:randomUUID()};
+  const [a,b]=await Promise.all([call(shot),m.client('clown')(shot)]);assert.equal(b.replayed,true);
+  sum+=38;assert.equal(a.outcome.sumUnits,sum);assert.equal(a.player.balance,used===9?1001.55:997.75);
+  const restored=(await m.client('clown')(request({action:'bootstrap'}))).player;
+  assert.equal(restored.clownRound?.used ?? 10,used+1);
+  if(used===0) {
+   await assert.rejects(call(request({...base,used:0,requestId:randomUUID()})),{code:'king-rico/invalid-argument'});
+   await assert.rejects(call(request({...base,used:2})),{code:'king-rico/round-conflict'});
+   assert.equal((await call(request({action:'recharge'}))).reason,'clown-round');
+  }
+  m.advance(350);
+ }
+ const p=m.records.get('players/clown');assert.equal(p.clownStats.betUnits,250);assert.equal(p.clownStats.winUnits,380);
+ await assert.rejects(call(request({...base,used:9})),{code:'king-rico/round-conflict'});
+});
+test('Bounce persists skill checkpoints and pays gold, fall guarantee and collection only once',async()=>{
+ const m=memory(),call=m.client('bounce');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:10,roundId,gold:false};
+ const start={...base,move:'start',n:0,requestId:roundId};await call(start);assert.equal((await call(start)).replayed,true);
+ for(let n=0;n<10;n++) {
+  m.advance(400);const step=request({...base,move:'land',n,gold:n===2});const r=await call(step);
+  assert.equal((await call(step)).replayed,true);assert.equal(r.player.bounceRound.n,n+1);
+ }
+ assert.equal((await call(request({action:'bootstrap'}))).player.balance,1020);
+ m.advance(400);const loss=request({...base,move:'fall',n:10});const paid=await call(loss);
+ assert.equal(paid.player.balance,1035);assert.equal(paid.player.bounceRound,null);assert.equal((await call(loss)).replayed,true);
+ m.advance(400);const next=randomUUID();await call({...start,requestId:next,roundId:next});
+ m.advance(400);await call(request({...base,roundId:next,move:'land',n:0}));
+ m.advance(400);const collect=request({...base,roundId:next,move:'collect',n:1});assert.equal((await call(collect)).player.balance,1035.5);
+ assert.equal((await call(collect)).replayed,true);
 });

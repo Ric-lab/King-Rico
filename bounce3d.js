@@ -4,7 +4,7 @@
 // Ganchos: window.bounceHooks = { onStart() → bool, decide(n) → 'ok'|'fail', onLand(n, gold), onStopped(), onFall() }
 (function () {
   if (customElements.get('bounce-3d')) return;
-  const SRC = 'https://unpkg.com/three@0.184.0/build/three.module.js';
+  const SRC = './runtime/three.module.js';
   const SAVE = 10, DZ = 4, BR = 0.32, HOP = 1.5, L = 1.6, XMAX = 2.3, PAD = 0.05;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const hook = (n, ...a) => { const h = window.bounceHooks; return h && h[n] ? h[n](...a) : n === 'onStart' ? true : n === 'decide' ? 'ok' : undefined; };
@@ -110,8 +110,8 @@
     sprite(s, op) { const T = this.T, m = new T.Sprite(new T.SpriteMaterial({ map: this.gTex, blending: T.AdditiveBlending, transparent: true, depthWrite: false, opacity: op })); m.scale.setScalar(s); m.userData.op = op; this.scene.add(m); return m; }
     local(e) { const rc = this.getBoundingClientRect(); return (e.clientX - rc.left) * (this.W || 453) / rc.width; }
     // arrasto relativo e incremental: sem teleporte ao tocar, sem tranco ao recolocar o dedo, inversão imediata na borda; ~1:1 com a pista na tela
-    down(e) { if (this.drag) return; try { this.setPointerCapture(e.pointerId); } catch (x) {} this.drag = { id: e.pointerId, lx: this.local(e) };
-      if (this.state === 'idle' && hook('onStart')) { this.state = 'run'; this.startHop(0); } }
+    async down(e) { if (this.drag) return; try { this.setPointerCapture(e.pointerId); } catch (x) {} this.drag = { id: e.pointerId, lx: this.local(e) };
+      if(['idle','resume'].includes(this.state)) {const k=this.k || 0;this.state='confirming';if(await hook('onStart')) {this.state='run';this.startHop(k);}else this.state=k ? 'resume':'idle';} }
     move(e) { const d = this.drag; if (!d || e.pointerId !== d.id) return; const x = this.local(e), dx = x - d.lx; d.lx = x; if (this.state !== 'run') return; this.tx = clamp(this.tx + dx * 0.016, -XMAX, XMAX); if (Math.abs(dx) > 2 && !this._dragged) { this._dragged = true; hook('onDrag'); } }
     // DIFICULDADE SOB DEMANDA (visível de longe): cada fileira sorteia fácil/médio/difícil; difícil fica mais comum e mais duro com a distância (quase impossível ~35ª).
     // assinatura: coroa gravada no centro da placa, acende no impacto
@@ -145,6 +145,7 @@
       for (const [a, g] of this.arches) if (a < a0 - 1) { this.scene.remove(g); this.arches.delete(a); } }
     reset() { for (const [, r] of this.rows) this.scene.remove(r.g); this.rows.clear(); for (const [, g] of this.arches) this.scene.remove(g); this.arches.clear();
       this.k = 0; this.streak = 0; if (this.ball) this.ball.visible = true; this.bx = this.tx = 0; this.bz = 0; this.by = BR; this.vy = 0; this.state = 'idle'; this.hop = null; this.idleT = 0; this.stopReq = false; this.ensure(0); this.ball.visible = true; }
+    restore(n) {this.reset();this.k=n;this.ensure(n);this.bz=-n*DZ;this.bx=this.tx=this.rows.get(n)?.t.position.x || 0;this.by=BR;this.state='resume';}
     stop() { if (this.state === 'run') this.stopReq = true; }
     startHop(k) { const dur = Math.max(0.36, 0.72 - k * 0.0012); this.hop = { k, t: 0, dur }; this.ensure(k + 1); }
     splash(row, noPud) { const T = this.T, n = 18; this.wob = 1; this.wobT = 0;
@@ -155,12 +156,12 @@
         m.position.set(this.bx, 0.1, -(this.hop.k + 1) * DZ); this.scene.add(m); this.drops.push({ m, vx: Math.cos(a) * sp, vz: Math.sin(a) * sp * 0.7, vy: 2.6 + Math.random() * 2.6, t: 0, s: m.scale.x }); }
       if (row.wet) { row.t.remove(row.wet.m); row.wet.m.material.dispose(); } const wet = new T.Mesh(this.wetG || (this.wetG = new T.PlaneGeometry(0.9, 0.9)), new T.MeshBasicMaterial({ map: this.wetTex, transparent: true, depthWrite: false, opacity: 0.8 })); wet.rotation.set(-Math.PI / 2, 0, Math.random() * 6); wet.position.set((this.bx - row.t.position.x), 0.008, 0); row.t.add(wet); row.wet = { m: wet, t: 0 };
       hook('sfx', 'splash'); }
-    land() { const k = this.hop.k + 1, row = this.rows.get(k); this.bz = -k * DZ; const hit = Math.abs(this.bx - row.t.position.x) < row.ts / 2 + BR * 0.85 + PAD;
+    async land() { const k = this.hop.k + 1, row = this.rows.get(k); this.bz = -k * DZ; const hit = Math.abs(this.bx - row.t.position.x) < row.ts / 2 + BR * 0.85 + PAD;
       if (!hit) return this.fall();
       this.k = k; this.splash(row); row.flash = 1; row.crown = 1; row.sink = 1; row.lit = true; row.tilt = clamp((this.bx - row.t.position.x) / (row.ts / 2), -1, 1); const perfect = Math.abs(this.bx - row.t.position.x) < row.ts * 0.16; if (perfect) { this.streak = (this.streak || 0) + 1; row.perfect = 1; } else this.streak = 0; row.lit = true; this.squash = 1; this.ring(row); if (perfect) this.ring(row, true);
-      hook('onLand', k, row.gold, perfect, this.streak, row.save);
+      this.hop=null;this.state='confirming';if(await hook('onLand',k,row.gold,perfect,this.streak,row.save)===false){this.state='paused';return;}
       if (this.stopReq) { this.state = 'stopped'; this.hop = null; hook('onStopped'); return; }
-      this.startHop(k); }
+      this.state='run';this.startHop(k); }
     ring(row, white) { const T = this.T, s = new T.Sprite(new T.SpriteMaterial({ map: this.rTex, blending: T.AdditiveBlending, transparent: true, depthWrite: false, color: white ? 0xffffff : row.gold ? 0xffe680 : 0x8ae0ff }));
       s.position.set(row.t.position.x, 0.05, row.g.position.z); this.scene.add(s); this.fx.push({ s, t: 0, big: white ? 1.6 : row.gold ? 4 : 2.6 }); }
     fall() { this.state = 'fall'; this.hop = null; this.vy = 0; this.fallT = 0; this.stopReq = false; this.steamed = false; }

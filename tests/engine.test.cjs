@@ -67,11 +67,11 @@ test('slot caps Happeach per spin and settles the whole special round',()=>{
   }
   assert.ok(triggered>0,'Special rounds must actually execute');
 });
-test('wheel uses 9.5% hit probability, including zero, and pays total x10',()=>{
-  for(let selected=0;selected<12;selected++) {
-    assert.deepEqual(engine.wheel(2.5,selected,()=>.094),{target:selected,winUnits:2500});
-    const miss=engine.wheel(2.5,selected,()=>.095);
-    assert.notEqual(miss.target,selected);assert.equal(miss.winUnits,0);
+test('13-pocket wheel pays the displayed exact, color and Fortune prizes',()=>{
+  for(let selected=0;selected<13;selected++) {
+    assert.deepEqual(engine.wheel(2.5,selected,()=>0),{target:selected,winUnits:selected===0?6250:2500});
+    const miss=engine.wheel(2.5,selected,()=>.99);assert.notEqual(miss.target,selected);assert.equal(miss.winUnits,0);
+    if(selected>0) {const color=engine.wheel(2.5,selected,()=>.1);assert.notEqual(color.target,selected);assert.equal(color.winUnits,1250);assert.equal(color.target%2,selected%2);}
   }
 });
 test('coin arithmetic retains cents from fractional slot rewards',()=>{

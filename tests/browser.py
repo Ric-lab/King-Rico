@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
 from login_ui import check_wallet_retry
 from penalty_browser import check_penalty
+from clown_browser import check_clown_bounce
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -117,7 +118,7 @@ def check_menu(page, screen, paytable):
     return appearance
 
 with sync_playwright() as p:
-    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True)
+    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
     context=browser.new_context(viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
     context.add_init_script(LOGIN_OBSERVER)
     page=context.new_page();errors=[];http_errors=[]
@@ -409,6 +410,7 @@ with sync_playwright() as p:
     check_wallet_retry(browser)
     penalty_result=check_penalty(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)
     print(json.dumps(penalty_result))
+    print(json.dumps(check_clown_bounce(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,

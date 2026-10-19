@@ -25,7 +25,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #0c0318;">
   <div ref="{{ stageRef }}" data-screen-label="Fortune Bounce" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
-    <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js?v=84" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
+    <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
 
     <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
@@ -33,7 +33,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
-    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
+    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- multiplicador atual + garantido -->
     <sc-if value="{{ perfShow }}" hint-placeholder-val="{{ false }}">
@@ -117,30 +117,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: bnFade .2s ease-out;">
-        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
-        <div style="position: absolute; left: 416px; top: 480px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
-            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
-            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
-          </div>
-          <div style="display: flex; flex-direction: column; padding: 4px 18px 6px;">
-            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
-              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
-              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
-              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
-              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
-              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
-            </div>
-            <div style="padding: 14px 0 10px; font-size: 18px; font-weight: 700; line-height: 1.35; color: #f6e8ff; text-wrap: pretty;">Arraste o dedo para os lados e a bola segue. Cada placa soma +0,05 ao prêmio. A cada 10 placas a placa verde SALVA o prêmio: se cair depois, você recebe o valor salvo. Placa dourada paga 3x a aposta na hora. Setas mostram as placas que andam.</div>
-          </div>
-        </div>
-      </div>
-    </sc-if>
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
 
     <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: bnFade .2s ease-out;">
@@ -176,12 +153,25 @@ class Component extends DCLogic {
   stageRef = React.createRef();
   componentDidMount() {
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
-    try { const b = JSON.parse(localStorage.getItem(BKEY)); if (b) this.setState({ betIdx: b.betIdx ?? 3 }); } catch (e) {}
-    window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st, sv) => this.onLand(n, g, p, st, sv), onSteam: () => this.onSteam(), onDrag: () => this.setState({ dragged: true }), onFall: () => this.onFall() };
+    window.__bounce=this;const cloud=window.KingRicoCloud;
+    if(cloud?.enabled) this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this._request) this.applyCloudPlayer();});
+    window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st, sv) => this.onLand(n, g, p, st, sv), onSteam: () => this.onSteam(), onDrag: () => this.setState({ dragged: true }), onFall: () => this.onFall(), onStopped:()=>this.collect(multOf(this.state.n),'VOCÊ GANHOU!') };
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._rs); clearTimeout(this._t); }
-  save(bal) { const s = this.state; try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = bal ?? s.balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(BKEY, JSON.stringify({ betIdx: s.betIdx })); } catch (e) {} }
+  componentWillUnmount() {this._unwatchCloud?.();clearTimeout(this._restore);if(window.__bounce===this){delete window.__bounce;delete window.bounceHooks;}window.removeEventListener('resize', this._rs); clearTimeout(this._t); }
+  save() {const s=this.state;window.KingRicoCloud?.settings({sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,bounceBetIdx:s.betIdx});}
+  applyCloudPlayer() {
+    const p=this._cloudDeferred;if(!p || this._request) return;this._cloudDeferred=null;const r=p.bounceRound;
+    const restore=!!r && (!this.state.active || this.state.n!==r.n || this.state.roundId!==r.id);
+    this.setState({balance:p.balance,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.bounceBetIdx ?? 3,
+      active:!!r,roundId:r?.id || null,roundBet:(r?.betUnits || 0)/100,n:r?.n || 0,guard:r?.guardUnits ? r.guardUnits/r.betUnits : 0});
+    if(restore) this.restoreRenderer(r.n);
+  }
+  restoreRenderer(n) {clearTimeout(this._restore);if(window.Bounce3D) window.Bounce3D.restore(n);else this._restore=setTimeout(()=>this.restoreRenderer(n),100);}
+  async commit(move,gold=false) {const c=window.KingRicoCloud;if(this._request || !c?.enabled || !c.player) return null;this._request=true;
+    try {const r=await c.bounce(move,move==='start' ? BETS[this.state.betIdx] : this.state.roundBet,this.state.roundId || crypto.randomUUID(),this.state.n,gold);return r;}
+    catch(e){this._cloudDeferred=c.player;c.error(e);return null;}
+    finally {this._request=false;}
+  }
   ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   tone(f, d, type = 'triangle', g = 0.07, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
   lv() { return [0, 0.35, 1][this.state.sfxLvl ?? 2]; }
@@ -192,11 +182,12 @@ class Component extends DCLogic {
     o.type = 'sine'; o.frequency.value = freq; o2.type = 'sine'; o2.frequency.value = freq * 2; const g2 = ac.createGain(); g2.gain.value = 0.28; f.type = 'lowpass'; f.frequency.setValueAtTime(freq * 6, t); f.frequency.exponentialRampToValueAtTime(freq * 1.6, t + dur * 0.7);
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * L, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(f); o2.connect(g2); g2.connect(f); f.connect(g); g.connect(ac.destination); o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05); }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; try { navigator.vibrate && navigator.vibrate(L === 1 ? [].concat(p).map(x => Math.max(10, x >> 1)) : p); } catch (e) {} }
-  busy() { const s = this.state; return s.win || s.menu || s.betOpen || s.paying; }
-  onStart() { const s = this.state; if (this.busy() || s.active) return false; this.ac(); const bet = BETS[s.betIdx];
-    if (s.balance < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); return false; }
-    const bal = Math.round((s.balance - bet) * 100) / 100; this.setState({ balance: bal, active: true, roundBet: bet, n: 0, guard: 0, lost: false }, () => this.save(bal)); this.tone(440, 0.08, 'square', 0.05); return true; }
-  onLand(n, gold, perfect, streak, save) { const s = this.state, bet = s.roundBet, guard = save ? multOf(n) : s.guard; this.setState({ n, guard, perf: perfect ? streak : 0, perfKey: perfect ? 'p' + n : s.perfKey });
+  busy() { const s = this.state; return this._request || s.win || s.menu || s.betOpen || s.paying; }
+  async onStart() {if(this.busy()) return false;if(this.state.active) return true;
+    const r=await this.commit('start');if(!r) return false;
+    this._cloudDeferred=null;this.setState({balance:r.player.balance,active:true,roundId:r.outcome.roundId,roundBet:r.outcome.betUnits/100,n:0,guard:0,lost:false});this.tone(440,.08,'square',.05);return true;
+  }
+  async onLand(n, gold, perfect, streak, save) {const r=await this.commit('land',gold);if(!r) return false;this._cloudDeferred=null;this.setState({balance:r.player.balance});const s = this.state, bet = s.roundBet, guard = save ? multOf(n) : s.guard; this.setState({ n, guard, perf: perfect ? streak : 0, perfKey: perfect ? 'p' + n : s.perfKey });
     // frase musical de 10 placas: 9 notas que sobem e criam expectativa (a 9ª é a sensível, pede resolução) + a verde RESOLVE na tônica.
       // Cada frase muda de tom (I → IV → V → I), então a música avança junto com o jogo. Dourada = a nota da vez com oitava acima (brilho, mesmo instrumento).
       const PH = [261.63, 293.66, 329.63, 392, 440, 392, 440, 493.88, 587.33], KEY = [1, 4 / 3, 3 / 2, 1][Math.floor((n - 1) / SAVE) % 4], pos = (n - 1) % SAVE, f = (pos < 9 ? PH[pos] : 523.25) * KEY * (KEY > 1.2 ? 0.75 : 1);
@@ -205,19 +196,17 @@ class Component extends DCLogic {
       else this.pluck(f, 0.11, 0.45); this.buzz(gold || save ? [40, 30, 60] : perfect ? [12, 25, 12] : 15);
     if (perfect) this.pluck(f * 2, 0.05, 0.35, 0.05);
     
-    if (gold) { const w = Math.round(bet * GOLD * 100) / 100, bal = Math.round((this.state.balance + w) * 100) / 100; 
-      clearTimeout(this._gt); this.setState({ balance: bal, goldShow: true, goldKey: 'g' + n, goldText: '+' + fmt(w) }, () => this.save(bal)); this._gt = setTimeout(() => this.setState({ goldShow: false }), 1400); } }
+    if(gold){const w=r.outcome.winUnits/100;clearTimeout(this._gt);this.setState({goldShow:true,goldKey:'g'+n,goldText:'+'+fmt(w)});this._gt=setTimeout(()=>this.setState({goldShow:false}),1400);}
+    if(r.outcome.ended){this.setState({active:false,paying:true,win:{w:r.outcome.winUnits/100,title:'VOCÊ GANHOU!'}});return false;}return true;
+  }
   onSteam() { this.tone(900, 0.5, 'sawtooth', 0.04, 120); this.buzz([30, 20, 60]); }
-  onFall() { const s = this.state; if (!s.active) return;
-    if (s.guard) return this.collect(s.guard, 'SALVO!');
-    this.tone(220, 0.3, 'sine', 0.08, 150); setTimeout(() => this.tone(150, 0.4, 'sine', 0.08, 110), 260);
-    this.setState({ active: false, lost: true }); this._t = setTimeout(() => { this.setState({ lost: false, n: 0, guard: 0 }); window.Bounce3D && window.Bounce3D.reset(); }, 700); }
+  async onFall() {if(!this.state.active) return;const r=await this.commit('fall');if(!r) return;this._cloudDeferred=null;
+    if(r.outcome.winUnits>0){this.setState({balance:r.player.balance,active:false,paying:true,win:{w:r.outcome.winUnits/100,title:'SALVO!'}});return;}
+    this.setState({balance:r.player.balance,active:false,lost:true,roundId:null});this._t=setTimeout(()=>{this.setState({lost:false,n:0,guard:0});window.Bounce3D?.reset();},700);
+  }
   collectBtn = () => { const s = this.state; if (!s.active || s.n < 1 || s.win || s.stopping) return; this.tone(900, 0.05, 'square', 0.05); this.buzz(20); this.setState({ stopping: true }); window.Bounce3D && window.Bounce3D.stop(); };
-  collect(mult, title) { const w = Math.round(this.state.roundBet * mult * 100) / 100;
-    [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90)); this.buzz([70, 60, 70, 60, 120]);
-    this.setState({ active: false, stopping: false, paying: true, win: { w, title } }); }
-  closeWin = () => { const s = this.state; if (!s.win) return; const w = s.win.w; this.setState({ win: null });
-    this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal, paying: false, n: 0, guard: 0 }, () => this.save(bal)); window.Bounce3D && window.Bounce3D.reset(); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); };
+  async collect(mult,title) {const r=await this.commit('collect');if(!r) return;this._cloudDeferred=null;this.setState({balance:r.player.balance,active:false,stopping:false,paying:true,win:{w:r.outcome.winUnits/100,title}});}
+  closeWin = () => {if(!this.state.win || this._paying) return;this._paying=true;this.setState({win:null});this.flyCoins(()=>{this._paying=false;this.setState({paying:false,n:0,guard:0,roundId:null});window.Bounce3D?.reset();this._cloudDeferred=window.KingRicoCloud.player;this.applyCloudPlayer();});};
   flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 226, y: 742 }, to = { x: 40, y: 42 }, n = 10;
     for (let i = 0; i < n; i++) { const c = document.createElement('img'); c.src = 'assets/fingo/coin.webp';
       c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;pointer-events:none;filter:drop-shadow(0 0 8px rgba(255,210,87,.8))'; st.appendChild(c);
@@ -233,12 +222,14 @@ class Component extends DCLogic {
   betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save()); };
   goHome = e => { if (this.state.active && e) e.preventDefault(); };
   recharge = async () => { const cloud = window.KingRicoCloud;
-    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
+    if (cloud && cloud.enabled) { try { const r = await cloud.recharge(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
     this.setState({ balance: 1000 }, () => this.save(1000)); };
   rcBroke() { const s = this.state; return s.balance < 1 && !s.win && !s.menu && !s.active && !s.paying; }
   renderVals() {
     const s = this.state, txt = fmt(s.balance), m = multOf(s.n);
     return {
+      menuButton:{onClick:this.openMenu,disabled:!!(s.active || this._request),style:{zIndex:25}},
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Bounce',details:'Deslize para cair nas plataformas. Cada salto aumenta o multiplicador; a cada 10 saltos o valor fica garantido. Placas douradas pagam x3. A aposta, as placas e os prêmios ficam salvos na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       goHome: this.goHome, openMenu: this.openMenu, closeMenu: this.closeMenu, menu: !!s.menu,
       perfShow: s.perf > 0 && s.active, perfKey: s.perfKey || 'p0', perfText: s.perf > 1 ? 'PERFEITO ×' + s.perf : 'PERFEITO!', multText: 'x' + fmt(m), multOp: s.n ? 1 : 0.45, multKey: 'm' + s.n, hasGuard: !!s.guard, guardText: fmt(s.roundBet * s.guard),

@@ -29,7 +29,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
   <div style="position: absolute; left: 0; right: 0; top: 0; height: 64%; background: linear-gradient(180deg, rgba(48,10,70,.62) 0%, rgba(48,10,70,.32) 55%, rgba(48,10,70,0) 100%); pointer-events: none;"></div>
   <div data-screen-label="Home" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: min(453px, 100%); margin: 0 auto; display: flex; flex-direction: column; padding-top: {{ padTop }}; box-sizing: border-box;">
 
-    <div style="position: relative; height: {{ hdrH }};">
+    <div style="position: relative; flex-shrink:0; height: {{ hdrH }};">
+      <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
       <div ref="{{ rPlaque }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: {{ plqL }}; top: {{ plqT }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('{{ imgStage }}'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale({{ plqS }}); transform-origin: {{ plqO }};">
         <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
           <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
@@ -155,23 +156,16 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <sc-if value="{{ settings }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ toggleSettings }}" style="position: absolute; inset: 0; z-index: 20; background: rgba(10,2,20,.7); display: flex; align-items: flex-end; justify-content: center;">
-        <div onClick="{{ stop }}" style="width: 100%; max-width: 453px; box-sizing: border-box; padding: 20px 20px 30px; border-radius: 24px 24px 0 0; background: linear-gradient(180deg, #3a1260, #22083a); box-shadow: 0 -2px 0 #f0b41f; display: flex; flex-direction: column; gap: 14px;">
-          <span style="font-size: 22px; font-weight: 800; color: #ffd257;">Configurações</span>
-          <span style="font-size: 16px; font-weight: 700; line-height: 1.4; color: #f3e2ff; text-wrap: pretty;">Som e vibração ficam dentro de cada jogo, no menu. Aqui vão entrar conta e privacidade.</span>
-          <div onClick="{{ toggleSettings }}" role="button" style="align-self: stretch; text-align: center; padding: 12px; border-radius: 14px; background: #2ec962; box-shadow: 0 4px 0 #147a36; font-size: 18px; font-weight: 800; color: #fff; cursor: pointer;">OK</div>
-        </div>
-      </div>
-    </sc-if>
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;testGift&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Teste da raspadinha&quot;},&quot;testDay&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:7,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Teste da raspadinha&quot;},&quot;onPlay&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
 const SAVE = 'fortuneCircus.slot.v3', BONUS_KEY = 'fortuneCircus.home.bonus', ROLL_KEY = 'fortuneCircus.home.bonusRoll';
 // raspadinha: valor sorteado dentro da faixa do dia; a faixa sobe com dias seguidos. Nunca zero.
 const WEEK = [500, 750, 1000, 1500, 2000, 3000, 5000];
+const CLOUD_WEEK = [50, 100, 150, 200, 250, 500, 1000];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const rollCard = max => { const a = rollPrize(max), r10 = v => Math.max(10, Math.round(v / 10) * 10); let d1 = r10(a * 0.2), d2 = r10(a * 0.5); if (d2 === d1) d2 = d1 + 10;
+const rollCard = (max, award) => { const a = award ?? rollPrize(max), r10 = v => Math.max(10, Math.round(v / 10) * 10); let d1 = r10(a * 0.2), d2 = r10(a * 0.5); if (d2 === d1) d2 = d1 + 10;
   return { a, cells: shuffle([a, a, a, d1, d2, 0, 0, -1, -1]) }; };
 const rollPrize = max => { const min = max / 10, r = Math.random(), rnd = v => Math.max(min, Math.round(v / 10) * 10);
   return r < 0.6 ? rnd(min + Math.random() * min * 1.4) : r < 0.9 ? rnd(min * 2.4 + Math.random() * min * 2.6) : r < 0.98 ? rnd(min * 5 + Math.random() * min * 3) : max; };
@@ -184,22 +178,30 @@ const QUIPS = {
   idle: 'Escolha um jogo e boa sorte!', bonus: 'Moedas na conta!'
 };
 class Component extends DCLogic {
-  state = { settings: false, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
+  state = { menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
   rPlaque = React.createRef();
   componentDidMount() {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => this.setState({
+      balance: p.balance, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, last: p.bonus.day ? Number(p.bonus.day.replaceAll('-', '')) : 0, streak: p.bonus.streak
+    }));
     this._rs = () => this.forceUpdate(); window.addEventListener('resize', this._rs);
     [0, 60, 300, 1000, 2500].forEach(t => setTimeout(() => { if (!this._dead) this.forceUpdate(); }, t));
-    try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {}
-    try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
+    if (!cloud?.enabled) {
+      try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
+      try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
+    }
     this.setState({ loaded: true });
     this.tick = setInterval(() => this.setState({ now: Date.now() }), 30000);
     this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3200);
   }
-  componentWillUnmount() { this._dead = true; clearInterval(this.tick); clearTimeout(this.idleT); }
+  componentWillUnmount() { this._unwatchCloud && this._unwatchCloud(); window.removeEventListener('resize', this._rs); clearTimeout(this._tt); this._dead = true; clearInterval(this.tick); clearTimeout(this.idleT); }
   buzz(p) {
+    const level = this.state.vibLvl ?? 2; if (!level) return;
+    p = level === 1 ? [].concat(p).map((v,i) => i % 2 ? v : Math.max(15, Math.round(v / 2))) : p;
     try {
       const C = window.Capacitor; // app Android: plugin nativo com força máxima
-      if (C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')) { C.nativePromise('FcHaptics', 'vibrate', { pattern: [].concat(p), strength: 1 }).catch(() => {}); return; }
+      if (C && C.nativePromise && (C.PluginHeaders || []).some(h => h.name === 'FcHaptics')) { C.nativePromise('FcHaptics', 'vibrate', { pattern: [].concat(p), strength: level === 1 ? .55 : 1 }).catch(() => {}); return; }
       navigator.vibrate && navigator.vibrate(p);
     } catch (e) {}
   }
@@ -210,12 +212,13 @@ class Component extends DCLogic {
   }
   tapKing = () => { this.buzz(22); const n = this.state.tapN; this.setState({ tapN: n + 1 }); this.react(TAP_MOODS[n % TAP_MOODS.length]); };
   // weekly cycle: claim once per calendar day; consecutive days advance 50→1000, a missed day restarts, after day 7 it loops
-  cycle() { const s = this.state, today = dayKey(Date.now()); const gap = s.last ? dayDiff(s.last, today) : 99;
-    if (this.props.testGift ?? false) { const d = this.props.testDay ?? 1; return { claimed: !!s.testClaimed, idx: Math.min(6, Math.max(0, d - 1)), today: 'test-' + this._testSeed }; }
+  cycle() { const s = this.state, today = window.KingRicoCloud?.enabled ? window.KingRicoCloud.dayKey() : dayKey(Date.now()); const gap = s.last ? dayDiff(s.last, today) : 99;
+    if (!window.KingRicoCloud?.enabled && (this.props.testGift ?? false)) { const d = this.props.testDay ?? 1; return { claimed: !!s.testClaimed, idx: Math.min(6, Math.max(0, d - 1)), today: 'test-' + this._testSeed }; }
     const claimed = gap === 0, idx = claimed ? (s.streak + 6) % 7 : gap === 1 ? s.streak % 7 : 0; return { claimed, idx, today }; }
   _testSeed = Date.now();
   testAgain = () => { this._testSeed = Date.now(); this._prize = null; this._sc = null; this.setState({ testClaimed: false, scRevealed: false, scTouched: false, scOpen: null }); };
-  prize(c) { if (this._prize && this._prize.d === c.today) return this._prize.a;
+  prize(c) { if (this._prize && this._prize.d === c.today && (!window.KingRicoCloud?.enabled || this._prize.idx === c.idx)) return this._prize.a;
+    if (window.KingRicoCloud?.enabled) { this._prize = { d: c.today, idx: c.idx, ...rollCard(CLOUD_WEEK[c.idx], CLOUD_WEEK[c.idx]) }; return this._prize.a; }
     if (String(c.today).startsWith('test-')) { this._prize = { d: c.today, ...rollCard(WEEK[c.idx]) }; return this._prize.a; }
     let p = null; try { p = JSON.parse(localStorage.getItem(ROLL_KEY)); } catch (e) {}
     if (!p || p.d !== c.today || !p.cells) { p = { d: c.today, ...rollCard(WEEK[c.idx]) }; try { localStorage.setItem(ROLL_KEY, JSON.stringify(p)); } catch (e) {} }
@@ -248,7 +251,20 @@ class Component extends DCLogic {
   cellPop(ci) { const p = this._prize, v = p && p.cells[ci]; if (v === p.a) { const n = this._open.filter((o, i) => o && p.cells[i] === p.a).length + 1; this.buzz(n >= 3 ? [40, 50, 80] : 25); } else this.buzz(12); }
   scUp = () => { this._scOn = false; this._scLast = null; };
   reveal() { if (this.state.scRevealed) return; setTimeout(() => { this.setState({ scRevealed: true }); this.buzz([30, 40, 60]); }, 350); }
-  collectBonus = () => {
+  collectBonus = async () => {
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) {
+      if (this._collecting) return;
+      this._collecting = true;
+      try {
+        const r = await cloud.bonus();
+        const p = cloud.player || r.player;
+        this.setState({ balance: p.balance, last: Number(p.bonus.day.replaceAll('-', '')), streak: p.bonus.streak });
+        if (r.amount) { this.buzz([35, 50, 45]); this.react('cheer', '+' + r.amount.toLocaleString('pt-BR') + ' moedas pra você!'); }
+      } catch (e) { cloud.error(e); }
+      finally { this._collecting = false; }
+      return;
+    }
     const c = this.cycle(); if (c.claimed) { this.buzz(18); return; }
     const amt = this.prize(c), b = (this.state.balance ?? 1000) + amt, streak = c.idx + 1, test = this.props.testGift ?? false;
     try { const sv = JSON.parse(localStorage.getItem(SAVE)) || {}; sv.balance = b; localStorage.setItem(SAVE, JSON.stringify(sv)); if (!test) localStorage.setItem(BONUS_KEY, JSON.stringify({ d: c.today, s: streak })); } catch (e) {}
@@ -261,9 +277,24 @@ class Component extends DCLogic {
   };
   // embedded inside the game (published single file): stay in-page and let the host swap screens
   tapPlay = e => { this.buzz(30); if (this.props.onPlay) { if (e && e.preventDefault) e.preventDefault(); this.props.onPlay(); } };
-  renderVals() {
-    const s = this.state, b = s.balance ?? 1000, txt = Math.floor(b).toLocaleString('pt-BR');
-    const cy = this.cycle(), ready = !cy.claimed;
+  openMenu = () => this.setState({ menu: true });
+  closeMenu = () => this.setState({ menu: false });
+  setLvl(k, value) {
+    this.setState({ [k]: value });
+    const cloud = window.KingRicoCloud;
+    if (cloud && cloud.enabled) { cloud.settings({ [k]: value }); return; }
+    try {
+      const saved = JSON.parse(localStorage.getItem(SAVE)) || {};
+      saved[k] = value; saved.sound = (saved.sfxLvl ?? 2) > 0; saved.vibrate = (saved.vibLvl ?? 2) > 0;
+      localStorage.setItem(SAVE, JSON.stringify(saved));
+    } catch (e) {}
+  }
+  rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle'); }
+  recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
+  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
+  _rv() {
+    const s = this.state, b = s.balance ?? 1000, txt = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+    const cy = this.cycle(), ready = !cy.claimed, week = window.KingRicoCloud?.enabled ? CLOUD_WEEK : WEEK;
     const A = p => (typeof window !== 'undefined' && window.__fcAsset ? window.__fcAsset(p) : p);
     return {
       rPlaque: this.rPlaque,
@@ -288,9 +319,9 @@ class Component extends DCLogic {
           return { text: king ? '' : v.toLocaleString('pt-BR'), img: v === 0 ? A('assets/symbols/sym-wild-s.webp') : v < 0 ? A('assets/neck/g-head.webp') : '', imgOp: king ? 1 : 0, fs: v >= 1000 ? '24px' : '28px',
             color: v === p.a ? '#6b2e05' : '#8a6a3a', bg: win ? 'linear-gradient(180deg, #fff3c4, #ffd257)' : '#fff6df', sh: win ? '0 0 0 3px #e8900f, 0 0 16px rgba(255,210,87,.9)' : 'inset 0 0 0 2px rgba(200,135,26,.35)', anim: win ? 'hsPop .5s ease-out ' + (i * 0.04) + 's' : 'none' }; }); })(),
       foilOp: s.scRevealed ? 0 : 1, foilPe: s.scRevealed ? 'none' : 'auto', showScratchHand: !s.scTouched, amtAnim: s.scRevealed ? 'hsPop .5s ease-out' : 'none',
-      bonusSub: ready ? 'Dia ' + (cy.idx + 1) + ': ganhe ' + WEEK[cy.idx].toLocaleString('pt-BR') + ' moedas' : 'Volte amanhã: ' + WEEK[(cy.idx + 1) % 7].toLocaleString('pt-BR') + ' moedas',
+      bonusSub: ready ? 'Dia ' + (cy.idx + 1) + ': ganhe ' + week[cy.idx].toLocaleString('pt-BR') + ' moedas' : 'Volte amanhã: ' + week[(cy.idx + 1) % 7].toLocaleString('pt-BR') + ' moedas',
       bonusBtn: ready ? 'PEGAR' : 'AMANHÃ',
-      week: WEEK.map((v, i) => { const done = cy.claimed ? i <= cy.idx : i < cy.idx, now = !cy.claimed && i === cy.idx, last = i === 6;
+      week: week.map((v, i) => { const done = cy.claimed ? i <= cy.idx : i < cy.idx, now = !cy.claimed && i === cy.idx, last = i === 6;
         return { label: done ? '✓' : now ? String(i + 1) : last ? '🎁' : '', size: now ? '44px' : last ? '34px' : '22px', fs: now ? '22px' : last ? '18px' : '14px',
           bg: now ? 'linear-gradient(180deg, #fff3c4, #ffd257 55%, #f0a018)' : done ? 'linear-gradient(180deg, #6cf096, #2ec962)' : last ? 'linear-gradient(180deg, #ff7ab8, #d63a7c)' : '#4a1670',
           sh: now ? '0 0 0 3px #6b2e05, 0 0 16px rgba(255,210,87,.9)' : done ? '0 0 0 2px #147a36' : last ? '0 0 0 2px #ffd257' : '0 0 0 2px rgba(255,255,255,.25)',
@@ -300,9 +331,17 @@ class Component extends DCLogic {
       bonusBtnSh: ready ? '0 3px 0 #a86a00, inset 0 1px 0 rgba(255,255,255,.6)' : 'none',
       bonusBtnColor: ready ? '#5a2a00' : 'rgba(255,240,210,.7)',
       bonusCursor: ready ? 'pointer' : 'default',
-      settings: s.settings,
-      toggleSettings: () => this.setState(x => ({ settings: !x.settings })),
-      stop: e => e.stopPropagation()
+      soon: [
+        { id: 2, name: 'Bingo do Circo', img: A('assets/symbols/sym-tent.png'), c1: '#7a1c3a', c2: '#3a0b22' }
+      ],
+      menuButton: {onClick:this.openMenu,style:(() => {
+        if (window.__fcLayout) return {};
+        const gs = Math.max(.25, Math.min(window.innerWidth / 453, window.innerHeight / 802, 1.6));
+        return {right:20.167*gs+'px',top:29.5*gs+'px',transform:'translateX(2px) scale('+1.25*gs+')'};
+      })()},
+      menuProps: {open:!!s.menu,onClose:this.closeMenu,screen:'Home',
+        details:'Seu saldo é compartilhado entre todos os jogos. O bônus diário acompanha uma sequência de sete dias.',
+        sfxLvl:s.sfxLvl,vibLvl:s.vibLvl,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)}
     };
   }
 }

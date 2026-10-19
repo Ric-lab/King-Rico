@@ -3,7 +3,7 @@ import engine from './engine.cjs';
 
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,
+export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,clownRound:p.clownRound || null,bounceRound:p.bounceRound || null,
   settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
@@ -22,13 +22,15 @@ export function createGameStore(db, uid, dependencies={}) {
     const allowed={bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected'],
       neck:['action','requestId','game','bet','move','roundId','floor'],
       fingo:['action','requestId','game','bet','move','roundId','used','selected'],
+      bounce:['action','requestId','game','bet','roundId','n','move','gold'],
+      clown:['action','requestId','game','bet','roundId','used','selected'],
       penalty:['action','requestId','game','bet','move','roundId','step','quality'],
       bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
     if (data.analyticsConsent !== undefined && typeof data.analyticsConsent !== 'boolean') fail('king-rico/invalid-argument','Preferência inválida.');
     if (data.action==='spin' && (!engine.BETS.includes(data.bet) || !['circus','wheel'].includes(data.game) ||
-      (data.game==='wheel' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>11 : data.selected!==undefined)))
+      (data.game==='wheel' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>12 : data.selected!==undefined)))
       fail('king-rico/invalid-argument','Aposta inválida.');
     if(data.action==='neck' && (data.game!=='neck' || !engine.BETS.includes(data.bet) || !['start','climb','collect'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.floor) || data.floor<0 || data.floor>32 || data.move==='start' && data.floor!==0))
@@ -43,11 +45,18 @@ export function createGameStore(db, uid, dependencies={}) {
       || data.move==='collect' && (data.step===0 || data.quality!==0)
       || data.step===0 && data.requestId!==data.roundId))
       fail('king-rico/invalid-argument','Rodada inválida.');
+    if(data.action==='clown' && (data.game!=='clown' || !engine.BETS.includes(data.bet)
+      || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.used) || data.used<0 || data.used>=engine.CLOWN_BALLS
+      || !Number.isInteger(data.selected) || data.selected< -1 || data.selected>5 || data.used===0 && data.requestId!==data.roundId))
+      fail('king-rico/invalid-argument','Lançamento inválido.');
+    if(data.action==='bounce' && (data.game!=='bounce' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '')
+      || !['start','land','fall','collect'].includes(data.move) || !Number.isInteger(data.n) || data.n<0 || data.n>=10000 || typeof data.gold!=='boolean'
+      || data.move!=='land' && data.gold || data.move==='start' && (data.n!==0 || data.requestId!==data.roundId))) fail('king-rico/invalid-argument','Salto inválido.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus','neck','fingo','penalty','recharge'].includes(data.action);
+    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -120,6 +129,31 @@ export function createGameStore(db, uid, dependencies={}) {
         p.penaltyRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,step:outcome.step};
         p.settings.penaltyBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'penalty',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+      } else if(data.action==='bounce') {
+        const round=p.bounceRound || null;
+        if(round ? data.move==='start' || round.id!==data.roundId || round.n!==data.n || round.betUnits!==engine.units(data.bet) : data.move!=='start')
+          fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
+        if(data.move==='collect' && data.n<1) fail('king-rico/invalid-argument','Prêmio indisponível.');
+        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de saltar.');
+        betUnits=round ? 0 : engine.units(data.bet);if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const outcome=engine.bounce(data.bet,round,data.move,data.roundId,data.gold),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
+        p.bounceRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,n:outcome.n,guardUnits:outcome.guardUnits};
+        p.settings.bounceBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+        result={game:'bounce',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+      } else if(data.action==='clown') {
+        const round=p.clownRound || null;
+        if(round ? round.id!==data.roundId || round.used!==data.used || round.betUnits!==engine.units(data.bet) : data.used!==0)
+          fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
+        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de lançar.');
+        betUnits=round ? 0 : engine.units(data.bet);
+        if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const stats=p.clownStats || {betUnits:0,winUnits:0},outcome=engine.clown(data.bet,round,data.roundId,data.selected,stats,rng),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
+        p.clownRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,used:outcome.used,results:outcome.results,sumUnits:outcome.sumUnits};
+        if(outcome.ended) p.clownStats={betUnits:stats.betUnits+outcome.betUnits,winUnits:stats.winUnits+winUnits};
+        p.settings.clownBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+        result={game:'clown',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if (data.action==='bonus') {
         const today=dayIndex(time), gap=today-p.bonus.dayIndex;
         if (gap===0) return {amount:0,player:publicPlayer(p)};
@@ -131,6 +165,8 @@ export function createGameStore(db, uid, dependencies={}) {
       } else if (data.action==='recharge') {
         if(p.neckRound) return {amount:0,reason:'neck-round',player:publicPlayer(p)};
         if(p.fingoRound) return {amount:0,reason:'fingo-round',player:publicPlayer(p)};
+        if(p.bounceRound) return {amount:0,reason:'bounce-round',player:publicPlayer(p)};
+        if(p.clownRound) return {amount:0,reason:'clown-round',player:publicPlayer(p)};
         if(p.penaltyRound) return {amount:0,reason:'penalty-round',player:publicPlayer(p)};
         if(p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
         winUnits=100000;p.balanceUnits+=winUnits;

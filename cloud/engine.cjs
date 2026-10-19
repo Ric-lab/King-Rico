@@ -15,7 +15,7 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-13-spark-v2';
+const RULES_VERSION = '2026-10-19-spark-v3';
 const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
 const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;
@@ -122,10 +122,32 @@ function slot(bet, peaches = 0, rng = random) {
   return { grid, res, feature: bonus, peaches: bonus ? total - PEACH_GOAL : total,
     winUnits: units(res.win) + (bonus ? units(bonus.res.win) : 0) };
 }
-function wheel(bet, selected, rng = random) {
-  const others = Array.from({ length: 12 }, (_,i) => i).filter(i => i !== selected);
-  const target = rng() < WHEEL_HIT_P ? selected : others[Math.floor(rng() * others.length)];
-  return { target, winUnits: target === selected ? units(bet * WHEEL_PAY) : 0 };
+// Match the current 13-pocket Claude Design wheel, including same-color prizes.
+const WHEEL_EXACT_P=.04, WHEEL_COLOR_P=.143, WHEEL_FORTUNE_P=.95/25;
+const wheelPrize=(bet,selected,target)=>units(bet*(target===selected ? selected===0 ? 25 : 10 : selected!==0 && target!==0 && selected%2===target%2 ? 5 : 0));
+function wheel(bet,selected,rng=random) {
+  const all=Array.from({length:13},(_,i)=>i),r=rng();
+  const pool=selected===0 ? r<WHEEL_FORTUNE_P ? [0] : all.slice(1)
+    : r<WHEEL_EXACT_P ? [selected] : r<WHEEL_EXACT_P+WHEEL_COLOR_P
+      ? all.filter(n=>n!==0 && n!==selected && n%2===selected%2) : all.filter(n=>n===0 || n%2!==selected%2);
+  const target=pool[Math.floor(rng()*pool.length)];return {target,winUnits:wheelPrize(bet,selected,target)};
+}
+const CLOWN_BALLS=10,CLOWN_MULTIPLIERS=[1.5,2.5,5,5,10,10];
+function clown(bet,previous,roundId,selected,stats={betUnits:0,winUnits:0},rng=random) {
+  const used=(previous?.used || 0)+1,betUnits=previous?.betUnits || units(bet),results=previous?.results || [];
+  const m=CLOWN_MULTIPLIERS[selected] || 0,rtp=stats.betUnits ? stats.winUnits/stats.betUnits : 0;
+  const hot=stats.betUnits>=2000 && rtp>.95,adjust=hot ? Math.max(.45,1-(rtp-.95)*3) : 1;
+  const hit=selected>=0 && (!results.some(v=>v>0) && !hot || rng()<Math.min(1,.95/m*adjust)) ? selected : -1;
+  const multiplier=hit<0 ? 0 : m,sumUnits=(previous?.sumUnits || 0)+Math.round(betUnits*multiplier/CLOWN_BALLS),ended=used===CLOWN_BALLS;
+  return {roundId,betUnits,used,selected,hit,results:[...results,multiplier],sumUnits,ended,winUnits:ended?sumUnits:0};
+}
+// Skill determines landing; each checkpoint/gold prize is committed once.
+function bounce(bet,previous,move,roundId,gold=false) {
+  const betUnits=previous?.betUnits || units(bet),n=(previous?.n || 0)+(move==='land'?1:0);
+  const prize=step=>Math.round(betUnits*(100+5*step)/100),guardUnits=move==='land' && n%10===0 ? prize(n) : previous?.guardUnits || 0;
+  const ended=move==='fall' || move==='collect' || n===10000;
+  const winUnits=move==='land' && gold ? betUnits*3 : ended ? move==='fall' ? guardUnits : prize(n) : 0;
+  return {roundId,betUnits,move,n,guardUnits,gold,ended,winUnits};
 }
 function dayKey(ms) {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date(ms));
@@ -142,4 +164,4 @@ function bonusFor(last, streak, now) {
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

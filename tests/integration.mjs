@@ -311,3 +311,47 @@ test('Spark rules validate creation, settings, timestamps, balances, operation b
     fingerprint:'forged',betUnits:0,winUnits:5000,result:{amount:50,player:publicP},createdAt:serverTimestamp(),rulesVersion:'2026-10-12-spark-v1'});
   await assertFails(b.commit());
 });
+test('Clown Rules persist ten throws, reject forged progress and settle across devices once',async()=>{
+ const identity='clown-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),roundId=randomUUID(),base={action:'clown',game:'clown',bet:2.5,roundId,selected:0};
+ const first={...base,requestId:roundId,used:0};const [a,b]=await Promise.all([c.call(first),c.call(first)]);
+ assert.ok(a.replayed || b.replayed);assert.equal(a.player.balance,997.5);
+ const other=await client(identity+'other',identity,{rng:()=>0});assert.equal((await other.call(request({action:'bootstrap'}))).player.clownRound.used,1);
+ await assertFails(updateDoc(ref,{clownRound:null,updatedAt:serverTimestamp(),revision:2}));
+ for(let used=1;used<10;used++) {
+  await new Promise(r=>setTimeout(r,350));const shot=request({...base,used});const result=await other.call(shot);
+  assert.equal((await c.call(shot)).replayed,true);assert.equal(result.player.balance,used===9?1001.3:997.5);
+ }
+ assert.equal((await getDoc(ref)).data().clownStats.winUnits,380);
+ assert.equal((await c.call(first)).replayed,true);
+ await assert.rejects(c.call(request({...base,used:9})),{code:'king-rico/round-conflict'});
+});
+test('Bounce Rules validate gold, saved checkpoint, loss, replay and restore',async()=>{
+ const identity='bounce-'+randomUUID(),c=await client(identity,identity);await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:1000,roundId,gold:false};
+ const start={...base,move:'start',n:0,requestId:roundId};await c.call(start);assert.equal((await c.call(start)).replayed,true);
+ assert.equal((await c.call(request({action:'recharge'}))).reason,'bounce-round');
+ for(let n=0;n<10;n++) {await new Promise(r=>setTimeout(r,350));const step=request({...base,move:'land',n,gold:n===2});await c.call(step);assert.equal((await c.call(step)).replayed,true);}
+ const other=await client(identity+'other',identity);assert.equal((await other.call(request({action:'bootstrap'}))).player.bounceRound.n,10);
+ await new Promise(r=>setTimeout(r,350));const fall=request({...base,move:'fall',n:10});const r=await c.call(fall);
+ assert.equal(r.player.balance,4500);assert.equal(r.player.bounceRound,null);assert.equal((await other.call(fall)).replayed,true);
+ await assertFails(updateDoc(doc(c.db,'players',c.uid),{balanceUnits:99999999,revision:r.player.revision+1,updatedAt:serverTimestamp()}));
+});
+test('Wheel Rules match all 13 targets and displayed color/Fortune prizes',async()=>{
+ const identity='wheel13-'+randomUUID();let rng=0;
+ const c=await client(identity,identity,{rng:()=>rng});await c.call(request({action:'bootstrap'}));
+ for(const [selected,value,win] of [[0,0,25000],[12,0,10000],[12,.1,5000],[12,.99,0]]) {
+  rng=value;await new Promise(r=>setTimeout(r,750));const result=await c.call(request({action:'spin',game:'wheel',bet:10,selected}));assert.equal(result.outcome.winUnits,win);
+ }
+});
+test('Clown Rules persist misses and whole-number multipliers, without numeric type mismatches',async()=>{
+ const identity='clown-targets-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'clown',game:'clown',bet:1,roundId};
+ let sum=0;
+ for(const [used,selected] of [4,-1,2,1,0,5,-1,3,0,-1].entries()) {
+  if(used) await new Promise(r=>setTimeout(r,350));
+  const r=await c.call({...base,used,selected,requestId:used===0?roundId:randomUUID()});
+  sum+=Math.round(100*(selected<0?0:engine.CLOWN_MULTIPLIERS[selected])/10);
+  assert.equal(r.outcome.sumUnits,sum);assert.equal(r.player.balance,used===9?999+sum/100:999);
+ }
+});

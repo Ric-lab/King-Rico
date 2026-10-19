@@ -8,13 +8,15 @@ service cloud.firestore {
     function dayIndex(t) { return int((t.toMillis() - 10800000) / 86400000); }
     function settings(s) {
       return s.keys().hasAll(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
-        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx'])
+        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx'])
         && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
         && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
         && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
         && s.wheelBetIdx is int && s.wheelBetIdx >= 0 && s.wheelBetIdx <= 9
         && s.get('neckBetIdx',3) is int && s.get('neckBetIdx',3) >= 0 && s.get('neckBetIdx',3) <= 9
         && s.get('fingoBetIdx',3) is int && s.get('fingoBetIdx',3) >= 0 && s.get('fingoBetIdx',3) <= 9
+        && s.get('bounceBetIdx',3) is int && s.get('bounceBetIdx',3) >= 0 && s.get('bounceBetIdx',3) <= 9
+        && s.get('clownBetIdx',3) is int && s.get('clownBetIdx',3) >= 0 && s.get('clownBetIdx',3) <= 9
         && s.get('penaltyBetIdx',3) is int && s.get('penaltyBetIdx',3) >= 0 && s.get('penaltyBetIdx',3) <= 9;
     }
     function neckPrize(bet, floor) {
@@ -25,12 +27,15 @@ service cloud.firestore {
       return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
           'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
         && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
-          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound','penaltyRound'])
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('neckRound',null) == null || p.neckRound is map)
         && (p.get('fingoRound',null) == null || p.fingoRound is map)
         && (p.get('penaltyRound',null) == null || p.penaltyRound is map)
+        && (p.get('bounceRound',null) == null || p.bounceRound is map)
+        && (p.get('clownRound',null) == null || p.clownRound is map)
+        && (p.get('clownStats',null) == null || p.clownStats is map)
         && p.analyticsConsent is bool && p.analyticsFromCreation is bool
         && p.revision is int && p.revision >= 0 && p.updatedAt == request.time
         && p.bonus.keys().hasAll(['day','dayIndex','streak']) && p.bonus.keys().hasOnly(['day','dayIndex','streak'])
@@ -45,6 +50,8 @@ service cloud.firestore {
         && p.settings.wheelBetIdx == 3 && p.settings.get('neckBetIdx',3) == 3 && p.get('neckRound',null) == null
         && p.settings.get('fingoBetIdx',3) == 3 && p.get('fingoRound',null) == null
         && p.settings.get('penaltyBetIdx',3) == 3 && p.get('penaltyRound',null) == null
+        && p.settings.get('bounceBetIdx',3) == 3 && p.get('bounceRound',null) == null
+        && p.settings.get('clownBetIdx',3) == 3 && p.get('clownRound',null) == null && p.get('clownStats',null) == null
         && p.analyticsFromCreation == p.analyticsConsent && p.revision == 0
         && p.createdAt == request.time && p.firstSpinAt == null && p.lastSpinAt == null && p.lastOperationId == null;
     }
@@ -52,22 +59,106 @@ service cloud.firestore {
     function operation(o) {
       return o.keys().hasAll(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
         && o.keys().hasOnly(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
-        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2']
+        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3']
         && o.fingerprint is string && o.fingerprint.size() <= 500
         && o.betUnits is int && o.winUnits is int && o.winUnits >= 0 && o.result is map;
     }
+    function wheelWin(o) {
+      let t = o.result.outcome.target;
+      let selected = o.selected;
+      return t is int && t >= 0 && t <= 12 && o.winUnits == o.betUnits *
+        (t == selected ? selected == 0 ? 25 : 10 : selected != 0 && t != 0 && selected % 2 == t % 2 ? 5 : 0);
+    }
+    function bounce(p, old, o) {
+      let x = o.result.outcome;
+      let previous = old.get('bounceRound',null);
+      let first = previous == null;
+      let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'n':0,'guardUnits':0} : previous;
+      let preferences = p.settings;
+      let prize = int((x.betUnits * (100+5*x.n) + 50) / 100);
+      let guard = x.move == 'land' && x.n%10 == 0 ? prize : r.guardUnits;
+      return o.action == 'bounce' && o.game == 'bounce' && o.selected == -1
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','bounceRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && preferences.diff(old.settings).affectedKeys().hasOnly(['bounceBetIdx'])
+        && preferences.bounceBetIdx is int && preferences.bounceBetIdx >= 0 && preferences.bounceBetIdx <= 9
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.bounceBetIdx]
+        && x.keys().hasOnly(['roundId','betUnits','move','n','guardUnits','gold','ended','winUnits'])
+        && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
+        && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
+        && x.move in ['start','land','fall','collect'] && (first ? x.move == 'start' : x.move != 'start')
+        && x.n is int && x.n == r.n + (x.move == 'land' ? 1 : 0) && x.n >= 0 && x.n <= 10000
+        && (x.move != 'collect' || x.n >= 1) && x.gold is bool && (!x.gold || x.move == 'land')
+        && x.guardUnits == guard && x.ended == (x.move in ['fall','collect'] || x.n == 10000)
+        && o.winUnits == (x.move == 'land' && x.gold ? x.betUnits*3 : x.ended ? x.move == 'fall' ? guard : prize : 0) && x.winUnits == o.winUnits
+        && p.get('bounceRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'n':x.n,'guardUnits':guard})
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(300,'ms'))
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == 'bounce' && o.result.bet == x.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0
+        && o.result.baseBalance == p.balanceUnits / 100.0;
+    }
+    function clown(p, old, o) {
+      let x = o.result.outcome;
+      let previous = old.get('clownRound',null);
+      let first = previous == null;
+      let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'used':0,'results':[],'sumUnits':0} : previous;
+      let preferences = p.settings;
+      let mult = x.hit == -1 ? 0 : [1.5,2.5,5,5,10,10][x.hit];
+      let multiplier = int(mult * 10);
+      let sum = r.sumUnits + int((x.betUnits * multiplier + 50) / 100);
+      let stats = old.get('clownStats',{'betUnits':0,'winUnits':0});
+      return o.action == 'clown' && o.game == 'clown'
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','clownRound','clownStats','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && preferences.diff(old.settings).affectedKeys().hasOnly(['clownBetIdx'])
+        && preferences.clownBetIdx is int && preferences.clownBetIdx >= 0 && preferences.clownBetIdx <= 9
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.clownBetIdx]
+        && x.keys().hasOnly(['roundId','betUnits','used','selected','hit','results','sumUnits','ended','winUnits'])
+        && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
+        && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
+        && x.used is int && x.used == r.used + 1 && x.used >= 1 && x.used <= 10
+        && o.selected is int && o.selected >= -1 && o.selected <= 5 && x.selected == o.selected
+        && x.hit is int && x.hit >= -1 && x.hit <= 5 && (x.hit == -1 || x.hit == o.selected)
+        && x.results == r.results.concat([mult]) && x.sumUnits == sum
+        && x.ended == (x.used == 10) && o.winUnits == (x.ended ? sum : 0) && x.winUnits == o.winUnits
+        && p.get('clownRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'used':x.used,'results':x.results,'sumUnits':sum})
+        && p.get('clownStats',null) == (x.ended ? {'betUnits':stats.betUnits+x.betUnits,'winUnits':stats.winUnits+sum} : old.get('clownStats',null))
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(300,'ms'))
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == 'clown' && o.result.bet == x.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0
+        && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0 && o.result.baseBalance == p.balanceUnits / 100.0;
+    }
+    function spinSettings(preferences, previous, o) {
+      let key = o.game == 'wheel' ? 'wheelBetIdx' : 'slotBetIdx';
+      let index = preferences[key];
+      return preferences.diff(previous).affectedKeys().hasOnly([key])
+        && index is int && index >= 0 && index <= 9
+        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][index];
+    }
     function spin(p, old, o) {
       return o.action == 'spin' && o.game in ['circus','wheel']
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','peaches','settings','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.peaches is int && p.peaches >= 0 && p.peaches <= 4
+        && spinSettings(p.settings,old.settings,o)
         && o.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000]
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
         && p.bonus == old.bonus && p.analyticsConsent == old.analyticsConsent
         && p.get('neckRound',null) == old.get('neckRound',null)
         && p.get('fingoRound',null) == old.get('fingoRound',null)
         && p.get('penaltyRound',null) == old.get('penaltyRound',null)
+        && p.get('bounceRound',null) == old.get('bounceRound',null)
+        && p.get('clownRound',null) == old.get('clownRound',null) && p.get('clownStats',null) == old.get('clownStats',null)
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
-        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= 11
-            && o.winUnits in [0, o.betUnits * 10] && p.peaches == old.peaches
+        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion == '2026-10-19-spark-v3' ? 12 : 11)
+            && (o.rulesVersion == '2026-10-19-spark-v3' ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches
           : o.selected == -1 && o.winUnits <= o.betUnits * 3330)
         && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
         && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
@@ -86,7 +177,10 @@ service cloud.firestore {
         // Unchanged fields were validated when created. Validate only the Neck
         // transition to stay below Firestore's expression limit for a batch.
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','neckRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
-        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000 && settings(p.settings)
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.settings.diff(old.settings).affectedKeys().hasOnly(['neckBetIdx'])
+        && p.settings.neckBetIdx is int && p.settings.neckBetIdx >= 0 && p.settings.neckBetIdx <= 9
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.neckBetIdx]
         && x.keys().hasOnly(['move','roundId','betUnits','peachAt','floor','savedUnits','ok','ended','winUnits'])
         && x.move in ['start','climb','collect'] && x.ok is bool && x.ended is bool
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
@@ -204,37 +298,46 @@ service cloud.firestore {
       let today = dayIndex(request.time);
       let streak = today - old.bonus.dayIndex == 1 ? old.bonus.streak % 7 + 1 : 1;
       let amount = [5000,10000,15000,20000,25000,50000,100000][streak - 1];
-      return o.action == 'bonus' && o.game == 'home' && o.selected == -1 && o.betUnits == 0
+      return p.diff(old).affectedKeys().hasOnly(['balanceUnits','bonus','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.bonus.keys().hasOnly(['day','dayIndex','streak']) && p.bonus.day.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && o.action == 'bonus' && o.game == 'home' && o.selected == -1 && o.betUnits == 0
         && today > old.bonus.dayIndex && p.bonus.dayIndex == today && p.bonus.streak == streak && p.bonus.day is string
         && o.winUnits == amount && p.balanceUnits == old.balanceUnits + amount
         && p.peaches == old.peaches && p.settings == old.settings && p.analyticsConsent == old.analyticsConsent
         && p.get('neckRound',null) == old.get('neckRound',null)
         && p.get('fingoRound',null) == old.get('fingoRound',null)
         && p.get('penaltyRound',null) == old.get('penaltyRound',null)
+        && p.get('bounceRound',null) == old.get('bounceRound',null)
+        && p.get('clownRound',null) == old.get('clownRound',null) && p.get('clownStats',null) == old.get('clownStats',null)
         && p.firstSpinAt == old.firstSpinAt && p.lastSpinAt == old.lastSpinAt
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == amount / 100.0;
     }
     function recharge(p, old, o) {
-      return o.action == 'recharge' && o.game == 'home' && o.selected == -1
-        && old.balanceUnits < 100 && old.get('neckRound',null) == null && old.get('fingoRound',null) == null && old.get('penaltyRound',null) == null
+      return p.balanceUnits is int && p.balanceUnits <= 1000000000000
+        && o.action == 'recharge' && o.game == 'home' && o.selected == -1
+        && old.balanceUnits < 100 && old.get('neckRound',null) == null && old.get('fingoRound',null) == null && old.get('penaltyRound',null) == null && old.get('clownRound',null) == null && old.get('bounceRound',null) == null
         && o.betUnits == 0 && o.winUnits == 100000
         && p.balanceUnits == old.balanceUnits + 100000
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == 1000;
     }
+    function legacyPlayer(player, expected) {
+      return player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound','penaltyRound','clownRound','bounceRound'])
+        && player.get('neckRound',null) == expected.neckRound && player.get('fingoRound',null) == expected.fingoRound
+        && player.get('penaltyRound',null) == expected.penaltyRound && player.get('clownRound',null) == expected.clownRound
+        && player.get('bounceRound',null) == expected.bounceRound;
+    }
     function financial(uid, p, old) {
       let path = operationPath(uid, p.lastOperationId);
       let o = getAfter(path).data;
       let player = o.result.player;
-      let expected = {'balance':p.balanceUnits / 100.0,'peaches':p.peaches,'bonus':p.bonus,'settings':p.settings,'analyticsConsent':p.analyticsConsent,'revision':p.revision};
+      let expected = {'balance':p.balanceUnits / 100.0,'peaches':p.peaches,'bonus':p.bonus,'settings':p.settings,'analyticsConsent':p.analyticsConsent,'revision':p.revision,
+        'neckRound':p.get('neckRound',null),'fingoRound':p.get('fingoRound',null),'penaltyRound':p.get('penaltyRound',null),'clownRound':p.get('clownRound',null),'bounceRound':p.get('bounceRound',null)};
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
-        && player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound','penaltyRound'])
-        && player.get('neckRound',null) == p.get('neckRound',null)
-        && player.get('fingoRound',null) == p.get('fingoRound',null)
-        && player.get('penaltyRound',null) == p.get('penaltyRound',null)
-        && (o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : profile(p)
-          && (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
+        && (o.rulesVersion == '2026-10-19-spark-v3' ? player.diff(expected).affectedKeys().size() == 0 : legacyPlayer(player,expected))
+        && (o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {
       allow read: if owner(uid);
