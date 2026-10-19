@@ -37,12 +37,12 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div style="position: absolute; left: 0; right: 0; top: 116px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
 
     <div ref="{{ faceRef }}" style="position: absolute; inset: 0; pointer-events: none; will-change: transform;">
-    <img ref="{{ boardRef }}" src="assets/clown/clown.webp" alt="Palhaço" draggable="false" style="position: absolute; left: 26.5px; top: 160px; width: 400px; height: 400px; pointer-events: none; filter: drop-shadow(0 12px 16px rgba(0,0,0,.5)); transform-origin: 50% 50%;">
+    <img ref="{{ boardRef }}" src="assets/clown/clown.webp" alt="Palhaço" draggable="false" style="position: absolute; left: 6.5px; top: 140px; width: 440px; height: 440px; pointer-events: none; filter: drop-shadow(0 12px 16px rgba(0,0,0,.5)); transform-origin: 50% 50%;">
     <sc-for list="{{ tags }}" as="t" hint-placeholder-count="6">
       <div style="position: absolute; left: {{ t.x }}; top: {{ t.y }}; transform: translateX(-50%); padding: 1px 7px; border-radius: 10px; background: rgba(28,6,48,.85); font-size: 14px; font-weight: 800; color: #ffd257; pointer-events: none;">{{ t.m }}</div>
     </sc-for>
-    <div data-lid="0" style="position: absolute; left: 161px; top: 281px; width: 37px; height: 37px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
-    <div data-lid="1" style="position: absolute; left: 253px; top: 281px; width: 37px; height: 37px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
+    <div data-lid="0" style="position: absolute; left: 155px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
+    <div data-lid="1" style="position: absolute; left: 256.4px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
     </div>
     <sc-if value="{{ floatOn }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; z-index: 9; left: {{ floatX }}; top: {{ floatY }}; transform: translateX(-50%); font-size: 30px; font-weight: 800; color: #fff3c4; text-shadow: 0 2px 0 #6b2e05; animation: ckFloat .9s ease-out forwards; pointer-events: none;">{{ floatText }}</div>
@@ -99,10 +99,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // Fortune Clown — a "boca do palhaço" com swipe. 5 bolas por aposta; cada bola vale aposta/5 × buraco.
 // Habilidade: a bola vai exatamente onde o dedo parou (e faz o arco do dedo). Errou o buraco = não pontua.
 // Sorte: bola dentro do buraco entra com chance 0,95/x (senão bate na borda e sai) → retorno ≤ 95% mesmo para quem acerta sempre.
-const HOLES = [ // centro e raio (px da tela), medidos no rosto novo
-  { n: 'boca', x: 226.5, y: 420, rx: 62, ry: 22, m: 1.5 }, { n: 'nariz', x: 225.7, y: 354, rx: 17, ry: 17, m: 3 },
-  { n: 'olho', x: 179.6, y: 299.4, rx: 16, ry: 16, m: 6 }, { n: 'olho', x: 271.8, y: 299.4, rx: 16, ry: 16, m: 6 },
-  { n: 'orelha', x: 97.6, y: 375.2, rx: 9, ry: 9, m: 15 }, { n: 'orelha', x: 353.1, y: 375.2, rx: 9, ry: 9, m: 15 }];
+const HOLES = [ // rosto 440px (maior); área generosa: boca conta lábio e língua, olho conta a lente, nariz conta a bola vermelha
+  { n: 'boca', x: 226.5, y: 436, rx: 92, ry: 50, m: 1.5 }, { n: 'nariz', x: 225.6, y: 353.6, rx: 30, ry: 30, m: 3 },
+  { n: 'olho', x: 174.9, y: 293.4, rx: 28, ry: 28, m: 6 }, { n: 'olho', x: 276.4, y: 293.4, rx: 28, ry: 28, m: 6 },
+  { n: 'orelha', x: 84.7, y: 376.8, rx: 16, ry: 16, m: 15 }, { n: 'orelha', x: 365.7, y: 376.8, rx: 16, ry: 16, m: 15 }];
 const BALLS = 5, BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000], SKEY = 'fortuneCircus.slot.v3', B0 = { x: 226, y: 670 };
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 class Component extends DCLogic {
@@ -127,20 +127,23 @@ class Component extends DCLogic {
   anim(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else done && done(); }; this._raf = requestAnimationFrame(st); }
   stop = e => e.stopPropagation();
   down = e => { const s = this.state; if (s.busy || s.win || s.menu) return; this.ac(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} const p = this.pt(e); this.drag = { pts: [p] }; };
-  move = e => { const d = this.drag; if (!d) return; d.pts.push(this.pt(e)); this.drawTrail(); };
-  up = () => { const d = this.drag; this.drag = null; this.clearTrail(); if (!d || d.pts.length < 2) return; const a = d.pts[0], z = d.pts[d.pts.length - 1]; if (a.y - z.y < 60) return; this.shoot(d.pts); };
+  move = e => { const d = this.drag; if (!d) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; for (const ev of (evs.length ? evs : [e])) d.pts.push(this.pt(ev)); this.drawTrail(); };
+  up = e => { const d = this.drag; if (d && e && e.clientX != null) d.pts.push(this.pt(e)); this.drag = null; this.clearTrail(); if (!d || d.pts.length < 2) return; const a = d.pts[0], z = d.pts[d.pts.length - 1]; if (a.y - z.y < 60) return; this.shoot(d.pts); };
   drawTrail() { const c = this.trailRef.current, P = this.drag && this.drag.pts; if (!c || !P) return; const x = c.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, 453, 802); x.lineCap = 'round'; x.strokeStyle = 'rgba(255,236,170,.6)'; x.lineWidth = 10; x.beginPath(); P.forEach((p, i) => i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y)); x.stroke(); }
   clearTrail() { const c = this.trailRef.current; if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
   shoot(P) {
     const s = this.state; let bal = s.balance, active = s.active, bet = BETS[s.betIdx];
     if (!active) { if (bal < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); return; } bal = Math.round((bal - bet) * 100) / 100; active = true; this.save(bal); }
     this.setState({ balance: bal, active, busy: true, touched: true });
-    const a = P[0], z = P[P.length - 1], T = { x: z.x, y: z.y }; let dev = { x: 0, y: 0 }, best = 0; // ponto do gesto mais longe da reta = barriga do arco
-    for (const q of P) { const t = ((q.x - a.x) * (z.x - a.x) + (q.y - a.y) * (z.y - a.y)) / ((z.x - a.x) ** 2 + (z.y - a.y) ** 2 || 1), px = a.x + (z.x - a.x) * t, py = a.y + (z.y - a.y) * t, dd = Math.hypot(q.x - px, q.y - py); if (dd > best) { best = dd; dev = { x: q.x - px, y: q.y - py }; } }
-    const C = { x: (B0.x + T.x) / 2 + dev.x * 2, y: Math.min(B0.y, T.y) - 140 + dev.y * 2 };
+    const a = P[0], z = P[P.length - 1], T = { x: z.x, y: z.y }, L = [0]; for (let i = 1; i < P.length; i++) L.push(L[i - 1] + Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y));
+    const tot = L[L.length - 1] || 1, chord = Math.hypot(z.x - a.x, z.y - a.y) || 1, sc = Math.hypot(T.x - B0.x, T.y - B0.y) / chord;
+    const devAt = u => { const want = u * tot; let i = 1; while (i < L.length - 1 && L[i] < want) i++; const f = (want - L[i - 1]) / ((L[i] - L[i - 1]) || 1), qx = P[i - 1].x + (P[i].x - P[i - 1].x) * f, qy = P[i - 1].y + (P[i].y - P[i - 1].y) * f;
+      return { x: qx - (a.x + (z.x - a.x) * u), y: qy - (a.y + (z.y - a.y) * u) }; };
+    let maxDev = 0; for (let i = 0; i <= 10; i++) { const dv = devAt(i / 10); maxDev = Math.max(maxDev, Math.hypot(dv.x, dv.y)); } const curve = maxDev > 6;
+    const path = t => { const dv = curve ? devAt(t) : { x: 0, y: 0 }; return { x: B0.x + (T.x - B0.x) * t + dv.x * sc, y: B0.y + (T.y - B0.y) * t + dv.y * sc - 70 * Math.sin(Math.PI * t) }; };
     const kEnd = 0.4;
     this.tone(180, 0.12, 'sine', 0.12, 90); this.buzz(25);
-    this.anim(650, k => { const u = 1 - k, x = u * u * B0.x + 2 * u * k * C.x + k * k * T.x, y = u * u * B0.y + 2 * u * k * C.y + k * k * T.y; this.setBall(x, y, 1 + (kEnd - 1) * k, 1); }, () => {
+    this.anim(650, k => { const q = path(k); this.setBall(q.x, q.y, 1 + (kEnd - 1) * k, 1); }, () => {
       const off = this.off, hole = HOLES.find(h => ((T.x - h.x - off) / h.rx) ** 2 + ((T.y - h.y) / h.ry) ** 2 <= 1), inn = hole && Math.random() < 0.95 / hole.m;
       if (inn) { this.react(hole); this.anim(260, k => this.setBall(T.x + (hole.x + off - T.x) * k, T.y + (hole.y - T.y) * k, kEnd * (1 - k * 0.8), 1 - k), () => this.score(hole));
         return; }
