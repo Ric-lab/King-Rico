@@ -24,6 +24,13 @@
       x.fillStyle = c1; x.fillRect(0, 0, 256, 128); x.strokeStyle = c2; x.lineWidth = 14; x.lineCap = 'round';
       for (let i = 0; i < 3; i++) { x.beginPath(); for (let u = 0; u <= 256; u += 8) { const y = 30 + i * 34 + Math.sin(u / 256 * Math.PI * 4 + i) * 12; u ? x.lineTo(u, y) : x.moveTo(u, y); } x.stroke(); }
       const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return t; }
+    // retrato 3D da bola (mesma malha, luz e textura) para os marcadores do topo
+    snap(i) { const T = this.T; this._snaps = this._snaps || []; if (this._snaps[i]) return this._snaps[i];
+      if (!this._sr) { this._sr = new T.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); this._sr.setPixelRatio(1); this._sr.setSize(96, 96, false); this._sr.setClearColor(0, 0);
+        this._ss = new T.Scene(); this._ss.add(new T.HemisphereLight(0xffffff, 0x553366, 1.3)); const dl = new T.DirectionalLight(0xffffff, 2.4); dl.position.set(-150, 220, 300); this._ss.add(dl);
+        this._sm = new T.Mesh(new T.SphereGeometry(30, 48, 32), new T.MeshPhysicalMaterial({ roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.1 })); this._sm.rotation.set(0.5, -0.6, 0.2); this._ss.add(this._sm);
+        this._sc = new T.OrthographicCamera(-31, 31, 31, -31, -100, 100); this._sc.position.z = 50; }
+      this._sm.material.map = this.texs[i % this.texs.length]; this._sm.material.needsUpdate = true; this._sr.render(this._ss, this._sc); return this._snaps[i] = this._sr.domElement.toDataURL(); }
     setColor(i) { if (!this.texs) return; this.mat.map = this.texs[i % this.texs.length]; this.mat.needsUpdate = true; }
     set(x, y, k, op) { if (this.q && Math.hypot(x - this.q.x, y - this.q.y) > 80) this.last = null; this.q = { x, y, k, op }; }
   }

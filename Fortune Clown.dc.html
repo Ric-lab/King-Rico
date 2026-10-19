@@ -123,7 +123,7 @@ class Component extends DCLogic {
   ac() { if (!this._ac) try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   tone(f, d, type = 'triangle', g = 0.07, f2) { const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
   buzz(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
-  setBall(x, y, k, op) { this._bq = [x, y, k, op]; const B = window.ClownBall; if (B) B.set(x, y, k, op); else if (!this._bw) { this._bw = setInterval(() => { if (window.ClownBall) { clearInterval(this._bw); this._bw = null; window.ClownBall.set(...this._bq); } }, 100); } }
+  setBall(x, y, k, op) { this._bq = [x, y, k, op]; const B = window.ClownBall; if (B) B.set(x, y, k, op); else if (!this._bw) { this._bw = setInterval(() => { if (window.ClownBall && window.ClownBall.texs) { clearInterval(this._bw); this._bw = null; window.ClownBall.set(...this._bq); this.nextColor(); this.forceUpdate(); } }, 100); } }
   // marca de tinta onde a bola bateu (fica ~3 s e some); desenhada no rosto, então balança junto
   splat(x, y, col) { const f = this.faceRef.current; if (!f) return; this._spl = this._spl || {}; let u = this._spl[col];
     if (!u) { const c = document.createElement('canvas'); c.width = c.height = 120; const g = c.getContext('2d'); g.fillStyle = col; g.beginPath(); g.arc(60, 60, 26, 0, 7); g.fill();
@@ -132,11 +132,12 @@ class Component extends DCLogic {
     const im = document.createElement('img'); im.src = u; im.style.cssText = 'position:absolute;left:' + (x - this.off - 30) + 'px;top:' + (y - (this.dy || 0) - 30) + 'px;width:60px;height:60px;pointer-events:none;transform:rotate(' + Math.round(Math.random() * 360) + 'deg)'; f.appendChild(im);
     if (im.animate) { im.animate([{ transform: im.style.transform + ' scale(.2)' }, { transform: im.style.transform + ' scale(1.1)', offset: .1 }, { transform: im.style.transform + ' scale(1)', offset: .2 }, { transform: im.style.transform + ' scale(1)' }], { duration: 3200 }); im.animate([{ opacity: 1 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: 3200 }).onfinish = () => im.remove(); } else setTimeout(() => im.remove(), 3200); }
   // marcador = mesma bola (listras onduladas + brilho), desenhada em 2D
-  marker(i) { this._mk = this._mk || []; if (this._mk[i]) return this._mk[i]; const P = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']][i], c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+  marker(i) { const CB = window.ClownBall; if (CB && CB.snap && CB.texs) return CB.snap(i); this._mk = this._mk || []; if (this._mk[i]) return this._mk[i]; const P = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']][i], c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
     x.beginPath(); x.arc(32, 32, 31, 0, 7); x.clip(); x.fillStyle = P[0]; x.fillRect(0, 0, 64, 64); x.strokeStyle = P[1]; x.lineWidth = 6; x.lineCap = 'round';
     for (let k = 0; k < 3; k++) { x.beginPath(); for (let u = -4; u <= 68; u += 4) { const y = 14 + k * 17 + Math.sin(u / 64 * Math.PI * 2 + k) * 5; u > -4 ? x.lineTo(u, y) : x.moveTo(u, y); } x.stroke(); }
     const g = x.createRadialGradient(22, 18, 2, 32, 32, 34); g.addColorStop(0, 'rgba(255,255,255,.75)'); g.addColorStop(0.35, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.35)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
     return this._mk[i] = c.toDataURL(); }
+  nextColor() { const B = window.ClownBall, n = (window.ClownBallColors || [1]).length; if (B) B.setColor(this.state.results.length % n); }
   pt(e) { const r = this.stageRef.current.getBoundingClientRect(), s = r.width / 453; return { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s }; }
   anim(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else done && done(); }; this._raf = requestAnimationFrame(st); }
   stop = e => e.stopPropagation();
@@ -174,11 +175,11 @@ class Component extends DCLogic {
     const s = this.state, bet = BETS[s.betIdx], w = hole ? bet / BALLS * hole.m : 0, left = s.left - 1, sum = Math.round((s.sum + w) * 100) / 100;
     if (hole) { [784, 988, 1318].forEach((f, i) => setTimeout(() => this.tone(f + hole.m * 20, 0.16), i * 70)); this.buzz([30, 30, 50]); this.setState({ floatOn: true, floatX: (hole.x + this.off) + 'px', floatY: (hole.y - 30) + 'px', floatText: '+' + fmt(w), fk: Date.now() }); setTimeout(() => this.setState({ floatOn: false }), 900); }
     this.setState({ left, sum, results: s.results.concat([hole ? hole.m : 0]) });
-    if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }); }, 350); return; }
+    if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }, () => this.nextColor()); }, 350); return; }
     setTimeout(() => this.setState({ win: { w: sum, title: sum > 0 ? 'VOCÊ GANHOU!' : 'TENTE DE NOVO' } }), 500);
   }
   closeWin = () => { const s = this.state; const bal = Math.round((s.balance + s.win.w) * 100) / 100; this.save(bal); if (s.win.w > 0) this.tone(1320, 0.15);
-    this.setState({ balance: bal, win: null, left: BALLS, sum: 0, active: false, busy: false, results: [] }); this.setBall(B0.x, B0.y, 1, 1); };
+    this.setState({ balance: bal, win: null, left: BALLS, sum: 0, active: false, busy: false, results: [] }, () => this.nextColor()); this.setBall(B0.x, B0.y, 1, 1); };
   betDown = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) })); this.tone(900, 0.04, 'square', 0.04); };
   betUp = () => { if (this.state.active) return; this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) })); this.tone(1100, 0.04, 'square', 0.04); };
   renderVals() { const s = this.state;
