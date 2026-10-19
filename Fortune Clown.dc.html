@@ -110,7 +110,7 @@ class Component extends DCLogic {
   faceRef = React.createRef(); stageRef = React.createRef(); ballRef = React.createRef(); boardRef = React.createRef(); trailRef = React.createRef();
   componentDidMount() { this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance }); } catch (e) {} this.setBall(B0.x, B0.y, 1, 1); this.off = 0; this.amp = 0;
-    const sw = now => { const n = this.state.results.filter(v => v > 0).length, A = this.state.active && n >= 1 ? 22 + (n - 1) * 16 : 0; this.amp += (A - this.amp) * 0.04; this.off = Math.sin(now / 1000 * 1.7) * this.amp; const f = this.faceRef.current; if (f) f.style.transform = 'translateX(' + this.off.toFixed(1) + 'px)'; this._sw = requestAnimationFrame(sw); }; this._sw = requestAnimationFrame(sw); }
+    const sw = now => { const n = this.state.results.filter(v => v > 0).length, A = this.state.active && n >= 1 ? 22 + (n - 1) * 16 : 0; this.amp += (A - this.amp) * 0.04; this.off = Math.sin(now / 1000 * 1.7) * this.amp; this.dy = (this.dy || 0) + ((this.dyT || 0) - (this.dy || 0)) * 0.14; const f = this.faceRef.current; if (f) f.style.transform = 'translate(' + this.off.toFixed(1) + 'px,' + this.dy.toFixed(1) + 'px)'; this._sw = requestAnimationFrame(sw); }; this._sw = requestAnimationFrame(sw); }
   componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._sw); }
   react(h) { const b = this.boardRef.current, f = this.faceRef.current; if (!b || !b.animate) return;
     if (h.n === 'boca') { b.animate([0, 1, 0, 1, 0, 1, 0].map(k => ({ transform: k ? 'scale(1.03, .95)' : 'scale(1)' })), { duration: 720, easing: 'ease-in-out' }); [0, 240, 480].forEach(d => setTimeout(() => this.tone(140, 0.08, 'sine', 0.1, 90), d)); }
@@ -128,7 +128,7 @@ class Component extends DCLogic {
     if (!u) { const c = document.createElement('canvas'); c.width = c.height = 120; const g = c.getContext('2d'); g.fillStyle = col; g.beginPath(); g.arc(60, 60, 26, 0, 7); g.fill();
       for (let i = 0; i < 11; i++) { const a = i / 11 * 6.28 + Math.random() * 0.4, d = 26 + Math.random() * 22, r = 4 + Math.random() * 7; g.beginPath(); g.arc(60 + Math.cos(a) * d, 60 + Math.sin(a) * d, r, 0, 7); g.fill(); g.lineWidth = r * 1.2; g.strokeStyle = col; g.beginPath(); g.moveTo(60, 60); g.lineTo(60 + Math.cos(a) * d, 60 + Math.sin(a) * d); g.stroke(); }
       g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.arc(50, 48, 12, 0, 7); g.fill(); u = this._spl[col] = c.toDataURL(); }
-    const im = document.createElement('img'); im.src = u; im.style.cssText = 'position:absolute;left:' + (x - this.off - 30) + 'px;top:' + (y - 30) + 'px;width:60px;height:60px;pointer-events:none;transform:rotate(' + Math.round(Math.random() * 360) + 'deg)'; f.appendChild(im);
+    const im = document.createElement('img'); im.src = u; im.style.cssText = 'position:absolute;left:' + (x - this.off - 30) + 'px;top:' + (y - (this.dy || 0) - 30) + 'px;width:60px;height:60px;pointer-events:none;transform:rotate(' + Math.round(Math.random() * 360) + 'deg)'; f.appendChild(im);
     if (im.animate) { im.animate([{ transform: im.style.transform + ' scale(.2)' }, { transform: im.style.transform + ' scale(1.1)', offset: .1 }, { transform: im.style.transform + ' scale(1)', offset: .2 }, { transform: im.style.transform + ' scale(1)' }], { duration: 3200 }); im.animate([{ opacity: 1 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: 3200 }).onfinish = () => im.remove(); } else setTimeout(() => im.remove(), 3200); }
   pt(e) { const r = this.stageRef.current.getBoundingClientRect(), s = r.width / 453; return { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s }; }
   anim(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else done && done(); }; this._raf = requestAnimationFrame(st); }
@@ -136,7 +136,7 @@ class Component extends DCLogic {
   down = e => { const s = this.state; if (s.busy || s.win || s.menu) return; this.ac(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} const p = this.pt(e); this.drag = { pts: [p] }; };
   move = e => { const d = this.drag; if (!d) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; for (const ev of (evs.length ? evs : [e])) d.pts.push(this.pt(ev)); this.drawTrail(); };
   up = e => { const d = this.drag; if (d && e && e.clientX != null) d.pts.push(this.pt(e)); this.drag = null; this.clearTrail(); if (!d || d.pts.length < 2) return; const a = d.pts[0], z = d.pts[d.pts.length - 1]; if (a.y - z.y < 60) return; this.shoot(d.pts); };
-  drawTrail() { const c = this.trailRef.current, P = this.drag && this.drag.pts; if (!c || !P) return; const x = c.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, 453, 802); x.lineCap = 'round'; x.strokeStyle = 'rgba(255,236,170,.6)'; x.lineWidth = 10; x.beginPath(); P.forEach((p, i) => i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y)); x.stroke(); }
+  drawTrail() { const c = this.trailRef.current, P = this.drag && this.drag.pts; if (!c || !P) return; const x = c.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, 453, 802); x.lineCap = 'round'; x.strokeStyle = 'rgba(255,236,170,.6)'; x.lineWidth = 10; x.beginPath(); P.forEach((p, i) => i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y)); x.stroke(); const z = P[P.length - 1]; x.lineWidth = 3; x.strokeStyle = '#fff3c4'; x.beginPath(); x.arc(z.x, z.y, 14, 0, 7); x.stroke(); x.beginPath(); x.moveTo(z.x - 20, z.y); x.lineTo(z.x - 8, z.y); x.moveTo(z.x + 8, z.y); x.lineTo(z.x + 20, z.y); x.moveTo(z.x, z.y - 20); x.lineTo(z.x, z.y - 8); x.moveTo(z.x, z.y + 8); x.lineTo(z.x, z.y + 20); x.stroke(); }
   clearTrail() { const c = this.trailRef.current; if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }
   shoot(P) {
     const s = this.state; let bal = s.balance, active = s.active, bet = BETS[s.betIdx];
@@ -147,15 +147,18 @@ class Component extends DCLogic {
     const devAt = u => { const want = u * tot; let i = 1; while (i < L.length - 1 && L[i] < want) i++; const f = (want - L[i - 1]) / ((L[i] - L[i - 1]) || 1), qx = P[i - 1].x + (P[i].x - P[i - 1].x) * f, qy = P[i - 1].y + (P[i].y - P[i - 1].y) * f;
       return { x: qx - (a.x + (z.x - a.x) * u), y: qy - (a.y + (z.y - a.y) * u) }; };
     let maxDev = 0; for (let i = 0; i <= 10; i++) { const dv = devAt(i / 10); maxDev = Math.max(maxDev, Math.hypot(dv.x, dv.y)); } const curve = maxDev > 6;
-    const path = t => { const dv = curve ? devAt(t) : { x: 0, y: 0 }; return { x: B0.x + (T.x - B0.x) * t + dv.x * sc, y: B0.y + (T.y - B0.y) * t + dv.y * sc - 70 * Math.sin(Math.PI * t) }; };
+    const off0 = this.off, Tf = { x: T.x - off0, y: T.y }, aimed = HOLES.find(q => ((Tf.x - q.x) / q.rx) ** 2 + ((Tf.y - q.y) / q.ry) ** 2 <= 1), hits = this.state.results.filter(v => v > 0).length;
+    // sorte só depois do 1º acerto: se for hora de perder, o palhaço sobe/desce durante o voo e a bola passa ao lado (a mira manda; o buraco sai do lugar)
+    const lose = aimed && hits >= 1 && Math.random() >= 0.95 / aimed.m; this.dyT = lose ? (Math.random() < 0.5 ? -1 : 1) * (aimed.ry + 26) : 0;
+    const path = t => { const dv = curve ? devAt(t) : { x: 0, y: 0 }, ex = Tf.x + this.off; return { x: B0.x + (ex - B0.x) * t + dv.x * sc, y: B0.y + (T.y - B0.y) * t + dv.y * sc - 70 * Math.sin(Math.PI * t) }; };
     const kEnd = 0.4; this.ci = ((this.ci ?? -1) + 1) % ((window.ClownBallColors || [1]).length); const col = (window.ClownBallColors || ['#ff3b8a'])[this.ci]; if (window.ClownBall) window.ClownBall.setColor(this.ci);
     this.tone(180, 0.12, 'sine', 0.12, 90); this.buzz(25);
     this.anim(650, k => { const q = path(k); this.setBall(q.x, q.y, 1 + (kEnd - 1) * k, 1); }, () => {
-      const off = this.off, hole = HOLES.find(h => ((T.x - h.x - off) / h.rx) ** 2 + ((T.y - h.y) / h.ry) ** 2 <= 1), tongue = hole && hole.n === 'boca' && ((T.x - 226.5 - off) / 32) ** 2 + ((T.y - 462) / 17) ** 2 <= 1, inn = hole && (tongue || Math.random() < (hole.n === 'boca' ? 0.35 : 0.95 / hole.m));
-      if (inn) { this.react(hole); this.anim(260, k => this.setBall(T.x + (hole.x + off - T.x) * k, T.y + (hole.y - T.y) * k, kEnd * (1 - k * 0.8), 1 - k), () => this.score(hole));
+      const off = this.off, dy = this.dy || 0; T.x = Tf.x + off; const hole = HOLES.find(q => ((Tf.x - q.x) / q.rx) ** 2 + ((T.y - dy - q.y) / q.ry) ** 2 <= 1), inn = !!hole; setTimeout(() => { this.dyT = 0; }, 450);
+      if (inn) { this.react(hole); this.anim(260, k => this.setBall(T.x + (hole.x + off - T.x) * k, T.y + (hole.y + dy - T.y) * k, kEnd * (1 - k * 0.8), 1 - k), () => this.score(hole));
         return; }
       // bateu no rosto/borda: deixa a marca de tinta, quica e cai
-      if (hole || Math.hypot(T.x - 226.5 - off, (T.y - 360) * 1.05) < 215) this.splat(T.x, T.y, col);
+      if (hole || Math.hypot(T.x - 226.5 - off, (T.y - dy - 360) * 1.05) < 215) this.splat(T.x, T.y, col);
       this.tone(hole ? 700 : 300, 0.1, 'square', 0.05, hole ? 450 : 200); this.buzz(hole ? [20, 30, 20] : 15);
       const dir = T.x < 226 ? -1 : 1; this.anim(700, k => this.setBall(T.x + dir * 70 * k, T.y - 60 * Math.sin(k * Math.PI * 0.6) + 420 * k * k, kEnd + 0.3 * k, k > 0.7 ? 1 - (k - 0.7) / 0.3 : 1), () => this.score(null));
     });
