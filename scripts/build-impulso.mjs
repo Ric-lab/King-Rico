@@ -10,6 +10,8 @@ await copyFile(path.join(source,'cascade.html'),path.join(out,'index.html'));
 for(const font of ['baloo2-latin.woff2','rammettoone-latin.woff2'])await copyFile(path.join(root,'assets/fonts',font),path.join(out,'assets',font));
 await copyFile(path.join(root,'assets/icons/btn-menu.png'),path.join(out,'assets/menu.png'));
 await copyFile(path.join(root,'assets/brand/bg-circus-stage.webp'),path.join(out,'assets/circus-stage.webp'));
+await mkdir(path.join(out,'assets/cascade'),{recursive:true});
+for(const asset of ['cabinet.webp','collector.webp'])await copyFile(path.join(root,'assets/cascade',asset),path.join(out,'assets/cascade',asset));
 await build({entryPoints:[path.join(source,'cascade.js')],outfile:path.join(out,'game.js'),bundle:true,format:'esm',target:'es2022',minify:true,legalComments:'external'});
 await copyFile(path.join(root,'node_modules/three/LICENSE'),path.join(out,'assets/three.LICENSE'));
 await copyFile(path.join(root,'node_modules/matter-js/LICENSE'),path.join(out,'assets/matter.LICENSE'));

@@ -1,6 +1,6 @@
 # Protótipos King Rico
 
-**Versão atual: [Fortune Cascata](CASCATA.md).** `scripts/build-impulso.mjs` agora gera a cascata de bolinhas. Os testes atuais são `cascade-state.test.mjs` e `cascade-browser.py`. A descrição abaixo documenta o Impulso 02, preservado no site privado em `/v2/`.
+**Versão atual: [Fortune Cascata](CASCATA.md).** `scripts/build-impulso.mjs` agora gera a cascata de bolinhas. Os testes atuais são `cascade-state.test.mjs`, `cascade-browser.py` e `cascade-resume-browser.py`. A versão 04 inclui dois assets GPT Image e três reservas de avalanche. A descrição abaixo documenta o Impulso 02, preservado no site privado em `/v2/`.
 
 ## Fortune Impulso 02 — histórico
 

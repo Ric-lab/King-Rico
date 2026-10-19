@@ -1,22 +1,25 @@
 # Fortune Cascata
 
-Protótipo 03: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor horizontalmente com o dedo; cada bolinha capturada pontua. Três capturas consecutivas da mesma cor estouram automaticamente e acrescentam 3 pontos. A rodada recebe o prêmio automaticamente ao terminar.
+Protótipo 04: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor com o dedo. Três capturas consecutivas da mesma cor dão 3 pontos e abrem a reserva daquela cor, liberando uma avalanche de 12 bolinhas extras. Cada uma das três reservas abre uma vez: até 96 bolinhas na rodada.
 
-O objetivo desta versão é testar o prazer da cascata e do controle simples, seguindo as referências de bolas caindo, Plinko e Marble Run. A combinação é automática para evitar uma tarefa de planejamento durante a queda. As versões anteriores continuam em `/v1/` e `/v2/` no site privado.
+A moldura e o coletor são assets novos gerados com GPT Image a pedido do usuário. Ouro, vidro, esmalte roxo e rubis compartilham a mesma direção de arte. Os arquivos originais e a procedência estão em `assets/cascade/`. As versões anteriores continuam em `/v1/`, `/v2/` e `/v3/` no site privado.
 
 ## Rodada e carteira
 
-- São 60 bolinhas de três cores. Cor e impulso inicial vêm da semente da rodada.
-- A física usa Matter.js em passo fixo de 1/60 s. Pinos, bolinhas e paredes colidem; o prêmio depende do que passa pelo coletor.
-- Uma bolinha vale 1 ponto; uma trinca acrescenta 3 pontos. Prêmio = `floor(aposta × pontos / 25)` e inclui o valor apostado. Exemplo: apostar 25 e fazer 32 pontos recebe 32 moedas, resultado líquido +7.
-- A emissão dura aproximadamente 7 segundos; bolinhas restantes terminam o percurso em seguida. Há limite de 14 segundos de simulação para evitar que uma bola presa impeça a conclusão.
-- O ensaio é gratuito e não paga moedas. A economia é experimental, ainda sujeita a avaliação por partidas humanas.
-- A chave local exclusiva é `king-rico-cascade-demo-v1`. Não importa saldos antigos nem usa Firebase. Google, Firestore, Home e os jogos oficiais não são alterados.
-- Checkpoints incluem posições, velocidades, bolinhas emitidas/resolvidas, pontos e coletor. Uma atualização retoma o último checkpoint. Cada bolinha é resolvida uma vez; o saldo e o encerramento são escritos juntos, impedindo repetir o prêmio ao atualizar.
+- Cor e impulso inicial são reproduzíveis a partir da semente da rodada.
+- Matter.js avança em passo fixo de 1/60 s. Bolinhas, pinos, paredes dos reservatórios e comportas colidem. A comporta gira fisicamente e muda o caminho das bolinhas; as reservas caem das posições em que aparecem no vidro.
+- A combinação é automática. Três bolinhas seguidas da mesma cor pontuam +3 mesmo depois de a reserva daquela cor já ter sido aberta; a mesma reserva nunca libera outra avalanche.
+- Uma captura vale 1 ponto. Prêmio = `floor(aposta × pontos / 25)` e inclui a aposta. Apostar 25 e fazer 32 pontos recebe 32 moedas, resultado líquido +7.
+- A emissão principal dura aproximadamente 7 segundos. A rodada tem limite inicial de 14 segundos de simulação; uma comporta aberta garante até mais 6 segundos para a queda, respeitando o limite absoluto de 20 segundos. Bolinhas eventualmente presas são encerradas sem pontos.
+- O ensaio não debita nem paga moedas. A economia é experimental, sujeita a avaliação por partidas humanas.
+- Carteira exclusiva de demonstração: `king-rico-cascade-demo-v2`. Não importa saldos antigos nem usa Firebase. Google, Firestore, Home e os jogos oficiais não são alterados.
+- Checkpoints atômicos incluem posições, velocidades, emissões, reservas abertas, bolinhas resolvidas, pontos e coletor. Atualizar retoma o checkpoint, incluindo uma avalanche em andamento. Cada bolinha resolve uma vez; o crédito e o encerramento são gravados juntos, impedindo duplicar o prêmio por recarga da página.
 
-## Controle
+## Controle e detalhes
 
-O movimento usa deltas do dedo em coordenadas reais da mesa. Trocar o ponto de contato não faz o coletor pular; inverter o movimento na borda responde imediatamente. Toques secundários são ignorados e `pointercancel` solta o gesto sem encerrar a rodada. Menu e aba oculta pausam a simulação.
+O swipe usa deltas do dedo em coordenadas reais da mesa. Reagarrar não faz o coletor saltar; inverter na borda responde imediatamente. Toques secundários são ignorados; `pointercancel` libera o gesto. Menu e aba oculta pausam a simulação.
+
+Os três indicadores sob cada reservatório acompanham a combinação. A trinca acende a cor da comporta, solta a trava e libera as bolinhas de baixo para cima, com posições físicas contínuas. Capturas comprimem o coletor; contatos nos pinos produzem luz e notas curtas. Som e vibração obedecem ao menu compartilhado; efeitos respeitam redução de movimento.
 
 ## Executar e testar
 
@@ -25,8 +28,7 @@ node prototypes/fortune-impulso/cascade-state.test.mjs
 node scripts/build-impulso.mjs
 python -m http.server 5097 --directory work/fortune-impulso/dist
 python prototypes/fortune-impulso/cascade-browser.py
+python prototypes/fortune-impulso/cascade-resume-browser.py
 ```
 
-O teste de navegador usa Playwright com Chromium. `CASCADE_URL` pode mudar o endereço. Ele verifica swipe real por CDP, bordas, cancelamento, retomada, captura, recebimento, menu, tamanhos de tela e ensaio. Capturas em `work/cascade/`.
-
-Renderização Three.js com instâncias de esferas para bolinhas e pinos. Fontes, arte do palco e menu são os mesmos do projeto. Materiais, geometria e som são feitos por código, sem serviços de geração pagos.
+Playwright/Chromium verificam toque real, bordas, cancelamento, rodada com avalanche, retomada, recebimento único, menu, ensaio e enquadramento em celular pequeno/desktop. `CASCADE_URL` altera a URL local. Capturas e logs ficam em `work/cascade/`.
