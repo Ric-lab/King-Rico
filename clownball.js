@@ -2,7 +2,7 @@
 (function () {
   if (customElements.get('clown-ball')) return;
   const SRC = 'https://unpkg.com/three@0.184.0/build/three.module.js', W = 453, H = 802;
-  const COLS = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#ffc21a', '#fff3c4'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']];
+  const COLS = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']];
   class CB extends HTMLElement {
     connectedCallback() { if (this._i) return; this._i = 1; this.style.display = 'block'; this.style.pointerEvents = 'none'; import(SRC).then(T => this.setup(T)); }
     disconnectedCallback() { cancelAnimationFrame(this._raf); }
