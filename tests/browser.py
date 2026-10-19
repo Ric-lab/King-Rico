@@ -70,16 +70,25 @@ def claim_gift(page):
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
 
 def swipe(page):
-    wheel=page.locator('[data-screen-label="Fortune Wheel"] > div').nth(0)
-    # The actual draggable element is the circular wheel with cursor: grab.
-    wheel=page.locator('div[style*="cursor: grab"]')
-    box=wheel.bounding_box();assert box
-    cx,cy=box['x']+box['width']/2,box['y']+box['height']/2
-    r=box['width']*.38
-    page.mouse.move(cx,cy-r);page.mouse.down()
-    page.mouse.move(cx+r,cy,steps=5)
-    page.mouse.move(cx,cy+r,steps=5)
-    page.mouse.up()
+    # A busy software GPU can make a physical swipe fall below the game's
+    # minimum force. Retry only that rejected gesture, before any bet starts.
+    for attempt in range(3):
+        wheel=page.locator('div[style*="cursor: grab"]')
+        box=wheel.bounding_box();assert box
+        cx,cy=box['x']+box['width']/2,box['y']+box['height']/2
+        r=box['width']*.38
+        page.mouse.move(cx,cy-r);page.mouse.down()
+        page.mouse.move(cx+r,cy,steps=5)
+        page.mouse.move(cx,cy+r,steps=5)
+        page.mouse.up()
+        try:
+            page.wait_for_function('window.__fw.state.spinning',timeout=1200)
+            return
+        except Exception:
+            hint=page.evaluate('window.__fw.state.hint')
+            if not hint.startswith('Mais forte'):
+                raise
+    raise AssertionError('Three physical swipes were rejected for insufficient force')
 
 def check_menu(page, screen, paytable):
     trigger=page.get_by_role('button',name='Abrir menu',exact=True)
