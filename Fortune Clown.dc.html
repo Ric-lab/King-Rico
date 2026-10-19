@@ -191,7 +191,7 @@ class Component extends DCLogic {
       down: this.down, move: this.move, up: this.up, stop: this.stop, balanceText: fmt(s.balance),
       balls: Array.from({ length: BALLS }, (_, i) => { const C = window.ClownBallColors || ['#ff3b8a', '#2fb8ff', '#2ec962', '#a45cff'], c = C[i % C.length], used = i < s.results.length, hit = used && s.results[i] > 0, now = i === s.results.length && s.active;
         return { img: this.marker(i % 4), miss: used && !hit, sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', k: now ? 1.15 : used ? 0.85 : 1 }; }),
-      roundText: '+' + fmt(s.sum), tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.n === 'orelha' ? h.y + h.ry + 4 : h.n === 'boca' ? h.y - h.ry * 0.55 : h.y - 10) + 'px', m: 'x' + fmt(h.m) })),
+      roundText: '+' + fmt(s.sum), tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.n === 'orelha' ? h.y + h.ry + 4 : h.n === 'boca' ? h.y - h.ry * 0.3 : h.y - 10) + 'px', m: 'x' + fmt(h.m) })),
       floatOn: !!s.floatOn, floatX: s.floatX, floatY: s.floatY, floatText: s.floatText,
       showHand: !s.touched && !s.busy, showBet: !s.active, betText: fmt(BETS[s.betIdx]), betDown: this.betDown, betUp: this.betUp,
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin }; }
