@@ -29,20 +29,21 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <a href="Home.dc.html" onPointerDown="{{ stop }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
     <div onPointerDown="{{ stop }}" onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
 
-    <div style="position: absolute; left: 0; right: 0; top: 84px; display: flex; justify-content: center; gap: 6px;">
+    <div style="position: absolute; left: 0; right: 0; top: 100px; display: flex; justify-content: center; gap: 6px;">
       <sc-for list="{{ balls }}" as="b" hint-placeholder-count="5">
-        <div style="width: 28px; height: 28px; border-radius: 50%; background: {{ b.bg }}; box-shadow: {{ b.sh }}; opacity: {{ b.op }}; transform: scale({{ b.k }}); transition: transform .2s, opacity .2s;"></div>
+        <div style="position: relative; width: 30px; height: 30px; border-radius: 50%; background: url('{{ b.img }}') center / cover; box-shadow: {{ b.sh }}; transform: scale({{ b.k }}); transition: transform .2s;"><sc-if value="{{ b.miss }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(20,4,36,.55); font-size: 22px; font-weight: 800; line-height: 1; color: #ff4d4d; text-shadow: 0 1px 0 #fff;">✕</div></sc-if></div>
       </sc-for>
     </div>
-    <div style="position: absolute; left: 0; right: 0; top: 116px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
+    <div style="position: absolute; left: 0; right: 0; top: 132px; text-align: center; font-size: 26px; font-weight: 800; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; font-variant-numeric: tabular-nums;">{{ roundText }}</div>
 
     <div ref="{{ faceRef }}" style="position: absolute; inset: 0; pointer-events: none; will-change: transform;">
     <img ref="{{ boardRef }}" src="assets/clown/clown.webp" alt="Palhaço" draggable="false" style="position: absolute; left: 6.5px; top: 140px; width: 440px; height: 440px; pointer-events: none; filter: drop-shadow(0 12px 16px rgba(0,0,0,.5)); transform-origin: 50% 50%;">
     <sc-for list="{{ tags }}" as="t" hint-placeholder-count="6">
       <div style="position: absolute; left: {{ t.x }}; top: {{ t.y }}; transform: translateX(-50%); padding: 1px 7px; border-radius: 10px; background: rgba(28,6,48,.85); font-size: 14px; font-weight: 800; color: #ffd257; pointer-events: none;">{{ t.m }}</div>
     </sc-for>
-    <div data-lid="0" style="position: absolute; left: 155px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
-    <div data-lid="1" style="position: absolute; left: 256.4px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #fbe8d2, #f0cfae); box-shadow: inset 0 -3px 0 #e8a0a0; transform: scaleY(0); transform-origin: 50% 0;"></div>
+    <div data-lid="0" style="position: absolute; left: 155px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #ff7ab8, #ffb03a); box-shadow: inset 0 -4px 0 #fff3c4, 0 0 0 3px #ffd23a; transform: scaleY(0); transform-origin: 50% 0;"></div>
+    <div data-lid="1" style="position: absolute; left: 256.4px; top: 273.4px; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #5ad8ff, #a45cff); box-shadow: inset 0 -4px 0 #fff3c4, 0 0 0 3px #2ec4d6; transform: scaleY(0); transform-origin: 50% 0;"></div>
+    <div data-lid="nose" style="position: absolute; left: 205.6px; top: 333.6px; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 38% 32%, #ff9a9a 0%, #f0302a 45%, #b81414 100%); transform: scale(0);"></div>
     </div>
     <sc-if value="{{ floatOn }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; z-index: 9; left: {{ floatX }}; top: {{ floatY }}; transform: translateX(-50%); font-size: 30px; font-weight: 800; color: #fff3c4; text-shadow: 0 2px 0 #6b2e05; animation: ckFloat .9s ease-out forwards; pointer-events: none;">{{ floatText }}</div>
@@ -114,7 +115,7 @@ class Component extends DCLogic {
   componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._sw); }
   react(h) { const b = this.boardRef.current, f = this.faceRef.current; if (!b || !b.animate) return;
     if (h.n === 'boca') { b.animate([0, 1, 0, 1, 0, 1, 0].map(k => ({ transform: k ? 'scale(1.03, .95)' : 'scale(1)' })), { duration: 720, easing: 'ease-in-out' }); [0, 240, 480].forEach(d => setTimeout(() => this.tone(140, 0.08, 'sine', 0.1, 90), d)); }
-    else if (h.n === 'nariz') { b.animate([{ transform: 'scale(1)' }, { transform: 'scale(.97) translateY(4px)', offset: .45 }, { transform: 'scale(1.08) translateY(-10px)', offset: .6 }, { transform: 'scale(1)' }], { duration: 700 }); setTimeout(() => this.tone(900, 0.25, 'sawtooth', 0.05, 200), 380); }
+    else if (h.n === 'nariz') { const nz = f && f.querySelector('[data-lid="nose"]'); if (nz && nz.animate) nz.animate([{ transform: 'scale(0)' }, { transform: 'scale(1.1)', offset: .25 }, { transform: 'scale(1)', offset: .35 }, { transform: 'scale(1)', offset: .8 }, { transform: 'scale(0)' }], { duration: 1100 }); b.animate([{ transform: 'scale(1)' }, { transform: 'scale(.97) translateY(4px)', offset: .45 }, { transform: 'scale(1.08) translateY(-10px)', offset: .6 }, { transform: 'scale(1)' }], { duration: 700 }); setTimeout(() => this.tone(900, 0.25, 'sawtooth', 0.05, 200), 380); }
     else if (h.n === 'olho') { const lid = f && f.querySelector('[data-lid="' + (h.x < 226 ? 0 : 1) + '"]'); if (lid && lid.animate) lid.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)', offset: .3 }, { transform: 'scaleY(1)', offset: .65 }, { transform: 'scaleY(0)' }], { duration: 650 }); this.tone(1500, 0.08, 'triangle', 0.06, 2200); }
     else { const s = h.x < 226 ? 1 : -1; b.animate([0, 1, -1, 1, -1, 0].map(k => ({ transform: 'rotate(' + (k * s * 3) + 'deg)' })), { duration: 600, easing: 'ease-in-out' }); [0, 120, 240].forEach(d => setTimeout(() => this.tone(1100, 0.05, 'square', 0.04), d)); } }
   openMenu = () => this.setState({ menu: true }); closeMenu = () => this.setState({ menu: false });
@@ -130,6 +131,12 @@ class Component extends DCLogic {
       g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.arc(50, 48, 12, 0, 7); g.fill(); u = this._spl[col] = c.toDataURL(); }
     const im = document.createElement('img'); im.src = u; im.style.cssText = 'position:absolute;left:' + (x - this.off - 30) + 'px;top:' + (y - (this.dy || 0) - 30) + 'px;width:60px;height:60px;pointer-events:none;transform:rotate(' + Math.round(Math.random() * 360) + 'deg)'; f.appendChild(im);
     if (im.animate) { im.animate([{ transform: im.style.transform + ' scale(.2)' }, { transform: im.style.transform + ' scale(1.1)', offset: .1 }, { transform: im.style.transform + ' scale(1)', offset: .2 }, { transform: im.style.transform + ' scale(1)' }], { duration: 3200 }); im.animate([{ opacity: 1 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: 3200 }).onfinish = () => im.remove(); } else setTimeout(() => im.remove(), 3200); }
+  // marcador = mesma bola (listras onduladas + brilho), desenhada em 2D
+  marker(i) { this._mk = this._mk || []; if (this._mk[i]) return this._mk[i]; const P = [['#ff3b8a', '#ffd0e4'], ['#2fb8ff', '#d4f1ff'], ['#2ec962', '#d6ffe4'], ['#a45cff', '#ecdcff']][i], c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+    x.beginPath(); x.arc(32, 32, 31, 0, 7); x.clip(); x.fillStyle = P[0]; x.fillRect(0, 0, 64, 64); x.strokeStyle = P[1]; x.lineWidth = 6; x.lineCap = 'round';
+    for (let k = 0; k < 3; k++) { x.beginPath(); for (let u = -4; u <= 68; u += 4) { const y = 14 + k * 17 + Math.sin(u / 64 * Math.PI * 2 + k) * 5; u > -4 ? x.lineTo(u, y) : x.moveTo(u, y); } x.stroke(); }
+    const g = x.createRadialGradient(22, 18, 2, 32, 32, 34); g.addColorStop(0, 'rgba(255,255,255,.75)'); g.addColorStop(0.35, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.35)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+    return this._mk[i] = c.toDataURL(); }
   pt(e) { const r = this.stageRef.current.getBoundingClientRect(), s = r.width / 453; return { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s }; }
   anim(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else done && done(); }; this._raf = requestAnimationFrame(st); }
   stop = e => e.stopPropagation();
@@ -180,7 +187,7 @@ class Component extends DCLogic {
       payList: [['Boca', 1.5], ['Nariz', 2.5], ['Olho', 5], ['Orelha', 10]].map(([n, m]) => ({ n, m: 'x' + fmt(m) })), scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, ballRef: this.ballRef, boardRef: this.boardRef, trailRef: this.trailRef,
       down: this.down, move: this.move, up: this.up, stop: this.stop, balanceText: fmt(s.balance),
       balls: Array.from({ length: BALLS }, (_, i) => { const C = window.ClownBallColors || ['#ff3b8a', '#2fb8ff', '#2ec962', '#a45cff'], c = C[i % C.length], used = i < s.results.length, hit = used && s.results[i] > 0, now = i === s.results.length && s.active;
-        return { bg: 'radial-gradient(circle at 35% 30%, #ffffff 0%, ' + c + ' 45%, ' + c + ' 75%, rgba(0,0,0,.35) 100%)', sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', op: used && !hit ? 0.25 : 1, k: now ? 1.15 : used ? 0.85 : 1 }; }),
+        return { img: this.marker(i % 4), miss: used && !hit, sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', k: now ? 1.15 : used ? 0.85 : 1 }; }),
       roundText: s.active ? '+' + fmt(s.sum) : '', tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.y + h.ry + 4) + 'px', m: 'x' + fmt(h.m) })),
       floatOn: !!s.floatOn, floatX: s.floatX, floatY: s.floatY, floatText: s.floatText,
       showHand: !s.touched && !s.busy, showBet: !s.active, betText: fmt(BETS[s.betIdx]), betDown: this.betDown, betUp: this.betUp,
