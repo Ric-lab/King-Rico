@@ -18,6 +18,7 @@ def check_clown_bounce(browser,login,restored,check_menu,claim_gift,observer):
     def ready():
         page.wait_for_function('window.__clown && window.ClownBall?.texs && window.KingRicoCloud?.player',timeout=30000)
         restored(page,uid)
+        page.wait_for_function('document.querySelectorAll("[data-clown-marker]").length===10 && [...document.querySelectorAll("[data-clown-marker]")].every(img=>img.complete && img.naturalWidth>0)',timeout=20000)
     ready();check_menu(page,'Fortune Clown',False);page.screenshot(path='/tmp/king-rico-clown-ready.png')
     def swipe(x,y):
         page.wait_for_function('!__clown.state.busy && !__clown._request')
