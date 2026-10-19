@@ -97,3 +97,4 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 - 2026-10-18 · Capas da Home (Wheel, Neck, Penalty, Bounce, Fingo) · Meshy image-to-image gpt-image-2, ref = capa do Fortune Circus (estilo) + print do jogo (conteúdo), 16:9 com assunto no terço central (funciona quadrado e banner) · 5 tarefas ~30 cr · todas OK de 1ª.
 - 2026-10-18 · Wheel: capa refeita só com 3 cores (verde/vermelho/creme) + fundo do jogo (mesmo palco da capa, sem a roda, 9:16) · Meshy image-to-image ref = capa · 2 tarefas ~12 cr · OK de 1ª.
 - 2026-10-19 · Fortune Clown: rosto-alvo do palhaço (6 buracos) · Meshy image-to-image gpt-image-2 ref stage-bleed · ~6 cr · OK de 1ª.
+- 2026-10-19 · Fortune Clown v2: palhaço alegre colorido (óculos-alvo, buracos violeta com brilhos, sem olho vazado) · Meshy image-to-image ref clown-raw · ~6 cr · OK de 1ª. Lição: buraco preto em olho = assustador; usar interior colorido.
