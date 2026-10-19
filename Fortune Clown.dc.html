@@ -151,7 +151,7 @@ class Component extends DCLogic {
     const kEnd = 0.4; this.ci = ((this.ci ?? -1) + 1) % ((window.ClownBallColors || [1]).length); const col = (window.ClownBallColors || ['#ff3b8a'])[this.ci]; if (window.ClownBall) window.ClownBall.setColor(this.ci);
     this.tone(180, 0.12, 'sine', 0.12, 90); this.buzz(25);
     this.anim(650, k => { const q = path(k); this.setBall(q.x, q.y, 1 + (kEnd - 1) * k, 1); }, () => {
-      const off = this.off, hole = HOLES.find(h => ((T.x - h.x - off) / h.rx) ** 2 + ((T.y - h.y) / h.ry) ** 2 <= 1), inn = hole && Math.random() < 0.95 / hole.m;
+      const off = this.off, hole = HOLES.find(h => ((T.x - h.x - off) / h.rx) ** 2 + ((T.y - h.y) / h.ry) ** 2 <= 1), tongue = hole && hole.n === 'boca' && ((T.x - 226.5 - off) / 32) ** 2 + ((T.y - 462) / 17) ** 2 <= 1, inn = hole && (tongue || Math.random() < (hole.n === 'boca' ? 0.35 : 0.95 / hole.m));
       if (inn) { this.react(hole); this.anim(260, k => this.setBall(T.x + (hole.x + off - T.x) * k, T.y + (hole.y - T.y) * k, kEnd * (1 - k * 0.8), 1 - k), () => this.score(hole));
         return; }
       // bateu no rosto/borda: deixa a marca de tinta, quica e cai
