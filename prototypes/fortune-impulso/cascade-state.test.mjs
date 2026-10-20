@@ -51,3 +51,17 @@ test('cor, origem e impulso são reproduzíveis; reserva tem a cor da comporta',
  assert.deepEqual(marblePlan(44,20),marblePlan(44,20));assert.notDeepEqual(marblePlan(44,20),marblePlan(45,20));
  for(let i=TOTAL;i<MAX_BALLS;i++)assert.equal(marblePlan(44,i).color,Math.floor((i-TOTAL)/BONUS_PER_GATE));
 });
+test('acertar o centro vale dois; repetição e bolinhas perdidas não criam bônus',()=>{
+ let s=begin(fresh(),'center',123);
+ s=resolveBall(s,0,true,true);assert.equal(s.round.points,2);assert.equal(s.round.perfect,1);
+ assert.deepEqual(resolveBall(s,0,true,true),s);
+ s=resolveBall(s,1,true,false);assert.equal(s.round.points,3);assert.equal(s.round.perfect,1);
+ s=resolveBall(s,2,false,true);assert.equal(s.round.points,3);assert.equal(s.round.perfect,1);
+ const restored=JSON.parse(JSON.stringify(s));assert.equal(restored.round.perfect,1);
+});
+test('sequências de três permitem perseguir uma cor sem alterar o resultado depois do gesto',()=>{
+ for(const seed of [1,123,45678])for(let i=0;i<TOTAL;i+=3){
+  const first=marblePlan(seed,i);
+  assert.equal(marblePlan(seed,i+1).color,first.color);assert.equal(marblePlan(seed,i+2).color,first.color);
+ }
+});

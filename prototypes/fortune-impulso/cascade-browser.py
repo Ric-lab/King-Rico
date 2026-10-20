@@ -33,9 +33,9 @@ with sync_playwright() as w:
  touch('touchEnd');s=snap()['state'];assert s['round']['phase']=='paid',s['round'];assert s['round']['caught']>=5,s['round'];assert s['round']['resolved'] and len(s['round']['resolved'])==s['round']['total'];assert any(g['openedAt'] is not None for g in s['round']['gates']),s['round'];assert all(g['spawned']==12 for g in s['round']['gates'] if g['openedAt'] is not None);prize=s['round']['bet']*s['round']['points']//25
  assert s['balance']==975+prize;p.screenshot(path=str(OUT/'final-result.png'));p.reload(wait_until='domcontentloaded');p.wait_for_function('window.cascade');assert snap()['state']['balance']==975+prize
  print(f'PASS {s["round"]["total"]} bolinhas resolvidas com avalanche: {s["round"]["caught"]} coletadas, {s["round"]["combos"]} trincas, prêmio {prize}; recarregar não duplica',flush=True)
+ assert p.locator('#result-dialog').evaluate('(d)=>d.open');p.locator('#back').click()
  p.get_by_role('button',name='Abrir menu',exact=True).click();p.get_by_role('button',name='OFF',exact=True).first.click();assert snap()['state']['settings']['sfx']==0;p.get_by_role('button',name='Fechar menu',exact=True).click();p.locator('#help').click();assert p.locator('#how-to').evaluate('(d)=>d.open');p.locator('#got-it').click()
  print('PASS menu compartilhado, som e instruções',flush=True)
- p.locator('#back').click()
  for width,height in [(360,640),(1440,960)]:
   p.set_viewport_size({'width':width,'height':height});p.wait_for_timeout(100);box=p.locator('#play').bounding_box();assert box['y']+box['height']<height;assert p.evaluate('document.documentElement.scrollWidth<=innerWidth')
   p.screenshot(path=str(OUT/f'final-{width}.png'))
