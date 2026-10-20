@@ -259,3 +259,30 @@ test('Bounce persists skill checkpoints and pays gold, fall guarantee and collec
  m.advance(400);const collect=request({...base,roundId:next,move:'collect',n:1});assert.equal((await call(collect)).player.balance,1035.5);
  assert.equal((await call(collect)).replayed,true);
 });
+
+test('Flying commits a single debit, resumes popped balloons, pays collection once and forbids stale throws',async()=>{
+ const m=memory(()=>0),call=m.client('flying');await call(request({action:'bootstrap'}));
+ m.records.get('players/flying').balanceUnits=100025;
+ const roundId=randomUUID(),base={action:'flying',game:'flying',bet:2.5,roundId};
+ const first={...base,requestId:roundId,move:'pop',step:0,selected:4};
+ const [a,b]=await Promise.all([call(first),call(first)]);assert.equal(a.player.balance,997.75);assert.equal(b.replayed,true);
+ assert.deepEqual((await m.client('flying')(request({action:'bootstrap'}))).player.flyingRound.popped,[4]);
+ m.advance(350);const take=request({...base,move:'collect',step:1,selected:-1});
+ const paid=await call(take);assert.equal(paid.player.balance,1000.75);assert.equal((await call(take)).replayed,true);
+ await assert.rejects(call(request({...base,move:'collect',step:1,selected:-1})),{code:'king-rico/round-conflict'});
+ m.advance(350);m.setRng(()=>.99);const id=randomUUID();const lost=await call({...first,roundId:id,requestId:id});
+ assert.equal(lost.player.balance,998.25);assert.equal(lost.player.flyingRound,null);
+});
+test('21 persists the same deck/turn across devices and cannot duplicate a payout, debit or recharge',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');
+ const m=memory(rngFor([9,5,7,6,22])),call=m.client('twentyOne');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId};
+ const start={...base,move:'start',turn:0,requestId:roundId};const [a,b]=await Promise.all([call(start),call(start)]);
+ assert.equal(a.player.balance,0);assert.equal(b.replayed,true);assert.equal((await call(request({action:'recharge'}))).reason,'twenty-one-round');
+ assert.deepEqual((await m.client('twentyOne')(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
+ m.advance(350);let x=await call(request({...base,move:'stand',turn:1}));assert.equal(x.outcome.round.phase,'dealer');
+ m.advance(350);const finish=request({...base,move:'dealer',turn:2});x=await call(finish);
+ assert.equal(x.player.balance,2000);assert.equal(x.outcome.round.result.reason,'dealer-bust');assert.equal((await call(finish)).replayed,true);
+ m.advance(350);await assert.rejects(call(request({...base,move:'dealer',turn:2})),{code:'king-rico/round-conflict'});
+ assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
+});

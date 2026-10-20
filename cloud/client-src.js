@@ -86,7 +86,7 @@ else {
         if(response.outcome.ended) Cloud.track?.('spin_settled',{game:'fingo',bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       }
-      if(['penalty','clown'].includes(data.action) && response.outcome.ended)
+      if(['penalty','clown','flying','twentyOne'].includes(data.action) && response.outcome.ended)
         Cloud.track?.('spin_settled',{game:data.game,bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       if (data.action==='bonus' && response.amount) Cloud.track?.('daily_bonus_claimed',{amount:response.amount,operationId:data.requestId});
@@ -98,12 +98,12 @@ else {
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
       && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
-      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality;
+      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
     }
-    const data = pending || { ...payload, requestId: (payload.action==='penalty' && payload.step===0 || payload.action==='clown' && payload.used===0 || payload.action==='bounce' && payload.move==='start') ? payload.roundId : id() };
+    const data = pending || { ...payload, requestId: (payload.action==='penalty' && payload.step===0 || payload.action==='clown' && payload.used===0 || payload.action==='bounce' && payload.move==='start' || payload.action==='flying' && payload.step===0 || payload.action==='twentyOne' && payload.move==='start') ? payload.roundId : id() };
     // Save before sending. A lost response/reload must retry the same transaction.
     storage.set(key, data);
     try { const result = await call(data); localStorage.removeItem(key); return result; }
@@ -118,6 +118,8 @@ else {
   Cloud.bounce = (move,bet,roundId,n,gold=false) => mutate({action:'bounce',game:'bounce',move,bet,roundId,n,gold});
   Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
   Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
+  Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected});
+  Cloud.twentyOne = (move,bet,roundId,turn) => mutate({action:'twentyOne',game:'twentyOne',move,bet,roundId,turn});
   Cloud.bonus = () => mutate({ action:'bonus' });
   Cloud.recharge = () => mutate({ action:'recharge' });
   let settingsTimer, changes = {};
@@ -134,7 +136,7 @@ else {
       catch (error) { Cloud.error(error); }
     }, 400);
   };
-  const game = /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
+  const game = /Fortune(?:%20| )21/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
   Cloud.track = (name, extra={}) => {
@@ -267,7 +269,14 @@ else {
     try {
       await call({action:'bootstrap',requestId:id(),...(typeof selectedConsent==='boolean'?{analyticsConsent:selectedConsent}:{})});
       const key=`kingRico.pending.${user.uid}`, pending=storage.get(key);
-      if(pending) { await call(pending); localStorage.removeItem(key); notify('Sua última jogada e seu saldo foram recuperados.'); }
+      if(pending) {
+        try { await call(pending); notify('Sua última jogada e seu saldo foram recuperados.'); }
+        catch(error) {
+          if(!['king-rico/round-conflict','king-rico/already-exists','king-rico/invalid-argument','king-rico/failed-precondition'].includes(error.code))throw error;
+          notify('Sua rodada foi atualizada em outro aparelho. O saldo atual foi recuperado.');
+        }
+        localStorage.removeItem(key);
+      }
       if(current!==generation) return;
       unsubscribe=onSnapshot(doc(db,'players',user.uid), snapshot=>{
         if(current!==generation || !snapshot.exists() || snapshot.metadata.hasPendingWrites) return;
@@ -283,7 +292,7 @@ else {
   document.addEventListener('click', async event=>{
     if(event.target.closest('[data-cloud-signout]')) {
       const g=window.__fc, w=window.__fw, n=window.__fn, f=window.__fg, p=window.__pen;
-      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest || f?._cloudRequest || f?.state.phase==='falling' || f?.state.phase==='rolling' || p?.cloudLocked()) { notify('Espere a jogada terminar para sair.'); return; }
+      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest || f?._cloudRequest || f?.state.phase==='falling' || f?.state.phase==='rolling' || p?.cloudLocked() || window.__flying?._request || window.__flying?.state.busy || window.KingRico21?.isBusy()) { notify('Espere a jogada terminar para sair.'); return; }
       unsubscribe?.(); selectedConsent=undefined; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
       if(dialog) {
         dialog.querySelector('[data-cloud-consent]').checked=false;

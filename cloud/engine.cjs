@@ -15,7 +15,17 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-19-spark-v3';
+const RULES_VERSION = '2026-10-20-spark-v4';
+const {twentyOne} = require('./twenty-one.cjs');
+const FLYING_MULTIPLIERS = [1.2,1.5,2,2.5,3,4,5,8,12,20];
+function flying(bet,previous,move,roundId,selected,rng=random) {
+  const before=previous?.step || 0,betUnits=previous?.betUnits || units(bet);
+  const ok=move==='collect' || rng()<(before?FLYING_MULTIPLIERS[before-1]:.95)/FLYING_MULTIPLIERS[before];
+  const step=before+(move==='pop' && ok?1:0),popped=move==='pop'?[...(previous?.popped || []),selected]:[...previous.popped];
+  const ended=move==='collect' || !ok || step===10;
+  return {move,roundId,betUnits,step,popped,selected,ok,ended,winUnits:ended && ok?Math.round(betUnits*FLYING_MULTIPLIERS[step-1]):0};
+}
+const twentyOneRound = (bet,previous,move,roundId,rng=random) => twentyOne(bet,previous,move,roundId,rng);
 const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
 const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;
@@ -164,4 +174,4 @@ function bonusFor(last, streak, now) {
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  FLYING_MULTIPLIERS, flying, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

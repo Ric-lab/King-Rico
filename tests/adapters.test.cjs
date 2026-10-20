@@ -195,3 +195,13 @@ test('Clown rotates about its lowered center and aims in the same local coordina
   }
  }
 });
+
+test('Flying restores persisted balloons and refuses an offline pop without drawing or debiting',async()=>{
+ let errors=0;const player={balance:997.5,settings:{flyingBetIdx:1,sfxLvl:0,vibLvl:0},flyingRound:{id:'round',betUnits:250,step:2,popped:[4,8]}};
+ const cloud={enabled:true,player,flying:async()=>{throw Error('offline');},settings:()=>{},error:()=>errors++};
+ // Effects may be random; restoring IDs and refusing a request are not lotteries.
+ const {instance:f}=component('Fortune Flying Clown.dc.html',cloud,()=>.5);
+ f._cloudDeferred=player;f.applyCloudPlayer();assert.equal(f.balls.length,8);assert.equal(f.state.step,2);assert.equal(f.state.balance,997.5);
+ assert.ok(!f.balls.some(b=>b.id===4||b.id===8));await f.popIdx(0);
+ assert.equal(f.state.balance,997.5);assert.equal(f.balls.length,8);assert.equal(f.state.busy,false);assert.equal(errors,1);
+});

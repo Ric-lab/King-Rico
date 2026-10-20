@@ -41,7 +41,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6);"></a>
-    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; z-index: 20; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6);"></div>
+    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- multiplicador atual → próximo -->
     <div style="position: absolute; z-index: 10; left: 165px; right: 125px; top: 22px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; pointer-events: none; opacity: {{ multOp }};">
@@ -87,8 +87,9 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.94); cursor: pointer; animation: flFade .2s ease-out;">
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closePays }}" role="button" style="position: absolute; inset: 0; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.94); cursor: pointer; animation: flFade .2s ease-out;">
         <div style="width: 400px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
           <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
           <div style="font-size: 18px; font-weight: 700; line-height: 1.35; color: #fff3c4; text-align: center; text-wrap: pretty;">Toque num balão para estourar: o palhaço sobe e o prêmio aumenta. Se der azar, todos estouram, ele cai na rede e você perde a aposta. Pegue o prêmio quando quiser. Estourou o último? Ganha x20 e ele sai voando!</div>
@@ -98,6 +99,15 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             </sc-for>
           </div>
           <div style="margin-top: 6px; padding: 10px 28px; border-radius: 999px; background: linear-gradient(180deg, #ffe27a, #f0a018); box-shadow: 0 4px 0 #8a4a05; font-size: 20px; font-weight: 800; color: #4a1a00;">FECHAR</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
+        <div onClick="{{ recharge }}" role="button" aria-label="Recarregar saldo" style="pointer-events: auto; width: max-content; position: absolute; left: 626px; top: 772px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer;" style-active="transform: translateX(-50%) scale(.96);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; white-space: nowrap; color: #ffd257;">SALDO ESGOTADO</div>
+          <div style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #fff8dc;">RECARREGAR</div>
         </div>
       </div>
     </sc-if>
@@ -120,7 +130,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // Chance de passar do andar k-1 para k = M[k-1]/M[k] (1º: 0,95/1,2) → parar em qualquer andar devolve 95%.
 const M = [1.2, 1.5, 2, 2.5, 3, 4, 5, 8, 12, 20], N = 10, HX = 226, HY0 = 380, DY = 26, BW = 54, BH = 65;
 const SLOTS = [[-60, -92], [-20, -100], [20, -100], [60, -92], [-40, -146], [0, -152], [40, -146], [-20, -196], [20, -196], [0, -240]];
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000], SKEY = 'fortuneCircus.slot.v3';
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const CONF = ['#ffd257', '#e8352b', '#2ec962', '#7fcfff', '#fff3c4', '#c86bff'];
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const ease = k => k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
@@ -129,51 +139,69 @@ class Component extends DCLogic {
   stageRef = React.createRef(); worldRef = React.createRef(); canvasRef = React.createRef(); clownRef = React.createRef();
   componentDidMount() {
     this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     this.imgs = [0, 1, 2, 3, 4, 5].map(i => { const im = new Image(); im.src = 'assets/flying/b' + i + '.webp'; return im; });
     this.parts = []; this.fill(); this.cy = 0; this.cvy = 0; this.mode = 'idle'; this.hy = HY0;
+    window.__flying=this;const cloud=window.KingRicoCloud;if(cloud?.enabled)this._unwatch=cloud.watch(p=>{this._cloudDeferred=p;if(!this.state.busy&&!this._request&&!this.state.win)this.applyCloudPlayer();});
     const loop = now => { this.tick(now / 1000); this._raf = requestAnimationFrame(loop); }; this._raf = requestAnimationFrame(loop);
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._tw); clearTimeout(this._ct); }
-  fill() { this.balls = Array.from({ length: N }, (_, i) => ({ c: i % 6, x: SLOTS[i][0], y: SLOTS[i][1], s: 1, ph: Math.random() * 6 })); }
-  save(b) { try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = b; localStorage.setItem(SKEY, JSON.stringify(sv)); } catch (e) {} }
+  componentWillUnmount() { this._dead=true;this._unwatch?.();if(window.__flying===this)delete window.__flying;window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); cancelAnimationFrame(this._tw); clearTimeout(this._ct); }
+  fill() { this.balls = Array.from({ length: N }, (_, i) => ({ id:i,c: i % 6, x: SLOTS[i][0], y: SLOTS[i][1], s: 1, ph: Math.random() * 6 })); }
+  applyCloudPlayer() {
+    const p=this._cloudDeferred;if(!p)return;this._cloudDeferred=null;
+    const r=p.flyingRound;this.fill();
+    if(r){this.balls=this.balls.filter(b=>!r.popped.includes(b.id));this.balls.forEach((b,i)=>{b.x=SLOTS[i][0];b.y=SLOTS[i][1];});}
+    this.mode='idle';this.cy=this.cvy=0;this.hy=HY0-DY*(r?.step||0);
+    this.setState({balance:p.balance,betIdx:r?BETS.indexOf(r.betUnits/100):p.settings.flyingBetIdx??3,
+      sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,step:r?.step||0,bet:r?r.betUnits/100:0,roundId:r?.id||null,busy:false});
+  }
+  componentDidUpdate(){if(this._cloudDeferred&&!this.state.busy&&!this._request&&!this.state.win)this.applyCloudPlayer();}
+  setLvl=(key,value)=>{this.setState({[key]:value});window.KingRicoCloud?.settings({[key]:value});};
+  recharge=async()=>{const c=window.KingRicoCloud;if(!c?.enabled||this._request)return;this._request=true;try{const r=await c.recharge();if(r.reason)c.error({code:'king-rico/round-conflict'});}catch(e){c.error(e);}finally{this._request=false;this._cloudDeferred=c.player;this.applyCloudPlayer();}};
   ac() { if (!this._ac) try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   tone(f, d, type = 'triangle', g = 0.07, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g * L, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
   pop() { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; const a = this.ac(); if (!a || !L) return; const n = a.createBuffer(1, a.sampleRate * 0.12, a.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3); const s = a.createBufferSource(), g = a.createGain(); s.buffer = n; g.gain.value = 0.5 * L; s.connect(g).connect(a.destination); s.start(); }
   buzz(p) { if (!(this.state.vibLvl ?? 2)) return; try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
   tween(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._tw = requestAnimationFrame(st); else done && done(); }; cancelAnimationFrame(this._tw); this._tw = requestAnimationFrame(st); }
   tick(t) {
+    const dt=this._lastFrame==null?1/60:Math.min(.05,Math.max(0,t-this._lastFrame));this._lastFrame=t;if(this._dead||this.state.menu||this.state.pays||this.state.betOpen||document.hidden)return;
     const s = this.state.step, w = this.worldRef.current; if (w) w.style.transform = 'translateY(' + ((HY0 - this.hy) * 0.25).toFixed(1) + 'px)';
     const sway = Math.sin(t * 1.3) * 0.05, c = this.clownRef.current, hy = this.hy + this.cy;
     let rot = sway, sx = 1, sy = 1;
-    if (this.mode === 'hang') { this.hangT += 1 / 60; const k = Math.min(1, this.hangT / 0.35); sy = 1 + 0.08 * k; sx = 1 - 0.05 * k; rot = Math.sin(t * 30) * 0.04 * k; if (this.hangT >= 0.35) { this.mode = 'fall'; this.cvy = 60; } }
-    else if (this.mode === 'fall') { this.cvy += 2600 / 60; this.cy += this.cvy / 60; const fl = HY0 - this.hy + 98; rot = Math.sin(t * 22) * 0.12; sy = 1 + Math.min(0.12, this.cvy / 6000); sx = 1 / sy;
+    if (this.mode === 'hang') { this.hangT += dt; const k = Math.min(1, this.hangT / 0.35); sy = 1 + 0.08 * k; sx = 1 - 0.05 * k; rot = Math.sin(t * 30) * 0.04 * k; if (this.hangT >= 0.35) { this.mode = 'fall'; this.cvy = 60; } }
+    else if (this.mode === 'fall') { this.cvy += 2600 * dt; this.cy += this.cvy * dt; const fl = HY0 - this.hy + 98; rot = Math.sin(t * 22) * 0.12; sy = 1 + Math.min(0.12, this.cvy / 6000); sx = 1 / sy;
       if (this.cy >= fl) { this.cy = fl; this.mode = 'land'; this.landT = 0; this.dust(); this.tone(110, 0.3, 'sine', 0.14, 60); this.buzz([50, 30, 30]); const st = this.stageRef.current; if (st && st.animate) st.animate([{ transform: st.style.transform + ' translateY(0)' }, { transform: st.style.transform + ' translateY(6px)' }, { transform: st.style.transform + ' translateY(-2px)' }, { transform: st.style.transform + ' translateY(0)' }], { duration: 260 }); } }
-    else if (this.mode === 'land' || this.mode === 'down') { this.landT = (this.landT || 0) + 1 / 60; const k = this.landT; const q = k < 0.08 ? k / 0.08 : Math.exp(-(k - 0.08) * 7) * Math.cos((k - 0.08) * 26); sy = 1 - 0.28 * q; sx = 1 + 0.22 * q; rot = 0; if (k > 0.8) this.mode = 'down'; }
-    else if (this.mode === 'rise') { this.riseT += 1 / 60; const k = Math.min(1, this.riseT / 0.9); sy = 1 + 0.14 * Math.sin(k * Math.PI); sx = 1 - 0.08 * Math.sin(k * Math.PI); rot = 0; if (k >= 1) this.mode = 'idle'; }
+    else if (this.mode === 'land' || this.mode === 'down') { this.landT = (this.landT || 0) + dt; const k = this.landT; const q = k < 0.08 ? k / 0.08 : Math.exp(-(k - 0.08) * 7) * Math.cos((k - 0.08) * 26); sy = 1 - 0.28 * q; sx = 1 + 0.22 * q; rot = 0; if (k > 0.8) this.mode = 'down'; }
+    else if (this.mode === 'rise') { this.riseT += dt; const k = Math.min(1, this.riseT / 0.9); sy = 1 + 0.14 * Math.sin(k * Math.PI); sx = 1 - 0.08 * Math.sin(k * Math.PI); rot = 0; if (k >= 1) this.mode = 'idle'; }
     if (c) { c.style.transformOrigin = '50% 100%'; c.style.transform = 'translateY(' + (hy - HY0).toFixed(1) + 'px) rotate(' + rot.toFixed(3) + 'rad) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')'; }
     const cv = this.canvasRef.current; if (!cv) return; const x = cv.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, 453, 802);
     const hx = HX + Math.sin(sway) * 6; this.hit = [];
     this.balls.forEach((b, i) => { b.cx = hx + b.x + Math.sin(t * 1.5 + b.ph) * 4; b.cy = hy + b.y + Math.cos(t * 1.3 + b.ph) * 3; });
     x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 1.2; this.balls.forEach(b => { x.beginPath(); x.moveTo(hx, hy); x.quadraticCurveTo((hx + b.cx) / 2, (hy + b.cy) / 2 + 20, b.cx, b.cy + BH * 0.48 * b.s); x.stroke(); });
     this.balls.slice().sort((a, b) => a.cy - b.cy).forEach(b => { const im = this.imgs[b.c]; if (im.complete && im.naturalWidth) x.drawImage(im, b.cx - BW * b.s / 2, b.cy - BH * b.s / 2, BW * b.s, BH * b.s); });
-    for (let i = this.parts.length - 1; i >= 0; i--) { const p = this.parts[i]; p.t += 1 / 60; p.x += p.vx / 60; p.y += p.vy / 60; p.vy += 600 / 60; x.fillStyle = p.c; x.globalAlpha = Math.max(0, 1 - p.t / 0.7); x.fillRect(p.x, p.y, 7, 4); x.globalAlpha = 1; if (p.t > 0.7) this.parts.splice(i, 1); }
+    for (let i = this.parts.length - 1; i >= 0; i--) { const p = this.parts[i]; p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 600 * dt; x.fillStyle = p.c; x.globalAlpha = Math.max(0, 1 - p.t / 0.7); x.fillRect(p.x, p.y, 7, 4); x.globalAlpha = 1; if (p.t > 0.7) this.parts.splice(i, 1); }
   }
   burst(b) { const cols = ['#e8352b', '#ff6aa8', '#ffd23a', '#ff8a2a', '#2fc7d6', '#a45cff']; for (let k = 0; k < 12; k++) { const a = Math.random() * 6.28, v = 120 + Math.random() * 220; this.parts.push({ x: b.cx, y: b.cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 80, c: cols[b.c], t: 0 }); } }
   pack() { this.balls.forEach((b, i) => { const [tx, ty] = SLOTS[i], fx = b.x, fy = b.y; b.tw = { fx, fy, tx, ty }; }); const B = this.balls; const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / 400), e = ease(k); B.forEach(b => { if (b.tw) { b.x = b.tw.fx + (b.tw.tx - b.tw.fx) * e; b.y = b.tw.fy + (b.tw.ty - b.tw.fy) * e; } }); if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); }
   tapBalloon = e => {
-    const s = this.state; if (s.busy || s.win || s.menu || s.betOpen || this.mode !== 'idle') return; this.ac();
+    const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || s.betOpen || this.mode !== 'idle') return; this.ac();
     const r = e.currentTarget.getBoundingClientRect(), sc = r.width / 453, px = (e.clientX - r.left) / sc, py = (e.clientY - r.top) / sc;
     let bi = -1, bd = 1e9; this.balls.forEach((b, i) => { const d = Math.hypot(px - b.cx, (py - b.cy) * 0.85); if (d < bd) { bd = d; bi = i; } }); if (bi < 0 || bd > 40) return; this.popIdx(bi); };
-  popBtn = () => { const s = this.state; if (s.busy || s.win || s.menu || s.betOpen || this.mode !== 'idle' || !this.balls.length) return; this.ac(); let bi = 0; this.balls.forEach((b, i) => { if ((b.cy ?? 0) < (this.balls[bi].cy ?? 0)) bi = i; }); this.popIdx(bi); };
-  popIdx(bi) { const s = this.state;
-    let bal = s.balance, bet = s.bet;
-    if (s.step === 0) { bet = BETS[s.betIdx]; if (bal < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); return; } bal = Math.round((bal - bet) * 100) / 100; this.save(bal); }
-    const j = s.step, ok = Math.random() < (j === 0 ? 0.95 / M[0] : M[j - 1] / M[j]), b = this.balls[bi];
+  popBtn = () => { const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || s.betOpen || this.mode !== 'idle' || !this.balls.length) return; this.ac(); let bi = 0; this.balls.forEach((b, i) => { if ((b.cy ?? 0) < (this.balls[bi].cy ?? 0)) bi = i; }); this.popIdx(bi); };
+  async popIdx(bi) {
+    const c=window.KingRicoCloud,s=this.state;
+    if(!c?.enabled||!c.player||this._request||s.busy||!this.balls[bi])return;
+    const roundId=s.roundId||crypto.randomUUID(),bet=s.step?s.bet:BETS[s.betIdx],selected=this.balls[bi].id;
+    this._request=true;this.setState({busy:true});let r;
+    try{r=await c.flying('pop',bet,roundId,s.step,selected);}
+    catch(e){c.error(e);this.setState({busy:false});this._request=false;this._cloudDeferred=c.player;this.applyCloudPlayer();return;}
+    this._request=false;if(this._dead)return;
+    if(c.player.revision>r.player.revision){this.setState({busy:false});this._cloudDeferred=c.player;this.applyCloudPlayer();return;}
+    const x=r.outcome,bal=c.player.balance,j=s.step,ok=x.ok,b=this.balls[bi];
+    this.setState({roundId});
     this.setState({ balance: bal, bet, busy: true }); this.burst(b); this.pop(); this.buzz(25); this.balls.splice(bi, 1);
     if (!ok) { this.mode = 'hang'; this.hangT = 0; this.cvy = 0; let d = 0; this.balls.forEach(q => { setTimeout(() => { this.burst(q); this.pop(); }, d += 70); }); setTimeout(() => { this.balls = []; }, 60); setTimeout(() => this.tone(520, 0.5, 'sine', 0.07, 160), 150); this.buzz([60, 40, 60]); setTimeout(() => { this.reset(); this.mode = 'rise'; this.riseT = 0; this.hy = HY0 + 98; this.tween(1100, k => { this.hy = HY0 + 98 * (1 - ease(k)); }); this.tone(392, 0.2); setTimeout(() => this.tone(523, 0.25), 140); }, 2400); return; }
     const n = j + 1; [523, 659, 784].forEach((f, i) => setTimeout(() => this.tone(f * Math.pow(1.06, j), 0.14), 60 + i * 60)); this.pack();
-    if (n === N) { this.mode = 'away'; this.setState({ step: n }); this.confetti(); const fy = this.hy; this.tween(1400, k => { this.hy = fy - 700 * ease(k); }, () => this.collect(M[N - 1], 'SAIU VOANDO!')); return; }
+    if (n === N) { this.mode = 'away'; this.setState({ step: n }); this.confetti(); const fy = this.hy; this.tween(1400, k => { this.hy = fy - 700 * ease(k); }, () => this.showPrize(x.winUnits/100, 'SAIU VOANDO!')); return; }
     this.mode = 'rise'; this.riseT = 0.25; const fy = this.hy; this.tween(550, k => { this.hy = fy - DY * ease(k); }, () => this.setState({ step: n, busy: false }));
   };
   dust() { const st = this.stageRef.current; if (!st || !st.animate) return; const fy = 664;
@@ -182,27 +210,36 @@ class Component extends DCLogic {
       st.appendChild(d); const x0 = HX - sz / 2 + side * (6 + Math.random() * 16), y0 = fy - sz / 2 - 4;
       const a = d.animate([{ transform: 'translate(' + x0 + 'px,' + y0 + 'px) scale(.4)', opacity: .95 }, { transform: 'translate(' + (x0 + dx * 0.7) + 'px,' + (y0 + dy) + 'px) scale(1.2)', opacity: .8, offset: .45 }, { transform: 'translate(' + (x0 + dx) + 'px,' + (y0 + dy * 0.6) + 'px) scale(1.6)', opacity: 0 }], { duration: 650 + Math.random() * 300, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
       a.onfinish = () => d.remove(); } }
-  reset() { this.fill(); this.mode = 'idle'; this.cy = 0; this.cvy = 0; this.hy = HY0; this.setState({ step: 0, bet: 0, busy: false }); }
+  reset() { if(this._dead)return;this.fill(); this.mode = 'idle'; this.cy = 0; this.cvy = 0; this.hy = HY0; this.setState({ step: 0, bet: 0, roundId:null,busy: false },()=>{this._cloudDeferred=window.KingRicoCloud?.player;this.applyCloudPlayer();}); }
   confetti() { const conf = Array.from({ length: 24 }, (_, j) => { const a = -Math.PI / 2 + (j / 23 - 0.5) * 2.8, v = 110 + (j * 37 % 80); return { x: (HX - 5) + 'px', y: '300px', dx: Math.round(Math.cos(a) * v * 1.7) + 'px', dy: Math.round(Math.sin(a) * v * 1.7 + 80) + 'px', bg: CONF[j % CONF.length] }; });
     clearTimeout(this._ct); this.setState({ conf }); this._ct = setTimeout(() => this.setState({ conf: [] }), 1100); }
-  collect(m, title) { const w = Math.round(this.state.bet * m * 100) / 100; [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.2), i * 90)); this.buzz([60, 50, 90]); this.setState({ win: { w, title }, busy: true }); }
-  collectBtn = () => { const s = this.state; if (s.busy || s.win || s.step < 1) return; this.collect(M[s.step - 1], 'VOCÊ GANHOU!'); };
-  closeWin = () => { const s = this.state; if (!s.win) return; const w = s.win.w; this.setState({ win: null });
-    this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.save(bal); this.setState({ balance: bal }); this.tone(1320, 0.12); });
-    const away = this.mode === 'away'; if (away) { this.reset(); this.hy = HY0 + 300; this.tween(700, k => { this.hy = HY0 + 300 * (1 - ease(k)); }); return; }
-    const fy = this.hy; this.tween(900, k => { this.hy = fy + (HY0 - fy) * ease(k); }, () => this.reset()); };
+  showPrize(w, title) { if(this._dead)return; [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.2), i * 90)); this.buzz([60, 50, 90]); this.setState({ win: { w, title }, busy: true }); }
+  collectBtn=async()=>{
+    const c=window.KingRicoCloud,s=this.state;if(!c?.enabled||s.busy||s.win||s.step<1||this._request)return;
+    this._request=true;this.setState({busy:true});
+    try{const r=await c.flying('collect',s.bet,s.roundId,s.step,-1);if(this._dead)return;
+      this.setState({balance:c.player.balance});this.showPrize(r.outcome.winUnits/100,'VOCÊ GANHOU!');
+    }catch(e){c.error(e);this.setState({busy:false});this._cloudDeferred=c.player;}
+    finally{this._request=false;if(!this.state.busy)this.applyCloudPlayer();}
+  };
+  closeWin=()=>{if(!this.state.win)return;this.setState({win:null});this.flyCoins(()=>this.tone(1320,.12));
+    const away=this.mode==='away',fy=this.hy;
+    if(away){this.reset();this.hy=HY0+300;this.tween(700,k=>{this.hy=HY0+300*(1-ease(k));});return;}
+    this.tween(900,k=>{this.hy=fy+(HY0-fy)*ease(k);},()=>this.reset());
+  };
   flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 100, y: 745 }, to = { x: 40, y: 42 }, n = 10;
     for (let i = 0; i < n; i++) { const c = document.createElement('div'); c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;border-radius:50%;pointer-events:none;background-image:url(assets/stage-hd-c.webp);background-size:453px 802px;background-position:-19.333px -30px;box-shadow:0 0 10px rgba(255,210,87,.8)';
       st.appendChild(c); const dx = (i - n / 2) * 12, mid = { x: (from.x + to.x) / 2 + dx * 2, y: from.y - 260 - (i % 3) * 30 };
       const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 760, delay: i * 55, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
       a.onfinish = () => { c.remove(); this.tone(1800 + i * 40, 0.03, 'square', 0.03); if (i === n - 1) done(); }; } }
-  openBet = () => { if (this.state.step || this.state.busy) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
+  openBet = () => { if (this.state.step || this.state.busy || this._request) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
   closeBet = () => this.setState({ betOpen: false });
-  betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) })); };
-  betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) })); };
+  betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
+  betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
   openMenu = () => { if (this.state.busy) return; this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
-  goHome = e => { if ((this.state.busy || this.state.step) && e) e.preventDefault(); };
+  openPays=()=>this.setState({menu:false,pays:true});closePays=()=>this.setState({menu:true,pays:false});
+  goHome = e => { if ((this.state.busy || this._request) && e) e.preventDefault(); };
   renderVals() {
     const s = this.state, txt = fmt(s.balance), j = s.step;
     return {
@@ -213,7 +250,10 @@ class Component extends DCLogic {
       showCollect: j > 0, collectText: j ? fmt(s.bet * M[j - 1]) : '', collectOp: s.busy ? 0.6 : 1, collectBtn: this.collectBtn,
       tapBalloon: this.tapBalloon, popBtn: this.popBtn, popOp: s.busy ? 0.6 : 1, popAnim: !s.busy && !j ? 'flPulse 1.4s ease-in-out infinite' : 'none',
       betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upBetOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
-      menu: !!s.menu, closeMenu: this.closeMenu, payList: M.map(m => 'x' + fmt(m)),
+      menuButton:{onClick:this.openMenu,disabled:!!s.busy||!!this._request,style:{zIndex:25}},
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Flying Clown',details:'Estoure um balão para subir. Pegue o prêmio antes de arriscar o próximo. O décimo acerto paga x20. O resultado é salvo antes da animação, e a rodada continua ao voltar.',sfxLvl:s.sfxLvl??2,vibLvl:s.vibLvl??2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v),onPaytable:this.openPays},
+      broke:s.balance<1&&!s.step&&!s.busy&&!s.win&&!s.menu,recharge:this.recharge,
+      menu: !!s.menu, closeMenu: this.closeMenu,pays:!!s.pays,closePays:this.closePays, payList: M.map(m => 'x' + fmt(m)),
       confetti: s.conf, win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin
     };
   }

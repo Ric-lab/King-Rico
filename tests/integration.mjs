@@ -355,3 +355,91 @@ test('Clown Rules persist misses and whole-number multipliers, without numeric t
   assert.equal(r.outcome.sumUnits,sum);assert.equal(r.player.balance,used===9?999+sum/100:999);
  }
 });
+
+test('Flying Rules preserve the real wallet, balloon order, cross-device collection and all ten prizes',async()=>{
+ const name='flying-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'flying',game:'flying',bet:2.5,roundId};
+ const first={...base,requestId:roundId,move:'pop',step:0,selected:4};
+ const [a,b]=await Promise.all([c.call(first),c.call(first)]);assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,997.5);
+ const second=await client(name+'-other',name,{rng:()=>{throw Error('No redraw on collect');}});
+ assert.deepEqual((await second.call(request({action:'bootstrap'}))).player.flyingRound.popped,[4]);
+ await assertFails(updateDoc(doc(c.db,'players',c.uid),{flyingRound:null,revision:2,updatedAt:serverTimestamp()}));
+ await new Promise(r=>setTimeout(r,350));
+ const take=request({...base,move:'collect',step:1,selected:-1});const paid=await second.call(take);
+ assert.equal(paid.player.balance,1000.5);assert.equal((await c.call(take)).replayed,true);
+ await assert.rejects(c.call(request({...base,move:'pop',step:1,selected:3})),{code:'king-rico/round-conflict'});
+ await new Promise(r=>setTimeout(r,350));
+ const finalId=randomUUID();
+ for(let step=0;step<10;step++){
+  const x=await c.call({...base,roundId:finalId,requestId:step===0?finalId:randomUUID(),move:'pop',step,selected:step});
+  assert.equal(x.player.balance,step===9?1048:998);assert.equal(x.outcome.step,step+1);
+  await new Promise(r=>setTimeout(r,350));
+ }
+});
+test('21 Rules persist natural, tie, bust and bank turns without allowing extra credits or forged cards',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');let rng=rngFor([9,5,7,6,22]);
+ const name='twentyOne-'+randomUUID(),c=await client(name,name,{rng:()=>rng()});await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:2.5,roundId};
+ const first={...base,requestId:roundId,move:'start',turn:0};const [a,b]=await Promise.all([c.call(first),c.call(first)]);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,997.5);assert.equal(a.outcome.round.turn,1);
+ const second=await client(name+'-other',name,{rng:()=>{throw Error('Resume must not shuffle');}});
+ assert.deepEqual((await second.call(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
+ await new Promise(r=>setTimeout(r,350));await second.call(request({...base,move:'stand',turn:1}));
+ await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);
+ assert.equal(win.outcome.round.result.reason,'dealer-bust');assert.equal(win.player.balance,1002.5);
+ assert.equal((await second.call(final)).replayed,true);
+ await assert.rejects(c.call(request({...base,move:'hit',turn:2})),{code:'king-rico/round-conflict'});
+ await assertFails(updateDoc(doc(c.db,'players',c.uid),{'twentyOneRound.player':[0,9],balanceUnits:999999,revision:4,updatedAt:serverTimestamp()}));
+ await new Promise(r=>setTimeout(r,350));rng=rngFor([0,8,9,7]);const id=randomUUID();
+ await c.call({...base,roundId:id,requestId:id,move:'start',turn:0});await new Promise(r=>setTimeout(r,350));
+ const natural=await c.call(request({...base,roundId:id,move:'dealer',turn:1}));
+ assert.equal(natural.player.balance,1006.25);assert.equal(natural.outcome.round.result.reason,'natural');
+ await new Promise(r=>setTimeout(r,350));rng=rngFor([9,8,7,6,22]);const id2=randomUUID();
+ await c.call({...base,roundId:id2,requestId:id2,move:'start',turn:0});await new Promise(r=>setTimeout(r,350));
+ const busted=await c.call(request({...base,roundId:id2,move:'hit',turn:1}));assert.equal(busted.outcome.round.result.reason,'player-bust');assert.equal(busted.player.balance,1003.75);
+});
+
+test('21 Rules reject modified decks, skipped cards, fake totals, forged payout and recharge during a hand',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='21-forged-'+randomUUID(),c=await client(name,name,{rng:rngFor([9,5,7,6,22])});
+ await c.call(request({action:'bootstrap'}));const roundId=randomUUID();
+ await c.call({action:'twentyOne',game:'twentyOne',bet:1000,roundId,requestId:roundId,move:'start',turn:0});
+ assert.equal((await c.call(request({action:'recharge'}))).reason,'twenty-one-round');
+ const ref=doc(c.db,'players',c.uid);await new Promise(r=>setTimeout(r,350));
+ async function forge(change,credit=0){
+  const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.twentyOne(1000,old.twentyOneRound,'hit',roundId);
+  change(outcome);const next={...old,twentyOneRound:outcome.round,balanceUnits:old.balanceUnits+credit,revision:old.revision+1,
+   lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'twentyOne',game:'twentyOne',selected:-1,fingerprint:'forged',betUnits:0,winUnits:credit,
+   createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'twentyOne',bet:1000,balanceBefore:0,balanceDebited:0,baseBalance:credit/100,outcome}});
+  await assertFails(batch.commit());
+ }
+ await forge(x=>{[x.round.deck[4],x.round.deck[5]]=[x.round.deck[5],x.round.deck[4]];});
+ await forge(x=>{x.round.cursor++;});await forge(x=>{x.round.playerHard=21;});
+ await forge(x=>{x.winUnits=99999;},99999);
+});
+
+test('21 Rules validate both naturals, bank natural, ties and soft-ace adjustment',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');let draw;const name='21-aces-'+randomUUID(),c=await client(name,name,{rng:()=>draw()});await c.call(request({action:'bootstrap'}));
+ for(const [prefix,moves,reason] of [
+  [[0,13,9,22],['dealer'],'both-21'],[[8,0,7,9],['dealer'],'dealer-21'],
+  [[9,8,7,21],['stand','dealer'],'equal'],[[0,13,5,18],['stand','dealer'],'equal'],
+  [[0,8,5,7,22],['hit','stand','dealer'],'equal']]){
+  draw=rngFor(prefix);const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:2.5,roundId};
+  let result=await c.call({...base,requestId:roundId,move:'start',turn:0});
+  for(const move of moves){await new Promise(r=>setTimeout(r,350));result=await c.call(request({...base,move,turn:result.outcome.round.turn}));}
+  assert.equal(result.outcome.round.result.reason,reason);assert.equal(result.player.balance,reason==='dealer-21'?997.5:reason==='both-21'?1000:997.5);
+  await new Promise(r=>setTimeout(r,350));
+ }
+});
+
+test('Cached v3 clients can play another game without erasing a saved 21 hand',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='21-legacy-'+randomUUID(),c=await client(name,name,{rng:rngFor([9,5,7,6])});
+ await c.call(request({action:'bootstrap'}));const roundId=randomUUID();
+ await c.call({action:'twentyOne',game:'twentyOne',move:'start',bet:10,turn:0,roundId,requestId:roundId});
+ await new Promise(r=>setTimeout(r,750));const ref=doc(c.db,'players',c.uid),old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.wheel(1,1,()=>.99);
+ const next={...old,balanceUnits:old.balanceUnits-100+outcome.winUnits,settings:{...old.settings,wheelBetIdx:0},revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+ const player=publicPlayer(next);delete player.flyingRound;delete player.twentyOneRound;
+ const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'wheel',selected:1,fingerprint:'legacy-v3',betUnits:100,winUnits:outcome.winUnits,
+  createdAt:serverTimestamp(),rulesVersion:'2026-10-19-spark-v3',result:{game:'wheel',bet:1,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-100)/100,baseBalance:next.balanceUnits/100,outcome,player}});
+ await assertSucceeds(batch.commit());assert.equal((await getDoc(ref)).data().twentyOneRound.id,roundId);
+});

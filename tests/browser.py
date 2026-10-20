@@ -8,6 +8,7 @@ from playwright.sync_api import sync_playwright
 from login_ui import check_wallet_retry
 from penalty_browser import check_penalty
 from clown_browser import check_clown_bounce
+from new_games_browser import check_new_games
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -186,7 +187,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':height})
         assert check_menu(page,'Home',False)==common_menu
     page.set_viewport_size({'width':453,'height':802})
-    page.get_by_role('link',name='Jogar Fortune Circus',exact=True).click()
+    page.locator('a[href^="Fortune Circus.dc.html"]').click()
     page.wait_for_function('window.__fc && window.__fc.state.ready && !window.__fc.state.homeOpen')
     restored_without_login(page,account_uid)
     assert check_menu(page,'Fortune Circus',True)==common_menu
@@ -420,6 +421,7 @@ with sync_playwright() as p:
     penalty_result=check_penalty(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)
     print(json.dumps(penalty_result))
     print(json.dumps(check_clown_bounce(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)))
+    print(json.dumps(check_new_games(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,

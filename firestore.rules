@@ -8,7 +8,7 @@ service cloud.firestore {
     function dayIndex(t) { return int((t.toMillis() - 10800000) / 86400000); }
     function settings(s) {
       return s.keys().hasAll(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
-        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx'])
+        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx'])
         && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
         && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
         && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
@@ -17,6 +17,8 @@ service cloud.firestore {
         && s.get('fingoBetIdx',3) is int && s.get('fingoBetIdx',3) >= 0 && s.get('fingoBetIdx',3) <= 9
         && s.get('bounceBetIdx',3) is int && s.get('bounceBetIdx',3) >= 0 && s.get('bounceBetIdx',3) <= 9
         && s.get('clownBetIdx',3) is int && s.get('clownBetIdx',3) >= 0 && s.get('clownBetIdx',3) <= 9
+        && s.get('flyingBetIdx',3) is int && s.get('flyingBetIdx',3) >= 0 && s.get('flyingBetIdx',3) <= 9
+        && s.get('twentyOneBetIdx',3) is int && s.get('twentyOneBetIdx',3) >= 0 && s.get('twentyOneBetIdx',3) <= 9
         && s.get('penaltyBetIdx',3) is int && s.get('penaltyBetIdx',3) >= 0 && s.get('penaltyBetIdx',3) <= 9;
     }
     function neckPrize(bet, floor) {
@@ -27,7 +29,7 @@ service cloud.firestore {
       return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
           'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
         && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
-          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound'])
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound','flyingRound','twentyOneRound'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('neckRound',null) == null || p.neckRound is map)
@@ -36,6 +38,8 @@ service cloud.firestore {
         && (p.get('bounceRound',null) == null || p.bounceRound is map)
         && (p.get('clownRound',null) == null || p.clownRound is map)
         && (p.get('clownStats',null) == null || p.clownStats is map)
+        && (p.get('flyingRound',null) == null || p.flyingRound is map)
+        && (p.get('twentyOneRound',null) == null || p.twentyOneRound is map)
         && p.analyticsConsent is bool && p.analyticsFromCreation is bool
         && p.revision is int && p.revision >= 0 && p.updatedAt == request.time
         && p.bonus.keys().hasAll(['day','dayIndex','streak']) && p.bonus.keys().hasOnly(['day','dayIndex','streak'])
@@ -52,6 +56,8 @@ service cloud.firestore {
         && p.settings.get('penaltyBetIdx',3) == 3 && p.get('penaltyRound',null) == null
         && p.settings.get('bounceBetIdx',3) == 3 && p.get('bounceRound',null) == null
         && p.settings.get('clownBetIdx',3) == 3 && p.get('clownRound',null) == null && p.get('clownStats',null) == null
+        && p.settings.get('flyingBetIdx',3) == 3 && p.get('flyingRound',null) == null
+        && p.settings.get('twentyOneBetIdx',3) == 3 && p.get('twentyOneRound',null) == null
         && p.analyticsFromCreation == p.analyticsConsent && p.revision == 0
         && p.createdAt == request.time && p.firstSpinAt == null && p.lastSpinAt == null && p.lastOperationId == null;
     }
@@ -59,7 +65,7 @@ service cloud.firestore {
     function operation(o) {
       return o.keys().hasAll(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
         && o.keys().hasOnly(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
-        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3']
+        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3','2026-10-20-spark-v4']
         && o.fingerprint is string && o.fingerprint.size() <= 500
         && o.betUnits is int && o.winUnits is int && o.winUnits >= 0 && o.result is map;
     }
@@ -157,8 +163,8 @@ service cloud.firestore {
         && p.get('clownRound',null) == old.get('clownRound',null) && p.get('clownStats',null) == old.get('clownStats',null)
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
-        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion == '2026-10-19-spark-v3' ? 12 : 11)
-            && (o.rulesVersion == '2026-10-19-spark-v3' ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches
+        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4'] ? 12 : 11)
+            && (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4'] ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches
           : o.selected == -1 && o.winUnits <= o.betUnits * 3330)
         && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
         && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
@@ -316,28 +322,142 @@ service cloud.firestore {
     function recharge(p, old, o) {
       return p.balanceUnits is int && p.balanceUnits <= 1000000000000
         && o.action == 'recharge' && o.game == 'home' && o.selected == -1
+        && old.get('flyingRound',null) == null && (old.get('twentyOneRound',null) == null || old.twentyOneRound.phase == 'settled')
         && old.balanceUnits < 100 && old.get('neckRound',null) == null && old.get('fingoRound',null) == null && old.get('penaltyRound',null) == null && old.get('clownRound',null) == null && old.get('bounceRound',null) == null
         && o.betUnits == 0 && o.winUnits == 100000
         && p.balanceUnits == old.balanceUnits + 100000
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == 1000;
     }
+    function flying(p, old, o) {
+      let x = o.result.outcome;
+      let previous = old.get('flyingRound',null);
+      let first = previous == null;
+      let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'step':0,'popped':[]} : previous;
+      let prize = x.step > 0 ? int(x.betUnits * [120,150,200,250,300,400,500,800,1200,2000][x.step-1] / 100) : 0;
+      return o.action == 'flying' && o.game == 'flying' && o.selected == x.selected
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','flyingRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.settings.diff(old.settings).affectedKeys().hasOnly(['flyingBetIdx'])
+        && p.settings.flyingBetIdx is int && p.settings.flyingBetIdx >= 0 && p.settings.flyingBetIdx <= 9
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.flyingBetIdx]
+        && x.keys().hasOnly(['move','roundId','betUnits','step','popped','selected','ok','ended','winUnits'])
+        && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
+        && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
+        && x.move in ['pop','collect'] && x.ok is bool && x.ended is bool
+        && x.step is int && x.step >= 0 && x.step <= 10 && x.popped is list
+        && (x.move == 'collect' ? !first && r.step > 0 && x.selected == -1 && x.popped == r.popped && x.step == r.step && x.ok
+          : x.selected is int && x.selected >= 0 && x.selected < 10 && !(x.selected in r.popped)
+            && x.popped == r.popped.concat([x.selected]) && x.step == r.step + (x.ok ? 1 : 0))
+        && x.ended == (x.move == 'collect' || !x.ok || x.step == 10)
+        && o.winUnits == (x.ended && x.ok ? prize : 0) && x.winUnits == o.winUnits
+        && p.get('flyingRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'popped':x.popped})
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(300,'ms'))
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == 'flying' && o.result.bet == x.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0
+        && o.result.baseBalance == p.balanceUnits / 100.0;
+    }
+    function cardValue(c) { return c % 13 >= 9 ? 10 : c % 13 + 1; }
+    function cardTotal(hard, aces) { return hard + (aces > 0 && hard + 10 <= 21 ? 10 : 0); }
+    function twentyOneOpening(r) {
+      let d = r.deck;
+      return d is list && d.size() == 52 && d.toSet() == [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51].toSet()
+        && r.turn == 1 && r.cursor == 4 && r.player == [d[0],d[2]] && r.dealer == [d[1],d[3]]
+        && r.playerHard == cardValue(d[0])+cardValue(d[2]) && r.dealerHard == cardValue(d[1])+cardValue(d[3])
+        && r.playerAces == (cardValue(d[0]) == 1 ? 1 : 0)+(cardValue(d[2]) == 1 ? 1 : 0)
+        && r.dealerAces == (cardValue(d[1]) == 1 ? 1 : 0)+(cardValue(d[3]) == 1 ? 1 : 0)
+        && r.phase == (r.playerHard == 11 && r.playerAces == 1 || r.dealerHard == 11 && r.dealerAces == 1 ? 'dealer' : 'player');
+    }
+    function twentyOnePlayerStep(x,r) {
+      let c = r.deck[r.cursor]; let v = cardValue(c);
+      let hard = r.playerHard+v; let aces = r.playerAces+(v == 1 ? 1 : 0);
+      let total = cardTotal(hard,aces);
+      return r.phase == 'player' && x.diff(r).affectedKeys().hasOnly(['turn','phase','cursor','player','playerHard','playerAces','result'])
+        && x.cursor == r.cursor+1 && x.player == r.player.concat([c]) && x.playerHard == hard && x.playerAces == aces
+        && x.phase == (total > 21 ? 'settled' : total == 21 ? 'dealer' : 'player');
+    }
+    function twentyOneBankStep(x,r) {
+      let natural = r.turn == 1;
+      let draw = !natural && cardTotal(r.dealerHard,r.dealerAces) < 17;
+      let c = r.deck[r.cursor]; let v = cardValue(c);
+      let hard = r.dealerHard+(draw ? v : 0); let aces = r.dealerAces+(draw && v == 1 ? 1 : 0);
+      return r.phase == 'dealer' && x.diff(r).affectedKeys().hasOnly(['turn','phase','cursor','dealer','dealerHard','dealerAces','result'])
+        && x.cursor == r.cursor+(draw ? 1 : 0) && x.dealer == (draw ? r.dealer.concat([c]) : r.dealer)
+        && x.dealerHard == hard && x.dealerAces == aces
+        && x.phase == (natural || cardTotal(hard,aces) >= 17 ? 'settled' : 'dealer');
+    }
+    function twentyOneAdvance(x,r,move) {
+      return x.turn == r.turn+1 && (move == 'hit' ? twentyOnePlayerStep(x,r) : move == 'dealer' ? twentyOneBankStep(x,r)
+        : r.phase == 'player' && x.phase == 'dealer' && x.diff(r).affectedKeys().hasOnly(['turn','phase']));
+    }
+    function twentyOneInitialResult(r) {
+      let pn = r.playerHard == 11 && r.playerAces == 1;
+      let dn = r.dealerHard == 11 && r.dealerAces == 1;
+      let bet = r.betUnits;
+      return pn && dn ? {'outcome':'push','reason':'both-21','payoutUnits':bet,'netUnits':0}
+        : dn ? {'outcome':'loss','reason':'dealer-21','payoutUnits':0,'netUnits':-bet}
+        : {'outcome':'win','reason':'natural','payoutUnits':int(bet*2.5),'netUnits':int(bet*1.5)};
+    }
+    function twentyOneResult(r) {
+      // Opening naturals resolve in their first bank turn; later turns cannot be naturals.
+      let p = cardTotal(r.playerHard,r.playerAces); let d = cardTotal(r.dealerHard,r.dealerAces); let bet = r.betUnits;
+      return p > 21 ? {'outcome':'loss','reason':'player-bust','payoutUnits':0,'netUnits':-bet}
+        : d > 21 ? {'outcome':'win','reason':'dealer-bust','payoutUnits':bet*2,'netUnits':bet}
+        : p > d ? {'outcome':'win','reason':'higher','payoutUnits':bet*2,'netUnits':bet}
+        : p == d ? {'outcome':'push','reason':'equal','payoutUnits':bet,'netUnits':0}
+        : {'outcome':'loss','reason':'lower','payoutUnits':0,'netUnits':-bet};
+    }
+    function twentyOne(p, old, o) {
+      let x = o.result.outcome;
+      let r = p.twentyOneRound;
+      let previous = old.get('twentyOneRound',null);
+      let first = previous == null || previous.phase == 'settled';
+      return o.action == 'twentyOne' && o.game == 'twentyOne' && o.selected == -1
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','twentyOneRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.settings.diff(old.settings).affectedKeys().hasOnly(['twentyOneBetIdx'])
+        && p.settings.twentyOneBetIdx is int && p.settings.twentyOneBetIdx >= 0 && p.settings.twentyOneBetIdx <= 9
+        && r.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.twentyOneBetIdx]
+        && x.keys().hasOnly(['move','round','ended','winUnits']) && x.move in ['start','hit','stand','dealer']
+        && r.keys().hasOnly(['id','betUnits','turn','phase','deck','cursor','player','dealer','playerHard','playerAces','dealerHard','dealerAces','result'])
+        && r.id is string && r.id.matches('^[0-9a-fA-F-]{36}$') && r.turn is int && r.turn >= 1 && r.turn <= 53
+        && r.cursor is int && r.cursor >= 4 && r.cursor <= 52 && r.phase in ['player','dealer','settled']
+        && (first ? x.move == 'start' && r.id == p.lastOperationId && twentyOneOpening(r) : x.move != 'start' && twentyOneAdvance(r,previous,x.move))
+        && r.result == (r.phase == 'settled' ? (previous.turn == 1 && previous.phase == 'dealer' ? twentyOneInitialResult(r) : twentyOneResult(r)) : null)
+        && x.ended == (r.phase == 'settled') && x.winUnits == (x.ended ? r.result.payoutUnits : 0) && o.winUnits == x.winUnits
+        && x.round == r && o.betUnits == (first ? r.betUnits : 0)
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(300,'ms'))
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == 'twentyOne' && o.result.bet == r.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0
+        && o.result.baseBalance == p.balanceUnits / 100.0;
+    }
     function legacyPlayer(player, expected) {
-      return player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound','penaltyRound','clownRound','bounceRound'])
+      return player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound','penaltyRound','clownRound','bounceRound','flyingRound','twentyOneRound'])
         && player.get('neckRound',null) == expected.neckRound && player.get('fingoRound',null) == expected.fingoRound
         && player.get('penaltyRound',null) == expected.penaltyRound && player.get('clownRound',null) == expected.clownRound
-        && player.get('bounceRound',null) == expected.bounceRound;
+        && player.get('bounceRound',null) == expected.bounceRound
+        && player.get('flyingRound',expected.flyingRound) == expected.flyingRound && player.get('twentyOneRound',expected.twentyOneRound) == expected.twentyOneRound;
+    }
+    function legacyFinancialPlayer(p,o) {
+      let player=o.result.player;
+      let expected = {'balance':p.balanceUnits / 100.0,'peaches':p.peaches,'bonus':p.bonus,'settings':p.settings,'analyticsConsent':p.analyticsConsent,'revision':p.revision,
+        'neckRound':p.get('neckRound',null),'fingoRound':p.get('fingoRound',null),'penaltyRound':p.get('penaltyRound',null),'clownRound':p.get('clownRound',null),'bounceRound':p.get('bounceRound',null),'flyingRound':p.get('flyingRound',null),'twentyOneRound':p.get('twentyOneRound',null)};
+      return o.rulesVersion == '2026-10-19-spark-v3' ? player.diff(expected).affectedKeys().hasOnly(['flyingRound','twentyOneRound'])
+        && player.get('flyingRound',expected.flyingRound) == expected.flyingRound && player.get('twentyOneRound',expected.twentyOneRound) == expected.twentyOneRound : legacyPlayer(player,expected);
     }
     function financial(uid, p, old) {
       let path = operationPath(uid, p.lastOperationId);
       let o = getAfter(path).data;
-      let player = o.result.player;
-      let expected = {'balance':p.balanceUnits / 100.0,'peaches':p.peaches,'bonus':p.bonus,'settings':p.settings,'analyticsConsent':p.analyticsConsent,'revision':p.revision,
-        'neckRound':p.get('neckRound',null),'fingoRound':p.get('fingoRound',null),'penaltyRound':p.get('penaltyRound',null),'clownRound':p.get('clownRound',null),'bounceRound':p.get('bounceRound',null)};
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
-        && (o.rulesVersion == '2026-10-19-spark-v3' ? player.diff(expected).affectedKeys().size() == 0 : legacyPlayer(player,expected))
-        && (o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
+        && (o.rulesVersion == '2026-10-20-spark-v4' ? !('player' in o.result) : legacyFinancialPlayer(p,o))
+        && (o.action == 'twentyOne' ? twentyOne(p,old,o) : o.action == 'flying' ? flying(p,old,o) : o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {
       allow read: if owner(uid);
