@@ -365,7 +365,7 @@ class Component extends DCLogic {
       menuButton: {onClick:this.openMenu,style:(() => {
         if (window.__fcLayout) return {};
         const gs = Math.max(.25, Math.min(window.innerWidth / 453, window.innerHeight / 802, 1.6));
-        return {right:(40.667*gs-20.5)+'px',top:(50*gs-20.5)+'px','--kr-hud-scale':gs};
+        return {right:(40.667*gs-20.5)+'px',top:(50.5*gs-20.5)+'px','--kr-hud-scale':gs};
       })()},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,screen:'Home',
         details:'Seu saldo é compartilhado entre todos os jogos. O bônus diário acompanha uma sequência de sete dias.',

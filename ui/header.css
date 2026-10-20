@@ -1,5 +1,5 @@
-/* Shared HUD, in the games' 453px scene coordinates. The wallet is 45px tall. */
-:root{--kr-hud-button-size:41px;--kr-hud-button-scale:1.1;--kr-hud-top:29.5px}
+/* Shared HUD, in the games' 453px scene coordinates. The 45px wallet crop has a 43px visible rim; 44px button crops align their visible rims. */
+:root{--kr-hud-button-size:41px;--kr-hud-button-scale:1.0731707317073171;--kr-hud-top:30px}
 .kr-hud-home,.kr-menu-button{position:absolute;top:var(--kr-hud-top);width:var(--kr-hud-button-size);height:var(--kr-hud-button-size);padding:0;border:0;border-radius:50%;cursor:pointer;overflow:hidden;background-image:url('../assets/stage-lit.webp');background-size:453px 802px;background-repeat:no-repeat;transform:scale(calc(var(--kr-hud-button-scale)*var(--kr-hud-scale,1)));transform-origin:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .kr-hud-home{left:341.833px;background-position:-341.833px -29.5px}
 .kr-menu-button{right:20.167px;background-position:-391.833px -29.5px}
