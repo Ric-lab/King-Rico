@@ -1,14 +1,16 @@
-# Fortune 21 e Fortune Flying Clown
+# Fortune 33 e Fortune Flying Clown
 
 Ambos abrem pela Home e usam o mesmo login Google, sessão, saldo em centavos e menu dos demais jogos. Não importam o saldo do protótipo 21 nem de outros dados antigos do aparelho. Firebase continua no Spark: Auth, Firestore e Hosting, sem Cloud Functions.
 
-## Fortune 21
+## Fortune 33
 
-Cartas numeradas, jogador contra a banca. A carta 1 vale 1 ou 11 automaticamente. Pedir carta ou parar; a banca compra abaixo de 17 e para em qualquer 17, inclusive suave. Vitória devolve 2× a aposta; 21 com duas cartas, 2,5×; empate devolve a aposta. Os recebimentos incluem a aposta.
+Fortune 33 substitui o 21 na Home. Cartas numeradas de 1 a 13 valem exatamente o número impresso; 1 vale apenas 1. Objetivo: ficar mais perto de 33 que a banca, sem ultrapassar. A banca compra abaixo de 27 e para em 27 ou mais. Vitória recebe 2× incluindo a aposta; empate devolve a aposta. Fazer 33 passa a vez à banca, com o mesmo pagamento normal. Não há bônus de duas cartas: duas cartas somam no máximo 26.
 
-`cloud/twenty-one.cjs` guarda o baralho de 52 cartas, mãos, cursor, turno e resultado. Distribuir debita uma única aposta e salva o baralho; a confirmação de um 21 inicial ocorre na primeira ação automática da banca. Cada ação confirma a fase e o turno anteriores. Resultado e crédito são atômicos e vêm antes da apresentação do prêmio. A mão encerrada fica disponível para mostrar o resultado após recarregar.
+Cada número mantém o asset escolhido pelo autor. O botão de interrogação foi removido; as regras continuam disponíveis pelo menu. `cloud/thirty-three.cjs` implementa a regra; `target:33` é salvo e imutável durante a mão. O baralho de 52 cartas contém quatro cópias de cada número e é embaralhado uma vez na abertura. Débito, cartas, turnos, resultado e crédito continuam atômicos, verificáveis pelas regras Firestore e protegidos contra repetição.
 
-As regras conferem a permutação inteira do baralho na abertura, cada carta consumida, os pontos e ases incrementais, as fases, o turno e o prêmio. Separar a abertura da confirmação da banca mantém essa validação dentro do limite de expressões do Firestore.
+Os nomes internos `twentyOne`, `twentyOneRound` e o diretório `games/fortune21` permanecem por compatibilidade. Mãos antigas sem `target:33` terminam com a matemática original do 21, sem alterar baralho, aposta ou prêmio; a interface identifica a mão anterior. Toda nova mão iniciada pela nova interface usa 33. Clientes antigos ainda abertos continuam compatíveis, sem converter uma mão no meio. O endereço antigo redireciona para `Fortune 33.dc.html`.
+
+A banca em 27 é a configuração inicial do novo jogo. Uma simulação exploratória de 100 mil mãos por limiar de parada (24 a 29) encontrou aproximadamente 95% de retorno com paradas em 27–28; não é prova de estratégia ótima nem auditoria de RTP. O limite 33 não determina sozinho as chances: baralho, política de parada e pagamentos também contam.
 
 ## Flying Clown
 
@@ -20,7 +22,7 @@ O ID de cada balão estourado fica na rodada, permitindo restaurar cores, ordem 
 
 As operações v4 armazenam o resultado imutável sem duplicar o documento inteiro do jogador, baralhos e rodadas de outros jogos. O documento do jogador já é lido na transação; o replay retorna esse perfil atual junto do resultado salvo. Isso reduz os documentos e a validação duplicada, além de evitar reexibir um saldo antigo. As regras continuam aceitando clientes v1/v2/v3 compatíveis, inclusive sem os novos campos opcionais.
 
-A recarga de 1.000 moedas abaixo de 1 continua disponível. Não é concedida enquanto existe uma mão do 21 ou rodada do Flying em aberto. Conflitos de turno e requisições pendentes antigas de outro aparelho não obrigam novo login nem criam outro débito.
+A recarga de 1.000 moedas abaixo de 1 continua disponível. Não é concedida enquanto existe uma mão de cartas ou rodada do Flying em aberto. Conflitos de turno e requisições pendentes antigas de outro aparelho não obrigam novo login nem criam outro débito.
 
 A arquitetura mantém o limite já documentado do Spark: o cliente calcula o sorteio; as regras validam as transições e os valores, mas não provam que a aleatoriedade do navegador foi honesta. Apenas moedas virtuais, sem dinheiro real.
 

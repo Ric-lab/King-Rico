@@ -7,7 +7,7 @@ const CARD_ART = [
   {name:'Nick Neck',src:'./assets/girafa/head.webp'},{name:'King Rico',sprite:9}
 ];
 const Cloud=window.KingRicoCloud;
-function handValue(cards){const hard=cards.reduce((n,c)=>n+c.value,0),soft=cards.some(c=>c.value===1)&&hard+10<=21;return {total:hard+(soft?10:0),soft};}
+function handValue(cards,target=33){const hard=cards.reduce((n,c)=>n+c.value,0),soft=target===21&&cards.some(c=>c.value===1)&&hard+10<=21;return {total:hard+(soft?10:0),soft};}
 import {mountMenu} from './menu.jsx';
 
 const $ = id => document.getElementById(id);
@@ -20,9 +20,9 @@ let preferences={sfx:2,vib:2},audio;
 function applyPlayer(player){
   if(!player)return;
   const r=player.twentyOneRound;
-  const card=id=>({id:String(id),rank:id%13+1,value:Math.min(id%13+1,10)});
+  const card=id=>({id:String(id),rank:id%13+1,value:r.target===33?id%13+1:Math.min(id%13+1,10)});
   account={balance:player.balance,bet:busy?account.bet:BETS[player.settings.twentyOneBetIdx??3],revision:player.revision,
-    round:r?{id:r.id,turn:r.turn,bet:r.betUnits/100,phase:r.phase,player:r.player.map(card),dealer:r.dealer.map(card),
+    round:r?{id:r.id,target:r.target??21,turn:r.turn,bet:r.betUnits/100,phase:r.phase,player:r.player.map(card),dealer:r.dealer.map(card),
       result:r.result?{...r.result,payout:r.result.payoutUnits/100,net:r.result.netUnits/100}:null}:null};
   preferences={sfx:player.settings.sfxLvl,vib:player.settings.vibLvl};
   render();schedule();
@@ -82,7 +82,7 @@ function cardNode(card, hidden, index, count, newRound) {
   } else {
     const rank=card.rank ?? card.value, art=CARD_ART[rank-1];
     node.dataset.rank=rank;
-    node.setAttribute('aria-label',`Carta ${rank}, ${art.name}, ${rank===1?'vale 1 ou 11':`vale ${card.value} pontos`}`);
+    node.setAttribute('aria-label',`Carta ${rank}, ${art.name}, ${`vale ${card.value} pontos`}`);
     const number = document.createElement('span'); number.className = 'card-number'; number.textContent = rank;
     const symbol = document.createElement('i'); symbol.className = 'symbol';
     if(art.src){symbol.classList.add('character');symbol.style.backgroundImage=`url("${art.src}")`;}
@@ -90,10 +90,8 @@ function cardNode(card, hidden, index, count, newRound) {
     node.append(number,symbol);
     for (const bottom of [false,true]) {
       const corner = document.createElement('span'); corner.className = `corner${bottom?' bottom':''}`; corner.textContent = rank;
-      if (rank === 1) {const hint = document.createElement('small');hint.textContent = '1 / 11';corner.append(hint);}
       node.append(corner);
     }
-    if(rank>10){const points=document.createElement('small');points.className='rank-points';points.textContent='VALE 10';node.append(points);}
 
   }
   if (newRound) {node.classList.add('dealt');node.style.setProperty('--deal-delay',`${index * 120}ms`);}
@@ -147,34 +145,35 @@ function render() {
   $('start').querySelector('span').textContent = refill ? 'RECARREGAR MOEDAS' : r ? 'JOGAR OUTRA MÃO' : 'DISTRIBUIR CARTAS';
   $('start-hint').textContent = refill ? 'RECEBER 1.000 PARA TESTAR' : account.balance < account.bet ? 'DIMINUA A APOSTA' : `APOSTAR ${format(account.bet)} MOEDAS`;
   if (!r) {
-    const stub = [{id:'stub-a',value:1,suit:'crown'},{id:'stub-b',value:10,suit:'gem'}];
+    const stub = [{id:'stub-a',value:1,suit:'crown'},{id:'stub-b',value:13}];
     for (const hand of [$('dealer-hand'),$('player-hand')]) renderHand(hand,stub,true,false,false);
     return;
   }
   const newRound = r.id !== previousRoundId;
-  const player = handValue(r.player), dealer = handValue(r.dealer);
+  const player = handValue(r.player,r.target), dealer = handValue(r.dealer,r.target);
   const hidden = r.phase === 'player';
   renderHand($('dealer-hand'),r.dealer,hidden,newRound,r.result?.outcome==='loss' && r.result?.reason!=='player-bust');
   renderHand($('player-hand'),r.player,false,newRound,r.result?.outcome==='win');
   previousRoundId = r.id;
-  $('dealer-score').textContent = hidden ? `${handValue([r.dealer[0]]).total} + ?` : dealer.total;
+  $('dealer-score').textContent = hidden ? `${handValue([r.dealer[0]],r.target).total} + ?` : dealer.total;
   $('dealer-score').style.fontSize = hidden ? '23px' : '';
   $('player-score').textContent = player.total;
-  $('ace-note').textContent = player.soft ? 'A carta 1 está valendo 11' : '';
-  const labels = r.phase === 'player' ? ['Sua vez.', 'Pedir mais uma ou ficar com a mão?'] : r.phase === 'dealer' ? ['Vez da banca.', 'A banca compra até 17.'] : resultCopy(r);
+  $('ace-note').textContent = r.target===21 ? 'Mão anterior · regras de 21 até terminar' : '';
+  const labels = r.phase === 'player' ? ['Sua vez.', 'Pedir mais uma ou ficar com a mão?'] : r.phase === 'dealer' ? ['Vez da banca.', `A banca para em ${r.target===33?27:17} ou mais.`] : resultCopy(r);
   $('status').textContent = labels[0]; $('substatus').textContent = labels[1];
 }
 
 function resultCopy(r) {
+  const target=r.target??21;
   switch (r.result.reason) {
     case 'natural': return ['21 de saída!', 'Duas cartas. Recebimento de 2,5×.'];
-    case 'dealer-bust': return ['Você ganhou!', 'A banca passou de 21.'];
-    case 'higher': return ['Você ganhou!', 'Sua mão ficou mais perto de 21.'];
-    case 'player-bust': return ['Passou de 21.', 'Esta mão ficou com a banca.'];
+    case 'dealer-bust': return ['Você ganhou!', `A banca passou de ${target}.`];
+    case 'higher': return ['Você ganhou!', `Sua mão ficou mais perto de ${target}.`];
+    case 'player-bust': return [`Passou de ${target}.`, 'Esta mão ficou com a banca.'];
     case 'dealer-21': return ['21 da banca.', 'A banca fez 21 com duas cartas.'];
     case 'both-21': return ['Empate em 21.', 'A aposta voltou para o saldo.'];
     case 'equal': return ['Empatou!', 'A aposta voltou para o saldo.'];
-    default: return ['A banca ganhou.', 'A mão da banca ficou mais perto de 21.'];
+    default: return ['A banca ganhou.', `A mão da banca ficou mais perto de ${target}.`];
   }
 }
 
@@ -189,7 +188,7 @@ async function dispatch(type,extra={}){
     if(type==='refill')await Cloud.recharge();
     else {
       const r=account.round,starting=type==='start';
-      await Cloud.twentyOne(type,starting?account.bet:r.bet,starting?crypto.randomUUID():r.id,starting?0:r.turn);
+      await Cloud.twentyOne(type,starting?account.bet:r.bet,starting?crypto.randomUUID():r.id,starting?0:r.turn,starting?33:r.target);
     }
     applyPlayer(Cloud.player);
     if(type==='start'){shownResult=null;pendingUntil=Date.now()+(reducedMotion.matches?120:700);feedback('card');}
@@ -228,12 +227,12 @@ function showResult() {
   $('result-title').textContent = title;
   $('result-detail').textContent = detail;
   $('result-dialog').classList.toggle('loss',r.result.outcome==='loss');
-  $('result-kicker').textContent = r.result.reason==='natural' ? 'FORTUNE 21' : 'FIM DA RODADA';
+  $('result-kicker').textContent = r.result.reason==='natural' ? 'FORTUNE 33' : 'FIM DA RODADA';
   $('result-amount').textContent = r.result.outcome==='loss' ? `−${format(r.bet)}` : format(r.result.payout);
   $('result-caption').textContent = r.result.outcome==='loss' ? 'MOEDAS DESTA APOSTA' : r.result.outcome==='push' ? 'MOEDAS DEVOLVIDAS' : 'MOEDAS RECEBIDAS';
   $('result-net').textContent = r.result.outcome === 'win' ? `Aposta de ${format(r.bet)} incluída · lucro +${format(r.result.net)}` : r.result.outcome === 'push' ? 'Seu saldo ficou igual ao início da mão.' : 'A próxima mão é uma nova rodada.';
-  $('result-player').textContent = handValue(r.player).total;
-  $('result-dealer').textContent = handValue(r.dealer).total;
+  $('result-player').textContent = handValue(r.player,r.target).total;
+  $('result-dealer').textContent = handValue(r.dealer,r.target).total;
   $('collect').querySelector('span').textContent = r.result.outcome === 'win' ? 'VOLTAR À MESA' : 'CONTINUAR';
   $('result-dialog').showModal();
   if (r.result.outcome==='win') feedback('win');
@@ -256,7 +255,6 @@ function help() {
   paused = true;clearTimeout(dealerTimer);clearTimeout(resultTimer);render();$('help-dialog').showModal();
 }
 function unpause() {paused=false;render();schedule();}
-$('help').onclick=help;
 for (const id of ['close-help','help-done']) $(id).onclick=()=> $('help-dialog').close();
 $('help-dialog').addEventListener('close',unpause);
 $('collect').onclick=()=>{clearTimeout(resultTimer);shownResult=$('result-dialog').dataset.roundId;$('result-dialog').close();tone('tap');};

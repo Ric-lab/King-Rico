@@ -17,8 +17,8 @@ export function mountMenu(onOpen, onHelp, onPreferences, initial) {
     const show = value => {setOpen(value); onOpen(value);};
     return <>
       <MenuButton onClick={() => show(true)} />
-      <MenuPanel open={open} onClose={() => show(false)} screen="Fortune 21"
-        details="Você contra a banca. Peça cartas ou pare sem passar de 21. Sua mão fica salva na conta e o saldo é o mesmo dos outros jogos."
+      <MenuPanel open={open} onClose={() => show(false)} screen="Fortune 33"
+        details="Você contra a banca. Peça cartas ou pare sem passar de 33. Sua mão fica salva na conta e o saldo é o mesmo dos outros jogos."
         sfxLvl={preferences.sfx} vibLvl={preferences.vib}
         onSfx={value => change('sfx', value)} onVib={value => change('vib', value)}
         onPaytable={() => {show(false); onHelp();}} />

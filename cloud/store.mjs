@@ -26,7 +26,7 @@ export function createGameStore(db, uid, dependencies={}) {
       clown:['action','requestId','game','bet','roundId','used','selected'],
       penalty:['action','requestId','game','bet','move','roundId','step','quality'],
       flying:['action','requestId','game','bet','move','roundId','step','selected'],
-      twentyOne:['action','requestId','game','bet','move','roundId','turn'],
+      twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
       bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
@@ -58,7 +58,7 @@ export function createGameStore(db, uid, dependencies={}) {
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.step) || data.step<0 || data.step>9
       || !Number.isInteger(data.selected) || (data.move==='collect' ? data.selected!==-1 || data.step===0 : data.selected<0 || data.selected>9)
       || data.step===0 && data.requestId!==data.roundId)) fail('king-rico/invalid-argument','Balão inválido.');
-    if(data.action==='twentyOne' && (data.game!=='twentyOne' || !engine.BETS.includes(data.bet) || !['start','hit','stand','dealer'].includes(data.move)
+    if(data.action==='twentyOne' && (data.target!==undefined && ![21,33].includes(data.target) || data.game!=='twentyOne' || !engine.BETS.includes(data.bet) || !['start','hit','stand','dealer'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.turn) || data.turn<0 || data.turn>52
       || data.move==='start' && (data.turn!==0 || data.requestId!==data.roundId))) fail('king-rico/invalid-argument','Mão inválida.');
     const settings=data.settings || {};
@@ -184,7 +184,7 @@ export function createGameStore(db, uid, dependencies={}) {
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
         betUnits=starting?engine.units(data.bet):0;
         if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
-        const outcome=engine.twentyOne(data.bet,previous,data.move,data.roundId,rng),before=p.balanceUnits;
+        const outcome=engine.twentyOne(data.bet,previous,data.move,data.roundId,rng,data.target),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;p.twentyOneRound=outcome.round;
         p.settings.twentyOneBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'twentyOne',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};

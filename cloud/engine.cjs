@@ -17,6 +17,7 @@ const units = value => Math.round(value * 100);
 const coins = value => value / 100;
 const RULES_VERSION = '2026-10-20-spark-v4';
 const {twentyOne} = require('./twenty-one.cjs');
+const {thirtyThree} = require('./thirty-three.cjs');
 const FLYING_MULTIPLIERS = [1.2,1.5,2,2.5,3,4,5,8,12,20];
 function flying(bet,previous,move,roundId,selected,rng=random) {
   const before=previous?.step || 0,betUnits=previous?.betUnits || units(bet);
@@ -25,7 +26,9 @@ function flying(bet,previous,move,roundId,selected,rng=random) {
   const ended=move==='collect' || !ok || step===10;
   return {move,roundId,betUnits,step,popped,selected,ok,ended,winUnits:ended && ok?Math.round(betUnits*FLYING_MULTIPLIERS[step-1]):0};
 }
-const twentyOneRound = (bet,previous,move,roundId,rng=random) => twentyOne(bet,previous,move,roundId,rng);
+const twentyOneRound = (bet,previous,move,roundId,rng=random,target=21) =>
+  (move==='start' ? target===33 : previous?.target===33)
+    ? thirtyThree(bet,previous,move,roundId,rng) : twentyOne(bet,previous,move,roundId,rng);
 const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
 const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;

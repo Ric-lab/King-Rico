@@ -443,3 +443,42 @@ test('Cached v3 clients can play another game without erasing a saved 21 hand',a
   createdAt:serverTimestamp(),rulesVersion:'2026-10-19-spark-v3',result:{game:'wheel',bet:1,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-100)/100,baseBalance:next.balanceUnits/100,outcome,player}});
  await assertSucceeds(batch.commit());assert.equal((await getDoc(ref)).data().twentyOneRound.id,roundId);
 });
+
+test('33 Rules preserve literal ranks, exact 33, shared balance, replay and cross-device bank turns',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,3])});
+ await c.call(request({action:'bootstrap'}));const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
+ const opening={...base,requestId:roundId,move:'start',turn:0};const [a,b]=await Promise.all([c.call(opening),c.call(opening)]);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,0);assert.equal(a.outcome.round.target,33);assert.equal(a.outcome.round.playerHard,25);
+ assert.equal((await c.call(request({action:'recharge'}))).reason,'twenty-one-round');
+ const other=await client(name+'-other',name,{rng:()=>{throw Error('Resume cannot shuffle');}});assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
+ await new Promise(r=>setTimeout(r,350));const hit=await other.call(request({...base,move:'hit',turn:1}));assert.equal(hit.outcome.round.playerHard,33);assert.equal(hit.outcome.round.phase,'dealer');
+ await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2000);assert.equal(win.outcome.round.dealerHard,28);
+ assert.equal((await other.call(final)).replayed,true);await assert.rejects(c.call(request({...base,move:'hit',turn:2})),{code:'king-rico/round-conflict'});
+});
+test('33 Rules enforce bank 27, ties, both busts, and the literal value of one',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');let draw;const name='33-outcomes-'+randomUUID(),c=await client(name,name,{rng:()=>draw()});await c.call(request({action:'bootstrap'}));
+ for(const [prefix,moves,reason,total] of [
+  [[12,25,11,38,0],['stand','dealer'],'lower',25],
+  [[12,25,11,24,7,20],['hit','dealer'],'equal',33],
+  [[12,0,25,1,11],['hit'],'player-bust',38],
+  [[12,11,25,26,38,51],['stand','dealer','dealer'],'dealer-bust',26],
+  [[0,11,10,12,1],['stand','dealer'],'lower',12]]){
+  draw=rngFor(prefix);const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:2.5,roundId,target:33};
+  let x=await c.call({...base,requestId:roundId,move:'start',turn:0});
+  for(const move of moves){await new Promise(r=>setTimeout(r,350));x=await c.call(request({...base,move,turn:x.outcome.round.turn}));}
+  assert.equal(x.outcome.round.result.reason,reason);assert.equal(x.outcome.round.playerHard,total);assert.equal(x.outcome.round.playerAces,0);
+  await new Promise(r=>setTimeout(r,350));
+ }
+});
+test('33 Rules reject changed targets, capped face-card values, forged totals/decks/prizes',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-forged-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,3])});
+ await c.call(request({action:'bootstrap'}));const roundId=randomUUID();await c.call({action:'twentyOne',game:'twentyOne',bet:10,roundId,requestId:roundId,move:'start',turn:0,target:33});
+ const ref=doc(c.db,'players',c.uid);await new Promise(r=>setTimeout(r,350));
+ async function forge(change,credit=0){
+  const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.twentyOne(10,old.twentyOneRound,'hit',roundId);change(outcome);
+  const next={...old,twentyOneRound:outcome.round,balanceUnits:old.balanceUnits+credit,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'twentyOne',game:'twentyOne',selected:-1,fingerprint:'forged',betUnits:0,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+   result:{game:'twentyOne',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
+ }
+ await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
+});

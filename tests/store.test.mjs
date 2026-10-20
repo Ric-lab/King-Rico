@@ -286,3 +286,16 @@ test('21 persists the same deck/turn across devices and cannot duplicate a payou
  m.advance(350);await assert.rejects(call(request({...base,move:'dealer',turn:2})),{code:'king-rico/round-conflict'});
  assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
 });
+
+test('33 saves its rules across devices, deduplicates settlement and leaves legacy hands unchanged',async()=>{
+ const {rngFor}=await import('./helpers/twenty-one.cjs');
+ const m=memory(rngFor([12,25,11,10,7,3])),call=m.client('33');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
+ const start={...base,requestId:roundId,move:'start',turn:0};const a=await call(start);assert.equal(a.player.balance,0);assert.equal((await call(start)).replayed,true);
+ const other=m.client('33');assert.equal((await other(request({action:'bootstrap'}))).player.twentyOneRound.target,33);
+ assert.equal((await other(request({action:'recharge'}))).reason,'twenty-one-round');
+ m.advance(350);await other(request({...base,move:'hit',turn:1}));m.advance(350);
+ const final=request({...base,move:'dealer',turn:2});const x=await call(final);assert.equal(x.player.balance,2000);assert.equal(x.outcome.round.playerHard,33);
+ assert.equal((await other(final)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
+ await assert.rejects(call(request({...base,move:'hit',turn:1})),{code:'king-rico/round-conflict'});
+});

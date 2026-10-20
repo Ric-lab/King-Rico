@@ -32,40 +32,50 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     page.goto(BASE+'/Home.dc.html');login(page,'newgames-'+uuid.uuid4().hex[:12]);claim_gift(page)
     uid=page.evaluate('KingRicoCloud.uid');page.wait_for_function('KingRicoCloud.player.balance===1050')
     page.evaluate('KingRicoCloud.settings({sfxLvl:0,vibLvl:1})');page.wait_for_function('KingRicoCloud.player.settings.sfxLvl===0')
-    page.get_by_role('link',name='Jogar Fortune 21',exact=True).click();restored(page,uid)
+    page.get_by_role('link',name='Jogar Fortune 33',exact=True).click();restored(page,uid)
+    assert '/Fortune%2033.dc.html' in page.url
+    assert page.locator('#help').count()==0
+    assert '1 / 11' not in page.locator('body').inner_text()
     page.wait_for_selector('#start:not([disabled])')
     page.get_by_role('button',name='Abrir menu').tap()
-    menu=page.get_by_role('dialog',name='Menu — Fortune 21',exact=True);menu.wait_for()
+    menu=page.get_by_role('dialog',name='Menu — Fortune 33',exact=True);menu.wait_for()
     assert menu.get_by_role('button',name='Sair da conta').count()==1
     assert menu.get_by_role('group',name='Efeitos sonoros').get_by_role('button',name='OFF',exact=True).get_attribute('aria-pressed')=='true'
-    menu.get_by_role('button',name='Tabela de pagamentos').tap();page.get_by_role('dialog',name='Como jogar').wait_for();page.locator('#help-done').tap()
-    seed_cards(page,[9,5,7,6,22]);page.locator('#start').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound?.turn===1')
+    menu.get_by_role('button',name='Tabela de pagamentos').tap();page.get_by_role('dialog',name='Como jogar').wait_for()
+    assert '1 vale apenas 1' in page.locator('#help-dialog').inner_text()
+    assert '27' in page.locator('#help-dialog').inner_text();page.locator('#help-done').tap()
+    seed_cards(page,[12,25,11,10,7,3]);page.locator('#start').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound?.turn===1')
     assert page.evaluate('KingRicoCloud.player.balance')==1040
     assert page.locator('#dealer-hand .back').count()==1
+    assert page.locator('#player-score').inner_text()=='25'
+    assert page.locator('#player-hand .card[data-rank="13"]').get_attribute('aria-label')=='Carta 13, King Rico, vale 13 pontos'
     original=page.evaluate('KingRicoCloud.player.twentyOneRound')
-    page.evaluate('''r=>localStorage.setItem(`kingRico.pending.${KingRicoCloud.uid}`,JSON.stringify({action:'twentyOne',game:'twentyOne',move:'start',bet:10,roundId:r.id,requestId:r.id,turn:0}))''',original)
+    page.evaluate('''r=>localStorage.setItem(`kingRico.pending.${KingRicoCloud.uid}`,JSON.stringify({action:'twentyOne',game:'twentyOne',move:'start',bet:10,roundId:r.id,requestId:r.id,turn:0,target:33}))''',original)
     page.reload();restored(page,uid)
     assert page.evaluate('KingRicoCloud.player.twentyOneRound.id')==original['id']
     assert page.evaluate('KingRicoCloud.player.balance')==1040
-    page.wait_for_selector('#stand:not([disabled])');page.locator('#stand').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound.phase==="dealer"')
+    page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound.playerHard===33')
     second=context.new_page();second.goto(BASE+'/Fortune%2021.dc.html');restored(second,uid)
+    assert '/Fortune%2033.dc.html' in second.url
     page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]')
     assert page.evaluate('KingRicoCloud.player.balance')==1060
     assert page.locator('#result-title').inner_text()=='Você ganhou!'
     box=page.locator('#result-dialog').bounding_box();assert box['x']>=0 and box['x']+box['width']<=390 and box['y']>=0 and box['y']+box['height']<=844,box
-    second.wait_for_function('KingRicoCloud.player.balance===1060');second.close();page.bring_to_front();page.screenshot(path='/tmp/king-rico-21-win.png')
+    second.wait_for_function('KingRicoCloud.player.balance===1060');second.close();page.bring_to_front();page.screenshot(path='/tmp/king-rico-33-win.png')
     page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]');page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden')
     assert page.evaluate('KingRicoCloud.player.balance')==1060
     page.locator('#bet-down').tap();page.locator('#bet-down').tap();page.wait_for_function('KingRicoCloud.player.settings.twentyOneBetIdx===1')
-    seed_cards(page,[0,8,9,7]);page.locator('#start').tap();page.wait_for_selector('#result-dialog[open]')
-    assert page.evaluate('KingRicoCloud.player.balance')==1063.75
-    assert page.locator('#result-amount').inner_text()=='6,25'
+    seed_cards(page,[12,25,11,24,7,20]);page.locator('#start').tap();page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_selector('#result-dialog[open]')
+    assert page.evaluate('KingRicoCloud.player.balance')==1060
+    assert page.locator('#result-amount').inner_text()=='2,5'
     page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden');page.wait_for_selector('#start:not([disabled])')
-    seed_cards(page,[9,8,7,6,22]);page.locator('#start').tap();page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_selector('#result-dialog[open]')
-    assert page.locator('#result-title').inner_text()=='Passou de 21.'
-    assert page.evaluate('KingRicoCloud.player.balance')==1061.25
+    seed_cards(page,[12,0,25,1,11]);page.locator('#start').tap();page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_selector('#result-dialog[open]')
+    assert page.locator('#result-title').inner_text()=='Passou de 33.'
+    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
+    page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]')
+    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
     page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden');page.get_by_role('link',name='Voltar para o início').tap();restored(page,uid)
-    assert page.evaluate('KingRicoCloud.player.balance')==1061.25
+    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
     page.get_by_role('link',name='Jogar Fortune Flying Clown',exact=True).click();restored(page,uid)
     def flying_ready(tab):
         tab.wait_for_function('window.__flying && __flying.imgs.every(i=>i.complete&&i.naturalWidth>0) && !__flying.state.busy && !__flying._request && __flying.mode==="idle"',timeout=20000)
@@ -111,4 +121,4 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     assert not errors,errors
     assert not missing,missing
     context.close()
-    return {'new_games_home_links':True,'21_debit_once':True,'21_natural_cents':True,'21_bank_reload_two_tabs':True,'21_bust_persists':True,'flying_real_balloon_touch':True,'flying_restore_popped_order':True,'flying_collect_once_two_tabs':True,'flying_fall_saved':True,'flying_final_x20_saved':True,'same_google_session_wallet_and_menu':True,'legacy_balances_ignored':True,'stale_pending_does_not_block_login':True}
+    return {'new_games_home_links':True,'33_debit_once':True,'33_literal_ranks_tie_cents_no_ace_hint_or_help_button':True,'33_bank_reload_two_tabs_old_link_redirect':True,'33_bust_persists':True,'flying_real_balloon_touch':True,'flying_restore_popped_order':True,'flying_collect_once_two_tabs':True,'flying_fall_saved':True,'flying_final_x20_saved':True,'same_google_session_wallet_and_menu':True,'legacy_balances_ignored':True,'stale_pending_does_not_block_login':True}

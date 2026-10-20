@@ -53,4 +53,4 @@ function twentyOne(bet,previous,move,roundId,rng) {
   if(ended)round.result=result(round);
   return {move,round,ended,winUnits:ended?round.result.payoutUnits:0};
 }
-module.exports={value,score,total,result,twentyOne};
+module.exports={value,score,total,result,twentyOne,shuffle};
