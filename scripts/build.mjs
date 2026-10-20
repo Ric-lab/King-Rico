@@ -82,6 +82,14 @@ for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.htm
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
-  await writeFile(path.join(destination,file),source.replace('<head>','<head>\n'+tags.join('\n')+'\n'+cloudTags));
+  // Content-version stylesheet URLs so a cached old theme cannot override a new release.
+  let html=source.replace('<head>','<head>\n'+tags.join('\n')+'\n'+cloudTags);
+  const styles=[...html.matchAll(/href="(\.\/[^"?]+\.css)"/g)];
+  for(const [,href] of styles){
+    const bytes=await readFile(path.join(destination,href));
+    const revision=createHash('sha256').update(bytes).digest('hex').slice(0,12);
+    html=html.replaceAll(`href="${href}"`,`href="${href}?v=${revision}"`);
+  }
+  await writeFile(path.join(destination,file),html);
 }
 console.log(`Built ${emulator?'local emulator':'production'} web app in dist/`);

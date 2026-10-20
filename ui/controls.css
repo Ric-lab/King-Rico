@@ -1,0 +1,12 @@
+/* Wheel is the reference for reusable controls. Scene-specific layout stays in each game. */
+:root{--kr-control-rim:#6b2e05;--kr-control-depth:#4a1a00;--kr-control-cream:#fff3c4}
+.kr-stepper{box-sizing:border-box;width:var(--kr-step-size,54px);height:var(--kr-step-size,54px);flex:0 0 var(--kr-step-size,54px);padding:0;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff3c4,#f0b41f 55%,#c27a0a);box-shadow:0 0 0 3px var(--kr-control-rim),0 5px 0 var(--kr-control-depth);font:800 calc(var(--kr-step-size,54px)*.63)/1 'Baloo 2',sans-serif;color:var(--kr-control-rim);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.kr-button{--kr-button-top:#6cf096;--kr-button-mid:#2ec962;--kr-button-bottom:#22a650;--kr-button-edge:#147a36;--kr-button-ink:var(--kr-control-cream);box-sizing:border-box;border:0;border-radius:26px;background:var(--kr-button-surface,linear-gradient(180deg,var(--kr-button-top),var(--kr-button-mid) 55%,var(--kr-button-bottom)));box-shadow:0 0 0 3px var(--kr-button-edge),0 5px 0 var(--kr-control-depth),inset 0 2px 0 #ffffff99;color:var(--kr-button-ink);text-shadow:0 2px var(--kr-button-edge);font-family:'Baloo 2',sans-serif;font-weight:800;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.kr-button--red{--kr-button-top:#ff8b91;--kr-button-mid:#e83e4c;--kr-button-bottom:#bb2037;--kr-button-edge:#81162b}
+.kr-button--gold{--kr-button-top:#fff3c4;--kr-button-mid:#f0b41f;--kr-button-bottom:#c27a0a;--kr-button-edge:#6b2e05;--kr-button-ink:#6b2e05;text-shadow:0 1px #fff3c4}
+.kr-button:active:not(:disabled),.kr-stepper:active:not(:disabled){translate:0 3px;filter:brightness(.94)}
+.kr-button:active:not(:disabled){box-shadow:0 0 0 3px var(--kr-button-edge),0 2px 0 var(--kr-control-depth),inset 0 2px 0 #ffffff99}
+.kr-stepper:active:not(:disabled){box-shadow:0 0 0 3px var(--kr-control-rim),0 2px 0 var(--kr-control-depth)}
+.kr-button:disabled,.kr-stepper:disabled{opacity:.45;cursor:default}
+.kr-button:focus-visible,.kr-stepper:focus-visible{outline:3px solid #fff3c4;outline-offset:5px}
+@media(prefers-reduced-motion:reduce){.kr-button,.kr-stepper{transition:none}}

@@ -78,6 +78,7 @@ function cardNode(card, hidden, index, count, newRound) {
   node.setAttribute('role','img');
   if (hidden) {
     node.setAttribute('aria-label','Carta fechada');
+    const backNumber=document.createElement('b');backNumber.className='card-back-number';backNumber.textContent='33';node.append(backNumber);
     const symbol = document.createElement('i'); symbol.className = 'symbol'; symbol.style.setProperty('--symbol-x','63.6364%'); node.append(symbol);
   } else {
     const rank=card.rank ?? card.value, art=CARD_ART[rank-1];

@@ -2,6 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="./ui/header.css">
+<link rel="stylesheet" href="./ui/controls.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -90,19 +91,19 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div onClick="{{ closeBet }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
         <div style="position: absolute; left: 428px; top: 700px; width: 397px; padding: 22px 0 20px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 18px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: fpPop .3s ease-out;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 14px;">
-        <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00, inset 0 2px 0 rgba(255,255,255,.6); opacity: {{ downOp }};" style-active="transform: translateY(4px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">−</div>
+        <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ downOp }}; --kr-step-size:54px;">−</div>
         <div aria-label="Aposta {{ betText }}" style="width: 170px; height: 78px; border-radius: 39px; display: flex; align-items: center; justify-content: center; background: {{ betBg }}; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a; animation: {{ betAnim }};">
           <span style="font-size: 40px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
         </div>
-        <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00, inset 0 2px 0 rgba(255,255,255,.6); opacity: {{ upOp }};" style-active="transform: translateY(4px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">+</div>
+        <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ upOp }}; --kr-step-size:54px;">+</div>
           </div>
-          <div onClick="{{ closeBet }}" role="button" aria-label="OK" style="padding: 12px 64px; border-radius: 999px; cursor: pointer; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;" style-active="transform: translateY(3px); box-shadow: 0 2px 0 #147a36;">OK</div>
+          <div onClick="{{ closeBet }}" role="button" aria-label="OK" class="kr-button" style="padding: 12px 64px; cursor: pointer; font-size: 26px; font-weight: 800;">OK</div>
         </div>
       </div>
     </sc-if>
     <sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; z-index: 12; left: 0; right: 0; top: 158px; height: 60px; display: flex; justify-content: center; animation: fpPop .3s ease-out;">
-        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" style="position: relative; overflow: hidden; height: 56px; padding: 0 22px 0 10px; box-sizing: border-box; border-radius: 28px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 4px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6), 0 0 0 2px #6b2e05, 0 6px 14px rgba(0,0,0,.35); opacity: {{ collectOp }};" style-active="transform: translateY(3px); box-shadow: 0 1px 0 #8a4a05, 0 0 0 2px #6b2e05;">
+        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" class="kr-button kr-button--gold" style="position: relative; overflow: hidden; height: 56px; padding: 0 22px 0 10px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; opacity: {{ collectOp }};">
           <div style="width: 38px; height: 38px; border-radius: 50%; background-image: url('assets/stage-hd-c.webp'); background-size: 478px 846px; background-position: -20.4px -31.7px; box-shadow: 0 2px 0 #8a4a05;"></div>
           <span style="font-size: 30px; font-weight: 800; line-height: 1; color: #4a1a00; font-variant-numeric: tabular-nums;">{{ collectText }}</span>
           <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0)); animation: fpShine 2.4s ease-in-out infinite; pointer-events: none;"></div>
@@ -126,7 +127,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div style="width: 320px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: fpPop .45s cubic-bezier(.2,1.4,.4,1);">
           <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 28px; color: #ffd257; text-shadow: 0 3px 0 #6b2e05; white-space: nowrap;">{{ winTitle }}</span>
           <span style="font-size: 64px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
-          <div style="margin-top: 8px; padding: 12px 60px; border-radius: 999px; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;">OK</div>
+          <div class="kr-button" style="margin-top: 8px; padding: 12px 60px; font-size: 26px; font-weight: 800;">OK</div>
         </div>
       </div>
     </sc-if>
