@@ -1,5 +1,11 @@
 const {BETS} = require('../../cloud/engine.cjs');
-const SUITS=['crown','gem','clover','tent'];
+const CARD_ART = [
+  {name:'Bumbo',sprite:1},{name:'Circo',sprite:2},{name:'Trevo',sprite:4},
+  {name:'Nuvem',sprite:3},{name:'Capa',sprite:0},{name:'Cetro',sprite:5},
+  {name:'Moeda',sprite:6},{name:'Coroa',sprite:7},{name:'Happeach',sprite:11},
+  {name:'Diamante',sprite:8},{name:'Crazy Clown',src:'./assets/clown/clown.webp'},
+  {name:'Nick Neck',src:'./assets/girafa/head.webp'},{name:'King Rico',sprite:9}
+];
 const Cloud=window.KingRicoCloud;
 function handValue(cards){const hard=cards.reduce((n,c)=>n+c.value,0),soft=cards.some(c=>c.value===1)&&hard+10<=21;return {total:hard+(soft?10:0),soft};}
 import {mountMenu} from './menu.jsx';
@@ -14,7 +20,7 @@ let preferences={sfx:2,vib:2},audio;
 function applyPlayer(player){
   if(!player)return;
   const r=player.twentyOneRound;
-  const card=id=>({id:String(id),value:Math.min(id%13+1,10),suit:SUITS[Math.floor(id/13)]});
+  const card=id=>({id:String(id),rank:id%13+1,value:Math.min(id%13+1,10)});
   account={balance:player.balance,bet:busy?account.bet:BETS[player.settings.twentyOneBetIdx??3],revision:player.revision,
     round:r?{id:r.id,turn:r.turn,bet:r.betUnits/100,phase:r.phase,player:r.player.map(card),dealer:r.dealer.map(card),
       result:r.result?{...r.result,payout:r.result.payoutUnits/100,net:r.result.netUnits/100}:null}:null};
@@ -74,17 +80,21 @@ function cardNode(card, hidden, index, count, newRound) {
     node.setAttribute('aria-label','Carta fechada');
     const symbol = document.createElement('i'); symbol.className = 'symbol'; symbol.style.setProperty('--symbol-x','63.6364%'); node.append(symbol);
   } else {
-    node.dataset.suit = card.suit;
-    node.setAttribute('aria-label',`Carta ${card.value === 1 ? '1, vale 1 ou 11' : card.value}, ${({'crown':'coroa','gem':'diamante','clover':'trevo','tent':'circo'})[card.suit]}`);
-    const spriteIndex = {crown:7, gem:8, clover:4, tent:2}[card.suit];
-    const number = document.createElement('span'); number.className = 'card-number'; number.textContent = card.value;
-    const symbol = document.createElement('i'); symbol.className = 'symbol'; symbol.style.setProperty('--symbol-x',`${spriteIndex/11*100}%`);
+    const rank=card.rank ?? card.value, art=CARD_ART[rank-1];
+    node.dataset.rank=rank;
+    node.setAttribute('aria-label',`Carta ${rank}, ${art.name}, ${rank===1?'vale 1 ou 11':`vale ${card.value} pontos`}`);
+    const number = document.createElement('span'); number.className = 'card-number'; number.textContent = rank;
+    const symbol = document.createElement('i'); symbol.className = 'symbol';
+    if(art.src){symbol.classList.add('character');symbol.style.backgroundImage=`url("${art.src}")`;}
+    else symbol.style.setProperty('--symbol-x',`${art.sprite/11*100}%`);
     node.append(number,symbol);
     for (const bottom of [false,true]) {
-      const corner = document.createElement('span'); corner.className = `corner${bottom?' bottom':''}`; corner.textContent = card.value;
-      if (card.value === 1) {const hint = document.createElement('small');hint.textContent = '1 / 11';corner.append(hint);}
+      const corner = document.createElement('span'); corner.className = `corner${bottom?' bottom':''}`; corner.textContent = rank;
+      if (rank === 1) {const hint = document.createElement('small');hint.textContent = '1 / 11';corner.append(hint);}
       node.append(corner);
     }
+    if(rank>10){const points=document.createElement('small');points.className='rank-points';points.textContent='VALE 10';node.append(points);}
+
   }
   if (newRound) {node.classList.add('dealt');node.style.setProperty('--deal-delay',`${index * 120}ms`);}
   return node;

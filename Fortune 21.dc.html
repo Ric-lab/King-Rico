@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<link rel="stylesheet" href="./ui/header.css">
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#350a50">
   <meta name="description" content="Fortune 21: você contra a banca, no mundo do King Rico. Moedas virtuais, sem dinheiro real.">
@@ -11,9 +12,9 @@
   <div class="ambient" aria-hidden="true"></div>
   <main class="game" id="game" aria-label="Fortune 21">
     <header class="topbar">
-      <div class="wallet" aria-label="Seu saldo"><strong id="balance">0</strong></div>
+      <div class="wallet kr-hud-balance" aria-label="Seu saldo"><strong id="balance">0</strong></div>
       <span class="demo-label">SALDO DA SUA CONTA</span>
-      <a href="Home.dc.html" class="home-button" aria-label="Voltar para o início"></a>
+      <a href="Home.dc.html" class="kr-hud-home" aria-label="Voltar para o início"></a>
       <button id="help" class="help-coin" aria-label="Como jogar">?</button>
       <div id="menu-root"></div>
     </header>
@@ -47,7 +48,7 @@
     <div class="rule"><b>3</b><p>A banca compra até 17 e para. Quem passar de 21 perde.</p></div>
     <p class="ace-rule">A carta <b>1</b> vale <b>1 ou 11</b>, o que ajudar sua mão. As outras valem o número escrito.</p>
     <dl><div><dt>Vitória</dt><dd>recebe 2×</dd></div><div><dt>21 com duas cartas</dt><dd>recebe 2,5×</dd></div><div><dt>Empate</dt><dd>aposta de volta</dd></div></dl>
-    <p class="small-copy">O recebimento inclui a aposta. A banca para também no 17 com uma carta 1 valendo 11. Sem dobrar aposta ou dividir mãos.</p>
+    <p class="small-copy">As cartas 11, 12 e 13 valem 10 pontos. O recebimento inclui a aposta. A banca para também no 17 com uma carta 1 valendo 11. Sem dobrar aposta ou dividir mãos.</p>
     <button id="help-done" class="native-action"><span>ENTENDI</span></button>
     <p class="small-copy">Sua mão e seu saldo ficam salvos na sua conta do King Rico.</p>
   </dialog>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="./ui/header.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -35,12 +36,12 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-for>
 
     <!-- topo: saldo, casa, menu -->
-    <div role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; transform: scale(1.25); transform-origin: 0 50%;">
+    <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
         <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
       </div>
     </div>
-    <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; z-index: 20; left: 341.833px; top: 29.5px; width: 41px; height: 41px; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6);"></a>
+    <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6);"></a>
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- multiplicador atual → próximo -->

@@ -4,7 +4,6 @@ if (!document.getElementById('king-rico-menu-style')) {
   const style = document.createElement('style');
   style.id = 'king-rico-menu-style';
   style.textContent = `
-    .kr-menu-button{position:absolute;right:20.167px;top:29.5px;width:41px;height:41px;padding:0;border:0;border-radius:50%;cursor:pointer;background: url('assets/stage-lit.webp') -391.833px -29.5px / 453px 802px no-repeat;transform:translateX(2px) scale(1.25);overflow:hidden}
     .kr-menu-button:active{filter:brightness(.6) saturate(1.2);box-shadow:inset 0 2px 6px #0005}
     .kr-menu-button:disabled{cursor:default;opacity:.55}
     .kr-menu-button:focus-visible,.kr-menu-dialog button:focus-visible{outline:3px solid #fff3c4;outline-offset:3px}
