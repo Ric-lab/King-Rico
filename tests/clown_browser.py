@@ -22,7 +22,7 @@ def check_clown_bounce(browser,login,restored,check_menu,claim_gift,observer):
     ready();check_menu(page,'Fortune Clown',False);page.screenshot(path='/tmp/king-rico-clown-ready.png')
     def swipe(x,y):
         page.wait_for_function('!__clown.state.busy && !__clown._request')
-        points=page.evaluate('''([x,y])=>{const r=__clown.stageRef.current.getBoundingClientRect(),s=r.width/453;return {a:[r.x+226*s,r.y+670*s],b:[r.x+(x+(__clown.off||0))*s,r.y+y*s]};}''',[x,y])
+        points=page.evaluate('''([x,y])=>{const r=__clown.stageRef.current.getBoundingClientRect(),s=r.width/453,p=__clown.facePoint({x,y});return {a:[r.x+226*s,r.y+670*s],b:[r.x+p.x*s,r.y+p.y*s]};}''',[x,y])
         page.mouse.move(*points['a']);page.mouse.down();page.mouse.move(*points['b'],steps=8);page.mouse.up()
     swipe(226.5,442)
     page.wait_for_function('KingRicoCloud.player.clownRound?.used===1')

@@ -166,3 +166,32 @@ test('Clown refuses offline throws, restores progress and never credits a dismis
  cloud.player={...player,clownRound:null,balance:1001.3};g.state.win={w:3.8};g.closeWin();g.closeWin();assert.equal(g.state.balance,1001.3);
  let called=0;g.shoot=()=>called++;g.drag={id:1,pts:[{x:226,y:670},{x:226,y:442}]};g.cancel();g.up({pointerId:1});assert.equal(called,0);
 });
+test('Clown stays still without hits and adds clockwise rotation only after six restored hits',()=>{
+ const {instance:g}=component('Fortune Clown.dc.html',{});g.faceRef.current={style:{}};
+ g.state.active=true;g.state.results=[0,0,0,0,0,0];g.moveFace(0);g.moveFace(1000);
+ assert.equal(g.off,0);assert.equal(g.angle,0);
+ g.state.results=[1.5,0,1.5,1.5,1.5,1.5];g.moveFace(1016);
+ assert.notEqual(g.off,0);assert.equal(g.angle,0);
+ const results=[1.5,1.5,1.5,1.5,1.5,1.5];
+ g._cloudDeferred={balance:990,settings:{},clownRound:{id:'round',betUnits:1000,used:6,sumUnits:900,results}};g.applyCloudPlayer();
+ g.moveFace(1032);const first=g.angle;g.moveFace(1048);
+ assert.ok(first>0 && g.angle>first);assert.notEqual(g.off,0);
+ g.state.results=[];g.state.active=false;g.moveFace(1064);
+ assert.equal(g.angle,0);assert.equal(g.off,0);assert.equal(g.dy,0);
+});
+test('Clown rotates about its lowered center and aims in the same local coordinates',async()=>{
+ let selected;const cloud={enabled:true,player:{balance:990,settings:{}},clown:async(...args)=>{selected=args[3];throw Error('offline');},error:()=>{}};
+ const {instance:g}=component('Fortune Clown.dc.html',cloud);
+ g.off=30;g.dy=-10;g.angle=Math.PI/2;
+ const center=g.facePoint({x:226.5,y:360});assert.equal(center.x,256.5);assert.equal(center.y,374);
+ const mouth=g.facePoint({x:226.5,y:442});assert.equal(mouth.x,174.5);assert.equal(mouth.y,374);
+ const holes=[{x:226.5,y:442},{x:225.6,y:353.6},{x:174.9,y:293.4},{x:276.4,y:293.4},{x:84.7,y:376.8},{x:365.7,y:376.8}];
+ for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.8]){
+  g.angle=angle;
+  for(const [i,hole] of holes.entries()){
+   const point=g.facePoint(hole),local=g.facePoint(point,true);
+   assert.ok(Math.hypot(local.x-hole.x,local.y-hole.y)<1e-9);
+   await g.shoot([{x:226,y:670},point]);assert.equal(selected,i);
+  }
+ }
+});
