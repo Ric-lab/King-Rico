@@ -37,7 +37,9 @@ with sync_playwright() as w:
  p.get_by_role('button',name='Abrir menu',exact=True).click();p.get_by_role('button',name='OFF',exact=True).first.click();assert snap()['state']['settings']['sfx']==0;p.get_by_role('button',name='Fechar menu',exact=True).click();p.locator('#help').click();assert p.locator('#how-to').evaluate('(d)=>d.open');p.locator('#got-it').click()
  print('PASS menu compartilhado, som e instruções',flush=True)
  for width,height in [(360,640),(1440,960)]:
-  p.set_viewport_size({'width':width,'height':height});p.wait_for_timeout(100);box=p.locator('#play').bounding_box();assert box['y']+box['height']<height;assert p.evaluate('document.documentElement.scrollWidth<=innerWidth')
+  p.set_viewport_size({'width':width,'height':height})
+  p.wait_for_function('([w,h])=>Math.abs(parseFloat(document.querySelector(".app").style.getPropertyValue("--stage-scale"))-Math.min(w/453,h/802))<.00001',arg=[width,height])
+  box=p.locator('#play').bounding_box();assert box['y']+box['height']<height;assert p.evaluate('document.documentElement.scrollWidth<=innerWidth')
   p.screenshot(path=str(OUT/f'final-{width}.png'))
  print('PASS enquadramento em celular pequeno e desktop',flush=True)
  p.set_viewport_size({'width':390,'height':844});balance=snap()['state']['balance'];p.locator('#practice').click();assert snap()['state']['balance']==balance

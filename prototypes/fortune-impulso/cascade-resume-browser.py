@@ -10,12 +10,12 @@ fixture={'version':2,'balance':975,'bet':25,'settings':{'sfx':0,'vib':0},'round'
  'id':'resume-open-gate','seed':123,'practice':False,'bet':25,'phase':'playing',
  'tick':607,'spawned':60,'total':72,'deadline':960,
  'gates':[{'openedAt':600,'spawned':4},{'openedAt':None,'spawned':0},{'openedAt':None,'spawned':0}],
- 'resolved':list(range(60)),'balls':[{'id':71-i,'x':97-i*14,'y':109,'vx':0,'vy':2,'angle':0,'av':0} for i in range(4)],
+ 'resolved':list(range(60)),'balls':[{'id':71-i,'x':90+((11-i)%3-1)*21.5,'y':85+((11-i)//3)*23,'vx':0,'vy':2,'angle':0,'av':0} for i in range(4)],
  'catcher':180,'points':6,'caught':3,'comboColor':-1,'comboCount':0,'combos':1}}
 with sync_playwright() as w:
  b=w.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
  c=b.new_context(viewport={'width':390,'height':844},device_scale_factor=1)
- c.add_init_script('if(!localStorage.getItem("king-rico-cascade-demo-v3"))localStorage.setItem("king-rico-cascade-demo-v3",'+json.dumps(json.dumps(fixture))+')')
+ c.add_init_script('if(!localStorage.getItem("king-rico-cascade-demo-v4"))localStorage.setItem("king-rico-cascade-demo-v4",'+json.dumps(json.dumps(fixture))+')')
  p=c.new_page();errors=[];failed=[];p.on('pageerror',lambda e:errors.append(str(e)));p.on('console',lambda m:errors.append(m.text) if m.type=='error' else None);p.on('response',lambda r:failed.append(r.url) if r.status>=400 else None)
  p.goto(URL,wait_until='networkidle');p.wait_for_function('window.cascade');before=p.evaluate('cascade.snapshot().state')
  assert before['balance']==975;assert before['round']['phase']=='playing';assert before['round']['gates'][0]['spawned']>=4

@@ -1,6 +1,6 @@
 # Protótipos King Rico
 
-**Versão atual: [Fortune Cascata](CASCATA.md).** `scripts/build-impulso.mjs` agora gera a cascata de bolinhas. Os testes atuais são `cascade-state.test.mjs`, `cascade-browser.py` e `cascade-resume-browser.py`. A versão 06 aumenta as bolinhas Three.js, abre espaço para a mesa, adiciona rampas físicas, sequências de cores e recompensa por acertar o centro do coletor. A descrição abaixo documenta o Impulso 02, preservado no site privado em `/v2/`.
+**Versão atual: [Fortune Cascata](CASCATA.md).** `scripts/build-impulso.mjs` agora gera a cascata de bolinhas. Os testes atuais são `cascade-state.test.mjs`, `cascade-browser.py` e `cascade-resume-browser.py`. A versão 07 monta uma cena completa com arte referenciada no Circus, os controles reais do King Rico e luzes sincronizadas à jogada. As regras de precisão e sequências da revisão 06 são preservadas. A descrição abaixo documenta o Impulso 02, preservado no site privado em `/v2/`.
 
 ## Fortune Impulso 02 — histórico
 

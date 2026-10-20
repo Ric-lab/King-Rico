@@ -1,6 +1,6 @@
 # Fortune Cascata
 
-Protótipo 06: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor com o dedo. Três capturas consecutivas da mesma cor dão 3 pontos e abrem a reserva daquela cor, liberando uma avalanche de 12 bolinhas extras. Cada uma das três reservas abre uma vez: até 96 bolinhas na rodada.
+Protótipo 07: uma chuva de 60 bolinhas passa por pinos físicos. O jogador move um coletor com o dedo. Três capturas consecutivas da mesma cor dão 3 pontos e abrem a reserva daquela cor, liberando uma avalanche de 12 bolinhas extras. Cada uma das três reservas abre uma vez: até 96 bolinhas na rodada.
 
 A moldura e o coletor são assets novos gerados com GPT Image a pedido do usuário. Ouro, vidro, esmalte roxo e rubis compartilham a mesma direção de arte. Os arquivos originais e a procedência estão em `assets/cascade/`. As versões anteriores continuam em `/v1/`, `/v2/`, `/v3/` e `/v4/` no site privado.
 
@@ -12,7 +12,7 @@ A moldura e o coletor são assets novos gerados com GPT Image a pedido do usuár
 - Uma captura na borda vale 1 ponto; a até 12 unidades do centro do coletor, vale 2. Prêmio = `floor(aposta × pontos / 25)` e inclui a aposta. Apostar 25 e fazer 32 pontos recebe 32 moedas, resultado líquido +7.
 - A emissão principal dura aproximadamente 9 segundos. A rodada tem limite inicial de 14 segundos de simulação; uma comporta aberta garante até mais 6 segundos para a queda, respeitando o limite absoluto de 20 segundos. Bolinhas eventualmente presas são encerradas sem pontos.
 - O ensaio não debita nem paga moedas. A economia é experimental, sujeita a avaliação por partidas humanas.
-- Carteira exclusiva de demonstração: `king-rico-cascade-demo-v3`. Não importa saldos antigos nem usa Firebase. Google, Firestore, Home e os jogos oficiais não são alterados.
+- Carteira exclusiva de demonstração: `king-rico-cascade-demo-v4`. Não importa saldos antigos nem usa Firebase. Google, Firestore, Home e os jogos oficiais não são alterados.
 - Checkpoints atômicos incluem posições, velocidades, emissões, reservas abertas, bolinhas resolvidas, pontos e coletor. Atualizar retoma o checkpoint, incluindo uma avalanche em andamento. Cada bolinha resolve uma vez; o crédito e o encerramento são gravados juntos, impedindo duplicar o prêmio por recarga da página.
 
 ## Controle e detalhes
@@ -64,3 +64,27 @@ continua automático e único. A versão 05 está preservada em `/v5/` para comp
 Validação funcional não comprova que a versão é mais bonita ou divertida; isso
 continua dependendo do teste e do feedback do autor. Esta versão segue sendo um
 protótipo privado com carteira de demonstração, separado do Firebase oficial.
+
+
+## Revisão 07 — uma cena do King Rico
+
+Máquina nova baseada nas artes reais do Circus e Wheel, com esmalte vermelho,
+ouro amarelo, lâmpadas grandes e superfícies arredondadas. A mesa, os vãos e o
+canal do coletor pertencem à mesma imagem. Não existe uma segunda mesa lisa
+sobreposta à arte. Os centros e eixos físicos foram medidos da imagem final.
+
+A cena usa largura de referência 453, escala uniforme e altura mínima 802. O palco ocupa toda a tela; em celulares altos, a área da máquina ganha espaço e os controles continuam no rodapé, sem esticar a arte. A carteira vem da região original
+do stage-lit; ícones de Home/Menu, botão verde e moeda de prêmio são os oficiais.
+Os controles permanecem no mesmo lugar em repouso e durante a rodada. O coletor
+é geometria arredondada de ouro e esmalte vermelho, com a moeda da marca na frente.
+
+O toque debita uma vez, acende a máquina e dá 280 ms para a luz percorrer os pilares
+antes de soltar a primeira bola. Trincas acendem os soquetes da própria reserva e
+abrem a comporta visível. Menu e instruções pausam o relógio e a luz da cena.
+Ao sair do resultado, moedas voam até a carteira sem alterar o crédito já salvo.
+A versão anterior está preservada em `/v6/`, com sua carteira antiga separada.
+
+O namespace de demonstração mudou por causa da nova geometria das reservas. Não
+há importação de saldo nem de posições antigas. O Firestore e o site oficial não
+são alterados. A revisão depende de feedback humano sobre sua aparência; testes
+funcionais verificam controle, retomada e integridade do prêmio.

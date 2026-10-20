@@ -33,3 +33,30 @@ avaliação independente dos jogos.
   sem confundir presença de Three.js, mais efeitos ou testes aprovados com beleza.
 - Não é conhecido qual recurso específico do Claude Design fez a diferença para
   o autor. Não inventar uma explicação sobre seu modelo ou instruções internas.
+
+
+## Feedback de 20/10/2026 — versão 06
+
+O autor disse: “melhorou mas ainda falta muito”, e apontou que o agente ainda não
+entendeu a estética do jogo como um todo. Pediu olhar o King Rico completo, seus
+detalhes e o uso dos assets. Isso é melhora parcial percebida, não aprovação da
+aparência da Cascata.
+
+### Observações da comparação visual do agente
+
+- No Circus, a moldura, os números, o saldo e o botão formam uma cena contínua.
+  O vermelho é vivo e o ouro amarelo; os volumes são fortes e lisos. Uma moldura
+  de ouro champanhe, rubis e filigrana não reproduz essa linguagem.
+- O saldo usa uma região da arte oficial; o botão usa os seus bitmaps de base,
+  pressionado e aro. A interface não é um cabeçalho web independente da cena.
+- O Neck usa paisagem, tronco, galho, corpo, pescoço e cabeça separados, alinhados
+  para funcionarem como um personagem e um espaço. Não basta acrescentar uma
+  imagem bonita por trás de objetos sem relação com ela.
+- A Wheel repete os símbolos do Circus e mantém os controles da marca. Não exige
+  inserir o mascote em todo jogo para pertencer ao mesmo produto.
+- O pulso do Circus nasce no botão e chega à moldura com o começo dos rolos.
+  É uma sequência com causa, posição e tempo, não brilho permanente.
+
+A revisão 07 procura aplicar essas observações. Sua qualidade estética ainda
+precisa de avaliação do autor. Gerar uma imagem com o estilo certo não conclui o
+trabalho: medir aberturas, alinhar a física e montar os controles fazem parte da arte.

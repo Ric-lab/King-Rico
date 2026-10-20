@@ -1,11 +1,11 @@
 export const TOTAL=60,WIDTH=360,HEIGHT=500,COMBO_BONUS=3,BONUS_PER_GATE=12,MAX_BALLS=TOTAL+BONUS_PER_GATE*3,RADIUS=11.4;
-export const GATE_X=[76,180,284];
+export const GATE_X=[90,180,270],GATE_Y=171;
 export function random(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 export function marblePlan(seed,id){
   const rng=random((seed+id*7919)>>>0),bonus=id>=TOTAL,wave=Math.floor(id/3),waveRandom=random((seed+wave*104729)>>>0);
   const color=bonus?Math.floor((id-TOTAL)/BONUS_PER_GATE):Math.floor(waveRandom()*3),local=(id-TOTAL)%BONUS_PER_GATE;
-  return{id,x:bonus?GATE_X[color]+(local%3-1)*23:[104,180,256][(wave+(seed%3))%3]+(rng()-.5)*22,
-    y:bonus?61+Math.floor(local/3)*23:174,vx:(rng()-.5)*(bonus?.3:1.2),color};
+  return{id,x:bonus?GATE_X[color]+(local%3-1)*21.5:[104,180,256][(wave+(seed%3))%3]+(rng()-.5)*22,
+    y:bonus?82+Math.floor(local/3)*23:220,vx:(rng()-.5)*(bonus?.3:1.2),color};
 }
 export const availableIds=r=>Array.from({length:MAX_BALLS},(_,i)=>i).filter(i=>i<TOTAL||r.gates[Math.floor((i-TOTAL)/BONUS_PER_GATE)].openedAt!==null);
 export function begin(state,id,seed,practice=false){
