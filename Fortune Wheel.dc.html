@@ -41,7 +41,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></a>
-    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transition: filter .25s ease, box-shadow .25s ease; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2); box-shadow: inset 0 2px 6px rgba(0,0,0,.32); transition: none;"></div>
 
     <!-- roleta -->
     <div style="position: absolute; left: 56.5px; top: 104px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
@@ -49,7 +49,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <sc-for list="{{ bulbs }}" as="b" hint-placeholder-count="24">
         <div style="position: absolute; left: 164px; top: 164px; width: 12px; height: 12px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #fff3c4 35%, #ffc93a 100%); box-shadow: 0 0 6px rgba(255,220,120,.9); opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
       </sc-for>
-      <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ cancel }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
+      <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
         <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
           <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
             <div style="position: absolute; left: -1px; top: -160px; width: 3px; height: 112px; transform: rotate(13.846deg); transform-origin: 50% 160px; background: linear-gradient(180deg, #fff3c4, #e0a020);"></div>
@@ -144,7 +144,42 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </sc-if>
 
-    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: rrFade .2s ease-out;">
+        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+        <div style="position: absolute; left: 416px; top: 470px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
+            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
+          </div>
+          <div style="display: flex; flex-direction: column; padding: 4px 18px 4px;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+            <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+            <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+            <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
+          </div>
+            <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 16px 0; cursor: pointer;">
+              <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
+              <span style="font-size: 28px; font-weight: 800; color: #ffd257;">›</span>
+            </div>
+          </div>
+          <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos do Fortune Circus e ficam salvos neste aparelho.</div>
+
+          <sc-if value="{{ cloudEnabled }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,210,87,.22);">
+              <button data-cloud-signout style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Sair da conta</button>
+              <button data-cloud-analytics style="min-height:44px;padding:8px 12px;border-radius:12px;font:700 17px system-ui;">Dados de uso: {{ analyticsLabel }}</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
 
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
@@ -181,7 +216,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // 13 casas: 0 = FORTUNE (verde, casa da banca), 1..12 alternam vermelho (ímpar) e creme (par) → 6 + 6; a girafa (cabeça) é uma das vermelhas
 const POCKETS = [[-2, 'Fortune'], [6, 'Moeda'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [-1, 'Girafa'], [9, 'King Rico'], [3, 'Nuvem'], [0, 'Capa'], [5, 'Cetro'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
-// Desenho exato x10, mesma cor x5, FORTUNE escolhido x25. Preserva as probabilidades do export atual.
+// escolhe 1 desenho: deu ele = x10; deu outro da MESMA COR = x5; outra cor ou FORTUNE = perde. RTP 95% = 4% × 10 + 11% × 5
 const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 5, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.143, P_FORT = 0.95 / 25;
 const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
@@ -212,10 +247,10 @@ class Component extends DCLogic {
   applyCloudPlayer() {
     const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
     const first = this._cloudUid !== window.KingRicoCloud.uid; this._cloudUid = window.KingRicoCloud.uid;
-    this.setState({ balance: p.balance, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, ...(first ? {betIdx: p.settings.wheelBetIdx} : {}) });
+    this.setState({ balance: p.balance, ...(first ? {betIdx: p.settings.wheelBetIdx, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl} : {}) });
   }
   componentDidUpdate() { if(this._cloudDeferred && !this.state.spinning && !this._cloudRequest) this.applyCloudPlayer(); }
-  componentWillUnmount() { clearTimeout(this._at);this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
+  componentWillUnmount() { this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
   save(balance) {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) { cloud.settings({wheelBetIdx:this.state.betIdx, sfxLvl:this.state.sfxLvl ?? 2, vibLvl:this.state.vibLvl ?? 2}); return; }
@@ -254,11 +289,6 @@ class Component extends DCLogic {
     const now = performance.now(), s0 = d.samples[0], v = (this.rot - s0[1]) / Math.max(16, now - s0[0]), force = Math.min(1, Math.abs(v) / 1.6);
     if (!this.state.pick) { this.setState({ force, hint: 'Primeiro toque em um símbolo.' }); return; }
     if (force < 0.2) { this.setState({ force, hint: 'Mais forte! Arraste e solte' }); return; }
-    return this.release(force,v);
-  };
-  cancel = () => {this.drag=null;this.setGauge(0);};
-  release = async (force=.7,v=1) => {
-    if(this.state.spinning || this._cloudRequest || this.state.win || this.state.menu || this.state.pays || !this.state.pick) return;
     const bet = this.bet();
     if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
     let cloudResult = null;
@@ -273,7 +303,7 @@ class Component extends DCLogic {
     const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
     const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = (3000 + force * 2800) * (this.state.turbo ? 0.5 : 1), start = this.rot, t0 = performance.now();
-    // The cloud result uses the same 13 pockets and multipliers as the displayed wheel.
+    // RTP 95%: acerto paga x10, então a casa escolhida sai com chance 9,5% (as outras 11 dividem o resto igualmente)
     const pk = this.state.pick, rr = Math.random(), pool = pk.v === 0 ? (rr < P_FORT ? [0] : ORDER.filter(n => n !== 0)) : rr < P_EXACT ? [pk.v] : rr < P_EXACT + P_COLOR ? ORDER.filter(n => n !== pk.v && COLOR_OF(n) === COLOR_OF(pk.v)) : ORDER.filter(n => COLOR_OF(n) !== COLOR_OF(pk.v)), target = cloudResult ? cloudResult.outcome.target : pool[Math.floor(Math.random() * pool.length)];
     const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
     this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
@@ -306,11 +336,11 @@ class Component extends DCLogic {
   goHome = e => { if (this.state.spinning && e) e.preventDefault(); };
   rcBroke() { const s = this.state, bal = typeof s.balance === 'number' ? s.balance : 1000; return bal < 1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.paying && s.phase !== 'falling'; }
   recharge = async () => { const cloud = window.KingRicoCloud;
-    if (cloud && cloud.enabled) { try { const r = await cloud.recharge(); this.setState({ balance: cloud.player?.balance ?? r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
+    if (cloud && cloud.enabled) { try { const r = await cloud.bonus(); this.setState({ balance: r.player.balance }); } catch (e) { cloud.error && cloud.error(e); } return; }
     this.setState({ balance: 1000 }, () => this.save(1000)); };
   toggleTurbo = () => { this.setState(s => ({ turbo: !s.turbo })); };
   toggleAuto = () => { this.setState(s => ({ auto: !s.auto }), () => { if (this.state.auto && !this.state.spinning) this.autoSpin(); }); };
-  autoSpin() {clearTimeout(this._at);if(!this.state.auto) return;if(this.state.win) this.closeWin();if(!this.state.pick || this.state.balance<this.bet()){this.setState({auto:false});return;}if(!this.state.spinning && !this._cloudRequest && !this.state.menu && !this.state.pays) this.release(.7);this._at=setTimeout(()=>this.autoSpin(),900);}
+  autoSpin() { clearTimeout(this._at); if (!this.state.auto) return; if (this.state.spinning || this.state.win) { this._at = setTimeout(() => this.autoSpin(), 600); return; } if (this.release) { this.release(0.7); } this._at = setTimeout(() => this.autoSpin(), 900); }
   renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
   _rv() {
     const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
@@ -332,10 +362,6 @@ class Component extends DCLogic {
       betText: fmt(this.bet()), downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       betDown: this.betDown, betUp: this.betUp, hint: s.hint, goHome: this.goHome,
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
-      menuButton: {onClick:this.openMenu,disabled:!!(s.spinning)},
-      menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Wheel',
-        details:'Escolha um símbolo e deslize a roda. Veja os prêmios de cada aposta na tabela de pagamentos.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,
-        onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       hubBg: !p ? '#f0b41f' : COLOR_OF(p.v) === 'red' ? '#e0321f' : COLOR_OF(p.v) === 'cream' ? '#fbefd8' : '#2fa83a',

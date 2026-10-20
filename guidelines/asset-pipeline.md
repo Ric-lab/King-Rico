@@ -98,3 +98,5 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 - 2026-10-18 · Wheel: capa refeita só com 3 cores (verde/vermelho/creme) + fundo do jogo (mesmo palco da capa, sem a roda, 9:16) · Meshy image-to-image ref = capa · 2 tarefas ~12 cr · OK de 1ª.
 - 2026-10-19 · Fortune Clown: rosto-alvo do palhaço (6 buracos) · Meshy image-to-image gpt-image-2 ref stage-bleed · ~6 cr · OK de 1ª.
 - 2026-10-19 · Fortune Clown v2: palhaço alegre colorido (óculos-alvo, buracos violeta com brilhos, sem olho vazado) · Meshy image-to-image ref clown-raw · ~6 cr · OK de 1ª. Lição: buraco preto em olho = assustador; usar interior colorido.
+- 2026-10-20 · Flying Clown: palhaço corpo inteiro pendurado (ref = cabeça do Fortune Clown) · Meshy image-to-image gpt-image-2 · ~6 cr · OK de 1ª. Balões = código.
+- 2026-10-20 · Flying Clown: 6 balões (grade, fundo verde) + fundo lona vista de baixo · Meshy image-to-image · ~12 cr · OK de 1ª.
