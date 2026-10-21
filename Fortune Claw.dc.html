@@ -8,17 +8,21 @@
 <div class="ambient" aria-hidden="true"></div>
 <main id="game" class="claw-game" aria-label="Claw Machine">
  <header class="topbar"><div class="wallet kr-hud-balance" aria-label="Seu saldo"><strong id="balance">—</strong></div><a class="kr-hud-home" href="Home.dc.html" aria-label="Voltar para o início"></a><div id="menu-root"></div></header>
- <div class="claw-brand"><span>HAPPEACH</span><h1>CLAW <b>MACHINE</b></h1></div>
- <section class="machine" aria-label="Máquina de garra"><canvas id="claw-canvas" aria-label="Arraste para posicionar a garra. Use também as setas do teclado."></canvas><p class="loading" id="loading" role="status">Abrindo a máquina…</p></section>
- <div class="aim-status"><span id="aim-label" role="status">Arraste para posicionar a garra</span><span id="grip" aria-hidden="true"><i></i></span></div>
+ <section class="machine" id="machine" aria-label="Máquina de garra">
+  <div class="claw-brand"><h1>CLAW<span>MACHINE</span></h1></div>
+  <div class="play-window"><canvas id="claw-canvas" aria-label="Arraste para posicionar a garra. Use também as setas do teclado."></canvas><p class="loading" id="loading" role="status">Abrindo a máquina…</p></div>
+  <div class="machine-lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <img class="delivery-prize" src="./assets/claw/happeach-plush.webp" alt="">
+ </section>
+ <div class="aim-status"><span id="aim-label" role="status">Arraste para posicionar a garra</span></div>
  <footer class="controls">
   <div class="control-row"><div class="wager"><button id="bet-down" class="kr-stepper" aria-label="Diminuir aposta">−</button><div><span>APOSTA</span><strong id="bet">10</strong></div><button id="bet-up" class="kr-stepper" aria-label="Aumentar aposta">+</button></div><div class="target-prize"><span>NA MIRA</span><strong id="multiplier">×3</strong><small id="prize">30 moedas</small></div></div>
   <button id="grab" class="kr-button grab" disabled><span>PEGAR</span><small id="grab-hint">POSICIONE A GARRA</small></button>
   <p class="fineprint">Moedas virtuais · sem dinheiro real</p>
  </footer>
 </main>
-<dialog id="help-dialog" class="panel" aria-labelledby="help-title"><button id="close-help" class="close-panel" aria-label="Fechar regras">✕</button><h2 id="help-title">Claw Machine</h2><img class="help-peach" src="./assets/happeach/f-ready.webp" alt="Happeach"><p>Arraste para mover a garra para os lados, para a frente e para trás. A mira no chão mostra onde ela vai pegar.</p><p><b>Centralize e toque em PEGAR.</b> A garra desce, fecha e leva o Happeach até a saída.</p><dl><div><dt>Bem no centro</dt><dd>Recebe o valor da peça</dd></div><div><dt>Na borda</dt><dd>Aposta devolvida</dd></div><div><dt>Fora da mira</dt><dd>Perde a aposta</dd></div></dl><p>As peças valem de 1,2× a 3×. O recebimento inclui a aposta. O resultado depende da sua mira, sem sorteio escondido para soltar a garra.</p><button id="help-done" class="kr-button dialog-action">ENTENDI</button></dialog>
-<dialog id="result-dialog" class="panel result" aria-labelledby="result-title"><img id="result-art" src="./assets/happeach/f-victory.webp" alt=""><span class="kicker">CLAW MACHINE</span><h2 id="result-title"></h2><p id="result-detail"></p><strong id="result-amount"></strong><span id="result-caption"></span><button id="result-done" class="kr-button dialog-action">JOGAR DE NOVO</button><small>Rodada salva · moedas virtuais</small></dialog>
+<dialog id="help-dialog" class="panel" aria-labelledby="help-title"><button id="close-help" class="close-panel" aria-label="Fechar regras">✕</button><h2 id="help-title">Claw Machine</h2><img class="help-peach" src="./assets/happeach/f-ready.webp" alt="Happeach"><p>Arraste para mover a garra para os lados, para a frente e para trás. O círculo no chão mostra onde a garra vai descer. Use a sombra da pelúcia para alinhar os dois eixos.</p><p><b>Arraste para mirar. Toque em PEGAR quando o círculo passar pelo centro da pelúcia.</b> A garra balança de verdade: escolha o instante de descer.</p><dl><div><dt>Bem no centro</dt><dd>Recebe o valor da peça</dd></div><div><dt>Na borda</dt><dd>Aposta devolvida</dd></div><div><dt>Fora da mira</dt><dd>Perde a aposta</dd></div></dl><p>As peças valem de 1,2× a 3×. O recebimento inclui a aposta. O resultado depende da sua mira, sem sorteio escondido para soltar a garra.</p><button id="help-done" class="kr-button dialog-action">ENTENDI</button></dialog>
+<dialog id="result-dialog" class="panel result" aria-labelledby="result-title"><img id="result-art" src="./assets/claw/happeach-plush.webp" alt=""><span class="kicker">CLAW MACHINE</span><h2 id="result-title"></h2><p id="result-detail"></p><strong id="result-amount"></strong><span id="result-caption"></span><button id="result-done" class="kr-button dialog-action">JOGAR DE NOVO</button><small>Rodada salva · moedas virtuais</small></dialog>
 <div id="error" hidden role="alert"></div>
 <script type="module" src="./games/claw/game.js"></script>
 </body></html>
