@@ -521,5 +521,13 @@ test('Race Rules reject invented winners, overpayments, invalid marbles/seeds an
   const next={...old,settings:{...old.settings,raceBetIdx:3},balanceUnits:old.balanceUnits-1000+credit,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'race',game:'race',selected:0,fingerprint:'forged',betUnits:1000,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-1000)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
  }
- await forge(x=>{x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.winUnits=99999;},99999);await forge(x=>{x.selected=4;});await forge(x=>{x.seed=65536;});await forge(x=>{x.seed=-1;});await forge(x=>{x.roundId=randomUUID();});await forge(x=>{x.betUnits=250;});
+ await forge(x=>{x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.winUnits=99999;},99999);await forge(x=>{x.selected=4;});await forge(x=>{x.seed=65536;});await forge(x=>{x.seed=-1;});await forge(x=>{x.roundId=randomUUID();});await forge(x=>{x.betUnits=250;});await forge(x=>{x.version=2;x.seed=65535;});await forge(x=>{x.version=3;});await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=5000;},5000);
+});
+
+test('Five-marble Race Rules pay the fifth participant 4.8x, deduplicate it and still honor old four-marble rounds',async()=>{
+ const name='race-five-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const id=randomUUID(),bet={action:'race',game:'race',bet:2.5,selected:4,seed:24,version:2,roundId:id,requestId:id};
+ const a=await c.call(bet);assert.equal(a.player.balance,1009.5);assert.equal(a.outcome.winUnits,1200);assert.equal(a.outcome.winner,4);assert.equal((await c.call(bet)).replayed,true);
+ const op=doc(c.db,'players',c.uid,'operations',id);await assertFails(updateDoc(op,{'result.outcome.version':1}));
+ await new Promise(r=>setTimeout(r,750));const old=randomUUID();const legacy=await c.call({action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:old,requestId:old});assert.equal(legacy.outcome.winUnits,950);assert.equal(legacy.player.balance,1016.5);
 });

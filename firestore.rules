@@ -501,17 +501,17 @@ service cloud.firestore {
         && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0 && o.result.baseBalance == p.balanceUnits / 100.0;
     }
     function race(p,old,o) {
-      let x=o.result.outcome;
+      let x=o.result.outcome; let modern=x.get('version',1) == 2; let count=modern ? 5 : 4; let factor=modern ? 48 : 38;
       return o.action == 'race' && o.game == 'race' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['raceBetIdx'])
         && p.settings.raceBetIdx is int && p.settings.raceBetIdx >= 0 && p.settings.raceBetIdx <= 9
         && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.raceBetIdx]
-        && x.keys().hasOnly(['roundId','betUnits','selected','seed','winner','ended','winUnits'])
+        && x.keys().hasOnly(['roundId','betUnits','selected','seed','winner','ended','winUnits','version'])
         && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
-        && x.selected is int && x.selected >= 0 && x.selected < 4
-        && x.seed is int && x.seed >= 0 && x.seed <= 65535 && x.winner == x.seed%4
-        && x.ended == true && x.winUnits == (x.selected == x.winner ? int(o.betUnits*38 / 10) : 0) && o.winUnits == x.winUnits
+        && x.selected is int && x.selected >= 0 && x.selected < count
+        && x.seed is int && x.seed >= 0 && x.seed <= (modern ? 65534 : 65535) && x.get('version',1) in [1,2] && x.winner == x.seed%count
+        && x.ended == true && x.winUnits == (x.selected == x.winner ? int(o.betUnits*factor / 10) : 0) && o.winUnits == x.winUnits
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)

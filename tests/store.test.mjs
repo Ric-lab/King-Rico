@@ -320,3 +320,12 @@ test('Race debits and pays once across simultaneous requests/devices and preserv
  assert.equal((await call({...bet,roundId:loss,requestId:loss,selected:0})).player.balance,1004.5);
  for(const data of[{selected:4},{seed:-1},{seed:65536},{seed:1.1},{requestId:randomUUID()},{bet:3}])await assert.rejects(call({...bet,...data}),{code:'king-rico/invalid-argument'});
 });
+
+test('Five-marble races accept the fifth participant, preserve legacy payout and reject biased or mismatched versions',async()=>{
+ const m=memory(),call=m.client('race-five');await call(request({action:'bootstrap'}));
+ const id=randomUUID(),bet={action:'race',game:'race',bet:2.5,selected:4,seed:24,version:2,roundId:id,requestId:id};
+ const a=await call(bet);assert.equal(a.player.balance,1009.5);assert.equal(a.outcome.winUnits,1200);assert.equal(a.outcome.winner,4);assert.equal((await call(bet)).replayed,true);
+ await assert.rejects(call({...bet,version:1}),{code:'king-rico/invalid-argument'});
+ for(const data of[{selected:5},{seed:65535},{version:3},{seed:1.25}])await assert.rejects(call({...bet,...data}),{code:'king-rico/invalid-argument'});
+ m.advance(750);const legacy=randomUUID();assert.equal((await call({action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:legacy,requestId:legacy})).player.balance,1016.5);
+});
