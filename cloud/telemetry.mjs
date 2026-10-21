@@ -6,7 +6,7 @@ const definitions={account_created:[],spin_settled:['bet','payout','specialRound
 const uuid=/^[0-9a-f-]{36}$/i;
 export function eventParams(name,data) {
   if (!definitions[name] || Object.keys(data).some(k=>!['sessionId','game',...definitions[name]].includes(k)) ||
-    !uuid.test(data.sessionId || '') || !['home','circus','wheel','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw'].includes(data.game)) return null;
+    !uuid.test(data.sessionId || '') || !['home','circus','wheel','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race'].includes(data.game)) return null;
   if(data.floor!==undefined && (!Number.isInteger(data.floor) || data.floor<0 || data.floor>33)) return null;
   if(data.move!==undefined && !(name==='fingo_step'?['roll','drop']:['start','climb','collect']).includes(data.move)) return null;
   if(data.ballsUsed!==undefined && (!Number.isInteger(data.ballsUsed) || data.ballsUsed<0 || data.ballsUsed>21)) return null;

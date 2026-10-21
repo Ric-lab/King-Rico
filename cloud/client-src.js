@@ -86,7 +86,7 @@ else {
         if(response.outcome.ended) Cloud.track?.('spin_settled',{game:'fingo',bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       }
-      if(['penalty','clown','flying','twentyOne','claw'].includes(data.action) && response.outcome.ended)
+      if(['penalty','clown','flying','twentyOne','claw','race'].includes(data.action) && response.outcome.ended)
         Cloud.track?.('spin_settled',{game:data.game,bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       if (data.action==='bonus' && response.amount) Cloud.track?.('daily_bonus_claimed',{amount:response.amount,operationId:data.requestId});
@@ -103,7 +103,7 @@ else {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
     }
-    const data = pending || { ...payload, requestId: (payload.action==='penalty' && payload.step===0 || payload.action==='clown' && payload.used===0 || payload.action==='bounce' && payload.move==='start' || payload.action==='flying' && payload.step===0 || payload.action==='twentyOne' && payload.move==='start' || payload.action==='claw') ? payload.roundId : id() };
+    const data = pending || { ...payload, requestId: (payload.action==='penalty' && payload.step===0 || payload.action==='clown' && payload.used===0 || payload.action==='bounce' && payload.move==='start' || payload.action==='flying' && payload.step===0 || payload.action==='twentyOne' && payload.move==='start' || payload.action==='claw' || payload.action==='race') ? payload.roundId : id() };
     // Save before sending. A lost response/reload must retry the same transaction.
     storage.set(key, data);
     try { const result = await call(data); localStorage.removeItem(key); return result; }
@@ -119,6 +119,8 @@ else {
   Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
   Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
   Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected});
+  Cloud.race = (bet,selected,seed,roundId) => mutate({action:'race',game:'race',bet,selected,seed,roundId});
+  Cloud.raceResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='race'?saved.data().result:null;};
   Cloud.claw = (bet,selected,aimX,aimZ,seed,roundId) => mutate({action:'claw',game:'claw',bet,selected,aimX,aimZ,seed,roundId});
   Cloud.clawResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='claw'?saved.data().result:null;};
   Cloud.twentyOne = (move,bet,roundId,turn,target) => mutate({action:'twentyOne',game:'twentyOne',move,bet,roundId,turn,...(target===undefined?{}:{target})});
@@ -138,7 +140,7 @@ else {
       catch (error) { Cloud.error(error); }
     }, 400);
   };
-  const game = /Fortune(?:%20| )Claw/.test(location.pathname) ? 'claw' : /Fortune(?:%20| )(?:21|33)/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
+  const game = /Fortune(?:%20| )Race/.test(location.pathname) ? 'race' : /Fortune(?:%20| )Claw/.test(location.pathname) ? 'claw' : /Fortune(?:%20| )(?:21|33)/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
   Cloud.track = (name, extra={}) => {
@@ -294,7 +296,7 @@ else {
   document.addEventListener('click', async event=>{
     if(event.target.closest('[data-cloud-signout]')) {
       const g=window.__fc, w=window.__fw, n=window.__fn, f=window.__fg, p=window.__pen;
-      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest || f?._cloudRequest || f?.state.phase==='falling' || f?.state.phase==='rolling' || p?.cloudLocked() || window.__flying?._request || window.__flying?.state.busy || window.KingRico21?.isBusy() || window.KingRicoClaw?.isBusy()) { notify('Espere a jogada terminar para sair.'); return; }
+      if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest || f?._cloudRequest || f?.state.phase==='falling' || f?.state.phase==='rolling' || p?.cloudLocked() || window.__flying?._request || window.__flying?.state.busy || window.KingRico21?.isBusy() || window.KingRicoClaw?.isBusy() || window.KingRicoRace?.isBusy()) { notify('Espere a jogada terminar para sair.'); return; }
       unsubscribe?.(); selectedConsent=undefined; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
       if(dialog) {
         dialog.querySelector('[data-cloud-consent]').checked=false;

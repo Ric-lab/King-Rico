@@ -505,3 +505,21 @@ test('Claw Rules reject fake accuracy, invented payouts, changed positions, wron
  }
  await forge(x=>{x.quality=1000;x.winUnits=3000;},3000);await forge(x=>{x.winUnits=999999;},999999);await forge(x=>{x.aimX=-1;});await forge(x=>{x.selected=9;});await forge(x=>{x.seed=9;});await forge(x=>{x.betUnits=100;});await forge(x=>{x.roundId=randomUUID();});
 });
+
+test('Race Rules settle once, resume the same result, preserve exact cents and private immutable operations',async()=>{
+ const name='race-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const id=randomUUID(),bet={action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:id,requestId:id};
+ const [a,b]=await Promise.all([c.call(bet),c.call(bet)]);assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,1007);assert.equal(a.outcome.winUnits,950);
+ const other=await client(name+'-other',name);assert.equal((await other.call(bet)).replayed,true);
+ const op=doc(other.db,'players',c.uid,'operations',id);assert.equal((await getDoc(op)).data().result.outcome.seed,21);await assertFails(updateDoc(op,{'result.outcome.winner':3}));
+ const stranger=await client(name+'-stranger',name+'-stranger');await stranger.call(request({action:'bootstrap'}));await assertFails(getDoc(doc(stranger.db,'players',c.uid,'operations',id)));
+ await new Promise(r=>setTimeout(r,750));const loss=randomUUID();assert.equal((await c.call({...bet,selected:0,requestId:loss,roundId:loss})).player.balance,1004.5);
+});
+test('Race Rules reject invented winners, overpayments, invalid marbles/seeds and mismatched IDs',async()=>{
+ const name='race-forged-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));const ref=doc(c.db,'players',c.uid);
+ async function forge(change,credit=0){const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.race(10,0,1,id);change(outcome);
+  const next={...old,settings:{...old.settings,raceBetIdx:3},balanceUnits:old.balanceUnits-1000+credit,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'race',game:'race',selected:0,fingerprint:'forged',betUnits:1000,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-1000)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
+ }
+ await forge(x=>{x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.winUnits=99999;},99999);await forge(x=>{x.selected=4;});await forge(x=>{x.seed=65536;});await forge(x=>{x.seed=-1;});await forge(x=>{x.roundId=randomUUID();});await forge(x=>{x.betUnits=250;});
+});

@@ -309,3 +309,14 @@ test('Claw atomically settles one grab, shares its wallet and deduplicates a rep
  m.advance(750);const id=randomUUID();const loss=await other({...grab,roundId:id,requestId:id,aimX:0,aimZ:0});assert.equal(loss.player.balance,1002.5);assert.equal(loss.outcome.winUnits,0);
  await assert.rejects(call({...grab,roundId:randomUUID(),requestId:randomUUID()}),{code:'king-rico/invalid-argument'});
 });
+
+test('Race debits and pays once across simultaneous requests/devices and preserves the shared wallet',async()=>{
+ const m=memory(),call=m.client('race');await call(request({action:'bootstrap'}));
+ const id=randomUUID(),bet={action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:id,requestId:id};
+ const [a,b]=await Promise.all([call(bet),m.client('race')(bet)]);assert.equal(a.player.balance,1007);assert.equal(a.outcome.winUnits,950);assert.equal(b.replayed,true);
+ assert.equal((await m.client('race')(bet)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,1007);
+ await assert.rejects(call({...bet,seed:22}),{code:'king-rico/already-exists'});
+ m.advance(750);const loss=randomUUID();assert.equal((await call({...bet,roundId:loss,requestId:loss,selected:0})).player.balance,1004.5);
+ assert.equal((await call({...bet,roundId:loss,requestId:loss,selected:0})).player.balance,1004.5);
+ for(const data of[{selected:4},{seed:-1},{seed:65536},{seed:1.1},{requestId:randomUUID()},{bet:3}])await assert.rejects(call({...bet,...data}),{code:'king-rico/invalid-argument'});
+});

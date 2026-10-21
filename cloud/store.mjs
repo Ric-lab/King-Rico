@@ -26,6 +26,7 @@ export function createGameStore(db, uid, dependencies={}) {
       clown:['action','requestId','game','bet','roundId','used','selected'],
       penalty:['action','requestId','game','bet','move','roundId','step','quality'],
       flying:['action','requestId','game','bet','move','roundId','step','selected'],
+      race:['action','requestId','game','bet','roundId','selected','seed'],
       claw:['action','requestId','game','bet','roundId','selected','aimX','aimZ','seed'],
       twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
       bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
@@ -65,11 +66,13 @@ export function createGameStore(db, uid, dependencies={}) {
     if(data.action==='claw' && (data.game!=='claw' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
       || !Number.isInteger(data.selected) || data.selected<0 || data.selected>8 || !Number.isInteger(data.seed) || data.seed<0 || data.seed>8
       || !Number.isInteger(data.aimX) || data.aimX<0 || data.aimX>1000 || !Number.isInteger(data.aimZ) || data.aimZ<0 || data.aimZ>1000)) fail('king-rico/invalid-argument','Mira inválida.');
+    if(data.action==='race' && (data.game!=='race' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
+      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>3 || !Number.isInteger(data.seed) || data.seed<0 || data.seed>65535)) fail('king-rico/invalid-argument','Corrida inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','recharge'].includes(data.action);
+    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -180,6 +183,12 @@ export function createGameStore(db, uid, dependencies={}) {
         p.flyingRound=outcome.ended?null:{id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,popped:outcome.popped};
         p.settings.flyingBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'flying',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+      } else if(data.action==='race') {
+        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<700)fail('king-rico/resource-exhausted','Aguarde antes de largar.');
+        betUnits=engine.units(data.bet);if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const outcome=engine.race(data.bet,data.selected,data.seed,data.roundId),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;p.settings.raceBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+        result={game:'race',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='claw') {
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<700)fail('king-rico/resource-exhausted','Aguarde antes de pegar.');
         betUnits=engine.units(data.bet);if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');

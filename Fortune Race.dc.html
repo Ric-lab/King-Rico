@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#350a50">
+<title>Fortune Race · King Rico</title>
+<link rel="stylesheet" href="./ui/header.css"><link rel="stylesheet" href="./ui/controls.css"><link rel="stylesheet" href="./games/race/style.css"><link rel="icon" href="./assets/symbols/sym-coin.webp">
+<script type="importmap">{"imports":{"three":"./runtime/three.module.js"}}</script>
+</head><body>
+<div class="ambient" aria-hidden="true"></div>
+<main id="game" class="race-game" aria-label="Fortune Race">
+ <header class="topbar"><div class="wallet kr-hud-balance" aria-label="Seu saldo"><strong id="balance">—</strong></div><a class="kr-hud-home" href="Home.dc.html" aria-label="Voltar para o início"></a><div id="menu-root"></div></header>
+ <div class="race-title"><span>FORTUNE</span><h1>RACE</h1></div>
+ <section class="circuit" aria-label="Pista da corrida"><canvas id="race-canvas" aria-label="Corrida de quatro bolinhas. Escolha a sua nos botões abaixo."></canvas><p id="loading" class="loading" role="status">Preparando a pista…</p><div id="ball-labels" aria-hidden="true"></div><div id="countdown" class="countdown" hidden></div><div class="race-progress" aria-hidden="true"><i id="progress"></i></div></section>
+ <p id="race-status" class="race-status" role="status">Escolha sua bolinha e torça</p>
+ <footer class="race-controls">
+  <div id="choices" class="choices" role="group" aria-label="Escolha sua bolinha"></div>
+  <div class="wager-row"><div class="wager"><button id="bet-down" class="kr-stepper" aria-label="Diminuir aposta">−</button><div><span>APOSTA</span><strong id="bet">10</strong></div><button id="bet-up" class="kr-stepper" aria-label="Aumentar aposta">+</button></div><div class="potential"><span>SE ELA VENCER</span><strong id="prize">38</strong><small>moedas · ×3,8</small></div></div>
+  <button id="start" class="kr-button start" disabled><span>LARGAR</span><small id="start-hint">ESCOLHA SUA BOLINHA</small></button><p class="fineprint">Moedas virtuais · sem dinheiro real</p>
+ </footer>
+</main>
+<dialog id="help-dialog" class="panel" aria-labelledby="help-title"><button id="close-help" class="close-panel" aria-label="Fechar regras">✕</button><h2 id="help-title">Escolha e torça</h2><p>Escolha uma das quatro bolinhas, ajuste a aposta e toque em LARGAR. Depois, é só acompanhar a corrida: não há comandos durante a disputa.</p><p>Se a sua bolinha chegar em primeiro, recebe <b>3,8× a aposta</b>, incluindo o valor apostado. Se outra vencer, perde o valor da aposta.</p><p>As quatro têm a mesma chance de vitória: <b>1 em 4</b>. A escolha da cor não aumenta essa chance. A corrida dura cerca de 20 segundos.</p><p>Seu resultado é salvo antes da largada. Se atualizar a página, a mesma corrida será retomada, sem apostar novamente. O menu pausa a corrida.</p><button id="help-done" class="kr-button dialog-action">ENTENDI</button></dialog>
+<dialog id="result-dialog" class="panel result" aria-labelledby="result-title"><img id="result-art" alt=""><span class="kicker">FORTUNE RACE</span><h2 id="result-title"></h2><p id="result-detail"></p><strong id="result-amount"></strong><span id="result-caption"></span><button id="result-done" class="kr-button dialog-action">CORRER DE NOVO</button><small>Corrida salva · moedas virtuais</small></dialog>
+<div id="error" hidden role="alert"></div>
+<script type="module" src="./games/race/game.js"></script>
+</body></html>
