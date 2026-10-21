@@ -299,3 +299,13 @@ test('33 saves its rules across devices, deduplicates settlement and leaves lega
  assert.equal((await other(final)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
  await assert.rejects(call(request({...base,move:'hit',turn:1})),{code:'king-rico/round-conflict'});
 });
+
+test('Claw atomically settles one grab, shares its wallet and deduplicates a replay across devices',async()=>{
+ const m=memory(),call=m.client('claw');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),grab={action:'claw',game:'claw',bet:2.5,selected:4,aimX:500,aimZ:500,seed:0,roundId,requestId:roundId};
+ const [a,b]=await Promise.all([call(grab),call(grab)]);assert.equal(a.player.balance,1005);assert.equal(b.replayed,true);assert.equal(a.outcome.winUnits,750);
+ const other=m.client('claw');assert.equal((await other(request({action:'bootstrap'}))).player.balance,1005);
+ await assert.rejects(other({...grab,aimX:0}),{code:'king-rico/already-exists'});
+ m.advance(750);const id=randomUUID();const loss=await other({...grab,roundId:id,requestId:id,aimX:0,aimZ:0});assert.equal(loss.player.balance,1002.5);assert.equal(loss.outcome.winUnits,0);
+ await assert.rejects(call({...grab,roundId:randomUUID(),requestId:randomUUID()}),{code:'king-rico/invalid-argument'});
+});

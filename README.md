@@ -21,6 +21,7 @@ Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mes
 - **Fortune Wheel** — roda de 12 casas, escolha 1 símbolo e gire com swipe; paga x10 (`Fortune Wheel.dc.html`)
 
 - **Fortune 33** — cartas numeradas, você contra a banca (`Fortune 33.dc.html`)
+- **Claw Machine** — garra 3D do Happeach, com mira por arraste e prêmio por precisão (`Fortune Claw.dc.html`).
 - **Fortune Flying Clown** — estoure balões e escolha quando pegar o prêmio (`Fortune Flying Clown.dc.html`)
 
 Detalhes e garantias de persistência: [Fortune 33 e Flying Clown](docs/FORTUNE-21-E-FLYING.md).
@@ -32,3 +33,5 @@ Indicadores e eventos iniciais: [docs/ANALYTICS.md](docs/ANALYTICS.md).
 Sem a configuração Firebase (`enabled: true`), o jogo continua sendo o protótipo local.
 
 Atualizações do site pelo GitHub: [docs/PUBLICACAO.md](docs/PUBLICACAO.md). Depois da conexão inicial, alterações em `main` passam pelos testes e são publicadas no Firebase Hosting.
+
+Claw Machine: [mecânica, persistência e modelo 3D](docs/CLAW-MACHINE.md).

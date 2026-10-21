@@ -482,3 +482,26 @@ test('33 Rules reject changed targets, capped face-card values, forged totals/de
  }
  await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
 });
+
+test('Claw Rules persist one deterministic grab, exact cents, immutable result and cross-device replay',async()=>{
+ const name='claw-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),grab={action:'claw',game:'claw',bet:2.5,selected:4,aimX:500,aimZ:500,seed:0,roundId,requestId:roundId};
+ const [a,b]=await Promise.all([c.call(grab),c.call(grab)]);assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,1005);assert.equal(a.outcome.quality,1000);assert.equal(a.outcome.winUnits,750);
+ const other=await client(name+'-other',name);assert.equal((await other.call(grab)).replayed,true);assert.equal((await other.call(request({action:'bootstrap'}))).player.balance,1005);
+ const op=doc(other.db,'players',c.uid,'operations',roundId);assert.equal((await getDoc(op)).data().result.outcome.winUnits,750);await assertFails(updateDoc(op,{'result.outcome.winUnits':99999}));
+ const stranger=await client(name+'-stranger',name+'-stranger');await stranger.call(request({action:'bootstrap'}));await assertFails(getDoc(doc(stranger.db,'players',c.uid,'operations',roundId)));
+ for(const [aimX,expected]of[[548,1010],[549,1010],[596,1010],[597,1007.5]]){
+  await new Promise(r=>setTimeout(r,750));const id=randomUUID(),x=await c.call({...grab,aimX,roundId:id,requestId:id});assert.equal(x.player.balance,expected);
+ }
+});
+test('Claw Rules reject fake accuracy, invented payouts, changed positions, wrong prize and mismatched operation IDs',async()=>{
+ const name='claw-forged-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid);
+ async function forge(change,credit=0){
+  const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.claw(10,4,700,500,0,id);change(outcome);
+  const next={...old,settings:{...old.settings,clawBetIdx:3},balanceUnits:old.balanceUnits-1000+credit,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'claw',game:'claw',selected:4,fingerprint:'forged',betUnits:1000,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+   result:{game:'claw',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-1000)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
+ }
+ await forge(x=>{x.quality=1000;x.winUnits=3000;},3000);await forge(x=>{x.winUnits=999999;},999999);await forge(x=>{x.aimX=-1;});await forge(x=>{x.selected=9;});await forge(x=>{x.seed=9;});await forge(x=>{x.betUnits=100;});await forge(x=>{x.roundId=randomUUID();});
+});

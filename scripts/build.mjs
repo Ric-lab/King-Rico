@@ -67,6 +67,9 @@ await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
 await cp('ui',path.join(destination,'ui'),{recursive:true});
 await cp('assets',path.join(destination,'assets'),{recursive:true});
+await mkdir(path.join(destination,'games/claw'),{recursive:true});
+await copyFile('games/claw/style.css',path.join(destination,'games/claw/style.css'));
+await build({entryPoints:['games/claw/game.js'],outfile:path.join(destination,'games/claw/game.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'shared-three',setup(b){b.onResolve({filter:/^three$/},()=>({path:'three',external:true}));}}]});
 await mkdir(path.join(destination,'games/fortune21'),{recursive:true});
 await copyFile('games/fortune21/style.css',path.join(destination,'games/fortune21/style.css'));
 await build({entryPoints:['games/fortune21/game.js'],outfile:path.join(destination,'games/fortune21/game.js'),bundle:true,format:'esm',target:'es2022',minify:true});
@@ -78,7 +81,7 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>King Rico</title>
 <script>location.replace("Fortune%20Circus.dc.html"+location.search+location.hash);</script>
 </head><body><a href="Fortune%20Circus.dc.html">Abrir King Rico</a></body></html>\n`);
-for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html','Fortune Fingo.dc.html','Fortune Penalty.dc.html','Fortune Clown.dc.html','Fortune Bounce.dc.html','Fortune Flying Clown.dc.html','Fortune 21.dc.html','Fortune 33.dc.html']) {
+for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html','Fortune Fingo.dc.html','Fortune Penalty.dc.html','Fortune Clown.dc.html','Fortune Bounce.dc.html','Fortune Flying Clown.dc.html','Fortune 21.dc.html','Fortune 33.dc.html','Fortune Claw.dc.html']) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';

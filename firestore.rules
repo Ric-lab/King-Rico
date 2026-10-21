@@ -8,7 +8,7 @@ service cloud.firestore {
     function dayIndex(t) { return int((t.toMillis() - 10800000) / 86400000); }
     function settings(s) {
       return s.keys().hasAll(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx'])
-        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx'])
+        && s.keys().hasOnly(['sfxLvl','vibLvl','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx'])
         && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
         && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
         && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
@@ -18,6 +18,7 @@ service cloud.firestore {
         && s.get('bounceBetIdx',3) is int && s.get('bounceBetIdx',3) >= 0 && s.get('bounceBetIdx',3) <= 9
         && s.get('clownBetIdx',3) is int && s.get('clownBetIdx',3) >= 0 && s.get('clownBetIdx',3) <= 9
         && s.get('flyingBetIdx',3) is int && s.get('flyingBetIdx',3) >= 0 && s.get('flyingBetIdx',3) <= 9
+        && s.get('clawBetIdx',3) is int && s.get('clawBetIdx',3) >= 0 && s.get('clawBetIdx',3) <= 9
         && s.get('twentyOneBetIdx',3) is int && s.get('twentyOneBetIdx',3) >= 0 && s.get('twentyOneBetIdx',3) <= 9
         && s.get('penaltyBetIdx',3) is int && s.get('penaltyBetIdx',3) >= 0 && s.get('penaltyBetIdx',3) <= 9;
     }
@@ -472,6 +473,32 @@ service cloud.firestore {
         && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0
         && o.result.baseBalance == p.balanceUnits / 100.0;
     }
+    function clawQuality(x) {
+      let dx=x.aimX-(x.selected%3*320+180); let dz=x.aimZ-(int(x.selected / 3)*280+220);
+      let ax=dx < 0 ? -dx : dx; let az=dz < 0 ? -dz : dz;
+      let d=ax > az ? ax : az; let score=1000-int(d*1000 / 160);
+      return score > 0 ? score : 0;
+    }
+    function claw(p,old,o) {
+      let x=o.result.outcome; let q=clawQuality(x); let factor=[12,15,20,15,30,12,20,12,15][(x.selected+x.seed)%9];
+      return o.action == 'claw' && o.game == 'claw' && o.selected == x.selected
+        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
+        && p.settings.diff(old.settings).affectedKeys().hasOnly(['clawBetIdx'])
+        && p.settings.clawBetIdx is int && p.settings.clawBetIdx >= 0 && p.settings.clawBetIdx <= 9
+        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.clawBetIdx]
+        && x.keys().hasOnly(['roundId','betUnits','selected','aimX','aimZ','seed','quality','ended','winUnits'])
+        && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
+        && x.selected is int && x.selected >= 0 && x.selected < 9 && x.seed is int && x.seed >= 0 && x.seed < 9
+        && x.aimX is int && x.aimX >= 0 && x.aimX <= 1000 && x.aimZ is int && x.aimZ >= 0 && x.aimZ <= 1000
+        && x.quality == q && x.ended == true && x.winUnits == (q >= 700 ? int((o.betUnits*factor+5) / 10) : q >= 400 ? o.betUnits : 0) && o.winUnits == x.winUnits
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
+        && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
+        && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(700,'ms'))
+        && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
+        && o.result.game == 'claw' && o.result.bet == o.betUnits / 100.0
+        && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0 && o.result.baseBalance == p.balanceUnits / 100.0;
+    }
     function legacyPlayer(player, expected) {
       return player.diff(expected).affectedKeys().hasOnly(['neckRound','fingoRound','penaltyRound','clownRound','bounceRound','flyingRound','twentyOneRound'])
         && player.get('neckRound',null) == expected.neckRound && player.get('fingoRound',null) == expected.fingoRound
@@ -492,7 +519,7 @@ service cloud.firestore {
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
         && (o.rulesVersion == '2026-10-20-spark-v4' ? !('player' in o.result) : legacyFinancialPlayer(p,o))
-        && (o.action == 'twentyOne' ? twentyOne(p,old,o) : o.action == 'flying' ? flying(p,old,o) : o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
+        && (o.action == 'claw' ? claw(p,old,o) : o.action == 'twentyOne' ? twentyOne(p,old,o) : o.action == 'flying' ? flying(p,old,o) : o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {
       allow read: if owner(uid);

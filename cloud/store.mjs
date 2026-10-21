@@ -26,6 +26,7 @@ export function createGameStore(db, uid, dependencies={}) {
       clown:['action','requestId','game','bet','roundId','used','selected'],
       penalty:['action','requestId','game','bet','move','roundId','step','quality'],
       flying:['action','requestId','game','bet','move','roundId','step','selected'],
+      claw:['action','requestId','game','bet','roundId','selected','aimX','aimZ','seed'],
       twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
       bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
@@ -61,11 +62,14 @@ export function createGameStore(db, uid, dependencies={}) {
     if(data.action==='twentyOne' && (data.target!==undefined && ![21,33].includes(data.target) || data.game!=='twentyOne' || !engine.BETS.includes(data.bet) || !['start','hit','stand','dealer'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.turn) || data.turn<0 || data.turn>52
       || data.move==='start' && (data.turn!==0 || data.requestId!==data.roundId))) fail('king-rico/invalid-argument','Mão inválida.');
+    if(data.action==='claw' && (data.game!=='claw' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
+      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>8 || !Number.isInteger(data.seed) || data.seed<0 || data.seed>8
+      || !Number.isInteger(data.aimX) || data.aimX<0 || data.aimX>1000 || !Number.isInteger(data.aimZ) || data.aimZ<0 || data.aimZ>1000)) fail('king-rico/invalid-argument','Mira inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','recharge'].includes(data.action);
+    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -176,6 +180,12 @@ export function createGameStore(db, uid, dependencies={}) {
         p.flyingRound=outcome.ended?null:{id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,popped:outcome.popped};
         p.settings.flyingBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'flying',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+      } else if(data.action==='claw') {
+        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<700)fail('king-rico/resource-exhausted','Aguarde antes de pegar.');
+        betUnits=engine.units(data.bet);if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const outcome=engine.claw(data.bet,data.selected,data.aimX,data.aimZ,data.seed,data.roundId),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;p.settings.clawBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+        result={game:'claw',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='twentyOne') {
         const previous=p.twentyOneRound || null,starting=data.move==='start',active=previous && previous.phase!=='settled';
         if(starting ? active : !active || previous.id!==data.roundId || previous.turn!==data.turn || previous.betUnits!==engine.units(data.bet)

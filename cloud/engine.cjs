@@ -18,6 +18,7 @@ const coins = value => value / 100;
 const RULES_VERSION = '2026-10-20-spark-v4';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
+const {claw} = require('./claw.cjs');
 const FLYING_MULTIPLIERS = [1.2,1.5,2,2.5,3,4,5,8,12,20];
 function flying(bet,previous,move,roundId,selected,rng=random) {
   const before=previous?.step || 0,betUnits=previous?.betUnits || units(bet);
@@ -177,4 +178,4 @@ function bonusFor(last, streak, now) {
 module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  FLYING_MULTIPLIERS, flying, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  FLYING_MULTIPLIERS, flying, claw, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
