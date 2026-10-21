@@ -108,7 +108,7 @@ test('Fingo restores the cloud round and animates its committed roll without a l
  let calls=0;
  const cloud={enabled:true,player,fingo:async(...args)=>{calls++;assert.deepEqual(args,['roll',2.5,'round',3]);return {player,outcome:{...round,roundId:'round',slots:targets}};},error:()=>{throw Error('Unexpected error');}};
  const {instance:f}=component('Fortune Fingo.dc.html',cloud);f._cloudDeferred=player;f.applyCloudPlayer();
- assert.equal(f.state.balance,997.75);assert.equal(f.state.balls,18);assert.equal(f.state.active,true);
+ assert.equal(f.state.balance,997.75);assert.equal(f.state.balls,27);assert.equal(f.state.active,true);
  f.roll=(slots)=>{assert.deepEqual(slots,targets);};f.tone=()=>{};f.buzz=()=>{};
  await f.onSpin();assert.equal(calls,1);assert.equal(f.state.balance,997.75);
 });

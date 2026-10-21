@@ -33,7 +33,17 @@ export function lanes(p,t,ds,prev=null){
  }
  // A dodge is quick but never a teleport.
  if(prev)for(let i=0;i<5;i++)l[i]=prev[i]+Math.max(-.07,Math.min(.07,l[i]-prev[i]));
- for(let pass=0;pass<3;pass++)for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){const dd=ds[i]-ds[j],min=2*RADIUS+.02;if(Math.abs(dd)>=min)continue;const room=Math.sqrt(min*min-dd*dd),gap=l[j]-l[i];if(Math.abs(gap)<room){const push=(room-Math.abs(gap))/2,s=gap>=0?1:-1;l[i]-=s*push;l[j]+=s*push;}}
+ // Keep relaxation inside the walls: transfer any blocked share of a push
+ // to the other marble rather than pushing the pair outside the funnel.
+ const limits=ds.map(d=>halfWidth(Math.min(d,LENGTH+RUNOUT))-RADIUS-.06);
+ for(let i=0;i<5;i++)l[i]=Math.max(-limits[i],Math.min(limits[i],l[i]));
+ for(let pass=0;pass<24;pass++)for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){
+  const dd=ds[i]-ds[j],min=2*RADIUS+.02;if(Math.abs(dd)>=min)continue;
+  const room=Math.sqrt(min*min-dd*dd),gap=l[j]-l[i];if(Math.abs(gap)>=room)continue;
+  const need=room-Math.abs(gap),s=gap>=0?1:-1,capI=limits[i]+s*l[i],capJ=limits[j]-s*l[j];
+  let pushI=Math.min(need/2,capI),pushJ=Math.min(need-pushI,capJ);pushI=Math.min(need-pushJ,capI);
+  l[i]-=s*pushI;l[j]+=s*pushJ;
+ }
  return l;
 }
 export const settledAt=p=>[...p.times].sort((a,b)=>a-b)[1]+1.3;

@@ -184,12 +184,12 @@ test('Fingo Rules settle the final ball and forbid recharge while the exhausted 
   const ref=doc(c.db,'players',c.uid),targets=[1,16,31,46,61],roundId=randomUUID();
   async function seed(marks) {
     await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
-      balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:250,targets,marks,used:20,slots:targets}}));
+      balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:250,targets,marks,used:29,slots:targets}}));
   }
   await seed([true,true,true,true,false]);
   assert.equal((await c.call(request({action:'recharge'}))).reason,'fingo-round');
-  const last=request({action:'fingo',game:'fingo',bet:2.5,roundId,move:'drop',used:20,selected:4});
-  const paid=await c.call(last);assert.equal(paid.outcome.winUnits,100);assert.equal(paid.player.balance,1);assert.equal(paid.player.fingoRound,null);
+  const last=request({action:'fingo',game:'fingo',bet:2.5,roundId,move:'drop',used:29,selected:4});
+  const paid=await c.call(last);assert.equal(paid.outcome.winUnits,250);assert.equal(paid.player.balance,2.5);assert.equal(paid.player.fingoRound,null);
   assert.equal((await c.call(last)).replayed,true);
   await seed([false,false,false,false,false]);
   const missed=await c.call({...last,requestId:randomUUID()});
