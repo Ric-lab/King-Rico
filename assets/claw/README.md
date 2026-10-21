@@ -1,9 +1,7 @@
 # Claw Machine — arte
 
-Três gerações GPT Imagem da sessão de 21/out/2026, sem geração Meshy.
+As três artes GPT Imagem (gabinete, Happeach de pelúcia, Happeach coroado) da revisão `833ba5f` foram preservadas para compatibilidade com páginas antigas. As imagens do Happeach continuam no modal de resultado.
 
-- `cabinet.webp`: gabinete vazio e fundo com o palco `assets/stage-lit.webp` como direção de materiais; Happeach de `assets/happeach/f-ready.webp` como emblema. O vidro central foi pedido vazio para receber a cena viva.
-- `happeach-plush.webp`: o mesmo Happeach, reinterpretado como pelúcia de tecido macio, de frente e com transparência verdadeira.
-- `happeach-royal.webp`: variante gerada a partir da pelúcia anterior, com coroa e capa para identificar a peça de 3×.
+A máquina jogável atual é uma cena Three.js: o gabinete e o mecanismo são geometria, e os nove prêmios são o modelo volumétrico `assets/models/happeach-toy.glb`. Não há sprites como prêmios nem moldura ilustrada fingindo o gabinete.
 
-Exportação: gabinete 906×1359; pelúcias 512×512; WebP qualidade 90. Apenas redimensionamento e conversão de formato após a geração. Os originais PNG foram preservados em `/workspace/generated_images` na VM de autoria; os WebP são os assets de produção versionados. A arte de referências externas não foi incorporada ao jogo.
+O GLB deriva do modelo oficial `sym-peach-game.glb`, com simplificação por colapso de arestas que preserva os limites das ilhas UV. Reproduzir: `node scripts/prepare-claw-toy.mjs` após instalar as dependências do lockfile. Os modelos originais permanecem intactos.

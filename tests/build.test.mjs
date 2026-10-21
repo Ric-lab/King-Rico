@@ -22,7 +22,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   assert.equal(await readFile('dist/penalty3d.js','utf8'),await readFile('penalty3d.js','utf8'));
   assert.match(await readFile('dist/penalty3d.js','utf8'),/const SRC = '\.\/runtime\/three\.module\.js'/);
-  await access('dist/games/claw/game.js');await access('dist/games/claw/style.css');
+  await access('dist/assets/models/happeach-toy.glb');await access('dist/games/claw/game.js');await access('dist/games/claw/style.css');
   await access('dist/games/fortune21/game.js');await access('dist/games/fortune21/style.css');
   await access('dist/runtime/three.module.js');await access('dist/runtime/three.core.js');
   assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
