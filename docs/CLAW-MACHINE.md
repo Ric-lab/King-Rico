@@ -1,4 +1,4 @@
-# Claw Machine — Happeach
+# Claw Machine — King Rico
 
 Jogo da categoria Habilidade. Arraste no vidro para deslocar a garra nos dois eixos; setas do teclado também funcionam. A garra acompanha com inércia curta e tem um balanço periódico visível. Depois de apontar, o jogador escolhe o instante de apertar PEGAR. A mira projetada no chão corresponde exatamente à posição enviada, incluindo o balanço: não há correção, encaixe automático ou barra que revele a faixa de captura antes do toque.
 
@@ -28,9 +28,9 @@ Benchmark de páginas oficiais e imagens de divulgação, sem afirmar teste jog�
 
 ## Máquina 3D e movimento
 
-Após feedback do autor, a abordagem com sprites e gabinete ilustrado foi substituída por uma cena 3D única. O gabinete tem frente, laterais, vidro, dobradiças, fechadura, trilhos, carrinho com roldanas, cabo, dedos articulados e controles em volume. O botão verde da própria máquina também aceita toque; o botão principal e o cabeçalho continuam padronizados. A câmera mostra frente e lateral.
+Após feedback do autor, a abordagem com sprites e gabinete ilustrado foi substituída por uma cena 3D única. O gabinete tem frente, laterais, vidro, dobradiças, fechadura, trilhos, carrinho com roldanas, cabo, dedos articulados e controles em volume. O botão verde da própria máquina também aceita toque; o botão principal e o cabeçalho continuam padronizados. A câmera permite mirar pela frente ou girar para as laterais.
 
-Nove modelos do Happeach repousam dentro de uma caixa com paredes e piso. O modelo `happeach-toy.glb` deriva do original oficial: 22.400 vértices, 28.745 triângulos, cerca de 1,1 MB. A redução usa meshoptimizer para preservar as ilhas UV. A antiga redução por agrupamento espacial misturava cores nas costuras e foi descartada nesta versão. As texturas do modelo não foram repintadas; o acabamento dos brinquedos usa iluminação difusa Lambert, sem mapas de metal ou brilho, e a estrutura metálica mantém os materiais PBR. Os modelos usados por outros jogos não foram alterados.
+Nove prêmios volumétricos repousam dentro de uma caixa com paredes e piso. O modelo `happeach-toy.glb` deriva do original oficial: 22.400 vértices, 28.745 triângulos, cerca de 1 MB. A redução usa meshoptimizer para preservar as ilhas UV. A antiga redução por agrupamento espacial misturava cores nas costuras e foi descartada nesta versão. As texturas do modelo não foram repintadas; o acabamento dos brinquedos usa iluminação difusa Lambert, sem mapas de metal ou brilho, e a estrutura metálica mantém os materiais PBR. Os modelos usados por outros jogos não foram alterados.
 
 `games/claw/physics.mjs` usa Cannon ES local, com versão fixada no lockfile, para gravidade, apoio, contato entre os prêmios e queda no poço de entrega. Os corpos são compostos por esferas; não há simulação de tecido. A preensão usa um vínculo no ponto agarrado: a peça gira pelo próprio peso e colide com as outras ao sair. Os dedos visíveis acompanham a articulação; não se afirma uma simulação de atrito de tecido entre cada dedo e a pelúcia. A precisão já confirmada determina se o vínculo sustenta a peça ou a solta na subida.
 
@@ -54,3 +54,13 @@ As imagens geradas anteriormente permanecem para modais e compatibilidade. A cap
 ## Feedback registrado
 
 O autor considerou a revisão ilustrada ainda pouco verossímil: prêmios alinhados e arrumação excessiva. A correção seguinte trata composição e causalidade física (pilha, oclusão, contato, mecanismo), sem tratar aprovação funcional como aprovação estética.
+
+## Câmera próxima e variedade de prêmios (21/out)
+
+Após o autor considerar a máquina 3D uma melhora e pedir foco na captura, o enquadramento inicial passou para perto do vidro. O jogador pode aproximar/afastar nos botões +/− ou pela roda do mouse. GIRAR VISÃO alterna o arraste para rotação; VOLTAR A MIRAR devolve o controle da garra. No toque, dois dedos giram e a pinça amplia. Soltar um dos dedos não inicia uma mira acidental. CENTRAR restaura a vista inicial. Os limites mantêm a câmera fora do gabinete, voltada para a área de captura. Menu pausa e bloqueia os controles; redimensionar e começar outra rodada preservam a visão escolhida. Arrastar e usar setas para mirar respeita a orientação da câmera.
+
+A mira tem aro, centro e linha de descida verde neon; sua cor permanece igual em qualquer faixa de precisão. O valor NA MIRA continua refletindo o alvo real, sem revelar uma faixa de acerto.
+
+Os nove prêmios agora misturam Happeach, Diamante, Moeda, cabeça da Nick Neck e King Rico. Happeach e King Rico reutilizam as malhas oficiais simplificadas; diamante, moeda e girafa são almofadas fechadas com volume, borda arredondada, costura e verso de tecido, construídas a partir da silhueta e arte existentes. Não são planos voltados para a câmera. Os corpos de colisão continuam aproximados por esferas, sem simulação de tecido. `toys.js` usa a semente e o índice já salvos para escolher a identidade; atualizar ou recuperar uma operação mantém nome e imagem do prêmio, sem mudar pagamento ou formato da transação. Nenhum modelo original de outro jogo foi alterado.
+
+O teste de navegador também cobre zoom, giro, pinça, cancelamento com um dedo restante, preservação da câmera ao redimensionar e ausência de movimento da mira ou alteração de saldo ao ajustar a visão. A aprovação visual continua dependendo do feedback do autor.

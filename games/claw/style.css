@@ -6,3 +6,5 @@
 .claw-coin{position:fixed;width:28px;height:28px;object-fit:contain;z-index:2000;pointer-events:none;filter:drop-shadow(0 3px 3px #38162e66)}
 
 @media(prefers-reduced-motion:reduce){}
+
+.view-tools{position:absolute;top:5px;right:15px;display:flex;align-items:center;gap:5px;z-index:3}.view-tools button{height:34px;min-width:34px;padding:0 9px;border:1px solid #dcb062;border-radius:12px;background:#2e0c40e8;color:#ffe8b6;font-size:11px;font-weight:800;box-shadow:0 2px 4px #17032066;touch-action:manipulation}.view-tools #view-in,.view-tools #view-out{font-size:24px;line-height:1;padding:0}.view-tools button[aria-pressed=true]{color:#25122f;background:#ffe2a0}.view-tools button:focus-visible{outline:2px solid #71ff39;outline-offset:2px}.view-tools button:disabled{opacity:.4}.view-hint{position:absolute;left:10px;right:10px;bottom:0;margin:0;text-align:center;font-size:11px;color:#f4dfbb;text-shadow:0 1px 4px #15021b;pointer-events:none}.machine[data-view=view] canvas{cursor:move}
