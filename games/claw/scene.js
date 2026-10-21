@@ -81,7 +81,7 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
  // Contact shadows ground the cabinet, and the toys cast shadows into the bin.
  const ground=new T.Mesh(new T.PlaneGeometry(12,12),new T.ShadowMaterial({color:0x17051f,opacity:.32}));ground.rotation.x=-Math.PI/2;ground.position.y=.025;ground.receiveShadow=true;scene.add(ground);
  for(const x of[-1.47,1.47])for(const z of[-.95,.95])cyl(.14,.16,x,.08,z,rubber);
- const models=await loadToyModels(),toys=[];
+ const models=await loadToyModels(),toys=[],pickMeshes=[];
  for(let i=0;i<9;i++){const root=new T.Group();for(const model of models)root.add(model.clone(true));cabinet.add(root);toys.push(root);}
  // Constant neon color marks the real descent axis, without revealing hit quality.
  const neon=new T.MeshBasicMaterial({color:0x65ff29,toneMapped:false,depthTest:false,depthWrite:false});
@@ -97,7 +97,8 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
  function reset(next=Math.floor(Math.random()*9)){
   seed=next;physics?.destroy();physics=createPrizeWorld(seed);busy=false;outcome=null;attached=released=delivery=finished=false;aim={x:CHUTE.x,z:CHUTE.z};base={...aim};actual={...aim};clearInput();reticle.visible=guide.visible=true;
   for(let i=0;i<9;i++){toys[i].visible=true;toys[i].scale.setScalar(physics.toys[i].size);toys[i].children.forEach((model,type)=>model.visible=type===(i+seed)%models.length);}
-  setPhase('aim');syncToys();
+  pickMeshes.length=0;for(const toy of toys)toy.children.find(m=>m.visible).traverse(o=>{if(o.isMesh)pickMeshes.push(o);});
+  surfaceAt=-1;aimHeight=1.6;setPhase('aim');syncToys();
  }
  function syncToys(){physics.toys.forEach(({body},i)=>{toys[i].position.copy(body.position);toys[i].quaternion.copy(body.quaternion);});}
  function pick(){const hit=encodeAim(physics.targets(),actual.x,actual.z);return {...hit,seed,worldX:actual.x,worldZ:actual.z,toy:toyInfo(seed,hit.selected).id,multiplier:MULTIPLIERS[(hit.selected+seed)%9]};}
@@ -113,9 +114,18 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
   return {x,y,z,closed};
  }
  // Keep the view close to the glass; user zoom/orbit survives resize and rounds.
- const view={yaw:0,elevation:.39,zoom:1,mode:'aim'},pointers=new Map();let gesture=null;
+ const view={yaw:0,elevation:.39,zoom:1},pointers=new Map();let gesture=null,aimHeight=1.6,surfaceAt=-1;
+ const surfaceRay=new T.Raycaster(),downVector=new T.Vector3(0,-1,0);
+ function setRay(x,y){const r=canvas.getBoundingClientRect();pointer.set((x-r.left)/r.width*2-1,-(y-r.top)/r.height*2+1);camera.updateMatrixWorld();raycaster.setFromCamera(pointer,camera);}
+ function atPlane(x,y,height){setRay(x,y);return raycaster.ray.intersectPlane(new T.Plane(new T.Vector3(0,1,0),-height),new T.Vector3());}
+ function touchTarget(x,y){setRay(x,y);cabinet.updateMatrixWorld(true);const hit=raycaster.intersectObjects(pickMeshes,false)[0];
+  if(hit)return {point:hit.point,height:hit.point.y,onToy:true};
+  const point=atPlane(x,y,aimHeight);return point?{point,height:aimHeight,onToy:false}:null;
+ }
+ function moveAim(x,z){aim.x=clamp(x,-1.4,1.4);aim.z=clamp(z,-.9,.9);}
+ function presetView(side){if(paused||busy)return;clearInput();Object.assign(view,{yaw:side?.55:0,elevation:side?.48:.39});if(!side)view.zoom=1;updateCamera();}
  function updateCamera(){const d=Math.max(5.9,3.6/(2*Math.tan(T.MathUtils.degToRad(16))*camera.aspect))/view.zoom;
-  camera.position.set(Math.sin(view.yaw)*Math.cos(view.elevation)*d,2.72+Math.sin(view.elevation)*d,Math.cos(view.yaw)*Math.cos(view.elevation)*d);camera.lookAt(0,2.72,0);camera.updateProjectionMatrix();}
+  camera.position.set(Math.sin(view.yaw)*Math.cos(view.elevation)*d,2.72+Math.sin(view.elevation)*d,Math.cos(view.yaw)*Math.cos(view.elevation)*d);camera.lookAt(0,2.72,0);camera.updateMatrixWorld();camera.updateProjectionMatrix();}
  function resize(){const r=canvas.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;updateCamera();}
  function clearInput(){previous=performance.now();keys.clear();drag=null;pointers.clear();gesture=null;}
  function adjustView(yaw=0,elevation=0,zoom=1){view.yaw=clamp(view.yaw+yaw,-.65,.65);view.elevation=clamp(view.elevation+elevation,.22,.75);view.zoom=clamp(view.zoom*zoom,.82,1.55);updateCamera();}
@@ -123,17 +133,25 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
  const observer=new ResizeObserver(resize);observer.observe(canvas);resize();document.addEventListener('visibilitychange',clearInput);
  const down=e=>{if(paused||busy||e.button>2)return;e.preventDefault();pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);
   if(pointers.size===2){drag=null;gesture=cameraGesture();return;}
-  if(pointers.size===1)drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,rotate:view.mode==='view'||e.button===2||e.shiftKey};
+  if(pointers.size===1){const rotate=e.button===2||e.shiftKey,target=rotate?null:touchTarget(e.clientX,e.clientY),height=target?.height??aimHeight;
+   drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,rotate,target,height,start:atPlane(e.clientX,e.clientY,height),origin:{...aim}};
+  }
  };
  const move=e=>{if(paused||busy||!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pointers.size>=2){const next=cameraGesture();if(gesture)adjustView(-(next.x-gesture.x)*.006,(next.y-gesture.y)*.004,next.distance/Math.max(1,gesture.distance));gesture=next;return;}
-  if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y,r=canvas.getBoundingClientRect();
+  if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  drag.moved||=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>5;
   if(drag.rotate)adjustView(-dx*.007,dy*.005);
-  else{const x=dx/r.width*4.8/view.zoom,z=dy/r.height*4.6/view.zoom,c=Math.cos(view.yaw),s=Math.sin(view.yaw);aim.x=clamp(aim.x+x*c+z*s,-1.4,1.4);aim.z=clamp(aim.z-x*s+z*c,-.9,.9);}
-  drag.moved||=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>5;drag.x=e.clientX;drag.y=e.clientY;
+  else if(drag.moved){const point=atPlane(e.clientX,e.clientY,drag.height);if(point&&drag.start){const origin=drag.last?aim:(drag.target?.onToy?drag.target.point:drag.origin),previous=drag.last??drag.start;moveAim(origin.x+point.x-previous.x,origin.z+point.z-previous.z);drag.last=point;}}
+  drag.x=e.clientX;drag.y=e.clientY;
  };
- const up=e=>{pointers.delete(e.pointerId);if(gesture){gesture=null;drag=null;return;}if(drag?.id!==e.pointerId)return;const tap=e.type==='pointerup'&&!drag.moved&&!drag.rotate;drag=null;if(tap){const r=canvas.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);if(raycaster.intersectObject(button).length)onGrab?.();}};
- const wheel=e=>{e.preventDefault();if(!paused&&!busy)adjustView(0,0,Math.exp(-e.deltaY*.001));},contextmenu=e=>e.preventDefault();
+ const up=e=>{pointers.delete(e.pointerId);if(gesture){gesture=null;drag=null;return;}if(drag?.id!==e.pointerId)return;
+  const tap=e.type==='pointerup'&&!drag.moved&&!drag.rotate,target=drag.target;drag=null;
+  if(tap){setRay(e.clientX,e.clientY);if(raycaster.intersectObject(button).length){onGrab?.();return;}
+   if(target&&(target.onToy||(Math.abs(target.point.x)<=1.4&&Math.abs(target.point.z)<=.9)))moveAim(target.point.x,target.point.z);
+  }
+ };
+ const wheel=e=>{e.preventDefault();if(!paused&&!busy){clearInput();adjustView(0,0,Math.exp(-e.deltaY*.001));}},contextmenu=e=>e.preventDefault();
  canvas.addEventListener('wheel',wheel,{passive:false});canvas.addEventListener('contextmenu',contextmenu);
  canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointermove',move);for(const type of['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(type,up);
  const keydown=e=>{if(e.key.startsWith('Arrow')&&!paused&&!busy){e.preventDefault();keys.add(e.key);}},keyup=e=>keys.delete(e.key);window.addEventListener('keydown',keydown);window.addEventListener('keyup',keyup);
@@ -141,7 +159,7 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
  function frame(now){
   raf=requestAnimationFrame(frame);const elapsed=(now-previous)/1000,dt=clamp(elapsed,0,.25);previous=now;if(paused||document.hidden)return;time+=dt;
   slowFrames=elapsed>.07?slowFrames+1:Math.max(0,slowFrames-1);if(slowFrames>=4&&renderScale===1){renderScale=.75;renderer.setPixelRatio(Math.min(devicePixelRatio,.75));resize();}
-  if(!busy){const kx=(keys.has('ArrowRight')-keys.has('ArrowLeft'))*dt*1.2/view.zoom,kz=(keys.has('ArrowDown')-keys.has('ArrowUp'))*dt*.9/view.zoom,c=Math.cos(view.yaw),s=Math.sin(view.yaw);aim.x=clamp(aim.x+kx*c+kz*s,-1.4,1.4);aim.z=clamp(aim.z-kx*s+kz*c,-.9,.9);base.x=lerp(base.x,aim.x,1-Math.exp(-dt*10));base.z=lerp(base.z,aim.z,1-Math.exp(-dt*10));actual.x=clamp(base.x+Math.sin(time*2.1)*.12,-1.43,1.43);actual.z=clamp(base.z+Math.sin(time*1.6+.8)*.04,-.94,.94);onAim?.(pick());}
+  if(!busy){const kx=(keys.has('ArrowRight')-keys.has('ArrowLeft'))*dt*1.2/view.zoom,kz=(keys.has('ArrowDown')-keys.has('ArrowUp'))*dt*.9/view.zoom,c=Math.cos(view.yaw),s=Math.sin(view.yaw);aim.x=clamp(aim.x+kx*c+kz*s,-1.4,1.4);aim.z=clamp(aim.z-kx*s+kz*c,-.9,.9);base.x=lerp(base.x,aim.x,1-Math.exp(-dt*20));base.z=lerp(base.z,aim.z,1-Math.exp(-dt*20));actual.x=clamp(base.x+Math.sin(time*2.1)*.12,-1.43,1.43);actual.z=clamp(base.z+Math.sin(time*1.6+.8)*.04,-.94,.94);onAim?.(pick());}
   let p={x:actual.x,y:3.91,z:actual.z,closed:0},e=0;
   if(busy){e=(time-started)*(reduced?1.6:1);if(e<.2)capturedY=physics.toys[outcome.selected].body.position.y+.53;p=pose(e,capturedY);}
   bridge.position.z=busy?p.z:base.z;carriage.position.x=busy?p.x:base.x;
@@ -157,13 +175,15 @@ export async function createClawScene(canvas,{onAim,onFinish,onPhase,onGrab}){
   physics.step(dt);syncToys();
   if(busy&&released&&outcome.quality>=700&&physics.delivered(outcome.selected)&&!delivery){delivery=true;deliveryAt=time;setPhase('delivery');}
   if(busy&&e>4.25&&((delivery&&time-deliveryAt>.65)||(outcome.quality<700&&e>4.5)||e>6.6)&&!finished){finished=true;setPhase('done');onFinish?.(outcome);}
-  reticle.position.set(actual.x,BIN.floor+.025,actual.z);guide.position.set(actual.x,BIN.floor+.03,actual.z);guide.scale.y=3.9-BIN.floor;
+  // The marker sits on the exposed surface, so it no longer appears behind a toy.
+  if(!busy&&time-surfaceAt>.08){surfaceAt=time;cabinet.updateMatrixWorld(true);surfaceRay.set(new T.Vector3(actual.x,4.1,actual.z),downVector);const hit=surfaceRay.intersectObjects(pickMeshes,false)[0];aimHeight=hit?Math.max(BIN.floor,hit.point.y):BIN.floor;}
+  reticle.position.set(actual.x,aimHeight+.025,actual.z);guide.position.set(actual.x,aimHeight+.03,actual.z);guide.scale.y=Math.max(.1,3.9-aimHeight);
   bulbs.forEach((b,i)=>b.material.emissiveIntensity=busy&&!reduced?.4+Math.pow(Math.max(0,Math.sin(time*8-i*.55)),5)*1.2:.22);
   stick.rotation.z=lerp(stick.rotation.z,drag?clamp((aim.x-base.x)*-.8,-.2,.2):0,1-Math.exp(-dt*10));stick.rotation.x=lerp(stick.rotation.x,drag?clamp((aim.z-base.z)*.8,-.2,.2):0,1-Math.exp(-dt*10));button.position.y=busy?1.43:1.45;pressMaterial.emissive.setHex(busy?0x06451b:0x000000);
   renderer.render(scene,camera);
  }
  reset();raf=requestAnimationFrame(frame);
- return {pick,reset,play,view:()=>({...view}),setViewMode(mode){view.mode=mode==='view'?'view':'aim';clearInput();},zoom(factor){if(!paused&&!busy)adjustView(0,0,factor);},recenter(){if(!paused&&!busy){Object.assign(view,{yaw:0,elevation:.39,zoom:1});clearInput();updateCamera();}},buttonPoint(){const p=button.getWorldPosition(new T.Vector3()).project(camera),r=canvas.getBoundingClientRect();return {x:r.left+(p.x+1)/2*r.width,y:r.top+(1-p.y)/2*r.height};},targets:()=>physics.targets(),status:()=>({phase,renderScale,delivered:delivery,held:physics.held(),bodies:physics.targets(),aim:{...aim},toys:toys.map((_,i)=>toyInfo(seed,i).id)}),setPaused(v){paused=v;clearInput();},freeze(){return pick();},aimAt(x,z){aim={x:(x-500)/1000*3.1,z:(z-500)/1000*2.1};},inspect(angle=.26,focus){if(Number.isInteger(focus)){const t=toys[focus].position;camera.position.set(t.x+Math.sin(angle)*2,t.y+.6,t.z+Math.cos(angle)*2);camera.lookAt(t);}else{const d=10.8;camera.position.set(Math.sin(angle)*d,6.7,Math.cos(angle)*d);camera.lookAt(0,2.7,0);}},get busy(){return busy;},destroy(){
+ return {pick,reset,play,view:()=>({...view}),front:()=>presetView(false),side:()=>presetView(true),zoom(factor){if(!paused&&!busy){clearInput();adjustView(0,0,factor);}},recenter(){if(!paused&&!busy){Object.assign(view,{yaw:0,elevation:.39,zoom:1});clearInput();updateCamera();}},buttonPoint(){const p=button.getWorldPosition(new T.Vector3()).project(camera),r=canvas.getBoundingClientRect();return {x:r.left+(p.x+1)/2*r.width,y:r.top+(1-p.y)/2*r.height};},planePoint(x,y){return atPlane(x,y,aimHeight);},project(x,y,z){const p=new T.Vector3(x,y,z).project(camera),r=canvas.getBoundingClientRect();return {x:r.left+(p.x+1)*r.width/2,y:r.top+(1-p.y)*r.height/2};},targets:()=>physics.targets(),status:()=>({phase,renderScale,delivered:delivery,held:physics.held(),bodies:physics.targets(),aim:{...aim},aimHeight,toys:toys.map((_,i)=>toyInfo(seed,i).id)}),setPaused(v){paused=v;clearInput();},freeze(){return pick();},aimAt(x,z){aim={x:(x-500)/1000*3.1,z:(z-500)/1000*2.1};},inspect(angle=.26,focus){if(Number.isInteger(focus)){const t=toys[focus].position;camera.position.set(t.x+Math.sin(angle)*2,t.y+.6,t.z+Math.cos(angle)*2);camera.lookAt(t);}else{const d=10.8;camera.position.set(Math.sin(angle)*d,6.7,Math.cos(angle)*d);camera.lookAt(0,2.7,0);}},get busy(){return busy;},destroy(){
   cancelAnimationFrame(raf);physics.destroy();observer.disconnect();document.removeEventListener('visibilitychange',clearInput);window.removeEventListener('keydown',keydown);window.removeEventListener('keyup',keyup);canvas.removeEventListener('wheel',wheel);canvas.removeEventListener('contextmenu',contextmenu);canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);for(const t of['pointerup','pointercancel','lostpointercapture'])canvas.removeEventListener(t,up);
   const geometries=new Set(),mats=new Set(materials),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])mats.add(m);});geometries.forEach(g=>g.dispose());mats.forEach(m=>{for(const value of Object.values(m))if(value?.isTexture)textures.add(value);m.dispose();});textures.forEach(t=>t.dispose());glass.dispose();environment.dispose();renderer.dispose();
  }};

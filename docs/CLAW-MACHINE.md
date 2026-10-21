@@ -1,6 +1,6 @@
 # Claw Machine — King Rico
 
-Jogo da categoria Habilidade. Arraste no vidro para deslocar a garra nos dois eixos; setas do teclado também funcionam. A garra acompanha com inércia curta e tem um balanço periódico visível. Depois de apontar, o jogador escolhe o instante de apertar PEGAR. A mira projetada no chão corresponde exatamente à posição enviada, incluindo o balanço: não há correção, encaixe automático ou barra que revele a faixa de captura antes do toque.
+Jogo da categoria Habilidade. Arraste no vidro para deslocar a garra nos dois eixos; setas do teclado também funcionam. A garra acompanha com inércia curta e tem um balanço periódico visível. Depois de apontar, o jogador escolhe o instante de apertar PEGAR. A mira sobre a superfície da pilha corresponde exatamente à posição horizontal enviada, incluindo o balanço: não há correção, encaixe automático ou barra que revele a faixa de captura antes do toque.
 
 ## Primeira versão
 
@@ -57,10 +57,18 @@ O autor considerou a revisão ilustrada ainda pouco verossímil: prêmios alinha
 
 ## Câmera próxima e variedade de prêmios (21/out)
 
-Após o autor considerar a máquina 3D uma melhora e pedir foco na captura, o enquadramento inicial passou para perto do vidro. O jogador pode aproximar/afastar nos botões +/− ou pela roda do mouse. GIRAR VISÃO alterna o arraste para rotação; VOLTAR A MIRAR devolve o controle da garra. No toque, dois dedos giram e a pinça amplia. Soltar um dos dedos não inicia uma mira acidental. CENTRAR restaura a vista inicial. Os limites mantêm a câmera fora do gabinete, voltada para a área de captura. Menu pausa e bloqueia os controles; redimensionar e começar outra rodada preservam a visão escolhida. Arrastar e usar setas para mirar respeita a orientação da câmera.
+Após o autor considerar a máquina 3D uma melhora e pedir foco na captura, o enquadramento inicial passou para perto do vidro. O jogador pode aproximar/afastar nos botões +/− ou pela roda do mouse. Os botões FRENTE e LADO mudam o ponto de vista sem trocar a função do arraste. No toque, dois dedos giram e a pinça amplia. Soltar um dos dedos não inicia uma mira acidental. FRENTE restaura o enquadramento inicial. Os limites mantêm a câmera fora do gabinete, voltada para a área de captura. Menu pausa e bloqueia os controles; redimensionar e começar outra rodada preservam a visão escolhida. Arrastar e usar setas para mirar respeita a orientação da câmera.
 
 A mira tem aro, centro e linha de descida verde neon; sua cor permanece igual em qualquer faixa de precisão. O valor NA MIRA continua refletindo o alvo real, sem revelar uma faixa de acerto.
 
 Os nove prêmios agora misturam Happeach, Diamante, Moeda, cabeça da Nick Neck e King Rico. Happeach e King Rico reutilizam as malhas oficiais simplificadas; diamante, moeda e girafa são almofadas fechadas com volume, borda arredondada, costura e verso de tecido, construídas a partir da silhueta e arte existentes. Não são planos voltados para a câmera. Os corpos de colisão continuam aproximados por esferas, sem simulação de tecido. `toys.js` usa a semente e o índice já salvos para escolher a identidade; atualizar ou recuperar uma operação mantém nome e imagem do prêmio, sem mudar pagamento ou formato da transação. Nenhum modelo original de outro jogo foi alterado.
 
 O teste de navegador também cobre zoom, giro, pinça, cancelamento com um dedo restante, preservação da câmera ao redimensionar e ausência de movimento da mira ou alteração de saldo ao ajustar a visão. A aprovação visual continua dependendo do feedback do autor.
+
+## Mira direta após feedback sobre os comandos (21/out)
+
+O autor considerou os comandos pouco intuitivos. O movimento anterior usava multiplicadores fixos de deslocamento na tela, e um modo persistente trocava o arraste entre câmera e garra. A revisão remove esse modo: um dedo sempre mira. Tocar em uma peça aponta para o ponto efetivamente tocado em sua malha; não encaixa no centro nem altera a pontuação. Arrastar usa a interseção do raio da câmera com um plano na altura do contato, respeitando perspectiva, zoom e ângulo. Arrastar no vidro vazio ajusta a posição existente, sem salto ao recomeçar. Nas bordas, a inversão do movimento tem resposta imediata. Cancelar um toque parado não seleciona nem aposta.
+
+A indicação verde agora fica na superfície exposta sob o eixo de descida, em vez de aparecer atrás das pelúcias no piso. O movimento de acompanhamento foi encurtado para reduzir a sensação de atraso. O balanço, os pagamentos e a transação continuam iguais. FRENTE e LADO servem para conferir os dois eixos; dois dedos, pinça, roda do mouse e zoom permanecem disponíveis para a câmera. Toque simples só aposta sobre o botão físico PEGAR ou no botão principal, nunca sobre uma pelúcia.
+
+Os testes de navegador usam toque real em uma peça, arraste pela perspectiva frontal e lateral com zoom, cancelamento, pinça sem deslocar a mira, e o fluxo financeiro completo. Testes funcionais não comprovam intuitividade; o próximo feedback do autor continua sendo a referência para isso.
