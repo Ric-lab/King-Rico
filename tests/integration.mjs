@@ -521,7 +521,7 @@ test('Race Rules reject invented winners, overpayments, invalid marbles/seeds an
   const next={...old,settings:{...old.settings,raceBetIdx:3},balanceUnits:old.balanceUnits-1000+credit,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'race',game:'race',selected:0,fingerprint:'forged',betUnits:1000,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-1000)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
  }
- await forge(x=>{x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.winUnits=99999;},99999);await forge(x=>{x.selected=4;});await forge(x=>{x.seed=65536;});await forge(x=>{x.seed=-1;});await forge(x=>{x.roundId=randomUUID();});await forge(x=>{x.betUnits=250;});await forge(x=>{x.version=2;x.seed=65535;});await forge(x=>{x.version=3;});await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=5000;},5000);
+ await forge(x=>{x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.winUnits=99999;},99999);await forge(x=>{x.selected=4;});await forge(x=>{x.seed=65536;});await forge(x=>{x.seed=-1;});await forge(x=>{x.roundId=randomUUID();});await forge(x=>{x.betUnits=250;});await forge(x=>{x.version=2;x.seed=65535;});await forge(x=>{x.version=4;});await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=3800;},3800);await forge(x=>{x.version=2;x.seed=0;x.winner=0;x.winUnits=5000;},5000);
 });
 
 test('Five-marble Race Rules pay the fifth participant 4.8x, deduplicate it and still honor old four-marble rounds',async()=>{
@@ -531,3 +531,16 @@ test('Five-marble Race Rules pay the fifth participant 4.8x, deduplicate it and 
  const op=doc(c.db,'players',c.uid,'operations',id);await assertFails(updateDoc(op,{'result.outcome.version':1}));
  await new Promise(r=>setTimeout(r,750));const old=randomUUID();const legacy=await c.call({action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:old,requestId:old});assert.equal(legacy.outcome.winUnits,950);assert.equal(legacy.player.balance,1016.5);
 });
+
+ test('Gravity Race Rules validate physical finish tables, replay and reject invented winners',async()=>{
+ const name='race-physics-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const id=randomUUID(),winner=engine.race(2.5,0,21,id,3).winner,bet={action:'race',game:'race',bet:2.5,selected:winner,seed:21,version:3,roundId:id,requestId:id};
+ const [a,b]=await Promise.all([c.call(bet),c.call(bet)]);assert.equal(a.outcome.version,3);assert.equal(a.outcome.winUnits,1200);assert.equal(a.player.balance,1009.5);assert.ok(a.replayed||b.replayed);
+ const other=await client(name+'-second',name);assert.equal((await other.call(bet)).replayed,true);
+ const ref=doc(c.db,'players',c.uid);await new Promise(r=>setTimeout(r,750));
+ for(const change of[x=>{x.winner=(winner+1)%5;x.selected=x.winner;},x=>{x.seed=160;}]){
+  const old=(await getDoc(ref)).data(),roundId=randomUUID(),outcome=engine.race(2.5,winner,21,roundId,3);change(outcome);
+  const next={...old,settings:{...old.settings,raceBetIdx:1},balanceUnits:old.balanceUnits-250+1200,revision:old.revision+1,lastOperationId:roundId,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',roundId),{action:'race',game:'race',selected:outcome.selected,fingerprint:'forged',betUnits:250,winUnits:1200,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:2.5,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-250)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
+ }
+ });

@@ -70,6 +70,7 @@ await cp('assets',path.join(destination,'assets'),{recursive:true});
 await mkdir(path.join(destination,'games/race'),{recursive:true});
 await copyFile('games/race/style.css',path.join(destination,'games/race/style.css'));
 await build({entryPoints:['games/race/game.js'],outfile:path.join(destination,'games/race/game.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'shared-three',setup(b){b.onResolve({filter:/^three$/},()=>({path:'three',external:true}));}}]});
+await build({entryPoints:['games/race/physics-worker.js'],outfile:path.join(destination,'games/race/physics-worker.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'cannon-browser',setup(b){b.onResolve({filter:/^cannon-es$/},()=>({path:path.join(root,'node_modules/cannon-es/dist/cannon-es.js')}));}}]});
 await mkdir(path.join(destination,'games/claw'),{recursive:true});
 await copyFile('games/claw/style.css',path.join(destination,'games/claw/style.css'));
 await build({entryPoints:['games/claw/game.js'],outfile:path.join(destination,'games/claw/game.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'shared-three',setup(b){b.onResolve({filter:/^three$/},()=>({path:'three',external:true}));}}]});

@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import * as T from 'three';
 import race from '../cloud/race.cjs';
 import {LENGTH,RADIUS,point,ballPoint,viewPose} from '../games/race/course.mjs';
-test('The larger course has actual ascending and descending sections',()=>{
- assert.equal(LENGTH,96);let up=0,down=0;
- for(let d=0;d<LENGTH;d+=.1){const slope=point(d+.1).y-point(d).y;if(slope>.002)up++;if(slope<-.01)down++;}
- assert.ok(up>60&&down>300);
+test('Gravity course has a real height drop and varied descending grades',()=>{
+ assert.equal(LENGTH,96);let gentle=0,down=0;
+ for(let d=0;d<LENGTH;d+=.1){const slope=point(d+.1).y-point(d).y;if(slope>-.006)gentle++;if(slope<-.01)down++;}
+ assert.ok(gentle>60&&down>300);assert.ok(point(0).y-point(LENGTH).y>20);
 });
 test('Every selected marble stays inside portrait framing over hills, including reduced motion and historical rounds',()=>{
  for(const version of[1,2])for(const reduced of[false,true])for(const aspect of[.59,.77,1.05])for(let seed=0;seed<32;seed++)for(let selected=0;selected<(version===2?5:4);selected++){

@@ -1,7 +1,10 @@
 """Real race UI, Google-emulated identity, shared wallet and immutable replay."""
 import json,uuid
+from pathlib import Path
 BASE='http://127.0.0.1:5000'
 def check_race(browser,login,restored,claim_gift,observer):
+    table=json.loads(Path('cloud/race-physics-winners.json').read_text());winner=(table[4]+1)%5;loser=(winner+1)%5
+    names=['King Rico','Happeach','Nick Neck','Diamante','Crazy Clown']
     context=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
     context.add_init_script(observer)
     context.add_init_script("const original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>a instanceof Uint16Array&&a.length===1?(a[0]=21,a):original(a);")
@@ -9,28 +12,28 @@ def check_race(browser,login,restored,claim_gift,observer):
     page.goto(BASE+'/Home.dc.html');login(page,'race-browser-'+uuid.uuid4().hex[:10]);claim_gift(page);uid=page.evaluate('KingRicoCloud.uid')
     page.get_by_role('link',name='Jogar Fortune Race',exact=True).click();restored(page,uid);page.wait_for_function('!!window.KingRicoRace?.scene',timeout=60000)
     page.get_by_role('button',name='Bolinha 5: Crazy Clown',exact=True).tap();assert page.locator('.choice[aria-pressed=true]').get_attribute('data-index')=='4'
-    page.get_by_role('button',name='Bolinha 2: Happeach',exact=True).tap();assert page.locator('.choice[aria-pressed=true]').get_attribute('data-index')=='1'
+    page.get_by_role('button',name=f'Bolinha {winner+1}: {names[winner]}',exact=True).tap();assert page.locator('.choice[aria-pressed=true]').get_attribute('data-index')==str(winner)
     before=page.evaluate('KingRicoCloud.player.balance');page.locator('#start').tap();page.wait_for_function('KingRicoRace.scene.status().elapsed>5',timeout=90000)
     expected=before-10+48;assert page.evaluate('KingRicoCloud.player.balance')==expected
     assert page.locator('#balance').inner_text()=='1.040','Winning credit must wait for the arrival reveal'
     assert page.locator('.choice:not([disabled])').count()==0
-    assert page.locator('#choices').is_hidden();assert page.locator('.race-live').is_visible();assert page.evaluate('KingRicoRace.scene.status().version')==2
+    assert page.locator('#choices').is_hidden();assert page.locator('.race-live').is_visible();assert page.evaluate('KingRicoRace.scene.status().version')==3
     assert len(page.evaluate('KingRicoRace.scene.status().positions'))==5
     assert page.locator('.ball-label.selected').is_visible()
     page.get_by_role('button',name='Abrir menu').tap();page.get_by_role('dialog',name='Menu — Fortune Race').wait_for();paused=page.evaluate('KingRicoRace.scene.status().elapsed');page.wait_for_timeout(500);assert page.evaluate('KingRicoRace.scene.status().elapsed')==paused
     page.get_by_role('button',name='Fechar menu').tap();page.screenshot(path='/tmp/race-cloud-running.png')
     saved=page.evaluate('JSON.parse(localStorage.getItem(`kingRico.race.${KingRicoCloud.uid}`))');assert saved['elapsed']>=4
-    page.reload();restored(page,uid);page.wait_for_function('!!window.KingRicoRace?.scene&&KingRicoRace.isBusy()',timeout=60000)
+    page.reload();restored(page,uid);page.wait_for_function('!!window.KingRicoRace?.scene&&KingRicoRace.scene.status().active',timeout=60000)
     assert page.evaluate('KingRicoCloud.player.balance')==expected
     assert page.evaluate('KingRicoRace.scene.status().seed')==21;assert page.evaluate('KingRicoRace.scene.status().elapsed')>=saved['elapsed']-.1
-    page.wait_for_selector('#result-dialog[open]',timeout=120000);assert page.locator('#result-title').inner_text()=='A sua venceu!';assert page.evaluate('KingRicoRace.scene.status().order[0]')==1
+    page.wait_for_selector('#result-dialog[open]',timeout=120000);assert page.locator('#result-title').inner_text()=='A sua venceu!';assert page.evaluate('KingRicoRace.scene.status().order[0]')==winner
     page.screenshot(path='/tmp/race-cloud-win.png')
-    replay=page.evaluate('async id=>await KingRicoCloud.race(10,1,21,id,2)',saved['roundId']);assert replay['replayed'] is True;assert page.evaluate('KingRicoCloud.player.balance')==expected
+    replay=page.evaluate('async x=>await KingRicoCloud.race(10,x.winner,21,x.id,3)',{'winner':winner,'id':saved['roundId']});assert replay['replayed'] is True;assert page.evaluate('KingRicoCloud.player.balance')==expected
     second=context.new_page();second.goto(BASE+'/Fortune%20Race.dc.html');restored(second,uid);second.wait_for_selector('#result-dialog[open]',timeout=60000);assert second.evaluate('KingRicoCloud.player.balance')==expected;second.close();page.bring_to_front()
     page.locator('#result-done').tap();page.wait_for_selector('#start:not([disabled])')
-    page.get_by_role('button',name='Bolinha 4: Diamante',exact=True).tap();page.locator('#bet-down').tap();page.locator('#bet-down').tap();page.wait_for_function('KingRicoCloud.player.settings.raceBetIdx===1')
+    page.get_by_role('button',name=f'Bolinha {loser+1}: {names[loser]}',exact=True).tap();page.locator('#bet-down').tap();page.locator('#bet-down').tap();page.wait_for_function('KingRicoCloud.player.settings.raceBetIdx===1')
     page.locator('#start').tap();page.wait_for_function('KingRicoRace.scene.status().elapsed>3',timeout=60000);assert page.evaluate('KingRicoCloud.player.balance')==expected-2.5
-    page.wait_for_selector('#result-dialog[open]',timeout=120000);assert page.locator('#result-title').inner_text()=='Happeach venceu';assert page.locator('#result-amount').inner_text()=='−2,5';assert page.evaluate('KingRicoRace.scene.status().order[0]')==1
+    page.wait_for_selector('#result-dialog[open]',timeout=120000);assert page.locator('#result-title').inner_text()==f'{names[winner]} venceu';assert page.locator('#result-amount').inner_text()=='−2,5';assert page.evaluate('KingRicoRace.scene.status().order[0]')==winner
     page.locator('#result-done').tap();page.set_viewport_size({'width':320,'height':568});page.wait_for_timeout(300);page.screenshot(path='/tmp/race-cloud-narrow.png');assert page.locator('#start').bounding_box()['width']>250
     page.get_by_role('button',name='Abrir menu').tap();page.get_by_role('dialog',name='Menu — Fortune Race').wait_for();page.get_by_role('button',name='Tabela de pagamentos').tap();page.get_by_role('dialog',name='Escolha e torça').wait_for();page.locator('#help-done').tap()
     # An operation made by the old four-marble client keeps its original payout.

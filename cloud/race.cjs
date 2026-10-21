@@ -1,8 +1,9 @@
 'use strict';
-const PAY=4.8;
+const PAY=4.8,PHYSICS_WINNERS=require('./race-physics-winners.json');
+function physicalWinner(seed){return (PHYSICS_WINNERS[Math.floor(seed/5)]+seed%5)%5;}
 function race(bet,selected,seed,roundId,version=1){
- const betUnits=Math.round(bet*100),winner=seed%(version===2?5:4);
- return {roundId,betUnits,selected,seed,winner,ended:true,winUnits:selected===winner?Math.round(betUnits*(version===2?48:38)/10):0,...(version===2?{version:2}:{})};
+ const betUnits=Math.round(bet*100),winner=version===3?physicalWinner(seed):seed%(version===2?5:4);
+ return {roundId,betUnits,selected,seed,winner,ended:true,winUnits:selected===winner?Math.round(betUnits*(version>=2?48:38)/10):0,...(version>=2?{version}:{})};
 }
 // All presentation positions are functions of the saved seed and active elapsed
 // time. The finish order is continuous: no teleport, late winner swap or new draw.
@@ -16,4 +17,4 @@ function progress(seed,index,time,version=1){
  const u=Math.max(0,Math.min(1,time/finishTime(seed,index))),phase=(seed%31)*.23+index*1.67;
  return Math.max(0,Math.min(1,u+.026*Math.sin(u*Math.PI*3.6+phase)*Math.sin(Math.PI*u)));
 }
-module.exports={PAY,race,finishTime,progress};
+module.exports={PAY,race,finishTime,progress,physicalWinner};

@@ -500,8 +500,11 @@ service cloud.firestore {
         && o.result.game == 'claw' && o.result.bet == o.betUnits / 100.0
         && o.result.balanceBefore == old.balanceUnits / 100.0 && o.result.balanceDebited == (old.balanceUnits-o.betUnits) / 100.0 && o.result.baseBalance == p.balanceUnits / 100.0;
     }
+    function gravityWinner(seed) {
+      return ([0,3,1,2,3,4,0,0,4,0,4,3,1,3,1,2,1,0,1,0,4,3,0,0,1,1,3,0,0,3,0,4][int(seed / 5)] + seed%5)%5;
+    }
     function race(p,old,o) {
-      let x=o.result.outcome; let modern=x.get('version',1) == 2; let count=modern ? 5 : 4; let factor=modern ? 48 : 38;
+      let x=o.result.outcome; let modern=x.get('version',1) >= 2; let physical=x.get('version',1) == 3; let count=modern ? 5 : 4; let factor=modern ? 48 : 38;
       return o.action == 'race' && o.game == 'race' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['raceBetIdx'])
@@ -510,7 +513,7 @@ service cloud.firestore {
         && x.keys().hasOnly(['roundId','betUnits','selected','seed','winner','ended','winUnits','version'])
         && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
         && x.selected is int && x.selected >= 0 && x.selected < count
-        && x.seed is int && x.seed >= 0 && x.seed <= (modern ? 65534 : 65535) && x.get('version',1) in [1,2] && x.winner == x.seed%count
+        && x.seed is int && x.seed >= 0 && x.seed <= (physical ? 159 : modern ? 65534 : 65535) && x.get('version',1) in [1,2,3] && x.winner == (physical ? gravityWinner(x.seed) : x.seed%count)
         && x.ended == true && x.winUnits == (x.selected == x.winner ? int(o.betUnits*factor / 10) : 0) && o.winUnits == x.winUnits
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000

@@ -66,8 +66,8 @@ export function createGameStore(db, uid, dependencies={}) {
     if(data.action==='claw' && (data.game!=='claw' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
       || !Number.isInteger(data.selected) || data.selected<0 || data.selected>8 || !Number.isInteger(data.seed) || data.seed<0 || data.seed>8
       || !Number.isInteger(data.aimX) || data.aimX<0 || data.aimX>1000 || !Number.isInteger(data.aimZ) || data.aimZ<0 || data.aimZ>1000)) fail('king-rico/invalid-argument','Mira inválida.');
-    if(data.action==='race' && (data.version!==undefined && ![1,2].includes(data.version) || data.game!=='race' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
-      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>(data.version===2?4:3) || !Number.isInteger(data.seed) || data.seed<0 || data.seed>(data.version===2?65534:65535))) fail('king-rico/invalid-argument','Corrida inválida.');
+    if(data.action==='race' && (data.version!==undefined && ![1,2,3].includes(data.version) || data.game!=='race' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
+      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>(data.version>=2?4:3) || !Number.isInteger(data.seed) || data.seed<0 || data.seed>(data.version===3?159:data.version===2?65534:65535))) fail('king-rico/invalid-argument','Corrida inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
       Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))

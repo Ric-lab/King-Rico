@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signInWithCredential, getRedirectResult,
   onAuthStateChanged, signOut, connectAuthEmulator, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getFirestore, doc, getDoc, onSnapshot, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, runTransaction, onSnapshot, connectFirestoreEmulator } from 'firebase/firestore';
 import { createGameStore, publicPlayer } from './store.mjs';
 import { createTelemetry } from './telemetry.mjs';
 
@@ -119,8 +119,8 @@ else {
   Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
   Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
   Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected});
-  Cloud.race = (bet,selected,seed,roundId,version=1) => mutate({action:'race',game:'race',bet,selected,seed,roundId,...(version===2?{version:2}:{})});
-  Cloud.raceResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='race'?saved.data().result:null;};
+  Cloud.race = (bet,selected,seed,roundId,version=1) => mutate({action:'race',game:'race',bet,selected,seed,roundId,...(version>=2?{version}:{})});
+  Cloud.raceResult = async roundId => {await Cloud.ready;return runTransaction(db,async transaction=>{const saved=await transaction.get(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='race'?saved.data().result:null;});};
   Cloud.claw = (bet,selected,aimX,aimZ,seed,roundId) => mutate({action:'claw',game:'claw',bet,selected,aimX,aimZ,seed,roundId});
   Cloud.clawResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='claw'?saved.data().result:null;};
   Cloud.twentyOne = (move,bet,roundId,turn,target) => mutate({action:'twentyOne',game:'twentyOne',move,bet,roundId,turn,...(target===undefined?{}:{target})});
