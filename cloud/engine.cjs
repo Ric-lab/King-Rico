@@ -31,8 +31,9 @@ function flying(bet,previous,move,roundId,selected,rng=random) {
 const twentyOneRound = (bet,previous,move,roundId,rng=random,target=21) =>
   (move==='start' ? target===33 : previous?.target===33)
     ? thirtyThree(bet,previous,move,roundId,rng) : twentyOne(bet,previous,move,roundId,rng);
-const FINGO_BALLS = 21, FINGO_HIT = .2161, FINGO_GOLD = .28;
-const FINGO_MULTIPLIERS = [25,25,8,4,2,1,.4];
+// 30 balls in 10 trios. Exact RTP with the player always dropping on a golden pipe: 98,00%; card closes 27,5%.
+const FINGO_BALLS = 30, FINGO_HIT = .11783, FINGO_GOLD = .28;
+const FINGO_MULTIPLIERS = [50,25,12.5,10,9,7,5,3,2,1];
 const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;
 function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
   const before = previous?.step || 0, betUnits = previous?.betUnits || units(bet);

@@ -1,6 +1,16 @@
 # Fortune Race
 
+> **Guardado (21/out/2026):** fora da Home. Pendente ao retomar: bolas mais rápidas (subir velocidade: encurtar `times` em `games/race/script.mjs` ou alongar menos a pista), ajustar `tests/race_browser.py` para v4.
+
 Corrida contemplativa de cinco bolinhas: King Rico, Happeach, Nick Neck, Diamante e Crazy Clown. Escolha uma, aposte moedas virtuais e acompanhe a largada e a chegada. Retorno de 4,8× incluindo a aposta. Login Google, saldo, recarga e menu são os compartilhados do King Rico.
+
+## Pista de circo e aposta 1º e 2º (version 4)
+
+Corrida coreografada, sem física no aparelho: abre na hora e roda leve. A semente (0–639) define o par: `seed%20` → 1º e 2º (`circusPair`); o resto da semente só varia a encenação (`games/race/script.mjs`): tempos de chegada fixos por posição (~21–23 s; total ~25 s), ultrapassagens por ondulação que zera na linha, arrancada do vencedor no fim. As laterais são resolvidas a cada quadro contra pinos, tambores, paredes e outras bolinhas, então elas se esbarram sem sobrepor.
+
+Pista (`games/race/course.mjs`, 92 m): descida, floresta de pinos dourados, três tambores, rampa de salto, funil e chegada. Visual: piso de veludo vermelho, zebra vermelho/creme, trilho dourado com lâmpadas que acendem atrás do líder, noite roxa com luzes ao longe. Câmera baixa atrás da sua bolinha; chegada apertada vira câmera lenta lateral.
+
+Apostas: VENCEDOR ×4,8 (1 em 5) e 1º E 2º na ordem ×19,2 (1 em 20); RTP 96%. Rodadas v1–v3 pendentes mostram o resultado direto.
 
 ## Dinâmica por gravidade (version 3)
 

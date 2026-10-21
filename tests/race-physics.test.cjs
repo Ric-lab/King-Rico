@@ -18,3 +18,4 @@ test('Zero gravity cannot drive a race; identical initial states replay identica
  assert.throws(()=>simulate(0,{gravity:0}),/Unfinished/);
  const a=simulate(0),b=simulate(0);assert.deepEqual(a.times,b.times);assert.deepEqual(a.frames[480],b.frames[480]);
 });
+

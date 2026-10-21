@@ -224,11 +224,11 @@ service cloud.firestore {
     }
     function fingoDrop(x, r, o) {
       let complete = x.marks == [true,true,true,true,true];
-      let prize = int(x.betUnits * [2500,2500,800,400,200,100,40][int((x.used - 1) / 3)] / 100);
+      let prize = int(x.betUnits * [5000,2500,1250,1000,900,700,500,300,200,100][int((x.used - 1) / 3)] / 100);
       return r.slots != null && o.selected is int && o.selected >= 0 && o.selected <= 4 && x.bin >= 0 && x.bin <= 4
         && x.slots == r.slots && x.used == r.used + 1
         && fingoMark(x,r,0) && fingoMark(x,r,1) && fingoMark(x,r,2) && fingoMark(x,r,3) && fingoMark(x,r,4)
-        && x.ended == (complete || x.used == 21) && o.winUnits == (complete ? prize : 0);
+        && x.ended == (complete || x.used == 30) && o.winUnits == (complete ? prize : 0);
     }
     function fingo(p, old, o) {
       // Cache the arrays/counter to keep the full transition under Firestore's
@@ -254,8 +254,8 @@ service cloud.firestore {
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
         && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
         && (first ? x.move == 'roll' && fingoNumbers(targets) : x.roundId == r.id && targets == r.targets)
-        && marks is list && marks.size() == 5 && used is int && used >= 0 && used <= 21
-        && (x.move == 'roll' ? r.slots == null && used == r.used && used < 21 && marks == r.marks && !x.ended
+        && marks is list && marks.size() == 5 && used is int && used >= 0 && used <= 30
+        && (x.move == 'roll' ? r.slots == null && used == r.used && used < 30 && marks == r.marks && !x.ended
             && o.selected == -1 && x.bin == -1 && o.winUnits == 0 && fingoNumbers(slots)
             && (!r.marks[0] && slots[0] == targets[0] || !r.marks[1] && slots[1] == targets[1]
               || !r.marks[2] && slots[2] == targets[2] || !r.marks[3] && slots[3] == targets[3] || !r.marks[4] && slots[4] == targets[4])
@@ -504,17 +504,22 @@ service cloud.firestore {
       return ([0,3,1,2,3,4,0,0,4,0,4,3,1,3,1,2,1,0,1,0,4,3,0,0,1,1,3,0,0,3,0,4][int(seed / 5)] + seed%5)%5;
     }
     function race(p,old,o) {
-      let x=o.result.outcome; let modern=x.get('version',1) >= 2; let physical=x.get('version',1) == 3; let count=modern ? 5 : 4; let factor=modern ? 48 : 38;
+      let x=o.result.outcome; let modern=x.get('version',1) >= 2; let physical=x.get('version',1) == 3; let circus=x.get('version',1) == 4; let count=modern ? 5 : 4; let factor=modern ? 48 : 38;
+      let pick2=x.get('selected2',-1); let w4=int(x.seed%20 / 4);
       return o.action == 'race' && o.game == 'race' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['raceBetIdx'])
         && p.settings.raceBetIdx is int && p.settings.raceBetIdx >= 0 && p.settings.raceBetIdx <= 9
         && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.raceBetIdx]
-        && x.keys().hasOnly(['roundId','betUnits','selected','seed','winner','ended','winUnits','version'])
+        && x.keys().hasOnly(['roundId','betUnits','selected','seed','winner','ended','winUnits','version','selected2','second'])
         && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
         && x.selected is int && x.selected >= 0 && x.selected < count
-        && x.seed is int && x.seed >= 0 && x.seed <= (physical ? 159 : modern ? 65534 : 65535) && x.get('version',1) in [1,2,3] && x.winner == (physical ? gravityWinner(x.seed) : x.seed%count)
-        && x.ended == true && x.winUnits == (x.selected == x.winner ? int(o.betUnits*factor / 10) : 0) && o.winUnits == x.winUnits
+        && x.seed is int && x.seed >= 0 && x.get('version',1) in [1,2,3,4] && x.ended == true && o.winUnits == x.winUnits
+        && (circus ? x.keys().hasAll(['selected2','second']) && x.seed <= 639 && pick2 is int && pick2 >= -1 && pick2 <= 4 && pick2 != x.selected
+            && x.winner == w4 && x.second == (w4+1+x.seed%4)%5
+            && x.winUnits == (pick2 == -1 ? (x.selected == x.winner ? int(o.betUnits*48 / 10) : 0) : (x.selected == x.winner && pick2 == x.second ? int(o.betUnits*192 / 10) : 0))
+          : !('selected2' in x) && !('second' in x) && x.seed <= (physical ? 159 : modern ? 65534 : 65535)
+            && x.winner == (physical ? gravityWinner(x.seed) : x.seed%count) && x.winUnits == (x.selected == x.winner ? int(o.betUnits*factor / 10) : 0))
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)

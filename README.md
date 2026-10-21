@@ -21,8 +21,14 @@ Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mes
 - **Fortune Wheel** — roda de 12 casas, escolha 1 símbolo e gire com swipe; paga x10 (`Fortune Wheel.dc.html`)
 
 - **Fortune 33** — cartas numeradas, você contra a banca (`Fortune 33.dc.html`)
-- **Claw Machine** — máquina e prêmios 3D do Happeach, com colisões, mira por arraste e prêmio por precisão (`Fortune Claw.dc.html`).
 - **Fortune Flying Clown** — estoure balões e escolha quando pegar o prêmio (`Fortune Flying Clown.dc.html`)
+
+## Guardados (fora da Home)
+- **Fortune Bounce** (`Fortune Bounce.dc.html`)
+- **Claw Machine** — máquina e prêmios 3D do Happeach (`Fortune Claw.dc.html`). Faltam os 3 modelos .glb no projeto.
+- **Fortune 21** — versão antiga do Fortune 33 (`Fortune 21.dc.html`)
+- **Fortune Hoop** (`Fortune Hoop.dc.html`)
+- **Fortune Race** — corrida de 5 bolinhas, aposta no vencedor ou 1º e 2º (`Fortune Race.dc.html`, prévia em `Fortune Race Preview.html`). Pausado: bolas ainda lentas. Ver [docs/FORTUNE-RACE.md](docs/FORTUNE-RACE.md).
 
 Detalhes e garantias de persistência: [Fortune 33 e Flying Clown](docs/FORTUNE-21-E-FLYING.md).
 

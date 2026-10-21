@@ -9,7 +9,7 @@ export function eventParams(name,data) {
     !uuid.test(data.sessionId || '') || !['home','circus','wheel','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race'].includes(data.game)) return null;
   if(data.floor!==undefined && (!Number.isInteger(data.floor) || data.floor<0 || data.floor>33)) return null;
   if(data.move!==undefined && !(name==='fingo_step'?['roll','drop']:['start','climb','collect']).includes(data.move)) return null;
-  if(data.ballsUsed!==undefined && (!Number.isInteger(data.ballsUsed) || data.ballsUsed<0 || data.ballsUsed>21)) return null;
+  if(data.ballsUsed!==undefined && (!Number.isInteger(data.ballsUsed) || data.ballsUsed<0 || data.ballsUsed>30)) return null;
   if(data.success!==undefined && typeof data.success!=='boolean') return null;
   if (data.operationId!==undefined && !uuid.test(data.operationId)) return null;
   if (data.errorCode!==undefined && !['auth','network','service'].includes(data.errorCode)) return null;

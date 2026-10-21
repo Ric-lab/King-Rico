@@ -1,18 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as T from 'three';
 import race from '../cloud/race.cjs';
-import {LENGTH,RADIUS,point,ballPoint,viewPose} from '../games/race/course.mjs';
-test('Gravity course has a real height drop and varied descending grades',()=>{
- assert.equal(LENGTH,96);let gentle=0,down=0;
- for(let d=0;d<LENGTH;d+=.1){const slope=point(d+.1).y-point(d).y;if(slope>-.006)gentle++;if(slope<-.01)down++;}
- assert.ok(gentle>60&&down>300);assert.ok(point(0).y-point(LENGTH).y>20);
-});
-test('Every selected marble stays inside portrait framing over hills, including reduced motion and historical rounds',()=>{
- for(const version of[1,2])for(const reduced of[false,true])for(const aspect of[.59,.77,1.05])for(let seed=0;seed<32;seed++)for(let selected=0;selected<(version===2?5:4);selected++){
-  const count=version===2?5:4,camera=new T.PerspectiveCamera(40,aspect,.1,160);
-  for(let time=0;time<20;time+=.5){const ps=Array.from({length:count},(_,i)=>race.progress(seed,i,time,version)),pose=viewPose(ps,selected,aspect,reduced),ball=ballPoint(ps[selected],selected,count);camera.position.copy(pose.position);camera.lookAt(pose.target);camera.updateMatrixWorld();
-   for(const offset of[[0,.65,0],[-RADIUS,0,0],[RADIUS,0,0],[0,-RADIUS,0]]){const p=ball.clone().add(new T.Vector3(...offset)).project(camera),x=(p.x+1)/2,y=(1-p.y)/2;assert.ok(x>.035&&x<.965&&y>.025&&y<.97,JSON.stringify({version,reduced,aspect,seed,selected,time,x,y}));}
+import {LENGTH,RADIUS,PINS,DRUMS,halfWidth} from '../games/race/course.mjs';
+import {plan,distance,lanes,settledAt} from '../games/race/script.mjs';
+test('Circus staging: the crossing order is the settled pair, motion is monotonic and nothing overlaps',()=>{
+ for(let seed=0;seed<640;seed+=7){
+  const [w,s]=race.circusPair(seed),p=plan(seed,[w,s]),order=[0,1,2,3,4].sort((a,b)=>p.times[a]-p.times[b]);
+  assert.deepEqual(order.slice(0,2),[w,s]);assert.ok(p.times[w]>21&&settledAt(p)<26,JSON.stringify(p.times));
+  let last=[0,0,0,0,0],prev=null;
+  for(let t=0;t<settledAt(p);t+=1/60){
+   const d=[0,1,2,3,4].map(i=>distance(p,i,t)),l=lanes(p,t,d,prev);prev=l;
+   d.forEach((x,i)=>{assert.ok(x>=last[i]-1e-9,'monotonic');assert.ok(Math.abs(l[i])<=halfWidth(Math.min(x,LENGTH+8))-RADIUS+.05);});last=d;
+   for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)assert.ok(Math.hypot(d[i]-d[j],l[i]-l[j])>2*RADIUS-.01,JSON.stringify({seed,t,i,j}));
   }
  }
 });

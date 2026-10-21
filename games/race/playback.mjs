@@ -1,6 +1,9 @@
 // Interpolate recorded fixed-step rigid bodies, including free lateral movement.
-export function sample(recording,seed,time){
- const f=Math.max(0,Math.min(recording.frames.length-1,time*60)),a=Math.floor(f),b=Math.min(a+1,recording.frames.length-1),mix=f-a,shift=seed%5;
- return Array.from({length:5},(_,i)=>{const slot=(i-shift+5)%5,p=recording.frames[a][slot],q=recording.frames[b][slot];return p.map((x,k)=>x+(q[k]-x)*mix);});
+// slots[i] is the physical body painted with colour i.
+export const cyclicSlots=seed=>Array.from({length:5},(_,i)=>(i-seed%5+5)%5);
+export function sample(recording,slots,time){
+ const last=recording.frames.length-1,f=Math.max(0,Math.min(last,time*60)),a=Math.floor(f),b=Math.min(a+1,last),mix=f-a;
+ return slots.map(slot=>{const p=recording.frames[a][slot],q=recording.frames[b][slot];return p.map((x,k)=>x+(q[k]-x)*mix);});
 }
-export const arrival=(recording,seed,index)=>recording.times[(index-seed%5+5)%5];
+export const arrival=(recording,slots,index)=>recording.times?recording.times[slots[index]]:Infinity;
+export const buffered=(recording,time)=>recording.done||time*60<recording.frames.length-2;

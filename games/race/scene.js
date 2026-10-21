@@ -1,88 +1,108 @@
 import * as T from 'three';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 import {COMPETITORS} from './competitors.js';
-import {LENGTH,RADIUS,point,ballPoint,viewPose} from './course.mjs';
-const {finishTime,progress}=require('../../cloud/race.cjs');
-import {sample,arrival} from './playback.mjs';
-const COUNTDOWN=2.6;
-const clamp=T.MathUtils.clamp;
+import {LENGTH,RADIUS,RAMP,FUNNEL,RUNOUT,PINS,DRUMS,halfWidth,center,at,ballY,phase} from './course.mjs';
+import {plan,distance,lanes,settledAt} from './script.mjs';
+const {circusPair}=require('../../cloud/race.cjs');
+export const CIRCUS_READY=true;
+const COUNTDOWN=2.6,clamp=T.MathUtils.clamp,V=(p,dy=0)=>new T.Vector3(p.x,p.y+dy,p.z);
+const BULB_OFF=new T.Color(0x4a2238),BULB_ON=new T.Color(0xffd77a);
+function texture(w,h,draw,repeat){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;if(repeat){t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(...repeat);}return t;}
+const loadImage=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;});
 export async function createRaceScene(canvas,{onTick,onFinish,onLabel}){
- const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.94;
+ const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
- const scene=new T.Scene(),camera=new T.PerspectiveCamera(40,1,.1,160);
- scene.fog=new T.FogExp2(0x361344,.016);
- const pmrem=new T.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();scene.environment=env.texture;scene.environmentIntensity=.65;
- scene.add(new T.HemisphereLight(0xffe9ca,0x382354,2.3));
- const key=new T.DirectionalLight(0xffe5be,3.4);key.position.set(-4,15,5);key.castShadow=true;key.shadow.mapSize.set(512,512);key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;key.shadow.normalBias=.025;scene.add(key,key.target);
- const fill=new T.DirectionalLight(0xa6cfff,1.5);fill.position.set(5,6,-8);scene.add(fill);
- const gold=new T.MeshStandardMaterial({color:0xf3c66d,metalness:.65,roughness:.3}),red=new T.MeshStandardMaterial({color:0x951a3d,roughness:.4}),cream=new T.MeshStandardMaterial({color:0xe9cda5,roughness:.62}),plum=new T.MeshStandardMaterial({color:0x401a50,roughness:.7});
- function mesh(geometry,material,parent=scene){const o=new T.Mesh(geometry,material);o.castShadow=o.receiveShadow=true;parent.add(o);return o;}
- // One continuous ribbon: the marbles remain in contact through banked curves.
- function ribbon(left,right,offset,material){const pos=[],uv=[],idx=[],n=720,m=8;for(let i=0;i<=n;i++){const d=-3+i*(LENGTH+8)/n;for(let j=0;j<=m;j++){const p=point(d,T.MathUtils.lerp(left,right,j/m));pos.push(p.x,p.y+offset,p.z);uv.push(j/m,d/3);}}for(let i=0;i<n;i++)for(let j=0;j<m;j++){const a=i*(m+1)+j;idx.push(a,a+1,a+m+1,a+1,a+m+2,a+m+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();material.side=T.DoubleSide;return mesh(g,material);}
- ribbon(-1.95,1.95,-.01,gold);ribbon(-1.76,1.76,0,cream);ribbon(-2.06,2.06,-.20,red);
- const wallPosts=new T.InstancedMesh(new T.CylinderGeometry(.045,.045,.35,6),red,300),matrix=new T.Matrix4();wallPosts.castShadow=wallPosts.receiveShadow=true;scene.add(wallPosts);let postIndex=0;
- for(const lane of[-2.0,2.0]){
-  const points=Array.from({length:250},(_,i)=>point(-3+i*(LENGTH+8)/249,lane).add(new T.Vector3(0,.15,0)));
-  mesh(new T.TubeGeometry(new T.CatmullRomCurve3(points),600,.10,8,false),gold);
-  // Clear side guards match the rigid-body wall height and keep airborne
-  // marbles inside a bend; their thin upper rim makes the boundary visible.
-  const vertices=[],indices=[];for(let i=0;i<points.length;i++){const p=point(-3+i*(LENGTH+8)/249,lane);vertices.push(p.x,p.y,p.z,p.x,p.y+1.6,p.z);if(i<points.length-1){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}}
-  const guardGeometry=new T.BufferGeometry();guardGeometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));guardGeometry.setIndex(indices);guardGeometry.computeVertexNormals();const guard=mesh(guardGeometry,new T.MeshStandardMaterial({color:0xffe6c6,transparent:true,opacity:.055,depthWrite:false,side:T.DoubleSide,roughness:.15}));guard.castShadow=false;
-  const upper=points.map(p=>p.clone().add(new T.Vector3(0,1.45,0)));mesh(new T.TubeGeometry(new T.CatmullRomCurve3(upper),400,.025,6,false),gold);
-  // Deep sides make the circuit read as a built wooden toy, not a floating line.
-  for(let i=0;i<150;i++){const d=-3+i*(LENGTH+8)/149,p=point(d,lane);p.y-=.035;wallPosts.setMatrixAt(postIndex++,matrix.makeTranslation(p.x,p.y,p.z));}
+ const scene=new T.Scene(),camera=new T.PerspectiveCamera(56,1,.1,140);
+ scene.fog=new T.Fog(0x2a0b3a,18,60);
+ const pmrem=new T.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();scene.environment=env.texture;scene.environmentIntensity=.55;
+ scene.add(new T.HemisphereLight(0xffe2c0,0x2a0b3a,1.15));
+ const key=new T.DirectionalLight(0xfff0d8,2.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-7,right:7,top:7,bottom:-7,far:40});key.shadow.normalBias=.03;scene.add(key,key.target);
+ const rim=new T.DirectionalLight(0xff9a6a,1.2);rim.position.set(6,5,-20);scene.add(rim);
+ const mesh=(g,m,cast=true)=>{const o=new T.Mesh(g,m);o.castShadow=cast;o.receiveShadow=true;scene.add(o);return o;};
+ // Palette: red velvet floor, gold rails, red/cream curbs, plum night.
+ const floorMap=texture(128,256,(g,w,h)=>{g.fillStyle='#7a1030';g.fillRect(0,0,w,h);g.fillStyle='#8a1638';for(let y=0;y<h;y+=32)for(let x=(y/32%2)*16;x<w;x+=32){g.beginPath();g.moveTo(x+16,y);g.lineTo(x+32,y+16);g.lineTo(x+16,y+32);g.lineTo(x,y+16);g.fill();}g.fillStyle='#f3c66d';for(const x of[.2,.4,.6,.8])g.fillRect(x*w-1.5,8,3,h/2-16);});
+ const curbMap=texture(64,8,(g,w,h)=>{g.fillStyle='#fff1d2';g.fillRect(0,0,w,h);g.fillStyle='#c4213f';g.fillRect(0,0,w/2,h);});
+ const floor=new T.MeshStandardMaterial({map:floorMap,roughness:.6,envMapIntensity:.15,side:T.DoubleSide}),curb=new T.MeshStandardMaterial({map:curbMap,roughness:.45,envMapIntensity:.3,side:T.DoubleSide}),gold=new T.MeshStandardMaterial({color:0xf3c66d,metalness:.75,roughness:.28,emissive:0x3a2200}),skirt=new T.MeshStandardMaterial({color:0x2c0d3a,roughness:.8,side:T.DoubleSide}),red=new T.MeshStandardMaterial({color:0xb81f42,roughness:.35});
+ const span=[-4,LENGTH+RUNOUT],N=Math.round((span[1]-span[0])*5),ds=Array.from({length:N+1},(_,i)=>span[0]+i*(span[1]-span[0])/N);
+ function strip(fn,material,vRepeat,cast=false){const pos=[],uv=[],idx=[],cols=fn(0).length;ds.forEach((d,i)=>{fn(d).forEach((p,j)=>{pos.push(p.x,p.y,p.z);uv.push(j/(cols-1),d/vRepeat);});if(i<N)for(let j=0;j<cols-1;j++){const a=i*cols+j;idx.push(a,a+1,a+cols,a+1,a+cols+1,a+cols);}});const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return mesh(g,material,cast);}
+ strip(d=>{const h=halfWidth(d);return [-1,-.5,0,.5,1].map(s=>at(d,s*h));},floor,4);
+ for(const side of[-1,1]){
+  const e=d=>halfWidth(d)*side;
+  strip(d=>[at(d,e(d)),{...at(d,e(d)),y:center(d).y+.32},{...at(d,e(d)+side*.22),y:center(d).y+.32},{...at(d,e(d)+side*.22),y:center(d).y-.9}],curb,2);
+  strip(d=>[{...at(d,e(d)+side*.22),y:center(d).y-.9},{...at(d,e(d)+side*.22),y:center(d).y-1.6}],skirt,4);
+  const rail=new T.CatmullRomCurve3(ds.filter((_,i)=>i%3===0).map(d=>V(at(d,e(d)+side*.11),.62+(center(d).y-center(d).y))));
+  mesh(new T.TubeGeometry(rail,N,.055,8,false),gold);
  }
- for(let d=2;d<LENGTH;d+=8){for(const lane of[-1.66,1.66]){const p=point(d,lane),post=mesh(new T.CylinderGeometry(.10,.19,2.8,8),red);post.position.copy(p);post.position.y-=1.55;const collar=mesh(new T.TorusGeometry(.17,.03,6,14),gold);collar.rotation.x=Math.PI/2;collar.position.copy(p);collar.position.y-=.28;}}
- function sign(text,w,h){const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');g.fillStyle='#6d173b';g.fillRect(0,0,1024,256);g.strokeStyle='#ffe39a';g.lineWidth=15;g.strokeRect(8,8,1008,240);g.font='72px "Rammetto One"';g.fillStyle='#ffe8ae';g.textAlign='center';g.textBaseline='middle';g.fillText(text,512,135);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:t,side:T.DoubleSide}));}
+ const postGeo=new T.CylinderGeometry(.03,.03,.3,6),postCount=Math.ceil((span[1]-span[0])/1.5)*2,posts=new T.InstancedMesh(postGeo,gold,postCount),bulbs=new T.InstancedMesh(new T.SphereGeometry(.065,10,8),new T.MeshBasicMaterial({color:0xffffff,toneMapped:false}),postCount),bulbD=[],m4=new T.Matrix4();let k=0;
+ for(let d=span[0];d<span[1];d+=1.5)for(const side of[-1,1]){const p=at(d,(halfWidth(d)+.11)*side),y=center(d).y;posts.setMatrixAt(k,m4.makeTranslation(p.x,y+.47,p.z));bulbs.setMatrixAt(k,m4.makeTranslation(p.x,y+.7,p.z));bulbs.setColorAt(k,BULB_OFF);bulbD.push(d);k++;}
+ posts.count=bulbs.count=k;scene.add(posts,bulbs);let lit=-1;
+ function setLit(d){const n=bulbD.filter(b=>b<=d).length;if(n===lit)return;lit=n;bulbD.forEach((b,i)=>bulbs.setColorAt(i,b<=d?BULB_ON:BULB_OFF));bulbs.instanceColor.needsUpdate=true;}
+ // Obstacles: gold pin forest, striped circus drums, ramp lip.
+ const pinGeo=new T.CylinderGeometry(.07,.07,.55,10),capGeo=new T.SphereGeometry(.11,12,8);
+ for(const o of PINS){const p=at(o.d,o.lane),y=center(o.d).y;mesh(pinGeo,gold).position.set(p.x,y+.27,p.z);mesh(capGeo,red).position.set(p.x,y+.6,p.z);}
+ const drumMap=texture(256,64,(g,w,h)=>{g.fillStyle='#b81f42';g.fillRect(0,0,w,h);g.strokeStyle='#fff1d2';g.lineWidth=6;g.beginPath();for(let x=0;x<=w;x+=32){g.lineTo(x,14);g.lineTo(x+16,50);}g.stroke();},[2,1]);
+ const drumSide=new T.MeshStandardMaterial({map:drumMap,roughness:.4}),drumTop=new T.MeshStandardMaterial({color:0xfff1d2,roughness:.5});
+ for(const o of DRUMS){const p=at(o.d,o.lane),y=center(o.d).y;mesh(new T.CylinderGeometry(o.r,o.r,.6,32),[drumSide,drumTop,drumTop]).position.set(p.x,y+.3,p.z);for(const h of[.02,.6]){const r=mesh(new T.TorusGeometry(o.r+.01,.035,8,36),gold);r.rotation.x=Math.PI/2;r.position.set(p.x,y+h,p.z);}}
+ {const a=at(RAMP,-halfWidth(RAMP)),b=at(RAMP,halfWidth(RAMP)),lip=mesh(new T.CylinderGeometry(.06,.06,1,10),gold);lip.scale.y=Math.hypot(b.x-a.x,b.z-a.z);lip.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(b.x-a.x,0,b.z-a.z).normalize());lip.position.set((a.x+b.x)/2,center(RAMP).y+.03,(a.z+b.z)/2);}
+ const checker=texture(256,32,(g,w,h)=>{for(let x=0;x<16;x++)for(let y=0;y<2;y++){g.fillStyle=(x+y)%2?'#fff1d2':'#2c0d3a';g.fillRect(x*16,y*16,16,16);}});
+ {const w=halfWidth(LENGTH)*2,f=mesh(new T.PlaneGeometry(w,.5),new T.MeshStandardMaterial({map:checker,roughness:.6}),false);const c=center(LENGTH);f.rotation.set(-Math.PI/2,-Math.atan2(c.nz,c.nx),0,'YXZ');f.position.set(c.x,c.y+.012,c.z);}
  await document.fonts.load('24px "Rammetto One"');
- for(const [d,name]of[[0,'LARGADA'],[LENGTH,'CHEGADA']]){
-  const p=point(d);for(const side of[-1,1]){const post=mesh(new T.CylinderGeometry(.12,.15,2.2,12),red);post.position.copy(point(d,side*2.15)).add(new T.Vector3(0,1,0));const cap=mesh(new T.SphereGeometry(.18,14,10),gold);cap.position.copy(post.position);cap.position.y+=1.15;}
-  const board=sign(name,4.1,.65);board.position.copy(p).add(new T.Vector3(0,2,0));
- }
- const checkerCanvas=document.createElement('canvas');checkerCanvas.width=512;checkerCanvas.height=128;const cg=checkerCanvas.getContext('2d');for(let y=0;y<2;y++)for(let x=0;x<8;x++){cg.fillStyle=(x+y)%2?'#fff3d5':'#402039';cg.fillRect(x*64,y*64,64,64);}const checker=new T.CanvasTexture(checkerCanvas);checker.colorSpace=T.SRGBColorSpace;
- const finish=mesh(new T.PlaneGeometry(3.85,.7),new T.MeshStandardMaterial({map:checker,roughness:.7}));finish.rotation.x=-Math.PI/2;finish.position.copy(point(LENGTH)).add(new T.Vector3(0,.012,0));
- // Starting gate physically lifts before the first forward movement.
- const gate=mesh(new T.CylinderGeometry(.055,.055,3.95,12),gold);gate.rotation.z=Math.PI/2;gate.position.copy(point(.45)).add(new T.Vector3(0,.27,0));
- // A light circus surround stays subordinate to the moving marbles.
- const bulbGeo=new T.SphereGeometry(.075,8,6),bulbMat=new T.MeshBasicMaterial({color:0xffd790});
- for(let d=0;d<=LENGTH;d+=2){for(const lane of[-2.19,2.19]){const b=mesh(bulbGeo,bulbMat);b.position.copy(point(d,lane));b.position.y+=.35;}}
- for(let d=7;d<LENGTH;d+=12){const p=point(d,-4.0);const pedestal=mesh(new T.CylinderGeometry(.75,.9,.25,20),gold);pedestal.position.copy(p);pedestal.position.y-=1;const cone=mesh(new T.ConeGeometry(.8,1.4,12),red);cone.position.copy(p);cone.position.y-=.2;}
- const balls=[],halos=[];
+ function arch(d,text){const c=center(d),w=halfWidth(d)+.4,angle=-Math.atan2(c.nz,c.nx);
+  for(const s of[-1,1]){const p=at(d,s*w);mesh(new T.CylinderGeometry(.09,.11,2.2,12),gold).position.set(p.x,c.y+1.1,p.z);}
+  const cv=document.createElement('canvas');cv.width=512;cv.height=96;const g=cv.getContext('2d');g.fillStyle='#b81f42';g.fillRect(0,0,512,96);g.strokeStyle='#f3c66d';g.lineWidth=8;g.strokeRect(4,4,504,88);g.font='52px "Rammetto One"';g.fillStyle='#fff1d2';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256,52);const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;
+  const b=mesh(new T.PlaneGeometry(w*2,w*2*96/512),new T.MeshBasicMaterial({map:t,side:T.DoubleSide}),false);b.position.set(c.x,c.y+2.05,c.z);b.rotation.y=angle;}
+ arch(0,'LARGADA');arch(LENGTH,'CHEGADA');
+ const gate=mesh(new T.CylinderGeometry(.05,.05,4.1,12),gold);gate.rotation.z=Math.PI/2;{const c=center(.5);gate.rotation.y=-Math.atan2(c.nz,c.nx);}
+ // Distant warm lights in the dark: the big top at night.
+ {const n=260,p=new Float32Array(n*3);for(let i=0;i<n;i++){const d=Math.random()*(LENGTH+30)-10,c=center(d),s=Math.random()<.5?-1:1;p.set([c.x+s*(6+Math.random()*22),c.y-6+Math.random()*16,c.z+(Math.random()-.5)*6],i*3);}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));scene.add(new T.Points(g,new T.PointsMaterial({color:0xffcf7a,size:.16,fog:false,transparent:true,opacity:.75})));}
+ const arts=await Promise.all(COMPETITORS.map(c=>loadImage(c.art))),balls=[],halos=[];
  for(let i=0;i<5;i++){
-  const root=new T.Group();scene.add(root);balls.push(root);
-  const material=new T.MeshPhysicalMaterial({color:COMPETITORS[i].color,roughness:.17,metalness:.03,clearcoat:.8,clearcoatRoughness:.12});mesh(new T.SphereGeometry(RADIUS,36,24),material,root);
-  const pearl=new T.MeshStandardMaterial({color:0xfff1c7,roughness:.27,metalness:.12});
-  for(let band=0;band<2;band++){const points=[];for(let j=0;j<=90;j++){const t=j/90*Math.PI*2,phi=t*1.4+band*Math.PI,r=RADIUS+.002;points.push(new T.Vector3(r*Math.sin(t)*Math.cos(phi),r*Math.cos(t),r*Math.sin(t)*Math.sin(phi)));}mesh(new T.TubeGeometry(new T.CatmullRomCurve3(points),100,.012,6,false),pearl,root);}
-  const h=mesh(new T.TorusGeometry(.39,.035,8,40),new T.MeshBasicMaterial({color:0xffe3a0,toneMapped:false,transparent:true,opacity:.9}));h.rotation.x=Math.PI/2;halos.push(h);
+  const map=texture(512,256,(g,w,h)=>{g.fillStyle=COMPETITORS[i].css;g.fillRect(0,0,w,h);for(const cx of[128,384]){g.fillStyle='#fff6e2';g.beginPath();g.arc(cx,h/2,62,0,7);g.fill();g.strokeStyle='#f3c66d';g.lineWidth=8;g.stroke();const a=arts[i];if(a){const s=Math.min(98/a.width,98/a.height);g.drawImage(a,cx-a.width*s/2,h/2-a.height*s/2,a.width*s,a.height*s);}}});
+  const b=mesh(new T.SphereGeometry(RADIUS,32,22),new T.MeshPhysicalMaterial({map,roughness:.25,clearcoat:1,clearcoatRoughness:.1,envMapIntensity:.6}));balls.push(b);
+  const h=mesh(new T.TorusGeometry(.4,.035,8,40),new T.MeshBasicMaterial({color:0xffd36a,toneMapped:false}),false);h.rotation.x=Math.PI/2;halos.push(h);
  }
- let selected=0,seed=0,version=3,active=false,paused=false,elapsed=0,previous=performance.now(),raf,finished=false,lastTick=-1,slow=0,lowQuality=false;
- let recording=null,preparing=false,request=0;
- const worker=new Worker(new URL('./physics-worker.js',import.meta.url),{type:'module'});
- worker.onmessage=({data})=>{if(data.id!==request)return;if(data.error){onLabel?.('Não foi possível preparar a corrida. Recarregue para retomar.');console.error(data.error);return;}recording=data.recording;preparing=false;lastTick=-1;previous=performance.now();};
- worker.onerror=()=>{onLabel?.('Recarregue para retomar a corrida.');};
- const timeFor=i=>version===3?recording?arrival(recording,seed,i):Infinity:finishTime(seed,i,version);
- const progressFor=(i,t)=>version===3?recording?clamp(-sample(recording,seed,t)[i][2]/LENGTH,0,1):0:progress(seed,i,t,version);
- const focus=new T.Vector3(),cameraTarget=new T.Vector3(),cameraPosition=new T.Vector3();let cameraReady=false;let ranking=[0,1,2,3,4],shownLabels=[];const look=new T.Vector3();
+ const FIRST=new T.Color(0xffd36a),SECOND=new T.Color(0xfff6e4);
+ const CONF=160,cp=new Float32Array(CONF*3),cv=new Float32Array(CONF*3),cc=new Float32Array(CONF*3),pal=[0xf3c66d,0xc4213f,0x9b46ee,0xfff1d2,0x69d6f2].map(c=>new T.Color(c)),cg=new T.BufferGeometry();cg.setAttribute('position',new T.BufferAttribute(cp,3));cg.setAttribute('color',new T.BufferAttribute(cc,3));
+ const confetti=new T.Points(cg,new T.PointsMaterial({size:.1,vertexColors:true,toneMapped:false}));confetti.visible=false;confetti.frustumCulled=false;scene.add(confetti);let confLife=0;
+ function burst(){const c=center(LENGTH);for(let i=0;i<CONF;i++){cp.set([c.x+(Math.random()-.5)*2.4,c.y+2,c.z],i*3);cv.set([(Math.random()-.5)*3,1+Math.random()*3,(Math.random()-.5)*2],i*3);pal[i%5].toArray(cc,i*3);}cg.attributes.color.needsUpdate=true;confLife=2.4;confetti.visible=!reduced;}
+ let lat=null,selected=0,selected2=-1,race=null,active=false,paused=false,elapsed=0,previous=performance.now(),raf,finished=false,lastTick=-1,slow=0,lowQuality=false,photo=0,burstDone=false,ranking=[0,1,2,3,4],shown=[],seed=0;
+ const look=new T.Vector3(),camPos=new T.Vector3(),camLook=new T.Vector3(),axis=new T.Vector3(),q=new T.Quaternion();let camReady=false;
  function resize(){const r=canvas.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}const observer=new ResizeObserver(resize);observer.observe(canvas);resize();const clearClock=()=>{previous=performance.now();};document.addEventListener('visibilitychange',clearClock);
- function reset(index=selected){selected=index;version=3;active=false;elapsed=0;finished=false;recording=null;preparing=false;request++;cameraReady=false;onLabel?.('Escolha sua bolinha e torça');}
- function play(outcome,from=0){seed=outcome.seed;version=outcome.version??1;selected=outcome.selected;elapsed=from;active=true;finished=false;lastTick=-1;cameraReady=false;previous=performance.now();recording=null;preparing=version===3;if(preparing){request++;worker.postMessage({seed,id:request});}}
- function frame(now){raf=requestAnimationFrame(frame);const dt=clamp((now-previous)/1000,0,1);previous=now;if(paused||document.hidden)return;
-  slow=dt>.065?slow+1:Math.max(0,slow-1);if(slow>5&&!lowQuality){lowQuality=true;renderer.setPixelRatio(Math.min(devicePixelRatio,.85));resize();}
-  if(active&&!finished&&!preparing)elapsed+=dt;
-  const t=Math.max(0,elapsed-COUNTDOWN),count=version>=2?5:4,ids=Array.from({length:count},(_,i)=>i),positions=ids.map(i=>active?progressFor(i,t):0),order=ids.slice().sort((a,b)=>positions[b]-positions[a]||(positions[a]===1?timeFor(a)-timeFor(b):a-b)),lead=order[0];
-  ranking=order;const poses=version===3&&recording?sample(recording,seed,t):null;
-  balls.forEach((ball,i)=>{ball.visible=i<count;if(i>=count){halos[i].visible=false;return;}const d=positions[i]*LENGTH,p=poses?new T.Vector3(...poses[i].slice(0,3)):ballPoint(positions[i],i,count,active);ball.position.copy(p);if(poses)ball.quaternion.set(...poses[i].slice(3,7)).normalize();else ball.rotation.set(-d/RADIUS,Math.sin(d*.12)*.5,i*.7);halos[i].visible=i===selected;halos[i].position.copy(p);halos[i].position.y+=.07-RADIUS;});
-  gate.position.y=point(.45).y+.27+(active?T.MathUtils.smoothstep(elapsed,1.5,2.5)*1.6:0);
-  const pose=viewPose(positions,selected,camera.aspect,reduced,active,poses?balls[selected].position:null);focus.copy(pose.focus);cameraTarget.copy(pose.target);cameraPosition.copy(pose.position);
-  const a=cameraReady?1-Math.exp(-dt*3):1;camera.position.lerp(cameraPosition,a);look.lerp(cameraTarget,a);camera.lookAt(look);cameraReady=true;
-  key.position.copy(focus).add(new T.Vector3(-4,12,6));key.target.position.copy(focus);key.target.updateMatrixWorld();
+ const distances=t=>race?[0,1,2,3,4].map(i=>distance(race,i,t)):[0,0,0,0,0];
+ function reset(i=selected,i2=-1){selected=i;selected2=i2;race=null;active=false;elapsed=0;finished=false;camReady=false;photo=0;burstDone=false;onLabel?.('Escolha sua bolinha e torça');}
+ function play(outcome,from=0){selected=outcome.selected;selected2=outcome.selected2??-1;seed=outcome.seed;camReady=false;photo=0;finished=false;lastTick=-1;previous=performance.now();
+  // Rounds from older versions are already settled: show the result straight away.
+  if((outcome.version??1)!==4){race=null;active=false;finished=true;setTimeout(()=>onFinish?.(),0);return;}
+  race=plan(seed,circusPair(seed));elapsed=from;active=true;burstDone=from>COUNTDOWN+race.times[race.order[0]];}
+ function frame(now){raf=requestAnimationFrame(frame);const dt=clamp((now-previous)/1000,0,.1);previous=now;if(paused||document.hidden)return;
+  slow=dt>.06?slow+1:Math.max(0,slow-1);if(slow>6&&!lowQuality){lowQuality=true;renderer.setPixelRatio(Math.min(devicePixelRatio,.9));renderer.shadowMap.enabled=false;resize();}
+  if(active&&!finished)elapsed+=elapsed<COUNTDOWN?dt:dt*(1-.7*photo);
+  const t=Math.max(0,elapsed-COUNTDOWN),d=distances(t),l=active?(lat=lanes(race,t,d,lat)):(lat=null,[-1.46,-.73,0,.73,1.46]),order=[0,1,2,3,4].sort((a,b)=>d[b]-d[a]);ranking=order;
+  balls.forEach((b,i)=>{const p=at(d[i],l[i]),c=center(d[i]);b.position.set(p.x,ballY(d[i]),p.z);axis.set(c.nx,0,c.nz);b.quaternion.copy(q.setFromAxisAngle(axis,-d[i]/RADIUS)).multiply(q.setFromAxisAngle(new T.Vector3(0,1,0),Math.PI/2+Math.atan2(c.nz,c.nx)));
+   const h=halos[i];h.visible=i===selected||i===selected2;h.material.color.copy(i===selected2?SECOND:FIRST);h.position.set(p.x,center(d[i]).y+.03,p.z);});
+  {const c=center(.5);gate.position.set(c.x,c.y+.25+(active?T.MathUtils.smoothstep(elapsed,1.6,2.5)*1.5:0),c.z);}
+  const s=[...d].sort((a,b)=>b-a),pair=selected2>=0,close=s[0]-s[1]<1||pair&&s[1]-s[2]<1;
+  const want=active&&!finished&&!reduced&&s[0]>LENGTH-6&&s[pair?2:1]<LENGTH+.2&&close;
+  photo+=((want?1:0)-photo)*Math.min(1,dt*(want?6:2));if(photo<.002)photo=0;
+  setLit(active?Math.min(s[0],LENGTH+1):-1);
+  // Low chase camera behind the chosen marble, nudged toward the leader.
+  const own=d[selected],focusD=clamp(own*.8+s[0]*.2,0,LENGTH+3),fc=center(focusD),back=camera.aspect<.85?5.4:4.6,bc=at(Math.max(-4,focusD-back),l[selected]*.55);
+  camPos.set(bc.x,center(Math.max(-4,focusD-back)).y+2.5,bc.z);const ahead=at(focusD+2.2,l[selected]*.5);camLook.set(ahead.x,center(focusD+2.2).y+.35,ahead.z);
+  if(!active){const st=at(-5.5,0);camPos.set(st.x+1.2,center(-5.5).y+2.7,st.z);camLook.set(center(2).x,center(2).y+.2,center(2).z);}
+  if(photo){const f=center(LENGTH),side=at(LENGTH-2.6,camera.aspect<.85?-3.2:-2.8),sy=center(LENGTH-2.6).y;camPos.lerp(new T.Vector3(side.x,sy+1.9,side.z),photo);camLook.lerp(new T.Vector3(f.x,f.y+.35,f.z),photo);}
+  const a=camReady?1-Math.exp(-dt*(photo?5:4.5)):1;camera.position.lerp(camPos,a);look.lerp(camLook,a);camera.lookAt(look);camReady=true;
+  key.position.set(fc.x-3,fc.y+11,fc.z+5);key.target.position.set(fc.x,fc.y,fc.z);key.target.updateMatrixWorld();
+  if(active&&!burstDone&&s[0]>=LENGTH){burstDone=true;burst();}
+  if(confLife>0){confLife-=dt;for(let i=0;i<CONF;i++){cv[i*3+1]-=5*dt;for(let j=0;j<3;j++)cp[i*3+j]+=cv[i*3+j]*dt;}cg.attributes.position.needsUpdate=true;if(confLife<=0)confetti.visible=false;}
   renderer.render(scene,camera);
-  const labels=balls.map((b,i)=>{const p=b.position.clone().add(new T.Vector3(0,.65,0)).project(camera);return {i,x:(p.x+1)/2,y:(1-p.y)/2,place:order.indexOf(i)+1,visible:i<count&&p.z<1&&Math.abs(p.x)<1.2&&Math.abs(p.y)<1.2};});
-  shownLabels=labels;
-  if(active&&Math.floor(elapsed*5)!==lastTick){lastTick=Math.floor(elapsed*5);onTick?.({elapsed,time:t,preparing,lead,order,positions,labels,phase:Math.max(...positions)<.33?'Curvas do circo':Math.max(...positions)<.72?'Sobe e desce':'Reta final',countdown:elapsed<COUNTDOWN?preparing?'PREPARANDO…':Math.ceil(COUNTDOWN-elapsed):0});}
-  else if(!active)onTick?.({elapsed:0,time:0,lead:null,order,positions,labels,countdown:0});
-  if(active&&!finished&&t>Math.max(...ids.map(i=>timeFor(i)))+.5){finished=true;onFinish?.();}
+  const labels=balls.map((b,i)=>{const p=b.position.clone().add(new T.Vector3(0,.62,0)).project(camera);return {i,x:(p.x+1)/2,y:(1-p.y)/2,place:order.indexOf(i)+1,visible:p.z<1&&Math.abs(p.x)<1.15&&Math.abs(p.y)<1.15};});shown=labels;
+  const pos=d.map(x=>clamp(x/LENGTH,0,1));
+  if(active&&Math.floor(elapsed*5)!==lastTick){lastTick=Math.floor(elapsed*5);onTick?.({elapsed,time:t,preparing:false,lead:order[0],order,positions:pos,labels,photo:photo>.5,phase:phase(s[0]),countdown:elapsed<COUNTDOWN?Math.ceil(COUNTDOWN-elapsed):0});}
+  else if(!active)onTick?.({elapsed:0,time:0,lead:null,order,positions:pos,labels,countdown:0});
+  if(active&&!finished&&t>settledAt(race)){finished=true;onFinish?.();}
  }
  reset();raf=requestAnimationFrame(frame);
- return {play,reset,select(i){if(!active)selected=i;},setPaused(v){paused=v;previous=performance.now();},arrival:timeFor,status:()=>({active,paused,preparing,elapsed,seed,version,selected,finished,labels:shownLabels,order:[...ranking],positions:Array.from({length:version>=2?5:4},(_,i)=>active?progressFor(i,Math.max(0,elapsed-COUNTDOWN)):0)}),destroy(){worker.terminate();cancelAnimationFrame(raf);observer.disconnect();document.removeEventListener('visibilitychange',clearClock);const gs=new Set(),ms=new Set(),ts=new Set();scene.traverse(o=>{if(o.geometry)gs.add(o.geometry);for(const m of o.material?Array.isArray(o.material)?o.material:[o.material]:[])ms.add(m);});gs.forEach(g=>g.dispose());ms.forEach(m=>{for(const v of Object.values(m))if(v?.isTexture)ts.add(v);m.dispose();});ts.forEach(t=>t.dispose());env.dispose();renderer.dispose();}};
+ return {play,reset,select(i,i2=-1){if(!active){selected=i;selected2=i2;}},setPaused(v){paused=v;previous=performance.now();},arrival:i=>race?race.times[i]:Infinity,version:()=>4,
+  status:()=>({active,paused,preparing:false,elapsed,seed,version:4,selected,selected2,finished,photo,labels:shown,order:[...ranking],positions:distances(Math.max(0,elapsed-COUNTDOWN)).map(x=>clamp(x/LENGTH,0,1))}),
+  destroy(){cancelAnimationFrame(raf);observer.disconnect();document.removeEventListener('visibilitychange',clearClock);scene.traverse(o=>{o.geometry?.dispose();for(const m of o.material?[].concat(o.material):[]){m.map?.dispose();m.dispose();}});env.dispose();renderer.dispose();}};
 }

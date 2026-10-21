@@ -27,14 +27,19 @@ test('Fingo preserves the design table and settles the five-number game by balls
     previous={...drop,slots:null};
   }
 });
-test('Fingo always offers a golden target and ends an incomplete round at 21 balls',()=>{
+test('Fingo pays 98% with 10 trios when every ball is dropped on a golden pipe',()=>{
+  const C=(n,k)=>{let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return r;},h=engine.FINGO_HIT;let rtp=0;
+  for(let n=5;n<=engine.FINGO_BALLS;n++)rtp+=C(n-1,4)*h**5*(1-h)**(n-5)*engine.FINGO_MULTIPLIERS[Math.floor((n-1)/3)];
+  assert.equal(engine.FINGO_MULTIPLIERS.length*3,engine.FINGO_BALLS);assert.ok(Math.abs(rtp-.98)<.0005,String(rtp));
+});
+test('Fingo always offers a golden target and ends an incomplete round at 30 balls',()=>{
   let previous=null;
-  for(let used=0;used<21;used++) {
+  for(let used=0;used<30;used++) {
     const rolled=engine.fingo(10,previous,'roll','round',undefined,()=>.99);
     assert.ok(rolled.slots.some((n,c)=>!rolled.marks[c] && n===rolled.targets[c]));
     for(let c=0;c<5;c++) assert.ok(rolled.slots[c]>=c*15+1 && rolled.slots[c]<=c*15+15);
     const drop=engine.fingo(10,rolled,'drop','round',4,()=>.99);
-    assert.equal(drop.winUnits,0);assert.equal(drop.ended,used===20);
+    assert.equal(drop.winUnits,0);assert.equal(drop.ended,used===29);
     previous={...drop,slots:null};
   }
 });

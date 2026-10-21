@@ -294,7 +294,7 @@ with sync_playwright() as p:
             ? (array[0]=0,array) : original(array);
         }''')
     def fingo_drop(tab,column):
-        canvas=tab.locator('canvas[width="906"][height="1168"]')
+        canvas=tab.locator('canvas[width="906"][height="1018"]')
         # Wait for the rendered board to accept a drop after the rolling phase.
         tab.wait_for_function('''(column)=>{
           const c=document.querySelector('canvas[width="906"]');if(!c) return false;

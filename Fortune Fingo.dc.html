@@ -15,7 +15,7 @@
 <style>
 @font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
-html, body { margin: 0; padding: 0; height: 100%; background: #0b3d12; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+html, body { margin: 0; padding: 0; height: 100%; background: #2a0a4a; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fgPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
@@ -31,10 +31,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes fgShake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-6px, 3px); } 40% { transform: translate(6px, -3px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(4px, -2px); } }
 </style>
 </helmet>
-<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #0b3d12 url('assets/fingo/background.webp') 50% 50% / cover;">
-  <div style="position: absolute; inset: 0; background: rgba(0,20,4,.35);"></div>
+<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a url('assets/fingo/stage-bg.webp') 50% 50% / cover;">
+  <div style="position: absolute; inset: 0; background: rgba(20,4,36,.35);"></div>
 
-  <div ref="{{ stageRef }}" data-screen-label="Fortune Fingo" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none; background: url('assets/fingo/background.webp') 50% 50% / 453px auto;">
+  <div ref="{{ stageRef }}" data-screen-label="Fortune Fingo" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none; background: url('assets/fingo/stage-bg.webp') 50% 0 / 453px auto;">
 
 
     <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
@@ -46,43 +46,47 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- prêmio agora + bolas até ele cair + próximo valor (aposta fica junto do GIRAR) -->
-    <div aria-label="Ganha {{ prizeText }}. Cai para {{ nextText }} em {{ leftInTier }} bolas" style="position: absolute; z-index: 21; left: 0; right: 0; top: 84px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-      <div style="height: 48px; padding: 0 18px 0 6px; box-sizing: border-box; border-radius: 24px; display: flex; align-items: center; gap: 8px; background: {{ prizeBg }}; box-shadow: 0 3px 0 #8a4a05, 0 0 0 2px #6b2e05; transition: background .4s;">
-        <img src="assets/fingo/coin.webp" alt="" style="width: 36px; height: 36px;">
-        <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ prizeText }}</span>
+    <div aria-label="Ganha {{ prizeText }}. Cai para {{ nextText }} em {{ leftInTier }} bolas" style="position: absolute; z-index: 21; left: 0; right: 0; top: 76px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <div style="height: 44px; padding: 0 16px 0 5px; box-sizing: border-box; border-radius: 22px; display: flex; align-items: center; gap: 7px; background: {{ prizeBg }}; box-shadow: 0 3px 0 #8a4a05, 0 0 0 2px #6b2e05; transition: background .4s;">
+        <img src="assets/symbols/sym-coin.webp" alt="" style="width: 32px; height: 32px;">
+        <span style="font-size: 24px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ prizeText }}</span>
       </div>
       <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}">
-        <div style="height: 36px; padding: 0 12px 0 10px; box-sizing: border-box; border-radius: 18px; display: flex; align-items: center; gap: 8px; background: rgba(2,22,6,.75);">
-          <div style="display: flex; gap: 4px;">
-            <sc-for list="{{ tierDots }}" as="d" hint-placeholder-count="3">
-              <div style="width: 16px; height: 16px; border-radius: 50%; background: {{ d.bg }}; box-shadow: {{ d.sh }}; transition: background .3s;"></div>
+        <div style="height: 44px; padding: 0 12px 0 9px; box-sizing: border-box; border-radius: 22px; display: flex; align-items: center; gap: 8px; background: rgba(2,22,6,.75);">
+          <div style="display: flex; gap: 3px;">
+            <sc-for list="{{ tierDots }}" as="d" hint-placeholder-count="6">
+              <div style="width: 26px; height: 26px; border-radius: 50%; background: {{ d.bg }}; box-shadow: {{ d.sh }}; transition: background .3s; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; line-height: 1; color: #fff;">{{ d.mark }}</div>
             </sc-for>
           </div>
-          <span style="font-size: 18px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75);">→</span>
-          <span style="font-size: 18px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75); font-variant-numeric: tabular-nums;">{{ nextText }}</span>
+          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75);">→</span>
+          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75); font-variant-numeric: tabular-nums;">{{ nextText }}</span>
         </div>
       </sc-if>
     </div>
 
     <!-- linha de 5 bolas: números sorteados no início (1 por coluna) -->
-    <div style="position: absolute; z-index: 5; left: 30px; right: 30px; top: 140px; height: 72px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; justify-items: center;">
+    <div style="position: absolute; z-index: 5; left: 22px; right: 22px; top: 138px; height: 82px; box-sizing: border-box; padding: 0 8px; border-radius: 41px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; justify-items: center; background: #fffaf0; box-shadow: inset 0 -3px 0 rgba(160,110,40,.25), 0 0 0 3px #f0b41f, 0 6px 14px rgba(0,0,0,.4);">
       <sc-for list="{{ tballs }}" as="t" hint-placeholder-count="5">
-        <div style="position: relative; width: 66px; height: 66px; border-radius: 50%; background: {{ t.bg }}; box-shadow: {{ t.sh }}; filter: {{ t.filter }}; animation: {{ t.anim }}; transition: filter .3s;">
-          <div style="position: absolute; left: 12px; top: 12px; width: 42px; height: 42px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #f4f1ea 70%, #d9d3c4 100%); box-shadow: inset 0 -2px 3px rgba(0,0,0,.18); display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 23px; font-weight: 800; line-height: 1; color: {{ t.color }}; font-variant-numeric: tabular-nums;">{{ t.text }}</span>
-          </div>
-          <div style="position: absolute; left: 11px; top: 6px; width: 26px; height: 13px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,255,255,.85), rgba(255,255,255,0)); transform: rotate(-25deg); pointer-events: none;"></div>
+        <div style="position: relative; width: 70px; height: 70px; border-radius: 50%; background: url('assets/fingo/target-balls.webp') {{ t.pos }} 0 / 350px 70px no-repeat; box-shadow: {{ t.sh }}; filter: {{ t.filter }}; animation: {{ t.anim }}; transition: filter .3s; display: flex; align-items: center; justify-content: center;">
+          <sc-if value="{{ t.marked }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: radial-gradient(circle at 38% 30%, #fbecc4 0%, #e6bc62 35%, #c98f2e 70%, #8a5510 100%); box-shadow: inset 0 -2px 3px rgba(100,50,0,.45), 0 0 8px rgba(220,160,60,.7);"></div>
+          </sc-if>
+          <span style="position: relative; font-size: 24px; font-weight: 800; line-height: 1; color: {{ t.color }}; font-variant-numeric: tabular-nums; transform: translateY(1px); text-shadow: {{ t.numShadow }};">{{ t.text }}</span>
         </div>
       </sc-for>
     </div>
 
     <!-- Plinko (física Matter.js com os valores do original) -->
-    <div onPointerDown="{{ boardDown }}" style="position: absolute; z-index: 4; left: 0; top: 218px; width: 453px; height: 584px; touch-action: none; cursor: {{ boardCursor }}; animation: {{ shakeAnim }};">
-      <canvas ref="{{ canvasRef }}" width="906" height="1168" style="position: absolute; inset: 0; width: 453px; height: 584px;"></canvas>
+    <img src="assets/fingo/board-off.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none;">
+    <img src="assets/fingo/board-lit.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none; opacity: {{ boardLit }};">
+    <div style="position: absolute; z-index: 5; left: 207.5px; top: 241px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Rammetto One', 'Baloo 2', sans-serif; line-height: 1; color: #8a4f06; text-shadow: 0 1.5px 0 #fff3c0, 0 -1px 0 rgba(90,45,0,.6); font-size: {{ roundSize }};" aria-label="{{ roundLabel }}">{{ roundMark }}</div>
+    <div style="position: absolute; z-index: 4; left: 29px; top: 290px; width: 453px; height: 509px; transform: scale(.87); transform-origin: 0 0;">
+    <div onPointerDown="{{ boardDown }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 509px; touch-action: none; cursor: {{ boardCursor }}; animation: {{ shakeAnim }};">
+      <canvas ref="{{ canvasRef }}" width="906" height="1018" style="position: absolute; inset: 0; width: 453px; height: 509px;"></canvas>
       <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 70px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); pointer-events: none;">
         <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="5">
           <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 6px;">
-            <span style="font-size: 32px; font-weight: 800; line-height: 1; color: {{ b.color }}; font-variant-numeric: tabular-nums; text-shadow: 0 2px 2px rgba(0,0,0,.85), 0 0 {{ b.glow }} rgba(255,220,80,.9); filter: {{ b.blur }}; opacity: {{ b.op }}; animation: {{ b.anim }};">{{ b.text }}</span>
+            <span style="font-size: 42px; font-weight: 800; line-height: 1; color: {{ b.color }}; font-variant-numeric: tabular-nums; text-shadow: 0 2px 2px rgba(0,0,0,.85), 0 0 {{ b.glow }} rgba(255,220,80,.9); filter: {{ b.blur }}; opacity: {{ b.op }}; animation: {{ b.anim }};">{{ b.text }}</span>
           </div>
         </sc-for>
       </div>
@@ -96,6 +100,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </sc-if>
     </div>
 
+    </div>
     <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
       <div style="position: absolute; z-index: 9; left: {{ c.x }}; top: {{ c.y }}; width: 10px; height: 14px; border-radius: 2px; background: {{ c.bg }}; --dx: {{ c.dx }}; --dy: {{ c.dy }}; animation: fgConf .9s ease-out forwards; pointer-events: none;"></div>
     </sc-for>
@@ -105,7 +110,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="position: absolute; z-index: 8; left: 0; right: 0; top: 430px; display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; animation: fgPop .25s ease-out;">
         <sc-if value="{{ showBetChip }}" hint-placeholder-val="{{ true }}">
           <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="pointer-events: auto; height: 40px; padding: 0 14px 0 5px; border-radius: 20px; display: flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(2,22,6,.88); box-shadow: inset 0 0 0 2px rgba(255,210,87,.7); animation: {{ betAnim }};" style-active="transform: scale(.95);">
-            <img src="assets/fingo/coin.webp" alt="" style="width: 30px; height: 30px;">
+            <img src="assets/symbols/sym-coin.webp" alt="" style="width: 30px; height: 30px;">
             <span style="font-size: 20px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
             <span style="font-size: 16px; line-height: 1; color: #ffd257;">✎</span>
           </div>
@@ -151,9 +156,9 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="position: absolute; inset: 0; z-index: 50; background: rgba(10,2,20,.9); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
         <div style="width: 100%; padding: 20px; box-sizing: border-box; border-radius: 20px; background: #3d0a63; border: 2px solid #f0b41f; color: #fff3c4;">
           <h2 style="font-size: 24px; color: #ffd257;">TABELA DE PAGAMENTOS</h2>
-          <p>Uma aposta vale uma rodada de até 21 bolas. Acerte os cinco números para receber o prêmio. O multiplicador diminui a cada trio de bolas.</p>
-          <sc-for list="{{ payList }}" as="p" hint-placeholder-count="7">
-            <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #ffffff22;"><span>{{ p.balls }} bolas</span><strong>{{ p.mult }}</strong></div>
+          <p>Uma aposta vale até 10 rounds de 3 bolas. Acerte os cinco números para receber o prêmio. O multiplicador diminui a cada round.</p>
+          <sc-for list="{{ payList }}" as="p" hint-placeholder-count="10">
+            <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #ffffff22;"><span>{{ p.balls }}</span><strong>{{ p.mult }}</strong></div>
           </sc-for>
           <button onClick="{{ closePays }}" style="width: 100%; margin-top: 16px; padding: 14px; border: 0; border-radius: 14px; background: #2ec962; color: white; font: 800 20px 'Baloo 2'; cursor: pointer;">FECHAR</button>
         </div>
@@ -173,18 +178,19 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// Fortune Fingo: uma aposta, cinco alvos fixos e até 21 bolas.
+// Fortune Fingo: uma aposta, cinco alvos fixos e até 30 bolas (10 rounds de 3).
 // GIRAR grava os canos; escolher uma coluna grava a queda antes da física.
 // O prêmio por trio segue a tabela do design, sem prêmios parciais ou poderes.
 const COLS = ['L', 'U', 'C', 'K', 'Y'], TH = ['#e11d48', '#0284c7', '#059669', '#d97706', '#7c3aed'];
-// 21 bolas em 7 trios; fechar os 5 no trio k paga TRIO[k]. Sim 200k: RTP 95,7%, fecha 49%. Todo giro tem ≥1 cano dourado.
-const TRIO = [25, 25, 8, 4, 2, 1, 0.4], TIERS = TRIO.map((m, i) => [(i + 1) * 3, m]), BALLS = 21, HIT = 0.2161, G = 0.28;
+// 30 bolas em 10 rounds de 3; fechar os 5 no round k paga TRIO[k]. Exato: RTP 98,00%, fecha 27,5%. Todo giro tem ≥1 cano dourado.
+const TRIO = [50, 25, 12.5, 10, 9, 7, 5, 3, 2, 1], TIERS = TRIO.map((m, i) => [(i + 1) * 3, m]), BALLS = 30, HIT = 0.11783, G = 0.28;
 const TC = [['#fb7185', '#e11d48', '#881337'], ['#38bdf8', '#0284c7', '#0c4a6e'], ['#34d399', '#059669', '#064e3b'], ['#fbbf24', '#d97706', '#78350f'], ['#a78bfa', '#7c3aed', '#3b0764']];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', FKEY = 'fortuneCircus.fingo.v5';
-const W = 453, H = 584, BW = W / 5;
+// The board fills the felt: full width at the buckets, the felt narrows by INSET on each side at the top.
+const W = 453, H = 509, BW = W / 5, INSET = 45, inset = y => INSET * Math.max(0, Math.min(1, 1 - y / H));
 // PHYSICS_CONFIG do original
-const PC = { BALL_R: 0.024, BALL_REST: 0.75, BALL_FRIC: 0.005, BALL_AIR: 0.004, BALL_DENS: 1.5, CHAOS: 3, PEG_R: 0.03, PEG_RS: 0.03, PEG_REST_L: 0.9, PEG_REST_S: 1.0, PEG_COLS: 7, GAP: 2.4, ROWS_MIN: 10, ROWS_MAX: 16, WALL_REST: 1.3, GRAV: 1.6 };
+const PC = { BALL_R: 0.039, BALL_REST: 0.75, BALL_FRIC: 0.005, BALL_AIR: 0.004, BALL_DENS: 1.5, CHAOS: 3, PEG_R: 0.022, PEG_RS: 0.03, PEG_REST_L: 0.9, PEG_REST_S: 1.0, PEG_COLS: 7, GAP: 2.4, ROWS_MIN: 10, ROWS_MAX: 16, WALL_REST: 1.3, GRAV: 1.6 };
 const LINES = []; for (let r = 0; r < 5; r++) LINES.push([0, 1, 2, 3, 4].map(c => r * 5 + c)); for (let c = 0; c < 5; c++) LINES.push([0, 1, 2, 3, 4].map(r => r * 5 + c)); LINES.push([0, 6, 12, 18, 24], [4, 8, 12, 16, 20]);
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const multAt = u => { for (const [t, m] of TIERS) if (u <= t) return m; return 0; };
@@ -203,8 +209,8 @@ class Component extends DCLogic {
   async bakeBall() { try { const T = await import('./runtime/three.module.js'), S = 128, N = 32;
     const r = new T.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true }); r.setSize(S, S); r.setPixelRatio(1); r.outputColorSpace = T.SRGBColorSpace; r.toneMapping = T.ACESFilmicToneMapping;
     const sc = new T.Scene(), cam = new T.OrthographicCamera(-1.05, 1.05, 1.05, -1.05, 0.1, 10); cam.position.z = 5;
-    const tc = document.createElement('canvas'); tc.width = 512; tc.height = 256; const x = tc.getContext('2d'); x.fillStyle = '#fbfaf6'; x.fillRect(0, 0, 512, 256); x.fillStyle = '#e11d48'; x.fillRect(0, 0, 512, 46); x.fillRect(0, 210, 512, 46);
-    x.fillStyle = '#e11d48'; for (const cx of [128, 384]) { x.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? 22 : 52; x.lineTo(cx + Math.cos(a) * rr, 128 + Math.sin(a) * rr); } x.fill(); }
+    const tc = document.createElement('canvas'); tc.width = 512; tc.height = 256; const x = tc.getContext('2d'); x.fillStyle = '#d8132e'; x.fillRect(0, 0, 512, 256); x.fillStyle = '#a00a20'; x.fillRect(0, 0, 512, 40); x.fillRect(0, 216, 512, 40);
+    x.fillStyle = '#ffe9a8'; for (const cx of [128, 384]) { x.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? 22 : 52; x.lineTo(cx + Math.cos(a) * rr, 128 + Math.sin(a) * rr); } x.fill(); }
     const tex = new T.CanvasTexture(tc); tex.colorSpace = T.SRGBColorSpace;
     const m = new T.Mesh(new T.SphereGeometry(1, 48, 32), new T.MeshPhysicalMaterial({ map: tex, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.08 })); m.rotation.x = 0.35; sc.add(m);
     sc.add(new T.HemisphereLight(0xffffff, 0x445544, 1.6)); const k = new T.DirectionalLight(0xffffff, 2.6); k.position.set(-2, 3, 4); sc.add(k); const rim = new T.DirectionalLight(0xffe8b0, 1.2); rim.position.set(3, -1, -2); sc.add(rim);
@@ -228,7 +234,9 @@ class Component extends DCLogic {
     this._rs = () => this.setState({ vw: window.innerWidth || W, vh: window.innerHeight || 802 }); this._rs(); window.addEventListener('resize', this._rs); requestAnimationFrame(this._rs); setTimeout(this._rs, 300); if (window.ResizeObserver) { this._ro = new ResizeObserver(() => this._rs()); this._ro.observe(document.documentElement); }
     if(!cloud?.enabled) {
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
-    try { const f = JSON.parse(localStorage.getItem(FKEY)); if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, handSeen: !!f.handSeen }); } catch (e) {}
+    try { const f = JSON.parse(localStorage.getItem(FKEY)); // A round saved with no balls left (page closed mid-drop or before ACABOU) restarts fresh instead of locking the board.
+      if (f && (f.balls ?? BALLS) <= 0) this.setState({ betIdx: f.betIdx ?? 3, handSeen: !!f.handSeen });
+      else if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, handSeen: !!f.handSeen }); } catch (e) {}
     }
     this.particles = []; this.lit = new Map();
     const boot = () => { if(this._dead) return; if (!window.Matter) return setTimeout(boot, 50); this.initWorld();
@@ -240,11 +248,16 @@ class Component extends DCLogic {
   initWorld() {
     const { Engine, Bodies, Composite, Events, Body, Vector } = window.Matter, e = this.engine = Engine.create(); e.world.gravity.y = PC.GRAV;
     const add = [], wall = 60;
-    add.push(Bodies.rectangle(-wall / 2, H / 2, wall, H * 2, { isStatic: true, label: 'wall-left', friction: 0, restitution: PC.WALL_REST }), Bodies.rectangle(W + wall / 2, H / 2, wall, H * 2, { isStatic: true, label: 'wall-right', friction: 0, restitution: PC.WALL_REST }), Bodies.rectangle(W / 2, H + 25, W, 50, { isStatic: true, label: 'floor', restitution: 0, friction: 1 }));
-    const pr = W * PC.PEG_R, y0 = 30, y1 = H - 160, sp = W / 6; let rows = Math.round((y1 - y0) / 52) + 1; if (rows % 2) rows++; const gy = (y1 - y0) / (rows - 1);
+    // Slanted side walls follow the felt edge (INSET at the top, flush at the buckets).
+    const slant = (side) => { const x0 = side < 0 ? INSET : W - INSET, x1 = side < 0 ? 0 : W, y0 = -60, y1 = H + 40, len = Math.hypot(x1 - x0, y1 - y0), a = Math.atan2(x1 - x0, y1 - y0), nx = Math.cos(a) * side, ny = -Math.sin(a) * side;
+      return Bodies.rectangle((x0 + x1) / 2 + nx * wall / 2, (y0 + y1) / 2 + ny * wall / 2, wall, len, { isStatic: true, angle: -a, label: side < 0 ? 'wall-left' : 'wall-right', friction: 0, restitution: PC.WALL_REST }); };
+    add.push(slant(-1), slant(1), Bodies.rectangle(W / 2, H + 25, W, 50, { isStatic: true, label: 'floor', restitution: 0, friction: 1 }));
+    const pr = W * PC.PEG_R, y0 = 30, y1 = H - 160, sp = W / 6; // Gaps sized for the bigger ball: rows at least 52 px apart so it never wedges between two pegs.
+    let rows = Math.floor((y1 - y0) / 52) + 1; if (rows % 2) rows--; const gy = (y1 - y0) / (rows - 1);
     this.pegs = []; this.endY = y1; this.gy = gy;
-    for (let r = 0; r < rows; r++) { const B = r % 2 === 1, xs = B ? [0, 1, 2, 3, 4, 5].map(c => c === 0 ? sp / 2 + 6 : c === 5 ? W - sp / 2 - 6 : sp / 2 + c * sp) : [0, 1, 2, 3, 4, 5, 6].map(c => c * sp);
-      for (const x0 of xs) { const b = Bodies.circle(x0, y0 + r * gy, pr, { isStatic: true, restitution: PC.PEG_REST_L, label: 'peg' }); b.half = x0 <= 0 || x0 >= W; this.pegs.push(b); add.push(b); } }
+    // Pegs inset from the walls so none is cut by the frame; odd rows sit halfway between.
+    for (let r = 0; r < rows; r++) { const yy = y0 + r * gy, m = pr + 8 + inset(yy), sp2 = (W - 2 * m) / 6, B = r % 2 === 1, xs = B ? [0, 1, 2, 3, 4, 5].map(c => m + sp2 / 2 + c * sp2) : [0, 1, 2, 3, 4, 5, 6].map(c => m + c * sp2);
+      for (const x0 of xs) { const b = Bodies.circle(x0, yy, pr, { isStatic: true, restitution: PC.PEG_REST_L, label: 'peg' }); b.half = x0 <= 0 || x0 >= W; this.pegs.push(b); add.push(b); } }
     this.funnels = [];
     for (let i = 1; i <= 4; i++) { const f = Bodies.rectangle(i * BW, H - 46, 12, 92, { isStatic: true, friction: 0, frictionStatic: 0, label: 'funnel', restitution: 0.1 }), cap = Bodies.circle(i * BW, H - 94, 10, { isStatic: true, restitution: 0.5, label: 'funnel' }); add.push(cap); this.funnels.push(f); add.push(f); }
     for (let i = 0; i < 5; i++) add.push(Bodies.rectangle(i * BW + BW / 2, H - 16, BW + 2, 10, { isStatic: true, isSensor: true, label: 'bin-' + i }));
@@ -268,14 +281,18 @@ class Component extends DCLogic {
   }
   step() { const M = window.Matter; if (!this.engine) return; const b = this.ball;
     if (b && !b.done && !b.isSensor) { const tx = b.target * BW + BW / 2, y = b.position.y, x = b.position.x;
-      if (y > this.endY + 8) { M.Body.setVelocity(b, { x: (tx - x) * 0.14, y: Math.max(b.velocity.y, 2) }); }
-      else if (y > this.endY - this.gy * 2.2) { const aim = tx, vx0 = Math.abs(b.velocity.x) < 1 ? b.velocity.x : b.velocity.x * 0.6; M.Body.setVelocity(b, { x: vx0 + (aim - x) * 0.05, y: Math.max(b.velocity.y, 1.5) }); }
+      // Steering spread over the whole fall: each frame the sideways speed leans a little toward
+      // what is still needed to reach the target over the height left. Small early, firmer low down,
+      // never overriding the bounce, so the path still reads as pegs doing the work.
+      if (y <= this.endY) { const rh = Math.max(24, this.endY + 40 - y), vy = Math.max(1.2, b.velocity.y), need = Math.max(-3.2, Math.min(3.2, (tx - x) * vy / rh)), p = Math.max(0, y) / this.endY, k = 0.012 + 0.05 * p * p;
+        M.Body.setVelocity(b, { x: b.velocity.x + (need - b.velocity.x) * k, y: b.velocity.y }); }
+      else if (y > this.endY + 8) { const want = Math.max(-3.5, Math.min(3.5, (tx - x) * 0.09)); M.Body.setVelocity(b, { x: b.velocity.x + (want - b.velocity.x) * 0.22, y: Math.max(b.velocity.y, 1.8) }); }
       // destrava por POSIÇÃO parada (não velocidade): pulinho para o lado do alvo / para dentro da parede
       if (b.lp && Math.abs(x - b.lp.x) < 0.5 && Math.abs(y - b.lp.y) < 0.5) b.still = (b.still || 0) + 1; else b.still = 0; b.lp = { x, y };
       if (b.still > 18) { b.still = 0; const r0 = b.circleRadius, dir = x < r0 + 8 ? 1 : x > W - r0 - 8 ? -1 : (x < tx ? 1 : -1); M.Body.setVelocity(b, { x: dir * 3, y: -1.8 }); }
       // Na nuvem, as divisórias mantêm o balde já gravado para esta queda.
       // entrou no balde: trava nele e amortece (não pula para o vizinho)
-      if (y > H - 100) { if (b.lock == null) b.lock = this._cloudDrop ? this._cloudDrop.bin : Math.max(0, Math.min(4, Math.floor(x / BW))); b.target = b.lock; const r0 = b.circleRadius, L = b.lock * BW + r0 + 7, Rr = (b.lock + 1) * BW - r0 - 7, cx = Math.max(L, Math.min(Rr, x));
+      if (y > H - 100) { if (b.lock == null) b.lock = this._cloudDrop ? this._cloudDrop.bin : b.target; b.target = b.lock; const r0 = b.circleRadius, L = b.lock * BW + r0 + 7, Rr = (b.lock + 1) * BW - r0 - 7, cx = Math.max(L, Math.min(Rr, x));
         if(this._cloudDrop && cx!==x) M.Body.setPosition(b,{x:cx,y});
         M.Body.setVelocity(b, { x: b.velocity.x * 0.6 + (cx - x) * 0.25, y: Math.min(Math.max(b.velocity.y, 0.5), 5) }); }
       if (!b.t0) b.t0 = performance.now(); 
@@ -286,19 +303,19 @@ class Component extends DCLogic {
     if (b && b.isSensor && !b.done) for (let i = 0; i < 5; i++) this.particles.push({ x: b.position.x + (Math.random() - 0.5) * 10, y: b.position.y + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 2, vy: -Math.random() * 3 - 1, life: 1, decay: 0.05 + Math.random() * 0.05, size: 6 + Math.random() * 6, t: 'core' }), i < 2 && this.particles.push({ x: b.position.x, y: b.position.y, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, life: 1, decay: 0.03, size: 2 + Math.random() * 2, t: 'spark' });
     for (let i = this.particles.length - 1; i >= 0; i--) { const p = this.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= p.decay; if (p.life <= 0) this.particles.splice(i, 1); } }
   draw() { const cv = this.canvasRef.current; if (!cv || !this.engine) return; const x = cv.getContext('2d'); x.setTransform(2, 0, 0, 2, 0, 0); x.clearRect(0, 0, W, H); const IM = this.IM, now = performance.now();
-    for (const p of this.pegs) { const r = p.circleRadius; if (IM.peg.complete) x.drawImage(IM.peg, p.position.x - r * 1.15, p.position.y - r * 1.15, r * 2.3, r * 2.3); }
+    for (const p of this.pegs) { const r = p.circleRadius * 0.95, px = p.position.x, py = p.position.y; x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.arc(px + 1.5, py + 2.5, r, 0, Math.PI * 2); x.fill(); const g = x.createRadialGradient(px - r * .35, py - r * .4, r * .1, px, py, r); g.addColorStop(0, '#fffbe0'); g.addColorStop(.35, '#ffd65a'); g.addColorStop(.8, '#c8871a'); g.addColorStop(1, '#7a4a04'); x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, Math.PI * 2); x.fill(); }
     this.lit.forEach((d, id) => { const k = (now - d.t) / 350; if (k > 1) { this.lit.delete(id); return; } x.fillStyle = 'rgba(255,200,50,' + ((1 - k) * 0.5) + ')'; x.beginPath(); x.arc(d.x, d.y, 16, 0, Math.PI * 2); x.fill(); });
-    x.fillStyle = 'rgba(0,30,6,.35)'; x.fillRect(0, H - 96, W, 96);
+    x.fillStyle = 'rgba(0,30,6,.22)'; x.fillRect(0, H - 96, W, 96);
     for (const f of this.funnels) { const fx = f.position.x, top = H - 94, g = x.createLinearGradient(fx - 7, 0, fx + 7, 0); g.addColorStop(0, '#7a4a04'); g.addColorStop(0.35, '#ffe58a'); g.addColorStop(0.6, '#f0b41f'); g.addColorStop(1, '#8a5a06');
       x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.roundRect ? x.roundRect(fx - 4, top + 6, 13, 94, 6) : x.rect(fx - 4, top + 6, 13, 94); x.fill();
       x.fillStyle = g; x.beginPath(); x.roundRect ? x.roundRect(fx - 6, top, 12, 100, 6) : x.rect(fx - 6, top, 12, 100); x.fill();
-      if (IM.peg.complete) x.drawImage(IM.peg, fx - 12, top - 12, 24, 24); }
+      { const g2 = x.createRadialGradient(fx - 3, top - 3, 1, fx, top, 10); g2.addColorStop(0, '#fffbe0'); g2.addColorStop(.4, '#ffd65a'); g2.addColorStop(1, '#8a5206'); x.fillStyle = g2; x.beginPath(); x.arc(fx, top, 9, 0, Math.PI * 2); x.fill(); } }
     const b = this.ball;
     for (const p of this.particles) { x.beginPath(); x.arc(p.x, p.y, p.size, 0, Math.PI * 2); x.fillStyle = p.t === 'core' ? 'rgba(255,' + Math.floor(255 * p.life) + ',0,' + p.life + ')' : 'rgba(255,255,200,' + p.life + ')'; x.fill(); }
     if (!b) return; const r = b.circleRadius;
     if (b.isSensor) { const g = x.createRadialGradient(b.position.x, b.position.y, 5, b.position.x, b.position.y, 40); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.2, 'rgba(255,200,0,.8)'); g.addColorStop(0.5, 'rgba(255,69,0,.4)'); g.addColorStop(1, 'rgba(255,0,0,0)');
       x.globalCompositeOperation = 'screen'; x.fillStyle = g; x.beginPath(); x.arc(b.position.x, b.position.y, 45, 0, Math.PI * 2); x.fill(); x.globalCompositeOperation = 'source-over'; return; }
-    (this.trail || []).forEach((p, i, a) => { const f = (i + 1) / a.length; x.fillStyle = 'rgba(255,90,120,' + (0.22 * f) + ')'; x.beginPath(); x.arc(p.x, p.y, r * (0.4 + 0.6 * f), 0, Math.PI * 2); x.fill(); });
+    (this.trail || []).forEach((p, i, a) => { const f = (i + 1) / a.length; x.fillStyle = 'rgba(255,200,90,' + (0.25 * f) + ')'; x.beginPath(); x.arc(p.x, p.y, r * (0.4 + 0.6 * f), 0, Math.PI * 2); x.fill(); });
     x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.ellipse(b.position.x + 3, b.position.y + 5, r * 0.95, r * 0.8, 0, 0, Math.PI * 2); x.fill();
     x.fillStyle = 'rgba(255,255,255,.22)'; x.beginPath(); x.arc(b.position.x, b.position.y, r * 1.45, 0, Math.PI * 2); x.fill();
     const F = this.ballFrames; if (F) { const i = ((Math.floor(b.position.x / 4) % F.length) + F.length) % F.length; x.drawImage(F[i], b.position.x - r, b.position.y - r, r * 2, r * 2); }
@@ -386,7 +403,7 @@ class Component extends DCLogic {
   next() { const s = this.state;
     if (s.balls <= 0) { this.setState({ phase: 'won' }); this._t1 = setTimeout(() => { this.tone(220, 0.3, 'sine', 0.08, 150); this.setState({ win: { w: 0, title: 'ACABOU' } }); }, 900); return; }
     this._t2 = setTimeout(() => this.setState({ phase: 'spin', slots: null, landed: null, justMarked: -1 }, () => this.save()), 700); }
-  confetti(bin) { const cx = bin * BW + BW / 2, cy = 218 + H - 70; const conf = Array.from({ length: 22 }, (_, j) => { const a = -Math.PI / 2 + (j / 21 - 0.5) * 2.6, v = 90 + (j * 37 % 70);
+  confetti(bin) { const cx = 29 + (bin * BW + BW / 2) * 0.87, cy = 290 + (H - 70) * 0.87; const conf = Array.from({ length: 22 }, (_, j) => { const a = -Math.PI / 2 + (j / 21 - 0.5) * 2.6, v = 90 + (j * 37 % 70);
       return { x: (cx - 5) + 'px', y: cy + 'px', dx: Math.round(Math.cos(a) * v * 1.7) + 'px', dy: Math.round(Math.sin(a) * v * 1.7 + 40) + 'px', bg: CONF[j % CONF.length] }; });
     clearTimeout(this._ct); this.setState({ conf }); this._ct = setTimeout(() => this.setState({ conf: [] }), 1000); }
   closeWin = () => { const s = this.state; if (!s.win || this._paying) return; const w = s.win.w;
@@ -401,7 +418,7 @@ class Component extends DCLogic {
     this.setState({ win: null });
     if (w > 0) this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal }, () => { this.save(bal); reset(); }); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); else reset(); };
   flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
-    for (let i = 0; i < n; i++) { const c = document.createElement('img'); c.src = 'assets/fingo/coin.webp';
+    for (let i = 0; i < n; i++) { const c = document.createElement('img'); c.src = 'assets/symbols/sym-coin.webp';
       c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,210,87,.8))';
       st.appendChild(c); const dx = (i - n / 2) * 10, mid = { x: (from.x + to.x) / 2 + dx * 2, y: from.y + 50 + (i % 3) * 18 };
       const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 700, delay: i * 50, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
@@ -427,12 +444,16 @@ class Component extends DCLogic {
   betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save()); };
   betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save()); };
   goHome = e => { if (this.state.phase === 'falling' && e) e.preventDefault(); };
-  panel() { const s = this.state, TCOL = ['#ffe680', '#ffe680', '#ffd257', '#ffb43a', '#ff9030', '#f86b2a', '#e5482a'];
-    const cur = Math.min(6, Math.floor(s.used / 3)), bet = BETS[s.betIdx], hasNext = cur < 6 && s.used < BALLS;
-    const tierDots = [0, 1, 2].map(j => { const used = cur * 3 + j + 1 <= s.used;
-      return { bg: used ? 'rgba(0,0,0,.35)' : 'radial-gradient(circle at 35% 30%, #ffffff 0%, #f1ede2 55%, #c9c0aa 100%)', sh: used ? 'inset 0 1px 2px rgba(0,0,0,.5)' : '0 1px 2px rgba(0,0,0,.45)' }; });
-    const leftInTier = tierDots.filter((d, j) => cur * 3 + j + 1 > s.used).length;
-    return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * TRIO[cur + 1]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
+  panel() { const s = this.state, TCOL = ['#fff0a0', '#ffe680', '#ffd257', '#ffc447', '#ffb43a', '#ffa236', '#ff9030', '#f86b2a', '#ee5a2a', '#e5482a'];
+    const cur = Math.min(TRIO.length - 1, Math.floor(s.used / 3)), bet = BETS[s.betIdx];
+    // Equal neighbouring trios (25, 25) form one step: the side shows the next value that is actually LOWER.
+    let first = cur; while (first > 0 && TRIO[first - 1] === TRIO[cur]) first--;
+    let drop = cur + 1; while (drop < TRIO.length && TRIO[drop] === TRIO[cur]) drop++;
+    const hasNext = drop < TRIO.length && s.used < BALLS;
+    const tierDots = Array.from({ length: (drop - first) * 3 }, (_, j) => { const used = first * 3 + j + 1 <= s.used;
+      return { bg: used ? 'radial-gradient(circle at 35% 30%, #7ef0a0 0%, #22a650 60%, #147a36 100%)' : 'radial-gradient(circle at 35% 30%, #ffffff 0%, #f1ede2 55%, #c9c0aa 100%)', sh: used ? '0 1px 2px rgba(0,0,0,.45)' : '0 1px 2px rgba(0,0,0,.45)', mark: used ? '✓' : '' }; });
+    const leftInTier = drop * 3 - s.used;
+    return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * TRIO[drop]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
   renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
@@ -450,17 +471,20 @@ class Component extends DCLogic {
         anim: gold && fin ? 'fgBounce .6s ease-out forwards' : 'none' }; });
     const gold = this.goldCols();
     const tballs = [0, 1, 2, 3, 4].map(c => { const k = TC[c], m = s.tmarks[c], has = !!s.targets;
-      return { text: has ? String(s.targets[c]) : COLS[c], color: k[1], bg: 'radial-gradient(circle at 35% 28%, ' + k[0] + ' 0%, ' + k[1] + ' 45%, ' + k[2] + ' 100%)',
-        sh: m ? '0 0 0 3px #ffd257, 0 0 22px rgba(255,210,87,.95), 0 6px 10px rgba(0,0,0,.45)' : '0 6px 10px rgba(0,0,0,.45)', filter: m || !has ? 'none' : 'saturate(.35) brightness(.75)',
+      return { pos: (-c * 70) + 'px', text: has ? String(s.targets[c]) : COLS[c], color: m ? '#5a2a00' : k[2], numShadow: m ? '0 1px 0 rgba(255,246,200,.9)' : 'none', bg: 'radial-gradient(circle at 35% 28%, ' + k[0] + ' 0%, ' + k[1] + ' 45%, ' + k[2] + ' 100%)',
+        // Light off → on: numbers still missing sit greyed out; a marked number lights up in full colour, gold ring and a ✓.
+        sh: m ? '0 0 16px rgba(255,190,50,.95), 0 4px 8px rgba(0,0,0,.3)' : '0 4px 8px rgba(0,0,0,.25)', filter: 'none', marked: m,
         anim: s.justMarked === c ? 'fgBounce .6s ease-out' : m && s.phase === 'won' ? 'fgPulse .8s ease-in-out infinite' : 'none' }; });
+    // Safety net: never sit in 'spin' with zero balls and no result card.
+    if (s.phase === 'spin' && !s.win && s.balls <= 0 && !this._endQueued) { this._endQueued = true; setTimeout(() => { this._endQueued = false; this.next(); }, 0); }
     const canSpin = s.phase === 'spin' && !s.win && s.balls > 0;
     return {
       scale: Math.min(s.vw / W, s.vh / 802), stageRef: this.stageRef, canvasRef: this.canvasRef,
       balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       betText: fmt(BETS[s.betIdx]), betCursor: s.active ? 'default' : 'pointer', prizeSize: '22px', betAnim: s.noMoney ? 'fgNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      multText: 'x' + fmt(multAt(s.used + 1)), ...this.panel(), prizeText: fmt(this.prize()),
+      multText: 'x' + fmt(multAt(s.used + 1)), ...(() => { const n = s.active ? Math.min(TRIO.length, Math.floor(s.used / 3) + 1) : 0; return { roundMark: n ? String(n) : 'K', roundSize: n >= 10 ? '21px' : '27px', roundLabel: n ? 'Round ' + n + ' de ' + TRIO.length : 'King Rico' }; })(), ...this.panel(), prizeText: fmt(this.prize()),
       tballs, buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
-      showSpin: canSpin, countOp: 1, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
+      showSpin: canSpin, countOp: 1, boardLit: ['rolling', 'falling', 'won'].includes(s.phase) ? 1 : 0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand: s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
       lucky: !!s.lucky, luckyText: s.lucky || '', luckySize: s.lucky === 'FINGO!' ? '64px' : '48px', confetti: s.conf,
       onSpin: this.onSpin, ballsLeft: String(s.balls), spinText: String(s.balls), spinOp: canSpin ? 1 : 0.55, spinAnim: canSpin && s.used > 0 ? 'fgPulse 1.4s ease-in-out infinite' : 'none',
@@ -470,8 +494,8 @@ class Component extends DCLogic {
       magicCells: card.nums.map((n, i) => { const m = card.marks[i]; return { text: n === 0 ? '★' : String(n), pick: () => this.pickMagic(i), cursor: m ? 'default' : 'pointer', op: m ? 0.3 : 1, bg: m ? 'rgba(255,255,255,.12)' : '#ffffff', color: m ? '#cfe' : TH[i % 5] }; }),
       betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       menuButton:{onClick:this.openMenu,disabled:!!(this._cloudRequest || s.phase==='falling' || s.phase==='rolling'),style:{zIndex:25}},
-      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:'Uma aposta vale até 21 bolas. Acerte os cinco números para receber o prêmio; sua rodada fica salva na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
-      pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: TIERS.map(([t, m], i) => ({ balls: (i ? TIERS[i - 1][0] + 1 : 1) + '–' + t, mult: 'x' + fmt(m) })),
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:'Uma aposta vale até 10 rounds de 3 bolas. Acerte os cinco números para receber o prêmio; sua rodada fica salva na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: TIERS.map(([t, m], i) => ({ balls: 'Round ' + (i + 1) + ' · bolas ' + (t - 2) + '–' + t, mult: 'x' + fmt(m) })),
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? (s.win.w > 0 ? '+' + fmt(s.win.w) : 'Nova cartela') : '', closeWin: this.closeWin
     };

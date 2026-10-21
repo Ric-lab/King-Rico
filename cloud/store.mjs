@@ -26,7 +26,7 @@ export function createGameStore(db, uid, dependencies={}) {
       clown:['action','requestId','game','bet','roundId','used','selected'],
       penalty:['action','requestId','game','bet','move','roundId','step','quality'],
       flying:['action','requestId','game','bet','move','roundId','step','selected'],
-      race:['action','requestId','game','bet','roundId','selected','seed','version'],
+      race:['action','requestId','game','bet','roundId','selected','seed','version','selected2'],
       claw:['action','requestId','game','bet','roundId','selected','aimX','aimZ','seed'],
       twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
       bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
@@ -66,8 +66,9 @@ export function createGameStore(db, uid, dependencies={}) {
     if(data.action==='claw' && (data.game!=='claw' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
       || !Number.isInteger(data.selected) || data.selected<0 || data.selected>8 || !Number.isInteger(data.seed) || data.seed<0 || data.seed>8
       || !Number.isInteger(data.aimX) || data.aimX<0 || data.aimX>1000 || !Number.isInteger(data.aimZ) || data.aimZ<0 || data.aimZ>1000)) fail('king-rico/invalid-argument','Mira inválida.');
-    if(data.action==='race' && (data.version!==undefined && ![1,2,3].includes(data.version) || data.game!=='race' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
-      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>(data.version>=2?4:3) || !Number.isInteger(data.seed) || data.seed<0 || data.seed>(data.version===3?159:data.version===2?65534:65535))) fail('king-rico/invalid-argument','Corrida inválida.');
+    if(data.action==='race' && (data.version!==undefined && ![1,2,3,4].includes(data.version) || data.game!=='race' || !engine.BETS.includes(data.bet) || !requestIdPattern.test(data.roundId || '') || data.requestId!==data.roundId
+      || !Number.isInteger(data.selected) || data.selected<0 || data.selected>(data.version>=2?4:3) || !Number.isInteger(data.seed) || data.seed<0 || data.seed>(data.version===4?639:data.version===3?159:data.version===2?65534:65535)
+      || (data.version===4 ? !Number.isInteger(data.selected2) || data.selected2< -1 || data.selected2>4 || data.selected2===data.selected : data.selected2!==undefined))) fail('king-rico/invalid-argument','Corrida inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
       Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
@@ -186,7 +187,7 @@ export function createGameStore(db, uid, dependencies={}) {
       } else if(data.action==='race') {
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<700)fail('king-rico/resource-exhausted','Aguarde antes de largar.');
         betUnits=engine.units(data.bet);if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
-        const outcome=engine.race(data.bet,data.selected,data.seed,data.roundId,data.version),before=p.balanceUnits;
+        const outcome=engine.race(data.bet,data.selected,data.seed,data.roundId,data.version,data.selected2),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;p.settings.raceBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'race',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='claw') {

@@ -98,7 +98,7 @@ else {
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
       && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
-      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version;
+      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
@@ -119,7 +119,7 @@ else {
   Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
   Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
   Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected});
-  Cloud.race = (bet,selected,seed,roundId,version=1) => mutate({action:'race',game:'race',bet,selected,seed,roundId,...(version>=2?{version}:{})});
+  Cloud.race = (bet,selected,seed,roundId,version=1,selected2=-1) => mutate({action:'race',game:'race',bet,selected,seed,roundId,...(version>=2?{version}:{}),...(version===4?{selected2}:{})});
   Cloud.raceResult = async roundId => {await Cloud.ready;return runTransaction(db,async transaction=>{const saved=await transaction.get(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='race'?saved.data().result:null;});};
   Cloud.claw = (bet,selected,aimX,aimZ,seed,roundId) => mutate({action:'claw',game:'claw',bet,selected,aimX,aimZ,seed,roundId});
   Cloud.clawResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='claw'?saved.data().result:null;};

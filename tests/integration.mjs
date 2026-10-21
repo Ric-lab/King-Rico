@@ -532,6 +532,21 @@ test('Five-marble Race Rules pay the fifth participant 4.8x, deduplicate it and 
  await new Promise(r=>setTimeout(r,750));const old=randomUUID();const legacy=await c.call({action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:old,requestId:old});assert.equal(legacy.outcome.winUnits,950);assert.equal(legacy.player.balance,1016.5);
 });
 
+test('Circus v4 Race Rules pay 4.8x winner and 19.2x exact pair, and reject forged pairs',async()=>{
+ const name='race-v4-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
+ const pair=engine.race(2.5,0,22,'probe',4,1),w=pair.winner,s=pair.second;
+ const id=randomUUID(),bet={action:'race',game:'race',bet:2.5,selected:w,selected2:s,seed:22,version:4,roundId:id,requestId:id};
+ const a=await c.call(bet);assert.equal(a.outcome.winUnits,4800);assert.equal(a.player.balance,1000-2.5+48);assert.equal((await c.call(bet)).replayed,true);
+ await new Promise(r=>setTimeout(r,750));const id2=randomUUID();const b=await c.call({...bet,selected2:-1,roundId:id2,requestId:id2});assert.equal(b.outcome.winUnits,1200);
+ const ref=doc(c.db,'players',c.uid);
+ for(const change of[x=>{x.second=(s+1)%5===w?(s+2)%5:(s+1)%5;x.selected2=x.second;},x=>{x.seed=640;},x=>{x.selected2=x.selected;},x=>{delete x.second;}]){
+  await new Promise(r=>setTimeout(r,750));
+  const old=(await getDoc(ref)).data(),roundId=randomUUID(),outcome=engine.race(2.5,w,22,roundId,4,s);change(outcome);
+  const next={...old,settings:{...old.settings,raceBetIdx:1},balanceUnits:old.balanceUnits-250+4800,revision:old.revision+1,lastOperationId:roundId,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:old.firstSpinAt??serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',roundId),{action:'race',game:'race',selected:outcome.selected,fingerprint:'forged',betUnits:250,winUnits:4800,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:2.5,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-250)/100,outcome,baseBalance:next.balanceUnits/100}});await assertFails(batch.commit());
+ }
+});
+
  test('Gravity Race Rules validate physical finish tables, replay and reject invented winners',async()=>{
  const name='race-physics-'+randomUUID(),c=await client(name,name);await c.call(request({action:'bootstrap'}));
  const id=randomUUID(),winner=engine.race(2.5,0,21,id,3).winner,bet={action:'race',game:'race',bet:2.5,selected:winner,seed:21,version:3,roundId:id,requestId:id};
