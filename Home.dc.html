@@ -2,6 +2,8 @@
 <html>
 <head>
 <link rel="stylesheet" href="./ui/header.css">
+<link rel="stylesheet" href="./ui/controls.css">
+<link rel="stylesheet" href="./ui/home.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -10,8 +12,6 @@
 <x-dc>
 <helmet>
 <style>
-@keyframes hsScratch { 0% { transform: translate(-70px, 10px) rotate(-10deg); opacity: 0; } 15% { opacity: 1; } 50% { transform: translate(70px, -10px) rotate(10deg); } 85% { opacity: 1; } 100% { transform: translate(-70px, 10px) rotate(-10deg); opacity: 0; } }
-@keyframes hsBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 @keyframes hsPop { 0% { transform: scale(.5); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
 @font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Luckiest Guy'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/luckiestguy-latin.woff2') format('woff2'); }
@@ -24,7 +24,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </style>
 </helmet>
 
-<div style="position: relative; height: 100%; min-height: {{ rootMinH }}; overflow: hidden; background: #2a0a4a;">
+<div class="kr-home" style="height: {{ rootHeight }}; min-height: {{ rootMinH }};">
   <!-- mesmo palco do jogo como fundo (tela inteira) + escurecido no topo para o título -->
   <div style="position: absolute; inset: 0; background-image: url('{{ imgBleed }}'); background-size: cover; background-position: 50% 100%; pointer-events: none;"></div>
   <div style="position: absolute; left: 0; right: 0; top: 0; height: 64%; background: linear-gradient(180deg, rgba(48,10,70,.62) 0%, rgba(48,10,70,.32) 55%, rgba(48,10,70,0) 100%); pointer-events: none;"></div>
@@ -39,16 +39,17 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
 
-    <div style="position: relative; display: flex; justify-content: center; margin-top: 14px; padding: 0 12px;">
-      <div role="img" aria-label="King Rico" style="position: relative; transform: translateY(64px) rotate(-3deg);">
-        <div style="display: grid; justify-items: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 60px; line-height: 1.1; white-space: nowrap;">
-          <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 11px #8a1c06; text-shadow: 0 4px 0 #6a1404, 0 7px 0 #4e0c02, 0 10px 0 #3a0802, 0 14px 16px rgba(30,0,40,.55);">KING RICO</span>
-          <span style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7));">KING RICO</span>
+    <div class="kr-home-scroll" data-home-scroll="1">
+      <div class="kr-home-brand" role="img" aria-label="King Rico">
+        <div class="kr-home-wordmark">
+          <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 9px #8a1c06; text-shadow: 0 4px 0 #6a1404, 0 7px 0 #4e0c02, 0 10px 0 #3a0802, 0 14px 16px rgba(30,0,40,.55);">KING RICO</span>
+          <span aria-hidden="true" style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7));">KING RICO</span>
         </div>
       </div>
-    </div>
-
-    <div style="position: relative; flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; justify-content: safe center; gap: 16px; padding: 18px 18px 48px; margin-top: 64px;">
+      <button onClick="{{ recharge }}" class="kr-button kr-home-recharge" aria-label="Recarregar 1.000 moedas" disabled="{{ rechargeDisabled }}">
+        <img src="{{ imgCoin }}" alt="">
+        <span class="kr-home-recharge-copy"><strong>{{ rechargeLabel }}</strong><span aria-live="polite">{{ rechargeNote }}</span></span>
+      </button>
 
       <div style="display: flex; align-items: center; gap: 10px; padding: 2px 4px 0;">
         <div style="flex: 1; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,210,87,.6), rgba(255,210,87,0));"></div>
@@ -139,61 +140,30 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
   </div>
 
     <sc-if value="{{ bonusOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; inset: 0; z-index: 30; background: rgba(20,4,40,.82); display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 12px 18px; box-sizing: border-box; overflow-y: auto;">
-        <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 16px 16px; box-sizing: border-box; flex-shrink: 0; border-radius: 26px; background: linear-gradient(180deg, #8a35c4, #5c1f8f); box-shadow: 0 0 0 3px #f0b41f, 0 18px 40px rgba(0,0,0,.6);">
-          <span style="font-size: 26px; font-weight: 800; line-height: 1.1; color: #ffd257; text-align: center; white-space: nowrap;">Presente do dia!</span>
-          <div style="position: relative; width: min(340px, 100%, calc(100vh - 330px)); min-width: 200px; aspect-ratio: 1; border-radius: 20px; overflow: hidden; background: #ffe7a6; box-shadow: 0 0 0 3px #f0b41f, inset 0 0 0 3px #fff3c4; touch-action: none;">
-            <div style="position: absolute; inset: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 6px;">
-              <sc-for list="{{ cells }}" as="c" hint-placeholder-count="9">
-                <div style="position: relative; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: {{ c.bg }}; box-shadow: {{ c.sh }}; animation: {{ c.anim }}; transition: background .3s, box-shadow .3s;">
-                  <div style="position: absolute; inset: 6px; background-image: url('{{ c.img }}'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: {{ c.imgOp }};"></div>
-                  <span style="position: relative; font-size: {{ c.fs }}; font-weight: 800; line-height: 1; color: {{ c.color }}; font-variant-numeric: tabular-nums; text-shadow: 0 2px 0 rgba(255,255,255,.6);">{{ c.text }}</span>
-                </div>
-              </sc-for>
-            </div>
-            <canvas ref="{{ scratchRef }}" width="600" height="600" onPointerDown="{{ scDown }}" onPointerMove="{{ scMove }}" onPointerUp="{{ scUp }}" onPointerCancel="{{ scUp }}" style="position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: none; opacity: {{ foilOp }}; pointer-events: {{ foilPe }}; transition: opacity .45s ease-out;"></canvas>
-            <sc-if value="{{ showScratchHand }}" hint-placeholder-val="{{ true }}">
-              <div style="position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: rgba(255,255,255,.92); box-shadow: 0 0 0 8px rgba(255,255,255,.3), 0 4px 10px rgba(0,0,0,.4); pointer-events: none; animation: hsScratch 1.8s ease-in-out infinite;"></div>
-            </sc-if>
-          </div>
-          <sc-if value="{{ scRevealed }}" hint-placeholder-val="{{ false }}"><span style="font-size: 44px; font-weight: 800; line-height: 1; color: #fff6df; font-variant-numeric: tabular-nums; animation: hsPop .5s ease-out;">+{{ bonusAmt }}</span></sc-if>
-          <div aria-label="{{ bonusDay }}" style="position: relative; width: 100%; max-width: 320px; height: 46px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="position: absolute; left: 16px; right: 16px; top: 50%; height: 4px; margin-top: -2px; border-radius: 2px; background: rgba(255,255,255,.18);"></div>
+      <div class="kr-home-gift-overlay">
+        <div class="kr-home-gift" role="dialog" aria-modal="true" aria-label="Presente do dia">
+          <h2>Presente do dia!</h2>
+          <p>{{ bonusDay }}</p>
+          <div class="kr-home-gift-amount"><img src="{{ imgCoin }}" alt=""><span>+{{ bonusAmt }}</span></div>
+          <div class="kr-home-week" aria-label="Recompensas dos sete dias">
             <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
-              <div style="position: relative; width: {{ d.size }}; height: {{ d.size }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: {{ d.bg }}; box-shadow: {{ d.sh }}; animation: {{ d.anim }};">
-                <span style="font-size: {{ d.fs }}; font-weight: 800; line-height: 1; color: {{ d.c }};">{{ d.label }}</span>
-              </div>
+              <div class="kr-home-day {{ d.className }}" aria-label="{{ d.description }}"><span>{{ d.day }}</span><strong>{{ d.amount }}</strong></div>
             </sc-for>
           </div>
-          <sc-if value="{{ scRevealed }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ collectBonus }}" role="button" style="align-self: stretch; text-align: center; padding: 16px; border-radius: 18px; background: linear-gradient(180deg, #6cf096, #2ec962); box-shadow: 0 5px 0 #147a36; font-size: 24px; font-weight: 800; letter-spacing: 1px; color: #fff; cursor: pointer; user-select: none; animation: hsPop .35s ease-out;" style-active="transform: translateY(3px); box-shadow: 0 2px 0 #147a36;">PEGAR MOEDAS</div>
-          </sc-if>
+          <button onClick="{{ collectBonus }}" class="kr-button" disabled="{{ collecting }}">{{ collectLabel }}</button>
+          <p>Volte todos os dias para receber o próximo presente.</p>
         </div>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; inset: 0; z-index: 28; display: flex; align-items: center; justify-content: center; background: rgba(10,2,20,.6); pointer-events: none;">
-        <button onClick="{{ recharge }}" aria-label="Recarregar saldo" style="pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 16px; background: linear-gradient(180deg, rgba(58,6,84,.96), rgba(26,3,44,.96)); border: 3px solid #f0b41f; box-shadow: 0 10px 30px rgba(0,0,0,.6); cursor: pointer; font-family: inherit;">
-          <span style="font-size: 13px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">SALDO ESGOTADO</span>
-          <span style="padding: 8px 22px; border-radius: 18px; background: linear-gradient(180deg, #3ddc6d, #0a6b30); border: 2px solid #ffd257; font-size: 15px; font-weight: 800; color: #fff8dc;">RECARREGAR</span>
-        </button>
       </div>
     </sc-if>
 
     <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;testGift&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Teste da raspadinha&quot;},&quot;testDay&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:7,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Teste da raspadinha&quot;},&quot;onPlay&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
-const SAVE = 'fortuneCircus.slot.v3', BONUS_KEY = 'fortuneCircus.home.bonus', ROLL_KEY = 'fortuneCircus.home.bonusRoll';
-// raspadinha: valor sorteado dentro da faixa do dia; a faixa sobe com dias seguidos. Nunca zero.
+<script type="text/x-dc" data-dc-script data-props="{&quot;testGift&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Teste do presente diário&quot;},&quot;testDay&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:7,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Teste do presente diário&quot;},&quot;onPlay&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
+const SAVE = 'fortuneCircus.slot.v3', BONUS_KEY = 'fortuneCircus.home.bonus';
+// Presente diário fixo e independente da recarga repetível da Home.
 const WEEK = [500, 750, 1000, 1500, 2000, 3000, 5000];
 const CLOUD_WEEK = [50, 100, 150, 200, 250, 500, 1000];
-const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const rollCard = (max, award) => { const a = award ?? rollPrize(max), r10 = v => Math.max(10, Math.round(v / 10) * 10); let d1 = r10(a * 0.2), d2 = r10(a * 0.5); if (d2 === d1) d2 = d1 + 10;
-  return { a, cells: shuffle([a, a, a, d1, d2, 0, 0, -1, -1]) }; };
-const rollPrize = max => { const min = max / 10, r = Math.random(), rnd = v => Math.max(min, Math.round(v / 10) * 10);
-  return r < 0.6 ? rnd(min + Math.random() * min * 1.4) : r < 0.9 ? rnd(min * 2.4 + Math.random() * min * 2.6) : r < 0.98 ? rnd(min * 5 + Math.random() * min * 3) : max; };
 const dayKey = t => { const d = new Date(t); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 const dayDiff = (a, b) => Math.round((new Date(Math.floor(b / 10000), Math.floor(b / 100) % 100 - 1, b % 100) - new Date(Math.floor(a / 10000), Math.floor(a / 100) % 100 - 1, a % 100)) / 864e5);
 const TAP_MOODS = ['happy', 'wave', 'cheer', 'dance', 'tap', 'surprise'];
@@ -203,12 +173,12 @@ const QUIPS = {
   idle: 'Escolha um jogo e boa sorte!', bonus: 'Moedas na conta!'
 };
 class Component extends DCLogic {
-  state = { menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
+  state = { loaded:false,recharging:false,collecting:false,rechargeNote:'Pode recarregar sempre que quiser', menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
   rPlaque = React.createRef();
   componentDidMount() {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => this.setState({
-      balance: p.balance, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, last: p.bonus.day ? Number(p.bonus.day.replaceAll('-', '')) : 0, streak: p.bonus.streak
+      loaded:true,balance: p.balance,rechargeCount:p.rechargeCount||0, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, last: p.bonus.day ? Number(p.bonus.day.replaceAll('-', '')) : 0, streak: p.bonus.streak
     }));
     this._rs = () => this.forceUpdate(); window.addEventListener('resize', this._rs);
     [0, 60, 300, 1000, 2500].forEach(t => setTimeout(() => { if (!this._dead) this.forceUpdate(); }, t));
@@ -216,7 +186,7 @@ class Component extends DCLogic {
       try { const sv = JSON.parse(localStorage.getItem(SAVE)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
       try { const v = JSON.parse(localStorage.getItem(BONUS_KEY)); if (v && v.d) this.setState({ last: v.d, streak: v.s || 0 }); } catch (e) {}
     }
-    this.setState({ loaded: true });
+    if(!cloud?.enabled)this.setState({ loaded: true });
     this.tick = setInterval(() => this.setState({ now: Date.now() }), 30000);
     this.idleT = setTimeout(() => this.setState({ quip: QUIPS.idle }), 3200);
   }
@@ -241,53 +211,20 @@ class Component extends DCLogic {
     if (!window.KingRicoCloud?.enabled && (this.props.testGift ?? false)) { const d = this.props.testDay ?? 1; return { claimed: !!s.testClaimed, idx: Math.min(6, Math.max(0, d - 1)), today: 'test-' + this._testSeed }; }
     const claimed = gap === 0, idx = claimed ? (s.streak + 6) % 7 : gap === 1 ? s.streak % 7 : 0; return { claimed, idx, today }; }
   _testSeed = Date.now();
-  testAgain = () => { this._testSeed = Date.now(); this._prize = null; this._sc = null; this.setState({ testClaimed: false, scRevealed: false, scTouched: false, scOpen: null }); };
-  prize(c) { if (this._prize && this._prize.d === c.today && (!window.KingRicoCloud?.enabled || this._prize.idx === c.idx)) return this._prize.a;
-    if (window.KingRicoCloud?.enabled) { this._prize = { d: c.today, idx: c.idx, ...rollCard(CLOUD_WEEK[c.idx], CLOUD_WEEK[c.idx]) }; return this._prize.a; }
-    if (String(c.today).startsWith('test-')) { this._prize = { d: c.today, ...rollCard(WEEK[c.idx]) }; return this._prize.a; }
-    let p = null; try { p = JSON.parse(localStorage.getItem(ROLL_KEY)); } catch (e) {}
-    if (!p || p.d !== c.today || !p.cells) { p = { d: c.today, ...rollCard(WEEK[c.idx]) }; try { localStorage.setItem(ROLL_KEY, JSON.stringify(p)); } catch (e) {} }
-    this._prize = p; return p.a; }
-  scratchRef = el => { if (!el || el === this._sc) return; this._sc = el; const x = el.getContext('2d'), W = el.width, H = el.height;
-    // cada casa = placa arredondada iridescente (ouro com reflexo arco-íris), vãos transparentes
-    x.clearRect(0, 0, W, H); const cs = (600 - 28 - 20) / 3, rr = 26;
-    const rrect = (X, Y, w, h, r) => { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); };
-    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const X0 = 14 + c * (cs + 10), Y0 = 14 + r * (cs + 10);
-      x.save(); rrect(X0, Y0, cs, cs, rr); x.clip();
-      const g = x.createLinearGradient(0, 0, 600, 600); g.addColorStop(0, '#e9c86a'); g.addColorStop(.5, '#f7e7a8'); g.addColorStop(1, '#c99a3a'); x.fillStyle = g; x.fillRect(X0, Y0, cs, cs);
-      const ir = x.createLinearGradient(0, 600, 600, 0); [['#ff9ad5', 0], ['#ffe08a', .2], ['#9cf5d0', .4], ['#8fc8ff', .6], ['#d9a6ff', .8], ['#ff9ad5', 1]].forEach(([col, o]) => ir.addColorStop(o, col));
-      x.globalCompositeOperation = 'overlay'; x.globalAlpha = .75; x.fillStyle = ir; x.fillRect(X0, Y0, cs, cs);
-      x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1;
-      const sh = x.createLinearGradient(0, 0, 600, 600); sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(.3, 'rgba(255,255,255,0)'); sh.addColorStop(.36, 'rgba(255,255,255,.55)'); sh.addColorStop(.42, 'rgba(255,255,255,0)'); sh.addColorStop(.62, 'rgba(255,255,255,0)'); sh.addColorStop(.66, 'rgba(255,255,255,.35)'); sh.addColorStop(.7, 'rgba(255,255,255,0)'); x.fillStyle = sh; x.fillRect(X0, Y0, cs, cs);
-      for (let i = 0; i < 260; i++) { x.fillStyle = i % 3 ? 'rgba(255,255,255,.35)' : 'rgba(120,70,0,.14)'; x.fillRect(X0 + Math.random() * cs, Y0 + Math.random() * cs, 2, 2); }
-      x.fillStyle = 'rgba(110,60,0,.3)'; x.font = '800 90px "Baloo 2", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('?', X0 + cs / 2, Y0 + cs / 2 + 6);
-      x.restore(); }
-    this._scN = 0; this._open = Array(9).fill(false); };
-  scDown = e => { if (this.state.scRevealed) return; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} this._scOn = true; this._scLast = null; this.setState({ scTouched: true }); this.scMove(e); };
-  scMove = e => { if (!this._scOn || !this._sc || this.state.scRevealed) return; const el = this._sc, r = el.getBoundingClientRect(), k = el.width / r.width, X = (e.clientX - r.left) * k, Y = (e.clientY - r.top) * k, x = el.getContext('2d');
-    x.globalCompositeOperation = 'destination-out'; x.lineCap = 'round'; x.lineWidth = 46; x.beginPath(); const L = this._scLast || { X, Y }; x.moveTo(L.X, L.Y); x.lineTo(X, Y); x.stroke(); x.globalCompositeOperation = 'source-over'; this._scLast = { X, Y };
-    if (++this._scN % 3 === 0) { this.buzz(5); const d = x.getImageData(0, 0, 600, 600).data, open = this._open.slice();
-      for (let ci = 0; ci < 9; ci++) { if (open[ci]) continue; const cx0 = (ci % 3) * 200 + 20, cy0 = Math.floor(ci / 3) * 200 + 20; let clr = 0, n = 0;
-        for (let yy = cy0; yy < cy0 + 160; yy += 8) for (let xx = cx0; xx < cx0 + 160; xx += 8) { n++; if (d[(yy * 600 + xx) * 4 + 3] < 40) clr++; }
-        if (clr / n > 0.8) { open[ci] = true; x.clearRect((ci % 3) * 200, Math.floor(ci / 3) * 200, 200, 200); this.cellPop(ci); } }
-      let tc = 0, tn = 0; for (let yy = 20; yy < 580; yy += 10) for (let xx = 20; xx < 580; xx += 10) { const m = xx % 200, q = yy % 200; if (m < 20 || m > 180 || q < 20 || q > 180) continue; tn++; if (d[(yy * 600 + xx) * 4 + 3] < 40) tc++; }
-      if (tc / tn > 0.8 && !open.every(Boolean)) { for (let ci = 0; ci < 9; ci++) if (!open[ci]) open[ci] = true; x.clearRect(0, 0, 600, 600); }
-      if (open.some((v, i) => v !== this._open[i])) { this._open = open; this.setState({ scOpen: open }); if (open.every(Boolean)) this.reveal(); } } };
-  cellPop(ci) { const p = this._prize, v = p && p.cells[ci]; if (v === p.a) { const n = this._open.filter((o, i) => o && p.cells[i] === p.a).length + 1; this.buzz(n >= 3 ? [40, 50, 80] : 25); } else this.buzz(12); }
-  scUp = () => { this._scOn = false; this._scLast = null; };
-  reveal() { if (this.state.scRevealed) return; setTimeout(() => { this.setState({ scRevealed: true }); this.buzz([30, 40, 60]); }, 350); }
+  testAgain = () => { this._testSeed = Date.now(); this.setState({ testClaimed: false }); };
+  prize(c) { return (window.KingRicoCloud?.enabled ? CLOUD_WEEK : WEEK)[c.idx]; }
   collectBonus = async () => {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) {
       if (this._collecting) return;
-      this._collecting = true;
+      this._collecting = true;this.setState({collecting:true});
       try {
         const r = await cloud.bonus();
         const p = cloud.player || r.player;
         this.setState({ balance: p.balance, last: Number(p.bonus.day.replaceAll('-', '')), streak: p.bonus.streak });
         if (r.amount) { this.buzz([35, 50, 45]); this.react('cheer', '+' + r.amount.toLocaleString('pt-BR') + ' moedas pra você!'); }
       } catch (e) { cloud.error(e); }
-      finally { this._collecting = false; }
+      finally { this._collecting = false;this.setState({collecting:false}); }
       return;
     }
     const c = this.cycle(); if (c.claimed) { this.buzz(18); return; }
@@ -314,9 +251,17 @@ class Component extends DCLogic {
       localStorage.setItem(SAVE, JSON.stringify(saved));
     } catch (e) {}
   }
-  rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle'); }
-  recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
-  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
+  recharge = async () => {
+    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging)return;
+    this._recharging=true;this.setState({recharging:true,rechargeNote:'Confirmando suas moedas…'});
+    try {
+      const r=await cloud.recharge('home'),p=cloud.player||r.player;
+      this.setState({balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeNote:'+1.000 moedas adicionadas!'});
+      this.buzz([25,35,35]);
+    } catch(e){cloud.error(e);this.setState({rechargeNote:'Não confirmou. Toque para tentar de novo.'});}
+    finally{this._recharging=false;this.setState({recharging:false});}
+  };
+  renderVals() {return this._rv();}
   _rv() {
     const s = this.state, b = s.balance ?? 1000, txt = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
     const cy = this.cycle(), ready = !cy.claimed, week = window.KingRicoCloud?.enabled ? CLOUD_WEEK : WEEK;
@@ -326,9 +271,9 @@ class Component extends DCLogic {
       // Dentro do jogo (window.__fcLayout): mesma escala e mesma área segura do jogo; o saldo fica no mesmo ponto do saldo do jogo.
       // Arquivo avulso no navegador: tamanho em px do próprio navegador.
       ...(() => { const L = typeof window !== 'undefined' && window.__fcLayout;
-        if (L) return { rootMinH: '0px', padTop: L.safeTopU + 'px', plqS: 1.25, plqO: '0 50%', plqL: '18px', plqT: 'calc(var(--kr-hud-top) + 2px)', mnuR: '20.167px', mnuT: '29.5px', hdrH: '70px', hdrW: '453px' };
+        if (L) return { rootHeight:'100%',rootMinH: '0px', padTop: L.safeTopU + 'px', plqS: 1.25, plqO: '0 50%', plqL: '18px', plqT: 'calc(var(--kr-hud-top) + 2px)', mnuR: '20.167px', mnuT: '29.5px', hdrH: '70px', hdrW: '453px' };
         const w = window.innerWidth || 453, h = window.innerHeight || 802, gs = Math.max(.25, Math.min(w / 453, h / 802));
-        return { gs, rootMinH: '100vh', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
+        return { gs, rootHeight:'100dvh',rootMinH: '100dvh', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
       balanceText: txt,
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
@@ -338,24 +283,11 @@ class Component extends DCLogic {
         return { imgBleed: A('assets/bleed/stage-bleed.webp?v=3'), imgStage: A('assets/stage-hd-c.webp?v=2'), imgCover: A('assets/brand/cover.webp'), imgCoin: A('assets/symbols/sym-coin.webp') }; })(),
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: s.loaded && ready ? this.prize(cy).toLocaleString('pt-BR') : '', bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
-      scratchRef: this.scratchRef, scDown: this.scDown, scMove: this.scMove, scUp: this.scUp, scRevealed: !!s.scRevealed,
-      cells: (() => { const p = s.loaded && ready && this._prize, op = s.scOpen || [], all = !!s.scRevealed; if (!p || !p.cells) return [];
-        return p.cells.map((v, i) => { const win = all && v === p.a, king = v <= 0;
-          return { text: king ? '' : v.toLocaleString('pt-BR'), img: v === 0 ? A('assets/symbols/sym-wild-s.webp') : v < 0 ? A('assets/neck/g-head.webp') : '', imgOp: king ? 1 : 0, fs: v >= 1000 ? '24px' : '28px',
-            color: v === p.a ? '#6b2e05' : '#8a6a3a', bg: win ? 'linear-gradient(180deg, #fff3c4, #ffd257)' : '#fff6df', sh: win ? '0 0 0 3px #e8900f, 0 0 16px rgba(255,210,87,.9)' : 'inset 0 0 0 2px rgba(200,135,26,.35)', anim: win ? 'hsPop .5s ease-out ' + (i * 0.04) + 's' : 'none' }; }); })(),
-      foilOp: s.scRevealed ? 0 : 1, foilPe: s.scRevealed ? 'none' : 'auto', showScratchHand: !s.scTouched, amtAnim: s.scRevealed ? 'hsPop .5s ease-out' : 'none',
-      bonusSub: ready ? 'Dia ' + (cy.idx + 1) + ': ganhe ' + week[cy.idx].toLocaleString('pt-BR') + ' moedas' : 'Volte amanhã: ' + week[(cy.idx + 1) % 7].toLocaleString('pt-BR') + ' moedas',
-      bonusBtn: ready ? 'PEGAR' : 'AMANHÃ',
-      week: week.map((v, i) => { const done = cy.claimed ? i <= cy.idx : i < cy.idx, now = !cy.claimed && i === cy.idx, last = i === 6;
-        return { label: done ? '✓' : now ? String(i + 1) : last ? '🎁' : '', size: now ? '44px' : last ? '34px' : '22px', fs: now ? '22px' : last ? '18px' : '14px',
-          bg: now ? 'linear-gradient(180deg, #fff3c4, #ffd257 55%, #f0a018)' : done ? 'linear-gradient(180deg, #6cf096, #2ec962)' : last ? 'linear-gradient(180deg, #ff7ab8, #d63a7c)' : '#4a1670',
-          sh: now ? '0 0 0 3px #6b2e05, 0 0 16px rgba(255,210,87,.9)' : done ? '0 0 0 2px #147a36' : last ? '0 0 0 2px #ffd257' : '0 0 0 2px rgba(255,255,255,.25)',
-          c: now ? '#4a1a00' : '#fff', anim: now ? 'hsBeat 1.2s ease-in-out infinite' : 'none' }; }),
-      bonusBg: ready ? 'linear-gradient(180deg, rgba(122,34,150,.96), rgba(70,14,96,.96))' : 'linear-gradient(180deg, rgba(70,26,92,.9), rgba(44,12,62,.9))',
-      bonusBtnBg: ready ? 'linear-gradient(180deg, #ffe07a, #f0b41f)' : 'rgba(255,255,255,.12)',
-      bonusBtnSh: ready ? '0 3px 0 #a86a00, inset 0 1px 0 rgba(255,255,255,.6)' : 'none',
-      bonusBtnColor: ready ? '#5a2a00' : 'rgba(255,240,210,.7)',
-      bonusCursor: ready ? 'pointer' : 'default',
+      collecting:!!s.collecting,collectLabel:s.collecting?'CONFIRMANDO…':'PEGAR MOEDAS',
+      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging,
+      rechargeLabel:s.recharging?'CONFIRMANDO…':'+1.000 MOEDAS',rechargeNote:s.rechargeNote,
+      week:week.map((v,i)=>({day:'Dia '+(i+1),amount:v.toLocaleString('pt-BR'),
+        description:'Dia '+(i+1)+': '+v+' moedas',className:i===cy.idx?'kr-home-day--today':i<cy.idx?'kr-home-day--done':''})),
       soon: [
         { id: 2, name: 'Bingo do Circo', img: A('assets/symbols/sym-tent.png'), c1: '#7a1c3a', c2: '#3a0b22' }
       ],

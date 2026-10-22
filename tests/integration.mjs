@@ -584,3 +584,24 @@ test('recharge Rules preserve every paused game and prevent concurrent or replay
   await assertFails(batch.commit());
  }
 });
+
+test('Home recharge Rules count unlimited confirmed clicks without duplicating replays or changing the daily gift',async()=>{
+ const name='home-refill-'+randomUUID(),c=await client(name),other=await client(name+'-other',name);
+ await c.call(request({action:'bootstrap'}));await c.call(request({action:'bonus'}));const ref=doc(c.db,'players',c.uid);
+ const original=(await getDoc(ref)).data(),first=request({action:'recharge',source:'home'});
+ const [a,b]=await Promise.all([c.call(first),other.call(first)]);
+ assert.ok(a.replayed||b.replayed);assert.equal((await getDoc(ref)).data().balanceUnits,205000);assert.equal((await getDoc(ref)).data().rechargeCount,1);
+ const [second,third]=await Promise.all([c.call(request({action:'recharge',source:'home'})),other.call(request({action:'recharge',source:'home'}))]);
+ const current=(await getDoc(ref)).data();assert.equal(current.balanceUnits,405000);assert.equal(current.rechargeCount,3);
+ assert.deepEqual(current.bonus,original.bonus);assert.equal(second.amount+third.amount,2000);
+ assert.equal((await c.call(first)).player.rechargeCount,3);assert.equal((await c.call(request({action:'bonus'}))).amount,0);
+ await assertFails(updateDoc(ref,{rechargeCount:0}));
+ async function forge(changes,credit=100000){
+  const old=(await getDoc(ref)).data(),id=randomUUID(),next={...old,balanceUnits:old.balanceUnits+credit,rechargeCount:old.rechargeCount+1,
+   revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),...changes};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'recharge',game:'home',selected:-1,
+   fingerprint:'forged-home-click',betUnits:0,winUnits:credit,result:{source:'home',amount:credit/100,count:next.rechargeCount},createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+  await assertFails(batch.commit());
+ }
+ await forge({rechargeCount:99});await forge({},200000);await forge({bonus:{day:null,dayIndex:-1,streak:0}});
+});

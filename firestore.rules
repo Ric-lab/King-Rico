@@ -31,8 +31,9 @@ service cloud.firestore {
       return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
           'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
         && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
-          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound','flyingRound','twentyOneRound'])
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','rechargeCount','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound','flyingRound','twentyOneRound'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
+        && p.get('rechargeCount',0) is int && p.get('rechargeCount',0) >= 0 && p.get('rechargeCount',0) <= 1000000000
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('neckRound',null) == null || p.neckRound is map)
         && (p.get('fingoRound',null) == null || p.fingoRound is map)
@@ -50,7 +51,7 @@ service cloud.firestore {
         && p.bonus.streak is int && p.bonus.streak >= 0 && p.bonus.streak <= 7;
     }
     function initial(p) {
-      return profile(p) && p.balanceUnits == 100000 && p.peaches == 0
+      return profile(p) && p.balanceUnits == 100000 && p.peaches == 0 && p.get('rechargeCount',0) == 0
         && p.bonus == {'day':null,'dayIndex':-1,'streak':0}
         && p.settings.sfxLvl == 2 && p.settings.vibLvl == 2 && p.settings.slotBetIdx == 3
         && p.settings.wheelBetIdx == 3 && p.settings.get('neckBetIdx',3) == 3 && p.get('neckRound',null) == null
@@ -322,13 +323,19 @@ service cloud.firestore {
         && o.result.keys().hasOnly(['player','amount']) && o.result.amount == amount / 100.0;
     }
     function recharge(p, old, o) {
+      let home = o.result.get('source','') == 'home';
       return p.balanceUnits is int && p.balanceUnits <= 1000000000000
         && o.action == 'recharge' && o.game == 'home' && o.selected == -1
-        && old.balanceUnits < 100
+        && (home || old.balanceUnits < 100)
         && o.betUnits == 0 && o.winUnits == 100000
         && p.balanceUnits == old.balanceUnits + 100000
-        && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
-        && o.result.keys().hasOnly(['player','amount']) && o.result.amount == 1000;
+        && o.result.amount == 1000
+        && (home
+          ? p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId','rechargeCount'])
+            && p.get('rechargeCount',0) == old.get('rechargeCount',0) + 1
+            && o.result.keys().hasOnly(['player','amount','source','count']) && o.result.count == p.rechargeCount
+          : p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
+            && o.result.keys().hasOnly(['player','amount']));
     }
     function flying(p, old, o) {
       let x = o.result.outcome;

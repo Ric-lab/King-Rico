@@ -10,6 +10,7 @@ from penalty_browser import check_penalty
 from clown_browser import check_clown_bounce
 from new_games_browser import check_new_games
 from round_controls_browser import check_round_controls
+from home_rewards_browser import check_home_rewards
 from claw_browser import check_claw
 from race_browser import check_race
 
@@ -61,17 +62,10 @@ def login(page, account):
     page.evaluate('window.__krLoginShown=false')
 
 def claim_gift(page):
-    canvas=page.locator('canvas[width="600"][height="600"]')
-    canvas.wait_for(state='visible')
-    box=canvas.bounding_box()
-    # Start inside the rounded card; its clipped corner cannot receive a press.
-    page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/38);page.mouse.down()
-    for row in range(19):
-        y=box['y']+box['height']*(row+.5)/19
-        x=box['x']+(box['width']-2 if row%2==0 else 2)
-        page.mouse.move(x,y,steps=6)
-    page.mouse.up()
+    page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for(state='visible')
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
+    page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for(state='hidden')
+
 
 def swipe(page):
     # A busy software GPU can make a physical swipe fall below the game's
@@ -426,6 +420,7 @@ with sync_playwright() as p:
     print(json.dumps(check_clown_bounce(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_new_games(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_round_controls(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+    print(json.dumps(check_home_rewards(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_claw(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
@@ -439,7 +434,7 @@ with sync_playwright() as p:
                       'slow_wallet_restore_keeps_game_visible_and_blocks_wagers':True,
                       'wallet_error_retry_without_google_prompt_ui_fixture':True,
                       'recharge_after_claimed_daily_gift':True,'recharge_survives_reload_and_game_change':True,
-                      'scratch_gift_credits_cloud_wallet':True,'fingo_home_card_and_local_physics':True,
+                      'daily_gift_credits_cloud_wallet':True,'fingo_home_card_and_local_physics':True,
                       'fingo_pending_roll_and_used_balls_survive_reload':True,'fingo_resumes_on_another_tab':True,
                       'fingo_payout_commits_once_and_shares_wallet':True}))
     browser.close()

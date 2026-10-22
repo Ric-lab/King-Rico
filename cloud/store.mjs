@@ -4,7 +4,7 @@ import engine from './engine.cjs';
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,clownRound:p.clownRound || null,bounceRound:p.bounceRound || null,flyingRound:p.flyingRound || null,twentyOneRound:p.twentyOneRound || null,
-  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision});
+  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount})});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
 // Firebase Spark: the browser computes the lottery. Firestore transactions persist
@@ -29,9 +29,10 @@ export function createGameStore(db, uid, dependencies={}) {
       race:['action','requestId','game','bet','roundId','selected','seed','version','selected2'],
       claw:['action','requestId','game','bet','roundId','selected','aimX','aimZ','seed'],
       twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
-      bonus:['action','requestId'],recharge:['action','requestId'],settings:['action','requestId','settings','analyticsConsent']};
+      bonus:['action','requestId'],recharge:['action','requestId','source'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
+    if(data.action==='recharge' && data.source!==undefined && data.source!=='home')fail('king-rico/invalid-argument','Origem de recarga inválida.');
     if (data.analyticsConsent !== undefined && typeof data.analyticsConsent !== 'boolean') fail('king-rico/invalid-argument','Preferência inválida.');
     if (data.action==='spin' && (!engine.BETS.includes(data.bet) || !['circus','wheel'].includes(data.game) ||
       (data.game==='wheel' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>12 : data.selected!==undefined)))
@@ -218,9 +219,11 @@ export function createGameStore(db, uid, dependencies={}) {
         result={amount:winUnits/100};
       } else if (data.action==='recharge') {
         // A paused game must not lock the shared wallet. Preserve every round.
-        if(p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
+        const home=data.source==='home';
+        if(!home && p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
         winUnits=100000;p.balanceUnits+=winUnits;
-        result={amount:winUnits/100};
+        if(home)p.rechargeCount=(p.rechargeCount||0)+1;
+        result={amount:winUnits/100,...(home?{source:'home',count:p.rechargeCount}:{})};
       } else if (data.action==='settings') {
         p.settings={...p.settings,...settings};
         if (data.analyticsConsent!==undefined) p.analyticsConsent=data.analyticsConsent;
@@ -254,7 +257,7 @@ export function createGameStore(db, uid, dependencies={}) {
           return {...operation.result,player:publicPlayer(current.data()),replayed:true};
         }
         // Another tab may have recharged with a different ID. Re-read in a fresh
-        // transaction once; its balance guard returns a no-op after that credit.
+        // transaction once; the same operation ID never creates another credit.
         if(data.action==='recharge') return execute();
       }
       throw error;

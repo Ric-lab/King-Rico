@@ -125,15 +125,15 @@ test('Fingo shows an already committed prize without crediting it again on dismi
  f.flyCoins=done=>done();f.closeWin();assert.equal(f.state.balance,1240.25);assert.equal(f.state.win,null);
  f.closeWin();assert.equal(f.state.balance,1240.25);
 });
-test('the cloud scratch card displays the credited daily gift instead of a local cash draw',()=>{
+test('the daily gift uses the saved weekly reward without a scratch lottery',()=>{
  const cloud={enabled:true,dayKey:()=>20261015};
  const {instance:home}=component('Home.dc.html',cloud,()=>.99);
  home.props.testGift=true;home.props.testDay=7;
  const cycle=home.cycle();assert.equal(cycle.today,20261015);assert.equal(cycle.idx,0);
- assert.equal(home.prize(cycle),50);assert.equal(home._prize.cells.filter(n=>n===50).length,3);
+ assert.equal(home.prize(cycle),50);
  // A wallet restored after the first render may already be on a later day.
  home.state.last=20261014;home.state.streak=3;
- assert.equal(home.prize(home.cycle()),200);assert.equal(home._prize.cells.filter(n=>n===200).length,3);
+ assert.equal(home.prize(home.cycle()),200);
 });
 test('Circus recharges the cloud wallet once without reusing the already claimed daily gift',async()=>{
  let finish,calls=0;
@@ -204,4 +204,20 @@ test('Flying restores persisted balloons and refuses an offline pop without draw
  f._cloudDeferred=player;f.applyCloudPlayer();assert.equal(f.balls.length,8);assert.equal(f.state.step,2);assert.equal(f.state.balance,997.5);
  assert.ok(!f.balls.some(b=>b.id===4||b.id===8));await f.popIdx(0);
  assert.equal(f.state.balance,997.5);assert.equal(f.balls.length,8);assert.equal(f.state.busy,false);assert.equal(errors,1);
+});
+
+test('Home waits for the saved profile before deciding whether the daily gift is due',()=>{
+ let watch;const cloud={enabled:true,dayKey:()=>20261021,watch:fn=>(watch=fn,()=>{})};
+ const {instance:home,context}=component('Home.dc.html',cloud);
+ context.window.addEventListener=()=>{};home.componentDidMount();
+ assert.equal(home.state.loaded,false);assert.equal(home.renderVals().bonusOpen,false);
+ watch({balance:1050,rechargeCount:2,settings:{sfxLvl:0,vibLvl:0},bonus:{day:'2026-10-21',streak:1}});
+ assert.equal(home.state.loaded,true);assert.equal(home.renderVals().bonusOpen,false);assert.equal(home.state.rechargeCount,2);
+});
+test('Home counts one recharge while confirmation is pending and never changes the daily gift',async()=>{
+ let finish,calls=0;const player={balance:2050,rechargeCount:1,bonus:{day:'2026-10-21',streak:1}};
+ const cloud={enabled:true,player,recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>finish=r)},error:()=>{throw Error('Unexpected failure')}};
+ const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.last=20261021;home.state.streak=1;home.buzz=()=>{};
+ const first=home.recharge();await home.recharge();assert.equal(calls,1);finish({amount:1000,player});await first;
+ assert.equal(home.state.balance,2050);assert.equal(home.state.rechargeCount,1);assert.equal(home.state.last,20261021);assert.equal(home.state.streak,1);assert.equal(home.state.recharging,false);
 });

@@ -344,3 +344,18 @@ test('paused rounds from every game cannot lock recharge or be changed by repeat
   assert.deepEqual(m.records.get('players/'+field)[field],round);
  }
 });
+
+test('Home recharge adds 1000 at any balance and counts each confirmed click once',async()=>{
+ const m=memory(),call=m.client('home-refill');await call(request({action:'bootstrap'}));await call(request({action:'bonus'}));
+ const original=m.records.get('players/home-refill'),bonus=structuredClone(original.bonus);
+ original.balanceUnits=105025;original.flyingRound={id:randomUUID(),betUnits:1000,step:1,popped:[2]};
+ const round=structuredClone(original.flyingRound),first=request({action:'recharge',source:'home'});
+ const [paid,replay]=await Promise.all([call(first),call(first)]);
+ assert.equal(paid.player.balance,2050.25);assert.equal(paid.player.rechargeCount,1);assert.equal(replay.replayed,true);
+ const next=await call(request({action:'recharge',source:'home'}));assert.equal(next.player.balance,3050.25);assert.equal(next.player.rechargeCount,2);
+ assert.deepEqual(next.player.bonus,bonus);assert.deepEqual(next.player.flyingRound,round);
+ assert.equal((await call(first)).player.rechargeCount,2);assert.equal((await call(request({action:'bonus'}))).amount,0);
+ assert.equal((await call(request({action:'recharge'}))).amount,0);
+ await assert.rejects(call(request({action:'recharge',source:'elsewhere'})),{code:'king-rico/invalid-argument'});
+ await assert.rejects(call(request({action:'recharge',source:'home',count:99})),{code:'king-rico/invalid-argument'});
+});

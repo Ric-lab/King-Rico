@@ -98,7 +98,7 @@ else {
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
       && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
-      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2;
+      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2 && pending.source===payload.source;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
@@ -125,7 +125,7 @@ else {
   Cloud.clawResult = async roundId => {await Cloud.ready;const saved=await getDoc(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='claw'?saved.data().result:null;};
   Cloud.twentyOne = (move,bet,roundId,turn,target) => mutate({action:'twentyOne',game:'twentyOne',move,bet,roundId,turn,...(target===undefined?{}:{target})});
   Cloud.bonus = () => mutate({ action:'bonus' });
-  Cloud.recharge = () => mutate({ action:'recharge' });
+  Cloud.recharge = source => mutate({ action:'recharge',...(source==='home'?{source:'home'}:{}) });
   let settingsTimer, changes = {};
   Cloud.settings = settings => {
     const owner = Cloud.uid;

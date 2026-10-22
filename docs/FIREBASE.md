@@ -79,4 +79,8 @@ O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, u
 
 Quando o saldo fica abaixo de 1 moeda, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes, progresso Happeach nem rodadas em aberto de qualquer jogo.
 
+A barra da Home usa `recharge` com `source: home`: acrescenta 1.000 moedas mesmo com saldo disponível e incrementa `players/{uid}.rechargeCount` uma vez por operação confirmada. Repetir o mesmo ID recupera o saldo atual sem outro crédito ou incremento. Cliques confirmados novos podem se repetir sem limite diário; contagem e moedas são gravadas na mesma transação. A origem e a contagem também ficam na operação privada. O presente diário permanece separado e só pode ser recebido uma vez no dia.
+
+Nesta etapa não há SDK, impressão nem visualização de anúncio: a barra libera as moedas diretamente por decisão do autor, enquanto os anúncios serão integrados mais tarde. `rechargeCount` não deve ser usado como métrica de anúncios assistidos.
+
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.
