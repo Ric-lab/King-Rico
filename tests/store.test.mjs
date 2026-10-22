@@ -53,7 +53,7 @@ test('Penalty preserves losses and the final prize across retries and rejects st
   assert.equal((await call(request({action:'bootstrap'}))).player.balance,0);
   assert.equal((await call(request({action:'recharge'}))).player.balance,1000);
   m.advance(350);m.setRng(()=>0);const roundId=randomUUID(),base={...loss,roundId,requestId:roundId};
-  await call(base);assert.equal((await call(request({action:'recharge'}))).reason,'penalty-round');
+  await call(base);assert.ok((await call(request({action:'bootstrap'}))).player.penaltyRound);
   for(let step=1;step<=4;step++) {
     m.advance(350);const shot={...base,step,requestId:randomUUID()};const result=await call(shot);
     assert.equal((await call(shot)).replayed,true);
@@ -83,11 +83,11 @@ test('Fingo debits one bet, resumes the same targets and slots, and pays a compl
   }
   await assert.rejects(call(request({...base,move:'drop',used:4,selected:4})),{code:'king-rico/round-conflict'});
 });
-test('Fingo records a miss before animation and rejects forged steps, bets and recharge during a round',async()=>{
+test('Fingo records a miss before animation and rejects forged steps and bets during a round',async()=>{
   const m=memory(()=>.99),call=m.client('fingo-miss');await call(request({action:'bootstrap'}));
   const base={action:'fingo',game:'fingo',bet:1000,roundId:randomUUID()};
   await call(request({...base,move:'roll',used:0}));
-  const blocked=await call(request({action:'recharge'}));assert.equal(blocked.amount,0);assert.equal(blocked.reason,'fingo-round');
+  assert.ok((await call(request({action:'bootstrap'}))).player.fingoRound);
   for(const changes of [{used:1},{bet:10},{roundId:randomUUID()},{selected:5},{winUnits:99999}])
     await assert.rejects(call(request({...base,move:'drop',used:0,selected:4,...changes})));
   m.advance(350);
@@ -120,9 +120,9 @@ test('recharge rejects client-selected amounts and leaves an unfinished Neck rou
   const p=m.records.get('players/recharge-guard');p.balanceUnits=0;
   await assert.rejects(call(request({action:'recharge',amount:999999})),{code:'king-rico/invalid-argument'});
   p.neckRound={id:randomUUID(),betUnits:100000,floor:1,peachAt:0,savedUnits:0};
-  const blocked=await call(request({action:'recharge'}));
-  assert.equal(blocked.amount,0);assert.equal(blocked.reason,'neck-round');
-  assert.equal(m.records.size,1);assert.equal(p.balanceUnits,0);
+  const paid=await call(request({action:'recharge'}));
+  assert.equal(paid.amount,1000);assert.equal(paid.player.balance,1000);
+  assert.deepEqual(paid.player.neckRound,p.neckRound);
 });
 test('Spark creates a fixed wallet, preserves consent and deduplicates concurrent spins',async()=>{
   const m=memory(),call=m.client('one');
@@ -236,7 +236,7 @@ test('Clown commits ten throws, resumes across devices and settles the prize onc
   if(used===0) {
    await assert.rejects(call(request({...base,used:0,requestId:randomUUID()})),{code:'king-rico/invalid-argument'});
    await assert.rejects(call(request({...base,used:2})),{code:'king-rico/round-conflict'});
-   assert.equal((await call(request({action:'recharge'}))).reason,'clown-round');
+   assert.ok((await call(request({action:'bootstrap'}))).player.clownRound);
   }
   m.advance(350);
  }
@@ -278,7 +278,7 @@ test('21 persists the same deck/turn across devices and cannot duplicate a payou
  const m=memory(rngFor([9,5,7,6,22])),call=m.client('twentyOne');await call(request({action:'bootstrap'}));
  const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId};
  const start={...base,move:'start',turn:0,requestId:roundId};const [a,b]=await Promise.all([call(start),call(start)]);
- assert.equal(a.player.balance,0);assert.equal(b.replayed,true);assert.equal((await call(request({action:'recharge'}))).reason,'twenty-one-round');
+ assert.equal(a.player.balance,0);assert.equal(b.replayed,true);assert.ok((await call(request({action:'bootstrap'}))).player.twentyOneRound);
  assert.deepEqual((await m.client('twentyOne')(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
  m.advance(350);let x=await call(request({...base,move:'stand',turn:1}));assert.equal(x.outcome.round.phase,'dealer');
  m.advance(350);const finish=request({...base,move:'dealer',turn:2});x=await call(finish);
@@ -293,7 +293,7 @@ test('33 saves its rules across devices, deduplicates settlement and leaves lega
  const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
  const start={...base,requestId:roundId,move:'start',turn:0};const a=await call(start);assert.equal(a.player.balance,0);assert.equal((await call(start)).replayed,true);
  const other=m.client('33');assert.equal((await other(request({action:'bootstrap'}))).player.twentyOneRound.target,33);
- assert.equal((await other(request({action:'recharge'}))).reason,'twenty-one-round');
+ assert.ok((await other(request({action:'bootstrap'}))).player.twentyOneRound);
  m.advance(350);await other(request({...base,move:'hit',turn:1}));m.advance(350);
  const final=request({...base,move:'dealer',turn:2});const x=await call(final);assert.equal(x.player.balance,2000);assert.equal(x.outcome.round.playerHard,33);
  assert.equal((await other(final)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
@@ -328,4 +328,19 @@ test('Five-marble races accept the fifth participant, preserve legacy payout and
  await assert.rejects(call({...bet,version:1}),{code:'king-rico/invalid-argument'});
  for(const data of[{selected:5},{seed:65535},{version:4},{seed:1.25}])await assert.rejects(call({...bet,...data}),{code:'king-rico/invalid-argument'});
  m.advance(750);const legacy=randomUUID();assert.equal((await call({action:'race',game:'race',bet:2.5,selected:1,seed:21,roundId:legacy,requestId:legacy})).player.balance,1016.5);
+});
+
+test('paused rounds from every game cannot lock recharge or be changed by repeated requests',async()=>{
+ const fields=['neckRound','fingoRound','penaltyRound','clownRound','bounceRound','flyingRound','twentyOneRound'];
+ for(const field of fields){
+  const m=memory(),call=m.client(field);await call(request({action:'bootstrap'}));
+  const round={id:randomUUID(),betUnits:100000,step:1,phase:'player',popped:[2]};
+  m.records.get('players/'+field).balanceUnits=25;m.records.get('players/'+field)[field]=round;
+  const recharge=request({action:'recharge'}),paid=await call(recharge);
+  assert.equal(paid.amount,1000);assert.equal(paid.player.balance,1000.25);assert.deepEqual(paid.player[field],round);
+  assert.equal((await call(recharge)).replayed,true);
+  assert.equal((await call(request({action:'recharge'}))).amount,0);
+  assert.equal(m.records.get('players/'+field).balanceUnits,100025);
+  assert.deepEqual(m.records.get('players/'+field)[field],round);
+ }
 });

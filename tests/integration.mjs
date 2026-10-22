@@ -35,7 +35,7 @@ test('Penalty Rules persist shots, prevent duplicate debits/collection and share
   await assertFails(updateDoc(doc(c.db,'players',c.uid,'operations',collect.requestId),{winUnits:99999}));
   assert.equal((await other.call(request({action:'bootstrap'}))).player.peaches,2);
 });
-test('Penalty Rules validate losses, all five steps, automatic prize and blocked recharge',async()=>{
+test('Penalty Rules validate losses, all five steps, automatic prize and round preservation',async()=>{
   const identity='penalty-final-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
   await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
@@ -43,7 +43,7 @@ test('Penalty Rules validate losses, all five steps, automatic prize and blocked
   for(let step=0;step<5;step++) {
     const shot={...base,step,requestId:step===0?roundId:randomUUID()},result=await c.call(shot);
     assert.equal(result.player.balance,step===4?10000:0);assert.equal((await c.call(shot)).replayed,true);
-    if(step===0) assert.equal((await c.call(request({action:'recharge'}))).reason,'penalty-round');
+    if(step===0) assert.ok((await c.call(request({action:'bootstrap'}))).player.penaltyRound);
     await new Promise(resolve=>setTimeout(resolve,350));
   }
   const id=randomUUID(),miss={...base,requestId:id,roundId:id,step:0,quality:0};
@@ -178,7 +178,7 @@ test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and
   await forged({targets:[2,17,32,47,62]});await forged({winUnits:999999});await forged({}, {peaches:4});
   await assertFails(getDoc(doc(c.db,'players','another-fingo-player')));
 });
-test('Fingo Rules settle the final ball and forbid recharge while the exhausted wallet has a round',async()=>{
+test('Fingo Rules settle the final ball while preserving an exhausted wallet',async()=>{
   const name='fingo-last-'+randomUUID(),c=await client(name,name,{rng:()=>0});
   await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),targets=[1,16,31,46,61],roundId=randomUUID();
@@ -187,7 +187,7 @@ test('Fingo Rules settle the final ball and forbid recharge while the exhausted 
       balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:250,targets,marks,used:29,slots:targets}}));
   }
   await seed([true,true,true,true,false]);
-  assert.equal((await c.call(request({action:'recharge'}))).reason,'fingo-round');
+  assert.ok((await c.call(request({action:'bootstrap'}))).player.fingoRound);
   const last=request({action:'fingo',game:'fingo',bet:2.5,roundId,move:'drop',used:29,selected:4});
   const paid=await c.call(last);assert.equal(paid.outcome.winUnits,250);assert.equal(paid.player.balance,2.5);assert.equal(paid.player.fingoRound,null);
   assert.equal((await c.call(last)).replayed,true);
@@ -227,10 +227,13 @@ test('recharge Rules credit an exhausted wallet once after the daily gift and re
   await forged(999999);await forged(100000,{peaches:4});
   await forged(100000,{bonus:{day:null,dayIndex:-1,streak:0}});
   await seed({neckRound:{id:randomUUID(),betUnits:100000,floor:1,peachAt:0,savedUnits:0}});
-  const blocked=await c.call(request({action:'recharge'}));
-  assert.equal(blocked.amount,0);assert.equal(blocked.reason,'neck-round');
+  const paid=await c.call(request({action:'recharge'}));
+  assert.equal(paid.amount,1000);assert.equal(paid.player.neckRound.floor,1);
   await forged();
-  await seed({neckRound:null});
+  const collect=request({action:'neck',game:'neck',move:'collect',bet:1000,roundId:paid.player.neckRound.id,floor:1});
+  const prize=await c.call(collect);assert.equal(prize.player.balance,2100);assert.equal(prize.player.neckRound,null);
+  assert.equal((await other.call(collect)).replayed,true);assert.equal((await getDoc(ref)).data().balanceUnits,210000);
+  await seed({neckRound:null,balanceUnits:0});
   const [x,y]=await Promise.all([c.call(request({action:'recharge'})),other.call(request({action:'recharge'}))]);
   assert.equal((await getDoc(ref)).data().balanceUnits,100000);
   assert.equal(x.amount+y.amount,1000);
@@ -330,7 +333,7 @@ test('Bounce Rules validate gold, saved checkpoint, loss, replay and restore',as
  const identity='bounce-'+randomUUID(),c=await client(identity,identity);await c.call(request({action:'bootstrap'}));
  const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:1000,roundId,gold:false};
  const start={...base,move:'start',n:0,requestId:roundId};await c.call(start);assert.equal((await c.call(start)).replayed,true);
- assert.equal((await c.call(request({action:'recharge'}))).reason,'bounce-round');
+ assert.ok((await c.call(request({action:'bootstrap'}))).player.bounceRound);
  for(let n=0;n<10;n++) {await new Promise(r=>setTimeout(r,350));const step=request({...base,move:'land',n,gold:n===2});await c.call(step);assert.equal((await c.call(step)).replayed,true);}
  const other=await client(identity+'other',identity);assert.equal((await other.call(request({action:'bootstrap'}))).player.bounceRound.n,10);
  await new Promise(r=>setTimeout(r,350));const fall=request({...base,move:'fall',n:10});const r=await c.call(fall);
@@ -399,11 +402,11 @@ test('21 Rules persist natural, tie, bust and bank turns without allowing extra 
  const busted=await c.call(request({...base,roundId:id2,move:'hit',turn:1}));assert.equal(busted.outcome.round.result.reason,'player-bust');assert.equal(busted.player.balance,1003.75);
 });
 
-test('21 Rules reject modified decks, skipped cards, fake totals, forged payout and recharge during a hand',async()=>{
+test('21 Rules reject modified decks, skipped cards, fake totals and forged payout during a hand',async()=>{
  const {rngFor}=await import('./helpers/twenty-one.cjs');const name='21-forged-'+randomUUID(),c=await client(name,name,{rng:rngFor([9,5,7,6,22])});
  await c.call(request({action:'bootstrap'}));const roundId=randomUUID();
  await c.call({action:'twentyOne',game:'twentyOne',bet:1000,roundId,requestId:roundId,move:'start',turn:0});
- assert.equal((await c.call(request({action:'recharge'}))).reason,'twenty-one-round');
+ assert.ok((await c.call(request({action:'bootstrap'}))).player.twentyOneRound);
  const ref=doc(c.db,'players',c.uid);await new Promise(r=>setTimeout(r,350));
  async function forge(change,credit=0){
   const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.twentyOne(1000,old.twentyOneRound,'hit',roundId);
@@ -449,7 +452,7 @@ test('33 Rules preserve literal ranks, exact 33, shared balance, replay and cros
  await c.call(request({action:'bootstrap'}));const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
  const opening={...base,requestId:roundId,move:'start',turn:0};const [a,b]=await Promise.all([c.call(opening),c.call(opening)]);
  assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,0);assert.equal(a.outcome.round.target,33);assert.equal(a.outcome.round.playerHard,25);
- assert.equal((await c.call(request({action:'recharge'}))).reason,'twenty-one-round');
+ assert.ok((await c.call(request({action:'bootstrap'}))).player.twentyOneRound);
  const other=await client(name+'-other',name,{rng:()=>{throw Error('Resume cannot shuffle');}});assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
  await new Promise(r=>setTimeout(r,350));const hit=await other.call(request({...base,move:'hit',turn:1}));assert.equal(hit.outcome.round.playerHard,33);assert.equal(hit.outcome.round.phase,'dealer');
  await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2000);assert.equal(win.outcome.round.dealerHard,28);
@@ -559,3 +562,25 @@ test('Circus v4 Race Rules pay 4.8x winner and 19.2x exact pair, and reject forg
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',roundId),{action:'race',game:'race',selected:outcome.selected,fingerprint:'forged',betUnits:250,winUnits:1200,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'race',bet:2.5,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-250)/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
  }
  });
+
+test('recharge Rules preserve every paused game and prevent concurrent or replayed extra credit',async()=>{
+ const name='recharge-paused-'+randomUUID(),c=await client(name),other=await client(name+'-other',name);
+ await c.call(request({action:'bootstrap'}));const ref=doc(c.db,'players',c.uid);
+ const fields=['neckRound','fingoRound','penaltyRound','clownRound','bounceRound','flyingRound','twentyOneRound'];
+ for(const field of fields){
+  // Legacy rounds are opaque to recharge: no progress may be rewritten or lost.
+  const round={id:randomUUID(),betUnits:100000,step:1,phase:'player',popped:[2]};
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{balanceUnits:25,[field]:round}));
+  const recharge=request({action:'recharge'});
+  const [a,b]=await Promise.all([c.call(recharge),other.call(request({action:'recharge'}))]);
+  assert.equal(a.amount+b.amount,1000);assert.equal((await getDoc(ref)).data().balanceUnits,100025);
+  assert.equal((await c.call(recharge)).player.balance,1000.25);
+  assert.deepEqual((await getDoc(ref)).data()[field],round);
+  assert.equal((await other.call(request({action:'recharge'}))).amount,0);
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{balanceUnits:0}));
+  const before=(await getDoc(ref)).data(),id=randomUUID(),batch=writeBatch(c.db);
+  const next={...before,balanceUnits:before.balanceUnits+100000,[field]:null,revision:before.revision+1,lastOperationId:id,updatedAt:serverTimestamp()};
+  batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'recharge',game:'home',selected:-1,fingerprint:'forged-clear-round',betUnits:0,winUnits:100000,result:{amount:1000,player:publicPlayer(next)},createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+  await assertFails(batch.commit());
+ }
+});

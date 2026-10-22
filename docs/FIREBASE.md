@@ -77,6 +77,6 @@ Os eventos consentidos `fingo_step` registram movimento, bolas usadas e acerto; 
 
 O bônus mantém o ciclo 50 → 100 → 150 → 200 → 250 → 500 → 1.000, uma vez por dia em São Paulo (UTC−3), validado pelo relógio do Firestore. O navegador propõe o dia; relógios incorretos podem causar recusa, sem crédito extra.
 
-Quando o saldo fica abaixo de 1 moeda e não há uma rodada ativa do Neck ou Fingo, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes ou progresso Happeach.
+Quando o saldo fica abaixo de 1 moeda, **Recarregar** concede 1.000 moedas virtuais, mesmo depois de receber o presente diário. Eventuais centavos são preservados. A recarga grava jogador e operação na mesma transação; cliques repetidos, outro aparelho ou recuperação de uma resposta perdida não duplicam o crédito. As regras rejeitam valores diferentes, recarga com saldo suficiente e alterações de outros campos. A recarga não muda bônus diário, ajustes, progresso Happeach nem rodadas em aberto de qualquer jogo.
 
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.

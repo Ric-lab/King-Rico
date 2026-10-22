@@ -324,8 +324,7 @@ service cloud.firestore {
     function recharge(p, old, o) {
       return p.balanceUnits is int && p.balanceUnits <= 1000000000000
         && o.action == 'recharge' && o.game == 'home' && o.selected == -1
-        && old.get('flyingRound',null) == null && (old.get('twentyOneRound',null) == null || old.twentyOneRound.phase == 'settled')
-        && old.balanceUnits < 100 && old.get('neckRound',null) == null && old.get('fingoRound',null) == null && old.get('penaltyRound',null) == null && old.get('clownRound',null) == null && old.get('bounceRound',null) == null
+        && old.balanceUnits < 100
         && o.betUnits == 0 && o.winUnits == 100000
         && p.balanceUnits == old.balanceUnits + 100000
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])

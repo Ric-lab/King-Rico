@@ -22,13 +22,13 @@ O ID de cada balão estourado fica na rodada, permitindo restaurar cores, ordem 
 
 As operações v4 armazenam o resultado imutável sem duplicar o documento inteiro do jogador, baralhos e rodadas de outros jogos. O documento do jogador já é lido na transação; o replay retorna esse perfil atual junto do resultado salvo. Isso reduz os documentos e a validação duplicada, além de evitar reexibir um saldo antigo. As regras continuam aceitando clientes v1/v2/v3 compatíveis, inclusive sem os novos campos opcionais.
 
-A recarga de 1.000 moedas abaixo de 1 continua disponível. Não é concedida enquanto existe uma mão de cartas ou rodada do Flying em aberto. Conflitos de turno e requisições pendentes antigas de outro aparelho não obrigam novo login nem criam outro débito.
+A recarga de 1.000 moedas abaixo de 1 continua disponível. Rodadas em aberto são preservadas e não bloqueiam a recarga do saldo compartilhado. Conflitos de turno e requisições pendentes antigas de outro aparelho não obrigam novo login nem criam outro débito.
 
 A arquitetura mantém o limite já documentado do Spark: o cliente calcula o sorteio; as regras validam as transições e os valores, mas não provam que a aleatoriedade do navegador foi honesta. Apenas moedas virtuais, sem dinheiro real.
 
 ## Validação
 
 - `npm test`: matemática, adaptadores, transações e arquivos do build.
-- `npm run test:rules`: regras reais com Auth/Firestore emulados, incluindo repetição, concorrência, recarga bloqueada e tentativas de alterar cartas/prêmios.
+- `npm run test:rules`: regras reais com Auth/Firestore emulados, incluindo repetição, concorrência, recarga sem duplicação e tentativas de alterar cartas/prêmios.
 - `npm run test:integration`: regras e navegador com todos os jogos, incluindo `tests/new_games_browser.py` para toque real, Home, sessão salva, saldo compartilhado, centavos, retomada, duas abas e Flying x20.
 - `npm run build:production` depois das integrações; publicação pelo workflow existente, com o publicador REST das regras preservado.

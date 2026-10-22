@@ -217,13 +217,7 @@ export function createGameStore(db, uid, dependencies={}) {
         p.bonus={day:engine.dayKey(time),dayIndex:today,streak:index+1};
         result={amount:winUnits/100};
       } else if (data.action==='recharge') {
-        if(p.flyingRound) return {amount:0,reason:'flying-round',player:publicPlayer(p)};
-        if(p.twentyOneRound && p.twentyOneRound.phase!=='settled')return {amount:0,reason:'twenty-one-round',player:publicPlayer(p)};
-        if(p.neckRound) return {amount:0,reason:'neck-round',player:publicPlayer(p)};
-        if(p.fingoRound) return {amount:0,reason:'fingo-round',player:publicPlayer(p)};
-        if(p.bounceRound) return {amount:0,reason:'bounce-round',player:publicPlayer(p)};
-        if(p.clownRound) return {amount:0,reason:'clown-round',player:publicPlayer(p)};
-        if(p.penaltyRound) return {amount:0,reason:'penalty-round',player:publicPlayer(p)};
+        // A paused game must not lock the shared wallet. Preserve every round.
         if(p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
         winUnits=100000;p.balanceUnits+=winUnits;
         result={amount:winUnits/100};
