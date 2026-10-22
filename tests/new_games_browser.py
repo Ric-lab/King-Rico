@@ -14,7 +14,8 @@ def seed_cards(page,prefix):
 
 def tap_pop(page):
     page.bring_to_front()
-    box=page.get_by_role('button',name='Subir',exact=True).bounding_box()
+    label='JOGAR' if page.evaluate('__flying.state.step===0') else 'SUBIR'
+    box=page.get_by_role('button',name=label,exact=True).bounding_box()
     page.touchscreen.tap(box['x']+box['width']/2,box['y']+box['height']/2)
 
 def forced_pop(page,success=True):
@@ -85,7 +86,8 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     page.get_by_text('FECHAR',exact=True).tap();page.get_by_role('button',name='Fechar menu').tap()
     before=page.evaluate('KingRicoCloud.player.balance');forced_pop(page)
     point=page.evaluate('''()=>{const g=__flying,r=g.canvasRef.current.getBoundingClientRect(),b=g.balls[0],s=r.width/453;return {x:r.x+b.cx*s,y:r.y+b.cy*s,id:b.id}}''')
-    page.touchscreen.tap(point['x'],point['y']);page.wait_for_function('KingRicoCloud.player.flyingRound?.step===1')
+    tap_pop(page);page.wait_for_function('KingRicoCloud.player.flyingRound?.step===1')
+    point['id']=page.evaluate('KingRicoCloud.player.flyingRound.popped[0]')
     assert page.evaluate('KingRicoCloud.player.balance')==before-10
     page.evaluate('''selected=>{const r=KingRicoCloud.player.flyingRound;localStorage.setItem(`kingRico.pending.${KingRicoCloud.uid}`,JSON.stringify({action:'flying',game:'flying',move:'pop',bet:10,roundId:r.id,requestId:r.id,step:0,selected}));}''',point['id'])
     page.reload();restored(page,uid);flying_ready(page)
@@ -106,7 +108,11 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     page.wait_for_function('__flying.mode==="fall" || __flying.mode==="land" || __flying.mode==="down"');page.screenshot(path='/tmp/king-rico-flying-fall.png')
     page.reload();restored(page,uid);flying_ready(page)
     for step in range(10):
-        forced_pop(page);tap_pop(page)
+        forced_pop(page)
+        if step==1:
+            point=page.evaluate("""()=>{const g=__flying,r=g.canvasRef.current.getBoundingClientRect(),b=g.balls[0],s=r.width/453;return {x:r.x+b.cx*s,y:r.y+b.cy*s}}""")
+            page.touchscreen.tap(point['x'],point['y'])
+        else:tap_pop(page)
         if step<9:
             page.wait_for_function('(n)=>KingRicoCloud.player.flyingRound?.step===n',arg=step+1);flying_ready(page)
         else:page.wait_for_function('!!__flying.state.win',timeout=20000)

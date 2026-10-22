@@ -66,29 +66,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </sc-if>
     </div>
 
-    <!-- controles -->
-    <div style="position: absolute; left: 14px; right: 14px; top: 642px; height: 50px; display: flex; gap: 10px;">
-      <div style="flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 6px; border-radius: 16px; background: rgba(20,4,36,.7); box-shadow: inset 0 0 0 2px rgba(255,210,87,.5);">
-        <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ downOp }}; --kr-step-size:40px;">−</div>
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; line-height: 1;"><span style="font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #dcc2f0;">APOSTA</span><span style="font-size: 24px; font-weight: 800; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span></div>
-        <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ upOp }}; --kr-step-size:40px;">+</div>
-      </div>
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; border-radius: 16px; background: rgba(20,4,36,.7); box-shadow: inset 0 0 0 2px rgba(255,210,87,.5);">
-        <span style="font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #dcc2f0; white-space: nowrap;">{{ prizeLbl }}</span>
-        <span style="font-size: 24px; font-weight: 800; color: #ffd257; font-variant-numeric: tabular-nums;">{{ prizeText }}</span>
-        <span style="font-size: 13px; font-weight: 800; color: #7dffa0; white-space: nowrap; opacity: {{ savedOp }};">Garantido: {{ savedText }}</span>
-      </div>
-    </div>
-    <div style="position: absolute; left: 14px; right: 14px; top: 704px; height: 86px; display: flex; gap: 10px;">
-      <div onClick="{{ collect }}" role="button" aria-label="Pegar o prêmio" class="kr-button kr-button--gold" style="flex: 0 0 {{ pegarW }}; overflow: hidden; height: 86px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; cursor: pointer; opacity: {{ pegarOp }}; transition: flex-basis .3s ease, opacity .2s;">
-        <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 24px; color: #4a1a00;">PEGAR</span>
-        <span style="font-size: 22px; font-weight: 800; color: #5a2a00; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ pegarText }}</span>
-      </div>
-      <div onClick="{{ climb }}" role="button" aria-label="{{ goLbl }}" class="kr-button" style="--kr-button-surface: {{ goBg }}; flex: 1; height: 86px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: background .2s;">
-        <span style="font-size: 34px; font-weight: 800; color: #fff; opacity: {{ arrowOp }};">↑</span>
-        <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 28px; color: #fff; text-shadow: 0 2px 0 #147a36;">{{ goLbl }}</span>
-      </div>
-    </div>
+    <sc-if value="{{ savedOp }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="position: absolute; left: 14px; right: 14px; top: 665px; text-align: center; font-size: 19px; font-weight: 800; color: #7dffa0; text-shadow: 0 2px 0 #2a0a4a;">Garantido: {{ savedText }}</div>
+    </sc-if>
+    <x-import from="./ui/round-controls.js" component="RoundControls" dc-props="{{ roundControls }}"></x-import>
 
     <sc-if value="{{ broke }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 28; background: rgba(10,2,20,.6); pointer-events: none; animation: rcFade .2s ease-out;">
@@ -262,9 +243,9 @@ class Component extends DCLogic {
     const cloud=window.KingRicoCloud;if(cloud && cloud.enabled) {this._cloudDeferred=cloud.player;this.applyCloudPlayer();}
   }, 2200); }
   swDown = e => { this._sy = e.clientY; };
-  swUp = e => { if (this._sy != null && this._sy - e.clientY > 40) this.climb(); this._sy = null; };
-  betDown = () => { if (this.state.round) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.saveBet()); };
-  betUp = () => { if (this.state.round) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.saveBet()); };
+  swUp = e => { if (this.state.round && this._sy != null && this._sy - e.clientY > 40) this.climb(); this._sy = null; };
+  betDown = () => { if (this.state.round || this.state.busy || this._cloudRequest) return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.saveBet()); };
+  betUp = () => { if (this.state.round || this.state.busy || this._cloudRequest) return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.saveBet()); };
   goHome = e => { if ((this.state.round || this.state.busy) && e) e.preventDefault(); };
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
@@ -287,8 +268,11 @@ class Component extends DCLogic {
       pegarText: fmt(pr), prizeLbl: 'SE SUBIR ' + ml(nextM), prizeText: fmt((s.round ? s.roundBet : this.bet()) * nextM),
       savedOp: s.saved > 0 ? 1 : 0, savedText: fmt(s.saved),
       collect: this.collect, climb: this.climb, swDown: this.swDown, swUp: this.swUp,
-      pegarW: s.round && s.floor > 0 ? '44%' : '0%', pegarOp: s.round && s.floor > 0 && !s.busy ? 1 : 0.0,
-      goLbl: s.round ? 'SUBIR' : 'JOGAR', arrowOp: s.round ? 1 : 0, goBg: s.busy ? 'linear-gradient(180deg, #4fa86a, #2d7a45)' : 'linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%)',
+      roundControls:{active:s.round||s.busy,busy:!!(s.busy||this._cloudRequest||s.menu||s.pays),
+        betText:fmt(this.bet()),prizeText:fmt(pr),
+        onBetDown:this.betDown,onBetUp:this.betUp,onStart:this.climb,onClimb:this.climb,onCollect:this.collect,
+        betDownDisabled:s.betIdx===0,betUpDisabled:s.betIdx===BETS.length-1,
+        startDisabled:s.balance<this.bet(),collectDisabled:!s.round||s.floor<1},
       payList: M.map((m, i) => ({ label: ml(m), src: SRC(i + 1) })),
       menuButton: {onClick:this.openMenu,disabled:!!(s.busy || s.round)},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Neck',

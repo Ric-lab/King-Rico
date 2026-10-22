@@ -9,6 +9,7 @@ from login_ui import check_wallet_retry
 from penalty_browser import check_penalty
 from clown_browser import check_clown_bounce
 from new_games_browser import check_new_games
+from round_controls_browser import check_round_controls
 from claw_browser import check_claw
 from race_browser import check_race
 
@@ -424,6 +425,7 @@ with sync_playwright() as p:
     print(json.dumps(penalty_result))
     print(json.dumps(check_clown_bounce(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_new_games(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+    print(json.dumps(check_round_controls(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_claw(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],

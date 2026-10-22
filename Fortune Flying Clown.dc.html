@@ -15,11 +15,9 @@
 @font-face { font-family: 'Rammetto One'; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
-@keyframes flGlow { 0%,100% { box-shadow: 0 0 0 3px #fff3c4, 0 0 16px rgba(255,200,60,.55); } 50% { box-shadow: 0 0 0 3px #fff3c4, 0 0 30px rgba(255,200,60,1); } }
 @keyframes flRung { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 @keyframes flPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes flFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes flPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 @keyframes flShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(520%) skewX(-18deg); } }
 @keyframes flConf { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(540deg); opacity: 0; } }
 @keyframes flNo { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-8px); } 50% { transform: translateX(8px); } }
@@ -31,7 +29,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <div ref="{{ worldRef }}" style="position: absolute; left: -120px; top: -520px; width: 693px; height: 1221px; background: url('assets/flying/bg2.webp') 50% 50% / cover no-repeat; will-change: transform;"></div>
     <div ref="{{ floorRef }}" style="position: absolute; z-index: 4; left: -224px; top: 590px; width: 900px; height: 320px; pointer-events: none; will-change: transform; background: url('assets/flying/floor.webp') 50% 0 / 900px 183px no-repeat, linear-gradient(#680302, #3a0206) 0 182px / 100% 140px no-repeat;"></div>
-    <canvas ref="{{ canvasRef }}" onPointerDown="{{ tapBalloon }}" width="906" height="1604" style="position: absolute; z-index: 6; inset: 0; width: 453px; height: 802px; cursor: pointer; touch-action: none;"></canvas>
+    <canvas ref="{{ canvasRef }}" onPointerDown="{{ tapBalloon }}" width="906" height="1604" style="position: absolute; z-index: 6; inset: 0; width: 453px; height: 802px; cursor: {{ balloonCursor }}; touch-action: none;"></canvas>
     <img ref="{{ clownRef }}" src="assets/flying/clown.webp?v=dc397ed34816" alt="Palhaço" draggable="false" style="position: absolute; z-index: 5; left: 172.3px; top: 368.7px; width: 110px; height: 197px; pointer-events: none; transform-origin: 53.7px 11.3px; filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));">
 
     <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
@@ -56,40 +54,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </sc-for>
     </div>
 
-    <!-- botões (igual ao Neck): PEGAR à esquerda, SUBIR à direita -->
-    <div style="position: absolute; z-index: 12; left: 14px; right: 14px; top: 704px; height: 86px; display: flex; gap: 10px;">
-      <sc-if value="{{ showBet }}" hint-placeholder-val="{{ true }}">
-        <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="flex: 0 0 130px; height: 86px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; line-height: 1; cursor: pointer; background: rgba(28,6,48,.92); box-shadow: inset 0 0 0 3px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.96);">
-          <img src="assets/symbols/sym-coin.webp" alt="" style="width: 34px; height: 34px;">
-          <span style="font-size: 24px; font-weight: 800; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
-        </div>
-      </sc-if>
-      <sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}">
-        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" class="kr-button kr-button--gold" style="flex: 0 0 170px; overflow: hidden; height: 86px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1; cursor: pointer; opacity: {{ collectOp }}; animation: flGlow 1.2s ease-in-out infinite;">
-          <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 20px; color: #4a1a00;">PEGAR</span>
-          <div style="display: flex; align-items: center; gap: 5px;"><img src="assets/symbols/sym-coin.webp" alt="" style="width: 28px; height: 28px;"><span style="font-size: 27px; font-weight: 800; color: #4a1a00; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ collectText }}</span></div>
-        </div>
-      </sc-if>
-      <div onClick="{{ popBtn }}" role="button" aria-label="Subir" class="kr-button" style="flex: 1; height: 86px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; opacity: {{ popOp }}; animation: {{ popAnim }};">
-        <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 26px; color: #fff; text-shadow: 0 2px 0 #147a36;">SUBIR</span>
-      </div>
-    </div>
+    <x-import from="./ui/round-controls.js" component="RoundControls" dc-props="{{ roundControls }}"></x-import>
 
-    <sc-if value="{{ betOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; inset: 0; z-index: 40; background: rgba(10,2,20,.72); animation: flFade .2s ease-out;">
-        <div onClick="{{ closeBet }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
-        <div style="position: absolute; left: 28px; right: 28px; top: 300px; padding: 22px 0 20px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 18px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: flPop .3s ease-out;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ downOp }}; --kr-step-size:54px;">−</div>
-            <div style="width: 160px; height: 78px; border-radius: 39px; display: flex; align-items: center; justify-content: center; background: #2a0a4a; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a;"><span style="font-size: 40px; font-weight: 800; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span></div>
-            <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" class="kr-stepper" style="display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ upBetOp }}; --kr-step-size:54px;">+</div>
-          </div>
-          <div onClick="{{ closeBet }}" role="button" class="kr-button" style="padding: 12px 64px; cursor: pointer; font-size: 26px; font-weight: 800;">OK</div>
-        </div>
-      </div>
-    </sc-if>
-
-    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closePays }}" role="button" style="position: absolute; inset: 0; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.94); cursor: pointer; animation: flFade .2s ease-out;">
         <div style="width: 400px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
@@ -168,7 +134,7 @@ class Component extends DCLogic {
   buzz(p) { if (!(this.state.vibLvl ?? 2)) return; try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
   tween(T, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / T); f(k); if (k < 1) this._tw = requestAnimationFrame(st); else done && done(); }; cancelAnimationFrame(this._tw); this._tw = requestAnimationFrame(st); }
   tick(t) {
-    const dt=this._lastFrame==null?1/60:Math.min(.05,Math.max(0,t-this._lastFrame));this._lastFrame=t;if(this._dead||this.state.menu||this.state.pays||this.state.betOpen||document.hidden)return;
+    const dt=this._lastFrame==null?1/60:Math.min(.05,Math.max(0,t-this._lastFrame));this._lastFrame=t;if(this._dead||this.state.menu||this.state.pays||document.hidden)return;
     const s = this.state.step, w = this.worldRef.current, f = this.floorRef.current, cam = Math.max(0, Math.min(PAN, (HY0 - this.hy - this.cy) * PANK));
     if (w) w.style.transform = 'translateY(' + cam.toFixed(1) + 'px)'; if (f) f.style.transform = 'translateY(' + (cam * 1.35).toFixed(1) + 'px)';
     const sway = Math.sin(t * 1.3) * 0.05, c = this.clownRef.current, hy = this.hy + this.cy;
@@ -195,10 +161,10 @@ class Component extends DCLogic {
   shake() { const w = this.worldRef.current; if (!w || !w.animate) return; w.animate([{ translate: '0 0' }, { translate: '-4px 2px' }, { translate: '4px -2px' }, { translate: '-2px 1px' }, { translate: '0 0' }], { duration: 180 }); }
   pack() { this.balls.forEach((b, i) => { const [tx, ty] = SLOTS[i], fx = b.x, fy = b.y; b.tw = { fx, fy, tx, ty }; }); const B = this.balls; const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / 400), e = ease(k); B.forEach(b => { if (b.tw) { b.x = b.tw.fx + (b.tw.tx - b.tw.fx) * e; b.y = b.tw.fy + (b.tw.ty - b.tw.fy) * e; } }); if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); }
   tapBalloon = e => {
-    const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || s.betOpen || this.mode !== 'idle') return; this.ac();
+    const s = this.state; if (!s.step || this._request || s.busy || s.win || s.menu || s.pays || this.mode !== 'idle') return; this.ac();
     const r = e.currentTarget.getBoundingClientRect(), sc = r.width / 453, px = (e.clientX - r.left) / sc, py = (e.clientY - r.top) / sc;
     let bi = -1, bd = 1e9; this.balls.forEach((b, i) => { const d = Math.hypot(px - b.cx, (py - b.cy) * 0.85); if (d < bd) { bd = d; bi = i; } }); if (bi < 0 || bd > 40) return; this.popIdx(bi); };
-  popBtn = () => { const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || s.betOpen || this.mode !== 'idle' || !this.balls.length) return; this.ac(); let bi = 0; this.balls.forEach((b, i) => { if ((b.cy ?? 0) < (this.balls[bi].cy ?? 0)) bi = i; }); this.popIdx(bi); };
+  popBtn = () => { const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || this.mode !== 'idle' || !this.balls.length) return; this.ac(); let bi = 0; this.balls.forEach((b, i) => { if ((b.cy ?? 0) < (this.balls[bi].cy ?? 0)) bi = i; }); this.popIdx(bi); };
   // Offline (no login, e.g. preview): same odds as cloud/engine.cjs — 0,95/1,2 on the first balloon, M[k-1]/M[k] after.
   // Wallet kept on this device only.
   localFlying(move, bet, step) { const before = this.state.balance;
@@ -257,10 +223,8 @@ class Component extends DCLogic {
       st.appendChild(c); const dx = (i - n / 2) * 12, mid = { x: (from.x + to.x) / 2 + dx * 2, y: from.y - 260 - (i % 3) * 30 };
       const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 760, delay: i * 55, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
       a.onfinish = () => { c.remove(); this.tone(1800 + i * 40, 0.03, 'square', 0.03); if (i === n - 1) done(); }; } }
-  openBet = () => { if (this.state.step || this.state.busy || this._request) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
-  closeBet = () => this.setState({ betOpen: false });
-  betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
-  betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
+  betDown = () => { if(this.state.step || this.state.busy || this._request)return; this.tone(900, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
+  betUp = () => { if(this.state.step || this.state.busy || this._request)return; this.tone(1100, 0.04, 'square', 0.04); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }),()=>window.KingRicoCloud?.settings({flyingBetIdx:this.state.betIdx})); };
   openMenu = () => { if (this.state.busy) return; this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
   openPays=()=>this.setState({menu:false,pays:true});closePays=()=>this.setState({menu:true,pays:false});
@@ -277,10 +241,12 @@ class Component extends DCLogic {
       popNext: j < N ? 'PARA x' + fmt(M[j]) : '', canvasRef: this.canvasRef, clownRef: this.clownRef,
       balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       multText: j ? 'x' + fmt(M[j - 1]) : 'x' + fmt(M[0]), multOp: j ? 1 : 0.6, hasNext: j > 0 && j < M.length, nextText: j < M.length ? 'x' + fmt(M[j]) : '',
-      showBet: j === 0, betText: fmt(BETS[s.betIdx]), betAnim: s.noMoney ? 'flNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      showCollect: j > 0, collectText: j ? fmt(s.bet * M[j - 1]) : '', collectOp: s.busy ? 0.6 : 1, collectBtn: this.collectBtn,
-      tapBalloon: this.tapBalloon, popBtn: this.popBtn, popOp: s.busy ? 0.6 : 1, popAnim: !s.busy && !j ? 'flPulse 1.4s ease-in-out infinite' : 'none',
-      betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upBetOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
+      roundControls:{active:j>0||s.busy||!!s.win,busy:!!(s.busy||this._request||s.win||s.menu||s.pays),
+        betText:fmt(BETS[s.betIdx]),prizeText:j?fmt(s.bet*M[j-1]):'0',
+        onBetDown:this.betDown,onBetUp:this.betUp,onStart:this.popBtn,onClimb:this.popBtn,onCollect:this.collectBtn,
+        betDownDisabled:s.betIdx===0,betUpDisabled:s.betIdx===BETS.length-1,
+        startDisabled:s.balance<BETS[s.betIdx],collectDisabled:j<1,collectLabel:'Pegar '+(j?fmt(s.bet*M[j-1]):'0')+' moedas'},
+      tapBalloon:this.tapBalloon,balloonCursor:j>0&&!s.busy?'pointer':'default',
       menuButton:{onClick:this.openMenu,disabled:!!s.busy||!!this._request,style:{zIndex:25}},
       menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Flying Clown',details:'Estoure um balão para subir. Pegue o prêmio antes de arriscar o próximo. O décimo acerto paga x20. O resultado é salvo antes da animação, e a rodada continua ao voltar.',sfxLvl:s.sfxLvl??2,vibLvl:s.vibLvl??2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v),onPaytable:this.openPays},
       broke:s.balance<1&&!s.step&&!s.busy&&!s.win&&!s.menu,recharge:this.recharge,
