@@ -14,7 +14,7 @@ def seed_cards(page,prefix):
 
 def tap_pop(page):
     page.bring_to_front()
-    box=page.get_by_role('button',name='Estourar um balão').bounding_box()
+    box=page.get_by_role('button',name='Subir',exact=True).bounding_box()
     page.touchscreen.tap(box['x']+box['width']/2,box['y']+box['height']/2)
 
 def forced_pop(page,success=True):

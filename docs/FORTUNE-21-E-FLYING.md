@@ -14,7 +14,7 @@ A banca em 27 é a configuração inicial do novo jogo. Uma simulação explorat
 
 ## Flying Clown
 
-Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/ESTOURAR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20 e a chance original: 0,95/1,2 na primeira etapa, multiplicador anterior/próximo nas demais. Escolher um balão não altera a chance.
+Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/SUBIR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20 e a chance original: 0,95/1,2 na primeira etapa, multiplicador anterior/próximo nas demais. Escolher um balão não altera a chance.
 
 O ID de cada balão estourado fica na rodada, permitindo restaurar cores, ordem e quantidade. Estourar debita apenas na primeira ação; pegar ou completar a décima etapa credita uma única vez. As moedas que voam ao saldo são apenas apresentação. Sair e voltar restaura o ponto salvo, e a perda também fica confirmada antes da queda.
 
