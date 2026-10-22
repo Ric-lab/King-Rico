@@ -9,4 +9,4 @@ Fortune Wheel é a referência para gradiente dourado, aro escuro e profundidade
 
 Reutilize as classes e ajuste apenas a geometria necessária. Não duplique gradientes, sombras e estados de toque em estilos locais. Preserve eventos, estados desabilitados, feedback e arte dos controles integrados à máquina Circus.
 
-`header.css` mantém os controles do topo. O build coloca a revisão do conteúdo nos links dos estilos, e o Hosting manda revalidar CSS, para não misturar uma página nova com um tema antigo do cache.
+`header.css` define uma posição única para saldo, Home e menu: `--kr-hud-top:14px` na cena de 453×802. A Home acompanha a mesma escala; o cabeçalho do 21/33 compensa sua cena de 810 unidades. Ajuste esse valor compartilhado, sem sobrescrever a posição em cada jogo. O build coloca a revisão do conteúdo nos links dos estilos, e o Hosting manda revalidar CSS, para não misturar uma página nova com um tema antigo do cache.

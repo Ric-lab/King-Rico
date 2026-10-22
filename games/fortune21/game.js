@@ -33,6 +33,7 @@ function resize() {
   const height = document.documentElement.clientHeight;
   const scale = Math.min(width / 453, height / 810);
   game.style.setProperty('--scene-scale', scale);
+  game.style.setProperty('--kr-hud-ratio', Math.min(width / 453, height / 802) / scale);
   game.style.setProperty('--scene-height', `${height / scale}px`);
   const cardHeight = Math.min(156,114+Math.max(0,height/scale-810)*.25);
   game.style.setProperty('--card-height', `${cardHeight}px`);

@@ -66,7 +66,7 @@ a:hover { color: #fff3c4; }
   <div style="position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};">
     <div style="position: absolute; inset: 0; background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
   </div>
-  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
+  <div style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-size: 453px 802px; mask-size: 453px 802px; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
   <div ref="{{ lightsBleedRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible; opacity: {{ bleedOn }};"></div>
   <div ref="{{ lightsRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
   <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
@@ -464,6 +464,8 @@ const FC_SAFE_AREA = () => {
 // Recorte do quadro sobre o palco com sangria (espaço 453×802): fica a máquina (até a barra de aposta) + o botão;
 // o chão roxo ao redor some e a máquina se apoia no palco. Borda suave via desfoque do SVG; topo com transição de 40 px.
 const FC_FRAME_SVG = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 453 802\' preserveAspectRatio=\'none\'%3E%3Cfilter id=\'f\' x=\'-0.1\' y=\'-0.1\' width=\'1.2\' height=\'1.2\'%3E%3CfeGaussianBlur stdDeviation=\'5\'/%3E%3C/filter%3E%3Cg filter=\'url%28%23f%29\' fill=\'%23fff\'%3E%3Crect x=\'5\' y=\'-40\' width=\'443\' height=\'708\'/%3E%3Crect x=\'47\' y=\'681\' width=\'359\' height=\'84\' rx=\'40\'/%3E%3C/g%3E%3C/svg%3E")';
+// Feather out the old HUD baked into the artwork; keep the shared controls separate.
+const FC_HUD_MASK = 'url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20453%20802%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22f%22%3E%3CfeGaussianBlur%20stdDeviation%3D%223%22%2F%3E%3C%2Ffilter%3E%3Cmask%20id%3D%22m%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22453%22%20height%3D%22802%22%3E%3Crect%20width%3D%22453%22%20height%3D%22802%22%20fill%3D%22white%22%2F%3E%3Cg%20fill%3D%22black%22%20filter%3D%22url%28%23f%29%22%3E%3Crect%20x%3D%2210%22%20y%3D%2218%22%20width%3D%22150%22%20height%3D%2265%22%20rx%3D%2223%22%2F%3E%3Ccircle%20cx%3D%22362.3%22%20cy%3D%2250%22%20r%3D%2230%22%2F%3E%3Ccircle%20cx%3D%22412.3%22%20cy%3D%2250%22%20r%3D%2230%22%2F%3E%3C%2Fg%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Crect%20width%3D%22453%22%20height%3D%22802%22%20fill%3D%22white%22%20mask%3D%22url%28%23m%29%22%2F%3E%3C%2Fsvg%3E")';
 const FC_EDGE_MASK = FC_FRAME_SVG + ', linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
 const FC_TOP_MASK = 'linear-gradient(to right, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%), linear-gradient(to bottom, transparent 0, #000 40px, #000 100%)';
 // Lâmpadas do cenário em unidades do quadro 453×802 [x, y, raio] (gerado por app/scripts/stage_art.py → bulbs.json).
@@ -1798,12 +1800,12 @@ class Component extends DCLogic {
     const vals = {
       ...(() => { const sc = s.scale ?? 1, left = ((s.vw || 453 * sc) - 453 * sc) / 2;
         return { bleedL: (left - 151 * sc) + 'px', bleedT: ((s.stageTop ?? 0) - 130 * sc) + 'px', bleedW: 755 * sc + 'px', bleedH: 1132 * sc + 'px', bleedOn: s.inset ? 0 : 1,
-          edgeMask: s.inset ? 'none' : FC_EDGE_MASK,
+          edgeMask: s.inset ? FC_HUD_MASK : FC_EDGE_MASK + ', ' + FC_HUD_MASK,
           // janelas (prêmio, menu, tabela, Home) cobrem a tela inteira, não só o quadro
           ovX: s.inset ? '0px' : -Math.ceil(((s.vw || 453 * sc) / sc - 453) / 2) + 'px',
           ovT: s.inset ? '0px' : -Math.ceil((s.stageTop ?? 0) / sc) + 'px',
           ovB: s.inset ? '0px' : -Math.ceil(((s.vh || 802 * sc) - (s.stageTop ?? 0)) / sc - 802) + 'px',
-          hudLift: -(s.hudD || 0) + 'px', topMask: s.inset ? 'none' : FC_TOP_MASK }; })(),
+          hudLift: -(s.hudD || 0) + 'px', topMask: s.inset ? FC_HUD_MASK : FC_TOP_MASK + ', ' + FC_HUD_MASK }; })(),
       scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', stageBg: s.inset ? '#1d0733' : 'transparent' /* o palco com sangria aparece pelas bordas suaves */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
