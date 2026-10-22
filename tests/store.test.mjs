@@ -295,8 +295,8 @@ test('33 saves its rules across devices, deduplicates settlement and leaves lega
  const other=m.client('33');assert.equal((await other(request({action:'bootstrap'}))).player.twentyOneRound.target,33);
  assert.ok((await other(request({action:'bootstrap'}))).player.twentyOneRound);
  m.advance(350);await other(request({...base,move:'hit',turn:1}));m.advance(350);
- const final=request({...base,move:'dealer',turn:2});const x=await call(final);assert.equal(x.player.balance,2000);assert.equal(x.outcome.round.playerHard,33);
- assert.equal((await other(final)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,2000);
+ const final=request({...base,move:'dealer',turn:2});const x=await call(final);assert.equal(x.player.balance,2080);assert.equal(x.outcome.round.playerHard,33);
+ assert.equal((await other(final)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,2080);
  await assert.rejects(call(request({...base,move:'hit',turn:1})),{code:'king-rico/round-conflict'});
 });
 

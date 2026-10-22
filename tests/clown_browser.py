@@ -24,6 +24,10 @@ def check_clown_bounce(browser,login,restored,check_menu,claim_gift,observer):
         page.wait_for_function('!__clown.state.busy && !__clown._request')
         points=page.evaluate('''([x,y])=>{const r=__clown.stageRef.current.getBoundingClientRect(),s=r.width/453,p=__clown.facePoint({x,y});return {a:[r.x+226*s,r.y+670*s],b:[r.x+p.x*s,r.y+p.y*s]};}''',[x,y])
         page.mouse.move(*points['a']);page.mouse.down();page.mouse.move(*points['b'],steps=8);page.mouse.up()
+    # v5 no longer guarantees the first hit. Force only this test's first draw.
+    page.evaluate('''()=>{const original=crypto.getRandomValues.bind(crypto);
+      crypto.getRandomValues=a=>{if(a instanceof Uint32Array&&a.length===1){
+        crypto.getRandomValues=original;a[0]=0;return a;}return original(a);};}''')
     swipe(226.5,442)
     page.wait_for_function('KingRicoCloud.player.clownRound?.used===1')
     assert page.evaluate('KingRicoCloud.player.balance')==1040
@@ -48,7 +52,8 @@ def check_clown_bounce(browser,login,restored,check_menu,claim_gift,observer):
     page.reload(wait_until='domcontentloaded');ready()
     assert page.evaluate('__clown.state.balance')==1041.5
     page.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded');restored(page,uid)
-    page.get_by_role('link',name='Jogar Fortune Bounce',exact=True).click()
+    # Bounce is parked; its existing round is still reachable by its direct URL.
+    page.goto(BASE+'/Fortune%20Bounce.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.Bounce3D && window.__bounce && KingRicoCloud.player',timeout=30000);restored(page,uid)
     check_menu(page,'Fortune Bounce',False)
     assert page.evaluate('__bounce.state.balance')==1041.5

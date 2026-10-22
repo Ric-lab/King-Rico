@@ -141,8 +141,7 @@ King Rico: quadros desenhados em crossfade, sem mudar de tamanho, sempre atrás 
 **Jogo e matemática.** 3 × 3, 5 linhas, apostas 1 → 1.000. Tabela (multiplicador por linha):
 Bumbo 1,0 · Circo 2,5 · Trevo 5,0 · Nuvem 7,5 · Capa 10,0 · Cetro 12,5 · Moeda 15,0 · Coroa 17,5 ·
 Diamante 20,0 · King Rico (coringa) 33,3. Happeach não paga: máx. 2 por jogada, 5 na cesta =
-Rodada Especial de 5 giros; o excedente já conta. Tabela na tela: título 24px, multiplicadores 28px, símbolos 50px, regras 17px e botão FECHAR grande — nada abaixo de 17px em telas de leitura. RTP ≈ 96,5–97% (simulação de 700 mil giros) —
-o saldo oscila e tende a zerar em centenas de giros, não em um dia. Ver `guidelines/game-paytable.card.html`.
+Rodada Especial de 5 giros; o excedente já conta. Tabela na tela: título 24px, multiplicadores 28px, símbolos 50px, regras 17px e botão FECHAR grande — nada abaixo de 17px em telas de leitura. RTP teórico 98%, incluindo a especial; referência em `docs/ECONOMIA.md`. O saldo oscila; não há prazo garantido para zerar. Ver `guidelines/game-paytable.card.html`.
 
 **Layout.** Coluna única, ancorada: cabeçalho em cima, ação em baixo, rolos ao centro; nada
 rola. O trilho de aposta fica sempre imediatamente acima da barra de giro. Alvo de toque

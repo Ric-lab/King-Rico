@@ -352,6 +352,7 @@ class Component extends DCLogic {
       bal = Math.round((bal - bet) * 100) / 100; active = true; }
     let targets = s.targets; if (!targets) targets = [0, 1, 2, 3, 4].map(c => rint(c * 15 + 1, c * 15 + 15));
     const slots = [0, 1, 2, 3, 4].map(c => { if (!s.tmarks[c] && Math.random() < G) return targets[c]; let v; do v = rint(c * 15 + 1, c * 15 + 15); while (v === targets[c]); return v; });
+    if (slots.every((n, c) => n === targets[c])) slots[4] = 61 + (targets[4] - 60) % 15;
     const miss = [0, 1, 2, 3, 4].filter(c => !s.tmarks[c]); if (!miss.some(c => slots[c] === targets[c])) { const c = miss[Math.floor(Math.random() * miss.length)]; slots[c] = targets[c]; }
     this.setState({ targets });
     this.roll(slots, { balance: bal, active }); this.tone(500, 0.06, 'square', 0.05); this.buzz(20);

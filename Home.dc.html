@@ -47,7 +47,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         </div>
       </div>
       <button onClick="{{ recharge }}" class="kr-button kr-home-recharge" aria-label="Recarregar 1.000 moedas" aria-description="{{ rechargeDescription }}" disabled="{{ rechargeDisabled }}">
-        <span class="kr-home-recharge-art"><img src="assets/icons/reward-video.svg" alt=""><img src="{{ imgCoin }}" alt=""></span>
+        <span class="kr-home-recharge-art"><img src="assets/icons/reward-video.svg" alt=""><img src="assets/symbols/sym-coin.webp" alt=""></span>
         <span class="kr-home-recharge-copy"><strong>+1000 moedas</strong><span>Ver anúncio de 30s</span></span>
         <span class="kr-home-recharge-count" aria-label="{{ rechargeCountLabel }}">{{ rechargeCounter }}</span>
       </button>
@@ -141,7 +141,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div class="kr-home-gift" role="dialog" aria-modal="true" aria-label="Presente do dia">
           <h2>Presente do dia!</h2>
           <p>{{ bonusDay }}</p>
-          <div class="kr-home-gift-amount"><img src="{{ imgCoin }}" alt=""><span>+{{ bonusAmt }}</span></div>
+          <div class="kr-home-gift-amount"><img src="assets/symbols/sym-coin.webp" alt=""><span>+{{ bonusAmt }}</span></div>
           <div class="kr-home-week" aria-label="Recompensas dos sete dias">
             <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
               <div class="kr-home-day {{ d.className }}" aria-label="{{ d.description }}"><span>{{ d.day }}</span><strong>{{ d.amount }}</strong></div>

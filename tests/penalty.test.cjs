@@ -4,8 +4,8 @@ const engine=require('../cloud/engine.cjs');
 test('Penalty keeps the five prizes, skill penalty and first-shot odds',()=>{
   assert.deepEqual(engine.PENALTY_MULTIPLIERS,[1.2,1.8,3,5,10]);
   assert.equal(engine.penalty(2.5,null,'shoot','id',1000,()=>.79).goal,true);
-  assert.equal(engine.penalty(2.5,null,'shoot','id',1000,()=>.8).goal,false);
-  assert.equal(engine.penalty(2.5,null,'shoot','id',500,()=>.4).goal,false);
+  assert.equal(engine.penalty(2.5,null,'shoot','id',1000,()=>.82).goal,false);
+  assert.equal(engine.penalty(2.5,null,'shoot','id',500,()=>.41).goal,false);
   assert.equal(engine.penalty(2.5,null,'shoot','id',0,()=>{throw Error('Outside shot must lose');}).goal,false);
   let round;
   for(let step=1;step<=5;step++) {

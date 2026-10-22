@@ -14,6 +14,64 @@ before(async()=>{
 });
 after(async()=>{await Promise.all(apps.map(deleteApp));await environment?.cleanup();});
 const request=data=>({requestId:randomUUID(),...data});
+test('Circus v5 banks contributing stakes, rejects inflation, and replays a bonus across devices once',async()=>{
+  const name='circus-bank-'+randomUUID();let draws=[];
+  const c=await client(name,name,{rng:()=>draws.length?draws.shift():.99});
+  await c.call(request({action:'bootstrap'}));const ref=doc(c.db,'players',c.uid);
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
+    peaches:4,peachBank:{count:4,units:400}}));
+  const old=(await getDoc(ref)).data();
+  const queue=()=>[0,0,...Array.from({length:7},()=>[.99,.2]).flat()];
+  async function forge(change){
+    let samples=queue();const outcome=engine.slot(1000,old.peaches,()=>samples.length?samples.shift():.99,old.peachBank);
+    const id=randomUUID(),next={...old,balanceUnits:old.balanceUnits-100000+outcome.winUnits,
+      peaches:outcome.peaches,peachBank:outcome.peachBank,settings:{...old.settings,slotBetIdx:9},
+      revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp()};
+    change(next,outcome);
+    const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{
+      action:'spin',game:'circus',selected:-1,fingerprint:'forged-bank',betUnits:100000,winUnits:outcome.winUnits,
+      rulesVersion:engine.RULES_VERSION,createdAt:serverTimestamp(),result:{game:'circus',bet:1000,
+        balanceBefore:1000,balanceDebited:0,baseBalance:next.balanceUnits/100,outcome}});
+    await assertFails(batch.commit());
+  }
+  await forge((p,x)=>{p.peachBank={count:1,units:200000};x.peachBank=p.peachBank;});
+  await forge((p,x)=>{x.feature.bet=1000;});
+  await forge((p,x)=>{x.res.peach=[0];});
+  draws=queue();const spin=request({action:'spin',game:'circus',bet:1000});
+  const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);
+  assert.ok(a.replayed||b.replayed);assert.equal(a.outcome.feature.bet,200.8);
+  assert.equal(a.outcome.feature.res.win,2008);assert.deepEqual(a.player.peachBank,{count:1,units:100000});
+  const other=await client(name+'-other',name,{rng:()=>{throw Error('Replay cannot redraw or bank twice');}});
+  assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.peachBank,a.player.peachBank);
+  assert.equal((await other.call(spin)).player.balance,a.player.balance);
+  assert.equal((await getDoc(ref)).data().peachBank.units,100000);
+});
+test('Wheel v5 rejects a color x5 payout while a saved v4 client still uses its x5 table',async()=>{
+  for(const [version,pay,allowed]of[[engine.RULES_VERSION,5,false],[engine.RULES_VERSION,2,true],['2026-10-20-spark-v4',5,true]]){
+    const name='wheel-version-'+randomUUID(),c=await client(name);await c.call(request({action:'bootstrap'}));
+    const ref=doc(c.db,'players',c.uid),old=(await getDoc(ref)).data(),id=randomUUID();
+    const outcome={target:3,winUnits:1000*pay};
+    const next={...old,balanceUnits:old.balanceUnits-1000+outcome.winUnits,revision:1,lastOperationId:id,
+      updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp()};
+    const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{
+      action:'spin',game:'wheel',selected:1,fingerprint:'version-table',betUnits:1000,winUnits:outcome.winUnits,
+      rulesVersion:version,createdAt:serverTimestamp(),result:{game:'wheel',bet:10,balanceBefore:1000,
+        balanceDebited:990,baseBalance:next.balanceUnits/100,outcome}});
+    await (allowed?assertSucceeds(batch.commit()):assertFails(batch.commit()));
+  }
+});
+test('A saved legacy 33 hand settles at its original 2x after the v5 update',async()=>{
+  const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-old-hand-'+randomUUID(),c=await client(name);
+  await c.call(request({action:'bootstrap'}));const roundId=randomUUID();
+  const opening=engine.twentyOne(10,null,'start',roundId,rngFor([12,25,11,10,7,3]),33).round;
+  delete opening.winFactor;
+  await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
+    balanceUnits:99000,twentyOneRound:opening}));
+  const base={action:'twentyOne',game:'twentyOne',bet:10,roundId,target:33};
+  await c.call(request({...base,move:'hit',turn:1}));await new Promise(r=>setTimeout(r,350));
+  const paid=await c.call(request({...base,move:'dealer',turn:2}));
+  assert.equal(paid.outcome.winUnits,2000);assert.equal(paid.player.balance,1010);
+});
 test('Penalty Rules persist shots, prevent duplicate debits/collection and share a legacy wallet',async()=>{
   const identity='penalty-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
   await c.call(request({action:'bootstrap'}));await c.call(request({action:'bonus'}));
@@ -343,7 +401,7 @@ test('Bounce Rules validate gold, saved checkpoint, loss, replay and restore',as
 test('Wheel Rules match all 13 targets and displayed color/Fortune prizes',async()=>{
  const identity='wheel13-'+randomUUID();let rng=0;
  const c=await client(identity,identity,{rng:()=>rng});await c.call(request({action:'bootstrap'}));
- for(const [selected,value,win] of [[0,0,25000],[12,0,10000],[12,.1,5000],[12,.99,0]]) {
+ for(const [selected,value,win] of [[0,0,25000],[12,0,10000],[12,.1,2000],[12,.99,0]]) {
   rng=value;await new Promise(r=>setTimeout(r,750));const result=await c.call(request({action:'spin',game:'wheel',bet:10,selected}));assert.equal(result.outcome.winUnits,win);
  }
 });
@@ -455,7 +513,7 @@ test('33 Rules preserve literal ranks, exact 33, shared balance, replay and cros
  assert.ok((await c.call(request({action:'bootstrap'}))).player.twentyOneRound);
  const other=await client(name+'-other',name,{rng:()=>{throw Error('Resume cannot shuffle');}});assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
  await new Promise(r=>setTimeout(r,350));const hit=await other.call(request({...base,move:'hit',turn:1}));assert.equal(hit.outcome.round.playerHard,33);assert.equal(hit.outcome.round.phase,'dealer');
- await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2000);assert.equal(win.outcome.round.dealerHard,28);
+ await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2080);assert.equal(win.outcome.round.dealerHard,28);
  assert.equal((await other.call(final)).replayed,true);await assert.rejects(c.call(request({...base,move:'hit',turn:2})),{code:'king-rico/round-conflict'});
 });
 test('33 Rules enforce bank 27, ties, both busts, and the literal value of one',async()=>{
@@ -483,7 +541,7 @@ test('33 Rules reject changed targets, capped face-card values, forged totals/de
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'twentyOne',game:'twentyOne',selected:-1,fingerprint:'forged',betUnits:0,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
    result:{game:'twentyOne',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
  }
- await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
+ await forge(x=>{x.round.winFactor=300;});await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
 });
 
 test('Claw Rules persist one deterministic grab, exact cents, immutable result and cross-device replay',async()=>{

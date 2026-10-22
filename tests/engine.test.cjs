@@ -76,7 +76,7 @@ test('13-pocket wheel pays the displayed exact, color and Fortune prizes',()=>{
   for(let selected=0;selected<13;selected++) {
     assert.deepEqual(engine.wheel(2.5,selected,()=>0),{target:selected,winUnits:selected===0?6250:2500});
     const miss=engine.wheel(2.5,selected,()=>.99);assert.notEqual(miss.target,selected);assert.equal(miss.winUnits,0);
-    if(selected>0) {const color=engine.wheel(2.5,selected,()=>.1);assert.notEqual(color.target,selected);assert.equal(color.winUnits,1250);assert.equal(color.target%2,selected%2);}
+    if(selected>0) {const color=engine.wheel(2.5,selected,()=>.1);assert.notEqual(color.target,selected);assert.equal(color.winUnits,500);assert.equal(color.target%2,selected%2);}
   }
 });
 test('coin arithmetic retains cents from fractional slot rewards',()=>{
@@ -97,9 +97,9 @@ test('Neck preserves the design table, first-floor odds, guaranteed prize and ma
   assert.deepEqual(plain(table),engine.NECK_MULTIPLIERS);assert.equal(table.length,33);
   assert.ok(table.every(m=>!String(m).includes('6')));
   assert.equal(Number(source.match(/const T = ([0-9.]+)/)[1]),engine.NECK_BASE);
-  let values=[.99,.8];
+  const chance=engine.NECK_BASE/engine.NECK_MULTIPLIERS[0];let values=[.99,chance];
   assert.equal(engine.neck(10,null,'start','round',()=>values.shift()).ok,false);
-  values=[.99,.8-1/2**32];const first=engine.neck(10,null,'start','round',()=>values.shift());
+  values=[.99,chance-1/2**32];const first=engine.neck(10,null,'start','round',()=>values.shift());
   assert.equal(first.floor,1);assert.equal(first.winUnits,0);assert.equal(first.peachAt,0);
   const round={id:'round',betUnits:1000,floor:6,peachAt:6,savedUnits:1550};
   const miss=engine.neck(10,round,'climb','round',()=>.99);assert.equal(miss.winUnits,1550);assert.equal(miss.ended,true);

@@ -59,24 +59,24 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     second=context.new_page();second.goto(BASE+'/Fortune%2021.dc.html');restored(second,uid)
     assert '/Fortune%2033.dc.html' in second.url
     page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]')
-    assert page.evaluate('KingRicoCloud.player.balance')==1060
+    assert page.evaluate('KingRicoCloud.player.balance')==1060.8
     assert page.locator('#result-title').inner_text()=='Você ganhou!'
     box=page.locator('#result-dialog').bounding_box();assert box['x']>=0 and box['x']+box['width']<=390 and box['y']>=0 and box['y']+box['height']<=844,box
-    second.wait_for_function('KingRicoCloud.player.balance===1060');second.close();page.bring_to_front();page.screenshot(path='/tmp/king-rico-33-win.png')
+    second.wait_for_function('KingRicoCloud.player.balance===1060.8');second.close();page.bring_to_front();page.screenshot(path='/tmp/king-rico-33-win.png')
     page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]');page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden')
-    assert page.evaluate('KingRicoCloud.player.balance')==1060
+    assert page.evaluate('KingRicoCloud.player.balance')==1060.8
     page.locator('#bet-down').tap();page.locator('#bet-down').tap();page.wait_for_function('KingRicoCloud.player.settings.twentyOneBetIdx===1')
     seed_cards(page,[12,25,11,24,7,20]);page.locator('#start').tap();page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_selector('#result-dialog[open]')
-    assert page.evaluate('KingRicoCloud.player.balance')==1060
+    assert page.evaluate('KingRicoCloud.player.balance')==1060.8
     assert page.locator('#result-amount').inner_text()=='2,5'
     page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden');page.wait_for_selector('#start:not([disabled])')
     seed_cards(page,[12,0,25,1,11]);page.locator('#start').tap();page.wait_for_selector('#hit:not([disabled])');page.locator('#hit').tap();page.wait_for_selector('#result-dialog[open]')
     assert page.locator('#result-title').inner_text()=='Passou de 33.'
-    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
+    assert page.evaluate('KingRicoCloud.player.balance')==1058.3
     page.reload();restored(page,uid);page.wait_for_selector('#result-dialog[open]')
-    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
+    assert page.evaluate('KingRicoCloud.player.balance')==1058.3
     page.bring_to_front();page.locator('#collect').tap();page.wait_for_selector('#result-dialog',state='hidden');page.get_by_role('link',name='Voltar para o início').tap();restored(page,uid)
-    assert page.evaluate('KingRicoCloud.player.balance')==1057.5
+    assert page.evaluate('KingRicoCloud.player.balance')==1058.3
     page.get_by_role('link',name='Jogar Fortune Flying Clown',exact=True).click();restored(page,uid)
     def flying_ready(tab):
         tab.wait_for_function('window.__flying && __flying.imgs.every(i=>i.complete&&i.naturalWidth>0) && !__flying.state.busy && !__flying._request && __flying.mode==="idle"',timeout=20000)

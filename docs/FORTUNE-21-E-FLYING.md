@@ -4,17 +4,17 @@ Ambos abrem pela Home e usam o mesmo login Google, sessão, saldo em centavos e 
 
 ## Fortune 33
 
-Fortune 33 substitui o 21 na Home. Cartas numeradas de 1 a 13 valem exatamente o número impresso; 1 vale apenas 1. Objetivo: ficar mais perto de 33 que a banca, sem ultrapassar. A banca compra abaixo de 27 e para em 27 ou mais. Vitória recebe 2× incluindo a aposta; empate devolve a aposta. Fazer 33 passa a vez à banca, com o mesmo pagamento normal. Não há bônus de duas cartas: duas cartas somam no máximo 26.
+Fortune 33 substitui o 21 na Home. Cartas numeradas de 1 a 13 valem exatamente o número impresso; 1 vale apenas 1. Objetivo: ficar mais perto de 33 que a banca, sem ultrapassar. A banca compra abaixo de 27 e para em 27 ou mais. Novas mãos pagam 2,08× na vitória incluindo a aposta; mãos antigas já abertas conservam 2×; empate devolve a aposta. Fazer 33 passa a vez à banca, com o mesmo pagamento normal. Não há bônus de duas cartas: duas cartas somam no máximo 26.
 
 Cada número mantém o asset escolhido pelo autor. O botão de interrogação foi removido; as regras continuam disponíveis pelo menu. `cloud/thirty-three.cjs` implementa a regra; `target:33` é salvo e imutável durante a mão. O baralho de 52 cartas contém quatro cópias de cada número e é embaralhado uma vez na abertura. Débito, cartas, turnos, resultado e crédito continuam atômicos, verificáveis pelas regras Firestore e protegidos contra repetição.
 
 Os nomes internos `twentyOne`, `twentyOneRound` e o diretório `games/fortune21` permanecem por compatibilidade. Mãos antigas sem `target:33` terminam com a matemática original do 21, sem alterar baralho, aposta ou prêmio; a interface identifica a mão anterior. Toda nova mão iniciada pela nova interface usa 33. Clientes antigos ainda abertos continuam compatíveis, sem converter uma mão no meio. O endereço antigo redireciona para `Fortune 33.dc.html`.
 
-A banca em 27 é a configuração inicial do novo jogo. Uma simulação exploratória de 100 mil mãos por limiar de parada (24 a 29) encontrou aproximadamente 95% de retorno com paradas em 27–28; não é prova de estratégia ótima nem auditoria de RTP. O limite 33 não determina sozinho as chances: baralho, política de parada e pagamentos também contam.
+A banca em 27 é a configuração inicial do novo jogo. A auditoria reproduzível de 200 mil mãos por limiar (24 a 30) encontrou 97,82% de retorno ao pedir abaixo de 28 e parar em 28 ou mais com o pagamento novo; não é prova de estratégia ótima. Ver `docs/ECONOMIA.md`. O limite 33 não determina sozinho as chances: baralho, política de parada e pagamentos também contam.
 
 ## Flying Clown
 
-Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/SUBIR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20 e a chance original: 0,95/1,2 na primeira etapa, multiplicador anterior/próximo nas demais. Escolher um balão não altera a chance.
+Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/SUBIR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20 e a chance de 0,98/1,2 na primeira etapa, multiplicador anterior/próximo nas demais. Escolher um balão não altera a chance.
 
 O ID de cada balão estourado fica na rodada, permitindo restaurar cores, ordem e quantidade. Estourar debita apenas na primeira ação; pegar ou completar a décima etapa credita uma única vez. As moedas que voam ao saldo são apenas apresentação. Sair e voltar restaura o ponto salvo, e a perda também fica confirmada antes da queda.
 

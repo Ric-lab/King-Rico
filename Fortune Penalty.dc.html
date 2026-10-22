@@ -135,10 +135,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// Fortune Penalty — 5 pênaltis: x1,2 → x1,8 → x3 → x5 → x10 (chance do chute bom: 79 → 67 → 60 → 60 → 50%). Errou perde tudo; PEGAR quando quiser.
-// Chance de chegar ao degrau k = T / M[k] → parar em qualquer degrau devolve T = 95% (quando o chute vai no gol).
+// Fortune Penalty — 5 pênaltis: x1,2 → x1,8 → x3 → x5 → x10 (chance do chute bom: 82 → 67 → 60 → 60 → 50%). Errou perde tudo; PEGAR quando quiser.
+// Chance de chegar ao degrau k = T / M[k] → parar em qualquer degrau devolve T = 98% (quando o chute vai no gol).
 // Habilidade manda: chute pra fora/na trave por mira = erro de verdade. O "roubo" é sutil: chute bom na hora de errar → girafa defende (ou trave, se foi perto dela).
-const M = [1.2, 1.8, 3, 5, 10], T = 0.95;
+const M = [1.2, 1.8, 3, 5, 10], T = 0.98;
 const G = { l: 40, r: 413, top: 346, line: 505 }, B0 = { x: 226, y: 640 }, BS = 64;
 const PIV = { x: 226, y: 515 }, LEN = 194; const KC = { w: 152, h: 160 }, KD = { w: 250, h: 107 }, KU = { w: 98, h: 200 }, GD = { x: -105, y: 17 }, GU = -85, KS = { x: 226, y: 505 - 77 }, GLOVE = 70; // luva no mergulho: 78px do centro, na altura do centro
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];

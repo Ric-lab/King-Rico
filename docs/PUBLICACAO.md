@@ -52,7 +52,7 @@ Exportações do editor visual precisam preservar as ligações da Home com `Kin
 
 Clown e Bounce também fazem parte da publicação. O Clown salva cada uma das dez bolas antes da animação e credita o total no último lançamento; fechar o painel de resultado não altera moedas. O Bounce salva cada plataforma, os prêmios dourados e o valor protegido antes do próximo salto. Recarregar a página restaura a rodada, sem importar moedas locais. Os renderizadores de Pênalti, Clown e Bounce carregam o Three.js do próprio Hosting.
 
-A Wheel atual tem 13 casas: FORTUNE x25, desenho exato x10 e outro desenho da mesma cor x5. Ao exportar outra versão, manter a matemática de `cloud/engine.cjs`, as regras e a tabela exibida em acordo. As probabilidades atuais seguem o export de design; o x5 por cor usa 14,3%, portanto não anunciar RTP fixo de 95% para essa aposta.
+A Wheel atual tem 13 casas: FORTUNE x25 (3,92%), desenho exato x10 (4%) e outro desenho da mesma cor x2 (29%). Isso fecha RTP de 98% nas novas operações v5. Clientes antigos v3/v4 ainda usam sua tabela x5. Ao exportar outra versão, manter motor, regras e tabela exibida em acordo. A auditoria e os limites de cada jogo estão em `docs/ECONOMIA.md`.
 
 Os dados públicos do Firebase estão em `cloud/firebase-config.production.js`, incluído no Git. A chave Web é um identificador público; a autorização continua nos tokens de login e nas regras do Firestore. O build de produção usa esse arquivo mesmo que um desenvolvedor tenha configuração local diferente. JavaScript usa validação de cache para que uma recarga obtenha a nova versão.
 

@@ -223,7 +223,7 @@ with sync_playwright() as p:
     assert check_menu(page,'Fortune Neck',True)==common_menu
     page.get_by_role('button',name='Abrir menu',exact=True).click()
     page.get_by_text('Tabela de pagamentos',exact=True).click()
-    page.get_by_text('Na primeira subida, há 20% de chance de falhar.',exact=False).wait_for(state='visible')
+    page.get_by_text('Na primeira subida, há cerca de 15,3% de chance de falhar.',exact=False).wait_for(state='visible')
     page.get_by_text('FECHAR',exact=True).click()
     page.get_by_role('button',name='Fechar menu',exact=True).click()
     # Deterministic emulator-only outcomes exercise a resumable successful

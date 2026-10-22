@@ -96,7 +96,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 <script type="text/x-dc" data-dc-script>
 // Fortune Flying Clown — par de escada do Nick Neck. Começa com 10 balões; toque num balão para estourar → ele sobe 1 andar.
 // Azar: todos estouram e ele cai na rede (perde). Estourou o 10º = x20 e ele sai voando. PEGAR quando quiser.
-// Chance de passar do andar k-1 para k = M[k-1]/M[k] (1º: 0,95/1,2) → parar em qualquer andar devolve 95%.
+// Chance de passar do andar k-1 para k = M[k-1]/M[k] (1º: 0,98/1,2) → parar em qualquer andar devolve 98%.
 const M = [1.2, 1.5, 2, 2.5, 3, 4, 5, 8, 12, 20], N = 10, HX = 226, HY0 = 380, DY = 24, BW = 54, BH = 65;
 // Camera: the tent pans down (and the near floor faster) as he rises, so 9 balloons read as a real climb.
 const PAN = 520, PANK = PAN / (DY * 9), FEET = 640;
@@ -166,11 +166,11 @@ class Component extends DCLogic {
     const r = e.currentTarget.getBoundingClientRect(), sc = r.width / 453, px = (e.clientX - r.left) / sc, py = (e.clientY - r.top) / sc;
     let bi = -1, bd = 1e9; this.balls.forEach((b, i) => { const d = Math.hypot(px - b.cx, (py - b.cy) * 0.85); if (d < bd) { bd = d; bi = i; } }); if (bi < 0 || bd > 40) return; this.popIdx(bi); };
   popBtn = () => { const s = this.state; if (this._request || s.busy || s.win || s.menu || s.pays || this.mode !== 'idle' || !this.balls.length) return; this.ac(); let bi = 0; this.balls.forEach((b, i) => { if ((b.cy ?? 0) < (this.balls[bi].cy ?? 0)) bi = i; }); this.popIdx(bi); };
-  // Offline (no login, e.g. preview): same odds as cloud/engine.cjs — 0,95/1,2 on the first balloon, M[k-1]/M[k] after.
+  // Offline (no login, e.g. preview): same odds as cloud/engine.cjs — 0,98/1,2 on the first balloon, M[k-1]/M[k] after.
   // Wallet kept on this device only.
   localFlying(move, bet, step) { const before = this.state.balance;
     if (move === 'collect') { const w = Math.round(bet * M[step - 1] * 100) / 100, bal = Math.round((before + w) * 100) / 100; this.saveLocal(bal); return { outcome: { ok: true, winUnits: Math.round(w * 100) }, balance: bal }; }
-    const debit = step === 0 ? bet : 0, ok = Math.random() < (step === 0 ? 0.95 / M[0] : M[step - 1] / M[step]), done = ok && step + 1 === N, w = done ? Math.round(bet * M[N - 1] * 100) / 100 : 0, bal = Math.round((before - debit + w) * 100) / 100;
+    const debit = step === 0 ? bet : 0, ok = Math.random() < (step === 0 ? 0.98 / M[0] : M[step - 1] / M[step]), done = ok && step + 1 === N, w = done ? Math.round(bet * M[N - 1] * 100) / 100 : 0, bal = Math.round((before - debit + w) * 100) / 100;
     this.saveLocal(bal); return { outcome: { ok, winUnits: Math.round(w * 100) }, balance: bal }; }
   saveLocal(bal) { try { localStorage.setItem('kr.flying.local', JSON.stringify({ balance: bal })); } catch (e) {} }
   async popIdx(bi) {

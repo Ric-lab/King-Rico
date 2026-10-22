@@ -17,10 +17,10 @@ test('21 stands on soft 17 and three-card 21 earns an ordinary win',()=>{
 test('21 bust settles the lost stake without another bank draw',()=>{
  let x=start([9,8,7,6,22]);x=engine.twentyOne(2.5,x.round,'hit','round');assert.equal(x.round.result.reason,'player-bust');assert.equal(x.winUnits,0);assert.equal(x.round.dealer.length,2);
 });
-test('Flying preserves all ten multipliers and the 95% step schedule',()=>{
+test('Flying preserves all ten multipliers and the 98% step schedule',()=>{
  assert.deepEqual(engine.FLYING_MULTIPLIERS,[1.2,1.5,2,2.5,3,4,5,8,12,20]);
  assert.equal(engine.flying(2.5,null,'pop','round',0,()=>.79).ok,true);
- assert.equal(engine.flying(2.5,null,'pop','round',0,()=>.8).ok,false);
+ assert.equal(engine.flying(2.5,null,'pop','round',0,()=>.82).ok,false);
  let r=null;
  for(let i=0;i<10;i++){
   const x=engine.flying(2.5,r,'pop','round',i,()=>0);assert.equal(x.step,i+1);assert.equal(x.popped.length,i+1);

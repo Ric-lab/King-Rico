@@ -154,7 +154,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
           <div style="font-size: 20px; font-weight: 800; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Escolha um desenho. Quando a roda parar:</div>
           <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; border-radius: 8px; background: #e0321f; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="width: 26px; height: 26px; border-radius: 8px; background: #fbefd8; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Outro desenho da mesma cor</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x5</span></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; border-radius: 8px; background: #e0321f; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="width: 26px; height: 26px; border-radius: 8px; background: #fbefd8; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Outro desenho da mesma cor</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x2</span></div>
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-position-x: 81.8%;"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">O seu desenho</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x10</span></div>
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 14px; background: rgba(255,255,255,.08);"><div style="display: flex; align-items: center; gap: 10px;"><span style="width: 26px; height: 26px; border-radius: 8px; background: #2fa83a; box-shadow: 0 0 0 2px rgba(255,255,255,.5);"></span><span style="font-size: 20px; font-weight: 800; color: #fff3c4;">Apostou no FORTUNE e deu</span></div><span style="font-size: 28px; font-weight: 800; color: #ffd257;">x25</span></div>
           </div>
@@ -178,13 +178,11 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// 12 casas, sem zero. Vermelho = ímpar, preto = par. Cor paga x1,9 (RTP 95%), número paga x10 (RTP 95,8%).
-// 12 casas: 11 símbolos do slot + a Girafa. Acertar a casa escolhida paga x10 (RTP 83,3%).
 // 13 casas: 0 = FORTUNE (verde, casa da banca), 1..12 alternam vermelho (ímpar) e creme (par) → 6 + 6; a girafa (cabeça) é uma das vermelhas
 const POCKETS = [[-2, 'Fortune'], [6, 'Moeda'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [-1, 'Girafa'], [9, 'King Rico'], [3, 'Nuvem'], [0, 'Capa'], [5, 'Cetro'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
-// Desenho exato x10, mesma cor x5, FORTUNE escolhido x25. Preserva as probabilidades do export atual.
-const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 5, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.143, P_FORT = 0.95 / 25;
+// RTP 98%: exato x10 (4%), mesma cor x2 (29%), FORTUNE x25 (3,92%).
+const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 2, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.29, P_FORT = 0.98 / 25;
 const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#2fa83a' : i % 2 ? '#e0321f' : '#fbefd8';

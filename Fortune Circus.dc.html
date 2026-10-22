@@ -426,12 +426,12 @@ const HAPTIC = {
 };
 const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
 const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
-// Balance (sim 700k giros): RTP ≈ 96,5–97% (ref. Fortune Tiger 96,81%), acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros.
-// pay = multiplicador da aposta por linha. Sessão típica (saldo = 100 apostas): zera em ~600–1.900 giros; ~17% chegam a dobrar o saldo.
+// RTP teórico 98% incluindo a Rodada Especial; cálculo reproduzível em scripts/economy-math.mjs.
+// pay = multiplicador da aposta por linha. Frequência de prêmios e sessões: npm run audit:economy.
 const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
 // every Happeach frame as a literal path (dynamic 'f-'+name paths were missing from published builds)
 const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
-const PEACH = 11, PEACH_P = 0.008, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
+const PEACH = 11, PEACH_P = 0.008117510618322589, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];
@@ -1612,6 +1612,7 @@ class Component extends DCLogic {
     requestAnimationFrame(loop);
   }
   startPeachFeature(bet) {
+    bet=this._cloudSpin?.outcome.feature?.bet ?? bet;
     this._featPending = false;
     const carry = this._peachCarry || 0; this._peachCarry = 0;
     this.setState({ peaches: carry, peachShownBase: null, peachShownAdd: 0 }, this.save);
@@ -1700,6 +1701,7 @@ class Component extends DCLogic {
   endFeature(bet) {
     const grid = this.state.grid;
     const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
+    bet=plan?.bet ?? bet;
     const res = plan ? plan.res : this.evaluate(grid, bet);
     if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
     const big = res.win >= bet * 12;
@@ -1826,7 +1828,7 @@ class Component extends DCLogic {
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
       menuButton: {onClick:this.toggleMenu,onPointerDown:this.pressMenu,onPointerUp:this.pressUp,hidden:!!s.homeOpen,style:{marginTop:-(s.hudD || 0)+'px'}},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Circus',
-        details:'Gire os símbolos. Veja as combinações premiadas e as rodadas especiais na tabela de pagamentos.',
+        details:'Gire os símbolos e veja os prêmios na tabela. A Rodada Especial usa a média das apostas que coletaram os cinco Happeach.',
         sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:this.setSfx,onVib:this.setVib},
       hint: s.hint, turbo: s.turbo, auto: s.auto, pays: s.pays, menu: s.menu,
       soundIcon: s.sound ? '♪' : '✕',

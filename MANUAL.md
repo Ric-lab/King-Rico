@@ -49,13 +49,13 @@ publicação oficial recomenda-se portar para um projeto React/Vite normal (seç
 
 ### Regras e matemática (simulado em 500 mil giros)
 - Grade 3×3, 5 linhas (3 horizontais + 2 diagonais). Aposta de 1 a **1.000** por giro.
-- **Retorno ao jogador (RTP) ≈ 98%**. Jogo base devolve ≈ 76%; o resto vem da Rodada Especial.
-- **Taxa de acerto ≈ 24%** (1 em 4 giros ganha algo) — importante para o público idoso não desanimar.
-- Constantes ficam agrupadas no topo da lógica do jogo: `LINE_K = 1.9`, `FEAT_P_SYM = 0.15`,
-  `FEAT_P_WILD = 0.04`, `FEAT_MIN = 10`, `PEACH_P = 0.008`, `PEACH_GOAL = 5`, `PEACH_PAY = 20`, `FEAT_SPINS = 5`.
-- Elefante = curinga (substitui tudo menos o Happeach). Tela cheia do mesmo símbolo paga ×10.
+- **Retorno ao jogador (RTP) ≈ 98%**. Jogo base devolve ≈ 73,55%; o resto vem da Rodada Especial.
+- **Taxa de acerto ≈ 30%** (cerca de 3 em 10 giros ganham algo) — importante para o público idoso não desanimar.
+- Constantes ficam agrupadas no topo da lógica do jogo: `FEAT_P_SYM = 0.14`,
+  `FEAT_P_WILD = 0.04`, `FEAT_MIN = 10`, `PEACH_P = 0.008117510618322589`, `PEACH_GOAL = 5`, `FEAT_SPINS = 5`.
+- King Rico = curinga (substitui tudo menos o Happeach). Tela cheia do mesmo símbolo paga ×10.
 - **Happeach**: cada um que cai vai para a **cesta** (contador 0–5). Excedente conta para a próxima rodada.
-  3 Happeach na mesma linha pagam ×20.
+  Happeach não paga linhas; a especial usa a média das apostas que coletaram os cinco.
 - **Rodada Especial** (5 Happeach): 5 giros em que símbolos travam; paga no mínimo 10× a aposta.
   Sai em média a cada ~70 giros.
 - **Antes de mexer em qualquer número, rode a simulação** (copie as regras para um script e simule ≥ 300 mil
@@ -253,12 +253,12 @@ RTP = quanto volta, em média, de cada 1 apostado (soma de probabilidade × prê
 2. Para cada um, o prêmio TOTAL devolvido em múltiplos da aposta (a aposta já foi descontada ao girar).
 3. RTP = Σ (probabilidade × prêmio). Jogos com rodada bônus: some o valor esperado do bônus × chance de cair nele.
 4. Confirme com simulação (≥500 mil jogadas) dentro do próprio arquivo, sem animação, e anote no código: RTP, taxa de acerto e em quantas jogadas o saldo inicial zera.
-5. Meta da casa: RTP 96–97% (referência de mercado ~96,8%). Saldo não pode zerar rápido demais — o jogador deve ganhar e perder bastante antes, para não parecer "roubado".
+5. Meta atual: aproximadamente 98%, com critérios por jogo em `docs/ECONOMIA.md`. Não corrigir o resultado de uma sessão pelo histórico individual.
 6. Multiplicadores sempre inteiros ou ",5" fáceis de ler (x10, x2,5). Nunca 11,5.
 
-**Fortune Circus:** simulação de 700 mil giros → RTP ≈ 96,5–97%, acerto ≈ 30%, Rodada Especial ≈ 1 a cada 70 giros; saldo de 100 apostas zera em ~600–1.900 giros (ver comentário em `Fortune Circus.dc.html`, perto de `FEAT_P_SYM`).
+**Fortune Circus:** RTP teórico de 98%, acerto observado perto de 30%, especial em média a cada 68,48 giros; cálculo exato e amostras reproduzíveis em `npm run audit:economy`.
 
-**Fortune Wheel:** 12 casas (11 símbolos + 0), jogador escolhe 1 símbolo, acerto paga x10. Com casas sorteadas por igual o RTP seria 1/12 × 10 = 83,3%. Para fechar em **95%** a casa escolhida sai com chance `HIT_P = 9,5%` (as outras 11 dividem o resto); RTP = 0,095 × 10 = 95%. A roda gira com a força do swipe e o ângulo final é ajustado (menos de 1 volta) para parar na casa sorteada — visualmente natural. Para mudar o RTP, altere só `HIT_P` (RTP ÷ prêmio).
+**Fortune Wheel:** 13 casas. Desenho exato ×10 com 4%, outro da mesma cor ×2 com 29%; RTP = 0,04 × 10 + 0,29 × 2 = 98%. Fortune ×25 com 3,92% também retorna 98%. A força do swipe afeta a apresentação da roda; o resultado usa o sorteio do motor.
 
 
 ## Fortune Neck (Girafa)

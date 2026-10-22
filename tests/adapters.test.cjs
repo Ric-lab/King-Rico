@@ -70,6 +70,16 @@ test('Circus special rounds render the serialized committed plan without choosin
  assert.deepEqual(Array.from(g.state.locked),[6]);
  assert.ok(Array.from(g.state.grid).every((value,i)=>value===(i===6?2:-1)));
 });
+test('Circus uses the saved average stake for the bonus animation and its minimum prize',()=>{
+ const plan={bet:200.8,res:{win:2008,cells:[],lines:[],full:false}};
+ const {instance:g}=component('Fortune Circus.dc.html',{enabled:true});
+ g._cloudSpin={outcome:{feature:plan}};
+ for(const method of ['save','sfxWin','sfxCoins','hap','featBanner','lightsLevel','kingSet'])g[method]=()=>{};
+ let shownBet;g.startFeature=bet=>shownBet=bet;g.later=fn=>fn();
+ g.startPeachFeature(1000);assert.equal(shownBet,200.8);
+ g.later=()=>{};g.lineLabels=()=>[];g.endFeature(1000);
+ assert.equal(g.state.winAmount,2008);assert.equal(plan.res.win,2008);
+});
 test('Wheel lands on the committed sector and uses the persisted debit',async()=>{
  let request;
  const cloud={enabled:true,spin:async(...args)=>(request=args,{balanceDebited:490,outcome:{target:7,winUnits:0}}),settings:()=>{},error:()=>{throw Error('Unexpected error');}};

@@ -20,8 +20,9 @@ nativo, vibração confiável, ícone na loja e, mais tarde, Play Billing.
 - `src/game/engine.ts`: regras e matemática puras (sem DOM), portadas 1:1 do jogo. O gerador aleatório é
   injetável, então o mesmo código roda no servidor quando o saldo for para a nuvem.
 - `npm test`: simulação de 500 mil giros que **falha** se o RTP sair de 96–99%, se o acerto ficar abaixo de 20% ou
-  se a Rodada Especial sair do intervalo de 1/50 a 1/100. Medição atual (2 milhões de giros): RTP **98,7%**, base 75,7%,
-  acerto 24,1%, Rodada Especial a cada 69 giros com média de 15,9x.
+  se a Rodada Especial sair do intervalo de 1/50 a 1/100. Esses valores pertencem ao protótipo Android. No site atual, `cloud/engine.cjs` e
+  `npm run audit:economy` são a referência: Circus com RTP teórico **98%**, base 73,554%
+  e especial a cada 68,48 giros. Ver `docs/ECONOMIA.md`; o port Android não foi recalibrado nesta entrega.
 - `npm run build:www`: empacota o protótipo atual **para rodar sem internet**. React, ReactDOM e Babel saem do npm
   (no lugar do unpkg) e as fontes vêm do @fontsource. Segue os `<dc-import>` (jogo → Home → KingRico) e
   copia só os assets usados. O build falha se faltar algum asset ou se sobrar alguma URL externa.

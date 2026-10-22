@@ -4,7 +4,7 @@ import engine from './engine.cjs';
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,clownRound:p.clownRound || null,bounceRound:p.bounceRound || null,flyingRound:p.flyingRound || null,twentyOneRound:p.twentyOneRound || null,
-  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount}),...(p.rechargeDaily===undefined?{}:{rechargeDaily:p.rechargeDaily})});
+  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.peachBank===undefined?{}:{peachBank:p.peachBank}),...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount}),...(p.rechargeDaily===undefined?{}:{rechargeDaily:p.rechargeDaily})});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
 // Firebase Spark: the browser computes the lottery. Firestore transactions persist
@@ -98,10 +98,10 @@ export function createGameStore(db, uid, dependencies={}) {
         if (p.lastSpinAt && time-p.lastSpinAt.toMillis()<700) fail('king-rico/resource-exhausted','Aguarde antes de girar.');
         betUnits=engine.units(data.bet);
         if (p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
-        const outcome=data.game==='circus' ? engine.slot(data.bet,p.peaches,rng) : engine.wheel(data.bet,data.selected,rng);
+        const outcome=data.game==='circus' ? engine.slot(data.bet,p.peaches,rng,p.peachBank) : engine.wheel(data.bet,data.selected,rng);
         const before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
-        if (data.game==='circus') p.peaches=outcome.peaches;
+        if (data.game==='circus') {p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;}
         p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         p.settings[data.game==='circus'?'slotBetIdx':'wheelBetIdx']=engine.BETS.indexOf(data.bet);
         result={game:data.game,bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,

@@ -8,14 +8,15 @@ const SYMBOLS = [
   { id: 'coin', pay: 15, w: 4 }, { id: 'crown', pay: 17.5, w: 3 },
   { id: 'gem', pay: 20, w: 2 }, { id: 'wild', pay: 33.3, w: 2.85 }
 ];
+const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
-const WILD = 9, PEACH = 11, PEACH_P = .008, PEACH_GOAL = 5;
+const WILD = 9, PEACH = 11, PEACH_P = .008117510618322589, PEACH_GOAL = 5;
 const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-20-spark-v4';
+const RULES_VERSION = '2026-10-22-balance-v5';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
 const {claw} = require('./claw.cjs');
@@ -23,7 +24,7 @@ const {race} = require('./race.cjs');
 const FLYING_MULTIPLIERS = [1.2,1.5,2,2.5,3,4,5,8,12,20];
 function flying(bet,previous,move,roundId,selected,rng=random) {
   const before=previous?.step || 0,betUnits=previous?.betUnits || units(bet);
-  const ok=move==='collect' || rng()<(before?FLYING_MULTIPLIERS[before-1]:.95)/FLYING_MULTIPLIERS[before];
+  const ok=move==='collect' || rng()<(before?FLYING_MULTIPLIERS[before-1]:TARGET_RTP)/FLYING_MULTIPLIERS[before];
   const step=before+(move==='pop' && ok?1:0),popped=move==='pop'?[...(previous?.popped || []),selected]:[...previous.popped];
   const ended=move==='collect' || !ok || step===10;
   return {move,roundId,betUnits,step,popped,selected,ok,ended,winUnits:ended && ok?Math.round(betUnits*FLYING_MULTIPLIERS[step-1]):0};
@@ -31,10 +32,10 @@ function flying(bet,previous,move,roundId,selected,rng=random) {
 const twentyOneRound = (bet,previous,move,roundId,rng=random,target=21) =>
   (move==='start' ? target===33 : previous?.target===33)
     ? thirtyThree(bet,previous,move,roundId,rng) : twentyOne(bet,previous,move,roundId,rng);
-// 30 balls in 10 trios. Exact RTP with the player always dropping on a golden pipe: 98,00%; card closes 27,5%.
+// 30 balls in 10 trios. Approximate RTP with the player always dropping on a golden pipe: 98,006%; card closes 27,5%.
 const FINGO_BALLS = 30, FINGO_HIT = .11783, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [50,25,12.5,10,9,7,5,3,2,1];
-const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = .95;
+const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = TARGET_RTP;
 function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
   const before = previous?.step || 0, betUnits = previous?.betUnits || units(bet);
   const chance = (before ? PENALTY_MULTIPLIERS[before-1] : PENALTY_BASE) / PENALTY_MULTIPLIERS[before];
@@ -54,6 +55,8 @@ function fingo(bet, previous, move, roundId, selected, rng = random) {
       const value=c*15+1+Math.floor(rng()*14);
       return value>=target ? value+1 : value;
     });
+    // Keep one losing pipe: five golden pipes would turn a sampled miss into a hit.
+    if(slots.every((n,c)=>n===targets[c])) slots[4]=60+1+(targets[4]-60)%15;
     const missing=marks.flatMap((marked,c)=>marked?[]:[c]);
     if(!missing.some(c=>slots[c]===targets[c])) {
       const c=missing[Math.floor(rng()*missing.length)];slots[c]=targets[c];
@@ -73,7 +76,7 @@ function fingo(bet, previous, move, roundId, selected, rng = random) {
     winUnits:complete ? Math.round(units(bet)*FINGO_MULTIPLIERS[Math.floor((used-1)/3)]) : 0};
 }
 const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
-const NECK_BASE = .88, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
+const NECK_BASE = .9320338677939342, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
 // Preserve the design's one-decimal prizes, without rounding the shared wallet.
 const neckPrize = (bet, floor) => Math.round(bet * NECK_MULTIPLIERS[floor-1] * 10) * 10;
 function neck(bet, previous, move, roundId, rng = random) {
@@ -127,20 +130,24 @@ function feature(bet, rng = random) {
   const res = evaluate(grid, bet); res.win = Math.max(res.win, coins(units(bet * FEAT_MIN)));
   return { sym, rounds, grid, res };
 }
-function slot(bet, peaches = 0, rng = random) {
+function slot(bet, peaches = 0, rng = random, bank = null) {
   const grid = Array.from({ length: 9 }, () => pick(rng));
   let pc = 0;
   for (let i = 0; i < 9; i++) if (grid[i] === PEACH && ++pc > 2) {
     do { grid[i] = pick(rng); } while (grid[i] === PEACH);
   }
   const res = evaluate(grid, bet), total = peaches + res.peach.length;
-  const bonus = total >= PEACH_GOAL ? feature(bet, rng) : null;
-  return { grid, res, feature: bonus, peaches: bonus ? total - PEACH_GOAL : total,
+  const stake = units(bet), saved = bank?.count===peaches ? bank.units : peaches*stake;
+  const featureBet = (saved+(PEACH_GOAL-peaches)*stake)/PEACH_GOAL/100;
+  const bonus = total >= PEACH_GOAL ? {...feature(featureBet, rng),bet:featureBet} : null;
+  const remaining = bonus ? total-PEACH_GOAL : total;
+  const peachBank = {count:remaining,units:bonus ? remaining*stake : saved+res.peach.length*stake};
+  return { grid, res, feature: bonus, peaches: remaining, peachBank,
     winUnits: units(res.win) + (bonus ? units(bonus.res.win) : 0) };
 }
 // Match the current 13-pocket Claude Design wheel, including same-color prizes.
-const WHEEL_EXACT_P=.04, WHEEL_COLOR_P=.143, WHEEL_FORTUNE_P=.95/25;
-const wheelPrize=(bet,selected,target)=>units(bet*(target===selected ? selected===0 ? 25 : 10 : selected!==0 && target!==0 && selected%2===target%2 ? 5 : 0));
+const WHEEL_EXACT_P=.04, WHEEL_COLOR_P=.29, WHEEL_FORTUNE_P=TARGET_RTP/25, WHEEL_COLOR_PAY=2;
+const wheelPrize=(bet,selected,target)=>units(bet*(target===selected ? selected===0 ? 25 : 10 : selected!==0 && target!==0 && selected%2===target%2 ? WHEEL_COLOR_PAY : 0));
 function wheel(bet,selected,rng=random) {
   const all=Array.from({length:13},(_,i)=>i),r=rng();
   const pool=selected===0 ? r<WHEEL_FORTUNE_P ? [0] : all.slice(1)
@@ -151,9 +158,10 @@ function wheel(bet,selected,rng=random) {
 const CLOWN_BALLS=10,CLOWN_MULTIPLIERS=[1.5,2.5,5,5,10,10];
 function clown(bet,previous,roundId,selected,stats={betUnits:0,winUnits:0},rng=random) {
   const used=(previous?.used || 0)+1,betUnits=previous?.betUnits || units(bet),results=previous?.results || [];
-  const m=CLOWN_MULTIPLIERS[selected] || 0,rtp=stats.betUnits ? stats.winUnits/stats.betUnits : 0;
-  const hot=stats.betUnits>=2000 && rtp>.95,adjust=hot ? Math.max(.45,1-(rtp-.95)*3) : 1;
-  const hit=selected>=0 && (!results.some(v=>v>0) && !hot || rng()<Math.min(1,.95/m*adjust)) ? selected : -1;
+  const m=CLOWN_MULTIPLIERS[selected] || 0,perBall=Math.round(betUnits*m/CLOWN_BALLS);
+  // The same chosen target has the same chance regardless of past wins or balance.
+  const chance=perBall ? TARGET_RTP*betUnits/(CLOWN_BALLS*perBall) : 0;
+  const hit=selected>=0 && rng()<chance ? selected : -1;
   const multiplier=hit<0 ? 0 : m,sumUnits=(previous?.sumUnits || 0)+Math.round(betUnits*multiplier/CLOWN_BALLS),ended=used===CLOWN_BALLS;
   return {roundId,betUnits,used,selected,hit,results:[...results,multiplier],sumUnits,ended,winUnits:ended?sumUnits:0};
 }
@@ -177,7 +185,7 @@ function bonusFor(last, streak, now) {
   const index = gap === 1 ? (streak || 0) % 7 : 0;
   return { day: today, streak: index + 1, amount: [50,100,150,200,250,500,1000][index] };
 }
-module.exports = { SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
+module.exports = { TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
   FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
