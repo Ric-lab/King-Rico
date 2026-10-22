@@ -3,6 +3,6 @@
 .kr-hud-home,.kr-menu-button{position:absolute;top:var(--kr-hud-top);width:var(--kr-hud-button-size);height:var(--kr-hud-button-size);padding:0;border:0;border-radius:50%;cursor:pointer;overflow:hidden;background-image:url('../assets/stage-lit.webp');background-size:453px 802px;background-repeat:no-repeat;transform:scale(calc(var(--kr-hud-button-scale)*var(--kr-hud-scale,1)));transform-origin:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .kr-hud-home{left:341.833px;background-position:-341.833px -29.5px}
 .kr-menu-button{right:20.167px;background-position:-391.833px -29.5px}
-.kr-hud-balance{top:32px!important;transform:scale(1.25)!important}
+.kr-hud-balance{top:calc(var(--kr-hud-top) + 2px)!important;transform:scale(1.25)!important}
 .kr-hud-home:active{filter:brightness(.6) saturate(1.2)}
 .kr-hud-home:focus-visible{outline:3px solid #fff3c4;outline-offset:3px}
