@@ -150,6 +150,20 @@ test('Circus does not mint local coins if the cloud recharge fails',async()=>{
  const {instance:g}=component('Fortune Circus.dc.html',cloud);g.cloudBusy=()=>false;g.state.balance=0;
  await g.recharge();assert.equal(g.state.balance,0);assert.equal(g._recharging,false);assert.equal(errors,1);
 });
+test('Circus coin arrivals keep whole prizes whole and preserve real fractional prizes',()=>{
+ for(const amount of [1,100,33.3]){
+  const {instance:g,context,frame}=component('Fortune Circus.dc.html',{enabled:false});
+  const pending=[],setState=g.setState.bind(g);
+  g.setState=(update,done)=>{if(typeof update==='object'&&'balPending'in update)pending.push(update.balPending);setState(update,done);};
+  context.document={querySelector:()=>null,createElement:()=>({style:{},animate:()=>({})})};
+  g.fxRef.current={appendChild(){}};g._cf={ready:true,max:14,fit(){},draw(){}};g.syncCeleb=()=>{};g.bell=()=>{};g.later=()=>{};
+  g.coinFly(amount,()=>{});frame();
+  assert.ok(pending.length>1);assert.equal(pending.at(-1),0);assert.ok(pending[0]<amount);
+  assert.ok(pending.every(n=>n>=0&&n<=amount));
+  if(Number.isInteger(amount))assert.ok(pending.every(Number.isInteger));
+  else assert.ok(pending.some(n=>!Number.isInteger(n)));
+ }
+});
 test('Home and Wheel preserve cents earned in Circus',()=>{
  const cloud={enabled:false};
  const {instance:home}=component('Home.dc.html',cloud);home.state.balance=1050.25;

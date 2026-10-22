@@ -11,6 +11,8 @@ Reutilize as classes e ajuste apenas a geometria necessária. Não duplique grad
 
 `header.css` define uma posição única para saldo, Home e menu: `--kr-hud-top:14px` na cena de 453×802. A Home acompanha a mesma escala; o cabeçalho do 21/33 compensa sua cena de 810 unidades. Ajuste esse valor compartilhado, sem sobrescrever a posição em cada jogo. O build coloca a revisão do conteúdo nos links dos estilos, e o Hosting manda revalidar CSS, para não misturar uma página nova com um tema antigo do cache.
 
+A placa do saldo usa CSS e o asset da moeda. Ela cresce com o texto para acomodar `100.000.000,65`, com números de 19 unidades em todas as telas, sem redução por quantidade de dígitos. A escala geral de cada cena continua acompanhando o aparelho.
+
 `RoundControls` (`ui/round-controls.js`) é a barra compartilhada do Neck e Flying Clown. Antes da rodada mostra o seletor de aposta e JOGAR; a primeira ação confirma a aposta e executa a primeira subida. Durante a rodada há apenas PEGAR (com o prêmio atual) e SUBIR, em duas colunas iguais. Aposta não é editável até terminar; retomada restaura diretamente os controles da rodada. Botões ficam desabilitados enquanto uma jogada está sendo confirmada ou animada.
 
 `banner.js` e `banner.css`, incluídos pelo build em todas as páginas jogáveis, reservam uma faixa preta de 60 px com BANNER. `KingRicoViewport.height` desconta esse espaço para a escala das cenas; o cabeçalho mantém o mesmo alinhamento dentro da área restante. Menus, login e a simulação de anúncio usam portais no body e continuam cobrindo a janela inteira. É apenas um espaço de teste, sem SDK nem impressões de anúncio.

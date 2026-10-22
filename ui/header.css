@@ -1,8 +1,13 @@
-/* Shared HUD, in the games' 453px scene coordinates. The 45px wallet crop has a 43px visible rim; 44px button crops align their visible rims. */
+/* Shared HUD in the games' 453px scene coordinates. CSS wallet; matching 44px button crops. */
 :root{--kr-hud-button-size:41px;--kr-hud-button-scale:1.0731707317073171;--kr-hud-top:14px}
 .kr-hud-home,.kr-menu-button{position:absolute;top:var(--kr-hud-top);width:var(--kr-hud-button-size);height:var(--kr-hud-button-size);padding:0;border:0;border-radius:50%;cursor:pointer;overflow:hidden;background-image:url('../assets/stage-lit.webp');background-size:453px 802px;background-repeat:no-repeat;transform:scale(calc(var(--kr-hud-button-scale)*var(--kr-hud-scale,1)));transform-origin:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .kr-hud-home{left:341.833px;background-position:-341.833px -29.5px}
 .kr-menu-button{right:20.167px;background-position:-391.833px -29.5px}
 .kr-hud-balance{left:18px!important;transform-origin:0 50%!important;top:calc(var(--kr-hud-top) + 2px)!important;transform:scale(1.25)!important}
+/* The plate grows with the value; digits keep the same size through 100.000.000,65. */
+.kr-hud-balance,.kr-home-wallet{box-sizing:border-box!important;display:inline-flex!important;align-items:center;width:max-content!important;min-width:130px;max-width:230px;height:36px!important;padding:0 10px 0 40px;border:2px solid #e8a72f;border-radius:20px!important;background:linear-gradient(#fffdef,#fff0c8 65%,#f7d894)!important;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 #b86c263d,0 1px 2px #29053080;overflow:visible!important}
+.kr-hud-balance::before,.kr-home-wallet::before{content:'';position:absolute;left:1px;top:0;width:32px;height:32px;background:url('../assets/symbols/sym-coin.webp') center/contain no-repeat;pointer-events:none}
+.kr-hud-balance>div,.kr-home-wallet>div,.kr-hud-balance>strong{position:static!important;inset:auto!important;flex:1 0 auto;width:auto!important;height:100%!important;display:flex!important;align-items:center;justify-content:center;white-space:nowrap}
+.kr-hud-balance>div>span,.kr-home-wallet>div>span,.kr-hud-balance>strong{font:800 19px/1 'Baloo 2',sans-serif!important;font-variant-numeric:tabular-nums!important;letter-spacing:0!important;color:#662c2c;text-shadow:none}
 .kr-hud-home:active{filter:brightness(.6) saturate(1.2)}
 .kr-hud-home:focus-visible{outline:3px solid #fff3c4;outline-offset:3px}
