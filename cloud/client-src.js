@@ -49,6 +49,7 @@ Cloud.error = error => {
   const code = error?.code || '';
   Cloud.track?.('client_error', {errorCode: code.includes('auth') ? 'auth' : code.includes('network') ? 'network' : 'service'});
   notify(code.includes('failed-precondition') ? 'Saldo insuficiente ou conta desconectada.' :
+    code.includes('daily-limit') ? 'Você já recebeu as 5 recompensas de hoje. Volte amanhã.' :
     code.includes('resource-exhausted') ? 'Aguarde um instante e tente novamente.' :
     code.includes('recovered') ? 'Jogada anterior recuperada. Você já pode jogar novamente.' :
     code.includes('round-conflict') ? 'A rodada mudou em outro aparelho. Atualizando seu progresso.' :
@@ -108,7 +109,7 @@ else {
     storage.set(key, data);
     try { const result = await call(data); localStorage.removeItem(key); return result; }
     catch (error) {
-      if (['king-rico/invalid-argument','king-rico/failed-precondition','king-rico/resource-exhausted','king-rico/round-conflict','permission-denied','king-rico/already-exists'].includes(error.code)) localStorage.removeItem(key);
+      if (['king-rico/invalid-argument','king-rico/failed-precondition','king-rico/resource-exhausted','king-rico/round-conflict','king-rico/daily-limit','permission-denied','king-rico/already-exists'].includes(error.code)) localStorage.removeItem(key);
       throw error;
     }
   }
@@ -276,8 +277,8 @@ else {
       if(pending) {
         try { await call(pending); notify('Sua última jogada e seu saldo foram recuperados.'); }
         catch(error) {
-          if(!['king-rico/round-conflict','king-rico/already-exists','king-rico/invalid-argument','king-rico/failed-precondition'].includes(error.code))throw error;
-          notify('Sua rodada foi atualizada em outro aparelho. O saldo atual foi recuperado.');
+          if(!['king-rico/round-conflict','king-rico/already-exists','king-rico/invalid-argument','king-rico/failed-precondition','king-rico/daily-limit'].includes(error.code))throw error;
+          notify(error.code==='king-rico/daily-limit'?'Você já recebeu as 5 recompensas de hoje. Volte amanhã.':'Sua rodada foi atualizada em outro aparelho. O saldo atual foi recuperado.');
         }
         localStorage.removeItem(key);
       }

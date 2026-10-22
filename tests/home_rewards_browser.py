@@ -55,6 +55,7 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     assert page.evaluate('__giftFrames')==0
     assert page.evaluate('KingRicoCloud.player.balance')==3050
     assert page.evaluate('KingRicoCloud.player.rechargeCount')==2
+    assert refill.locator('.kr-home-recharge-count').inner_text()=='2/5'
     for width,height in [(320,568),(390,844),(844,390)]:
         page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(300)
         scroll=page.locator('[data-home-scroll]');scroll.evaluate('e=>e.scrollTop=0')
@@ -62,7 +63,9 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
         before=brand.bounding_box();hud=wallet.bounding_box()
         scroll.evaluate('e=>e.scrollTop=250');page.wait_for_timeout(100)
         assert brand.bounding_box()['y']<before['y']-100
-        assert abs(wallet.bounding_box()['y']-hud['y'])<1
+        assert wallet.bounding_box()['y']<hud['y']-100
+        assert page.locator('.kr-home-header .kr-menu-button').bounding_box()['y']<60
+        assert page.locator('#kr-ad-banner').bounding_box()['y']==0
         scroll.evaluate('e=>e.scrollTop=0')
     page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(300)
     page.screenshot(path='/tmp/king-rico-home-recharge.png')
@@ -83,7 +86,11 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     assert page.evaluate('KingRicoCloud.player.balance')==3049
     assert page.evaluate('KingRicoCloud.player.rechargeCount')==2
     assert ad.count()==0
+    for _ in range(3):page.evaluate("async()=>await KingRicoCloud.recharge('home')")
+    page.wait_for_function("document.querySelector('.kr-home-recharge-count').textContent==='5/5'")
+    assert page.get_by_role('button',name='Recarregar 1.000 moedas',exact=True).is_disabled()
+    assert page.evaluate('KingRicoCloud.player.rechargeCount')==5
     assert not errors,errors
     context.close()
     return {'daily_gift_without_scratch':True,'repeated_home_refill_and_counter':True,'count_survives_game_and_reload':True,
-        'no_daily_gift_flash_on_return':True,'wordmark_and_bar_scroll':True,'embedded_home_styled':True,'30_second_interruption_before_credit':True,'cancel_without_reward':True,'embedded_fullscreen_and_reload_without_credit':True}
+        'no_daily_gift_flash_on_return':True,'header_wordmark_and_bar_scroll':True,'embedded_home_styled':True,'30_second_interruption_before_credit':True,'cancel_without_reward':True,'embedded_fullscreen_and_reload_without_credit':True,'daily_badge_and_cap':True}

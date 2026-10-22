@@ -238,3 +238,12 @@ test('a failed ad reward can be confirmed again without another countdown',async
  assert.equal(home.state.adComplete,true);assert.equal(home.state.adError,true);assert.equal(home.state.balance,1050);
  await home.finishAd();assert.equal(calls,2);assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);
 });
+
+test('Home daily reward badge reaches 5/5, blocks another ad and renews for a new day',()=>{
+ let key=20261022;const cloud={enabled:true,dayKey:()=>key};const {instance:home}=component('Home.dc.html',cloud);
+ home.state.loaded=true;home.state.rechargeDaily={dayIndex:home.rechargeDay(),count:5};
+ assert.equal(home.renderVals().rechargeCounter,'5/5');assert.equal(home.renderVals().rechargeDisabled,true);
+ home.recharge();assert.equal(home.state.adOpen,false);
+ key=20261023;assert.equal(home.renderVals().rechargeCounter,'0/5');assert.equal(home.renderVals().rechargeDisabled,false);
+ home.recharge();assert.equal(home.state.adOpen,true);
+});

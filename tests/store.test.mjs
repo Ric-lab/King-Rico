@@ -359,3 +359,18 @@ test('Home recharge adds 1000 at any balance and counts each confirmed click onc
  await assert.rejects(call(request({action:'recharge',source:'elsewhere'})),{code:'king-rico/invalid-argument'});
  await assert.rejects(call(request({action:'recharge',source:'home',count:99})),{code:'king-rico/invalid-argument'});
 });
+
+test('Home rewards stop at five per Sao Paulo day, deduplicate the last slot and renew at midnight',async()=>{
+ const m=memory(),call=m.client('daily-refill'),other=m.client('daily-refill');await call(request({action:'bootstrap'}));
+ const first=request({action:'recharge',source:'home'});await call(first);
+ for(let n=2;n<=4;n++)await call(request({action:'recharge',source:'home'}));
+ const last=await Promise.allSettled([call(request({action:'recharge',source:'home'})),other(request({action:'recharge',source:'home'}))]);
+ assert.equal(last.filter(x=>x.status==='fulfilled').length,1);assert.equal(last.find(x=>x.status==='rejected').reason.code,'king-rico/daily-limit');
+ let p=m.records.get('players/daily-refill');assert.equal(p.balanceUnits,600000);assert.equal(p.rechargeDaily.count,5);
+ assert.equal((await call(first)).replayed,true);assert.equal(m.records.get('players/daily-refill').rechargeDaily.count,5);
+ m.advance(Date.parse('2026-10-13T02:59:59Z')-Date.parse('2026-10-12T12:00:00Z'));
+ await assert.rejects(call(request({action:'recharge',source:'home'})),{code:'king-rico/daily-limit'});
+ m.advance(1000);const renewed=await call(request({action:'recharge',source:'home'}));
+ assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,6);assert.equal(renewed.player.balance,7000);
+ assert.equal(renewed.player.rechargeDaily.dayIndex,dayIndex(Date.parse('2026-10-13T03:00:00Z')));
+});

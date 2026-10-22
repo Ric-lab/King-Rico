@@ -31,9 +31,12 @@ service cloud.firestore {
       return p.keys().hasAll(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
           'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId'])
         && p.keys().hasOnly(['balanceUnits','peaches','settings','bonus','analyticsConsent','analyticsFromCreation',
-          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','rechargeCount','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound','flyingRound','twentyOneRound'])
+          'createdAt','updatedAt','firstSpinAt','lastSpinAt','revision','lastOperationId','rechargeCount','rechargeDaily','neckRound','fingoRound','penaltyRound','clownRound','clownStats','bounceRound','flyingRound','twentyOneRound'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.get('rechargeCount',0) is int && p.get('rechargeCount',0) >= 0 && p.get('rechargeCount',0) <= 1000000000
+        && (!('rechargeDaily' in p) || p.rechargeDaily is map
+          && p.rechargeDaily.keys().hasOnly(['dayIndex','count']) && p.rechargeDaily.dayIndex is int && p.rechargeDaily.dayIndex >= 0
+          && p.rechargeDaily.count is int && p.rechargeDaily.count >= 1 && p.rechargeDaily.count <= 5)
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('neckRound',null) == null || p.neckRound is map)
         && (p.get('fingoRound',null) == null || p.fingoRound is map)
@@ -51,7 +54,7 @@ service cloud.firestore {
         && p.bonus.streak is int && p.bonus.streak >= 0 && p.bonus.streak <= 7;
     }
     function initial(p) {
-      return profile(p) && p.balanceUnits == 100000 && p.peaches == 0 && p.get('rechargeCount',0) == 0
+      return profile(p) && p.balanceUnits == 100000 && p.peaches == 0 && p.get('rechargeCount',0) == 0 && !('rechargeDaily' in p)
         && p.bonus == {'day':null,'dayIndex':-1,'streak':0}
         && p.settings.sfxLvl == 2 && p.settings.vibLvl == 2 && p.settings.slotBetIdx == 3
         && p.settings.wheelBetIdx == 3 && p.settings.get('neckBetIdx',3) == 3 && p.get('neckRound',null) == null
@@ -324,6 +327,8 @@ service cloud.firestore {
     }
     function recharge(p, old, o) {
       let home = o.result.get('source','') == 'home';
+      let today = dayIndex(request.time);
+      let daily = old.get('rechargeDaily',{'dayIndex':-1,'count':0});
       return p.balanceUnits is int && p.balanceUnits <= 1000000000000
         && o.action == 'recharge' && o.game == 'home' && o.selected == -1
         && (home || old.balanceUnits < 100)
@@ -331,8 +336,11 @@ service cloud.firestore {
         && p.balanceUnits == old.balanceUnits + 100000
         && o.result.amount == 1000
         && (home
-          ? p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId','rechargeCount'])
+          ? p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId','rechargeCount','rechargeDaily'])
             && p.get('rechargeCount',0) == old.get('rechargeCount',0) + 1
+            && p.rechargeDaily.keys().hasOnly(['dayIndex','count']) && p.rechargeDaily.dayIndex == today
+            && daily.dayIndex <= today && p.rechargeDaily.count is int
+            && p.rechargeDaily.count == (daily.dayIndex == today ? daily.count : 0) + 1 && p.rechargeDaily.count <= 5
             && o.result.keys().hasOnly(['player','amount','source','count']) && o.result.count == p.rechargeCount
           : p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
             && o.result.keys().hasOnly(['player','amount']));

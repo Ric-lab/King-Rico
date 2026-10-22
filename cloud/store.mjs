@@ -4,7 +4,7 @@ import engine from './engine.cjs';
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,clownRound:p.clownRound || null,bounceRound:p.bounceRound || null,flyingRound:p.flyingRound || null,twentyOneRound:p.twentyOneRound || null,
-  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount})});
+  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount}),...(p.rechargeDaily===undefined?{}:{rechargeDaily:p.rechargeDaily})});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
 // Firebase Spark: the browser computes the lottery. Firestore transactions persist
@@ -221,6 +221,12 @@ export function createGameStore(db, uid, dependencies={}) {
         // A paused game must not lock the shared wallet. Preserve every round.
         const home=data.source==='home';
         if(!home && p.balanceUnits>=engine.units(engine.BETS[0])) return {amount:0,player:publicPlayer(p)};
+        if(home){
+          const today=dayIndex(time),daily=p.rechargeDaily,count=daily?.dayIndex===today?daily.count:0;
+          if(daily?.dayIndex>today)fail('king-rico/invalid-argument','Confira a data do aparelho.');
+          if(count>=5)fail('king-rico/daily-limit','Você já recebeu as cinco recompensas de hoje.');
+          p.rechargeDaily={dayIndex:today,count:count+1};
+        }
         winUnits=100000;p.balanceUnits+=winUnits;
         if(home)p.rechargeCount=(p.rechargeCount||0)+1;
         result={amount:winUnits/100,...(home?{source:'home',count:p.rechargeCount}:{})};

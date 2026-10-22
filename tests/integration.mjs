@@ -585,7 +585,7 @@ test('recharge Rules preserve every paused game and prevent concurrent or replay
  }
 });
 
-test('Home recharge Rules count unlimited confirmed clicks without duplicating replays or changing the daily gift',async()=>{
+test('Home recharge Rules count daily confirmed clicks without duplicating replays or changing the daily gift',async()=>{
  const name='home-refill-'+randomUUID(),c=await client(name),other=await client(name+'-other',name);
  await c.call(request({action:'bootstrap'}));await c.call(request({action:'bonus'}));const ref=doc(c.db,'players',c.uid);
  const original=(await getDoc(ref)).data(),first=request({action:'recharge',source:'home'});
@@ -597,11 +597,23 @@ test('Home recharge Rules count unlimited confirmed clicks without duplicating r
  assert.equal((await c.call(first)).player.rechargeCount,3);assert.equal((await c.call(request({action:'bonus'}))).amount,0);
  await assertFails(updateDoc(ref,{rechargeCount:0}));
  async function forge(changes,credit=100000){
-  const old=(await getDoc(ref)).data(),id=randomUUID(),next={...old,balanceUnits:old.balanceUnits+credit,rechargeCount:old.rechargeCount+1,
+  const old=(await getDoc(ref)).data(),id=randomUUID(),next={...old,balanceUnits:old.balanceUnits+credit,rechargeCount:old.rechargeCount+1,rechargeDaily:{...old.rechargeDaily,count:old.rechargeDaily.count+1},
    revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),...changes};
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'recharge',game:'home',selected:-1,
    fingerprint:'forged-home-click',betUnits:0,winUnits:credit,result:{source:'home',amount:credit/100,count:next.rechargeCount},createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
   await assertFails(batch.commit());
  }
  await forge({rechargeCount:99});await forge({},200000);await forge({bonus:{day:null,dayIndex:-1,streak:0}});
+ await assertFails(updateDoc(ref,{rechargeDaily:{...current.rechargeDaily,count:0}}));
+ await c.call(request({action:'recharge',source:'home'}));
+ const last=await Promise.allSettled([c.call(request({action:'recharge',source:'home'})),other.call(request({action:'recharge',source:'home'}))]);
+ assert.equal(last.filter(x=>x.status==='fulfilled').length,1);
+ assert.equal(last.find(x=>x.status==='rejected').reason.code,'king-rico/daily-limit');
+ const capped=(await getDoc(ref)).data();assert.equal(capped.rechargeDaily.count,5);assert.equal(capped.balanceUnits,605000);
+ await forge({});await forge({rechargeDaily:{...capped.rechargeDaily,count:1}});
+ await forge({rechargeDaily:{dayIndex:capped.rechargeDaily.dayIndex+1,count:1}});
+ assert.equal((await c.call(first)).player.rechargeDaily.count,5);
+ await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{rechargeDaily:{dayIndex:capped.rechargeDaily.dayIndex-1,count:5}}));
+ const renewed=await c.call(request({action:'recharge',source:'home'}));
+ assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,6);
 });

@@ -30,7 +30,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
   <div style="position: absolute; left: 0; right: 0; top: 0; height: 64%; background: linear-gradient(180deg, rgba(48,10,70,.62) 0%, rgba(48,10,70,.32) 55%, rgba(48,10,70,0) 100%); pointer-events: none;"></div>
   <div data-screen-label="Home" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: min(453px, 100%); margin: 0 auto; display: flex; flex-direction: column; padding-top: {{ padTop }}; box-sizing: border-box;">
 
-    <div style="position: relative; left: 50%; width: {{ hdrW }}; transform: translateX(-50%); height: {{ hdrH }}; flex: 0 0 {{ hdrH }}; z-index: 10;">
+    <div class="kr-home-scroll" data-home-scroll="1">
+    <div class="kr-home-header" style="position: relative; width: {{ hdrW }}; height: {{ hdrH }}; flex: 0 0 {{ hdrH }}; z-index: 10;">
       <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
       <div ref="{{ rPlaque }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; left: {{ plqL }}; top: {{ plqT }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('{{ imgStage }}'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale({{ plqS }}); transform-origin: {{ plqO }};">
         <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
@@ -39,16 +40,16 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       </div>
     </div>
 
-    <div class="kr-home-scroll" data-home-scroll="1">
       <div class="kr-home-brand" role="img" aria-label="King Rico">
         <div class="kr-home-wordmark">
           <span aria-hidden="true" style="grid-area: 1 / 1; color: #8a1c06; -webkit-text-stroke: 9px #8a1c06; text-shadow: 0 4px 0 #6a1404, 0 7px 0 #4e0c02, 0 10px 0 #3a0802, 0 14px 16px rgba(30,0,40,.55);">KING RICO</span>
           <span aria-hidden="true" style="grid-area: 1 / 1; background: linear-gradient(180deg, #fffbd8 0%, #ffe25a 30%, #ffc21a 55%, #f08a08 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.7));">KING RICO</span>
         </div>
       </div>
-      <button onClick="{{ recharge }}" class="kr-button kr-home-recharge" aria-label="Recarregar 1.000 moedas" disabled="{{ rechargeDisabled }}">
+      <button onClick="{{ recharge }}" class="kr-button kr-home-recharge" aria-label="Recarregar 1.000 moedas" aria-description="{{ rechargeDescription }}" disabled="{{ rechargeDisabled }}">
         <span class="kr-home-recharge-art"><img src="assets/icons/reward-video.svg" alt=""><img src="{{ imgCoin }}" alt=""></span>
-        <span class="kr-home-recharge-copy"><strong>{{ rechargeLabel }}</strong><span aria-live="polite">{{ rechargeNote }}</span></span>
+        <span class="kr-home-recharge-copy"><strong>+1000 moedas</strong><span>Ver anúncio de 30s</span></span>
+        <span class="kr-home-recharge-count" aria-label="{{ rechargeCountLabel }}">{{ rechargeCounter }}</span>
       </button>
 
       <div style="display: flex; align-items: center; gap: 10px; padding: 2px 4px 0;">
@@ -174,12 +175,12 @@ const QUIPS = {
   idle: 'Escolha um jogo e boa sorte!', bonus: 'Moedas na conta!'
 };
 class Component extends DCLogic {
-  state = { loaded:false,recharging:false,adOpen:false,adComplete:false,adError:false,collecting:false,rechargeNote:'Ver anúncio • 30 segundos', menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
+  state = { loaded:false,recharging:false,adOpen:false,adComplete:false,adError:false,collecting:false, menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
   rPlaque = React.createRef();
   componentDidMount() {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => this.setState({
-      loaded:true,balance: p.balance,rechargeCount:p.rechargeCount||0, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, last: p.bonus.day ? Number(p.bonus.day.replaceAll('-', '')) : 0, streak: p.bonus.streak
+      loaded:true,balance: p.balance,rechargeCount:p.rechargeCount||0,rechargeDaily:p.rechargeDaily||null, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, last: p.bonus.day ? Number(p.bonus.day.replaceAll('-', '')) : 0, streak: p.bonus.streak
     }));
     this._rs = () => this.forceUpdate(); window.addEventListener('resize', this._rs);
     [0, 60, 300, 1000, 2500].forEach(t => setTimeout(() => { if (!this._dead) this.forceUpdate(); }, t));
@@ -252,25 +253,30 @@ class Component extends DCLogic {
       localStorage.setItem(SAVE, JSON.stringify(saved));
     } catch (e) {}
   }
+  rechargeDay() {
+    const key=window.KingRicoCloud?.enabled?window.KingRicoCloud.dayKey():dayKey(Date.now());
+    return Math.floor(Date.UTC(Math.floor(key/10000),Math.floor(key/100)%100-1,key%100)/86400000);
+  }
+  dailyRecharges() {const d=this.state.rechargeDaily;return d&&d.dayIndex===this.rechargeDay()?d.count:0;}
   recharge = () => {
-    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging||this.state.adOpen)return;
+    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging||this.state.adOpen||this.dailyRecharges()>=5)return;
     this.setState({adOpen:true,adComplete:false,adError:false});
   };
   cancelAd = () => {
     if(this._recharging)return;
-    this.setState({adOpen:false,adComplete:false,adError:false,rechargeNote:'Ver anúncio • 30 segundos'});
+    this.setState({adOpen:false,adComplete:false,adError:false});
   };
   finishAd = async () => {
     const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging)return;
     if(!this.state.adOpen)return;
-    this._recharging=true;this.setState({adComplete:true,adError:false,recharging:true,rechargeNote:'Confirmando suas moedas…'});
+    this._recharging=true;this.setState({adComplete:true,adError:false,recharging:true});
     try {
       const r=await cloud.recharge('home'),p=cloud.player||r.player;
       if(r.amount!==1000)throw new Error('Recarga não confirmada');
       if(this._dead)return;
-      this.setState({adOpen:false,balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeNote:'+1.000 moedas! Ver outro anúncio • 30s'});
+      this.setState({adOpen:false,balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeDaily:p.rechargeDaily||null});
       this.buzz([25,35,35]);
-    } catch(e){cloud.error(e);if(!this._dead)this.setState({adError:true,rechargeNote:'Não confirmou. Toque para tentar de novo.'});}
+    } catch(e){cloud.error(e);if(!this._dead)this.setState(e.code==='king-rico/daily-limit'?{adOpen:false,adError:false,rechargeDaily:{dayIndex:this.rechargeDay(),count:5}}:{adError:true});}
     finally{this._recharging=false;if(!this._dead)this.setState({recharging:false});}
   };
   renderVals() {return this._rv();}
@@ -296,8 +302,9 @@ class Component extends DCLogic {
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: s.loaded && ready ? this.prize(cy).toLocaleString('pt-BR') : '', bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
       collecting:!!s.collecting,collectLabel:s.collecting?'CONFIRMANDO…':'PEGAR MOEDAS',
-      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging||!!s.adOpen,
-      rechargeLabel:s.recharging?'CONFIRMANDO…':'+1.000 MOEDAS',rechargeNote:s.rechargeNote,
+      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging||!!s.adOpen||this.dailyRecharges()>=5,
+      rechargeCounter:this.dailyRecharges()+'/5',rechargeCountLabel:this.dailyRecharges()+' de 5 recompensas recebidas hoje',
+      rechargeDescription:this.dailyRecharges()>=5?'Limite diário atingido. Novas recompensas amanhã.':'Até 5 recompensas por dia.',
       adProps:{open:!!s.adOpen,complete:!!s.adComplete,busy:!!s.recharging,error:!!s.adError,
         onComplete:this.finishAd,onCancel:this.cancelAd,coin:A('assets/symbols/sym-coin.webp')},
       week:week.map((v,i)=>({day:'Dia '+(i+1),amount:v.toLocaleString('pt-BR'),
