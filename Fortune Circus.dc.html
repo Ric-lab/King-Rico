@@ -1445,7 +1445,7 @@ class Component extends DCLogic {
       i.style.cssText = 'position:absolute;left:' + (x - d / 2).toFixed(1) + 'px;top:' + (y - d / 2).toFixed(1) + 'px;width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;opacity:' + op + ';pointer-events:none;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0);';
       (h || host).appendChild(i); return i; };
     // tamanho do abafador/brilho por grupo: pilar é estreito (não pode escurecer as casas dos rolos)
-    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7], hud: [3.2, 4.6] }, list = [];
+    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7], hud: [2, 4.6] }, list = [];
     const hostBleed = this.lightsBleedRef.current || host;
     // O recorte do saldo antigo revela estas duas lâmpadas da sangria.
     const bulbs = {...FC_BULBS, hud:[[78.6,65.0,4.82],[53.1,76.3,4.8]]};
