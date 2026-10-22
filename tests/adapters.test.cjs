@@ -216,11 +216,17 @@ test('Home waits for the saved profile before deciding whether the daily gift is
 });
 test('Home counts one recharge while confirmation is pending and never changes the daily gift',async()=>{
  let finish,calls=0;const player={balance:2050,rechargeCount:1,bonus:{day:'2026-10-21',streak:1}};
- const cloud={enabled:true,player,recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>finish=r)},error:()=>{throw Error('Unexpected failure')}};
+ const cloud={enabled:true,player,dayKey:()=>20261021,recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>finish=r)},error:()=>{throw Error('Unexpected failure')}};
  const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.last=20261021;home.state.streak=1;home.buzz=()=>{};
  home.recharge();home.recharge();assert.equal(calls,0);assert.equal(home.state.adOpen,true);
  const first=home.finishAd();await home.finishAd();assert.equal(calls,1);finish({amount:1000,player});await first;
  assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);assert.equal(home.state.rechargeCount,1);assert.equal(home.state.last,20261021);assert.equal(home.state.streak,1);assert.equal(home.state.recharging,false);
+ assert.equal(home.state.rewardOpen,true);assert.equal(home.state.rewardPending,1000);
+ assert.equal(home.renderVals().balanceText,'1.050');
+ home.recharge();assert.equal(home.state.adOpen,false);assert.equal(calls,1);
+ home.rewardProgress(250);assert.equal(home.state.rewardPending,750);assert.equal(home.renderVals().balanceText,'1.300');
+ home.rewardDone();home.rewardDone();assert.equal(home.state.rewardPending,0);assert.equal(home.state.rewardOpen,false);assert.equal(home.state.balance,2050);assert.equal(calls,1);
+ assert.equal(home.renderVals().balanceText,'2.050');
 });
 
 test('closing the simulated ad before completion grants no coins and can be reopened',()=>{

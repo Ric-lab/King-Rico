@@ -32,12 +32,16 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     uid=page.evaluate('KingRicoCloud.uid');bonus=page.evaluate('KingRicoCloud.player.bonus')
     refill=page.get_by_role('button',name='Recarregar 1.000 moedas',exact=True)
     ad=page.get_by_role('dialog',name='Simulação de anúncio de 30 segundos',exact=True)
+    receipt=page.get_by_role('dialog',name='Você ganhou 1.000 moedas',exact=True)
     refill.tap();ad.wait_for()
     assert page.evaluate('KingRicoCloud.player.balance')==1050
     assert page.locator('.kr-home').evaluate('e=>!!e.closest("[inert]")')
     page.get_by_role('button',name='Fechar anúncio sem ganhar moedas',exact=True).tap();ad.wait_for(state='hidden')
     assert page.evaluate('KingRicoCloud.player.rechargeCount||0')==0
     for count in [1,2]:
+        # Exercise the same receipt inside the embedded Circus Home and standalone.
+        page.goto(BASE+('/Fortune%20Circus.dc.html' if count==1 else '/Home.dc.html'));restored(page,uid)
+        refill.wait_for()
         before=page.evaluate('KingRicoCloud.player.balance');started=time.monotonic()
         refill.tap();ad.wait_for()
         assert ad.get_by_role('timer').get_attribute('aria-label')=='30 segundos restantes'
@@ -48,6 +52,30 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
         page.wait_for_function('(n)=>KingRicoCloud.player.rechargeCount===n&&KingRicoCloud.player.balance===1050+n*1000',arg=count,timeout=40000)
         assert time.monotonic()-started>=29.8
         ad.wait_for(state='hidden')
+        receipt.wait_for()
+        assert ' '.join(receipt.locator('.kr-reward-receipt-amount').inner_text().split())=='1.000 moedas'
+        assert page.locator('[role=status][aria-label^="Seu saldo"]').first.get_attribute('aria-label')=='Seu saldo: '+format(before,',').replace(',','.')+' moedas'
+        assert page.locator('.kr-home').evaluate('e=>!!e.closest("[inert]")')
+        if count==1:
+            for width,height in [(320,568),(390,844),(844,390)]:
+                page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(80)
+                assert receipt.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
+                ok=receipt.get_by_role('button',name='OK',exact=True);box=ok.bounding_box()
+                assert box['y']>=0 and box['y']+box['height']<=height
+            page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(80)
+            page.screenshot(path='/tmp/king-rico-reward-receipt.png')
+            receipt.get_by_role('button',name='OK',exact=True).tap()
+            page.locator('.kr-reward-flying-coin').first.wait_for(state='visible')
+            assert page.locator('[data-home-scroll]').evaluate('e=>e.scrollTop')==0
+            page.wait_for_timeout(300);page.screenshot(path='/tmp/king-rico-reward-flight.png')
+            page.locator('.kr-reward-receipt').wait_for(state='hidden')
+            assert page.locator('[role=status][aria-label^="Seu saldo"]').first.get_attribute('aria-label')=='Seu saldo: 2.050 moedas'
+            assert page.evaluate('KingRicoCloud.player.rechargeCount')==1
+        else:
+            # Closing the page before OK preserves the already committed reward.
+            page.reload();restored(page,uid)
+            assert receipt.count()==0
+            assert page.evaluate('KingRicoCloud.player.balance')==3050
         assert page.evaluate('KingRicoCloud.player.bonus')==bonus
         refill.wait_for(state='visible');page.wait_for_function('!document.querySelector(".kr-home-recharge").disabled')
     assert page.evaluate('async()=>(await KingRicoCloud.bonus()).amount')==0
@@ -93,4 +121,4 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     assert not errors,errors
     context.close()
     return {'daily_gift_without_scratch':True,'repeated_home_refill_and_counter':True,'count_survives_game_and_reload':True,
-        'no_daily_gift_flash_on_return':True,'header_wordmark_and_bar_scroll':True,'embedded_home_styled':True,'30_second_interruption_before_credit':True,'cancel_without_reward':True,'embedded_fullscreen_and_reload_without_credit':True,'daily_badge_and_cap':True}
+        'no_daily_gift_flash_on_return':True,'header_wordmark_and_bar_scroll':True,'embedded_home_styled':True,'30_second_interruption_before_credit':True,'cancel_without_reward':True,'embedded_fullscreen_and_reload_without_credit':True,'daily_badge_and_cap':True,'reward_receipt_and_wallet_flight':True,'reload_before_ok_keeps_credit':True}

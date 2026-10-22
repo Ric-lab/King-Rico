@@ -25,6 +25,15 @@
 .kr-home-day--today{background:linear-gradient(#fff3c4,#ffd257 55%,#e8900f);color:#5a2a00;box-shadow:0 0 0 2px #fff3c4}
 .kr-home-day--done{background:#195638;color:#e9ffe8;box-shadow:inset 0 0 0 1px #6cf096}
 .kr-home-gift .kr-button{width:100%;min-height:58px;padding:12px;font-size:22px;flex-shrink:0}
+.kr-reward-receipt{position:fixed;inset:0;z-index:2147483645;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(20,4,40,.82);font-family:'Baloo 2',system-ui,sans-serif;overscroll-behavior:none}
+.kr-reward-receipt-panel{max-width:350px;gap:18px;padding:28px 24px}
+.kr-reward-receipt-coin{width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 8px 10px #21033d66)}
+.kr-reward-receipt-amount{font-size:48px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:#fff3c4}
+.kr-reward-receipt-amount span{display:block;margin-top:6px;font-size:25px}
+.kr-reward-receipt .kr-button:focus-visible{outline:3px solid #fff3c4;outline-offset:5px}
+.kr-reward-receipt--flying{background:transparent}
+.kr-reward-flying-coin{position:absolute;left:0;top:0;width:48px;height:48px;object-fit:contain;pointer-events:none;will-change:transform,opacity}
+@media(max-height:500px){.kr-reward-receipt-panel{display:grid;grid-template-columns:86px 1fr;column-gap:20px;row-gap:12px;max-width:450px;padding:20px}.kr-reward-receipt-panel h2{grid-column:1/-1;font-size:25px}.kr-reward-receipt-coin{width:86px;height:86px}.kr-reward-receipt-amount{font-size:42px}.kr-reward-receipt-panel .kr-button{grid-column:1/-1;min-height:52px}}
 @media(max-width:340px){.kr-home-recharge{padding:12px 10px;gap:8px}.kr-home-recharge-copy strong{font-size:22px}.kr-home-recharge>img{width:42px;height:42px}.kr-home-week{gap:3px}.kr-home-day strong{font-size:13px}.kr-home-gift{padding:18px 12px}}
 .kr-reward-ad{position:fixed;inset:0;z-index:2147483645;box-sizing:border-box;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:none;background:#000;color:#fff3c4;font-family:'Baloo 2',system-ui,sans-serif;padding:max(16px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));-webkit-tap-highlight-color:transparent}
 .kr-reward-ad-top{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;flex-shrink:0;color:#c5bca9;font-size:12px;font-weight:800;letter-spacing:1.3px}
