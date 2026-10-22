@@ -209,7 +209,7 @@ class Component extends DCLogic {
   async bakeBall() { try { const T = await import('./runtime/three.module.js'), S = 128, N = 32;
     const r = new T.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true }); r.setSize(S, S); r.setPixelRatio(1); r.outputColorSpace = T.SRGBColorSpace; r.toneMapping = T.ACESFilmicToneMapping;
     const sc = new T.Scene(), cam = new T.OrthographicCamera(-1.05, 1.05, 1.05, -1.05, 0.1, 10); cam.position.z = 5;
-    const tc = document.createElement('canvas'); tc.width = 512; tc.height = 256; const x = tc.getContext('2d'); x.fillStyle = '#d8132e'; x.fillRect(0, 0, 512, 256); x.fillStyle = '#a00a20'; x.fillRect(0, 0, 512, 40); x.fillRect(0, 216, 512, 40);
+    const tc = document.createElement('canvas'); tc.width = 512; tc.height = 256; const x = tc.getContext('2d'); x.fillStyle = '#d8132e'; x.fillRect(0, 0, 512, 256);
     x.fillStyle = '#ffe9a8'; for (const cx of [128, 384]) { x.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? 22 : 52; x.lineTo(cx + Math.cos(a) * rr, 128 + Math.sin(a) * rr); } x.fill(); }
     const tex = new T.CanvasTexture(tc); tex.colorSpace = T.SRGBColorSpace;
     const m = new T.Mesh(new T.SphereGeometry(1, 48, 32), new T.MeshPhysicalMaterial({ map: tex, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.08 })); m.rotation.x = 0.35; sc.add(m);
