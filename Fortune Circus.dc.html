@@ -543,7 +543,7 @@ class Component extends DCLogic {
     const vv = window.visualViewport;
     const de = document.documentElement;
     const w = Math.max(window.innerWidth || 0, de.clientWidth || 0, (vv && vv.width) || 0);
-    const h = Math.max(window.innerHeight || 0, de.clientHeight || 0, (vv && vv.height) || 0);
+    const h = window.KingRicoViewport?.height ?? Math.max(window.innerHeight || 0, de.clientHeight || 0, (vv && vv.height) || 0);
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
     // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
     // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;

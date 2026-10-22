@@ -8,7 +8,7 @@ let mode='win',selected2=-1,scene,player=null,balance=null,selected=0,bet=10,bus
 const key=()=>`kingRico.race.${cloud?.uid}`;
 function pending(){try{return JSON.parse(localStorage.getItem(key()));}catch{return null;}}
 const save=x=>localStorage.setItem(key(),JSON.stringify(x));
-function resize(){const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight,s=Math.min(w/453,h/802);$('game').style.setProperty('--scene-scale',s);$('game').style.setProperty('--scene-height',h/s+'px');}new ResizeObserver(resize).observe(document.documentElement);resize();
+function resize(){const w=document.documentElement.clientWidth,h=(window.KingRicoViewport?.height ?? document.documentElement.clientHeight),s=Math.min(w/453,h/802);$('game').style.setProperty('--scene-scale',s);$('game').style.setProperty('--scene-height',h/s+'px');}new ResizeObserver(resize).observe(document.documentElement);resize();
 COMPETITORS.forEach((c,i)=>{
  const button=document.createElement('button');button.className='choice';button.dataset.index=i;button.style.setProperty('--ball-color',c.css);button.setAttribute('aria-label',`Bolinha ${i+1}: ${c.name}`);button.innerHTML=`<span class="number">${i+1}</span><img src="${c.art}" alt=""><span class="name">${c.name}</span>`;button.onclick=()=>{if(busy||loading||paused)return;pick(i);scene.select(selected,selected2);cue('tap');render();};$('choices').append(button);
  const label=document.createElement('span');label.className='ball-label';label.style.setProperty('--ball-color',c.css);label.textContent=i+1;$('ball-labels').append(label);

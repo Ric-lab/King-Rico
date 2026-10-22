@@ -1,0 +1,6 @@
+#kr-ad-banner{position:fixed;inset:0 0 auto;height:var(--kr-banner-height,60px);z-index:500;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#000;color:#aaa;font:800 14px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:3px;padding-top:env(safe-area-inset-top,0px);user-select:none}
+/* A containing block keeps fixed DC scenes below the slot. Body portals (login,
+   menu and rewarded-ad simulation) still use the full browser viewport. */
+.kr-banner-enabled #dc-root{height:100dvh}
+.kr-banner-enabled #dc-root>.sc-host{height:calc(100dvh - var(--kr-banner-height))!important;transform:translateY(var(--kr-banner-height))}
+.kr-banner-enabled body>#game{top:var(--kr-banner-height)}

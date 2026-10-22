@@ -154,7 +154,7 @@ class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, n: 0, guard: 0, active: false, roundBet: 0, vw: 453, vh: 802 };
   stageRef = React.createRef();
   componentDidMount() {
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: (window.KingRicoViewport?.height ?? window.innerHeight) }); this._rs(); window.addEventListener('resize', this._rs);
     window.__bounce=this;const cloud=window.KingRicoCloud;
     if(cloud?.enabled) this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this._request) this.applyCloudPlayer();});
     window.bounceHooks = { onStart: () => this.onStart(), onLand: (n, g, p, st, sv) => this.onLand(n, g, p, st, sv), onSteam: () => this.onSteam(), onDrag: () => this.setState({ dragged: true }), onFall: () => this.onFall(), onStopped:()=>this.collect(multOf(this.state.n),'VOCÊ GANHOU!') };

@@ -175,7 +175,7 @@ class Component extends DCLogic {
       roundId:r?.id || null,step:r?.step || 0,roundBet:r ? r.betUnits/100 : 0});
   }
   componentDidMount() {
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: (window.KingRicoViewport?.height ?? window.innerHeight) }); this._rs(); window.addEventListener('resize', this._rs);
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this.cloudLocked()) this.applyCloudPlayer();});
     if(!cloud?.enabled) {

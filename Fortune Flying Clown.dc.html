@@ -55,6 +55,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </div>
 
     <x-import from="./ui/round-controls.js" component="RoundControls" dc-props="{{ roundControls }}"></x-import>
+    <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
 
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closePays }}" role="button" style="position: absolute; inset: 0; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.94); cursor: pointer; animation: flFade .2s ease-out;">
@@ -108,7 +109,7 @@ class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, step: 0, bet: 0, busy: false, conf: [], vw: 453, vh: 802 };
   stageRef = React.createRef(); worldRef = React.createRef(); floorRef = React.createRef(); canvasRef = React.createRef(); clownRef = React.createRef();
   componentDidMount() {
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: (window.KingRicoViewport?.height ?? window.innerHeight) }); this._rs(); window.addEventListener('resize', this._rs);
     this.imgs = [0, 1, 2, 3, 4, 5].map(i => { const im = new Image(); im.src = 'assets/flying/b' + i + '.webp'; return im; });
     this.parts = []; this.fill(); this.cy = 0; this.cvy = 0; this.mode = 'idle'; this.hy = HY0;
     window.__flying=this;const cloud=window.KingRicoCloud;

@@ -207,7 +207,7 @@ class Component extends DCLogic {
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
       this._cloudDeferred = p; if (!this.state.spinning && !this._cloudRequest) this.applyCloudPlayer();
     });
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: (window.KingRicoViewport?.height ?? window.innerHeight) }); this._rs(); window.addEventListener('resize', this._rs);
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const w = JSON.parse(localStorage.getItem(WKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
   }

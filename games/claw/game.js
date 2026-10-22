@@ -7,7 +7,7 @@ let scene,player=null,displayedBalance=null,bet=10,busy=false,paused=false,loadi
 const storageKey=()=>`kingRico.claw.${cloud?.uid}`;
 const stored=()=>{try{return JSON.parse(localStorage.getItem(storageKey()));}catch{return null;}};
 const save=x=>localStorage.setItem(storageKey(),JSON.stringify(x));
-function resize(){const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight,s=Math.min(w/453,h/802);$('game').style.setProperty('--scene-scale',s);$('game').style.setProperty('--scene-height',h/s+'px');}
+function resize(){const w=document.documentElement.clientWidth,h=(window.KingRicoViewport?.height ?? document.documentElement.clientHeight),s=Math.min(w/453,h/802);$('game').style.setProperty('--scene-scale',s);$('game').style.setProperty('--scene-height',h/s+'px');}
 new ResizeObserver(resize).observe(document.documentElement);resize();
 function sound(win=false,cue='tap'){
  if(prefs.vib&&cue!=='motor')navigator.vibrate?.(win?[25,35,40]:cue==='close'?[15,20,22]:16);

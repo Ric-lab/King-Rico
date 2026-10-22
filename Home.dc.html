@@ -284,8 +284,8 @@ class Component extends DCLogic {
       // Arquivo avulso no navegador: tamanho em px do próprio navegador.
       ...(() => { const L = typeof window !== 'undefined' && window.__fcLayout;
         if (L) return { rootHeight:'100%',rootMinH: '0px', padTop: L.safeTopU + 'px', plqS: 1.25, plqO: '0 50%', plqL: '18px', plqT: 'calc(var(--kr-hud-top) + 2px)', mnuR: '20.167px', mnuT: '29.5px', hdrH: '70px', hdrW: '453px' };
-        const w = window.innerWidth || 453, h = window.innerHeight || 802, gs = Math.max(.25, Math.min(w / 453, h / 802));
-        return { gs, rootHeight:'100dvh',rootMinH: '100dvh', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
+        const w = window.innerWidth || 453, h = window.KingRicoViewport?.height ?? (window.innerHeight || 802), gs = Math.max(.25, Math.min(w / 453, h / 802));
+        return { gs, rootHeight:'calc(100dvh - var(--kr-banner-height, 0px))',rootMinH: 'calc(100dvh - var(--kr-banner-height, 0px))', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
       balanceText: txt,
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
@@ -307,7 +307,7 @@ class Component extends DCLogic {
       ],
       menuButton: {onClick:this.openMenu,style:(() => {
         if (window.__fcLayout) return {};
-        const gs = Math.max(.25, Math.min(window.innerWidth / 453, window.innerHeight / 802));
+        const gs = Math.max(.25, Math.min(window.innerWidth / 453, (window.KingRicoViewport?.height ?? window.innerHeight) / 802));
         return {right:(40.667*gs-20.5)+'px',top:'calc((var(--kr-hud-top) + 20.5px) * '+gs+' - 20.5px)','--kr-hud-scale':gs};
       })()},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,screen:'Home',

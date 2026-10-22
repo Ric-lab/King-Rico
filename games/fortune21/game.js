@@ -30,7 +30,7 @@ function applyPlayer(player){
 
 function resize() {
   const width = document.documentElement.clientWidth;
-  const height = document.documentElement.clientHeight;
+  const height = (window.KingRicoViewport?.height ?? document.documentElement.clientHeight);
   const scale = Math.min(width / 453, height / 810);
   game.style.setProperty('--scene-scale', scale);
   game.style.setProperty('--kr-hud-ratio', Math.min(width / 453, height / 802) / scale);
