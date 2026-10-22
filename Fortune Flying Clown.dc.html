@@ -32,7 +32,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div ref="{{ worldRef }}" style="position: absolute; left: -120px; top: -520px; width: 693px; height: 1221px; background: url('assets/flying/bg2.webp') 50% 50% / cover no-repeat; will-change: transform;"></div>
     <div ref="{{ floorRef }}" style="position: absolute; z-index: 4; left: -224px; top: 590px; width: 900px; height: 320px; pointer-events: none; will-change: transform; background: url('assets/flying/floor.webp') 50% 0 / 900px 183px no-repeat, linear-gradient(#680302, #3a0206) 0 182px / 100% 140px no-repeat;"></div>
     <canvas ref="{{ canvasRef }}" onPointerDown="{{ tapBalloon }}" width="906" height="1604" style="position: absolute; z-index: 6; inset: 0; width: 453px; height: 802px; cursor: pointer; touch-action: none;"></canvas>
-    <img ref="{{ clownRef }}" src="assets/flying/clown.webp" alt="Palhaço" draggable="false" style="position: absolute; z-index: 5; left: 172.3px; top: 368.7px; width: 110px; height: 197px; pointer-events: none; transform-origin: 53.7px 11.3px; filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));">
+    <img ref="{{ clownRef }}" src="assets/flying/clown.webp?v=dc397ed34816" alt="Palhaço" draggable="false" style="position: absolute; z-index: 5; left: 172.3px; top: 368.7px; width: 110px; height: 197px; pointer-events: none; transform-origin: 53.7px 11.3px; filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));">
 
     <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
       <div style="position: absolute; z-index: 9; left: {{ c.x }}; top: {{ c.y }}; width: 10px; height: 14px; border-radius: 2px; background: {{ c.bg }}; --dx: {{ c.dx }}; --dy: {{ c.dy }}; animation: flConf 1s ease-out forwards; pointer-events: none;"></div>
