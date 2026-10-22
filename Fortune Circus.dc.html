@@ -58,7 +58,7 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: -60px; background-image: url('assets/stage-lit.webp'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
  <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
- <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v4.png'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
+ <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v5.png'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
  <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
@@ -387,7 +387,7 @@ a:hover { color: #fff3c4; }
     <img data-asset="assets|spin|spin-base.webp" src="assets/spin/spin-base.webp" alt="">
     <img data-asset="assets|spin|spin-pressed.webp" src="assets/spin/spin-pressed.webp" alt="">
     <img data-asset="assets|stage-off6.webp" src="assets/stage-off6.webp" alt="">
-    <img data-asset="assets|bleed|stage-bleed-v4.png" src="assets/bleed/stage-bleed-v4.png" alt="">
+    <img data-asset="assets|bleed|stage-bleed-v5.png" src="assets/bleed/stage-bleed-v5.png" alt="">
     <img data-asset="assets|stage-hd-c.webp" src="assets/stage-hd-c.webp" alt="">
     <img data-asset="assets|symbols|sym-crown.png" src="assets/symbols/sym-crown.png" alt="">
     <img data-asset="assets|symbols|sym-tent.png" src="assets/symbols/sym-tent.png" alt="">
@@ -547,7 +547,7 @@ class Component extends DCLogic {
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
     // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
     // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
-    // ao redor, o palco com sangria (assets/bleed/stage-bleed-v4.png) continua o cenário. Tela deitada (computador) = moldura centralizada.
+    // ao redor, o palco com sangria (assets/bleed/stage-bleed-v5.png) continua o cenário. Tela deitada (computador) = moldura centralizada.
     const inset = w > h;
     const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
     const avail = h - safe.top - band - safe.bottom;
@@ -1445,13 +1445,11 @@ class Component extends DCLogic {
       i.style.cssText = 'position:absolute;left:' + (x - d / 2).toFixed(1) + 'px;top:' + (y - d / 2).toFixed(1) + 'px;width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;opacity:' + op + ';pointer-events:none;will-change:opacity,transform;backface-visibility:hidden;transform:translateZ(0);';
       (h || host).appendChild(i); return i; };
     // tamanho do abafador/brilho por grupo: pilar é estreito (não pode escurecer as casas dos rolos)
-    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7], hud: [2, 4.6] }, list = [];
+    const K = { stage: [3.2, 4.6], star: [1.25, 2.1], top: [6, 7], bleed: [6.5, 7] }, list = [];
     const hostBleed = this.lightsBleedRef.current || host;
-    // O recorte do saldo antigo revela estas duas lâmpadas da sangria.
-    const bulbs = {...FC_BULBS, hud:[[78.6,65.0,4.82],[53.1,76.3,4.8]]};
     // pilares: a luz vem das imagens acesa/apagada — sem abafador/brilho de código por cima das lâmpadas deles
-    Object.keys(bulbs).filter(g => g !== 'star').forEach(g => bulbs[g].filter(([x, y]) => !(g === 'stage' && (x < 40 || x > 413) && y > 190 && y < 625)).forEach(([x, y, r]) => {
-      const h = g === 'stage' ? hostTop : g === 'bleed' || g === 'hud' ? hostBleed : host;
+    Object.keys(FC_BULBS).filter(g => g !== 'star').forEach(g => FC_BULBS[g].filter(([x, y]) => !(g === 'stage' && (x < 40 || x > 413) && y > 190 && y < 625)).forEach(([x, y, r]) => {
+      const h = g === 'stage' ? hostTop : g === 'bleed' ? hostBleed : host;
       const dim = make(dimSrc, x, y, r * 2 * K[g][0], FC_LIGHT_IDLE, h), glow = make(glowSrc, x, y, r * 2 * K[g][1], 0, h);
       list.push({ x, y, dim, glow, i: list.length });
     }));
