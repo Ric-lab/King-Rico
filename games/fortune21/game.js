@@ -132,7 +132,7 @@ function render() {
   game.classList.toggle('idle',!r);
   game.classList.toggle('has-round',!!r);
   game.classList.toggle('dealer-turn',r?.phase === 'dealer');
-  $('balance').textContent = format(account.balance);
+  window.KingRicoWallet.set($('balance'),account.balance,{hold:r?.phase==='dealer'||(r?.phase==='settled'&&shownResult!==r.id),source:$('player-score')});
   $('bet').textContent = format(r && playing ? r.bet : account.bet);
   $('start-controls').hidden = !!playing;
   $('play-controls').hidden = !playing;
@@ -240,19 +240,6 @@ function showResult() {
   if (r.result.outcome==='win') feedback('win');
 }
 
-function coinFlight() {
-  if (reducedMotion.matches) return;
-  const from = $('player-score').getBoundingClientRect(), to = $('balance').getBoundingClientRect();
-  for (let i=0;i<7;i++) {
-    const coin = new Image();coin.src='./assets/symbols/sym-coin.webp';coin.className='payout-coin';
-    coin.style.left=`${from.x+from.width/2-16}px`;coin.style.top=`${from.y}px`;document.body.append(coin);
-    const dx=to.x+to.width/2-(from.x+from.width/2),dy=to.y-from.y;
-    const animation = coin.animate([{transform:'translate(0,0) scale(.65)',opacity:0},{transform:`translate(${(i-3)*13}px,-35px) scale(1)`,opacity:1,offset:.22},{transform:`translate(${dx}px,${dy}px) scale(.5)`,opacity:1}],{duration:600,delay:i*45,easing:'cubic-bezier(.4,0,.65,1)',fill:'both'});
-    animation.finished.then(()=>coin.remove()).catch(()=>coin.remove());
-  }
-  setTimeout(()=>{$('balance').parentElement.classList.remove('credit');void $('balance').offsetWidth;$('balance').parentElement.classList.add('credit');},650);
-}
-
 function help() {
   paused = true;clearTimeout(dealerTimer);clearTimeout(resultTimer);render();$('help-dialog').showModal();
 }
@@ -260,7 +247,7 @@ function unpause() {paused=false;render();schedule();}
 for (const id of ['close-help','help-done']) $(id).onclick=()=> $('help-dialog').close();
 $('help-dialog').addEventListener('close',unpause);
 $('collect').onclick=()=>{clearTimeout(resultTimer);shownResult=$('result-dialog').dataset.roundId;$('result-dialog').close();tone('tap');};
-$('result-dialog').addEventListener('close',()=>{shownResult=$('result-dialog').dataset.roundId;if($('result-dialog').dataset.outcome==='win')coinFlight();render();schedule();});
+$('result-dialog').addEventListener('close',()=>{shownResult=$('result-dialog').dataset.roundId;render();schedule();});
 $('bet-down').onclick=()=>dispatch('bet',{amount:BETS[Math.max(0,BETS.indexOf(account.bet)-1)]});
 $('bet-up').onclick=()=>dispatch('bet',{amount:BETS[Math.min(BETS.length-1,BETS.indexOf(account.bet)+1)]});
 $('start').onclick=()=>{

@@ -27,8 +27,9 @@ function RewardReceipt({open,coin,target,onCollect,onProgress,onDone}) {
     if(!rect||!source){onProgress(1000);onDone();return;}
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const count=reduced?1:12,animations=[],nodes=[];let alive=true,landed=0;
+    const safety=setTimeout(()=>{if(alive){onProgress(1000);onDone();}},1600);
     const sx=source.x+source.width/2,sy=source.y+source.height/2,tx=rect.x+rect.width/2,ty=rect.y+rect.height/2;
-    for(let i=0;i<count;i++){
+    try {for(let i=0;i<count;i++){
       const el=document.createElement('img');el.src=coin;el.alt='';el.className='kr-reward-flying-coin';
       panel.current.appendChild(el);nodes.push(el);
       const transform=(x,y,s,r)=>`translate(${x-24}px,${y-24}px) rotate(${r}deg) scale(${s})`;
@@ -48,8 +49,8 @@ function RewardReceipt({open,coin,target,onCollect,onProgress,onDone}) {
           onDone();
         }
       }).catch(()=>{});
-    }
-    return ()=>{alive=false;animations.forEach(a=>a.cancel());nodes.forEach(el=>el.remove());};
+    }} catch {onProgress(1000);onDone();}
+    return ()=>{alive=false;clearTimeout(safety);animations.forEach(a=>a.cancel());nodes.forEach(el=>el.remove());};
   },[open,flying,coin,target,onProgress,onDone]);
   if(!open)return null;
   return window.ReactDOM.createPortal(h('div',{ref:panel,className:'kr-reward-receipt'+(flying?' kr-reward-receipt--flying':''),

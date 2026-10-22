@@ -224,7 +224,7 @@ test('Home counts one recharge while confirmation is pending and never changes t
  assert.equal(home.state.rewardOpen,true);assert.equal(home.state.rewardPending,1000);
  assert.equal(home.renderVals().balanceText,'1.050');
  home.recharge();assert.equal(home.state.adOpen,false);assert.equal(calls,1);
- home.rewardProgress(250);assert.equal(home.state.rewardPending,750);assert.equal(home.renderVals().balanceText,'1.300');
+ home.rewardProgress(250);assert.equal(home.state.rewardPending,0);assert.equal(home.renderVals().balanceText,'2.050');
  home.rewardDone();home.rewardDone();assert.equal(home.state.rewardPending,0);assert.equal(home.state.rewardOpen,false);assert.equal(home.state.balance,2050);assert.equal(calls,1);
  assert.equal(home.renderVals().balanceText,'2.050');
 });

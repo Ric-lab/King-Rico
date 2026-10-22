@@ -69,7 +69,7 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
             assert page.locator('[data-home-scroll]').evaluate('e=>e.scrollTop')==0
             page.wait_for_timeout(300);page.screenshot(path='/tmp/king-rico-reward-flight.png')
             page.locator('.kr-reward-receipt').wait_for(state='hidden')
-            assert page.locator('[role=status][aria-label^="Seu saldo"]').first.get_attribute('aria-label')=='Seu saldo: 2.050 moedas'
+            page.wait_for_function("document.querySelector('[data-kr-wallet-value]').textContent==='2.050'")
             assert page.evaluate('KingRicoCloud.player.rechargeCount')==1
         else:
             # Closing the page before OK preserves the already committed reward.

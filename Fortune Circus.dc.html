@@ -159,7 +159,7 @@ a:hover { color: #fff3c4; }
 
   <div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+    <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
   </div>
   </div>
 
@@ -1811,7 +1811,7 @@ class Component extends DCLogic {
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
       stageOpacity: s.ready ? 1 : 0,
       balanceSize: (() => { const l = this.shownBalance().toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
-      balanceText: this.shownBalance().toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
+      walletProps:{value: this.shownBalance().toLocaleString('pt-BR',{maximumFractionDigits:2}),hold:s.showWin,external:!!(this._cfRun||s.winDim)}, balanceText: this.shownBalance().toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
       ...(() => { const b = this.bet(), t = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }); return { betText: t, betSize: (t.length <= 4 ? 36 : t.length <= 5 ? 32 : 28) + 'px' }; })(),
       winText: s.displayWin > 0 ? this.money(s.displayWin) : '',
       winAnim: s.displayWin > 0 ? 'fcBeat .5s ease-in-out infinite' : 'none',

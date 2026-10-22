@@ -90,7 +90,7 @@ for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.htm
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
   // Content-version stylesheet URLs so a cached old theme cannot override a new release.
-  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script src="./ui/banner.js"></script>';
+  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script src="./ui/banner.js"></script>\n<script src="./ui/wallet.js"></script>';
   let html=source.replace('<head>','<head>\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
   const styles=[...html.matchAll(/href="(\.\/[^"?]+\.css)"/g)];
   for(const [,href] of styles){

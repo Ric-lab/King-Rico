@@ -34,7 +34,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="cursor: pointer; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6) saturate(1.2);"></a>
@@ -270,7 +270,7 @@ class Component extends DCLogic {
     }
     this.setState({ win: null, step: 0, roundBet: 0 });
     this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal, paying: false }, () => this.save(bal)); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); };
-  flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done();
+  flyCoins(done) { const wallet=this.stageRef.current?.querySelector('.kr-hud-balance');if(window.KingRicoWallet&&wallet){window.KingRicoWallet.fly(wallet,{onFirst:done});return;} const st = this.stageRef.current; if (!st || !st.animate) return done();
     const from = { x: 226, y: 745 }, to = { x: 40, y: 42 }, n = 10;
     for (let i = 0; i < n; i++) { const c = document.createElement('div');
       c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;border-radius:50%;pointer-events:none;background-image:url(assets/stage-hd-c.webp);background-size:453px 802px;background-position:-19.333px -30px;box-shadow:0 0 10px rgba(255,210,87,.8)';
@@ -300,7 +300,7 @@ class Component extends DCLogic {
       scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, ballRef: this.ballRef, spinRef: this.spinRef, shadowRef: this.shadowRef, netRef: this.netRef,
       kcRef: this.kcRef, klRef: this.klRef, krRef: this.krRef, kshRef: this.kshRef, ballSrc: s.ballSrc,
       ladder, confetti: s.conf, gol: s.gol, dimOp: s.flying ? 0 : 0.12,
-      balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
+      walletProps:{value: txt,hold:!!(s.win||s.paying),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       showHand: j === 0 && (!s.touched || s.idle) && !s.flying && !s.win, down: this.down, move: this.move, up: this.up,
       showBet: j === 0 && !s.paying && !s.flying, betOpen: !!s.betOpen, openBet: this.openBet, closeBet: this.closeBet, showCollect: j > 0 && j < 5, collectText: cv, collectOp: s.flying ? 0.55 : 1, collectBtn: this.collectBtn,
       betText: fmt(BETS[s.betIdx]), betBg: s.noMoney ? '#8a1010' : '#2a0a4a', betAnim: s.noMoney ? 'fpNo .6s ease-in-out' : 'none', downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1, betDown: this.betDown, betUp: this.betUp, goHome: this.goHome,

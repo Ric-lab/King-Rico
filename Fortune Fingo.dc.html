@@ -39,7 +39,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
       </div>
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; cursor: pointer; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6) saturate(1.2);"></a>
@@ -417,7 +417,7 @@ class Component extends DCLogic {
     const reset = () => this.setState({ targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());
     this.setState({ win: null });
     if (w > 0) this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal }, () => { this.save(bal); reset(); }); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); else reset(); };
-  flyCoins(done) { const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
+  flyCoins(done) { const wallet=this.stageRef.current?.querySelector('.kr-hud-balance');if(window.KingRicoWallet&&wallet){window.KingRicoWallet.fly(wallet,{onFirst:done});return;} const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
     for (let i = 0; i < n; i++) { const c = document.createElement('img'); c.src = 'assets/symbols/sym-coin.webp';
       c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,210,87,.8))';
       st.appendChild(c); const dx = (i - n / 2) * 10, mid = { x: (from.x + to.x) / 2 + dx * 2, y: from.y + 50 + (i % 3) * 18 };
@@ -480,7 +480,7 @@ class Component extends DCLogic {
     const canSpin = s.phase === 'spin' && !s.win && s.balls > 0;
     return {
       scale: Math.min(s.vw / W, s.vh / 802), stageRef: this.stageRef, canvasRef: this.canvasRef,
-      balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
+      walletProps:{value: txt,hold:!!s.win,external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       betText: fmt(BETS[s.betIdx]), betCursor: s.active ? 'default' : 'pointer', prizeSize: '22px', betAnim: s.noMoney ? 'fgNo .6s ease-in-out' : 'none', openBet: this.openBet,
       multText: 'x' + fmt(multAt(s.used + 1)), ...(() => { const n = s.active ? Math.min(TRIO.length, Math.floor(s.used / 3) + 1) : 0; return { roundMark: n ? String(n) : 'K', roundSize: n >= 10 ? '21px' : '27px', roundLabel: n ? 'Round ' + n + ' de ' + TRIO.length : 'King Rico' }; })(), ...this.panel(), prizeText: fmt(this.prize()),
       tballs, buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
