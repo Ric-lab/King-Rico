@@ -81,6 +81,6 @@ Quando o saldo fica abaixo de 1 moeda, **Recarregar** concede 1.000 moedas virtu
 
 A barra da Home usa `recharge` com `source: home`: acrescenta 1.000 moedas mesmo com saldo disponível e incrementa `players/{uid}.rechargeCount` uma vez por operação confirmada. Repetir o mesmo ID recupera o saldo atual sem outro crédito ou incremento. Cliques confirmados novos podem se repetir sem limite diário; contagem e moedas são gravadas na mesma transação. A origem e a contagem também ficam na operação privada. O presente diário permanece separado e só pode ser recebido uma vez no dia.
 
-Nesta etapa não há SDK, impressão nem visualização de anúncio: a barra libera as moedas diretamente por decisão do autor, enquanto os anúncios serão integrados mais tarde. `rechargeCount` não deve ser usado como métrica de anúncios assistidos.
+Nesta etapa não há SDK nem anúncio real. A barra abre uma simulação identificada de anúncio: tela preta, contagem circular de 30 segundos visíveis e retorno automático após confirmar 1.000 moedas. Fechar antes ou recarregar a página durante a contagem não concede moedas. Ocultar a página pausa o tempo. Uma falha na confirmação permite tentar novamente sem repetir a espera, usando a mesma operação pendente. `rechargeCount` continua contando recargas confirmadas; não deve ser usado como métrica de anúncios reais assistidos.
 
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.

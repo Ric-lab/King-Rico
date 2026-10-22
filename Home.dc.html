@@ -47,7 +47,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         </div>
       </div>
       <button onClick="{{ recharge }}" class="kr-button kr-home-recharge" aria-label="Recarregar 1.000 moedas" disabled="{{ rechargeDisabled }}">
-        <img src="{{ imgCoin }}" alt="">
+        <span class="kr-home-recharge-art"><img src="assets/icons/reward-video.svg" alt=""><img src="{{ imgCoin }}" alt=""></span>
         <span class="kr-home-recharge-copy"><strong>{{ rechargeLabel }}</strong><span aria-live="polite">{{ rechargeNote }}</span></span>
       </button>
 
@@ -157,6 +157,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-if>
 
     <x-import from="./ui/menu.js" component="MenuPanel" dc-props="{{ menuProps }}"></x-import>
+    <x-import from="./ui/reward-ad.js" component="RewardAd" dc-props="{{ adProps }}"></x-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;testGift&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Teste do presente diário&quot;},&quot;testDay&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:7,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Teste do presente diário&quot;},&quot;onPlay&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
@@ -173,7 +174,7 @@ const QUIPS = {
   idle: 'Escolha um jogo e boa sorte!', bonus: 'Moedas na conta!'
 };
 class Component extends DCLogic {
-  state = { loaded:false,recharging:false,collecting:false,rechargeNote:'Pode recarregar sempre que quiser', menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
+  state = { loaded:false,recharging:false,adOpen:false,adComplete:false,adError:false,collecting:false,rechargeNote:'Ver anúncio • 30 segundos', menu: false, sfxLvl: 2, vibLvl: 2, balance: null, last: 0, streak: 0, now: Date.now(), mood: 'wave', key: 1, quip: QUIPS.wave, tapN: 0 };
   rPlaque = React.createRef();
   componentDidMount() {
     const cloud = window.KingRicoCloud;
@@ -251,15 +252,26 @@ class Component extends DCLogic {
       localStorage.setItem(SAVE, JSON.stringify(saved));
     } catch (e) {}
   }
-  recharge = async () => {
+  recharge = () => {
+    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging||this.state.adOpen)return;
+    this.setState({adOpen:true,adComplete:false,adError:false});
+  };
+  cancelAd = () => {
+    if(this._recharging)return;
+    this.setState({adOpen:false,adComplete:false,adError:false,rechargeNote:'Ver anúncio • 30 segundos'});
+  };
+  finishAd = async () => {
     const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging)return;
-    this._recharging=true;this.setState({recharging:true,rechargeNote:'Confirmando suas moedas…'});
+    if(!this.state.adOpen)return;
+    this._recharging=true;this.setState({adComplete:true,adError:false,recharging:true,rechargeNote:'Confirmando suas moedas…'});
     try {
       const r=await cloud.recharge('home'),p=cloud.player||r.player;
-      this.setState({balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeNote:'+1.000 moedas adicionadas!'});
+      if(r.amount!==1000)throw new Error('Recarga não confirmada');
+      if(this._dead)return;
+      this.setState({adOpen:false,balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeNote:'+1.000 moedas! Ver outro anúncio • 30s'});
       this.buzz([25,35,35]);
-    } catch(e){cloud.error(e);this.setState({rechargeNote:'Não confirmou. Toque para tentar de novo.'});}
-    finally{this._recharging=false;this.setState({recharging:false});}
+    } catch(e){cloud.error(e);if(!this._dead)this.setState({adError:true,rechargeNote:'Não confirmou. Toque para tentar de novo.'});}
+    finally{this._recharging=false;if(!this._dead)this.setState({recharging:false});}
   };
   renderVals() {return this._rv();}
   _rv() {
@@ -284,8 +296,10 @@ class Component extends DCLogic {
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: s.loaded && ready ? this.prize(cy).toLocaleString('pt-BR') : '', bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
       collecting:!!s.collecting,collectLabel:s.collecting?'CONFIRMANDO…':'PEGAR MOEDAS',
-      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging,
+      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging||!!s.adOpen,
       rechargeLabel:s.recharging?'CONFIRMANDO…':'+1.000 MOEDAS',rechargeNote:s.rechargeNote,
+      adProps:{open:!!s.adOpen,complete:!!s.adComplete,busy:!!s.recharging,error:!!s.adError,
+        onComplete:this.finishAd,onCancel:this.cancelAd,coin:A('assets/symbols/sym-coin.webp')},
       week:week.map((v,i)=>({day:'Dia '+(i+1),amount:v.toLocaleString('pt-BR'),
         description:'Dia '+(i+1)+': '+v+' moedas',className:i===cy.idx?'kr-home-day--today':i<cy.idx?'kr-home-day--done':''})),
       soon: [

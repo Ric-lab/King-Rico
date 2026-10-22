@@ -1,6 +1,21 @@
 """Home daily gift, scroll and counted repeatable refills against real emulators."""
 import uuid
+import time
 BASE='http://127.0.0.1:5000'
+
+def check_ad_layout(page,refill,ad):
+    refill.tap();ad.wait_for()
+    for width,height in [(320,568),(390,844),(844,390)]:
+        page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(150)
+        rect=ad.bounding_box();assert rect and rect['x']==0 and rect['y']==0
+        assert abs(rect['width']-width)<1 and abs(rect['height']-height)<1
+        assert ad.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
+        close=ad.get_by_role('button',name='Fechar anúncio sem ganhar moedas',exact=True)
+        assert close.is_visible();page.keyboard.press('Tab');assert close.evaluate('e=>e===document.activeElement')
+        if width==844:page.screenshot(path='/tmp/king-rico-ad-landscape.png')
+    page.keyboard.press('Escape');ad.wait_for(state='hidden')
+    assert not page.locator('.kr-home').evaluate('e=>!!e.closest("[inert]")')
+    page.set_viewport_size({'width':390,'height':844})
 
 def check_home_rewards(browser,login,restored,claim_gift,observer):
     context=browser.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True)
@@ -16,8 +31,23 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     claim_gift(page);page.wait_for_function('KingRicoCloud.player.balance===1050&&!localStorage.getItem(`kingRico.pending.${KingRicoCloud.uid}`)')
     uid=page.evaluate('KingRicoCloud.uid');bonus=page.evaluate('KingRicoCloud.player.bonus')
     refill=page.get_by_role('button',name='Recarregar 1.000 moedas',exact=True)
+    ad=page.get_by_role('dialog',name='Simulação de anúncio de 30 segundos',exact=True)
+    refill.tap();ad.wait_for()
+    assert page.evaluate('KingRicoCloud.player.balance')==1050
+    assert page.locator('.kr-home').evaluate('e=>!!e.closest("[inert]")')
+    page.get_by_role('button',name='Fechar anúncio sem ganhar moedas',exact=True).tap();ad.wait_for(state='hidden')
+    assert page.evaluate('KingRicoCloud.player.rechargeCount||0')==0
     for count in [1,2]:
-        refill.tap();page.wait_for_function('(n)=>KingRicoCloud.player.rechargeCount===n&&KingRicoCloud.player.balance===1050+n*1000',arg=count)
+        before=page.evaluate('KingRicoCloud.player.balance');started=time.monotonic()
+        refill.tap();ad.wait_for()
+        assert ad.get_by_role('timer').get_attribute('aria-label')=='30 segundos restantes'
+        if count==1:
+            page.wait_for_timeout(1200)
+            assert page.evaluate('KingRicoCloud.player.balance')==before
+            page.screenshot(path='/tmp/king-rico-ad-simulation.png')
+        page.wait_for_function('(n)=>KingRicoCloud.player.rechargeCount===n&&KingRicoCloud.player.balance===1050+n*1000',arg=count,timeout=40000)
+        assert time.monotonic()-started>=29.8
+        ad.wait_for(state='hidden')
         assert page.evaluate('KingRicoCloud.player.bonus')==bonus
         refill.wait_for(state='visible');page.wait_for_function('!document.querySelector(".kr-home-recharge").disabled')
     assert page.evaluate('async()=>(await KingRicoCloud.bonus()).amount')==0
@@ -47,7 +77,13 @@ def check_home_rewards(browser,login,restored,claim_gift,observer):
     page.get_by_role('button',name='Recarregar 1.000 moedas',exact=True).wait_for()
     assert page.evaluate('__giftFrames')==0
     assert page.locator('.kr-home-scroll').evaluate('e=>getComputedStyle(e).overflowY')=='auto'
+    embedded=page.get_by_role('button',name='Recarregar 1.000 moedas',exact=True)
+    check_ad_layout(page,embedded,ad)
+    embedded.tap();ad.wait_for();page.reload();restored(page,uid)
+    assert page.evaluate('KingRicoCloud.player.balance')==3049
+    assert page.evaluate('KingRicoCloud.player.rechargeCount')==2
+    assert ad.count()==0
     assert not errors,errors
     context.close()
     return {'daily_gift_without_scratch':True,'repeated_home_refill_and_counter':True,'count_survives_game_and_reload':True,
-        'no_daily_gift_flash_on_return':True,'wordmark_and_bar_scroll':True,'embedded_home_styled':True}
+        'no_daily_gift_flash_on_return':True,'wordmark_and_bar_scroll':True,'embedded_home_styled':True,'30_second_interruption_before_credit':True,'cancel_without_reward':True,'embedded_fullscreen_and_reload_without_credit':True}

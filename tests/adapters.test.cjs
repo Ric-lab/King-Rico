@@ -218,6 +218,23 @@ test('Home counts one recharge while confirmation is pending and never changes t
  let finish,calls=0;const player={balance:2050,rechargeCount:1,bonus:{day:'2026-10-21',streak:1}};
  const cloud={enabled:true,player,recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>finish=r)},error:()=>{throw Error('Unexpected failure')}};
  const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.last=20261021;home.state.streak=1;home.buzz=()=>{};
- const first=home.recharge();await home.recharge();assert.equal(calls,1);finish({amount:1000,player});await first;
- assert.equal(home.state.balance,2050);assert.equal(home.state.rechargeCount,1);assert.equal(home.state.last,20261021);assert.equal(home.state.streak,1);assert.equal(home.state.recharging,false);
+ home.recharge();home.recharge();assert.equal(calls,0);assert.equal(home.state.adOpen,true);
+ const first=home.finishAd();await home.finishAd();assert.equal(calls,1);finish({amount:1000,player});await first;
+ assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);assert.equal(home.state.rechargeCount,1);assert.equal(home.state.last,20261021);assert.equal(home.state.streak,1);assert.equal(home.state.recharging,false);
+});
+
+test('closing the simulated ad before completion grants no coins and can be reopened',()=>{
+ let calls=0;const cloud={enabled:true,recharge:()=>calls++};const {instance:home}=component('Home.dc.html',cloud);
+ home.state.loaded=true;home.state.balance=1050;home.recharge();assert.equal(home.state.adOpen,true);
+ home.cancelAd();assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,1050);assert.equal(calls,0);
+ home.recharge();assert.equal(home.state.adOpen,true);assert.equal(home.state.adComplete,false);
+});
+
+test('a failed ad reward can be confirmed again without another countdown',async()=>{
+ let calls=0,errors=0;const player={balance:2050,rechargeCount:1};
+ const cloud={enabled:true,player,recharge:async()=>{if(++calls===1)throw Error('offline');return {amount:1000,player}},error:()=>errors++};
+ const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.balance=1050;home.buzz=()=>{};
+ home.recharge();await home.finishAd();assert.equal(errors,1);assert.equal(home.state.adOpen,true);
+ assert.equal(home.state.adComplete,true);assert.equal(home.state.adError,true);assert.equal(home.state.balance,1050);
+ await home.finishAd();assert.equal(calls,2);assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);
 });
