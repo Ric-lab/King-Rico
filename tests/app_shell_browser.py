@@ -13,7 +13,7 @@ def check_app_shell(browser,login,restore,claim_gift,login_observer):
     login(page,'install-'+uuid.uuid4().hex[:10]);claim_gift(page)
     uid=page.evaluate('KingRicoCloud.uid');balance=page.evaluate('KingRicoCloud.player.balance')
     assert page.title()=='Fortune Circus'
-    assert page.locator('link[rel="apple-touch-icon"]').get_attribute('href')=='/assets/app/apple-touch-icon.png'
+    assert page.locator('link[rel="apple-touch-icon"]').get_attribute('href')=='/assets/app/apple-touch-icon-v2.png'
     manifest=page.evaluate('async()=>await (await fetch(document.querySelector("link[rel=manifest]").href)).json()')
     assert manifest['name']=='Fortune Circus' and manifest['display']=='standalone'
     assert manifest['start_url']=='/circus?source=app'

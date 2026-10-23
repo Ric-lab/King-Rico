@@ -15,6 +15,7 @@ from home_rewards_browser import check_home_rewards
 from claw_browser import check_claw
 from race_browser import check_race
 from app_shell_browser import check_app_shell
+from loading_browser import check_loading
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -416,6 +417,7 @@ with sync_playwright() as p:
         restored_without_login(returned,uid)
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
         reopened.close()
+    print(json.dumps(check_loading(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_app_shell(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_wheel(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     check_wallet_retry(browser)

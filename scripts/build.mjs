@@ -27,7 +27,7 @@ for (const [name,[key,relative]] of Object.entries(packages)) {
   const actual='sha384-'+createHash('sha384').update(data).digest('base64');
   if (!expected || actual!==expected) throw new Error(`Repository SRI mismatch for ${name}`);
   await writeFile(`runtime/${name}`,data);
-  tags.push(`<script src="./runtime/${name}" integrity="${expected}" crossorigin="anonymous"></script>`);
+  tags.push(`<script defer src="./runtime/${name}" integrity="${expected}" crossorigin="anonymous"></script>`);
 }
 await build({entryPoints:['cloud/client-src.js'],outfile:'cloud/client.js',bundle:true,format:'iife',target:'es2022',minify:true});
 // Pin the Fingo physics/renderer in the lockfile and serve them with the game.
@@ -86,6 +86,7 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>Fortune Circus</title>
 <script>location.replace("/circus"+location.search+location.hash);</script>
 </head><body><a href="/circus">Abrir Fortune Circus</a></body></html>\n`);
+const loadingMarkup=await readFile('ui/loading.html','utf8');
 for(const {file,game,title} of routes) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
@@ -93,6 +94,7 @@ for(const {file,game,title} of routes) {
   // Content-version stylesheet URLs so a cached old theme cannot override a new release.
   const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script src="./ui/banner.js"></script>\n<script src="./ui/wallet.js"></script>';
   const appTags=`<title>${title}</title>
+<style>x-dc{display:none!important}</style>
 <meta name="king-rico-game" content="${game}">
 <meta name="theme-color" content="#1d0733">
 <meta name="application-name" content="Fortune Circus">
@@ -100,10 +102,17 @@ for(const {file,game,title} of routes) {
 <meta name="apple-mobile-web-app-title" content="Fortune Circus">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" href="/assets/app/icon-192.png">
-<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/assets/app/icon-v2-192.png">
+<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon-v2.png">
+<link rel="preload" as="image" href="/assets/brand/loading-king-rico.webp" fetchpriority="high">
+<link rel="stylesheet" href="./ui/loading.css">
+<script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
   let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
+  // The illustrated loading screen can paint while the large runtime downloads.
+  // Deferred scripts retain their document order: React/Babel, cloud, then DC support.
+  html=html.replace('<script src="./support.js">','<script defer src="./support.js">')
+    .replace(/<body\b[^>]*>/,match=>match+'\n'+loadingMarkup);
   // Only navigation links change; DC component imports retain their source filenames.
   html=html.replace(/href="([^"?#]+)([?#][^"]*)?"/g,(match,target,suffix='')=>{
     const route=routes.find(entry=>entry.file===decodeURI(target.replace(/^\.\//,'')));

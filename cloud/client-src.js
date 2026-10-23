@@ -161,7 +161,7 @@ else {
     }
     const apply=()=>{
       for(const element of document.body.children) {
-        if(element.matches('script,style,[data-cloud-login],[data-cloud-loading],[data-cloud-notice]')) continue;
+        if(element.matches('script,style,#kr-boot-screen,[data-cloud-login],[data-cloud-loading],[data-cloud-notice]')) continue;
         if(!gatedElements.has(element)) {gatedElements.set(element,element.inert);element.inert=true;}
       }
     };

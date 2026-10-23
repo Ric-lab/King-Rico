@@ -1,0 +1,20 @@
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:400 800;font-display:swap;src:url('/assets/fonts/baloo2-latin.woff2') format('woff2')}
+@font-face{font-family:'Rammetto One';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/rammettoone-latin.woff2') format('woff2')}
+#kr-boot-screen{position:fixed;inset:0;z-index:2147483644;display:grid;place-items:center;background:#250626;color:#fff3c4;font-family:'Baloo 2',system-ui,sans-serif;transition:opacity .18s ease-out;isolation:isolate}
+#kr-boot-screen[hidden]{display:none}
+#kr-boot-screen[data-leaving]{opacity:0;pointer-events:none}
+.kr-boot-scene{position:relative;width:min(100%,480px);height:100%;overflow:hidden}
+.kr-boot-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.kr-boot-brand{position:absolute;top:max(32px,calc(9% + env(safe-area-inset-top,0px)));left:16px;right:16px;display:flex;flex-direction:column;align-items:center;gap:6px;margin:0;text-align:center;font-family:'Rammetto One',system-ui,sans-serif;line-height:1.05;letter-spacing:2px;text-shadow:0 3px 0 #71310b,0 6px 14px #200325}
+.kr-boot-brand span{font-size:clamp(20px,6vw,28px);color:#fff3c4}
+.kr-boot-brand strong{font-size:clamp(32px,9vw,44px);font-weight:400;color:#ffd257}
+.kr-boot-status{position:absolute;bottom:max(26px,calc(7% + env(safe-area-inset-bottom,0px)));left:24px;right:24px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.kr-boot-status p{margin:0;font-size:20px;font-weight:700;line-height:1.35;text-shadow:0 2px 6px #19031c}
+.kr-boot-track{width:176px;height:5px;border-radius:4px;background:#fff3c426;overflow:hidden}
+.kr-boot-track span{display:block;width:45%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d28b20,#ffe7a0,#ffd257);animation:krBootTravel 1.4s ease-in-out infinite}
+.kr-boot-retry{min-height:48px;padding:10px 24px;border:1px solid #f5b637;border-radius:14px;background:#ffd257;color:#4a1a00;font:800 19px 'Baloo 2',system-ui,sans-serif;cursor:pointer}
+.kr-boot-retry[hidden]{display:none}
+.kr-boot-retry:focus-visible{outline:3px solid #fff3c4;outline-offset:4px}
+@keyframes krBootTravel{from{transform:translateX(-110%)}to{transform:translateX(335%)}}
+@media(prefers-reduced-motion:reduce){#kr-boot-screen{transition:none}.kr-boot-track span{animation:none;margin:auto}}
+@media(max-height:540px){.kr-boot-brand{top:20px;left:16px;right:auto;align-items:flex-start}.kr-boot-brand strong{font-size:30px}.kr-boot-status{bottom:20px}.kr-boot-status p{font-size:18px}}
