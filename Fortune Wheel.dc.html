@@ -28,7 +28,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes fwPrize { 0%, 100% { opacity: .45; } 50% { opacity: .95; } }
 @keyframes fwLand { 0% { transform: scale(1); } 45% { transform: scale(1.055); } 100% { transform: scale(1); } }
 .fw-launch { position: absolute; inset: -8px; z-index: 4; border: 5px solid #ffe49b; border-radius: 50%; box-shadow: 0 0 20px #ffd257, inset 0 0 16px #ffd257; opacity: 0; pointer-events: none; }
-.fw-machine[data-phase="spinning"] .fw-launch { animation: fwLaunch .48s ease-out both; }
+.fw-machine[data-phase="spinning"] .fw-launch, .fw-machine[data-phase="confirming"] .fw-launch { animation: fwLaunch .48s ease-out both; }
 .fw-pocket-halo { position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); }
 .fw-machine[data-winning="true"] .fw-pocket-halo { animation: fwPrize 1.2s ease-in-out infinite; }
 .fw-machine[data-phase="landed"] .fw-hub { animation: fwLand .32s ease-out; }
@@ -277,31 +277,50 @@ class Component extends DCLogic {
     const bet = this.bet();
     if (this.state.balance < bet) { this.buzz([40, 80, 40]); this.setState({ hint: 'Saldo baixo: diminua a aposta' }); return; }
     let cloudResult = null;
-    const cloud = window.KingRicoCloud;
-    if (cloud && cloud.enabled) {
-      if(this._cloudRequest) return;
-      this._cloudRequest = true; this.setState({spinning:true,phase:'confirming',landed:null,hint:'Confirmando giro…'});
-      try { cloudResult = await cloud.spin('wheel', bet, this.state.pick.v); this._cloudSpin = cloudResult; }
-      catch(e) { if(this._dead)return;this.setState({spinning:false,phase:'ready',hint:'Não foi possível confirmar o giro'}); cloud.error(e); return; }
-      finally { this._cloudRequest = false; }
-    }
-    if(this._dead)return;
-    const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
-    // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
-    const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = (3000 + force * 2800) * (this.state.turbo ? 0.5 : 1), start = this.rot, t0 = performance.now();
-    // The cloud result uses the same 13 pockets and multipliers as the displayed wheel.
-    const pk = this.state.pick, rr = Math.random(), pool = pk.v === 0 ? (rr < P_FORT ? [0] : ORDER.filter(n => n !== 0)) : rr < P_EXACT ? [pk.v] : rr < P_EXACT + P_COLOR ? ORDER.filter(n => n !== pk.v && COLOR_OF(n) === COLOR_OF(pk.v)) : ORDER.filter(n => COLOR_OF(n) !== COLOR_OF(pk.v)), target = cloudResult ? cloudResult.outcome.target : pool[Math.floor(Math.random() * pool.length)];
-    const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
-    this._presentation={target,bet,pick:{...pk},cloud:cloudResult};
-    this._lastSeg=Math.floor(start/SEG);
+    const cloud = window.KingRicoCloud,pk={...this.state.pick};
+    const dir=Math.sign(v)||1,speed=Math.max(.65,Math.min(1.8,Math.abs(v))),releasedAt=performance.now(),origin=this.rot;
     const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const duration=reduced?350:T;
-    const travel=reduced?((total%360+540)%360)-180:total;
+    this._cloudSpin=null;this._presentation=null;
+    this.setState({spinning:true,phase:cloud?.enabled?'confirming':'spinning',landed:null,force,forceSet:true});
+    this.buzz(Math.round(25+force*35));this.tone(180,.18,'sine',.12,90);
+    // Carry the swipe momentum immediately. No result or money is chosen here.
+    const coast=()=>{
+      if(this._dead)return;
+      if(!reduced){
+        this.setRot(origin+dir*speed*(performance.now()-releasedAt));this.setGauge(Math.max(force,.35));
+        const seg=Math.floor(this.rot/SEG);
+        if(seg!==this._lastSeg){this._lastSeg=seg;this.tick(force);this.kick(-dir*(10+force*10));}
+      }
+      this._raf=requestAnimationFrame(coast);
+    };
+    this._raf=requestAnimationFrame(coast);
+    if (cloud && cloud.enabled) {
+      this._cloudRequest = true; this.setState({spinning:true,phase:'confirming',landed:null,hint:'Confirmando giro…'});
+      try { cloudResult = await cloud.spin('wheel', bet, pk.v); this._cloudSpin = cloudResult; }
+      catch(e) { if(this._dead)return;this.setGauge(0);this.setState({spinning:false,phase:'ready',force:0,forceSet:false,hint:'Não foi possível confirmar o giro'}); cloud.error(e); return; }
+      finally { this._cloudRequest = false;cancelAnimationFrame(this._raf); }
+    }
+    cancelAnimationFrame(this._raf);
+    if(this._dead)return;
+    const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal);
+    // Only the saved outcome determines the pocket; gesture force controls presentation.
+    const rr=Math.random(),pool=pk.v===0?(rr<P_FORT?[0]:ORDER.filter(n=>n!==0)):rr<P_EXACT?[pk.v]:rr<P_EXACT+P_COLOR?ORDER.filter(n=>n!==pk.v&&COLOR_OF(n)===COLOR_OF(pk.v)):ORDER.filter(n=>COLOR_OF(n)!==COLOR_OF(pk.v));
+    const target=cloudResult?cloudResult.outcome.target:pool[Math.floor(Math.random()*pool.length)];
+    if(cloudResult&&!reduced)this.setRot(origin+dir*speed*(performance.now()-releasedAt));
+    const aim=ORDER.indexOf(target)*SEG+SEG*(.18+Math.random()*.64),start=this.rot,t0=performance.now();
+    const arc=dir>0?((-aim-start)%360+360)%360:((start+aim)%360+360)%360;
+    const remaining=Math.max(900,(3000+force*2800)*(this.state.turbo?.5:1)-(t0-releasedAt));
+    const turns=Math.max(0,Math.ceil((speed*600/3-arc)/360),Math.round((speed*remaining/3-arc)/360));
+    const total=dir*(arc+turns*360),travel=reduced?((total%360+540)%360)-180:total;
+    // Cubic coast starts at the exact pending speed and ends at rest: no second launch.
+    const duration=reduced?350:Math.max(1,3*Math.abs(travel)/speed);
+    this._presentation={target,bet,pick:pk,cloud:cloudResult};
+    this._lastSeg=Math.floor(start/SEG);
     this.setState({ spinning: true, phase:'spinning',balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
       if(this._dead)return;
-      const k = Math.min(1, (performance.now() - t0) / duration), ramp=.06, area=ramp/2+(1-ramp)/3;
-      const e=k<ramp?k*k/(2*ramp*area):(ramp/2+(1-ramp)/3*(1-Math.pow((1-k)/(1-ramp),3)))/area; this.setRot(start + travel * e); this.setGauge(Math.max(force, 0.35) * Math.pow(1 - k, 2));
+      const k=Math.min(1,(performance.now()-t0)/duration),e=1-Math.pow(1-k,3);
+      this.setRot(start+travel*e);this.setGauge(Math.max(force,.35)*Math.pow(1-k,2));
       this.frameRef.current?.style.setProperty('--fw-chase-duration',(.22+k*k*.85)+'s');
       const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; const sp = Math.pow(1 - k, 2); this.tick(sp); this.kick(dir > 0 ? -10 - sp * 10 : 10 + sp * 10); }
       if (k < 1) this._raf = requestAnimationFrame(step); else { this.buzz(28); this.finish(bet); }

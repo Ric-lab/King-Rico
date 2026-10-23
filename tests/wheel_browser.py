@@ -39,15 +39,35 @@ def check_wheel(browser,login,restored,claim_gift,observer):
         if name=='fortune':page.get_by_role('button',name='Apostar no FORTUNE, paga 25 vezes').tap()
         else:page.get_by_role('button',name='Apostar em Moeda',exact=True).tap()
         before=page.evaluate('KingRicoCloud.player.balance');seed_wheel(page,roll)
+        if name=='color':
+            page.evaluate('''()=>{
+              const send=KingRicoCloud.spin;window.__wheelFirstMotion=null;window.__wheelReleaseResponse=null;
+              KingRicoCloud.spin=async(...args)=>{const result=await send(...args);await new Promise(r=>window.__wheelReleaseResponse=r);return result;};
+              document.addEventListener('pointerup',()=>{
+                const at=performance.now(),rot=__fw.rot;
+                const probe=()=>{if(Math.abs(__fw.rot-rot)>.5)window.__wheelFirstMotion=performance.now()-at;else requestAnimationFrame(probe);};
+                requestAnimationFrame(probe);
+              },{once:true});
+            }''')
         for attempt in range(3):
             touch_wheel(page,session)
             page.wait_for_timeout(120)
-            if page.evaluate('__fw.state.spinning || KingRicoCloud.player.balance!==__fw.state.balance'):break
-        page.wait_for_function('__fw.state.phase==="spinning" && !!__fw._cloudSpin',timeout=10000)
+            if page.evaluate('__fw.state.spinning || !!__fw._cloudSpin'):break
+        if name=='color':
+            page.wait_for_function('__wheelFirstMotion!==null',timeout=1000)
+            first_motion=page.evaluate('__wheelFirstMotion');assert first_motion<250,first_motion
+            page.wait_for_function('!!window.__wheelReleaseResponse')
+            pending_rot=page.evaluate('__fw.rot');page.wait_for_timeout(1500)
+            assert abs(page.evaluate('__fw.rot')-pending_rot)>100
+            assert page.evaluate('__fw.state.phase')=='confirming'
+            page.evaluate('__wheelReleaseResponse()')
+        try:page.wait_for_function('!!__fw._presentation && !!__fw._cloudSpin',timeout=10000)
+        except Exception:
+            raise AssertionError((name,page.evaluate('({state:__fw.state,rot:__fw.rot,result:__fw._cloudSpin,draws:__wheelDraws})'),errors))
         # Releasing twice during the animation must not create another request.
         page.evaluate('()=>{__fw.release(.7);}')
         committed=page.evaluate('__fw._cloudSpin');assert committed['outcome']['winUnits']==10*100*mult
-        assert page.evaluate('__fw.state.balance')==before-10
+        assert page.evaluate('__fw.state.balance')==(before-10 if page.evaluate('__fw.state.spinning') else before-10+10*mult)
         if name=='color':
             page.wait_for_timeout(600);page.screenshot(path='/tmp/king-rico-wheel-after-spinning.png')
         page.wait_for_function('!__fw.state.spinning',timeout=15000)
@@ -70,13 +90,17 @@ def check_wheel(browser,login,restored,claim_gift,observer):
     page.emulate_media(reduced_motion='reduce')
     page.evaluate('''()=>{__fw.setLvl('sfxLvl',0);__fw.setLvl('vibLvl',0);__fw._ac?.close();__fw._ac=null;}''')
     page.get_by_role('button',name='Apostar em Moeda',exact=True).tap();seed_wheel(page,.9)
-    touch_wheel(page,session);page.wait_for_function('__fw.state.spinning');page.wait_for_function('!__fw.state.spinning',timeout=5000)
+    page.wait_for_function('KingRicoCloud.player.settings.sfxLvl===0 && KingRicoCloud.player.settings.vibLvl===0')
+    for attempt in range(3):
+        touch_wheel(page,session);page.wait_for_timeout(100)
+        if page.evaluate('__fw.state.spinning || !!__fw._cloudSpin'):break
+    page.wait_for_function('!!__fw._presentation && !__fw.state.spinning',timeout=5000)
     assert page.evaluate('__fw._ac===null'),'OFF must not start audio during the gesture or spin'
     assert page.locator('.fw-launch').evaluate("e=>getComputedStyle(e).animationName")=='none'
     page.get_by_role('link',name='Voltar para o início').tap();restored(page,uid)
     assert not errors,errors
     assert not missing,missing
     context.close()
-    return {'wheel_touch_cancel_and_regrab':True,'wheel_color_exact_fortune_loss':True,
+    return {'wheel_first_motion_ms':round(first_motion,1),'wheel_moves_during_1500ms_response_delay':True,'wheel_touch_cancel_and_regrab':True,'wheel_color_exact_fortune_loss':True,
             'wheel_committed_sector_and_single_debit':True,'wheel_modal_holds_wallet_until_ok':True,
             'wheel_reload_and_shared_wallet':True,'wheel_reduced_motion_and_sound_off':True}

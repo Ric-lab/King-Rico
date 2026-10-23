@@ -6,17 +6,17 @@ const path=require('node:path');
 function component(file,cloud,random=Math.random){
  const source=fs.readFileSync(path.join(__dirname,'..',file),'utf8');
  const script=source.match(/<script[^>]*data-dc-script[^>]*>([\s\S]*?)<\/script>/)[1];
- const frames=[],timers=[];let now=100;
+ const frames=[],timers=[],cancelled=new Set();let now=100,frameId=0;
  class Base{
   constructor(){this.props={startingBalance:1000,defaultBet:10};}
   setState(update,callback){this.state={...this.state,...(typeof update==='function'?update(this.state):update)};callback?.();}
  }
  const context={DCLogic:Base,React:{createRef:()=>({current:null})},Image:class {},window:{KingRicoCloud:cloud},navigator:{},
   Math:Object.assign(Object.create(Math),{random}),console,Date,crypto:require('node:crypto'),performance:{now:()=>now},
-  requestAnimationFrame:fn=>(frames.push(fn),frames.length),cancelAnimationFrame:()=>{},
+  requestAnimationFrame:fn=>{const id=++frameId;frames.push({id,fn});return id;},cancelAnimationFrame:id=>cancelled.add(id),
   setTimeout:(fn,ms)=>(timers.push({fn,ms}),timers.length),clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};
  const Class=vm.runInNewContext(script+'\nComponent;',context),instance=new Class();
- return {instance,context,frame:()=>{now=10000;frames.shift()?.();},timers:()=>{let count=0;while(timers.length && ++count<1000)timers.shift().fn();assert.ok(count<1000);}};
+ return {instance,context,frame:(at=10000)=>{now=at;while(frames.length){const f=frames.shift();if(!cancelled.has(f.id)){f.fn();break;}}},timers:()=>{let count=0;while(timers.length && ++count<1000)timers.shift().fn();assert.ok(count<1000);}};
 }
 test('Circus uses the committed grid and debit even when local balance differs',async()=>{
  const outcome={grid:[1,2,3,4,5,6,7,8,0],res:{win:0,cells:[],lines:[],full:false,peach:[]},feature:null};
@@ -309,5 +309,29 @@ test('Wheel refuses a failed request without local debit and ignores results aft
  await w.release();assert.equal(errors,1);assert.equal(w.state.balance,1000);assert.equal(w.state.spinning,false);
  let complete;cloud.spin=()=>new Promise(r=>complete=r);const pending=w.release();w._dead=true;
  complete({balanceDebited:990,outcome:{target:1,winUnits:10000},player:{balance:1090}});await pending;
- assert.equal(w.state.balance,1000);assert.equal(w._presentation,undefined);
+ assert.equal(w.state.balance,1000);assert.equal(w._presentation,null);
+});
+
+test('Wheel continues the swipe while confirmation is pending, then coasts to the saved result without a restart',async()=>{
+ for(const direction of [-1,1]){
+  let resolve,calls=0;const cloud={enabled:true,player:{balance:990},spin:()=>{calls++;return new Promise(r=>resolve=r);},settings:()=>{}};
+  const {instance:w,frame}=component('Fortune Wheel.dc.html',cloud,()=>.5);w.state.pick={t:'n',v:1};
+  w.tone=w.buzz=w.tick=w.kick=()=>{};const pending=w.release(.7,direction);
+  frame(116);assert.equal(w.rot,16*direction);assert.equal(w.state.balance,1000);
+  frame(1116);assert.equal(w.rot,1016*direction);assert.equal(w.state.landed,null);
+  await w.release(.7,direction);assert.equal(calls,1);
+  const atConfirmation=w.rot;
+  resolve({balanceDebited:990,player:cloud.player,outcome:{target:2,winUnits:0}});await pending;
+  assert.equal(w.rot,atConfirmation);assert.equal(w.state.balance,990);
+  frame(1132);const delta=(w.rot-atConfirmation)*direction;
+  assert.ok(delta>15&&delta<=16,'Confirmed deceleration must preserve the swipe velocity');
+  frame(10000);assert.equal(w.state.landed,2);assert.equal(w.state.balance,990);assert.equal(calls,1);
+ }
+});
+test('Wheel stops pending motion on request failure without inventing a result or debit',async()=>{
+ let reject;const cloud={enabled:true,spin:()=>new Promise((_,r)=>reject=r),error:()=>{}};
+ const {instance:w,frame}=component('Fortune Wheel.dc.html',cloud);w.state.pick={t:'n',v:1};w.tone=w.buzz=w.tick=w.kick=()=>{};
+ const pending=w.release();frame(200);assert.ok(w.rot>0);const last=w.rot;
+ reject(Error('offline'));await pending;frame(1200);
+ assert.equal(w.rot,last);assert.equal(w.state.spinning,false);assert.equal(w.state.balance,1000);assert.equal(w.state.landed,null);
 });
