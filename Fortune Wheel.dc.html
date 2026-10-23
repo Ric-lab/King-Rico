@@ -363,7 +363,7 @@ class Component extends DCLogic {
       frameRef:this.frameRef,phase:s.phase,winning,pocketHalo:halo,selectionTitle,selectionStep:landed!==null?'•':p?'2':'1',
       wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,cancel:this.cancel,
       wheelBg: WHEEL_BG, segs: SEGS, glow: lit || winning ? '34px' : '0px',
-      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit || winning ? 1 : 0.95, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
+      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-175px)', op: lit || winning ? 1 : 0.95, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
       showHint: !s.touched && !!p,
       forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
       forceLabel: !s.forceSet ? '' : s.force > 0.85 ? 'MÁXIMA' : s.force > 0.55 ? 'FORTE' : s.force > 0.2 ? 'BOA' : 'FRACA',
