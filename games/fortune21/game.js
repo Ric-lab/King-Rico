@@ -22,7 +22,7 @@ function applyPlayer(player){
   const r=player.twentyOneRound;
   const card=id=>({id:String(id),rank:id%13+1,value:r.target===33?id%13+1:Math.min(id%13+1,10)});
   account={balance:player.balance,bet:busy?account.bet:BETS[player.settings.twentyOneBetIdx??3],revision:player.revision,
-    round:r?{id:r.id,target:r.target??21,turn:r.turn,bet:r.betUnits/100,phase:r.phase,player:r.player.map(card),dealer:r.dealer.map(card),
+    round:r?{id:r.id,target:r.target??21,dealVersion:r.dealVersion??1,turn:r.turn,bet:r.betUnits/100,phase:r.phase,player:r.player.map(card),dealer:r.dealer.map(card),
       result:r.result?{...r.result,payout:r.result.payoutUnits/100,net:r.result.netUnits/100}:null}:null};
   preferences={sfx:player.settings.sfxLvl,vib:player.settings.vibLvl};
   render();schedule();
@@ -161,7 +161,7 @@ function render() {
   $('dealer-score').style.fontSize = hidden ? '23px' : '';
   $('player-score').textContent = player.total;
   $('ace-note').textContent = r.target===21 ? 'Mão anterior · regras de 21 até terminar' : '';
-  const labels = r.phase === 'player' ? ['Sua vez.', 'Pedir mais uma ou ficar com a mão?'] : r.phase === 'dealer' ? ['Vez da banca.', `A banca para em ${r.target===33?27:17} ou mais.`] : resultCopy(r);
+  const labels = r.phase === 'player' ? ['Sua vez.', 'Pedir mais uma ou ficar com a mão?'] : r.phase === 'dealer' ? ['Vez da banca.', r.target===33&&r.dealVersion===2?'A banca avalia sua mão e o risco de passar.':`A banca para em ${r.target===33?27:17} ou mais.`] : resultCopy(r);
   $('status').textContent = labels[0]; $('substatus').textContent = labels[1];
 }
 

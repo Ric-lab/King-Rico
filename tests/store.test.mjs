@@ -289,7 +289,7 @@ test('21 persists the same deck/turn across devices and cannot duplicate a payou
 
 test('33 saves its rules across devices, deduplicates settlement and leaves legacy hands unchanged',async()=>{
  const {rngFor}=await import('./helpers/twenty-one.cjs');
- const m=memory(rngFor([12,25,11,10,7,3])),call=m.client('33');await call(request({action:'bootstrap'}));
+ const m=memory(rngFor([12,25,11,10,7,38],{guided33:true})),call=m.client('33');await call(request({action:'bootstrap'}));
  const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
  const start={...base,requestId:roundId,move:'start',turn:0};const a=await call(start);assert.equal(a.player.balance,0);assert.equal((await call(start)).replayed,true);
  const other=m.client('33');assert.equal((await other(request({action:'bootstrap'}))).player.twentyOneRound.target,33);

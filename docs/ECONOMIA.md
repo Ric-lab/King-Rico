@@ -1,6 +1,6 @@
 # Economia de moedas — 22/10/2026
 
-Versão `2026-10-22-balance-v5`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-23-guided-v6`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
 Isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
@@ -19,7 +19,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
 | Fingo | 98,006% | Mirar sempre em um tubo dourado |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
-| Fortune 33 | Aproximadamente 98% | Depende da estratégia; referência simulada: pedir abaixo de 28 e parar a partir de 28 |
+| Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
 
 O Neck retorna cerca de 93,20% ao sacar sempre no primeiro andar com aposta de
 10. Não se deve confundir esse caso com a política ótima que considera a garantia.
@@ -43,7 +43,7 @@ Contadores antigos sem essa informação começam com a referência da aposta at
 
 Fortune 33 paga **2,08×** incluindo a aposta nas novas mãos; empates devolvem a
 aposta. Mãos antigas já abertas mantêm **2×**. O fator fica salvo e imutável na mão.
-O baralho continua real, com 52 cartas, ranks de 1 a 13 e banca parando em 27.
+O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribuição é dirigida na abertura e permanece fixa. A banca reage à pontuação do jogador, podendo parar abaixo de 27 ou comprar acima de 27; em empate alto, preserva o empate. Mãos antigas conservam a política em 27.
 
 ## Auditoria reproduzível
 
@@ -58,13 +58,17 @@ A simulação não substitui esse cálculo: jackpots raros fazem amostras grande
 oscilarem. Na amostra fixa de 500 mil giros, semente 472831, o retorno observado
 foi 96,65%, com prêmio em 30,53% dos giros; isso não altera o RTP teórico de 98%.
 
-No 33, a auditoria simula 200 mil mãos por limiar de parada de 24 a 30, com
-semente 326729. Parar em 28 retornou 97,82%, com 43,56% de vitórias e 7,21% de
-empates. Isso é uma estratégia de referência, não uma prova de política ótima.
+No 33 v2, a distribuição seleciona o resultado de referência com 8% de empates,
+`(0,98 − 0,08) / 2,08` de vitórias e o restante de derrotas, preparando um baralho
+compatível com esse duelo. O jogador continua livre para pedir ou parar em outro
+ponto, alterando o resultado; as cartas reveladas nunca são substituídas. A
+política da banca depende da pontuação do jogador e do risco de estourar em empate.
+`npm run audit:economy` simula os limiares de parada; não representa prova de
+estratégia ótima para todas as decisões possíveis.
 
 Também são simuladas 2 mil sessões de até 100 rodadas, começando com 1.000 e
-apostando 10, sem recargas. Na amostra fixa, 43,5% das sessões da Wheel e do 33
-terminaram acima do saldo inicial. A perda esperada permite sessões vencedoras.
+apostando 10, sem recargas. Os percentis e a proporção de sessões que terminam acima do saldo inicial
+são emitidos pelo comando para cada versão do motor. A perda esperada permite sessões vencedoras.
 
 Os testes verificam arredondamentos, pagamentos, contribuição dos Happeach,
 replay, duas abas/dispositivos e retomada de mãos antigas nas regras reais do

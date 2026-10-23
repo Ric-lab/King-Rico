@@ -63,8 +63,8 @@ test('Wheel v5 rejects a color x5 payout while a saved v4 client still uses its 
 test('A saved legacy 33 hand settles at its original 2x after the v5 update',async()=>{
   const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-old-hand-'+randomUUID(),c=await client(name);
   await c.call(request({action:'bootstrap'}));const roundId=randomUUID();
-  const opening=engine.twentyOne(10,null,'start',roundId,rngFor([12,25,11,10,7,3]),33).round;
-  delete opening.winFactor;
+  const opening=engine.twentyOne(10,null,'start',roundId,rngFor([12,25,11,10,7,3],{guided33:true}),33).round;
+  delete opening.winFactor;delete opening.dealVersion;
   await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
     balanceUnits:99000,twentyOneRound:opening}));
   const base={action:'twentyOne',game:'twentyOne',bet:10,roundId,target:33};
@@ -506,14 +506,14 @@ test('Cached v3 clients can play another game without erasing a saved 21 hand',a
 });
 
 test('33 Rules preserve literal ranks, exact 33, shared balance, replay and cross-device bank turns',async()=>{
- const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,3])});
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,38],{guided33:true})});
  await c.call(request({action:'bootstrap'}));const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:1000,roundId,target:33};
  const opening={...base,requestId:roundId,move:'start',turn:0};const [a,b]=await Promise.all([c.call(opening),c.call(opening)]);
  assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,0);assert.equal(a.outcome.round.target,33);assert.equal(a.outcome.round.playerHard,25);
  assert.ok((await c.call(request({action:'bootstrap'}))).player.twentyOneRound);
  const other=await client(name+'-other',name,{rng:()=>{throw Error('Resume cannot shuffle');}});assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.twentyOneRound,a.outcome.round);
  await new Promise(r=>setTimeout(r,350));const hit=await other.call(request({...base,move:'hit',turn:1}));assert.equal(hit.outcome.round.playerHard,33);assert.equal(hit.outcome.round.phase,'dealer');
- await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2080);assert.equal(win.outcome.round.dealerHard,28);
+ await new Promise(r=>setTimeout(r,350));const final=request({...base,move:'dealer',turn:2});const win=await c.call(final);assert.equal(win.player.balance,2080);assert.equal(win.outcome.round.dealerHard,37);
  assert.equal((await other.call(final)).replayed,true);await assert.rejects(c.call(request({...base,move:'hit',turn:2})),{code:'king-rico/round-conflict'});
 });
 test('33 Rules enforce bank 27, ties, both busts, and the literal value of one',async()=>{
@@ -524,7 +524,7 @@ test('33 Rules enforce bank 27, ties, both busts, and the literal value of one',
   [[12,0,25,1,11],['hit'],'player-bust',38],
   [[12,11,25,26,38,51],['stand','dealer','dealer'],'dealer-bust',26],
   [[0,11,10,12,1],['stand','dealer'],'lower',12]]){
-  draw=rngFor(prefix);const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:2.5,roundId,target:33};
+  draw=rngFor(prefix,{guided33:true});const roundId=randomUUID(),base={action:'twentyOne',game:'twentyOne',bet:2.5,roundId,target:33};
   let x=await c.call({...base,requestId:roundId,move:'start',turn:0});
   for(const move of moves){await new Promise(r=>setTimeout(r,350));x=await c.call(request({...base,move,turn:x.outcome.round.turn}));}
   assert.equal(x.outcome.round.result.reason,reason);assert.equal(x.outcome.round.playerHard,total);assert.equal(x.outcome.round.playerAces,0);
@@ -532,7 +532,7 @@ test('33 Rules enforce bank 27, ties, both busts, and the literal value of one',
  }
 });
 test('33 Rules reject changed targets, capped face-card values, forged totals/decks/prizes',async()=>{
- const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-forged-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,3])});
+ const {rngFor}=await import('./helpers/twenty-one.cjs');const name='33-forged-'+randomUUID(),c=await client(name,name,{rng:rngFor([12,25,11,10,7,38],{guided33:true})});
  await c.call(request({action:'bootstrap'}));const roundId=randomUUID();await c.call({action:'twentyOne',game:'twentyOne',bet:10,roundId,requestId:roundId,move:'start',turn:0,target:33});
  const ref=doc(c.db,'players',c.uid);await new Promise(r=>setTimeout(r,350));
  async function forge(change,credit=0){
@@ -541,7 +541,7 @@ test('33 Rules reject changed targets, capped face-card values, forged totals/de
   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'twentyOne',game:'twentyOne',selected:-1,fingerprint:'forged',betUnits:0,winUnits:credit,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
    result:{game:'twentyOne',bet:10,balanceBefore:old.balanceUnits/100,balanceDebited:old.balanceUnits/100,baseBalance:next.balanceUnits/100,outcome}});await assertFails(batch.commit());
  }
- await forge(x=>{x.round.winFactor=300;});await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
+ await forge(x=>{x.round.dealVersion=1;});await forge(x=>{x.round.winFactor=300;});await forge(x=>{x.round.target=21;});await forge(x=>{x.round.playerHard=28;});await forge(x=>{x.round.playerAces=1;});await forge(x=>{x.round.deck.reverse();});await forge(x=>{x.round.cursor++;});await forge(x=>{x.winUnits=99999;},99999);
 });
 
 test('Claw Rules persist one deterministic grab, exact cents, immutable result and cross-device replay',async()=>{

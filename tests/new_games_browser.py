@@ -6,6 +6,11 @@ def seed_cards(page,prefix):
     page.evaluate('''prefix=>{
       const target=[...prefix,...Array.from({length:52},(_,i)=>i).filter(i=>!prefix.includes(i))],current=Array.from({length:52},(_,i)=>i),draws=[];
       for(let i=51;i>0;i--){const j=current.indexOf(target[i]);draws.push(Math.floor((j+.5)/(i+1)*2**32));[current[i],current[j]]=[current[j],current[i]];}
+      let p=target[0]%13+target[2]%13+2,d=target[1]%13+target[3]%13+2,i=4;
+      while(p<28)p+=target[i++]%13+1;
+      if(p<=33)while(d<p||d===p&&d<=26)d+=target[i++]%13+1;
+      const outcome=p>33?'loss':d>33||p>d?'win':p===d?'push':'loss';
+      draws.unshift(Math.floor((outcome==='win'?0:outcome==='push'?.45:.9)*2**32));
       window.__testDraws=draws;
       if(!window.__nativeRandom){window.__nativeRandom=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>{
         if(a instanceof Uint32Array&&a.length===1&&window.__testDraws?.length){a[0]=window.__testDraws.shift();return a;}return window.__nativeRandom(a);
@@ -44,8 +49,8 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     assert menu.get_by_role('group',name='Efeitos sonoros').get_by_role('button',name='OFF',exact=True).get_attribute('aria-pressed')=='true'
     menu.get_by_role('button',name='Tabela de pagamentos').tap();page.get_by_role('dialog',name='Como jogar').wait_for()
     assert '1 vale apenas 1' in page.locator('#help-dialog').inner_text()
-    assert '27' in page.locator('#help-dialog').inner_text();page.locator('#help-done').tap()
-    seed_cards(page,[12,25,11,10,7,3]);page.locator('#start').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound?.turn===1')
+    assert 'A banca reage à sua mão' in page.locator('#help-dialog').inner_text();page.locator('#help-done').tap()
+    seed_cards(page,[12,25,11,10,7,38]);page.locator('#start').tap();page.wait_for_function('KingRicoCloud.player.twentyOneRound?.turn===1')
     assert page.evaluate('KingRicoCloud.player.balance')==1040
     assert page.locator('#dealer-hand .back').count()==1
     assert page.locator('#player-score').inner_text()=='25'
