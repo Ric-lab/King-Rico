@@ -5,6 +5,10 @@ O manifesto usa o nome **Fortune Circus** e a arte oficial do King Rico. Ao inst
 como aplicativo, as páginas abrem sem a barra de endereço. O navegador e o sistema
 podem manter seus próprios indicadores e barras do aparelho.
 
+A primeira tela ao tocar no ícone é criada pelo sistema, usando o ícone e a cor
+do manifesto. A ilustração completa aparece quando o HTML começa a carregar;
+uma prévia já está embutida nele. O site não controla a duração da etapa do sistema.
+
 - **Android / Chrome:** abra o site, entre no menu do jogo e toque em **Instalar no
   celular**. Se o navegador não oferecer a janela de instalação, use seu menu ⋮ →
   **Instalar app** ou **Adicionar à tela inicial**.

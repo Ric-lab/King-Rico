@@ -18,7 +18,6 @@
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
 html, body { margin: 0; padding: 0; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
-@keyframes hmShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(420%) skewX(-18deg); } }
 @keyframes hmBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 @keyframes hmGlow { 0%, 100% { box-shadow: 0 0 0 3px #f0b41f, 0 0 0 6px rgba(255,236,160,.22), 0 0 26px rgba(255,190,60,.35), 0 16px 30px rgba(0,0,0,.6); } 50% { box-shadow: 0 0 0 3px #ffd257, 0 0 0 6px rgba(255,236,160,.35), 0 0 40px rgba(255,200,80,.6), 0 16px 30px rgba(0,0,0,.6); } }
 </style>
@@ -56,8 +55,10 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: flex; align-items: center; gap: 10px; margin: 6px 2px -4px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,0), rgba(255,210,87,.7));"></div><span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; letter-spacing: 1px; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; white-space: nowrap;">SORTE</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,.7), rgba(255,210,87,0));"></div></div>
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Circus.dc.html?from=home" onClick="{{ tapPlay }}" aria-label="Jogar Fortune Machine" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #ff8a3d url('{{ imgCover }}') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 0s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: 0.0s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #ff8a3d url('{{ imgCover }}') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
+            <sc-for list="{{ coverReels }}" as="icon" hint-placeholder-count="9">
+              <span class="kr-cover-reel" aria-hidden="true" style="left: {{ icon.left }}; top: {{ icon.top }}; background-position-x: {{ icon.pos }};"></span>
+            </sc-for>
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -65,8 +66,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           </div>
         </a>
         <a href="Fortune Wheel.dc.html" aria-label="Jogar Fortune Wheel" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-wheel-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 1s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -0.45s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-wheel-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -77,8 +77,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: flex; align-items: center; gap: 10px; margin: 6px 2px -4px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,0), rgba(255,210,87,.7));"></div><span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; letter-spacing: 1px; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; white-space: nowrap;">MIRA</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,.7), rgba(255,210,87,0));"></div></div>
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Clown.dc.html" aria-label="Jogar Fortune Clown" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-clown.webp?v=2') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 5s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -0.9s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-clown.webp?v=2') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -86,8 +85,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           </div>
         </a>
         <a href="Fortune Penalty.dc.html" aria-label="Jogar Fortune Penalty" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-penalty.webp?v=2') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 3s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -1.35s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-penalty.webp?v=2') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -98,8 +96,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: flex; align-items: center; gap: 10px; margin: 6px 2px -4px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,0), rgba(255,210,87,.7));"></div><span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; letter-spacing: 1px; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; white-space: nowrap;">ESCADA</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,.7), rgba(255,210,87,0));"></div></div>
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Neck.dc.html" aria-label="Jogar Fortune Neck" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-neck-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 2s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -1.8s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-neck-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -107,7 +104,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           </div>
         </a>
         <a href="Fortune Flying Clown.dc.html" aria-label="Jogar Fortune Flying Clown" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-flying-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -2.25s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-flying-current.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);"></div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-size:10px;font-weight:800;letter-spacing:1.5px;color:#e9ffe8;">FORTUNE</span><span style="font-family:'Rammetto One','Baloo 2',sans-serif;font-size:12px;color:#fff;text-shadow:0 2px #147a36;white-space:nowrap;">FLYING CLOWN</span>
           </div>
@@ -116,8 +113,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: flex; align-items: center; gap: 10px; margin: 6px 2px -4px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,0), rgba(255,210,87,.7));"></div><span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; letter-spacing: 1px; color: #ffd257; text-shadow: 0 2px 0 #6b2e05; white-space: nowrap;">CLÁSSICOS</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, rgba(255,210,87,.7), rgba(255,210,87,0));"></div></div>
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Fingo.dc.html" aria-label="Jogar Fortune Fingo" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-fingo-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.3), rgba(255,255,255,0)); animation: hmShine 4.2s 5s ease-in-out infinite; pointer-events: none;"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -2.7s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-fingo-bingo.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -125,7 +121,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           </div>
         </a>
         <a href="Fortune 33.dc.html" aria-label="Jogar Fortune 33" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
-          <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-33-focus.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);"></div>
+          <div class="kr-game-cover" style="--kr-cover-delay: -3.15s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; background: #2a0a4a url('assets/brand/cover-33-three.webp') center / cover no-repeat; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);"></div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-size:10px;font-weight:800;letter-spacing:1.5px;color:#e9ffe8;">FORTUNE</span><span style="font-family:'Rammetto One','Baloo 2',sans-serif;font-size:15px;color:#fff;text-shadow:0 2px #147a36;white-space:nowrap;">33</span>
           </div>
@@ -299,12 +295,13 @@ class Component extends DCLogic {
         const w = window.innerWidth || 453, h = window.KingRicoViewport?.height ?? (window.innerHeight || 802), gs = Math.max(.25, Math.min(w / 453, h / 802));
         return { gs, rootHeight:'calc(100dvh - var(--kr-banner-height, 0px))',rootMinH: 'calc(100dvh - var(--kr-banner-height, 0px))', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
       walletProps:{value: txt,hold:false,external:s.rewardOpen}, balanceText: txt,
+      coverReels: [[8,33.1,40.9],[7,49.3,41.8],[1,65.8,42.8],[1,32.8,55.1],[8,49.9,55.9],[6,66.9,56.7],[6,32.3,69.1],[1,50,69.7],[8,67.8,70.2]].map(([symbol,x,y])=>({left:x+'%',top:y+'%',pos:symbol*100/11+'%'})),
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
       collectBonus: this.collectBonus, tapPlay: this.tapPlay,
       // published single-file build: images resolve through the host game's asset registry
       ...(() => { const A = p => (typeof window !== 'undefined' && window.__fcAsset ? window.__fcAsset(p) : p);
-        return { imgBleed: A('assets/bleed/stage-bleed.webp?v=3'), imgStage: A('assets/stage-hd-c.webp?v=2'), imgCover: A('assets/brand/cover-machine-focus.webp'), imgCoin: A('assets/symbols/sym-coin.webp') }; })(),
+        return { imgBleed: A('assets/bleed/stage-bleed.webp?v=3'), imgStage: A('assets/stage-hd-c.webp?v=2'), imgCover: A('assets/brand/cover-machine-reels.webp'), imgCoin: A('assets/symbols/sym-coin.webp') }; })(),
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: s.loaded && ready ? this.prize(cy).toLocaleString('pt-BR') : '', bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
       collecting:!!s.collecting,collectLabel:s.collecting?'CONFIRMANDO…':'PEGAR MOEDAS',

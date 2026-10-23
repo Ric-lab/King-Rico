@@ -1,5 +1,6 @@
 """Real loading screen before runtime download and during saved-wallet recovery."""
 import uuid
+from home_covers_browser import check_home_covers
 
 BASE='http://127.0.0.1:5000'
 
@@ -12,8 +13,13 @@ def check_loading(browser,login,restore,claim_gift,login_observer):
         if holding[0]:held.append(route)
         else:route.continue_()
     page.route('**/runtime/react.js',hold_runtime)
+    held_art=[]
+    page.route('**/assets/brand/loading-king-rico.webp',lambda route:held_art.append(route))
     page.goto(BASE+'/home',wait_until='commit')
     page.locator('#kr-boot-screen').wait_for(state='visible')
+    assert page.locator('.kr-boot-scene').evaluate('e=>getComputedStyle(e).backgroundImage.includes("data:image/webp;base64,")')
+    page.screenshot(path='/tmp/king-rico-loading-preview.png')
+    for route in held_art:route.continue_()
     page.wait_for_function('document.querySelector(".kr-boot-art").naturalWidth>0')
     assert not page.evaluate('!!window.React'),'Loading was only shown after the blocked runtime loaded'
     assert held,'The test did not delay the actual React download'
@@ -23,6 +29,7 @@ def check_loading(browser,login,restore,claim_gift,login_observer):
     login(page,'cover-review-'+uuid.uuid4().hex[:10])
     page.locator('#kr-boot-screen').wait_for(state='hidden')
     claim_gift(page);uid=page.evaluate('KingRicoCloud.uid');balance=page.evaluate('KingRicoCloud.player.balance')
+    cover_result=check_home_covers(page)
     page.screenshot(path='/tmp/king-rico-covers-home-top.png')
     page.locator('.kr-home-scroll').evaluate('el=>el.scrollTop=el.scrollHeight')
     page.screenshot(path='/tmp/king-rico-covers-home-bottom.png')
@@ -63,4 +70,4 @@ def check_loading(browser,login,restore,claim_gift,login_observer):
     failure.get_by_role('button',name='Tentar novamente',exact=True).wait_for(state='visible')
     for route in stalled_runtime:route.abort()
     stalled.close()
-    return {'early_loading_before_runtime':True,'saved_wallet_blocks_until_ready':True,'same_identity_and_balance':True,'missing_art_does_not_block_game':True,'slow_runtime_retry':True,'console_errors':errors}
+    return {'early_loading_before_runtime':True,'inline_preview_before_full_image':True,**cover_result,'saved_wallet_blocks_until_ready':True,'same_identity_and_balance':True,'missing_art_does_not_block_game':True,'slow_runtime_retry':True,'console_errors':errors}

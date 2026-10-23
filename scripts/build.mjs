@@ -87,16 +87,18 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 <script>location.replace("/circus"+location.search+location.hash);</script>
 </head><body><a href="/circus">Abrir Fortune Circus</a></body></html>\n`);
 const loadingMarkup=await readFile('ui/loading.html','utf8');
+const loadingStyles=await readFile('ui/loading.css','utf8');
+const loadingPreview=(await readFile('assets/brand/loading-king-rico-preview.webp')).toString('base64');
 for(const {file,game,title} of routes) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
-  const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
+  const cloudTags='<script defer src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
   // Content-version stylesheet URLs so a cached old theme cannot override a new release.
-  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script src="./ui/banner.js"></script>\n<script src="./ui/wallet.js"></script>';
+  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script defer src="./ui/banner.js"></script>\n<script defer src="./ui/wallet.js"></script>';
   const appTags=`<title>${title}</title>
 <style>x-dc{display:none!important}</style>
 <meta name="king-rico-game" content="${game}">
-<meta name="theme-color" content="#1d0733">
+<meta name="theme-color" content="#250626">
 <meta name="application-name" content="Fortune Circus">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fortune Circus">
@@ -105,13 +107,16 @@ for(const {file,game,title} of routes) {
 <link rel="icon" type="image/png" href="/assets/app/icon-v2-192.png">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon-v2.png">
 <link rel="preload" as="image" href="/assets/brand/loading-king-rico.webp" fetchpriority="high">
-<link rel="stylesheet" href="./ui/loading.css">
+<style data-kr-loading-style>${loadingStyles}
+.kr-boot-scene{background-image:url('data:image/webp;base64,${loadingPreview}');background-size:cover;background-position:center}
+</style>
 <script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
   let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
   // The illustrated loading screen can paint while the large runtime downloads.
   // Deferred scripts retain their document order: React/Babel, cloud, then DC support.
   html=html.replace('<script src="./support.js">','<script defer src="./support.js">')
+    .replace('<script src="./runtime/matter.min.js">','<script defer src="./runtime/matter.min.js">')
     .replace(/<body\b[^>]*>/,match=>match+'\n'+loadingMarkup);
   // Only navigation links change; DC component imports retain their source filenames.
   html=html.replace(/href="([^"?#]+)([?#][^"]*)?"/g,(match,target,suffix='')=>{

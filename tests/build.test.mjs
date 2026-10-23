@@ -48,8 +48,8 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   await access('dist/ui/app-shell.js');await access('dist/sw.js');
   for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const name of ['machine','wheel','neck','fingo','33','flying']) {
-    const asset=`assets/brand/cover-${name}-focus.webp`;
+  for(const name of ['machine-reels','wheel-focus','neck-focus','fingo-bingo','33-three','flying-current']) {
+    const asset=`assets/brand/cover-${name}.webp`;
     assert.ok(home.includes(asset),asset);
     await access(path.join('dist',asset));
   }
@@ -58,5 +58,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
     assert.equal([...html.matchAll(/id="kr-boot-screen"/g)].length,1);
     assert.ok(html.indexOf('id="kr-boot-screen"')<html.indexOf('<x-dc>') || !html.includes('<x-dc>'));
     assert.match(html,/<script defer src="\.\/runtime\/react.js"/);
+    assert.match(html,/<style data-kr-loading-style>/);
+    assert.match(html,/data:image\/webp;base64,/);
   }
 });
