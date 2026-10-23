@@ -15,17 +15,22 @@ Nas miniaturas da Home, conferir primeiro em 160–175 px:
 | Fingo | Cinco bolas numeradas | Plinko verde | Cortinas discretas |
 | 33 | Três cartas 10–13–10 | King Rico e diamantes | Feltro e cortinas |
 
-Pênalti e Clown mantêm as artes anteriores, que já têm um assunto principal claro.
-Wheel e Neck usam `cover-*-focus.webp`; Machine, Flying Clown, Fingo e 33 usam
-respectivamente `cover-machine-reels.webp`, `cover-flying-current.webp`,
-`cover-fingo-plinko.webp` e `cover-33-three.webp`, em `assets/brand/`. As versões
-anteriores foram preservadas. A Machine tem nove células vazias na ilustração;
-os símbolos são o atlas original `symbols-v7.webp`, posicionado sobre as células.
-As legendas continuam em HTML, fora da arte, e o limite inferior da
-miniatura pode receber a faixa verde. Não acrescentar chuva de moedas, confetes,
-pedestais ou vários personagens de importância igual para representar diversão.
-O brilho móvel vem de uma única regra `.kr-game-cover::after`, nas oito capas,
-com início defasado, sem interceptar toques e desativado com movimento reduzido.
+As oito capas são compostas em camadas. Todas usam exatamente o mesmo arquivo
+`assets/brand/covers/stage.webp`, derivado do cenário da capa da Wheel. Não gerar
+um novo fundo por jogo: a consistência depende de compartilhar a mesma imagem.
+Os elementos de cada jogo são WebP transparentes no mesmo diretório, montados
+por `.kr-cover-object` e ajustes de enquadramento em `ui/home.css`. As artes
+anteriores foram preservadas. Na Machine, os nove símbolos continuam vindo do
+atlas original `symbols-v7.webp`, sobre as células vazias da máquina.
+
+O Fingo mantém cinco bolas acima do plinko; o 33 mantém três cartas 10–13–10;
+o Flying usa o palhaço atual vermelho/verde. O Pênalti conserva gol, goleira,
+bola e uma pequena base de grama, deixando o cenário compartilhado visível.
+As legendas ficam em HTML, sobre a faixa verde inferior. Conferir as camadas no
+tamanho da Home, incluindo recorte pelos cantos arredondados e pela faixa.
+Não acrescentar chuva de moedas, confetes ou decoração concorrendo com o jogo.
+O brilho móvel vem de `.kr-game-cover::after`, nas oito capas, com início
+defasado, sem interceptar toques e desativado com movimento reduzido.
 
 O ícone usa o rosto de King Rico em fundo simples, exportado em PNG 192/512/180.
 A ilustração de abertura tem espaço para o título e a mensagem em HTML. O indicador

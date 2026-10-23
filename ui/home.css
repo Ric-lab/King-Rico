@@ -56,7 +56,16 @@
 .kr-reward-ad-content .kr-button{width:100%;min-height:56px;padding:12px;font-size:20px}
 .kr-reward-ad-footer{margin:0;text-align:center;color:#8e887e;font-size:12px;line-height:1.4;flex-shrink:0}
 @media(max-height:500px){.kr-reward-ad-content{display:grid;grid-template-columns:140px minmax(0,1fr);column-gap:24px;row-gap:10px;width:min(550px,100%);padding:16px 0;text-align:left}.kr-reward-ad-clock{grid-row:1/4;width:140px;height:140px}.kr-reward-ad-clock strong{font-size:55px}.kr-reward-ad h2{font-size:22px}.kr-reward-ad-prize{font-size:22px}.kr-reward-ad-content p{font-size:15px}}
-.kr-game-cover{isolation:isolate}
+.kr-game-cover{isolation:isolate;background:#250626 url('../assets/brand/covers/stage.webp') center/cover no-repeat}
+.kr-cover-object{position:absolute;inset:3% 5% 9%;background-position:center;background-size:contain;background-repeat:no-repeat;pointer-events:none;filter:drop-shadow(0 3px 3px #17021c55)}
+.kr-cover-object-machine{inset:2% 4% 8%}
+.kr-cover-object-wheel{inset:1% 5% 10%}
+.kr-cover-object-neck{inset:3% -8% -14%}
+.kr-cover-object-clown{inset:8% 5% 9%}
+.kr-cover-object-penalty{inset:19% 3% 13%}
+.kr-cover-object-flying{inset:2% 19% 9%}
+.kr-cover-object-fingo{inset:4% 11% 10%}
+.kr-cover-object-33{inset:18% 3% 14%}
 .kr-game-cover::after{content:'';position:absolute;top:-15%;bottom:-15%;left:-45%;width:36%;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff57,transparent);transform:skewX(-18deg);animation:krCoverShine 4.2s var(--kr-cover-delay,0s) linear infinite}
 .kr-cover-reel{position:absolute;z-index:1;width:13%;height:13%;pointer-events:none;background-image:url('../assets/symbols-v7.webp');background-size:1200% 100%;background-repeat:no-repeat;transform:translate(-50%,-50%) rotate(2deg);filter:drop-shadow(0 1px 1px #57240540)}
 @keyframes krCoverShine{0%{transform:translateX(0) skewX(-18deg)}30%,100%{transform:translateX(420%) skewX(-18deg)}}

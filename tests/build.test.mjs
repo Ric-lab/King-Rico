@@ -37,6 +37,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
   assert.equal(manifest.display,'standalone');
   assert.ok(routes.some(r=>r.path===manifest.start_url.split('?')[0]));
   for(const icon of manifest.icons) await access(path.join('dist',icon.src));
+  await access('dist/assets/brand/covers/stage.webp');
   for(const route of routes) {
     assert.ok(hosting.rewrites.some(r=>r.source===route.path && r.destination==='/'+route.file),route.path);
     assert.ok(hosting.headers.some(r=>r.source===route.path && r.headers.some(h=>h.key==='Cache-Control' && h.value==='no-store')),route.path+' must not serve a stale game');
@@ -48,11 +49,12 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   await access('dist/ui/app-shell.js');await access('dist/sw.js');
   for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const name of ['machine-reels','wheel-focus','neck-focus','fingo-plinko','33-three','flying-current']) {
-    const asset=`assets/brand/cover-${name}.webp`;
+  for(const name of ['machine','wheel','neck','clown','penalty','fingo','33','flying']) {
+    const asset=`assets/brand/covers/${name}.webp`;
     assert.ok(home.includes(asset),asset);
     await access(path.join('dist',asset));
   }
+  await access('dist/assets/brand/covers/stage.webp');
   for(const route of routes) {
     const html=await readFile(path.join('dist',route.file),'utf8');
     assert.equal([...html.matchAll(/id="kr-boot-screen"/g)].length,1);

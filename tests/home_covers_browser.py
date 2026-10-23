@@ -2,6 +2,21 @@
 def check_home_covers(page):
     covers=page.locator('.kr-game-cover')
     assert covers.count()==8
+    backgrounds=covers.evaluate_all("els=>els.map(e=>getComputedStyle(e).backgroundImage)")
+    assert len(set(backgrounds))==1 and '/assets/brand/covers/stage.webp' in backgrounds[0]
+    objects=page.locator('.kr-cover-object')
+    assert objects.count()==8
+    for obj in objects.all():
+        assert obj.evaluate(r"""async e=>{
+          const src=getComputedStyle(e).backgroundImage.match(/url\(["']?(.*?)["']?\)/)[1];
+          const image=new Image();image.src=src;await image.decode();
+          const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
+          const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+          const pixels=ctx.getImageData(0,0,image.width,image.height).data;
+          let transparent=0,opaque=0;
+          for(let i=3;i<pixels.length;i+=4){if(pixels[i]<=16)transparent++;if(pixels[i]>=240)opaque++;}
+          return transparent>pixels.length/40 && opaque>pixels.length/40;
+        }""")
     reels=page.locator('.kr-cover-reel')
     assert reels.count()==9
     for reel in reels.all():
@@ -28,4 +43,4 @@ def check_home_covers(page):
     page.emulate_media(reduced_motion='no-preference')
     # Capture unobscured artwork after checking movement.
     page.evaluate('''()=>document.querySelectorAll('.kr-game-cover').forEach(e=>e.getAnimations({subtree:true}).forEach(a=>{a.pause();a.currentTime=4200+a.effect.getTiming().delay+2000;}))''')
-    return {'original_reel_sprites':9,'moving_shine_on_covers':8,'reduced_motion':True}
+    return {'shared_stage':True,'transparent_objects':8,'original_reel_sprites':9,'moving_shine_on_covers':8,'reduced_motion':True}
