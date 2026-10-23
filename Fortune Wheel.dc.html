@@ -29,11 +29,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rrBlink { 0%, 100% { box-shadow: 0 0 0 3px #ffd257, 0 0 14px rgba(255,210,87,.8); } 50% { box-shadow: 0 0 0 3px #fff3c4, 0 0 26px rgba(255,230,140,1); } }
 @keyframes fwLaunch { 0% { transform: scale(.42); opacity: 0; } 18% { opacity: .95; } 100% { transform: scale(1.08); opacity: 0; } }
-@keyframes fwPrize { 0%, 100% { opacity: .45; } 50% { opacity: .95; } }
+@keyframes fwPrize { 0%, 100% { filter: drop-shadow(0 0 2px #ffd257); } 50% { filter: drop-shadow(0 0 5px #fff2bd); } }
 .fw-launch { position: absolute; inset: -8px; z-index: 4; border: 5px solid #ffe49b; border-radius: 50%; box-shadow: 0 0 20px #ffd257, inset 0 0 16px #ffd257; opacity: 0; pointer-events: none; }
 .fw-machine[data-phase="spinning"] .fw-launch, .fw-machine[data-phase="confirming"] .fw-launch { animation: fwLaunch .48s ease-out both; }
-.fw-pocket-halo { position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); }
-.fw-machine[data-winning="true"] .fw-pocket-halo { animation: fwPrize 1.2s ease-in-out infinite; }
+.fw-pocket-focus { position: absolute; inset: 0; width: 320px; height: 320px; transform-origin: 50% 50%; pointer-events: none; }
+.fw-pocket-focus path { filter: drop-shadow(0 0 2px #ffd257); }
+.fw-machine[data-winning="true"] .fw-pocket-focus path { animation: fwPrize 1.2s ease-in-out infinite; }
+.fw-pocket-symbol { transform: scale(var(--fw-symbol-scale,1)); transition: transform .25s ease-out, filter .25s ease-out; }
 @media (prefers-reduced-motion: reduce) { .fw-machine *, .fw-prize, .fw-prize * { animation: none !important; } }
 </style>
 </helmet>
@@ -62,21 +64,24 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
           <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
             <div style="position: absolute; left: -1px; top: -160px; width: 3px; height: 112px; transform: rotate(13.846deg); transform-origin: 50% 160px; background: linear-gradient(180deg, #fff3c4, #e0a020);"></div>
-            <div style="position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));"></div>
-            <img src="assets/girafa/head.webp" alt="Girafa" draggable="false" style="position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; object-fit: contain; opacity: {{ sg.zeroOp }}; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));">
-            <span style="position: absolute; left: -20px; top: -158px; width: 40px; display: flex; flex-direction: column; align-items: center; line-height: 1; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 11px; color: #fff; text-shadow: 0 2px 0 #147a36; opacity: {{ sg.fortOp }}; pointer-events: none;"><span style="height: 11.5px; animation: fwLetter 1.75s 0.00s ease-in-out infinite;">F</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.25s ease-in-out infinite;">O</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.50s ease-in-out infinite;">R</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.75s ease-in-out infinite;">T</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.00s ease-in-out infinite;">U</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.25s ease-in-out infinite;">N</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.50s ease-in-out infinite;">E</span></span>
+            <div class="fw-pocket-symbol" style="--fw-symbol-scale: {{ sg.scale }}; position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ sg.pos }}; opacity: {{ sg.iconOp }}; filter: {{ sg.filter }};"></div>
+            <img class="fw-pocket-symbol" src="assets/girafa/head.webp" alt="Girafa" draggable="false" style="--fw-symbol-scale: {{ sg.scale }}; position: absolute; left: -26px; top: -142px; width: 52px; height: 52px; object-fit: contain; opacity: {{ sg.zeroOp }}; filter: {{ sg.filter }};">
+            <span class="fw-fortune-label" style="position: absolute; left: -20px; top: -148px; width: 40px; display: flex; flex-direction: column; align-items: center; line-height: 1; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 11px; color: #fff; text-shadow: 0 2px 0 #147a36; opacity: {{ sg.fortOp }}; pointer-events: none;"><span style="height: 10.5px; animation: fwLetter 1.75s 0.00s ease-in-out infinite;">F</span><span style="height: 10.5px; animation: fwLetter 1.75s 0.25s ease-in-out infinite;">O</span><span style="height: 10.5px; animation: fwLetter 1.75s 0.50s ease-in-out infinite;">R</span><span style="height: 10.5px; animation: fwLetter 1.75s 0.75s ease-in-out infinite;">T</span><span style="height: 10.5px; animation: fwLetter 1.75s 1.00s ease-in-out infinite;">U</span><span style="height: 10.5px; animation: fwLetter 1.75s 1.25s ease-in-out infinite;">N</span><span style="height: 10.5px; animation: fwLetter 1.75s 1.50s ease-in-out infinite;">E</span></span>
           </div>
         </sc-for>
-        <div class="fw-pocket-halo" style="background: {{ pocketHalo }};"></div>
+        <svg class="fw-pocket-focus" viewBox="0 0 320 320" aria-hidden="true" style="opacity: {{ pocketFocusOp }}; transform: {{ pocketFocusRot }};">
+          <path d="{{ pocketFocusPath }}" fill="none" stroke="#8c4b13" stroke-width="4.5" stroke-linejoin="round"></path>
+          <path d="{{ pocketFocusPath }}" fill="none" stroke="#ffe8a3" stroke-width="2" stroke-linejoin="round"></path>
+        </svg>
       </div>
       <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: rgba(26,4,44,.9); -webkit-mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px); mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px);"></div>
-      <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: #fffaf0; -webkit-mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px); mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px);"></div>
+      <div class="fw-hub-ring" style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: #fffaf0; -webkit-mask-image: radial-gradient(circle, transparent 51px, #000 51.5px, #000 55px, transparent 55.5px); mask-image: radial-gradient(circle, transparent 51px, #000 51.5px, #000 55px, transparent 55.5px);"></div>
       <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; --g: 0; --cap: 0; background: rgba(37,8,66,.6); -webkit-mask-image: radial-gradient(circle, transparent 56.5px, #000 57px, #000 67px, transparent 67.5px); mask-image: radial-gradient(circle, transparent 56.5px, #000 57px, #000 67px, transparent 67.5px);">
         <div ref="{{ gaugeRef }}" style="position: absolute; inset: 0; background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: conic-gradient(#000 calc(var(--g) * 1turn), transparent 0); mask-image: conic-gradient(#000 calc(var(--g) * 1turn), transparent 0);"></div>
           <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%);"></div>
           <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%);"></div>
       </div>
-      <div class="fw-hub" aria-label="Sua aposta: {{ hubName }}" style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: {{ hubBg }}; transition: background .25s; box-shadow: 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
+      <div class="fw-hub" aria-label="Sua aposta: {{ hubName }}" style="position: absolute; left: 118.5px; top: 118.5px; width: 103px; height: 103px; border-radius: 50%; background: {{ hubBg }}; transition: background .25s; box-shadow: 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
         <div style="position: absolute; inset: 8px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ hubPos }}; opacity: {{ hubIconOp }};"></div>
         <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: {{ hubFs }}; font-family: {{ hubFf }}; font-weight: 800; color: {{ hubCharC }}; opacity: {{ hubQOp }};">{{ hubChar }}</span><span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; color: #fff; opacity: {{ hubFortOp }}; pointer-events: none;"><sc-for list="{{ hubLetters }}" as="l" hint-placeholder-count="7"><span style="animation: {{ l.anim }}; text-shadow: 0 2px 0 #147a36;">{{ l.c }}</span></sc-for></span><img src="assets/girafa/head.webp" alt="" draggable="false" style="position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; object-fit: contain; opacity: {{ hubGirOp }};">
       </div>
@@ -193,6 +198,12 @@ const isRed = n => n % 2 === 1;
 const RED = '#c8261e', BLACK = '#1c1020';
 const WHEEL_BG = 'conic-gradient(' + ORDER.map(i => PBG(i) + ' ' + (i * SEG) + 'deg ' + ((i + 1) * SEG) + 'deg').join(', ') + ')';
 const SEGS = ORDER.map(i => ({ t: 'rotate(' + (i * SEG + SEG / 2) + 'deg)', pos: POS(i), iconOp: POCKETS[i][0] >= 0 ? 1 : 0, zeroOp: POCKETS[i][0] === -1 ? 1 : 0, fortOp: POCKETS[i][0] === -2 ? 1 : 0 }));
+// Inset outline leaves the result artwork and the original pocket color visible.
+const FOCUS_PATH = (() => {
+  const angle=(SEG/2-.6)*Math.PI/180;
+  const point=(radius,side)=>[(160+side*radius*Math.sin(angle)).toFixed(2),(160-radius*Math.cos(angle)).toFixed(2)].join(' ');
+  return 'M '+point(153,-1)+' A 153 153 0 0 1 '+point(153,1)+' L '+point(71.5,1)+' A 71.5 71.5 0 0 0 '+point(71.5,-1)+' Z';
+})();
 const RING_ON = '0 0 0 4px #ffd257, 0 0 16px rgba(255,210,87,.85)', RING_OFF = 'inset 0 -3px 0 rgba(150,90,40,.25), 0 2px 0 rgba(0,0,0,.25)';
 class Component extends DCLogic {
   state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null, phase: 'idle' };
@@ -353,16 +364,15 @@ class Component extends DCLogic {
     const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
     const landed=s.landed,winning=landed!==null&&!!p&&MULT(p,landed)>0;
     const hub=p;
-    const halo=landed===null?'transparent':'conic-gradient(transparent 0deg '+(landed*SEG)+'deg, rgba(255,225,130,'+(winning?.65:.28)+') '+(landed*SEG)+'deg '+((landed+1)*SEG)+'deg, transparent '+((landed+1)*SEG)+'deg 360deg)';
     const waiting=s.phase==='confirming',spinning=s.phase==='spinning';
     const selectionTitle=waiting?'Confirmando giro…':spinning?'Girando…':s.phase==='dragging'?'Solte para girar':landed!==null?'Deu '+POCKETS[landed][1]:s.forceSet&&s.force<.2?'Deslize com mais força':p?'Agora deslize a roda':'Escolha um desenho';
     const sel = q => p && p.t === q.t && p.v === q.v;
     const _tb = { turboBg: this.state.turbo ? "#2ec962" : "#2a0a4a", autoBg: this.state.auto ? "#2ec962" : "#2a0a4a", toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto };
     return { ..._tb,
       scale: Math.min(s.vw / 453, s.vh / 802), walletProps:{value: txt,hold:!!(s.win||s.spinning),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
-      frameRef:this.frameRef,phase:s.phase,winning,pocketHalo:halo,selectionTitle,selectionStep:landed!==null?'•':p?'2':'1',
+      frameRef:this.frameRef,phase:s.phase,winning,pocketFocusOp:landed===null?0:1,pocketFocusRot:'rotate('+((ORDER.indexOf(landed)+.5)*SEG)+'deg)',pocketFocusPath:FOCUS_PATH,selectionTitle,selectionStep:landed!==null?'•':p?'2':'1',
       wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,cancel:this.cancel,
-      wheelBg: WHEEL_BG, segs: SEGS, glow: lit || winning ? '34px' : '0px',
+      wheelBg: WHEEL_BG, segs: SEGS.map((sg,i)=>({...sg,scale:landed===ORDER[i]?1.1:1,filter:landed===ORDER[i]?'drop-shadow(0 2px 2px rgba(0,0,0,.45)) drop-shadow(0 0 3px #fff2bd)':'drop-shadow(0 2px 2px rgba(0,0,0,.45))'})), glow: lit || winning ? '34px' : '0px',
       bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-175px)', op: lit || winning ? 1 : 0.95, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
       showHint: !s.touched && !!p,
       forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
