@@ -225,7 +225,6 @@ export function createGameStore(db, uid, dependencies={}) {
         if(home){
           const today=dayIndex(time),daily=p.rechargeDaily,count=daily?.dayIndex===today?daily.count:0;
           if(daily?.dayIndex>today)fail('king-rico/invalid-argument','Confira a data do aparelho.');
-          if(count>=5)fail('king-rico/daily-limit','Você já recebeu as cinco recompensas de hoje.');
           p.rechargeDaily={dayIndex:today,count:count+1};
         }
         winUnits=100000;p.balanceUnits+=winUnits;

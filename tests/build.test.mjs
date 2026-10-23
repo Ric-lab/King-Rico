@@ -49,7 +49,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   await access('dist/ui/app-shell.js');await access('dist/sw.js');
   for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const name of ['machine','wheel','neck','clown','penalty','fingo','33','flying']) {
+  for(const name of ['machine-front','wheel','neck','clown','penalty','33','flying']) {
     const asset=`assets/brand/covers/${name}.webp`;
     assert.ok(home.includes(asset),asset);
     await access(path.join('dist',asset));

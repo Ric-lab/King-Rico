@@ -36,7 +36,7 @@ service cloud.firestore {
         && p.get('rechargeCount',0) is int && p.get('rechargeCount',0) >= 0 && p.get('rechargeCount',0) <= 1000000000
         && (!('rechargeDaily' in p) || p.rechargeDaily is map
           && p.rechargeDaily.keys().hasOnly(['dayIndex','count']) && p.rechargeDaily.dayIndex is int && p.rechargeDaily.dayIndex >= 0
-          && p.rechargeDaily.count is int && p.rechargeDaily.count >= 1 && p.rechargeDaily.count <= 5)
+          && p.rechargeDaily.count is int && p.rechargeDaily.count >= 1)
         && (!('peachBank' in p) || p.peachBank is map && p.peachBank.keys().hasOnly(['count','units'])
           && p.peachBank.count is int && p.peachBank.count >= 0 && p.peachBank.count <= 4
           && p.peachBank.units is int && p.peachBank.units % 50 == 0
@@ -363,7 +363,7 @@ service cloud.firestore {
             && p.get('rechargeCount',0) == old.get('rechargeCount',0) + 1
             && p.rechargeDaily.keys().hasOnly(['dayIndex','count']) && p.rechargeDaily.dayIndex == today
             && daily.dayIndex <= today && p.rechargeDaily.count is int
-            && p.rechargeDaily.count == (daily.dayIndex == today ? daily.count : 0) + 1 && p.rechargeDaily.count <= 5
+            && p.rechargeDaily.count == (daily.dayIndex == today ? daily.count : 0) + 1
             && o.result.keys().hasOnly(['player','amount','source','count']) && o.result.count == p.rechargeCount
           : p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
             && o.result.keys().hasOnly(['player','amount']));

@@ -20,10 +20,12 @@ As oito capas são compostas em camadas. Todas usam exatamente o mesmo arquivo
 um novo fundo por jogo: a consistência depende de compartilhar a mesma imagem.
 Os elementos de cada jogo são WebP transparentes no mesmo diretório, montados
 por `.kr-cover-object` e ajustes de enquadramento em `ui/home.css`. As artes
-anteriores foram preservadas. Na Machine, os nove símbolos continuam vindo do
+anteriores foram preservadas. Na Machine, a máquina fica de frente, sem o elefante. Os nove símbolos continuam vindo do
 atlas original `symbols-v7.webp`, sobre as células vazias da máquina.
 
-O Fingo mantém cinco bolas acima do plinko; o 33 mantém três cartas 10–13–10;
+O Fingo mantém cinco bolas acima do plinko, usando a moldura original do jogo
+e a geometria atual por código: seis fileiras alternadas (39 pinos) e quatro
+separadores com topo arredondado, formando cinco saídas; o 33 mantém três cartas 10–13–10;
 o Flying usa o palhaço atual vermelho/verde. O Pênalti conserva gol, goleira,
 bola e uma pequena base de grama, deixando o cenário compartilhado visível.
 As legendas ficam em HTML, sobre a faixa verde inferior. Conferir as camadas no

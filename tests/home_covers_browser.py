@@ -7,6 +7,11 @@ def check_home_covers(page):
     objects=page.locator('.kr-cover-object')
     assert objects.count()==8
     for obj in objects.all():
+        if 'kr-cover-object-fingo' in obj.get_attribute('class'):
+            assert obj.locator('.kr-cover-fingo-peg').count()==39
+            assert obj.locator('.kr-cover-fingo-funnel').count()==4
+            assert obj.locator('.kr-cover-fingo-ball').all_text_contents()==['15','16','32','52','64']
+            continue
         assert obj.evaluate(r"""async e=>{
           const src=getComputedStyle(e).backgroundImage.match(/url\(["']?(.*?)["']?\)/)[1];
           const image=new Image();image.src=src;await image.decode();
@@ -43,4 +48,4 @@ def check_home_covers(page):
     page.emulate_media(reduced_motion='no-preference')
     # Capture unobscured artwork after checking movement.
     page.evaluate('''()=>document.querySelectorAll('.kr-game-cover').forEach(e=>e.getAnimations({subtree:true}).forEach(a=>{a.pause();a.currentTime=4200+a.effect.getTiming().delay+2000;}))''')
-    return {'shared_stage':True,'transparent_objects':8,'original_reel_sprites':9,'moving_shine_on_covers':8,'reduced_motion':True}
+    return {'shared_stage':True,'transparent_objects':7,'fingo_code_board':True,'original_reel_sprites':9,'moving_shine_on_covers':8,'reduced_motion':True}

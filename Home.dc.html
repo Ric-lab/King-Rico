@@ -56,7 +56,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Circus.dc.html?from=home" onClick="{{ tapPlay }}" aria-label="Jogar Fortune Machine" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
           <div class="kr-game-cover" style="--kr-cover-delay: 0.0s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <span class="kr-cover-object kr-cover-object-machine" aria-hidden="true" style="background-image:url('assets/brand/covers/machine.webp');"></span>
+            <span class="kr-cover-object kr-cover-object-machine" aria-hidden="true" style="background-image:url('assets/brand/covers/machine-front.webp');"></span>
             <sc-for list="{{ coverReels }}" as="icon" hint-placeholder-count="9">
               <span class="kr-cover-reel" aria-hidden="true" style="left: {{ icon.left }}; top: {{ icon.top }}; background-position-x: {{ icon.pos }};"></span>
             </sc-for>
@@ -120,7 +120,14 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px;">
         <a href="Fortune Fingo.dc.html" aria-label="Jogar Fortune Fingo" style="position: relative; display: block; padding-bottom: 6px; cursor: pointer;" style-active="transform: scale(.97);">
           <div class="kr-game-cover" style="--kr-cover-delay: -2.7s;position: relative; aspect-ratio: 1 / 1; border-radius: 30px; overflow: hidden; box-shadow: inset 0 0 0 3px rgba(255,236,160,.85), 0 0 0 3px #f0b41f, 0 8px 16px rgba(0,0,0,.35);">
-            <span class="kr-cover-object kr-cover-object-fingo" aria-hidden="true" style="background-image:url('assets/brand/covers/fingo.webp');"></span>
+            <span class="kr-cover-object kr-cover-object-fingo" aria-hidden="true">
+              <span class="kr-cover-fingo-balls"><sc-for list="{{ fingoCoverBalls }}" as="ball" hint-placeholder-count="5"><span class="kr-cover-fingo-ball" style="background-position-x:{{ ball.pos }};color:{{ ball.color }};transform:translateY({{ ball.offset }});">{{ ball.number }}</span></sc-for></span>
+              <span class="kr-cover-fingo-board"><span class="kr-cover-fingo-felt">
+                <sc-for list="{{ fingoCoverPegs }}" as="peg" hint-placeholder-count="39"><span class="kr-cover-fingo-peg" style="left:{{ peg.x }};top:{{ peg.y }};"></span></sc-for>
+                <sc-for list="{{ fingoCoverFunnels }}" as="funnel" hint-placeholder-count="4"><span class="kr-cover-fingo-funnel" style="left:{{ funnel }};"></span></sc-for>
+                <span class="kr-cover-fingo-drop"></span>
+              </span></span>
+            </span>
           </div>
           <div style="position: absolute; left: 6px; right: 6px; bottom: 0; height: 38px; border-radius: 50%; background: linear-gradient(180deg, #6cf096 0%, #2ec962 60%, #22a650 100%); box-shadow: 0 4px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6), 0 8px 12px rgba(30,0,50,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
             <span style="font-family: 'Baloo 2', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,.85);">FORTUNE</span>
@@ -260,7 +267,7 @@ class Component extends DCLogic {
   }
   dailyRecharges() {const d=this.state.rechargeDaily;return d&&d.dayIndex===this.rechargeDay()?d.count:0;}
   recharge = () => {
-    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging||this.state.adOpen||this.state.rewardOpen||this.dailyRecharges()>=5)return;
+    const cloud=window.KingRicoCloud;if(!cloud?.enabled||!this.state.loaded||this._recharging||this.state.adOpen||this.state.rewardOpen)return;
     this.setState({adOpen:true,adComplete:false,adError:false});
   };
   cancelAd = () => {
@@ -278,7 +285,7 @@ class Component extends DCLogic {
       // The transaction is already saved. Only the displayed balance waits for the coins.
       this.setState({adOpen:false,rewardOpen:true,rewardPending:1000,balance:p.balance,rechargeCount:p.rechargeCount||0,rechargeDaily:p.rechargeDaily||null});
       this.buzz([25,35,35]);
-    } catch(e){cloud.error(e);if(!this._dead)this.setState(e.code==='king-rico/daily-limit'?{adOpen:false,adError:false,rechargeDaily:{dayIndex:this.rechargeDay(),count:5}}:{adError:true});}
+    } catch(e){cloud.error(e);if(!this._dead)this.setState({adError:true});}
     finally{this._recharging=false;if(!this._dead)this.setState({recharging:false});}
   };
   collectReward = () => {
@@ -303,7 +310,11 @@ class Component extends DCLogic {
         const w = window.innerWidth || 453, h = window.KingRicoViewport?.height ?? (window.innerHeight || 802), gs = Math.max(.25, Math.min(w / 453, h / 802));
         return { gs, rootHeight:'calc(100dvh - var(--kr-banner-height, 0px))',rootMinH: 'calc(100dvh - var(--kr-banner-height, 0px))', padTop: 'env(safe-area-inset-top, 0px)', plqS: 1.25 * gs, plqO: '0 50%', plqL: 18 * gs + 'px', plqT: 'calc((var(--kr-hud-top) + 20px) * ' + gs + ' - 18px)', mnuR: 20.167 * gs + 'px', mnuT: 29.5 * gs + 'px', hdrH: Math.round(70 * gs) + 'px', hdrW: 453 * gs + 'px' }; })(),
       walletProps:{value: txt,hold:false,external:s.rewardOpen}, balanceText: txt,
-      coverReels: [[8,32.5,40.6],[7,48.7,41.4],[1,65.1,42.1],[1,32.1,54.2],[8,49.1,54.9],[6,66.2,55.6],[6,31.7,67.7],[1,49.1,68.3],[8,67,68.7]].map(([symbol,x,y])=>({left:x+'%',top:y+'%',pos:symbol*100/11+'%'})),
+      coverReels: [[8,31.7,33.8],[7,50.1,33.8],[1,68.4,33.8],[1,31.7,47.6],[8,50.1,47.6],[6,68.4,47.6],[6,31.7,61.5],[1,50.1,61.5],[8,68.4,61.5]].map(([symbol,x,y])=>({left:x+'%',top:y+'%',pos:symbol*100/11+'%'})),
+      // Same six staggered rows and four capped dividers as Fingo.buildWorld (453 × 509).
+      fingoCoverPegs: Array.from({length:6},(_,r)=>{const y=30+r*319/5,m=453*.022+8+45*(1-y/509),step=(453-2*m)/6;return Array.from({length:r%2?6:7},(_,c)=>({x:(m+step*(c+(r%2?.5:0)))/453*100+'%',y:y/509*100+'%'}));}).flat(),
+      fingoCoverFunnels:['20%','40%','60%','80%'],
+      fingoCoverBalls:[15,16,32,52,64].map((number,i)=>({number,pos:i*25+'%',color:['#b71624','#08649e','#237e22','#b75a04','#6122a0'][i],offset:[8,0,-4,0,8][i]+'%'})),
       balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       quip: s.quip, kingMood: s.mood, kingKey: s.key, tapKing: this.tapKing,
       collectBonus: this.collectBonus, tapPlay: this.tapPlay,
@@ -313,9 +324,9 @@ class Component extends DCLogic {
       // mandatory: modal shows whenever today's gift is unclaimed (after saved state is read)
       bonusOpen: !!(s.loaded && ready), bonusAmt: s.loaded && ready ? this.prize(cy).toLocaleString('pt-BR') : '', bonusDay: 'Dia ' + (cy.idx + 1) + ' de 7',
       collecting:!!s.collecting,collectLabel:s.collecting?'CONFIRMANDO…':'PEGAR MOEDAS',
-      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging||!!s.adOpen||!!s.rewardOpen||this.dailyRecharges()>=5,
-      rechargeCounter:this.dailyRecharges()+'/5',rechargeCountLabel:this.dailyRecharges()+' de 5 recompensas recebidas hoje',
-      rechargeDescription:this.dailyRecharges()>=5?'Limite diário atingido. Novas recompensas amanhã.':'Até 5 recompensas por dia.',
+      recharge:this.recharge,rechargeDisabled:!s.loaded||!!s.recharging||!!s.adOpen||!!s.rewardOpen,
+      rechargeCounter:this.dailyRecharges()+' hoje',rechargeCountLabel:this.dailyRecharges()+' recargas recebidas hoje',
+      rechargeDescription:'Recargas sem limite diário, após cada anúncio de 30 segundos.',
       adProps:{open:!!s.adOpen,complete:!!s.adComplete,busy:!!s.recharging,error:!!s.adError,
         onComplete:this.finishAd,onCancel:this.cancelAd,coin:A('assets/symbols/sym-coin.webp')},
       receiptProps:{open:!!s.rewardOpen,coin:A('assets/symbols/sym-coin.webp'),target:this.rewardTarget,

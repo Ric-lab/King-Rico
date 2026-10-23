@@ -664,16 +664,17 @@ test('Home recharge Rules count daily confirmed clicks without duplicating repla
  await forge({rechargeCount:99});await forge({},200000);await forge({bonus:{day:null,dayIndex:-1,streak:0}});
  await assertFails(updateDoc(ref,{rechargeDaily:{...current.rechargeDaily,count:0}}));
  await c.call(request({action:'recharge',source:'home'}));
- const last=await Promise.allSettled([c.call(request({action:'recharge',source:'home'})),other.call(request({action:'recharge',source:'home'}))]);
- assert.equal(last.filter(x=>x.status==='fulfilled').length,1);
- assert.equal(last.find(x=>x.status==='rejected').reason.code,'king-rico/daily-limit');
- const capped=(await getDoc(ref)).data();assert.equal(capped.rechargeDaily.count,5);assert.equal(capped.balanceUnits,605000);
- await forge({});await forge({rechargeDaily:{...capped.rechargeDaily,count:1}});
- await forge({rechargeDaily:{dayIndex:capped.rechargeDaily.dayIndex+1,count:1}});
- assert.equal((await c.call(first)).player.rechargeDaily.count,5);
- await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{rechargeDaily:{dayIndex:capped.rechargeDaily.dayIndex-1,count:5}}));
+ const sixth=request({action:'recharge',source:'home'});
+ const last=await Promise.all([c.call(request({action:'recharge',source:'home'})),other.call(sixth)]);
+ assert.equal(last[0].amount+last[1].amount,2000);
+ const uncapped=(await getDoc(ref)).data();assert.equal(uncapped.rechargeDaily.count,6);assert.equal(uncapped.balanceUnits,705000);
+ assert.equal((await other.call(sixth)).replayed,true);assert.equal((await getDoc(ref)).data().balanceUnits,705000);
+ await forge({rechargeDaily:{...uncapped.rechargeDaily,count:1}});
+ await forge({rechargeDaily:{dayIndex:uncapped.rechargeDaily.dayIndex+1,count:1}});
+ assert.equal((await c.call(first)).player.rechargeDaily.count,6);
+ await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{rechargeDaily:{dayIndex:uncapped.rechargeDaily.dayIndex-1,count:6}}));
  const renewed=await c.call(request({action:'recharge',source:'home'}));
- assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,6);
+ assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,7);
 });
 
 test('Flying Happeach v7 persists protection, rejects forged saves and pays a protected fall exactly once',async()=>{

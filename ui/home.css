@@ -64,7 +64,15 @@
 .kr-cover-object-clown{inset:8% 5% 9%}
 .kr-cover-object-penalty{inset:19% 3% 13%}
 .kr-cover-object-flying{inset:2% 19% 9%}
-.kr-cover-object-fingo{inset:4% 11% 10%}
+.kr-cover-object-fingo{inset:4% 8% 10%}
+.kr-cover-fingo-balls{position:absolute;left:1%;right:1%;top:0;height:20%;display:flex;align-items:center;justify-content:center}
+.kr-cover-fingo-ball{width:20%;aspect-ratio:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;background-image:url('../assets/fingo/target-balls.webp');background-size:500% 100%;background-repeat:no-repeat;font:800 clamp(9px,3vw,16px)/1 'Baloo 2',sans-serif}
+.kr-cover-fingo-board{position:absolute;left:11%;right:11%;top:14%;bottom:0;background:url('../assets/fingo/board-lit.webp') center/100% 100% no-repeat}
+.kr-cover-fingo-felt{position:absolute;left:9.28%;top:12.05%;width:81.26%;height:78.51%}
+.kr-cover-fingo-peg{position:absolute;width:4.18%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 32% 30%,#fffbe0 0%,#ffd65a 35%,#c8871a 80%,#7a4a04);box-shadow:1px 1px 1px #0007}
+.kr-cover-fingo-funnel{position:absolute;top:81.53%;bottom:-1%;width:2.65%;transform:translateX(-50%);border-radius:2px;background:linear-gradient(90deg,#7a4a04,#ffe58a 35%,#f0b41f 60%,#8a5a06);box-shadow:1px 1px 1px #0006}
+.kr-cover-fingo-funnel::before{content:'';position:absolute;top:-7%;left:50%;transform:translateX(-50%);width:150%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fffbe0,#ffd65a 40%,#8a5206)}
+.kr-cover-fingo-drop{position:absolute;left:52%;top:47%;width:7.8%;aspect-ratio:1;background:url('../assets/fingo/ball.webp') center/contain no-repeat}
 .kr-cover-object-33{inset:18% 3% 14%}
 .kr-game-cover::after{content:'';position:absolute;top:-15%;bottom:-15%;left:-45%;width:36%;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff57,transparent);transform:skewX(-18deg);animation:krCoverShine 4.2s var(--kr-cover-delay,0s) linear infinite}
 .kr-cover-reel{position:absolute;z-index:1;width:13%;height:13%;pointer-events:none;background-image:url('../assets/symbols-v7.webp');background-size:1200% 100%;background-repeat:no-repeat;transform:translate(-50%,-50%) rotate(2deg);filter:drop-shadow(0 1px 1px #57240540)}
