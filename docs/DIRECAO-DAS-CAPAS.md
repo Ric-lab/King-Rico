@@ -12,13 +12,13 @@ Nas miniaturas da Home, conferir primeiro em 160–175 px:
 | Wheel | Roda e ponteira | Símbolos da roda | Palco |
 | Neck | Rosto e pescoço | Uma maçã | Cortinas |
 | Flying Clown | Palhaço atual vermelho e verde | Três balões | Interior do circo |
-| Fingo | Cartela BINGO numerada | Bola vermelha 7 | Cortinas |
+| Fingo | Cinco bolas numeradas | Plinko verde | Cortinas discretas |
 | 33 | Três cartas 10–13–10 | King Rico e diamantes | Feltro e cortinas |
 
 Pênalti e Clown mantêm as artes anteriores, que já têm um assunto principal claro.
 Wheel e Neck usam `cover-*-focus.webp`; Machine, Flying Clown, Fingo e 33 usam
 respectivamente `cover-machine-reels.webp`, `cover-flying-current.webp`,
-`cover-fingo-bingo.webp` e `cover-33-three.webp`, em `assets/brand/`. As versões
+`cover-fingo-plinko.webp` e `cover-33-three.webp`, em `assets/brand/`. As versões
 anteriores foram preservadas. A Machine tem nove células vazias na ilustração;
 os símbolos são o atlas original `symbols-v7.webp`, posicionado sobre as células.
 As legendas continuam em HTML, fora da arte, e o limite inferior da
@@ -43,3 +43,8 @@ ao sistema operacional: o manifesto fornece fundo e ícone, não uma cena arbitr
 
 Aceite estético do autor ainda pendente. Conferir futuros ajustes na própria Home,
 com suas bordas, rótulos e tamanho de uso, além de examinar o arquivo grande.
+
+Feedback do autor: a cartela de bingo foi rejeitada. O conceito aprovado como
+referência é o antigo plinko com cinco bolas; o excesso de lâmpadas, halos e
+faíscas deve ser removido. A nova capa retoma essa composição sem luzes no fundo.
+Aceite estético da nova execução ainda pendente.
