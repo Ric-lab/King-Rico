@@ -23,6 +23,8 @@ if (!document.getElementById('king-rico-menu-style')) {
     .kr-menu-levels button[aria-pressed=true]{background:#ffd257;color:#4a1a00}
     .kr-menu-paytable{width:100%;border:0;background:transparent;text-align:left}
     .kr-menu-arrow{font-size:26px;font-weight:800;color:#ffd257}
+    .kr-menu-app-button{width:100%;border:0;background:transparent;text-align:left}
+    .kr-menu-app-help{margin:0;padding:12px 0;font-size:17px;line-height:1.5;color:#fff3c4}
     .kr-menu-progress{padding:14px 18px;background:#0004}
     .kr-menu-progress h3{margin:0 0 7px;font-size:19px;font-weight:800;color:#fff3c4}
     .kr-menu-progress p{margin:6px 0;font-size:16px;line-height:1.45;color:#dcc2f0}
@@ -44,8 +46,12 @@ function MenuButton({onClick,style,hidden,disabled,onPointerDown,onPointerUp}) {
 function MenuPanel({open,onClose,onPaytable,screen,details,sfxLvl=2,vibLvl=2,onSfx,onVib}) {
   const cloud=window.KingRicoCloud;
   const [player,setPlayer]=React.useState(cloud?.player);
+  const app=window.KingRicoApp;
+  const [appState,setAppState]=React.useState(()=>app?.snapshot());
+  const [appHelp,setAppHelp]=React.useState('');
   const panel=React.useRef(null);
   React.useEffect(()=>cloud?.watch(setPlayer),[cloud]);
+  React.useEffect(()=>app?.watch(setAppState),[app]);
   React.useEffect(()=>{
     if (!open) return;
     const previous=document.querySelector('.kr-menu-button:not(:disabled)') || document.activeElement;
@@ -68,6 +74,14 @@ function MenuPanel({open,onClose,onPaytable,screen,details,sfxLvl=2,vibLvl=2,onS
     };
   },[open]);
   if(!open) return null;
+  const appAction=async action=>{
+    const message=await action();
+    setAppHelp(message);
+    if(!message) onClose();
+  };
+  const appButton=(label,icon,action)=>h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:()=>appAction(action)},
+    h('span',{className:'kr-menu-icon','aria-hidden':true},icon),h('span',{className:'kr-menu-label'},label),
+    h('span',{className:'kr-menu-arrow','aria-hidden':true},'›'));
   const levels=(label,icon,value,change)=>h('div',{className:'kr-menu-row'},
     h('span',{className:'kr-menu-icon','aria-hidden':true},icon),
     h('span',{className:'kr-menu-label'},label),
@@ -82,6 +96,9 @@ function MenuPanel({open,onClose,onPaytable,screen,details,sfxLvl=2,vibLvl=2,onS
         h('button',{type:'button',className:'kr-menu-close','aria-label':'Fechar menu',onClick:onClose},'✕')),
       h('p',{className:'kr-menu-screen'},screen),
       h('div',{className:'kr-menu-controls'},
+        appState && !appState.installed && appButton(appState.fullscreen?'Sair da tela cheia':'Tela cheia','⛶',app.toggleFullscreen),
+        appState && !appState.installed && appButton('Instalar no celular','↓',app.install),
+        appHelp && h('p',{className:'kr-menu-app-help',role:'status'},appHelp),
         levels('Efeitos sonoros','♫',sfxLvl,onSfx),levels('Vibração','≈',vibLvl,onVib),
         onPaytable && h('button',{type:'button',className:'kr-menu-row kr-menu-paytable',
           'aria-label':'Tabela de pagamentos',onClick:onPaytable},

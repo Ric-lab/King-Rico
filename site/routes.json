@@ -1,0 +1,15 @@
+[
+  {"file":"Home.dc.html","path":"/home","game":"home","title":"Fortune Circus"},
+  {"file":"Fortune Circus.dc.html","path":"/circus","game":"circus","title":"Fortune Circus"},
+  {"file":"Fortune Wheel.dc.html","path":"/wheel","game":"wheel","title":"Fortune Wheel"},
+  {"file":"Fortune Neck.dc.html","path":"/neck","game":"neck","title":"Fortune Neck"},
+  {"file":"Fortune Fingo.dc.html","path":"/fingo","game":"fingo","title":"Fortune Fingo"},
+  {"file":"Fortune Penalty.dc.html","path":"/penalty","game":"penalty","title":"Fortune Penalty"},
+  {"file":"Fortune Clown.dc.html","path":"/clown","game":"clown","title":"Fortune Clown"},
+  {"file":"Fortune Flying Clown.dc.html","path":"/flying-clown","game":"flying","title":"Fortune Flying Clown"},
+  {"file":"Fortune 33.dc.html","path":"/33","game":"twentyOne","title":"Fortune 33"},
+  {"file":"Fortune 21.dc.html","path":"/21","game":"twentyOne","title":"Fortune 21"},
+  {"file":"Fortune Bounce.dc.html","path":"/bounce","game":"bounce","title":"Fortune Bounce"},
+  {"file":"Fortune Claw.dc.html","path":"/claw","game":"claw","title":"Claw Machine"},
+  {"file":"Fortune Race.dc.html","path":"/race","game":"race","title":"Fortune Race"}
+]

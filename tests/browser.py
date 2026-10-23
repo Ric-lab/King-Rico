@@ -14,6 +14,7 @@ from wheel_browser import check_wheel
 from home_rewards_browser import check_home_rewards
 from claw_browser import check_claw
 from race_browser import check_race
+from app_shell_browser import check_app_shell
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -185,7 +186,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':height})
         assert check_menu(page,'Home',False)==common_menu
     page.set_viewport_size({'width':453,'height':802})
-    page.locator('a[href^="Fortune Circus.dc.html"]').click()
+    page.get_by_role('link',name='Jogar Fortune Machine',exact=True).click()
     page.wait_for_function('window.__fc && window.__fc.state.ready && !window.__fc.state.homeOpen')
     restored_without_login(page,account_uid)
     assert check_menu(page,'Fortune Circus',True)==common_menu
@@ -415,6 +416,7 @@ with sync_playwright() as p:
         restored_without_login(returned,uid)
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
         reopened.close()
+    print(json.dumps(check_app_shell(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_wheel(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     check_wallet_retry(browser)
     penalty_result=check_penalty(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)

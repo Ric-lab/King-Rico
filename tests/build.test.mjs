@@ -8,7 +8,8 @@ test('production artifact serves every Home game and the Penalty renderer with l
   const result=spawnSync(process.execPath,['scripts/build.mjs','--production'],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
   const home=await readFile('dist/Home.dc.html','utf8');
-  const games=[...new Set([...home.matchAll(/href="(Fortune[^"#?]+\.dc\.html)/g)].map(m=>decodeURIComponent(m[1])))];
+  const routes=JSON.parse(await readFile('site/routes.json','utf8'));
+  const games=[...new Set([...home.matchAll(/href="([^"#?]+)(?:[?#][^"]*)?"/g)].map(m=>routes.find(r=>r.path===m[1])?.file).filter(Boolean))];
   assert.ok(games.includes('Fortune Penalty.dc.html'));
   assert.match(await readFile('dist/Fortune Fingo.dc.html','utf8'),/src="\.\/runtime\/matter\.min\.js"/);
   for(const game of ['Circus','Wheel','Neck','Fingo','Penalty','Clown','Flying Clown','33']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
@@ -30,4 +31,20 @@ test('production artifact serves every Home game and the Penalty renderer with l
   await access('dist/games/fortune21/game.js');await access('dist/games/fortune21/style.css');
   await access('dist/runtime/three.module.js');await access('dist/runtime/three.core.js');
   assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
+  const hosting=JSON.parse(await readFile('firebase.json','utf8')).hosting;
+  const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));
+  assert.equal(manifest.name,'Fortune Circus');
+  assert.equal(manifest.display,'standalone');
+  assert.ok(routes.some(r=>r.path===manifest.start_url.split('?')[0]));
+  for(const icon of manifest.icons) await access(path.join('dist',icon.src));
+  for(const route of routes) {
+    assert.ok(hosting.rewrites.some(r=>r.source===route.path && r.destination==='/'+route.file),route.path);
+    assert.ok(hosting.headers.some(r=>r.source===route.path && r.headers.some(h=>h.key==='Cache-Control' && h.value==='no-store')),route.path+' must not serve a stale game');
+    const html=await readFile(path.join('dist',route.file),'utf8');
+    assert.match(html,/<link rel="manifest" href="\/manifest.webmanifest">/);
+    assert.match(html,/<link rel="apple-touch-icon"/);
+    assert.ok(html.includes(`<meta name="king-rico-game" content="${route.game}">`));
+    assert.equal([...html.matchAll(/<title>/g)].length,1);
+  }
+  await access('dist/ui/app-shell.js');await access('dist/sw.js');
 });

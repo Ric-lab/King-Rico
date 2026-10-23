@@ -10,6 +10,7 @@ const emulator = process.argv.includes('--emulator');
 const production = process.argv.includes('--production');
 if (emulator && production) throw new Error('Choose production or emulator build');
 const destination = path.join(root, 'dist');
+const routes = JSON.parse(await readFile('site/routes.json','utf8'));
 await rm(destination, { recursive:true, force:true });
 await mkdir(destination, {recursive:true});
 await mkdir('runtime',{recursive:true});
@@ -77,21 +78,37 @@ await build({entryPoints:['games/claw/game.js'],outfile:path.join(destination,'g
 await mkdir(path.join(destination,'games/fortune21'),{recursive:true});
 await copyFile('games/fortune21/style.css',path.join(destination,'games/fortune21/style.css'));
 await build({entryPoints:['games/fortune21/game.js'],outfile:path.join(destination,'games/fortune21/game.js'),bundle:true,format:'esm',target:'es2022',minify:true});
-for(const file of ['support.js','penalty3d.js','clownball.js','bounce3d.js','KingRico.dc.html','King Rico.dc.html','index.html','version.json'])
+for(const file of ['support.js','penalty3d.js','clownball.js','bounce3d.js','KingRico.dc.html','King Rico.dc.html','index.html','version.json','manifest.webmanifest','sw.js'])
   await copyFile(file,path.join(destination,file));
 // The authoring tool can regenerate a packed game.html. Hosting always loads the
 // current source game so that Firebase login and wallet adapters remain active.
 await writeFile(path.join(destination,'game.html'),`<!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><title>King Rico</title>
-<script>location.replace("Fortune%20Circus.dc.html"+location.search+location.hash);</script>
-</head><body><a href="Fortune%20Circus.dc.html">Abrir King Rico</a></body></html>\n`);
-for(const file of ['Home.dc.html','Fortune Circus.dc.html','Fortune Wheel.dc.html','Fortune Neck.dc.html','Fortune Fingo.dc.html','Fortune Penalty.dc.html','Fortune Clown.dc.html','Fortune Bounce.dc.html','Fortune Flying Clown.dc.html','Fortune 21.dc.html','Fortune 33.dc.html','Fortune Claw.dc.html','Fortune Race.dc.html']) {
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Fortune Circus</title>
+<script>location.replace("/circus"+location.search+location.hash);</script>
+</head><body><a href="/circus">Abrir Fortune Circus</a></body></html>\n`);
+for(const {file,game,title} of routes) {
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
   // Content-version stylesheet URLs so a cached old theme cannot override a new release.
   const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script src="./ui/banner.js"></script>\n<script src="./ui/wallet.js"></script>';
-  let html=source.replace('<head>','<head>\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
+  const appTags=`<title>${title}</title>
+<meta name="king-rico-game" content="${game}">
+<meta name="theme-color" content="#1d0733">
+<meta name="application-name" content="Fortune Circus">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fortune Circus">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/assets/app/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
+<script defer src="/ui/app-shell.js"></script>`;
+  let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
+  // Only navigation links change; DC component imports retain their source filenames.
+  html=html.replace(/href="([^"?#]+)([?#][^"]*)?"/g,(match,target,suffix='')=>{
+    const route=routes.find(entry=>entry.file===decodeURI(target.replace(/^\.\//,'')));
+    return route ? `href="${route.path}${suffix}"` : match;
+  });
   const styles=[...html.matchAll(/href="(\.\/[^"?]+\.css)"/g)];
   for(const [,href] of styles){
     const bytes=await readFile(path.join(destination,href));

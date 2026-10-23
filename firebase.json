@@ -14,7 +14,12 @@
     "headers": [
       {
         "source": "**/*.js",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
       },
       {
         "source": "**/*.html",
@@ -27,7 +32,223 @@
       },
       {
         "source": "**/*.css",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/manifest.webmanifest",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/manifest+json"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/home",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/circus",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/wheel",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/neck",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/fingo",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/penalty",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/clown",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/flying-clown",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/33",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/21",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/bounce",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/claw",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/race",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/home",
+        "destination": "/Home.dc.html"
+      },
+      {
+        "source": "/circus",
+        "destination": "/Fortune Circus.dc.html"
+      },
+      {
+        "source": "/wheel",
+        "destination": "/Fortune Wheel.dc.html"
+      },
+      {
+        "source": "/neck",
+        "destination": "/Fortune Neck.dc.html"
+      },
+      {
+        "source": "/fingo",
+        "destination": "/Fortune Fingo.dc.html"
+      },
+      {
+        "source": "/penalty",
+        "destination": "/Fortune Penalty.dc.html"
+      },
+      {
+        "source": "/clown",
+        "destination": "/Fortune Clown.dc.html"
+      },
+      {
+        "source": "/flying-clown",
+        "destination": "/Fortune Flying Clown.dc.html"
+      },
+      {
+        "source": "/33",
+        "destination": "/Fortune 33.dc.html"
+      },
+      {
+        "source": "/21",
+        "destination": "/Fortune 21.dc.html"
+      },
+      {
+        "source": "/bounce",
+        "destination": "/Fortune Bounce.dc.html"
+      },
+      {
+        "source": "/claw",
+        "destination": "/Fortune Claw.dc.html"
+      },
+      {
+        "source": "/race",
+        "destination": "/Fortune Race.dc.html"
       }
     ]
   },

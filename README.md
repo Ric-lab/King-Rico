@@ -40,4 +40,7 @@ Sem a configuração Firebase (`enabled: true`), o jogo continua sendo o protót
 
 Atualizações do site pelo GitHub: [docs/PUBLICACAO.md](docs/PUBLICACAO.md). Depois da conexão inicial, alterações em `main` passam pelos testes e são publicadas no Firebase Hosting.
 
+Instalação no celular como **Fortune Circus**, tela cheia, ícone e endereços curtos:
+[instruções e limites](docs/INSTALAR-NO-CELULAR.md).
+
 Claw Machine: [mecânica, persistência e modelo 3D](docs/CLAW-MACHINE.md).

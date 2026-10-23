@@ -141,7 +141,7 @@ else {
       catch (error) { Cloud.error(error); }
     }, 400);
   };
-  const game = /Fortune(?:%20| )Race/.test(location.pathname) ? 'race' : /Fortune(?:%20| )Claw/.test(location.pathname) ? 'claw' : /Fortune(?:%20| )(?:21|33)/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus';
+  const game = document.querySelector('meta[name="king-rico-game"]')?.content || (/Fortune(?:%20| )Race/.test(location.pathname) ? 'race' : /Fortune(?:%20| )Claw/.test(location.pathname) ? 'claw' : /Fortune(?:%20| )(?:21|33)/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus');
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
   Cloud.track = (name, extra={}) => {
