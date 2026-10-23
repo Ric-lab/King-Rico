@@ -19,7 +19,11 @@ html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-fami
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes rrChase { 0%, 100% { opacity: .28; } 50% { opacity: 1; } }
+.fw-lamp { background: radial-gradient(circle at 42% 35%, #fff 0%, #fff 42%, #fff6b5 72%, #ffd257 100%); box-shadow: inset 0 -1px 1px #d49619, 0 0 5px 2px #fff8d7, 0 0 13px 3px rgba(255,193,52,.9); }
+@keyframes rrChase {
+  0%, 100% { opacity: .55; filter: brightness(.9); box-shadow: inset 0 -1px 1px #d49619, 0 0 4px #fff3b0, 0 0 8px #ffbd39; }
+  40%, 60% { opacity: 1; filter: brightness(1.45); box-shadow: 0 0 5px 3px #fffceb, 0 0 15px 6px #ffd257, 0 0 26px 8px rgba(255,173,32,.8); }
+}
 @keyframes rrPop { 0% { transform: scale(.8); opacity: 0; } 70% { transform: scale(1.035); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
 @keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
@@ -52,7 +56,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div class="fw-rim" aria-hidden="true" style="position: absolute; z-index: 1; pointer-events: none; inset: -23px; border-radius: 50%; background-image: url('assets/wheel/gold-atlas.webp'); background-size: 636.842px 427.312px; background-position: -36.485px -17.526px; background-repeat: no-repeat; box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
       <div class="fw-launch"></div>
       <sc-for list="{{ bulbs }}" as="b" hint-placeholder-count="24">
-        <div style="position: absolute; z-index: 2; left: 164px; top: 164px; width: 12px; height: 12px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #fff3c4 35%, #ffc93a 100%); box-shadow: 0 0 6px rgba(255,220,120,.9); opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
+        <div class="fw-lamp" style="position: absolute; z-index: 2; left: 163px; top: 163px; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
       </sc-for>
       <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ cancel }}" onLostPointerCapture="{{ cancel }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
         <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
@@ -359,7 +363,7 @@ class Component extends DCLogic {
       frameRef:this.frameRef,phase:s.phase,winning,pocketHalo:halo,selectionTitle,selectionStep:landed!==null?'•':p?'2':'1',
       wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,cancel:this.cancel,
       wheelBg: WHEEL_BG, segs: SEGS, glow: lit || winning ? '34px' : '0px',
-      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit || winning ? 1 : 0.7, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
+      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit || winning ? 1 : 0.95, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
       showHint: !s.touched && !!p,
       forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
       forceLabel: !s.forceSet ? '' : s.force > 0.85 ? 'MÁXIMA' : s.force > 0.55 ? 'FORTE' : s.force > 0.2 ? 'BOA' : 'FRACA',
