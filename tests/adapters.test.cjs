@@ -335,3 +335,15 @@ test('Wheel stops pending motion on request failure without inventing a result o
  reject(Error('offline'));await pending;frame(1200);
  assert.equal(w.rot,last);assert.equal(w.state.spinning,false);assert.equal(w.state.balance,1000);assert.equal(w.state.landed,null);
 });
+
+test('Wheel center always marks the chosen bet regardless of the landed pocket',()=>{
+ const {instance:w}=component('Fortune Wheel.dc.html',{enabled:true});
+ for(const pick of [0,1,7,12]){
+  w.state.pick={t:'n',v:pick};w.state.landed=null;
+  const expected=w.renderVals();
+  for(let landed=0;landed<13;landed++){
+   w.state.landed=landed;const current=w.renderVals();
+   for(const key of ['hubName','hubPos','hubBg','hubIconOp','hubGirOp','hubFortOp'])assert.equal(current[key],expected[key]);
+  }
+ }
+});
