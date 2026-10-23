@@ -19,7 +19,7 @@ def check_clown_bounce(browser,login,restored,check_menu,claim_gift,observer):
         page.wait_for_function('window.__clown && window.ClownBall?.texs && window.KingRicoCloud?.player',timeout=30000)
         restored(page,uid)
         page.wait_for_function('document.querySelectorAll("[data-clown-marker]").length===10 && [...document.querySelectorAll("[data-clown-marker]")].every(img=>img.complete && img.naturalWidth>0)',timeout=20000)
-    ready();check_menu(page,'Fortune Clown',False);page.screenshot(path='/tmp/king-rico-clown-ready.png')
+    ready();assert page.locator('.ck-multiplier').all_text_contents()==['x0,15','x0,25','x0,5','x0,5','x1','x1'];check_menu(page,'Fortune Clown',False);page.screenshot(path='/tmp/king-rico-clown-ready.png')
     def swipe(x,y):
         page.wait_for_function('!__clown.state.busy && !__clown._request')
         points=page.evaluate('''([x,y])=>{const r=__clown.stageRef.current.getBoundingClientRect(),s=r.width/453,p=__clown.facePoint({x,y});return {a:[r.x+226*s,r.y+670*s],b:[r.x+p.x*s,r.y+p.y*s]};}''',[x,y])

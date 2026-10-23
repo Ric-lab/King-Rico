@@ -190,6 +190,20 @@ test('Clown refuses offline throws, restores progress and never credits a dismis
  cloud.player={...player,clownRound:null,balance:1001.3};g.state.win={w:3.8};g.closeWin();g.closeWin();assert.equal(g.state.balance,1001.3);
  let called=0;g.shoot=()=>called++;g.drag={id:1,pts:[{x:226,y:670},{x:226,y:442}]};g.cancel();g.up({pointerId:1});assert.equal(called,0);
 });
+test('Clown labels show each target payout relative to the displayed full round stake',()=>{
+ const {instance:g}=component('Fortune Clown.dc.html',{});g.marker=()=>'';
+ const view=g.renderVals();
+ assert.deepEqual(Array.from(view.tags,t=>t.m),['x0,15','x0,25','x0,5','x0,5','x1','x1']);
+ const engine=require('../cloud/engine.cjs');
+ for(let i=0;i<6;i++) {
+   const factor=Number(view.tags[i].m.slice(1).replace(',','.'));
+   for(const bet of engine.BETS) {
+     const result=engine.clown(bet,null,'label-check',i,undefined,()=>0);
+     assert.equal(result.sumUnits,Math.round(engine.units(bet)*factor));
+   }
+ }
+});
+
 test('Clown stays still without hits and adds clockwise rotation only after six restored hits',()=>{
  const {instance:g}=component('Fortune Clown.dc.html',{});g.faceRef.current={style:{}};
  g.state.active=true;g.state.results=[0,0,0,0,0,0];g.moveFace(0);g.moveFace(1000);
