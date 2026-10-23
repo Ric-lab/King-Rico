@@ -277,3 +277,11 @@ test('Home daily reward badge reaches 5/5, blocks another ad and renews for a ne
  key=20261023;assert.equal(home.renderVals().rechargeCounter,'0/5');assert.equal(home.renderVals().rechargeDisabled,false);
  home.recharge();assert.equal(home.state.adOpen,true);
 });
+
+test('Flying restores the Happeach checkpoint and protected amount from its shared round',()=>{
+ const player={balance:990,settings:{flyingBetIdx:3},flyingRound:{id:'r',betUnits:1000,step:2,popped:[0,1],ladderVersion:2,peachAt:2,savedUnits:1500}};
+ const {instance:f}=component('Fortune Flying Clown.dc.html',{enabled:true,player});
+ f._cloudDeferred=player;f.applyCloudPlayer();assert.equal(f.state.peachAt,2);assert.equal(f.state.savedUnits,1500);
+ assert.equal(f.renderVals().peachTitle,'PRÊMIO GARANTIDO');assert.equal(f.renderVals().peachText,'15 moedas');
+ assert.equal(f.renderVals().rungs[1].peachDisplay,'block');assert.equal(f.balls.length,8);
+});

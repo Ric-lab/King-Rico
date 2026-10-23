@@ -16,14 +16,25 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-23-guided-v6';
+const RULES_VERSION = '2026-10-23-ladder-v7';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
 const {claw} = require('./claw.cjs');
 const {race} = require('./race.cjs');
+const {climb,GUARANTEED_FACTOR,PEACH_PROBABILITY}=require('./ladder.cjs');
+const FLYING_BASE=.935419176, FLYING_PEACH_MIN=2, FLYING_PEACH_MAX=7;
 const FLYING_MULTIPLIERS = [1.2,1.5,2,2.5,3,4,5,8,12,20];
 function flying(bet,previous,move,roundId,selected,rng=random) {
   const before=previous?.step || 0,betUnits=previous?.betUnits || units(bet);
+  if(!previous || previous.ladderVersion===2) {
+    const x=climb({multipliers:FLYING_MULTIPLIERS,base:FLYING_BASE,peachMin:FLYING_PEACH_MIN,
+      peachMax:FLYING_PEACH_MAX,prize:(b,f)=>Math.round(units(b)*FLYING_MULTIPLIERS[f-1])},bet,
+      previous?{...previous,floor:before}:null,move,rng);
+    const {floor,...result}=x;
+    return {move,roundId,betUnits,ladderVersion:2,...result,step:floor,selected,
+      popped:move==='pop'?[...(previous?.popped||[]),selected]:[...previous.popped]};
+  }
+  // Already-paid rounds from older clients retain their original terms.
   const ok=move==='collect' || rng()<(before?FLYING_MULTIPLIERS[before-1]:TARGET_RTP)/FLYING_MULTIPLIERS[before];
   const step=before+(move==='pop' && ok?1:0),popped=move==='pop'?[...(previous?.popped || []),selected]:[...previous.popped];
   const ended=move==='collect' || !ok || step===10;
@@ -76,19 +87,12 @@ function fingo(bet, previous, move, roundId, selected, rng = random) {
     winUnits:complete ? Math.round(units(bet)*FINGO_MULTIPLIERS[Math.floor((used-1)/3)]) : 0};
 }
 const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
-const NECK_BASE = .9320338677939342, NECK_GUARANTEED_FACTOR = .85, NECK_PEACH_PROBABILITY = 1/8;
+const NECK_BASE = .9320338677939342, NECK_GUARANTEED_FACTOR = GUARANTEED_FACTOR, NECK_PEACH_PROBABILITY = PEACH_PROBABILITY;
 // Preserve the design's one-decimal prizes, without rounding the shared wallet.
 const neckPrize = (bet, floor) => Math.round(bet * NECK_MULTIPLIERS[floor-1] * 10) * 10;
 function neck(bet, previous, move, roundId, rng = random) {
-  const peachAt = previous ? previous.peachAt : rng()<NECK_PEACH_PROBABILITY ? 6+Math.floor(rng()*15) : 0;
-  const floor = previous?.floor || 0, savedUnits = previous?.savedUnits || 0;
-  if(move==='collect') return {move,roundId,betUnits:units(bet),peachAt,floor,savedUnits,ok:true,ended:true,winUnits:neckPrize(bet,floor)};
-  const next = floor+1;
-  const chance = (next===1 ? NECK_BASE/NECK_MULTIPLIERS[0] : NECK_MULTIPLIERS[next-2]/NECK_MULTIPLIERS[next-1]) * (savedUnits>0 ? NECK_GUARANTEED_FACTOR : 1);
-  const ok = rng()<chance, saved = ok && next===peachAt ? neckPrize(bet,next) : savedUnits;
-  const ended = !ok || next===NECK_MULTIPLIERS.length;
-  return {move,roundId,betUnits:units(bet),peachAt,floor:ok?next:floor,savedUnits:saved,ok,ended,
-    winUnits:ended ? ok ? neckPrize(bet,next) : saved : 0};
+  return {move,roundId,betUnits:units(bet),...climb({multipliers:NECK_MULTIPLIERS,base:NECK_BASE,
+    peachMin:6,peachMax:20,prize:neckPrize},bet,previous,move,rng)};
 }
 function weighted(pool, rng) {
   let r = rng() * pool.reduce((a, s) => a + s.w, 0);
@@ -188,4 +192,4 @@ function bonusFor(last, streak, now) {
 module.exports = { TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

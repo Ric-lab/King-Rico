@@ -13,7 +13,7 @@ test('Wheel, Clown and stopping ladders keep 98% across all legal stakes and cho
   for(const bet of engine.BETS){
     for(let selected=0;selected<13;selected++)assert.ok(Math.abs(wheelMath(bet,selected).rtp-.98)<1e-10);
     for(let selected=0;selected<6;selected++)assert.ok(Math.abs(clownMath(bet,selected).rtp-.98)<3e-8);
-    for(const game of ['flying','penalty'])for(const floor of ladderMath(game,bet))assert.ok(Math.abs(floor.rtp-.98)<3e-8);
+    for(const game of ['penalty'])for(const floor of ladderMath(game,bet))assert.ok(Math.abs(floor.rtp-.98)<3e-8);
     assert.ok(Math.abs(fingoMath(bet).rtp-.98)<.0001);
   }
   assert.ok(Math.abs(wheelMath(10,1).prizeRate-.33)<1e-12);

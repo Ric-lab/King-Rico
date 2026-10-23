@@ -75,7 +75,7 @@ service cloud.firestore {
     function operation(o) {
       return o.keys().hasAll(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
         && o.keys().hasOnly(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
-        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6']
+        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7']
         && o.fingerprint is string && o.fingerprint.size() <= 500
         && o.betUnits is int && o.winUnits is int && o.winUnits >= 0 && o.result is map;
     }
@@ -83,7 +83,7 @@ service cloud.firestore {
       let t = o.result.outcome.target;
       let selected = o.selected;
       return t is int && t >= 0 && t <= 12 && o.winUnits == o.betUnits *
-        (t == selected ? selected == 0 ? 25 : 10 : selected != 0 && t != 0 && selected % 2 == t % 2 ? (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6'] ? 2 : 5) : 0);
+        (t == selected ? selected == 0 ? 25 : 10 : selected != 0 && t != 0 && selected % 2 == t % 2 ? (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? 2 : 5) : 0);
     }
     function circusBank(p, old, o) {
       let x=o.result.outcome; let count=x.res.peach.size();
@@ -192,9 +192,9 @@ service cloud.firestore {
         // affectedKeys above already preserves bonuses, consent and every other saved game.
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
-        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6'] ? 12 : 11)
-            && (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6'] ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
-          : o.selected == -1 && (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6'] ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))
+        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? 12 : 11)
+            && (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
+          : o.selected == -1 && (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))
         && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
         && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
         && o.result.balanceBefore == old.balanceUnits / 100.0
@@ -368,19 +368,27 @@ service cloud.firestore {
           : p.diff(old).affectedKeys().hasOnly(['balanceUnits','revision','updatedAt','lastOperationId'])
             && o.result.keys().hasOnly(['player','amount']));
     }
+    function flyingProtection(x,r,first,prize) {
+      return x.ladderVersion == 2 && x.peachAt is int
+        && (first ? x.peachAt == 0 || x.peachAt >= 2 && x.peachAt <= 7 : x.peachAt == r.peachAt)
+        && x.savedUnits == (x.ok && x.step == x.peachAt ? prize : first ? 0 : r.savedUnits);
+    }
     function flying(p, old, o) {
       let x = o.result.outcome;
       let previous = old.get('flyingRound',null);
       let first = previous == null;
       let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'step':0,'popped':[]} : previous;
       let prize = x.step > 0 ? int(x.betUnits * [120,150,200,250,300,400,500,800,1200,2000][x.step-1] / 100) : 0;
+      let protected = first ? o.rulesVersion == '2026-10-23-ladder-v7' : r.get('ladderVersion',0) == 2;
+      let round = {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'popped':x.popped};
       return o.action == 'flying' && o.game == 'flying' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','flyingRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['flyingBetIdx'])
         && p.settings.flyingBetIdx is int && p.settings.flyingBetIdx >= 0 && p.settings.flyingBetIdx <= 9
         && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.flyingBetIdx]
-        && x.keys().hasOnly(['move','roundId','betUnits','step','popped','selected','ok','ended','winUnits'])
+        && (protected ? x.keys().hasOnly(['move','roundId','betUnits','step','popped','selected','ok','ended','winUnits','ladderVersion','peachAt','savedUnits'])
+          && flyingProtection(x,r,first,prize) : x.keys().hasOnly(['move','roundId','betUnits','step','popped','selected','ok','ended','winUnits']))
         && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
         && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
         && x.move in ['pop','collect'] && x.ok is bool && x.ended is bool
@@ -389,8 +397,9 @@ service cloud.firestore {
           : x.selected is int && x.selected >= 0 && x.selected < 10 && !(x.selected in r.popped)
             && x.popped == r.popped.concat([x.selected]) && x.step == r.step + (x.ok ? 1 : 0))
         && x.ended == (x.move == 'collect' || !x.ok || x.step == 10)
-        && o.winUnits == (x.ended && x.ok ? prize : 0) && x.winUnits == o.winUnits
-        && p.get('flyingRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'popped':x.popped})
+        && o.winUnits == (x.ended ? x.ok ? prize : protected ? x.savedUnits : 0 : 0) && x.winUnits == o.winUnits
+        && p.get('flyingRound',null) == (x.ended ? null : protected
+          ? {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'popped':x.popped,'ladderVersion':2,'peachAt':x.peachAt,'savedUnits':x.savedUnits} : round)
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits-o.betUnits+o.winUnits
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(300,'ms'))
@@ -452,7 +461,7 @@ service cloud.firestore {
     // Fortune 33 uses the same saved-hand slot; target is immutable during a hand.
     function thirtyThreeOpening(r, version) {
       let d=r.deck;
-      return r.target == 33 && (version in ['2026-10-22-balance-v5','2026-10-23-guided-v6'] ? r.get('winFactor',0) == 208 : !('winFactor' in r)) && (version == '2026-10-23-guided-v6' ? r.get('dealVersion',0) == 2 : !('dealVersion' in r)) && d is list && d.size() == 52 && d.toSet() == [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51].toSet()
+      return r.target == 33 && (version in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? r.get('winFactor',0) == 208 : !('winFactor' in r)) && (version in ['2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? r.get('dealVersion',0) == 2 : !('dealVersion' in r)) && d is list && d.size() == 52 && d.toSet() == [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51].toSet()
         && r.turn == 1 && r.cursor == 4 && r.phase == 'player'
         && r.player == [d[0],d[2]] && r.dealer == [d[1],d[3]]
         && r.playerHard == d[0]%13+d[2]%13+2 && r.dealerHard == d[1]%13+d[3]%13+2
@@ -589,7 +598,7 @@ service cloud.firestore {
       let o = getAfter(path).data;
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
-        && (o.rulesVersion in ['2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6'] ? !('player' in o.result) : legacyFinancialPlayer(p,o))
+        && (o.rulesVersion in ['2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7'] ? !('player' in o.result) : legacyFinancialPlayer(p,o))
         && (o.action == 'race' ? race(p,old,o) : o.action == 'claw' ? claw(p,old,o) : o.action == 'twentyOne' ? twentyOne(p,old,o) : o.action == 'flying' ? flying(p,old,o) : o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'fingo' ? fingo(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     match /players/{uid} {

@@ -3,6 +3,7 @@
 import engine from '../cloud/engine.cjs';
 import {slotMath} from './economy-math.mjs';
 import {auditNeck} from './neck-audit.mjs';
+import {auditFlying} from './flying-audit.mjs';
 import {pathToFileURL} from 'node:url';
 
 export const seeded=seed=>()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32);
@@ -26,15 +27,12 @@ export function clownMath(bet,selected) {
     prizeRate:1-(1-hit)**engine.CLOWN_BALLS};
 }
 export function ladderMath(game,bet) {
-  const play=(previous,move,r)=>game==='flying'
-    ?engine.flying(bet,previous,move,'audit',previous?.step||0,()=>r)
-    :engine.penalty(bet,previous,move,'audit',1000,()=>r);
-  const length=game==='flying'?engine.FLYING_MULTIPLIERS.length:engine.PENALTY_MULTIPLIERS.length;
+  if(game!=='penalty')throw Error('Use auditFlying: guarantees require conditional stopping policies');
+  const play=(previous,move,r)=>engine.penalty(bet,previous,move,'audit',1000,()=>r);
   let previous=null,success=1;const floors=[];
-  for(let i=0;i<length;i++){
-    const move=game==='flying'?'pop':'shoot';
-    success*=probability(r=>{const x=play(previous,move,r);return game==='flying'?x.ok:x.goal;});
-    previous=play(previous,move,0);
+  for(let i=0;i<engine.PENALTY_MULTIPLIERS.length;i++){
+    success*=probability(r=>play(previous,'shoot',r).goal);
+    previous=play(previous,'shoot',0);
     const prize=previous.ended?previous.winUnits:play(previous,'collect',0).winUnits;
     floors.push({floor:i+1,rtp:success*prize/engine.units(bet),prizeRate:success});
   }
@@ -93,13 +91,13 @@ function sessions(game,count=2000) {
     endsAboveStart:winners/count,unableToBetAgain:ruined/count};
 }
 export function auditEconomy() {
-  const neck=auditNeck();
+  const neck=auditNeck(),flying=auditFlying();
   return {rulesVersion:engine.RULES_VERSION,targetRtp:engine.TARGET_RTP,
     note:'Long-run wager return. Session samples can win or lose; no historical adjustment. Skill and choices matter.',
     circus:{theoretical:slotMath(),sample:slotSample(),sessions:sessions('circus')},
     wheel:{ordinary:wheelMath(10,1),fortune:wheelMath(10,0),sessions:sessions('wheel')},
     clown:engine.CLOWN_MULTIPLIERS.map((m,i)=>({multiplier:m,...clownMath(10,i)})),
-    fingo:fingoMath(),flying:ladderMath('flying',10),penalty:ladderMath('penalty',10),
+    fingo:fingoMath(),flying:{maxOptimalRtp:flying.maxOptimalRtp,firstFloor:flying.bets[3].fixedFloors[0]},penalty:ladderMath('penalty',10),
     neck:{maxOptimalRtp:neck.maxOptimalRtp,firstFloor:neck.bets.find(b=>b.bet===10).fixedFloors[0]},
     thirtyThree:{strategies:[24,25,26,27,28,29,30].map(t=>cardSimulation(200000,t)),sessions:sessions('33')},
     excluded:'Legacy 21 and parked Bounce/Claw/Race retain their previous math.'};

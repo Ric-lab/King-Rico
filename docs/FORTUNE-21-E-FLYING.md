@@ -4,7 +4,7 @@ Ambos abrem pela Home e usam o mesmo login Google, sessão, saldo em centavos e 
 
 ## Fortune 33
 
-Fortune 33 substitui o 21 na Home. Cartas numeradas de 1 a 13 valem exatamente o número impresso; 1 vale apenas 1. Objetivo: ficar mais perto de 33 que a banca, sem ultrapassar. Nas novas mãos, a banca compara sua pontuação com a do jogador: compra enquanto está atrás, para quando está à frente e, em empate, compra até 26 ou preserva o empate a partir de 27. Assim, pode parar abaixo de 27 ou comprar acima de 27. Novas mãos pagam 2,08× na vitória incluindo a aposta; mãos antigas já abertas conservam 2×; empate devolve a aposta. Fazer 33 passa a vez à banca, com o mesmo pagamento normal. Não há bônus de duas cartas: duas cartas somam no máximo 26.
+Fortune 33 substitui o 21 na Home. Cartas numeradas de 1 a 13 valem exatamente o número impresso; 1 vale apenas 1. Objetivo: ficar mais perto de 33 que a banca, sem ultrapassar. Nas novas mãos, a banca compara sua pontuação com a do jogador: compra enquanto está atrás, para quando está à frente e, em empate, compra até 26 ou preserva o empate a partir de 27. Assim, pode parar abaixo de 27 ou comprar acima de 27. Novas mãos pagam 2,08× na vitória incluindo a aposta; mãos antigas já abertas conservam seu fator de pagamento salvo (2× nas mãos sem fator); empate devolve a aposta. Fazer 33 passa a vez à banca, com o mesmo pagamento normal. Não há bônus de duas cartas: duas cartas somam no máximo 26.
 
 Cada número mantém o asset escolhido pelo autor. O botão de interrogação foi removido; as regras continuam disponíveis pelo menu. `cloud/thirty-three.cjs` implementa a regra; `target:33` é salvo e imutável durante a mão. O baralho de 52 cartas contém quatro cópias de cada número e é preparado uma vez na abertura. Na versão 2 da distribuição, um sorteio seleciona vitória, empate ou derrota para a política de referência de pedir abaixo de 28; o motor prepara um baralho legal compatível. As decisões do jogador continuam podendo mudar esse resultado. O baralho inteiro fica imutável durante a mão. Débito, cartas, turnos, resultado e crédito continuam atômicos, verificáveis pelas regras Firestore e protegidos contra repetição.
 
@@ -16,9 +16,11 @@ Mãos já abertas sem `dealVersion:2` conservam a banca antiga em 27 e seu fator
 
 ## Flying Clown
 
-Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/SUBIR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20 e a chance de 0,98/1,2 na primeira etapa, multiplicador anterior/próximo nas demais. Escolher um balão não altera a chance.
+Mantém a arte, os dez balões, a subida, o susto/queda, a aterrissagem, o esticão e os botões PEGAR/SUBIR do export. `cloud/engine.cjs` mantém os multiplicadores 1,2 → 20. Novas rodadas usam o mesmo motor `cloud/ladder.cjs` do Neck: Happeach pode aparecer em 1/8 das rodadas, entre os balões 2 e 7, e guarda o prêmio inteiro daquele ponto. Uma queda posterior paga o valor guardado; pegar paga apenas o prêmio atual. Após proteção, a chance de avanço recebe fator 0,85. A base 0,935419176 foi calibrada com a garantia e escolhas de pegar/subir, chegando a aproximadamente 98% na política ótima, conforme `scripts/flying-audit.mjs`. Escolher um balão não altera a chance.
 
 O ID de cada balão estourado fica na rodada, permitindo restaurar cores, ordem e quantidade. Estourar debita apenas na primeira ação; pegar ou completar a décima etapa credita uma única vez. As moedas que voam ao saldo são apenas apresentação. Sair e voltar restaura o ponto salvo, e a perda também fica confirmada antes da queda.
+
+O ponto de Happeach e o valor protegido são persistidos em `flyingRound` junto de `ladderVersion:2`. A interface indica o ponto na escada e o prêmio guardado; uma queda protegida apresenta “PRÊMIO GARANTIDO!” antes da confirmação visual do saldo. A transação já confirmou o crédito, independentemente da animação ou da conexão posterior. Rodadas antigas sem a versão continuam com sua regra original e seu formato, sem ganhar nem perder proteção no meio.
 
 ## Operações, compatibilidade e recarga
 

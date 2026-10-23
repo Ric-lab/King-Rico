@@ -374,3 +374,21 @@ test('Home rewards stop at five per Sao Paulo day, deduplicate the last slot and
  assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,6);assert.equal(renewed.player.balance,7000);
  assert.equal(renewed.player.rechargeDaily.dayIndex,dayIndex(Date.parse('2026-10-13T03:00:00Z')));
 });
+
+test('Flying protection survives another device, refunds a fall once and preserves legacy pending rounds',async()=>{
+ const m=memory(()=>0),call=m.client('flying-peach');await call(request({action:'bootstrap'}));
+ const roundId=randomUUID(),base={action:'flying',game:'flying',bet:10,roundId};
+ await call({...base,requestId:roundId,move:'pop',step:0,selected:0});m.advance(350);
+ let x=await call(request({...base,move:'pop',step:1,selected:1}));
+ assert.equal(x.player.flyingRound.savedUnits,1500);assert.equal(x.player.balance,990);
+ const other=m.client('flying-peach');assert.deepEqual((await other(request({action:'bootstrap'}))).player.flyingRound,x.player.flyingRound);
+ m.advance(350);m.setRng(()=>.99);const fail=request({...base,move:'pop',step:2,selected:2});
+ const [a,b]=await Promise.all([call(fail),other(fail)]);assert.equal(a.player.balance,1005);assert.equal(b.replayed,true);
+ assert.equal(a.outcome.winUnits,1500);assert.equal(a.player.flyingRound,null);
+ await assert.rejects(other(request({...base,move:'collect',step:2,selected:-1})),{code:'king-rico/round-conflict'});
+ assert.equal((await other(request({action:'bootstrap'}))).player.balance,1005);
+ // An already-debited legacy round has no guarantee/version fields.
+ m.records.get('players/flying-peach').flyingRound={id:roundId,betUnits:1000,step:1,popped:[0]};m.advance(350);
+ x=await call(request({...base,move:'collect',step:1,selected:-1}));assert.equal(x.outcome.winUnits,1200);
+ assert.equal('ladderVersion' in x.outcome,false);
+});

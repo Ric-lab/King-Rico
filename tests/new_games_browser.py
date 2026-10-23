@@ -19,13 +19,14 @@ def seed_cards(page,prefix):
 
 def tap_pop(page):
     page.bring_to_front()
+    page.locator('[data-cloud-notice]:visible').wait_for(state='hidden')
     label='JOGAR' if page.evaluate('__flying.state.step===0') else 'SUBIR'
     box=page.get_by_role('button',name=label,exact=True).bounding_box()
     page.touchscreen.tap(box['x']+box['width']/2,box['y']+box['height']/2)
 
 def forced_pop(page,success=True):
     seed_cards(page,[])
-    page.evaluate('(n)=>window.__testDraws=[n]',0 if success else 4294967295)
+    page.evaluate('''n=>{const fresh=!window.KingRicoCloud?.player?.flyingRound&&!window.__fn?.state?.floor;window.__testDraws=fresh?(n===0?[0,0,0]:[n,n]):[n];}''',0 if success else 4294967295)
 
 def check_new_games(browser,login,restored,claim_gift,observer):
     context=browser.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True)
@@ -129,7 +130,26 @@ def check_new_games(browser,login,restored,claim_gift,observer):
     page.evaluate('''()=>localStorage.setItem(`kingRico.pending.${KingRicoCloud.uid}`,JSON.stringify({action:'flying',game:'flying',move:'collect',bet:10,roundId:crypto.randomUUID(),requestId:crypto.randomUUID(),step:1,selected:-1}))''')
     page.reload();restored(page,uid);flying_ready(page)
     assert page.evaluate('KingRicoCloud.player.balance')==before+182
+    # Reach the visible checkpoint, restore it, then fail and acknowledge the saved prize.
+    protected_before=page.evaluate('KingRicoCloud.player.balance')
+    forced_pop(page);tap_pop(page);page.wait_for_function('KingRicoCloud.player.flyingRound?.step===1');flying_ready(page)
+    assert page.locator('[data-testid="flying-protection"]').inner_text().split()==['ALCANCE','HAPPEACH','x1,5']
+    forced_pop(page);tap_pop(page);page.wait_for_function('KingRicoCloud.player.flyingRound?.savedUnits===1500');flying_ready(page)
+    page.reload();restored(page,uid);flying_ready(page)
+    assert page.evaluate('__flying.state.savedUnits')==1500
+    assert 'PRÊMIO GARANTIDO' in page.locator('[data-testid="flying-protection"]').inner_text()
+    page.screenshot(path='/tmp/king-rico-flying-protected.png')
+    forced_pop(page,False);tap_pop(page);page.wait_for_function('!!__flying.state.win',timeout=15000)
+    assert page.evaluate('__flying.state.win.title')=='PRÊMIO GARANTIDO!'
+    assert page.evaluate('__flying.state.win.w')==15
+    assert page.evaluate('KingRicoCloud.player.balance')==protected_before+5
+    page.screenshot(path='/tmp/king-rico-flying-protected-prize.png')
+    page.get_by_text('PRÊMIO GARANTIDO!',exact=True).tap();flying_ready(page)
+    page.reload();restored(page,uid);flying_ready(page)
+    assert page.evaluate('KingRicoCloud.player.balance')==protected_before+5
+    page.get_by_role('link',name='Voltar para o início').tap();restored(page,uid)
+    assert page.evaluate('KingRicoCloud.player.balance')==protected_before+5
     assert not errors,errors
     assert not missing,missing
     context.close()
-    return {'new_games_home_links':True,'33_debit_once':True,'33_literal_ranks_tie_cents_no_ace_hint_or_help_button':True,'33_bank_reload_two_tabs_old_link_redirect':True,'33_bust_persists':True,'flying_real_balloon_touch':True,'flying_restore_popped_order':True,'flying_collect_once_two_tabs':True,'flying_fall_saved':True,'flying_final_x20_saved':True,'same_google_session_wallet_and_menu':True,'legacy_balances_ignored':True,'stale_pending_does_not_block_login':True}
+    return {'new_games_home_links':True,'33_debit_once':True,'33_literal_ranks_tie_cents_no_ace_hint_or_help_button':True,'33_bank_reload_two_tabs_old_link_redirect':True,'33_bust_persists':True,'flying_real_balloon_touch':True,'flying_restore_popped_order':True,'flying_collect_once_two_tabs':True,'flying_fall_saved':True,'flying_final_x20_saved':True,'flying_happeach_reload_protected_fall_paid_once':True,'same_google_session_wallet_and_menu':True,'legacy_balances_ignored':True,'stale_pending_does_not_block_login':True}

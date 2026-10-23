@@ -182,7 +182,8 @@ export function createGameStore(db, uid, dependencies={}) {
         if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
         const outcome=engine.flying(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
-        p.flyingRound=outcome.ended?null:{id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,popped:outcome.popped};
+        p.flyingRound=outcome.ended?null:{id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,popped:outcome.popped,
+          ...(outcome.ladderVersion===2?{ladderVersion:2,peachAt:outcome.peachAt,savedUnits:outcome.savedUnits}:{})};
         p.settings.flyingBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'flying',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='race') {

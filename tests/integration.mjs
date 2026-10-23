@@ -675,3 +675,41 @@ test('Home recharge Rules count daily confirmed clicks without duplicating repla
  const renewed=await c.call(request({action:'recharge',source:'home'}));
  assert.equal(renewed.player.rechargeDaily.count,1);assert.equal(renewed.player.rechargeCount,6);
 });
+
+test('Flying Happeach v7 persists protection, rejects forged saves and pays a protected fall exactly once',async()=>{
+ let roll=0;const name='flying-protected-'+randomUUID(),c=await client(name,name,{rng:()=>roll});
+ await c.call(request({action:'bootstrap'}));const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
+ const base={action:'flying',game:'flying',bet:10,roundId};
+ await c.call({...base,requestId:roundId,move:'pop',step:0,selected:0});
+ await new Promise(r=>setTimeout(r,350));
+ async function forge(change){
+  const old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.flying(10,old.flyingRound,'pop',roundId,1,()=>0);
+  change(outcome);const round={id:roundId,betUnits:1000,step:outcome.step,popped:outcome.popped,
+   ladderVersion:outcome.ladderVersion,peachAt:outcome.peachAt,savedUnits:outcome.savedUnits};
+  const next={...old,flyingRound:round,balanceUnits:old.balanceUnits+outcome.winUnits,revision:old.revision+1,
+   lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{
+   action:'flying',game:'flying',selected:1,fingerprint:'forged-guarantee',betUnits:0,winUnits:outcome.winUnits,
+   createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{game:'flying',bet:10,
+    balanceBefore:990,balanceDebited:990,baseBalance:next.balanceUnits/100,outcome}});
+  await assertFails(batch.commit());
+ }
+ await forge(x=>x.savedUnits=999999);await forge(x=>x.peachAt=3);await forge(x=>x.ladderVersion=1);
+ const x=await c.call(request({...base,move:'pop',step:1,selected:1}));
+ assert.equal(x.player.flyingRound.savedUnits,1500);assert.equal(x.player.balance,990);
+ const second=await client(name+'-other',name,{rng:()=>.99});
+ assert.deepEqual((await second.call(request({action:'bootstrap'}))).player.flyingRound,x.player.flyingRound);
+ await new Promise(r=>setTimeout(r,350));roll=.99;const loss=request({...base,move:'pop',step:2,selected:2});
+ const [a,b]=await Promise.all([c.call(loss),second.call(loss)]);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,1005);assert.equal(b.player.balance,1005);
+ assert.equal(a.outcome.ok,false);assert.equal(a.outcome.winUnits,1500);assert.equal(a.player.flyingRound,null);
+ assert.equal((await second.call(loss)).replayed,true);
+ await assert.rejects(c.call(request({...base,move:'collect',step:2,selected:-1})),{code:'king-rico/round-conflict'});
+});
+test('Flying v7 can finish an already-paid legacy round without changing its payout schema',async()=>{
+ const name='flying-legacy-'+randomUUID(),c=await client(name);await c.call(request({action:'bootstrap'}));
+ const roundId=randomUUID();await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
+  balanceUnits:99000,flyingRound:{id:roundId,betUnits:1000,step:2,popped:[4,8]}}));
+ const x=await c.call(request({action:'flying',game:'flying',bet:10,roundId,move:'collect',step:2,selected:-1}));
+ assert.equal(x.player.balance,1005);assert.equal('savedUnits' in x.outcome,false);
+});

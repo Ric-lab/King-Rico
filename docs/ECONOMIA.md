@@ -1,6 +1,6 @@
-# Economia de moedas — 22/10/2026
+# Economia de moedas — 23/10/2026
 
-Versão `2026-10-23-guided-v6`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-23-ladder-v7`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
 Isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
@@ -15,7 +15,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Circus / Machine | 98,000% teórico | Aposta constante; inclui linhas, telas cheias, mínimo e Rodada Especial |
 | Wheel | 98,000% | Qualquer um dos 13 desenhos escolhidos |
 | Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
-| Flying Clown | 98,000% | Parar em qualquer andar fixo |
+| Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
 | Fingo | 98,006% | Mirar sempre em um tubo dourado |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
@@ -23,6 +23,16 @@ O ajuste histórico que existia no Clown foi removido.
 
 O Neck retorna cerca de 93,20% ao sacar sempre no primeiro andar com aposta de
 10. Não se deve confundir esse caso com a política ótima que considera a garantia.
+Flying e Neck compartilham `cloud/ladder.cjs`: Happeach aparece em 1/8 das rodadas;
+ao alcançá-lo, o prêmio inteiro daquele andar fica guardado e uma queda posterior
+paga esse valor, sem somar ao prêmio de pegar. Depois da garantia, a chance de
+avançar recebe fator 0,85. Não há influência do histórico. A localização sorteada
+é 6–20 no Neck e 2–7 no Flying, respeitando suas tabelas e durações próprias.
+O Flying mantém dez balões e pagamentos em centavos; o Neck mantém 33 andares e
+seu arredondamento de prêmio em décimos. As bases calibradas são respectivamente
+0,935419176 e 0,9320338677939342. Sacar sempre no primeiro balão do Flying retorna
+93,54%; a política ótima com a garantia chega a 98%. Rodadas Flying antigas sem
+`ladderVersion:2` continuam sem proteção e com as chances já contratadas.
 No Clown, errar a mira pode reduzir o retorno. O 21 antigo e os protótipos
 guardados Bounce, Claw e Race conservam sua matemática anterior.
 
@@ -42,7 +52,7 @@ as quatro contribuições antigas. O sexto Happeach já pertence ao próximo cic
 Contadores antigos sem essa informação começam com a referência da aposta atual.
 
 Fortune 33 paga **2,08×** incluindo a aposta nas novas mãos; empates devolvem a
-aposta. Mãos antigas já abertas mantêm **2×**. O fator fica salvo e imutável na mão.
+aposta. Mãos antigas já abertas mantêm seu fator salvo (ou **2×** quando ainda não havia fator). O fator fica salvo e imutável na mão.
 O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribuição é dirigida na abertura e permanece fixa. A banca reage à pontuação do jogador, podendo parar abaixo de 27 ou comprar acima de 27; em empate alto, preserva o empate. Mãos antigas conservam a política em 27.
 
 ## Auditoria reproduzível
@@ -50,6 +60,7 @@ O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribui
 `npm run audit:economy` usa o motor publicado e produz JSON com expectativas,
 frequências, simulações e sessões. `npm run audit:neck` verifica todas as apostas,
 todos os andares e uma política ótima consciente da garantia por programação dinâmica.
+`node scripts/flying-audit.mjs` aplica a mesma auditoria ao Flying, incluindo a garantia conhecida e todas as apostas.
 As fronteiras de sorteio são verificadas na grade de 32 bits do Web Crypto.
 
 O Circus é calculado por máscaras de Happeach, probabilidades das linhas e
