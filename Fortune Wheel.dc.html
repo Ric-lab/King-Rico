@@ -19,16 +19,20 @@ html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-fami
 a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 @keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rcFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
-@keyframes rrChase { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
-@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
-@keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
+@keyframes rrChase { 0%, 100% { opacity: .28; } 50% { opacity: 1; } }
+@keyframes rrPop { 0% { transform: scale(.8); opacity: 0; } 70% { transform: scale(1.035); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes rrHint { 0%, 100% { transform: translateX(-14px) rotate(-8deg); opacity: .55; } 50% { transform: translateX(14px) rotate(8deg); opacity: 1; } }
-@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fwLetter { 0%, 100% { color: #fff; text-shadow: 0 2px 0 #147a36; } 8% { color: #fff6a0; text-shadow: 0 0 6px #ffe680, 0 0 12px #ffd257, 0 2px 0 #147a36; } 22% { color: #fff; text-shadow: 0 2px 0 #147a36; } }
 @keyframes rrBlink { 0%, 100% { box-shadow: 0 0 0 3px #ffd257, 0 0 14px rgba(255,210,87,.8); } 50% { box-shadow: 0 0 0 3px #fff3c4, 0 0 26px rgba(255,230,140,1); } }
+@keyframes fwLaunch { 0% { transform: scale(.42); opacity: 0; } 18% { opacity: .95; } 100% { transform: scale(1.08); opacity: 0; } }
+@keyframes fwPrize { 0%, 100% { opacity: .45; } 50% { opacity: .95; } }
+@keyframes fwLand { 0% { transform: scale(1); } 45% { transform: scale(1.055); } 100% { transform: scale(1); } }
+.fw-launch { position: absolute; inset: -8px; z-index: 4; border: 5px solid #ffe49b; border-radius: 50%; box-shadow: 0 0 20px #ffd257, inset 0 0 16px #ffd257; opacity: 0; pointer-events: none; }
+.fw-machine[data-phase="spinning"] .fw-launch { animation: fwLaunch .48s ease-out both; }
+.fw-pocket-halo { position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); mask-image: radial-gradient(circle, transparent 71px, #000 75px, #000 153px, transparent 160px); }
+.fw-machine[data-winning="true"] .fw-pocket-halo { animation: fwPrize 1.2s ease-in-out infinite; }
+.fw-machine[data-phase="landed"] .fw-hub { animation: fwLand .32s ease-out; }
+@media (prefers-reduced-motion: reduce) { .fw-machine *, .fw-prize, .fw-prize * { animation: none !important; } }
 </style>
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
@@ -46,12 +50,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
     <!-- roleta -->
-    <div style="position: absolute; left: 56.5px; top: 104px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
+    <div ref="{{ frameRef }}" class="fw-machine" data-phase="{{ phase }}" data-winning="{{ winning }}" style="--fw-chase-duration:.5s; position: absolute; left: 56.5px; top: 104px; width: 340px; height: 340px; transform: scale(1.12); transform-origin: 50% 0;">
       <div style="position: absolute; inset: -12px; border-radius: 50%; background: linear-gradient(160deg, #fff3c4 0%, #f0b41f 35%, #a8620a 70%, #f0b41f 100%); box-shadow: 0 16px 30px rgba(0,0,0,.5), 0 0 {{ glow }} rgba(255,200,80,.5);"></div>
+      <div class="fw-launch"></div>
       <sc-for list="{{ bulbs }}" as="b" hint-placeholder-count="24">
         <div style="position: absolute; left: 164px; top: 164px; width: 12px; height: 12px; border-radius: 50%; pointer-events: none; transform: {{ b.t }}; background: radial-gradient(circle at 40% 35%, #ffffff 0%, #fff3c4 35%, #ffc93a 100%); box-shadow: 0 0 6px rgba(255,220,120,.9); opacity: {{ b.op }}; animation: {{ b.anim }};"></div>
       </sc-for>
-      <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ cancel }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
+      <div ref="{{ wheelRef }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ cancel }}" onLostPointerCapture="{{ cancel }}" style="position: absolute; left: 10px; top: 10px; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; touch-action: none; cursor: grab; background: {{ wheelBg }}; will-change: transform;">
         <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
           <div style="position: absolute; left: 160px; top: 160px; width: 0; height: 0; transform: {{ sg.t }};">
             <div style="position: absolute; left: -1px; top: -160px; width: 3px; height: 112px; transform: rotate(13.846deg); transform-origin: 50% 160px; background: linear-gradient(180deg, #fff3c4, #e0a020);"></div>
@@ -60,7 +65,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             <span style="position: absolute; left: -20px; top: -158px; width: 40px; display: flex; flex-direction: column; align-items: center; line-height: 1; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 11px; color: #fff; text-shadow: 0 2px 0 #147a36; opacity: {{ sg.fortOp }}; pointer-events: none;"><span style="height: 11.5px; animation: fwLetter 1.75s 0.00s ease-in-out infinite;">F</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.25s ease-in-out infinite;">O</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.50s ease-in-out infinite;">R</span><span style="height: 11.5px; animation: fwLetter 1.75s 0.75s ease-in-out infinite;">T</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.00s ease-in-out infinite;">U</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.25s ease-in-out infinite;">N</span><span style="height: 11.5px; animation: fwLetter 1.75s 1.50s ease-in-out infinite;">E</span></span>
           </div>
         </sc-for>
-        
+        <div class="fw-pocket-halo" style="background: {{ pocketHalo }};"></div>
       </div>
       <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: rgba(26,4,44,.9); -webkit-mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px); mask-image: radial-gradient(circle, transparent 54.5px, #000 55px, #000 69px, transparent 69.5px);"></div>
       <div style="position: absolute; z-index: 3; left: 100px; top: 100px; width: 140px; height: 140px; border-radius: 50%; pointer-events: none; background: #fffaf0; -webkit-mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px); mask-image: radial-gradient(circle, transparent 47.5px, #000 48px, #000 55px, transparent 55.5px);"></div>
@@ -69,7 +74,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at 70px 8px, #000 98%, transparent 100%);"></div>
           <div style="position: absolute; inset: 0; opacity: var(--cap); background: conic-gradient(#ff3b3b, #ff9a1f, #ffe23a, #4cd964, #2fc7ff, #4a6bff, #b44aff, #ff3bb0, #ff3b3b); -webkit-mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%); mask-image: radial-gradient(circle 5px at calc(70px + 62px * sin(calc(var(--g) * 1turn))) calc(70px - 62px * cos(calc(var(--g) * 1turn))), #000 98%, transparent 100%);"></div>
       </div>
-      <div style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: {{ hubBg }}; transition: background .25s; box-shadow: 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
+      <div class="fw-hub" style="position: absolute; left: 122px; top: 122px; width: 96px; height: 96px; border-radius: 50%; background: {{ hubBg }}; transition: background .25s; box-shadow: 0 6px 14px rgba(0,0,0,.45); pointer-events: none;">
         <div style="position: absolute; inset: 8px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ hubPos }}; opacity: {{ hubIconOp }};"></div>
         <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: {{ hubFs }}; font-family: {{ hubFf }}; font-weight: 800; color: {{ hubCharC }}; opacity: {{ hubQOp }};">{{ hubChar }}</span><span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 15px; color: #fff; opacity: {{ hubFortOp }}; pointer-events: none;"><sc-for list="{{ hubLetters }}" as="l" hint-placeholder-count="7"><span style="animation: {{ l.anim }}; text-shadow: 0 2px 0 #147a36;">{{ l.c }}</span></sc-for></span><img src="assets/girafa/head.webp" alt="" draggable="false" style="position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; object-fit: contain; opacity: {{ hubGirOp }};">
       </div>
@@ -97,8 +102,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div style="position: absolute; left: 18px; right: 18px; top: 508px; padding: 10px 12px; border-radius: 20px; background: rgba(20,4,36,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.55), 0 10px 24px rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 8px;">
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 2px; opacity: {{ step1Op }};">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">1</span>
-          <span style="font-size: 20px; font-weight: 800; color: #fff3c4; white-space: nowrap;">Escolha um desenho e gire</span>
+          <span style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffd257; color: #4a1a00; font-size: 19px; font-weight: 800;">{{ selectionStep }}</span>
+          <span style="font-size: 20px; font-weight: 800; color: #fff3c4; white-space: nowrap;">{{ selectionTitle }}</span>
         </div>
         
         <div style="display: none;">
@@ -166,8 +171,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: rrFade .2s ease-out;">
-        <div style="width: 340px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: rrPop .45s cubic-bezier(.2,1.4,.4,1);">
-          <span style="font-size: 26px; font-weight: 800; letter-spacing: 1px; color: #ffd257;">VOCÊ GANHOU!</span>
+        <div class="fw-prize" data-prize-kind="{{ winKind }}" style="width: 340px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: rrPop .45s cubic-bezier(.2,1.4,.4,1);">
+          <span style="font-size: 26px; font-weight: 800; letter-spacing: 1px; color: #ffd257;">{{ winTitle }}</span>
+          <div style="position: relative; width: 78px; height: 78px; border-radius: 50%; background: {{ resultBg }}; box-shadow: inset 0 2px 0 #fff9, 0 0 0 3px #ffd257, 0 4px 12px #240336;">
+            <div style="position: absolute; inset: 7px; background: url('assets/symbols-v7.webp') {{ resultPos }} 50% / 1200% 100% no-repeat; opacity: {{ resultIconOp }};"></div>
+            <img src="assets/girafa/head.webp" alt="" style="position: absolute; inset: 7px; width: 64px; height: 64px; object-fit: contain; opacity: {{ resultGirOp }};">
+            <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: 'Rammetto One', sans-serif; color: #fff; opacity: {{ resultFortOp }};">FORTUNE</span>
+          </div>
           <span style="font-size: 22px; font-weight: 800; color: #f0dcff;">{{ winMult }}</span>
           <span style="font-size: 54px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
           <div class="kr-button" style="margin-top: 10px; padding: 12px 54px; font-size: 24px; font-weight: 800;">OK</div>
@@ -195,8 +205,8 @@ const WHEEL_BG = 'conic-gradient(' + ORDER.map(i => PBG(i) + ' ' + (i * SEG) + '
 const SEGS = ORDER.map(i => ({ t: 'rotate(' + (i * SEG + SEG / 2) + 'deg)', pos: POS(i), iconOp: POCKETS[i][0] >= 0 ? 1 : 0, zeroOp: POCKETS[i][0] === -1 ? 1 : 0, fortOp: POCKETS[i][0] === -2 ? 1 : 0 }));
 const RING_ON = '0 0 0 4px #ffd257, 0 0 16px rgba(255,210,87,.85)', RING_OFF = 'inset 0 -3px 0 rgba(150,90,40,.25), 0 2px 0 rgba(0,0,0,.25)';
 class Component extends DCLogic {
-  state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null };
-  wheelRef = React.createRef(); ptrRef = React.createRef(); gaugeRef = React.createRef(); rot = 0;
+  state = { balance: 1000, betIdx: 3, pick: null, spinning: false, force: 0, forceSet: false, win: null, hint: 'Toque em um símbolo para apostar.', touched: false, vw: 453, vh: 802, landed: null, phase: 'idle' };
+  frameRef = React.createRef(); wheelRef = React.createRef(); ptrRef = React.createRef(); gaugeRef = React.createRef(); rot = 0;
   // conta-giros: carrega com a força do arraste e esvazia conforme a roda perde velocidade
   setGauge(v) { const c = this.gaugeRef.current; if (!c) return; this._gv = v; const g = Math.max(0, Math.min(1, v)); c.style.setProperty('--g', String(g)); const p = c.parentNode; if (p) { p.style.setProperty('--g', String(g)); p.style.setProperty('--cap', g > 0.004 ? '1' : '0'); } }
   componentDidMount() {
@@ -206,8 +216,8 @@ class Component extends DCLogic {
       this._cloudDeferred = p; if (!this.state.spinning && !this._cloudRequest) this.applyCloudPlayer();
     });
     this._rs = () => this.setState({ vw: window.innerWidth, vh: (window.KingRicoViewport?.height ?? window.innerHeight) }); this._rs(); window.addEventListener('resize', this._rs);
-    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
-    try { const w = JSON.parse(localStorage.getItem(WKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
+    if(!cloud?.enabled) try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
+    if(!cloud?.enabled) try { const w = JSON.parse(localStorage.getItem(WKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
   }
   applyCloudPlayer() {
     const p = this._cloudDeferred; if (!p) return; this._cloudDeferred = null;
@@ -215,32 +225,37 @@ class Component extends DCLogic {
     this.setState({ balance: p.balance, sfxLvl: p.settings.sfxLvl, vibLvl: p.settings.vibLvl, ...(first ? {betIdx: p.settings.wheelBetIdx} : {}) });
   }
   componentDidUpdate() { if(this._cloudDeferred && !this.state.spinning && !this._cloudRequest) this.applyCloudPlayer(); }
-  componentWillUnmount() { clearTimeout(this._at);this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
+  componentWillUnmount() { this._dead=true;clearTimeout(this._resultTimer);clearTimeout(this._at);this._unwatchCloud && this._unwatchCloud(); if(window.__fw === this) delete window.__fw; window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); }
   save(balance) {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) { cloud.settings({wheelBetIdx:this.state.betIdx, sfxLvl:this.state.sfxLvl ?? 2, vibLvl:this.state.vibLvl ?? 2}); return; }
     try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = this.state.sfxLvl ?? 2; sv.vibLvl = this.state.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv)); localStorage.setItem(WKEY, JSON.stringify({ betIdx: this.state.betIdx })); } catch (e) {} }
-  ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
+  ac() { if((this.state.sfxLvl??2)===0)return null;if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   openMenu = () => { if (this.state.spinning) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
   openPays = () => this.setState({ menu: false, pays: true });
   closePays = () => this.setState({ pays: false, menu: true });
   setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(this.state.balance); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
   tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
-  tick(sp) { this.tone(1800 + sp * 600, 0.025, 'square', 0.035); const now = performance.now(), gap = 40 + (1 - sp) * 30; if (now - (this._lastBuzz || 0) < gap) return; this._lastBuzz = now; this.buzz(Math.round(8 + (1 - sp) * 10)); }
+  tick(sp) {
+    const now=performance.now();if(now-(this._lastTick||0)<35)return;this._lastTick=now;
+    // A short wooden click, brighter at speed and heavier as the wheel slows.
+    this.tone(620+sp*420,.026,'triangle',.075);this.tone(170+sp*90,.018,'sine',.055);
+    if(now-(this._lastBuzz||0)>55){this._lastBuzz=now;this.buzz(Math.round(8+(1-sp)*10));}
+  }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(15, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
   bet() { return BETS[this.state.betIdx]; }
   setRot(r) { this.rot = r; const el = this.wheelRef.current; if (el) el.style.transform = 'rotate(' + r + 'deg)'; }
   kick(amt) { const p = this.ptrRef.current; if (!p) return; p.style.transition = 'none'; p.style.transform = 'rotate(' + amt + 'deg)'; requestAnimationFrame(() => { p.style.transition = 'transform .12s ease-out'; p.style.transform = 'rotate(0deg)'; }); }
   angleAt(e) { const r = this.wheelRef.current.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; }
-  choose(p) { if (this.state.spinning) return; this.ac(); this.buzz(22); this.tone(1100, 0.04, 'square', 0.04); this.setState({ pick: p, landed: null, hint: 'Arraste a roda com força' }); }
+  choose(p) { if (this.state.spinning || this.state.win || this._cloudRequest) return; this.ac(); this.buzz(22); this.tone(1100, 0.04, 'square', 0.04); this.setState({ pick: p, landed: null, phase:'ready', hint: 'Arraste a roda com força' }); }
   pickRed = () => this.choose({ t: 'c', v: 'red' });
   pickBlack = () => this.choose({ t: 'c', v: 'black' });
   down = e => {
     if (this.state.spinning || this.state.win || this.state.menu || this.state.pays) return;
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
     this.ac(); this.drag = { last: this.angleAt(e), samples: [[performance.now(), this.rot]] }; this._lastSeg = Math.floor(this.rot / SEG);
-    this.setState({ touched: true, forceSet: false });
+    this.setState({ touched: true, forceSet: false,landed:null,phase:'dragging' });
   };
   move = e => {
     const d = this.drag; if (!d) return;
@@ -252,11 +267,11 @@ class Component extends DCLogic {
   up = async () => {
     const d = this.drag; if (!d) return; this.drag = null;
     const now = performance.now(), s0 = d.samples[0], v = (this.rot - s0[1]) / Math.max(16, now - s0[0]), force = Math.min(1, Math.abs(v) / 1.6);
-    if (!this.state.pick) { this.setState({ force, hint: 'Primeiro toque em um símbolo.' }); return; }
-    if (force < 0.2) { this.setState({ force, hint: 'Mais forte! Arraste e solte' }); return; }
+    if (!this.state.pick) { this.setState({ force, phase:'idle',hint: 'Primeiro toque em um símbolo.' }); return; }
+    if (force < 0.2) { this.setState({ force, phase:'ready',hint: 'Mais forte! Arraste e solte' }); return; }
     return this.release(force,v);
   };
-  cancel = () => {this.drag=null;this.setGauge(0);};
+  cancel = () => {if(!this.drag)return;this.drag=null;this.setGauge(0);this.setState({force:0,forceSet:false,phase:this.state.pick?'ready':'idle'});};
   release = async (force=.7,v=1) => {
     if(this.state.spinning || this._cloudRequest || this.state.win || this.state.menu || this.state.pays || !this.state.pick) return;
     const bet = this.bet();
@@ -265,36 +280,49 @@ class Component extends DCLogic {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) {
       if(this._cloudRequest) return;
-      this._cloudRequest = true; this.setState({spinning:true,hint:'Confirmando giro…'});
+      this._cloudRequest = true; this.setState({spinning:true,phase:'confirming',landed:null,hint:'Confirmando giro…'});
       try { cloudResult = await cloud.spin('wheel', bet, this.state.pick.v); this._cloudSpin = cloudResult; }
-      catch(e) { this.setState({spinning:false,hint:'Não foi possível confirmar o giro'}); cloud.error(e); return; }
+      catch(e) { if(this._dead)return;this.setState({spinning:false,phase:'ready',hint:'Não foi possível confirmar o giro'}); cloud.error(e); return; }
       finally { this._cloudRequest = false; }
     }
+    if(this._dead)return;
     const bal = cloudResult ? cloudResult.balanceDebited : this.state.balance - bet; this.save(bal); this.buzz(Math.round(25 + force * 35)); this.tone(180, 0.18, 'sine', 0.12, 90);
     // a força decide duração e voltas; a última volta é sorteada (não dá para mirar)
     const dir = Math.sign(v) || 1, turns = 2.5 + force * 5 + Math.random() * 1.5, T = (3000 + force * 2800) * (this.state.turbo ? 0.5 : 1), start = this.rot, t0 = performance.now();
     // The cloud result uses the same 13 pockets and multipliers as the displayed wheel.
     const pk = this.state.pick, rr = Math.random(), pool = pk.v === 0 ? (rr < P_FORT ? [0] : ORDER.filter(n => n !== 0)) : rr < P_EXACT ? [pk.v] : rr < P_EXACT + P_COLOR ? ORDER.filter(n => n !== pk.v && COLOR_OF(n) === COLOR_OF(pk.v)) : ORDER.filter(n => COLOR_OF(n) !== COLOR_OF(pk.v)), target = cloudResult ? cloudResult.outcome.target : pool[Math.floor(Math.random() * pool.length)];
     const k = ORDER.indexOf(target), aim = k * SEG + SEG * (0.18 + Math.random() * 0.64), f0 = start + dir * turns * 360, cur = ((-f0 % 360) + 360) % 360, total = (f0 - (((aim - cur) % 360) + 360) % 360) - start;
-    this.setState({ spinning: true, balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
+    this._presentation={target,bet,pick:{...pk},cloud:cloudResult};
+    this._lastSeg=Math.floor(start/SEG);
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const duration=reduced?350:T;
+    const travel=reduced?((total%360+540)%360)-180:total;
+    this.setState({ spinning: true, phase:'spinning',balance: bal, force, forceSet: true, landed: null, hint: force > 0.85 ? 'Força máxima!' : force > 0.55 ? 'Boa força!' : 'Girando…' });
     const step = () => {
-      const k = Math.min(1, (performance.now() - t0) / T), e = 1 - Math.pow(1 - k, 3); this.setRot(start + total * e); this.setGauge(Math.max(force, 0.35) * Math.pow(1 - k, 2));
+      if(this._dead)return;
+      const k = Math.min(1, (performance.now() - t0) / duration), ramp=.06, area=ramp/2+(1-ramp)/3;
+      const e=k<ramp?k*k/(2*ramp*area):(ramp/2+(1-ramp)/3*(1-Math.pow((1-k)/(1-ramp),3)))/area; this.setRot(start + travel * e); this.setGauge(Math.max(force, 0.35) * Math.pow(1 - k, 2));
+      this.frameRef.current?.style.setProperty('--fw-chase-duration',(.22+k*k*.85)+'s');
       const seg = Math.floor(this.rot / SEG); if (seg !== this._lastSeg) { this._lastSeg = seg; const sp = Math.pow(1 - k, 2); this.tick(sp); this.kick(dir > 0 ? -10 - sp * 10 : 10 + sp * 10); }
       if (k < 1) this._raf = requestAnimationFrame(step); else { this.buzz(28); this.finish(bet); }
     };
     this._raf = requestAnimationFrame(step);
   };
   finish(bet) {
-    const a = ((-this.rot % 360) + 360) % 360, n = ORDER[Math.floor(a / SEG) % N], p = this.state.pick;
+    if(this._dead)return;
+    const shown=this._presentation;
+    const a = ((-this.rot % 360) + 360) % 360, n = shown?.target ?? ORDER[Math.floor(a / SEG) % N], p = shown?.pick || this.state.pick;
+    this.setState({landed:n,phase:'landed'});
     const m = MULT(p, n), hit = m > 0;
     const where = 'Deu ' + POCKETS[n][1] + '.';
     if (m > 0) {
-      const cloud = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin;
+      const cloud = shown?.cloud || (window.KingRicoCloud?.enabled && this._cloudSpin);
       const w = cloud ? cloud.outcome.winUnits / 100 : Math.round(bet * m * 100) / 100;
-      const bal = cloud ? cloud.player.balance : Math.round((this.state.balance + w) * 100) / 100; this.save(bal);
-      [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), i * 90));
+      const bal = cloud ? (window.KingRicoCloud?.player?.balance ?? cloud.player.balance) : Math.round((this.state.balance + w) * 100) / 100; this.save(bal);
+      const notes=m===PAY_FORT?[523,659,784,1046,1318,1568]:m===PAY_NUM?[523,659,784,1046]:[659,831,988];
+      notes.forEach((f,i)=>setTimeout(()=>{if(!this._dead)this.tone(f,.2,'triangle',m===PAY_COLOR?.065:.09);},i*(m===PAY_COLOR?80:95)));
       this.buzz(m > 2 ? [70, 70, 70, 70, 130] : 45);
-      setTimeout(() => this.setState({ spinning: false, balance: bal, landed: n, win: { w, m }, hint: where + ' Gire de novo' }), 350);
+      this._resultTimer=setTimeout(() => {if(!this._dead)this.setState({ spinning: false, balance: bal, landed: n, win: { w, m }, hint: where + ' Gire de novo' });},m===PAY_COLOR?280:480);
     } else {
       this.tone(220, 0.3, 'sine', 0.08, 150);
       this.setState({ spinning: false, landed: n, hint: where + ' Gire de novo' });
@@ -314,13 +342,19 @@ class Component extends DCLogic {
   renderVals() { return Object.assign(this._rv(), { broke: this.rcBroke(), recharge: this.recharge }); }
   _rv() {
     const s = this.state, txt = fmt(s.balance), lit = s.spinning, p = s.pick;
+    const landed=s.landed,winning=landed!==null&&!!p&&MULT(p,landed)>0;
+    const hub=landed!==null?{t:'n',v:landed}:p;
+    const halo=landed===null?'transparent':'conic-gradient(transparent 0deg '+(landed*SEG)+'deg, rgba(255,225,130,'+(winning?.65:.28)+') '+(landed*SEG)+'deg '+((landed+1)*SEG)+'deg, transparent '+((landed+1)*SEG)+'deg 360deg)';
+    const waiting=s.phase==='confirming',spinning=s.phase==='spinning';
+    const selectionTitle=waiting?'Confirmando giro…':spinning?'Girando…':s.phase==='dragging'?'Solte para girar':landed!==null?'Deu '+POCKETS[landed][1]:s.forceSet&&s.force<.2?'Deslize com mais força':p?'Agora deslize a roda':'Escolha um desenho';
     const sel = q => p && p.t === q.t && p.v === q.v;
     const _tb = { turboBg: this.state.turbo ? "#2ec962" : "#2a0a4a", autoBg: this.state.auto ? "#2ec962" : "#2a0a4a", toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto };
     return { ..._tb,
       scale: Math.min(s.vw / 453, s.vh / 802), walletProps:{value: txt,hold:!!(s.win||s.spinning),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
-      wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,
-      wheelBg: WHEEL_BG, segs: SEGS, glow: lit ? '34px' : '0px',
-      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit ? 1 : 0.88, anim: lit ? 'rrChase .5s ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
+      frameRef:this.frameRef,phase:s.phase,winning,pocketHalo:halo,selectionTitle,selectionStep:landed!==null?'•':p?'2':'1',
+      wheelRef: this.wheelRef, ptrRef: this.ptrRef, gaugeRef: this.gaugeRef, down: this.down, move: this.move, up: this.up,cancel:this.cancel,
+      wheelBg: WHEEL_BG, segs: SEGS, glow: lit || winning ? '34px' : '0px',
+      bulbs: Array.from({ length: 24 }, (_, i) => ({ t: 'rotate(' + (i * 15) + 'deg) translateY(-171px)', op: lit || winning ? 1 : 0.7, anim: lit ? 'rrChase var(--fw-chase-duration) ' + ((i % 3) * -0.166) + 's linear infinite' : 'none' })),
       showHint: !s.touched && !!p,
       forcePct: Math.round((s.forceSet ? s.force : 0) * 100) + '%', forceTrans: this.drag ? 'none' : 'width .25s ease-out',
       forceLabel: !s.forceSet ? '' : s.force > 0.85 ? 'MÁXIMA' : s.force > 0.55 ? 'FORTE' : s.force > 0.2 ? 'BOA' : 'FRACA',
@@ -338,10 +372,14 @@ class Component extends DCLogic {
         onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
-      hubBg: !p ? '#f0b41f' : COLOR_OF(p.v) === 'red' ? '#e0321f' : COLOR_OF(p.v) === 'cream' ? '#fbefd8' : '#2fa83a',
-      hubPos: p ? POS(p.v) : '0%', hubIconOp: p && POCKETS[p.v][0] >= 0 ? 1 : 0, hubQOp: !p || p.v === 0 ? 1 : 0, hubChar: p && p.v === 0 ? '' : '?', hubFortOp: p && p.v === 0 ? 1 : 0, hubLetters: 'FORTUNE'.split('').map((c, i) => ({ c, anim: s.spinning ? 'fwLetter 1.05s ' + (i * 0.15).toFixed(2) + 's ease-in-out infinite' : 'none' })), hubFs: p && p.v === 0 ? '15px' : '44px', hubFf: p && p.v === 0 ? "'Rammetto One', 'Baloo 2', sans-serif" : 'inherit', hubCharC: p && p.v === 0 ? '#fff' : '#6b2e05', hubGirOp: p && POCKETS[p.v][0] === -1 ? 1 : 0,
-      step1Op: p && !lit ? 0.7 : 1, step2Op: p ? 1 : 0.45, forceOp: s.forceSet ? 1 : 0.5,
+      hubBg: !hub ? '#f0b41f' : COLOR_OF(hub.v) === 'red' ? '#e0321f' : COLOR_OF(hub.v) === 'cream' ? '#fbefd8' : '#2fa83a',
+      hubPos: hub ? POS(hub.v) : '0%', hubIconOp: hub && POCKETS[hub.v][0] >= 0 ? 1 : 0, hubQOp: !hub || hub.v === 0 ? 1 : 0, hubChar: hub && hub.v === 0 ? '' : '?', hubFortOp: hub && hub.v === 0 ? 1 : 0, hubLetters: 'FORTUNE'.split('').map((c, i) => ({ c, anim: s.spinning ? 'fwLetter 1.05s ' + (i * 0.15).toFixed(2) + 's ease-in-out infinite' : 'none' })), hubFs: hub && hub.v === 0 ? '15px' : '44px', hubFf: hub && hub.v === 0 ? "'Rammetto One', 'Baloo 2', sans-serif" : 'inherit', hubCharC: hub && hub.v === 0 ? '#fff' : '#6b2e05', hubGirOp: hub && POCKETS[hub.v][0] === -1 ? 1 : 0,
+      step1Op: 1, step2Op: p ? 1 : 0.45, forceOp: s.forceSet ? 1 : 0.5,
       step2Text: !p ? 'Depois, arraste a roda' : s.hint,
+      resultBg:landed===null?'#ffd257':PBG(landed),resultPos:landed===null?'0%':POS(landed),
+      resultIconOp:landed!==null&&POCKETS[landed][0]>=0?1:0,resultGirOp:landed!==null&&POCKETS[landed][0]===-1?1:0,resultFortOp:landed===0?1:0,
+      winKind:s.win?(s.win.m===PAY_FORT?'fortune':s.win.m===PAY_NUM?'exact':'color'):'',
+      winTitle:s.win?.m===PAY_FORT?'FORTUNE!':s.win?.m===PAY_NUM?'DESENHO CERTO!':'MESMA COR!',
       win: !!s.win, winText: s.win ? '+' + fmt(s.win.w) : '', winMult: s.win ? 'x' + fmt(s.win.m) + ' da aposta' : '', closeWin: this.closeWin
     };
   }

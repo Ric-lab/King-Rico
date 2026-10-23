@@ -10,6 +10,7 @@ from penalty_browser import check_penalty
 from clown_browser import check_clown_bounce
 from new_games_browser import check_new_games
 from round_controls_browser import check_round_controls
+from wheel_browser import check_wheel
 from home_rewards_browser import check_home_rewards
 from claw_browser import check_claw
 from race_browser import check_race
@@ -414,6 +415,7 @@ with sync_playwright() as p:
         restored_without_login(returned,uid)
         assert returned.evaluate('window.KingRicoCloud.player.balance')==1000
         reopened.close()
+    print(json.dumps(check_wheel(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     check_wallet_retry(browser)
     penalty_result=check_penalty(browser,login,restored_without_login,check_menu,claim_gift,LOGIN_OBSERVER)
     print(json.dumps(penalty_result))

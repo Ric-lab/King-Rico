@@ -18,7 +18,7 @@ Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mes
 
 ## Jogos
 - **Fortune Circus** — slot 3×3 (`Fortune Circus.dc.html`)
-- **Fortune Wheel** — roda de 12 casas, escolha 1 símbolo e gire com swipe; paga x10 (`Fortune Wheel.dc.html`)
+- **Fortune Wheel** — roda de 13 casas, escolha um símbolo e gire com swipe; mesma cor x2, desenho exato x10 e Fortune x25 (`Fortune Wheel.dc.html`)
 
 - **Fortune 33** — cartas numeradas, você contra a banca (`Fortune 33.dc.html`)
 - **Fortune Flying Clown** — estoure balões e escolha quando pegar o prêmio (`Fortune Flying Clown.dc.html`)

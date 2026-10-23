@@ -285,3 +285,29 @@ test('Flying restores the Happeach checkpoint and protected amount from its shar
  assert.equal(f.renderVals().peachTitle,'PRÊMIO GARANTIDO');assert.equal(f.renderVals().peachText,'15 moedas');
  assert.equal(f.renderVals().rungs[1].peachDisplay,'block');assert.equal(f.balls.length,8);
 });
+
+test('Wheel presentation reaches each committed pocket in both directions without drawing or paying again',async()=>{
+ for(const reduced of [false,true])for(const direction of [-1,1])for(let target=0;target<13;target++){
+  let calls=0;const winUnits=target===1?10000:target>0&&target%2?2000:0;
+  const cloud={enabled:true,player:{balance:990+winUnits/100},spin:async()=>{
+   calls++;return{balanceDebited:990,player:cloud.player,outcome:{target,winUnits}};
+  },settings:()=>{}};
+  const {instance:w,frame,timers,context}=component('Fortune Wheel.dc.html',cloud,()=>.5);
+  context.window.matchMedia=()=>({matches:reduced});
+  w.state.pick={t:'n',v:1};w.rot=137;w.tone=w.buzz=w.tick=w.kick=()=>{};
+  await w.release(.7,direction);await w.release(.7,direction);assert.equal(calls,1);
+  assert.equal(w.state.balance,990);frame();
+  const actual=Math.floor((((-w.rot%360)+360)%360)/(360/13));assert.equal(actual,target);
+  assert.equal(w.state.landed,target);timers();
+  assert.equal(w.state.balance,cloud.player.balance);assert.equal(w.state.win?.w||0,winUnits/100);
+  w.closeWin();assert.equal(calls,1);assert.equal(w.state.balance,cloud.player.balance);
+ }
+});
+test('Wheel refuses a failed request without local debit and ignores results after unmount',async()=>{
+ let errors=0;const cloud={enabled:true,spin:async()=>{throw Error('offline');},error:()=>errors++};
+ const {instance:w}=component('Fortune Wheel.dc.html',cloud);w.state.pick={t:'n',v:1};
+ await w.release();assert.equal(errors,1);assert.equal(w.state.balance,1000);assert.equal(w.state.spinning,false);
+ let complete;cloud.spin=()=>new Promise(r=>complete=r);const pending=w.release();w._dead=true;
+ complete({balanceDebited:990,outcome:{target:1,winUnits:10000},player:{balance:1090}});await pending;
+ assert.equal(w.state.balance,1000);assert.equal(w._presentation,undefined);
+});
