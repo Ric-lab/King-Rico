@@ -125,3 +125,14 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 - 2026-10-24 · Neck: teste da macieira no picadeiro · Reutilização de `assets/flying/bg2.webp` para picadeiro, plateia e lona, com camadas e transições por CSS. A árvore, os galhos, as maçãs e a girafa continuam sendo os assets originais; o trecho superior de `bg-sky33.webp` conserva o céu e o espaço. Nenhuma imagem nova gerada, sem consumo GPT Imagens ou Meshy. Enquadramentos conferidos no início e nos níveis 4/10/20/33; composição em teste com o autor.
 
 - 2026-10-24 · Neck: simplificação após feedback de fundo confuso · A composição com duas instâncias de `flying/bg2.webp` foi rejeitada pelo autor. Removida a camada de lona sobreposta e adotado um único cenário `assets/brand/bg-circus-stage.webp`, com centro mais livre. Céu superior com menor opacidade para destacar girafa e frutas. Sem novas imagens geradas; alterações somente na composição dos assets existentes. Aceite visual desta revisão pendente.
+
+## 2026-10-24 — Quintal do Fortune Neck
+
+Conceito de circo à esquerda e árvore à direita aceito pelo usuário; a montagem com
+ícone de tenda e grama detalhada foi rejeitada pelo acabamento. Nova arte única
+`assets/neck/courtyard-hd.webp`, gerada com GPT Image a partir da tela atual, palco
+oficial e cabeça da girafa: entrada, caminho e raízes na mesma perspectiva e luz.
+Uma geração; PNG mestre preservado no workspace, exportação WebP de 906 px (~120 KB).
+A textura do pescoço passou a seguir a curva em coordenadas próprias, com alternativa
+SVG quando Canvas não está disponível. As verificações funcionais não constituem
+aprovação estética; a nova arte ainda aguarda feedback do usuário.
