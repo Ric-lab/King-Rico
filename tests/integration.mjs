@@ -515,7 +515,8 @@ test('Cached v3 clients can play another game without erasing a saved 21 hand',a
  await c.call({action:'twentyOne',game:'twentyOne',move:'start',bet:10,turn:0,roundId,requestId:roundId});
  await new Promise(r=>setTimeout(r,750));const ref=doc(c.db,'players',c.uid),old=(await getDoc(ref)).data(),id=randomUUID(),outcome=engine.wheel(1,1,()=>.99);
  const next={...old,balanceUnits:old.balanceUnits-100+outcome.winUnits,settings:{...old.settings,wheelBetIdx:0},revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
- const player=publicPlayer(next);delete player.flyingRound;delete player.twentyOneRound;
+ // Reproduce the v3 public snapshot, which predates Flying, 21 and Bridge.
+ const player=publicPlayer(next);delete player.flyingRound;delete player.twentyOneRound;delete player.bridgeRound;
  const batch=writeBatch(c.db);batch.set(ref,next);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'wheel',selected:1,fingerprint:'legacy-v3',betUnits:100,winUnits:outcome.winUnits,
   createdAt:serverTimestamp(),rulesVersion:'2026-10-19-spark-v3',result:{game:'wheel',bet:1,balanceBefore:old.balanceUnits/100,balanceDebited:(old.balanceUnits-100)/100,baseBalance:next.balanceUnits/100,outcome,player}});
  await assertSucceeds(batch.commit());assert.equal((await getDoc(ref)).data().twentyOneRound.id,roundId);
