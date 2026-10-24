@@ -169,7 +169,7 @@ class Component extends DCLogic {
   // Presentation only: the confirmed result never depends on animation progress.
   leanTo(target) {
     cancelAnimationFrame(this._leanFrame);
-    const from=this.state.lean||0,start=performance.now(),duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:260;
+    const from=this.state.lean||0,start=performance.now(),duration=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?0:260;
     const frame=()=>{if(this._dead)return;const t=duration?Math.min(1,(performance.now()-start)/duration):1;
       const ease=t*t*(3-2*t);this.setState({lean:from+(target-from)*ease});
       if(t<1)this._leanFrame=requestAnimationFrame(frame);};frame();
