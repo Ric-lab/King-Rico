@@ -14,6 +14,7 @@ from wheel_browser import check_wheel
 from home_rewards_browser import check_home_rewards
 from claw_browser import check_claw
 from race_browser import check_race
+from bridge_browser import check_bridge
 from app_shell_browser import check_app_shell
 from loading_browser import check_loading
 
@@ -429,6 +430,7 @@ with sync_playwright() as p:
     print(json.dumps(check_home_rewards(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_claw(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+    print(json.dumps(check_bridge(browser,login,restored_without_login,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,

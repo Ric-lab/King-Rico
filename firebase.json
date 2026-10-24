@@ -195,6 +195,15 @@
             "value": "no-store"
           }
         ]
+      },
+      {
+        "source": "/bridge",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
       }
     ],
     "rewrites": [
@@ -249,6 +258,10 @@
       {
         "source": "/race",
         "destination": "/Fortune Race.dc.html"
+      },
+      {
+        "source": "/bridge",
+        "destination": "/Fortune Bridge.dc.html"
       }
     ]
   },

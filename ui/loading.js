@@ -4,7 +4,7 @@
   if(!screen)return;
   const retry=screen.querySelector('.kr-boot-retry');
   const game=document.querySelector('meta[name="king-rico-game"]')?.content;
-  const hooks={circus:'__fc',wheel:'__fw',neck:'__fn',fingo:'__fg',penalty:'__pen',clown:'__clown',flying:'__flying',bounce:'__bounce',twentyOne:'KingRico21',claw:'KingRicoClaw',race:'KingRicoRace'};
+  const hooks={bridge:'__bridge',circus:'__fc',wheel:'__fw',neck:'__fn',fingo:'__fg',penalty:'__pen',clown:'__clown',flying:'__flying',bounce:'__bounce',twentyOne:'KingRico21',claw:'KingRicoClaw',race:'KingRicoRace'};
   let dismissed=false,paint=0;
   const shown=selector=>{
     const element=document.querySelector(selector);

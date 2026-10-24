@@ -14,7 +14,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
   assert.match(await readFile('dist/Fortune Fingo.dc.html','utf8'),/src="\.\/runtime\/matter\.min\.js"/);
   for(const game of ['Circus','Wheel','Neck','Fingo','Penalty','Clown','Flying Clown','33']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
   for(const file of ['clownball.js','bounce3d.js']) {const source=await readFile(path.join('dist',file),'utf8');assert.match(source,/const SRC = '\.\/runtime\/three\.module\.js'/);assert.doesNotMatch(source,/unpkg\.com/);}
-  const archived=['Bounce','Claw','Race'].map(game=>`Fortune ${game}.dc.html`);
+  const archived=['Bounce','Claw','Race','Bridge'].map(game=>`Fortune ${game}.dc.html`);
   for(const game of archived)assert.ok(!games.includes(game),`${game} stays archived outside Home`);
   for(const game of [...games,...archived]) {
     const html=await readFile(path.join('dist',game),'utf8');

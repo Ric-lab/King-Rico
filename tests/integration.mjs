@@ -730,3 +730,45 @@ test('Flying v7 can finish an already-paid legacy round without changing its pay
  const x=await c.call(request({action:'flying',game:'flying',bet:10,roundId,move:'collect',step:2,selected:-1}));
  assert.equal(x.player.balance,1005);assert.equal('savedUnits' in x.outcome,false);
 });
+
+test('Bridge Rules save the path, resume, deduplicate payments, reject tampered panes and forged awards',async()=>{
+  const name='bridge-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+  const roundId=randomUUID(),base={action:'bridge',game:'bridge',bet:10,roundId};
+  const start={...base,requestId:roundId,move:'start',step:0,selected:-1};
+  const [a,b]=await Promise.all([c.call(start),c.call(start)]);assert.ok(a.replayed||b.replayed);assert.equal(a.player.balance,990);
+  assert.deepEqual(a.player.bridgeRound.safeSides,[0,0,0,0,0,0]);
+  const other=await client(name+'-other',name,{rng:()=>{throw Error('No redraw');}});
+  assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.bridgeRound,a.player.bridgeRound);
+  await new Promise(r=>setTimeout(r,350));
+  const old=(await getDoc(doc(c.db,'players',c.uid))).data();
+  for(const kind of ['path','award','debit']){
+    const id=randomUUID(),outcome=engine.bridge(10,old.bridgeRound,'jump',roundId,0);
+    if(kind==='path')outcome.safeSides=[1,0,0,0,0,0];
+    if(kind==='award')outcome.winUnits=99999;
+    const next={...old,settings:{...old.settings,bridgeBetIdx:3},balanceUnits:old.balanceUnits+outcome.winUnits+(kind==='debit'?1000:0),
+      bridgeRound:{id:roundId,betUnits:1000,step:1,choices:outcome.choices,safeSides:outcome.safeSides},revision:old.revision+1,lastOperationId:id,
+      updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:old.firstSpinAt};
+    const batch=writeBatch(c.db);batch.set(doc(c.db,'players',c.uid),next);batch.set(doc(c.db,'players',c.uid,'operations',id),{
+      action:'bridge',game:'bridge',selected:0,fingerprint:'forged-'+kind,betUnits:0,winUnits:outcome.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
+      result:{game:'bridge',bet:10,balanceBefore:990,balanceDebited:990,baseBalance:next.balanceUnits/100,outcome}});
+    await assertFails(batch.commit());
+  }
+  const jump=request({...base,move:'jump',step:0,selected:0});await c.call(jump);assert.equal((await other.call(jump)).replayed,true);
+  await new Promise(r=>setTimeout(r,350));const collect=request({...base,move:'collect',step:1,selected:-1});
+  const [paid,replay]=await Promise.all([c.call(collect),other.call(collect)]);assert.ok(paid.replayed||replay.replayed);assert.equal(paid.player.balance,1009);
+  assert.equal(paid.player.bridgeRound,null);assert.equal((await other.call(start)).player.balance,1009);
+  await assert.rejects(other.call(request({...base,move:'collect',step:1,selected:-1})),{code:'king-rico/round-conflict'});
+});
+test('Bridge Rules settle a broken pane and all six safe jumps, with replay after completion',async()=>{
+  const name='bridge-end-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+  for(const lose of [true,false]){
+    await new Promise(r=>setTimeout(r,350));const roundId=randomUUID(),base={action:'bridge',game:'bridge',bet:10,roundId};
+    await c.call({...base,requestId:roundId,move:'start',step:0,selected:-1});
+    for(let step=0;step<(lose?1:6);step++){
+      await new Promise(r=>setTimeout(r,350));const jump=request({...base,move:'jump',step,selected:lose?1:0});
+      const result=await c.call(jump);assert.equal((await c.call(jump)).replayed,true);
+      assert.equal(result.player.balance,lose?990:step===5?1580:980);
+    }
+    assert.equal((await c.call(request({action:'bootstrap'}))).player.bridgeRound,null);
+  }
+});

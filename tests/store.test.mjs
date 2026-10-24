@@ -394,3 +394,35 @@ test('Flying protection survives another device, refunds a fall once and preserv
  x=await call(request({...base,move:'collect',step:1,selected:-1}));assert.equal(x.outcome.winUnits,1200);
  assert.equal('ladderVersion' in x.outcome,false);
 });
+
+test('Bridge commits its path before choices, resumes it, and pays only once across devices',async()=>{
+  const m=memory(()=>0),call=m.client('bridge');await call(request({action:'bootstrap'}));
+  const roundId=randomUUID(),base={action:'bridge',game:'bridge',bet:10,roundId};
+  const start={...base,requestId:roundId,move:'start',step:0,selected:-1};
+  const [a,b]=await Promise.all([call(start),call(start)]);assert.equal(b.replayed,true);assert.equal(a.player.balance,990);
+  assert.deepEqual(a.player.bridgeRound.safeSides,[0,0,0,0,0,0]);
+  const other=m.client('bridge');m.setRng(()=>{throw Error('Cannot redraw');});
+  assert.deepEqual((await other(request({action:'bootstrap'}))).player.bridgeRound,a.player.bridgeRound);
+  m.advance(350);const jump=request({...base,move:'jump',step:0,selected:0});await call(jump);
+  assert.equal((await other(jump)).replayed,true);
+  m.advance(350);const collect=request({...base,move:'collect',step:1,selected:-1});
+  const [paid,replay]=await Promise.all([call(collect),other(collect)]);assert.equal(paid.player.balance,1009);assert.equal(replay.replayed,true);assert.equal(paid.player.bridgeRound,null);
+  await assert.rejects(other(request({...base,move:'collect',step:1,selected:-1})),{code:'king-rico/round-conflict'});
+  assert.equal((await call(start)).player.balance,1009);
+});
+test('Bridge rejects stale/invalid choices and persists losses and final prizes exactly once',async()=>{
+  const m=memory(()=>0),call=m.client('bridge-final');await call(request({action:'bootstrap'}));
+  for(const lose of [true,false]){
+    m.advance(350);const roundId=randomUUID(),base={action:'bridge',game:'bridge',bet:10,roundId};
+    await call({...base,requestId:roundId,move:'start',step:0,selected:-1});
+    await assert.rejects(call(request({...base,move:'collect',step:0,selected:-1})),{code:'king-rico/invalid-argument'});
+    await assert.rejects(call(request({...base,move:'jump',step:0,selected:2})),{code:'king-rico/invalid-argument'});
+    await assert.rejects(call(request({...base,move:'jump',step:1,selected:0})),{code:'king-rico/round-conflict'});
+    for(let step=0;step<(lose?1:6);step++){
+      m.advance(350);const choice=request({...base,move:'jump',step,selected:lose?1:0});
+      const paid=await call(choice);assert.equal((await call(choice)).replayed,true);
+      assert.equal(paid.player.balance,lose?990:step===5?1580:980);
+    }
+    assert.equal((await call(request({action:'bootstrap'}))).player.bridgeRound,null);
+  }
+});

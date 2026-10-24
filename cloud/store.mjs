@@ -4,7 +4,7 @@ import engine from './engine.cjs';
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const publicPlayer = p => ({balance:p.balanceUnits/100, peaches:p.peaches, bonus:p.bonus,neckRound:p.neckRound || null,fingoRound:p.fingoRound || null,penaltyRound:p.penaltyRound || null,clownRound:p.clownRound || null,bounceRound:p.bounceRound || null,flyingRound:p.flyingRound || null,twentyOneRound:p.twentyOneRound || null,
-  settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.peachBank===undefined?{}:{peachBank:p.peachBank}),...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount}),...(p.rechargeDaily===undefined?{}:{rechargeDaily:p.rechargeDaily})});
+  bridgeRound:p.bridgeRound||null,settings:p.settings, analyticsConsent:p.analyticsConsent, revision:p.revision,...(p.peachBank===undefined?{}:{peachBank:p.peachBank}),...(p.rechargeCount===undefined?{}:{rechargeCount:p.rechargeCount}),...(p.rechargeDaily===undefined?{}:{rechargeDaily:p.rechargeDaily})});
 export const dayIndex = ms => Math.floor((ms - 10800000)/86400000);
 
 // Firebase Spark: the browser computes the lottery. Firestore transactions persist
@@ -20,6 +20,7 @@ export function createGameStore(db, uid, dependencies={}) {
   const playerRef = reference(['players',uid]);
   return async data => {
     const allowed={bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected'],
+      bridge:['action','requestId','game','bet','move','roundId','step','selected'],
       neck:['action','requestId','game','bet','move','roundId','floor'],
       fingo:['action','requestId','game','bet','move','roundId','used','selected'],
       bounce:['action','requestId','game','bet','roundId','n','move','gold'],
@@ -37,6 +38,11 @@ export function createGameStore(db, uid, dependencies={}) {
     if (data.action==='spin' && (!engine.BETS.includes(data.bet) || !['circus','wheel'].includes(data.game) ||
       (data.game==='wheel' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>12 : data.selected!==undefined)))
       fail('king-rico/invalid-argument','Aposta inválida.');
+    if(data.action==='bridge' && (data.game!=='bridge'||!engine.BETS.includes(data.bet)||!['start','jump','collect'].includes(data.move)
+      ||!requestIdPattern.test(data.roundId||'')||!Number.isInteger(data.step)||data.step<0||data.step>5
+      ||(data.move==='jump'?![0,1].includes(data.selected):data.selected!==-1)
+      ||data.move==='start'&&(data.step!==0||data.requestId!==data.roundId)||data.move==='collect'&&data.step===0))
+      fail('king-rico/invalid-argument','Ponte inválida.');
     if(data.action==='neck' && (data.game!=='neck' || !engine.BETS.includes(data.bet) || !['start','climb','collect'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.floor) || data.floor<0 || data.floor>32 || data.move==='start' && data.floor!==0))
       fail('king-rico/invalid-argument','Rodada inválida.');
@@ -72,9 +78,9 @@ export function createGameStore(db, uid, dependencies={}) {
       || (data.version===4 ? !Number.isInteger(data.selected2) || data.selected2< -1 || data.selected2>4 || data.selected2===data.selected : data.selected2!==undefined))) fail('king-rico/invalid-argument','Corrida inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['bridgeBetIdx','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
+    const financial = ['bridge','spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
@@ -106,6 +112,18 @@ export function createGameStore(db, uid, dependencies={}) {
         p.settings[data.game==='circus'?'slotBetIdx':'wheelBetIdx']=engine.BETS.indexOf(data.bet);
         result={game:data.game,bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,
           baseBalance:(before-betUnits+(data.game==='circus'?engine.units(outcome.res.win):winUnits))/100};
+      } else if(data.action==='bridge') {
+        const round=p.bridgeRound||null;
+        if(round?(data.move==='start'||round.id!==data.roundId||round.step!==data.step||round.betUnits!==engine.units(data.bet)):data.move!=='start')
+          fail('king-rico/round-conflict','A ponte mudou em outro aparelho.');
+        if(p.lastSpinAt&&time-p.lastSpinAt.toMillis()<300)fail('king-rico/resource-exhausted','Aguarde antes de saltar.');
+        betUnits=round?0:engine.units(data.bet);
+        if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
+        const outcome=engine.bridge(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
+        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
+        p.bridgeRound=outcome.ended?null:{id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,safeSides:outcome.safeSides,choices:outcome.choices};
+        p.settings.bridgeBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt||=stamp();
+        result={game:'bridge',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='neck') {
         const round=p.neckRound || null;
         if(round && (data.move==='start' || round.id!==data.roundId || round.floor!==data.floor || round.betUnits!==engine.units(data.bet)) || !round && data.move!=='start')

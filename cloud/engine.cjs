@@ -179,6 +179,16 @@ function bounce(bet,previous,move,roundId,gold=false) {
   const winUnits=move==='land' && gold ? betUnits*3 : ended ? move==='fall' ? guardUnits : prize(n) : 0;
   return {roundId,betUnits,move,n,guardUnits,gold,ended,winUnits};
 }
+// Glass Bridge: the complete path is drawn once, before the first choice.
+const BRIDGE_MULTIPLIERS=[1.9,3.8,7.5,15,30,60];
+function bridge(bet,previous,move,roundId,selected=-1,rng=random) {
+  const betUnits=previous?.betUnits||units(bet),safeSides=previous?.safeSides||Array.from({length:6},()=>rng()<.5?0:1);
+  const before=previous?.step||0,ok=move!=='jump'||selected===safeSides[before];
+  const step=before+(move==='jump'&&ok?1:0),choices=move==='jump'?[...previous.choices,selected]:previous?.choices||[];
+  const ended=move==='collect'||!ok||step===6;
+  return {roundId,betUnits,move,selected,safeSides,choices,step,ok,ended,
+    winUnits:ended&&ok?Math.round(betUnits*BRIDGE_MULTIPLIERS[step-1]):0};
+}
 function dayKey(ms) {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date(ms));
   const get = key => parts.find(p => p.type === key).value;
@@ -191,7 +201,7 @@ function bonusFor(last, streak, now) {
   const index = gap === 1 ? (streak || 0) % 7 : 0;
   return { day: today, streak: index + 1, amount: [50,100,150,200,250,500,1000][index] };
 }
-module.exports = { TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
+module.exports = { bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
   FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_LEGACY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

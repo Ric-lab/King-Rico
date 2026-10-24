@@ -67,6 +67,8 @@ catch(error) {
 await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
 await cp('ui',path.join(destination,'ui'),{recursive:true});
+// The DC loader has no CommonJS dependency resolver; bundle the preview's shared components.
+await build({entryPoints:['ui/bridge-game.js'],outfile:path.join(destination,'ui/bridge-game.js'),bundle:true,format:'cjs',target:'es2022',minify:true});
 await cp('assets',path.join(destination,'assets'),{recursive:true});
 await mkdir(path.join(destination,'games/race'),{recursive:true});
 await copyFile('games/race/style.css',path.join(destination,'games/race/style.css'));

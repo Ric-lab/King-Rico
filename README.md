@@ -23,6 +23,9 @@ Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mes
 - **Fortune 33** — cartas numeradas, você contra a banca (`Fortune 33.dc.html`)
 - **Fortune Flying Clown** — estoure balões e escolha quando pegar o prêmio (`Fortune Flying Clown.dc.html`)
 
+## Experimento jogável
+- **Fortune Bridge** — Nick Neck numa passarela de vidro no circo, seis escolhas entre esquerda e direita. Prévia em `/bridge`; não substitui o Neck da Home. Ver [regras e validação](docs/FORTUNE-BRIDGE.md).
+
 ## Guardados (fora da Home)
 - **Fortune Bounce** (`Fortune Bounce.dc.html`)
 - **Claw Machine** — máquina e prêmios 3D do Happeach (`Fortune Claw.dc.html`). Faltam os 3 modelos .glb no projeto.

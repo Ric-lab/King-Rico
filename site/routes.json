@@ -11,5 +11,6 @@
   {"file":"Fortune 21.dc.html","path":"/21","game":"twentyOne","title":"Fortune 21"},
   {"file":"Fortune Bounce.dc.html","path":"/bounce","game":"bounce","title":"Fortune Bounce"},
   {"file":"Fortune Claw.dc.html","path":"/claw","game":"claw","title":"Claw Machine"},
-  {"file":"Fortune Race.dc.html","path":"/race","game":"race","title":"Fortune Race"}
+  {"file":"Fortune Race.dc.html","path":"/race","game":"race","title":"Fortune Race"},
+  {"file":"Fortune Bridge.dc.html","path":"/bridge","game":"bridge","title":"Fortune Bridge"}
 ]
