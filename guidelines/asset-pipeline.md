@@ -136,3 +136,13 @@ Uma geração; PNG mestre preservado no workspace, exportação WebP de 906 px (
 A textura do pescoço passou a seguir a curva em coordenadas próprias, com alternativa
 SVG quando Canvas não está disponível. As verificações funcionais não constituem
 aprovação estética; a nova arte ainda aguarda feedback do usuário.
+
+### 2026-10-24 — Vista lateral e apoio da girafa
+
+Após aprovação do acabamento do quintal, o usuário pediu apoio mais firme e mordida
+lateral. `assets/neck/g-head-side.webp`: uma geração GPT Image com a cabeça frontal
+como referência, exportada a 640 px com alpha. Troca de vista apenas durante a
+aproximação; ajuste da ponta do pescoço, alinhamento com a entrada e duas sombras
+curtas sob os cascos. Imagem frontal continua como alternativa se a lateral falhar.
+Validação no navegador: contato da boca com a fruta, apoio dos pés, retomada e prêmio;
+também com imagem lateral/Canvas indisponíveis e redução de movimento.

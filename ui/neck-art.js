@@ -23,14 +23,11 @@
     }
     function draw(state) {
       latest=state;if(dead||!texture.complete||!texture.naturalWidth)return;
-      const {bend,lean,lift}=state,height=bend+40,dpr=Math.min(2,window.devicePixelRatio||1);
+      const {bend,lean,lift,tipScale=1}=state,height=bend+40,dpr=Math.min(2,window.devicePixelRatio||1);
       if(canvas.width!==Math.ceil(250*dpr)||canvas.height!==Math.ceil(height*dpr)){
         canvas.width=Math.ceil(250*dpr);canvas.height=Math.ceil(height*dpr);
       }
       canvas.style.height=height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,250,height);
-      // A solid underpainting also closes the transparent outer margin of the original tile.
-      ctx.beginPath();ctx.moveTo(30.6,bend+20);ctx.bezierCurveTo(30.6,bend*.38+20,30.6+lean,bend*.38-lift+20,30.6+lean,20-lift);
-      ctx.lineWidth=61.2;ctx.strokeStyle='#dca22c';ctx.stroke();
       const phase=Math.max(0,root.clientHeight-bend)%34;
       const samples=[{...point(0,bend,lean,lift),s:0}],steps=80;
       for(let i=1;i<=steps;i++){
@@ -42,8 +39,14 @@
       }
       const edges=samples.map((p,i)=>{
         const prev=samples[Math.max(0,i-1)],next=samples[Math.min(samples.length-1,i+1)],dx=next.x-prev.x,dy=next.y-prev.y,n=Math.hypot(dx,dy)||1;
-        return {left:{x:p.x+dy/n*30.6,y:p.y-dx/n*30.6},right:{x:p.x-dy/n*30.6,y:p.y+dx/n*30.6},s:p.s};
+        const t=Math.max(0,Math.min(1,(p.s/samples.at(-1).s-.7)/.3)),radius=30.6*(1-(1-tipScale)*t*t*(3-2*t));
+        return {left:{x:p.x+dy/n*radius,y:p.y-dx/n*radius},right:{x:p.x-dy/n*radius,y:p.y+dx/n*radius},s:p.s};
       });
+      // Taper the tip into the side-view neck stump without narrowing the shoulders.
+      ctx.beginPath();ctx.moveTo(edges[0].left.x,edges[0].left.y);
+      edges.slice(1).forEach(p=>ctx.lineTo(p.left.x,p.left.y));
+      edges.slice().reverse().forEach(p=>ctx.lineTo(p.right.x,p.right.y));
+      ctx.closePath();ctx.fillStyle='#dca22c';ctx.fill();
       const w=texture.naturalWidth,h=texture.naturalHeight;
       for(let i=1;i<edges.length;i++){
         const a=edges[i-1],b=edges[i],offset=(a.s+phase+.0001)%34,v0=h*(1-offset/34),v1=h*(1-(offset+b.s-a.s)/34);

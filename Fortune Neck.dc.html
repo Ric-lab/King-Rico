@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="./ui/header.css">
 <link rel="stylesheet" href="./ui/controls.css">
 <script defer src="./ui/neck-art.js"></script>
+<link rel="preload" as="image" href="assets/neck/g-head-side.webp">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -56,8 +57,11 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             <div style="position: absolute; left: 372px; top: -14px; width: 66px; height: 30px; padding: 0; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: {{ f.pillBg }}; box-shadow: 0 0 0 2px {{ f.pillRing }}, 0 3px 6px rgba(0,0,0,.35); font-size: 18px; font-weight: 800; color: {{ f.pillC }}; font-variant-numeric: tabular-nums;">{{ f.label }}</div>
           </div>
         </sc-for>
-        <div class="fn-foot-shadow" aria-hidden="true" style="position:absolute;left:17px;bottom:29px;width:187px;height:24px;background:radial-gradient(ellipse,rgba(26,5,25,.65),rgba(26,5,25,.28) 42%,transparent 72%);filter:blur(2px);pointer-events:none;"></div>
-        <div class="fn-neck" ref="{{ neckRef }}" style="position:absolute;left:80.1px;bottom:257.6px;width:250px;height:{{ neckH }}px;transition:height {{ neckT }};pointer-events:none;">
+        <!-- Each hoof meets the ground at world height 44px, with a short contact shadow. -->
+        <div class="fn-foot-shadow" aria-hidden="true" style="position:absolute;left:22px;bottom:29px;width:150px;height:24px;background:radial-gradient(ellipse,rgba(46,22,12,.4),rgba(46,22,12,.14) 45%,transparent 72%);filter:blur(2px);pointer-events:none;"></div>
+        <div class="fn-hoof-contact" aria-hidden="true" style="position:absolute;left:42px;bottom:40px;width:46px;height:8px;border-radius:50%;background:radial-gradient(ellipse,#44200cb8,transparent 72%);pointer-events:none;"></div>
+        <div class="fn-hoof-contact" aria-hidden="true" style="position:absolute;left:111px;bottom:40px;width:46px;height:8px;border-radius:50%;background:radial-gradient(ellipse,#44200cb8,transparent 72%);pointer-events:none;"></div>
+        <div class="fn-neck" ref="{{ neckRef }}" style="position:absolute;left:70.1px;bottom:257.6px;width:250px;height:{{ neckH }}px;transition:height {{ neckT }};pointer-events:none;">
           <div data-neck-straight style="position:absolute;left:0;bottom:0;width:61.2px;height:calc(100% - {{ neckCap }}px);background:url('assets/neck/g-neck.webp') 0 100%/61.2px 34px repeat-y;opacity:0;"></div>
           <canvas hidden style="position:absolute;left:0;top:-20px;width:250px;height:{{ neckCanvasH }}px;"></canvas>
         <svg class="fn-neck-fallback" aria-hidden="true" width="250" height="{{ neckH }}" viewBox="0 0 250 {{ neckH }}" preserveAspectRatio="none" style="position:absolute;left:0;bottom:0;width:250px;height:{{ neckH }}px;overflow:visible;pointer-events:none;">
@@ -65,8 +69,12 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           <path class="fn-neck-path" d="{{ neckPath }}" fill="none" stroke="url(#fn-neck-spots)" stroke-width="61.2" stroke-linecap="butt"></path>
         </svg>
         </div>
-        <img src="assets/neck/g-body.webp" alt="" draggable="false" style="position: absolute; left: 13.5px; bottom: 40px; width: 192.8px; height: 221px;">
-        <img class="fn-head" src="assets/neck/g-head.webp" alt="Girafa" draggable="false" style="position: absolute; left: {{ headX }}px; bottom: {{ headB }}px; width: 192.8px; height: 159.8px; transform-origin: 50% 90%; transform: rotate({{ headRot }}deg) scale({{ headSc }}); transition: bottom {{ neckT }}, transform .09s ease-out;">
+        <img class="fn-body" src="assets/neck/g-body.webp" alt="" draggable="false" style="position:absolute;left:3.5px;bottom:40px;width:192.8px;height:221px;transform-origin:50% 100%;transform:skewX({{ bodySkew }}deg);">
+        <div class="fn-head" role="img" aria-label="Girafa" style="position:absolute;left:{{ headX }}px;bottom:{{ headB }}px;width:192.8px;height:159.8px;transform-origin:50% 90%;transform:translateY({{ headDY }}px) rotate({{ headRot }}deg) scale({{ headSc }});transition:bottom {{ neckT }};perspective:500px;">
+          <img class="fn-head-front" src="assets/neck/g-head.webp" alt="" draggable="false" style="position:absolute;inset:0;width:192.8px;height:159.8px;opacity:{{ frontOpacity }};transform:rotateY({{ frontYaw }}deg);transform-origin:50% 90%;">
+          <img class="fn-head-side" src="assets/neck/g-head-side.webp" alt="" draggable="false" ref="{{ sideRef }}" style="position:absolute;left:8px;top:-18px;width:216px;height:180px;opacity:{{ sideOpacity }};transform:rotateY({{ sideYaw }}deg);transform-origin:42% 94%;-webkit-mask-image:linear-gradient(#000 94%,transparent);mask-image:linear-gradient(#000 94%,transparent);">
+          <span data-mouth-anchor aria-hidden="true" style="position:absolute;left:193.3px;top:128.5px;width:1px;height:1px;pointer-events:none;"></span>
+        </div>
       </div>
       <sc-if value="{{ msg }}" hint-placeholder-val="{{ false }}">
         <div style="position: absolute; left: 0; right: 0; top: 239px; display: flex; justify-content: center; pointer-events: none;">
@@ -132,10 +140,11 @@ const ml = m => 'x' + String(m).replace('.', ',');
 const TIER = k => k <= 7 ? 'green' : k <= 12 ? 'yellow' : k <= 18 ? 'red' : k <= 23 ? 'silver' : k <= 28 ? 'gold' : 'diamond';
 const SRC = k => 'assets/neck/apple-f' + (1 + Math.round((Math.min(M.length, Math.max(1, k)) - 1) * 19 / (M.length - 1))) + '.webp'; // degradê verde → amarelo → vermelho (20 tons espalhados nos 33 andares)
 class Component extends DCLogic {
-  state = { balance: 1000, betIdx: 3, round: false, busy: false, floor: 0, reach: 0, peachAt: 0, saved: 0, fr: {}, headRot: 0, headSc: 1, lean: 0, msg: null, vw: 453, vh: 802 };
-  neckRef=React.createRef();
+  state = { balance: 1000, betIdx: 3, round: false, busy: false, floor: 0, reach: 0, peachAt: 0, saved: 0, fr: {}, headRot: 0, headSc: 1, lean: 0, sideReady:false,msg: null, vw: 453, vh: 802 };
+  neckRef=React.createRef();sideRef=React.createRef();
   componentDidMount() {
     window.__fn = this;
+    const side=this.sideRef.current;side?.addEventListener('load',this.sideLoaded);if(side?.complete&&side.naturalWidth)this.sideLoaded();
     this._neckArt=window.KingRicoNeckArt?.mount(this.neckRef.current);this.drawNeckArt();
     const cloud = window.KingRicoCloud;
     if(cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
@@ -145,8 +154,13 @@ class Component extends DCLogic {
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const w = JSON.parse(localStorage.getItem(NKEY)); if (w && typeof w.betIdx === 'number') this.setState({ betIdx: w.betIdx }); } catch (e) {}
   }
-  componentDidUpdate() { this.drawNeckArt();if(this._cloudDeferred && !this.state.busy && !this._cloudRequest) this.applyCloudPlayer(); }
-  drawNeckArt() {const bend=Math.min(180,34+this.state.reach*STEP);this._neckArt?.draw({bend,lean:(this.state.lean||0)*178,lift:(this.state.lean||0)*12});}
+  componentDidUpdate() { this.drawNeckArt();if(this._sideLoaded&&!this.state.busy&&!this.state.sideReady)this.setState({sideReady:true});if(this._cloudDeferred && !this.state.busy && !this._cloudRequest) this.applyCloudPlayer(); }
+  sideLoaded=()=>{this._sideLoaded=true;if(!this.state.busy)this.setState({sideReady:true});};
+  neckPose(){
+    const lean=this.state.lean||0,t=this.state.sideReady?Math.max(0,Math.min(1,(lean-.1)/.45)):0,turn=t*t*(3-2*t);
+    return {lean:lean*(this.state.sideReady?91:188),lift:lean*(this.state.sideReady?18:12),turn,tipScale:1-.24*turn};
+  }
+  drawNeckArt(){const bend=Math.min(180,34+this.state.reach*STEP);this._neckArt?.draw({bend,...this.neckPose()});}
   applyCloudPlayer() {
     const p=this._cloudDeferred; if(!p) return; this._cloudDeferred=null;
     const r=p.neckRound;this._cloudRoundId=r?.id || null;
@@ -155,7 +169,7 @@ class Component extends DCLogic {
       peachAt:r?.peachAt || 0,saved:(r?.savedUnits || 0)/100,
       fr:r ? Object.fromEntries(Array.from({length:r.floor},(_,i)=>[i+1,'eaten'])) : {}});
   }
-  componentWillUnmount() { this._dead=true;this._neckArt?.destroy();cancelAnimationFrame(this._leanFrame);this._unwatchCloud?.();if(window.__fn===this) delete window.__fn;window.removeEventListener('resize', this._rs); (this._t || []).forEach(clearTimeout); }
+  componentWillUnmount() { this._dead=true;this.sideRef.current?.removeEventListener('load',this.sideLoaded);this._neckArt?.destroy();cancelAnimationFrame(this._leanFrame);this._unwatchCloud?.();if(window.__fn===this) delete window.__fn;window.removeEventListener('resize', this._rs); (this._t || []).forEach(clearTimeout); }
   save(balance) {
     const cloud=window.KingRicoCloud;
     if(cloud && cloud.enabled) { cloud.settings({neckBetIdx:this.state.betIdx,sfxLvl:this.state.sfxLvl ?? 2,vibLvl:this.state.vibLvl ?? 2});return; }
@@ -278,12 +292,13 @@ class Component extends DCLogic {
   _rv() {
     const s = this.state, txt = fmt(s.balance), e = s.reach * STEP, mouth = MOUTH0 + e;
     const viewScale=Math.min(s.vw/453,s.vh/802),cameraY=Math.max(0,mouth-290),sceneHeight=Math.max(802,s.vh/viewScale);
-    const lean=(s.lean||0)*178,lift=(s.lean||0)*12,neckH=34+e,bend=Math.min(180,neckH);
+    const {lean,lift,turn}=this.neckPose(),neckH=34+e,bend=Math.min(180,neckH);
     const neckPath=`M 30.6 ${neckH} L 30.6 ${bend} C 30.6 ${bend*.38} ${30.6+lean} ${bend*.38-lift} ${30.6+lean} ${-lift}`;
     const pr = s.round && s.floor > 0 ? Math.round(s.roundBet * M[s.floor - 1] * 10) / 10 : 0, nextM = M[Math.min(M.length, (s.round ? s.floor : 0) + 1) - 1];
     return {
       scale:viewScale,sceneHeight,groundHeight:sceneHeight+124,worldBottom:sceneHeight-635,walletProps:{value: txt,hold:!!(s.msg||s.busy),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome,
-      camY:cameraY,neckRef:this.neckRef,neckCap:bend,neckCanvasH:bend+40,neckH,neckPath,headX:13.5+lean,headB:281.4+e+lift, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot:s.headRot+(s.lean||0)*6, headSc: s.headSc,
+      camY:cameraY,neckRef:this.neckRef,neckCap:bend,neckCanvasH:bend+40,neckH,neckPath,headX:3.5+lean,headB:281.4+e,headDY:-lift, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot:s.headRot+(1-turn)*(s.lean||0)*3,headSc:s.headSc,
+      frontOpacity:1-turn,sideOpacity:turn,frontYaw:turn*55,sideYaw:(turn-1)*-25,bodySkew:-(s.lean||0)*.8,sideRef:this.sideRef,
       trunkSat: 0.85 + s.floor / 215,
       floors: M.map((m, i) => { const k = i + 1, t = k / M.length, st = s.fr[k], peach = s.round && s.peachAt === k, cur = s.round && k === s.floor + 1;
         return { y: MOUTH0 + k * STEP, label: ml(m), src: peach ? 'assets/fx/peach-plain.webp' : SRC(k), glow: peach ? 1 : cur ? 0.6 : 0,
