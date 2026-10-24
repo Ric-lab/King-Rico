@@ -39,11 +39,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <!-- cena -->
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 0; width: 453px; height: {{ sceneHeight }}px; overflow: hidden; touch-action: none;">
       <div style="position:absolute;left:0;bottom:{{ worldBottom }}px;width:453px;height:4100px;transform:translateY({{ camY }}px);transition:transform .55s cubic-bezier(.3,.7,.3,1);background:linear-gradient(#00002f,#1c0734 65%,#3b061b);">
-        <!-- The apple tree stays in its original coordinates; the circus surrounds it. -->
-        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:1600px;height:2100px;opacity:.6;background:url('assets/neck/bg-sky33.webp') center top/453px 3700px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);"></div>
-        <div class="fn-circus-ring" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:805px;background:url('assets/brand/bg-circus-stage.webp') center bottom/453px 805px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 100px);mask-image:linear-gradient(transparent,#000 100px);"></div>
+        <!-- Two steps at the ring, then an uninterrupted climb through sky and space.
+             The bottom 400px of the sky artwork stay outside the layer (no savanna). -->
+        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;inset:0;background:url('assets/neck/bg-sky33.webp') center top/453px 4500px no-repeat;"></div>
+        <div class="fn-circus-ring" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:540px;background:url('assets/brand/bg-circus-stage.webp') center bottom/453px 805px no-repeat;-webkit-mask-image:linear-gradient(transparent 65px,#000 155px);mask-image:linear-gradient(transparent 65px,#000 155px);"></div>
         <div aria-hidden="true" style="position:absolute;left:0;right:0;top:calc(100% - 48px);height:{{ sceneHeight }}px;pointer-events:none;background:radial-gradient(ellipse at 50% 0,#61101b,transparent 65%),linear-gradient(#3b061b,#1c0734);-webkit-mask-image:linear-gradient(transparent,#000 48px);mask-image:linear-gradient(transparent,#000 48px);"></div>
-        <div style="position: absolute; left: 408px; bottom: 30px; width: 64px; height: 3600px; border-radius: 32px 32px 0 0; background: url('assets/neck/trunk-tile.webp') 0 0 / 64px 220px repeat-y; filter: saturate({{ trunkSat }}) drop-shadow(-4px 0 6px rgba(40,10,30,.35));"></div>
+        <!-- Branches overlap the bark; the trunk continues beyond every viewport edge. -->
+        <div class="fn-trunk" style="position:absolute;left:378px;top:-200px;bottom:-{{ sceneHeight }}px;width:104px;background:url('assets/neck/trunk-tile.webp') 0 0/104px 358px repeat-y;filter:saturate({{ trunkSat }}) drop-shadow(-5px 0 7px rgba(40,10,30,.32));"></div>
         <sc-for list="{{ floors }}" as="f" hint-placeholder-count="33">
           <div style="position: absolute; left: 0; bottom: {{ f.y }}px; width: 453px; height: 0;">
             <img src="assets/neck/branch-v2.webp" alt="" draggable="false" style="position: absolute; left: 230px; bottom: -64px; width: 200px; height: 58px; filter: {{ f.filter }};">
@@ -54,6 +56,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             <div style="position: absolute; left: 372px; top: -14px; width: 66px; height: 30px; padding: 0; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: {{ f.pillBg }}; box-shadow: 0 0 0 2px {{ f.pillRing }}, 0 3px 6px rgba(0,0,0,.35); font-size: 18px; font-weight: 800; color: {{ f.pillC }}; font-variant-numeric: tabular-nums;">{{ f.label }}</div>
           </div>
         </sc-for>
+        <div class="fn-foot-shadow" aria-hidden="true" style="position:absolute;left:17px;bottom:29px;width:187px;height:24px;background:radial-gradient(ellipse,rgba(26,5,25,.65),rgba(26,5,25,.28) 42%,transparent 72%);filter:blur(2px);pointer-events:none;"></div>
         <div style="position: absolute; left: 80.1px; bottom: 257.6px; width: 61.2px; height: {{ neckH }}px; background-image: url('assets/neck/g-neck.webp'); background-size: 61.2px 34px; background-repeat: repeat-y; background-position: 0 100%; transition: height {{ neckT }};"></div>
         <img src="assets/neck/g-body.webp" alt="" draggable="false" style="position: absolute; left: 13.5px; bottom: 40px; width: 192.8px; height: 221px;">
         <img src="assets/neck/g-head.webp" alt="Girafa" draggable="false" style="position: absolute; left: 13.5px; bottom: {{ headB }}px; width: 192.8px; height: 159.8px; transform-origin: 50% 90%; transform: rotate({{ headRot }}deg) scale({{ headSc }}); transition: bottom {{ neckT }}, transform .09s ease-out;">
