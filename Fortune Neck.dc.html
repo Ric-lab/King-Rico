@@ -24,7 +24,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </style>
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
-  <div style="position:absolute;inset:0;background:#1c0734 url('assets/flying/bg2.webp') center/cover;filter:blur(10px) brightness(.4);"></div>
+  <div style="position:absolute;inset:0;background:#1c0734 url('assets/brand/bg-circus-stage.webp') center/cover;filter:blur(10px) brightness(.4);"></div>
 
   <div data-screen-label="Fortune Neck" style="position: relative; flex: 0 0 auto; width: 453px; height: {{ sceneHeight }}px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
 
@@ -40,9 +40,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 0; width: 453px; height: {{ sceneHeight }}px; overflow: hidden; touch-action: none;">
       <div style="position:absolute;left:0;bottom:{{ worldBottom }}px;width:453px;height:4100px;transform:translateY({{ camY }}px);transition:transform .55s cubic-bezier(.3,.7,.3,1);background:linear-gradient(#00002f,#1c0734 65%,#3b061b);">
         <!-- The apple tree stays in its original coordinates; the circus surrounds it. -->
-        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:1600px;height:2100px;background:url('assets/neck/bg-sky33.webp') center top/453px 3700px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);"></div>
-        <div class="fn-circus-canopy" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:450px;height:1300px;background:url('assets/flying/bg2.webp') center top/453px 1600px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 150px,#000 calc(100% - 150px),transparent);mask-image:linear-gradient(transparent,#000 150px,#000 calc(100% - 150px),transparent);"></div>
-        <div class="fn-circus-ring" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:805px;background:url('assets/flying/bg2.webp') center bottom/453px 805px no-repeat;-webkit-mask-image:linear-gradient(transparent 130px,#000 280px);mask-image:linear-gradient(transparent 130px,#000 280px);"></div>
+        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:1600px;height:2100px;opacity:.6;background:url('assets/neck/bg-sky33.webp') center top/453px 3700px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);mask-image:linear-gradient(transparent,#000 100px,#000 calc(100% - 150px),transparent);"></div>
+        <div class="fn-circus-ring" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:805px;background:url('assets/brand/bg-circus-stage.webp') center bottom/453px 805px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 100px);mask-image:linear-gradient(transparent,#000 100px);"></div>
         <div aria-hidden="true" style="position:absolute;left:0;right:0;top:calc(100% - 48px);height:{{ sceneHeight }}px;pointer-events:none;background:radial-gradient(ellipse at 50% 0,#61101b,transparent 65%),linear-gradient(#3b061b,#1c0734);-webkit-mask-image:linear-gradient(transparent,#000 48px);mask-image:linear-gradient(transparent,#000 48px);"></div>
         <div style="position: absolute; left: 408px; bottom: 30px; width: 64px; height: 3600px; border-radius: 32px 32px 0 0; background: url('assets/neck/trunk-tile.webp') 0 0 / 64px 220px repeat-y; filter: saturate({{ trunkSat }}) drop-shadow(-4px 0 6px rgba(40,10,30,.35));"></div>
         <sc-for list="{{ floors }}" as="f" hint-placeholder-count="33">
