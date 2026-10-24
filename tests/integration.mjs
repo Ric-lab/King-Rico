@@ -86,28 +86,44 @@ test('Penalty Rules persist shots, prevent duplicate debits/collection and share
   await new Promise(resolve=>setTimeout(resolve,350));
   const collect=request({...base,move:'collect',step:1,quality:0});
   const [paid,replay]=await Promise.all([other.call(collect),c.call(collect)]);
-  assert.ok(paid.replayed || replay.replayed);assert.equal(paid.player.balance,1000.75);assert.equal(paid.player.penaltyRound,null);
+  assert.ok(paid.replayed || replay.replayed);assert.equal(paid.player.balance,1001.5);assert.equal(paid.player.penaltyRound,null);
   assert.equal((await c.call(shot)).replayed,true);
-  assert.equal((await getDoc(ref)).data().balanceUnits,100075);
+  assert.equal((await getDoc(ref)).data().balanceUnits,100150);
   await assert.rejects(c.call(request({...base,move:'collect',step:1,quality:0})),{code:'king-rico/round-conflict'});
   await assertFails(updateDoc(doc(c.db,'players',c.uid,'operations',collect.requestId),{winUnits:99999}));
   assert.equal((await other.call(request({action:'bootstrap'}))).player.peaches,2);
 });
-test('Penalty Rules validate losses, all five steps, automatic prize and round preservation',async()=>{
+test('Penalty Rules validate losses, all ten steps, automatic prize and round preservation',async()=>{
   const identity='penalty-final-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
   await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
   const base={action:'penalty',game:'penalty',bet:1000,roundId,move:'shoot',quality:1000};
-  for(let step=0;step<5;step++) {
+  for(let step=0;step<10;step++) {
     const shot={...base,step,requestId:step===0?roundId:randomUUID()},result=await c.call(shot);
-    assert.equal(result.player.balance,step===4?10000:0);assert.equal((await c.call(shot)).replayed,true);
+    assert.equal(result.player.balance,step===9?100000:0);assert.equal((await c.call(shot)).replayed,true);
     if(step===0) assert.ok((await c.call(request({action:'bootstrap'}))).player.penaltyRound);
     await new Promise(resolve=>setTimeout(resolve,350));
   }
   const id=randomUUID(),miss={...base,requestId:id,roundId:id,step:0,quality:0};
-  const loss=await c.call(miss);assert.equal(loss.player.balance,9000);assert.equal(loss.player.penaltyRound,null);
+  const loss=await c.call(miss);assert.equal(loss.player.balance,99000);assert.equal(loss.player.penaltyRound,null);
   assert.equal((await c.call(miss)).replayed,true);
-  assert.equal((await getDoc(ref)).data().balanceUnits,900000);
+  assert.equal((await getDoc(ref)).data().balanceUnits,9900000);
+});
+test('Penalty Rules finish a legacy five-goal round at its original prize, then start the new table',async()=>{
+ const c=await client('penalty-legacy-'+randomUUID(),undefined,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),roundId=randomUUID();
+ await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{
+  balanceUnits:99000,penaltyRound:{id:roundId,betUnits:1000,step:4}}));
+ const last=request({action:'penalty',game:'penalty',bet:10,roundId,step:4,move:'shoot',quality:1000});
+ const paid=await c.call(last);assert.equal(paid.outcome.ended,true);assert.equal(paid.outcome.step,5);
+ assert.equal(paid.outcome.winUnits,10000);assert.equal(paid.player.balance,1090);
+ assert.equal((await c.call(last)).replayed,true);assert.equal((await getDoc(ref)).data().balanceUnits,109000);
+ await new Promise(resolve=>setTimeout(resolve,350));
+ const next=randomUUID(),fresh=await c.call({action:'penalty',game:'penalty',bet:10,roundId:next,requestId:next,step:0,move:'shoot',quality:1000});
+ assert.equal(fresh.player.penaltyRound.ladderVersion,2);assert.equal(fresh.player.balance,1080);
+ await new Promise(resolve=>setTimeout(resolve,350));
+ const collected=await c.call(request({action:'penalty',game:'penalty',bet:10,roundId:next,step:1,move:'collect',quality:0}));
+ assert.equal(collected.player.balance,1095);
 });
 test('Penalty Rules reject free progress, skipped steps, changed bets and forged credits',async()=>{
   const identity='penalty-forged-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
@@ -120,7 +136,7 @@ test('Penalty Rules reject free progress, skipped steps, changed bets and forged
     const x={...engine.penalty(2.5,old.penaltyRound,'shoot',roundId,1000,()=>0),...changes};
     const next={...old,balanceUnits:old.balanceUnits+x.winUnits,revision:old.revision+1,lastOperationId:id,
       updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),
-      penaltyRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,step:x.step},...profileChanges};
+      penaltyRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,step:x.step,...(x.ladderVersion===2?{ladderVersion:2}:{})},...profileChanges};
     const batch=writeBatch(c.db);batch.set(ref,next);
     batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'penalty',game:'penalty',selected:-1,fingerprint:'forged',betUnits:0,
       winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
@@ -129,7 +145,7 @@ test('Penalty Rules reject free progress, skipped steps, changed bets and forged
     await assertFails(batch.commit());
   }
   await forged({step:4});await forged({betUnits:1000});await forged({quality:0});
-  await forged({winUnits:99999,ended:true});await forged({}, {peaches:4});
+  await forged({winUnits:99999,ended:true});await forged({ladderVersion:1});await forged({}, {peaches:4});
   await assertFails(getDoc(doc(c.db,'players','another-penalty-player')));
 });
 async function client(name,identity=name,dependencies={}){

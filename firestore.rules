@@ -301,25 +301,29 @@ service cloud.firestore {
       let previous = old.get('penaltyRound',null);
       let first = previous == null;
       let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'step':0} : previous;
+      let version = x.get('ladderVersion',1);
+      let total = version == 2 ? 10 : 5;
+      let multipliers = version == 2 ? [150,300,500,700,1000,1500,2000,2500,5000,10000] : [120,180,300,500,1000];
       let preferences = p.settings;
-      let prize = x.step >= 1 && x.step <= 5 ? int((x.betUnits * [120,180,300,500,1000][x.step-1] + 50) / 100) : 0;
+      let prize = x.step >= 1 && x.step <= total ? int((x.betUnits * multipliers[x.step-1] + 50) / 100) : 0;
       return o.action == 'penalty' && o.game == 'penalty' && o.selected == -1
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','penaltyRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['penaltyBetIdx'])
         && preferences.penaltyBetIdx is int && preferences.penaltyBetIdx >= 0 && preferences.penaltyBetIdx <= 9
         && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.penaltyBetIdx]
-        && x.keys().hasOnly(['move','roundId','betUnits','step','quality','goal','ended','winUnits'])
+        && version in [1,2] && (first || version == r.get('ladderVersion',1))
+        && x.keys().hasOnly(['move','roundId','betUnits','step','quality','goal','ended','winUnits','ladderVersion'])
         && x.move in ['shoot','collect'] && x.goal is bool && x.ended is bool
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$') && x.roundId == r.id
         && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
-        && x.step is int && x.step >= 0 && x.step <= 5
+        && x.step is int && x.step >= 0 && x.step <= total
         && x.quality is int && x.quality >= 0 && x.quality <= 1000
         && (x.move == 'collect' ? !first && r.step >= 1 && x.step == r.step && x.goal && x.ended && x.quality == 0
-          : r.step < 5 && x.step == r.step + (x.goal ? 1 : 0) && x.ended == (!x.goal || x.step == 5)
+          : r.step < total && x.step == r.step + (x.goal ? 1 : 0) && x.ended == (!x.goal || x.step == total)
             && (x.quality > 0 || !x.goal))
         && o.winUnits == (x.ended && x.goal ? prize : 0) && x.winUnits == o.winUnits
-        && p.get('penaltyRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'step':x.step})
+        && p.get('penaltyRound',null) == (x.ended ? null : version == 2 ? {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'ladderVersion':2} : {'id':x.roundId,'betUnits':x.betUnits,'step':x.step})
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(300,'ms'))

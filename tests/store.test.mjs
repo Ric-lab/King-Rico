@@ -39,10 +39,10 @@ test('Penalty commits one debit/outcome, resumes another device and collects exa
   const other=m.client('penalty');assert.equal((await other(request({action:'bootstrap'}))).player.penaltyRound.step,1);
   m.advance(350);const collect=request({...base,move:'collect',step:1,quality:0});
   const [paid,replay]=await Promise.all([call(collect),other(collect)]);
-  assert.equal(paid.player.balance,1000.75);assert.equal(replay.replayed,true);
+  assert.equal(paid.player.balance,1001.5);assert.equal(replay.replayed,true);
   assert.equal(paid.player.penaltyRound,null);
   assert.equal((await call(shot)).replayed,true);
-  assert.equal((await call(request({action:'bootstrap'}))).player.balance,1000.75);
+  assert.equal((await call(request({action:'bootstrap'}))).player.balance,1001.5);
   await assert.rejects(call(request({...base,move:'collect',step:1,quality:0})),{code:'king-rico/round-conflict'});
 });
 test('Penalty preserves losses and the final prize across retries and rejects stale rounds',async()=>{
@@ -54,10 +54,10 @@ test('Penalty preserves losses and the final prize across retries and rejects st
   assert.equal((await call(request({action:'recharge'}))).player.balance,1000);
   m.advance(350);m.setRng(()=>0);const roundId=randomUUID(),base={...loss,roundId,requestId:roundId};
   await call(base);assert.ok((await call(request({action:'bootstrap'}))).player.penaltyRound);
-  for(let step=1;step<=4;step++) {
+  for(let step=1;step<=9;step++) {
     m.advance(350);const shot={...base,step,requestId:randomUUID()};const result=await call(shot);
     assert.equal((await call(shot)).replayed,true);
-    assert.equal(result.player.balance,step===4?10000:0);
+    assert.equal(result.player.balance,step===9?100000:0);
   }
   await assert.rejects(call({...base,step:4,requestId:randomUUID()}),{code:'king-rico/round-conflict'});
   await assert.rejects(call({...base,quality:1001}),{code:'king-rico/invalid-argument'});

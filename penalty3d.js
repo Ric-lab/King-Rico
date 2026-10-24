@@ -146,7 +146,7 @@
       const ax = Math.abs(Tg.x), inside = ax < GW - PR - R * 0.6 && Tg.y < GH - PR - R * 0.6, nearSide = Math.abs(ax - GW) < PR + R + 0.02 && Tg.y < GH + PR + R, nearBar = Math.abs(Tg.y - GH) < PR + R + 0.02 && ax < GW + PR + R;
       // HABILIDADE = regras que se veem: (1) não chutar no meio (lá está a girafa), (2) não arrastar devagar. Acertou as duas → só a sorte decide (RTP cheio).
       // Progressão: a "zona da girafa" alarga e o mínimo de força sobe a cada pênalti. Nada escondido (sem penalidade por repetir canto etc.).
-      const dk = clamp((hook('getStep') || 0) / 4, 0, 1), lerp = (a, b) => a + (b - a) * dk;
+      const dk = clamp((hook('getProgress') ?? (hook('getStep') || 0) / 4), 0, 1), lerp = (a, b) => a + (b - a) * dk;
       const zone = lerp(0.3, 0.45), qPos = Math.abs(Tg.x - this.kx) / GW > zone || Tg.y > GH * lerp(0.86, 0.92) ? 1 : 0, qs = clamp((sp - lerp(0.25, 0.42)) / 0.15, 0, 1), q = qPos * qs;
       // Persist the skill-adjusted outcome before any animation. Only the
       // committed result can advance the ladder or settle the shared wallet.
@@ -215,8 +215,8 @@
     update(dt, t) {
       const T = this.T; this.drawTrail(dt);
       if (this.kAnim) { const a = this.kAnim, k = clamp((performance.now() / 1000 - a.t0) / a.dur, 0, 1), e = a.ease === 'smooth' ? 0.5 - 0.5 * Math.cos(Math.PI * k) : back(k); this.kx = a.fx + (a.tx - a.fx) * e; this.kth = a.fth + (a.tth - a.fth) * e; if (k >= 1) this.kAnim = null; }
-      else if (this.state === 'ready') { // girafa balança na linha; amplitude cresce a cada pênalti (1º parada → 5º ±1,1 m). Chutar LONGE dela é a habilidade.
-        if (this.swayT0 == null) { this.swayT0 = t; this.swayS = Math.random() < 0.5 ? -1 : 1; } const st = clamp((hook('getStep') || 0) / 4, 0, 1), amp = 0.25 + 0.85 * st, ph = (t - this.swayT0) * (1.1 + 0.5 * st);
+      else if (this.state === 'ready') { // girafa balança na linha; amplitude cresce a cada pênalti (primeiro chute → último chute ±1,1 m). Chutar LONGE dela é a habilidade.
+        if (this.swayT0 == null) { this.swayT0 = t; this.swayS = Math.random() < 0.5 ? -1 : 1; } const st = clamp((hook('getProgress') ?? (hook('getStep') || 0) / 4), 0, 1), amp = 0.25 + 0.85 * st, ph = (t - this.swayT0) * (1.1 + 0.5 * st);
         this.kx = this.swayS * amp * Math.sin(ph); this.kth = -0.06 * Math.cos(ph) * Math.sign(amp); }
       this.kg.position.x = this.kx; this.kg.rotation.z = -this.kth;
       if (this.kMat) { this.glow = Math.max(0, (this.glow || 0) - dt); this.kMat.color.setScalar(1 + this.glow * 3); }

@@ -33,6 +33,7 @@ def check_penalty(browser,login,restored,check_menu,claim_gift,login_observer):
     ready(page)
     assert page.evaluate('window.__pen.state.balance')==1050,'Imported a local balance'
     assert page.evaluate('window.__pen.state.step')==0,'Imported a local round'
+    assert [t.strip() for t in page.locator('[data-penalty-multiplier]').all_text_contents()]==['x1,5','x3','x5','x7','x10','x15','x20','x25','x50','x100']
     assert check_menu(page,'Fortune Pênalti',False)==common
     def outcome(tab,value):
         tab.evaluate('''value=>{
@@ -45,7 +46,7 @@ def check_penalty(browser,login,restored,check_menu,claim_gift,login_observer):
         points=tab.evaluate('''()=>{
           const c=window.Pen3D,r=c.getBoundingClientRect();
           const project=v=>{const p=v.clone().project(c.cam);return {x:r.x+(p.x+1)*r.width/2,y:r.y+(1-p.y)*r.height/2};};
-          return {start:project(c.pos),end:project(new c.T.Vector3(-2.8,1.6,0))};
+          return {start:project(c.pos),end:project(new c.T.Vector3(c.kx>0?-3.2:3.2,2.7,0))};
         }''')
         tab.mouse.move(points['start']['x'],points['start']['y']);tab.mouse.down()
         tab.mouse.move(points['end']['x'],points['end']['y']);tab.mouse.up()
@@ -59,31 +60,60 @@ def check_penalty(browser,login,restored,check_menu,claim_gift,login_observer):
     assert page.evaluate('window.__pen.state.step')==1
     assert page.evaluate('window.__pen.state.balance')==1040
     other=context.new_page();other.goto(BASE+'/Fortune%20Penalty.dc.html',wait_until='domcontentloaded');ready(other)
-    collect=other.get_by_role('button',name='Pegar 12 moedas',exact=True);collect.dblclick()
-    other.wait_for_function('window.KingRicoCloud.player.balance===1052 && !window.KingRicoCloud.player.penaltyRound')
+    collect=other.get_by_role('button',name='Pegar 15 moedas',exact=True);collect.dblclick()
+    other.wait_for_function('window.KingRicoCloud.player.balance===1055 && !window.KingRicoCloud.player.penaltyRound')
     other.reload(wait_until='domcontentloaded');ready(other)
-    assert other.evaluate('window.__pen.state.balance')==1052
-    page.wait_for_function('window.__pen.state.balance===1052 && window.__pen.state.step===0');other.close()
+    assert other.evaluate('window.__pen.state.balance')==1055
+    page.wait_for_function('window.__pen.state.balance===1055 && window.__pen.state.step===0');other.close()
     outcome(page,0);shoot(page)
     page.wait_for_function('window.__pen.state.step===1 && !window.__pen.state.flying',timeout=20000)
-    page.get_by_role('button',name='Pegar 12 moedas',exact=True).click()
+    page.get_by_role('button',name='Pegar 15 moedas',exact=True).click()
     page.wait_for_function('!!window.__pen.state.win')
-    assert page.evaluate('window.KingRicoCloud.player.balance')==1054
+    assert page.evaluate('window.KingRicoCloud.player.balance')==1060
     page.get_by_text('OK',exact=True).click()
-    page.wait_for_function('window.__pen.state.balance===1054 && !window.__pen.state.paying')
+    page.wait_for_function('window.__pen.state.balance===1060 && !window.__pen.state.paying')
     outcome(page,4252017623);shoot(page)
-    page.wait_for_function('window.KingRicoCloud.player.balance===1044 && !window.KingRicoCloud.player.penaltyRound')
+    page.wait_for_function('window.KingRicoCloud.player.balance===1050 && !window.KingRicoCloud.player.penaltyRound')
     page.reload(wait_until='domcontentloaded');ready(page)
-    assert page.evaluate('window.__pen.state.balance')==1044
+    assert page.evaluate('window.__pen.state.balance')==1050
     assert page.evaluate('window.__pen.state.step')==0
+    # A new round continues beyond five, restores at six and settles x100 once.
+    outcome(page,0)
+    for n in range(1,11):
+        shoot(page)
+        if n<10:
+            page.wait_for_function('(n)=>__pen.state.step===n&&!__pen.state.flying',arg=n,timeout=20000)
+            assert page.evaluate('KingRicoCloud.player.balance')==1040
+            assert page.evaluate('KingRicoCloud.player.penaltyRound.ladderVersion')==2
+            amount=[1.5,3,5,7,10,15,20,25,50,100][n-1]*10
+            assert page.get_by_role('button',name='Pegar '+str(int(amount))+' moedas',exact=True).is_visible()
+            if n==5:
+                collect_box=page.get_by_role('button',name='Pegar 100 moedas',exact=True).bounding_box()
+                assert collect_box['y']>=max(c.bounding_box()['y']+c.bounding_box()['height'] for c in page.locator('[data-penalty-multiplier]').all())
+                page.screenshot(path='/tmp/king-rico-penalty-five-of-ten.png')
+            if n==6:
+                page.reload(wait_until='domcontentloaded');ready(page);outcome(page,0)
+                assert page.evaluate('__pen.state.step')==6
+                assert page.locator('[data-penalty-multiplier]').count()==10
+        else:
+            page.wait_for_function('__pen.state.win?.w===1000',timeout=20000)
+            assert page.evaluate('KingRicoCloud.player.balance')==2040
+            page.reload(wait_until='domcontentloaded');ready(page)
+            assert page.evaluate('KingRicoCloud.player.balance')==2040
+            assert page.evaluate('KingRicoCloud.player.penaltyRound') is None
+    for width,height in [(360,780),(390,844)]:
+        page.set_viewport_size({'width':width,'height':height})
+        for chip in page.locator('[data-penalty-multiplier]').all():
+            box=chip.bounding_box();assert box['x']>=0 and box['x']+box['width']<=width
+        page.screenshot(path='/tmp/king-rico-penalty-ten-'+str(width)+'.png')
     page.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.__fn && window.KingRicoCloud?.player');restored(page,uid)
-    assert page.evaluate('window.__fn.state.balance')==1044
+    assert page.evaluate('window.__fn.state.balance')==2040
     assert not errors,errors
     assert not bad_http,bad_http
     assert not external,external
     context.close()
-    return {'penalty_home_link':True,'penalty_real_swipe':True,'penalty_local_three':True,
+    return {'penalty_home_link':True,'ten_steps_and_x100_once':True,'reload_after_six_goals':True,'penalty_real_swipe':True,'penalty_local_three':True,
       'penalty_ignores_legacy_balance_and_round':True,'penalty_pending_shot_recovery':True,
       'penalty_cross_tab_collection_once':True,'penalty_reload_during_shot_and_payout':True,
       'penalty_shared_menu_wallet_and_identity':True,'penalty_prize_and_loss_persist':True}

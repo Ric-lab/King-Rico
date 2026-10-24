@@ -107,6 +107,23 @@ test('Penalty waits for the committed shot and never adds its prize locally',asy
   g.state.flying=false;g.state.step=1;await g.collectBtn();
   g.state.win={w:3};g.closeWin();assert.equal(g.state.balance,1000.75);assert.equal(requests.length,2);
 });
+test('Penalty keeps shooting after goal five and settles goal ten at x100',()=>{
+ const {instance:g}=component('Fortune Penalty.dc.html',{enabled:true});
+ g.state={...g.state,step:4,roundBet:10};g._cloudShot={goal:true,winUnits:0};
+ g.confetti=()=>{};g.tone=()=>{};g.buzz=()=>{};g.save=()=>{};g.reset=()=>{};
+ let collected;g.collect=m=>collected=m;
+ g.result(true);assert.equal(g.state.step,5);assert.equal(collected,undefined);
+ assert.equal(g.renderVals().ladder.length,10);assert.equal(g.renderVals().showCollect,true);assert.equal(g.renderVals().collectText,'100');
+ g.state.step=9;g._cloudShot={goal:true,winUnits:100000};g.result(true);
+ assert.equal(g.state.step,10);assert.equal(collected,100);
+});
+test('Penalty restores legacy labels until the saved five-goal round is finished',()=>{
+ const {instance:g}=component('Fortune Penalty.dc.html',{enabled:true});
+ g._cloudDeferred={balance:990,settings:{},penaltyRound:{id:'old',betUnits:1000,step:4}};g.applyCloudPlayer();
+ assert.equal(g.state.ladderVersion,1);assert.equal(g.renderVals().ladder.length,5);assert.equal(g.renderVals().collectText,'50');
+ g._cloudDeferred={balance:1040,settings:{},penaltyRound:null};g.applyCloudPlayer();
+ assert.equal(g.state.ladderVersion,2);assert.equal(g.renderVals().ladder.length,10);
+});
 test('Penalty refuses an offline shot and preserves its wallet',async()=>{
   let errors=0;const cloud={enabled:true,penalty:async()=>{throw Error('offline');},error:()=>errors++};
   const {instance:g}=component('Fortune Penalty.dc.html',cloud);g.state.roundId='round';

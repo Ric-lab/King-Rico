@@ -45,7 +45,7 @@ export function createGameStore(db, uid, dependencies={}) {
       || (data.move==='drop' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>4 : data.selected!==undefined)))
       fail('king-rico/invalid-argument','Rodada inválida.');
     if(data.action==='penalty' && (data.game!=='penalty' || !engine.BETS.includes(data.bet) || !['shoot','collect'].includes(data.move)
-      || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.step) || data.step<0 || data.step>4
+      || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.step) || data.step<0 || data.step>=engine.PENALTY_MULTIPLIERS.length
       || !Number.isInteger(data.quality) || data.quality<0 || data.quality>1000
       || data.move==='collect' && (data.step===0 || data.quality!==0)
       || data.step===0 && data.requestId!==data.roundId))
@@ -144,7 +144,7 @@ export function createGameStore(db, uid, dependencies={}) {
         if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
         const outcome=engine.penalty(data.bet,round,data.move,data.roundId,data.quality,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
-        p.penaltyRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,step:outcome.step};
+        p.penaltyRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,step:outcome.step,...(outcome.ladderVersion===2?{ladderVersion:2}:{})};
         p.settings.penaltyBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'penalty',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='bounce') {

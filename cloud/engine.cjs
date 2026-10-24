@@ -46,15 +46,17 @@ const twentyOneRound = (bet,previous,move,roundId,rng=random,target=21) =>
 // 30 balls in 10 trios. Approximate RTP with the player always dropping on a golden pipe: 98,006%; card closes 27,5%.
 const FINGO_BALLS = 30, FINGO_HIT = .11783, FINGO_GOLD = .28;
 const FINGO_MULTIPLIERS = [50,25,12.5,10,9,7,5,3,2,1];
-const PENALTY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = TARGET_RTP;
+const PENALTY_MULTIPLIERS = [1.5,3,5,7,10,15,20,25,50,100], PENALTY_LEGACY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = TARGET_RTP;
 function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
+  const modern = !previous || previous.ladderVersion === 2;
+  const multipliers = modern ? PENALTY_MULTIPLIERS : PENALTY_LEGACY_MULTIPLIERS;
   const before = previous?.step || 0, betUnits = previous?.betUnits || units(bet);
-  const chance = (before ? PENALTY_MULTIPLIERS[before-1] : PENALTY_BASE) / PENALTY_MULTIPLIERS[before];
+  const chance = (before ? multipliers[before-1] : PENALTY_BASE) / multipliers[before];
   const goal = move === 'collect' || quality > 0 && rng() < chance * quality / 1000;
   const step = before + (move === 'shoot' && goal ? 1 : 0);
-  const ended = move === 'collect' || !goal || step === 5;
-  const winUnits = ended && goal ? Math.round(betUnits * PENALTY_MULTIPLIERS[step-1]) : 0;
-  return {move,roundId,betUnits,step,quality,goal,ended,winUnits};
+  const ended = move === 'collect' || !goal || step === multipliers.length;
+  const winUnits = ended && goal ? Math.round(betUnits * multipliers[step-1]) : 0;
+  return {move,roundId,betUnits,step,quality,goal,ended,winUnits,...(modern?{ladderVersion:2}:{})};
 }
 function fingo(bet, previous, move, roundId, selected, rng = random) {
   const targets = previous?.targets || Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));
@@ -192,4 +194,4 @@ function bonusFor(last, streak, now) {
 module.exports = { TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
-  FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
+  FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_LEGACY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
