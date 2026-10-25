@@ -27,10 +27,10 @@
     function draw(state) {
       latest=state;if(dead||!texture.complete||!texture.naturalWidth)return;
       const {bend,lean,lift,tipScale=1}=state,height=bend+40,dpr=Math.min(2,window.devicePixelRatio||1);
-      if(canvas.width!==Math.ceil(250*dpr)||canvas.height!==Math.ceil(height*dpr)){
-        canvas.width=Math.ceil(250*dpr);canvas.height=Math.ceil(height*dpr);
+      if(canvas.width!==Math.ceil(280*dpr)||canvas.height!==Math.ceil(height*dpr)){
+        canvas.width=Math.ceil(280*dpr);canvas.height=Math.ceil(height*dpr);
       }
-      canvas.style.height=height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,250,height);
+      canvas.style.height=height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,280,height);
       const phase=Math.max(0,root.clientHeight-bend)%34;
       const samples=[{...point(0,bend,lean,lift),s:0}],steps=80;
       for(let i=1;i<=steps;i++){
