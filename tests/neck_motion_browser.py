@@ -46,7 +46,21 @@ def check_neck_motion(browser, login, restored, observer):
         assert page.evaluate('KingRicoCloud.player.neckRound') is None
         page.screenshot(path='/tmp/neck-knock-falling-'+str(k)+'.png')
 
+    # A target-height render must not shift the SVG coordinates away from the
+    # live neck container before its first animation frame (a visible blink).
+    page.evaluate('''() => {
+      const root=document.querySelector('.fn-neck'),svg=root.querySelector('svg');
+      const origin=()=>{const m=svg.getScreenCTM();return (m.f-root.getBoundingClientRect().top)/m.d;};
+      const initial=origin(),probe=window.__neckOriginProbe={running:true,count:0,maxDelta:0};
+      function sample(){
+        probe.count++;probe.maxDelta=Math.max(probe.maxDelta,Math.abs(origin()-initial));
+        if(probe.running)requestAnimationFrame(sample);
+      }
+      requestAnimationFrame(sample);
+    }''')
     contact_before_drop(1)
+    origin_probe=page.evaluate('()=>{const p=window.__neckOriginProbe;p.running=false;return {count:p.count,maxDelta:p.maxDelta};}')
+    assert origin_probe['count']>8 and origin_probe['maxDelta']<.2,origin_probe
     assert page.evaluate('KingRicoCloud.player.balance')==990
     # Reload during the fall: the confirmed loss must not debit or draw again.
     page.reload();restored(page,uid);page.wait_for_function('__fn.state.balance===990&&!__fn.state.busy')
@@ -75,4 +89,4 @@ def check_neck_motion(browser, login, restored, observer):
     page.reload();restored(page,uid);page.wait_for_function('__fn.state.balance===995.5&&!__fn.state.busy')
     assert not errors,errors
     context.close()
-    return {'neck_motion':'passed','continuous_coat':True,'spots_do_not_stretch':True,'contact_before_fall':True,'reload_during_fall':True,'protected_prize_once':True}
+    return {'neck_motion':'passed','continuous_coat':True,'spots_do_not_stretch':True,'stable_first_climb':True,'contact_before_fall':True,'reload_during_fall':True,'protected_prize_once':True}
