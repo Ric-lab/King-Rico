@@ -18,14 +18,26 @@
     const id='kr-neck-'+(++sequence),defs=node('defs',{},art),clip=node('clipPath',{id:id+'-clip',clipPathUnits:'userSpaceOnUse'},defs),contour=node('path',{},clip);
     const filter=node('filter',{id:id+'-soft',filterUnits:'userSpaceOnUse',x:-30,y:-30,width:340,height:1000},defs);
     node('feGaussianBlur',{stdDeviation:.7},filter);
-    const body=node('path',{fill:'#ffc13b',stroke:'#9b601c','stroke-width':1,'stroke-linejoin':'round'},art);
-    const clipped=node('g',{'clip-path':`url(#${id}-clip)`},art),coat=node('g',{},clipped);
+    const grain=node('filter',{id:id+'-grain',filterUnits:'userSpaceOnUse',x:0,y:0,width:280,height:1000},defs);
+    node('feTurbulence',{type:'fractalNoise',baseFrequency:.65,numOctaves:2,seed:19,result:'grain'},grain);
+    node('feColorMatrix',{in:'grain',type:'saturate',values:0},grain);
+    const levels=node('feComponentTransfer',{},grain);
+    for(const channel of ['R','G','B'])node('feFunc'+channel,{type:'linear',slope:.08,intercept:.94},levels);
+    node('feComposite',{in2:'SourceGraphic',operator:'in'},grain);
+    node('feBlend',{in2:'SourceGraphic',mode:'multiply'},grain);
+    const skin=node('g',{filter:`url(#${id}-grain)`},art);
+    // Same sunny yellow and amber coat as the original head/body sprites.
+    const body=node('path',{fill:'#ffcd22',stroke:'#ba7b0b','stroke-width':.6,'stroke-linejoin':'round'},skin);
+    const clipped=node('g',{'clip-path':`url(#${id}-clip)`},skin),coat=node('g',{},clipped);
     // Diffuse light across a round cross-section, continuous through the bend.
-    const lighting=node('g',{filter:`url(#${id}-soft)`},clipped),bands=32,shade=[];
+    const lighting=node('g',{filter:`url(#${id}-soft)`},clipped),bands=32,shade=[],gloss=[];
     for(let i=0;i<bands;i++){
-      const u=-1+(i+.5)*2/bands,nz=Math.sqrt(Math.max(0,1-u*u)),diffuse=Math.max(0,nz*.894-u*.447),brightness=.5+.5*diffuse;
-      shade.push(node('path',{fill:'#000',opacity:number(1-brightness)},lighting));
+      const u=-1+(i+.5)*2/bands,nz=Math.sqrt(Math.max(0,1-u*u)),diffuse=Math.max(0,nz*.894-u*.447);
+      shade.push(node('path',{fill:'#874000',opacity:number(.3*(1-diffuse))},lighting));
+      gloss.push(node('path',{fill:'#fff2a3',opacity:number(.2*Math.exp(-Math.pow((u+.33)/.28,2)))},lighting));
     }
+    // A short, soft chin shadow joins the painted head to the moving surface.
+    const chin=Array.from({length:10},(_,i)=>node('path',{fill:'#8d4c00',opacity:number(.25*Math.pow((i+.5)/10,2))},clipped));
     const nodes=new Map(),cells=new Map(),sites=new Map();let latest={},dead=false,frame=0,stretching=false,deadline=0,lastPaint='';
     function rowSites(row){
       if(sites.has(row))return sites.get(row);
@@ -54,7 +66,7 @@
       const scene=root.closest('[data-screen-label]'),sceneRect=scene?.getBoundingClientRect(),rootRect=root.getBoundingClientRect(),scale=sceneRect?sceneRect.width/453:1;
       const available=sceneRect?(sceneRect.bottom-rootRect.top)/scale+60:1000,visible=Math.min(h+44,Math.max(80,available));
       const signature=[h,lean,lift,tipScale,visible].map(n=>number(n)).join('/');if(signature===lastPaint)return;lastPaint=signature;
-      svg.setAttribute('viewBox',`0 0 280 ${visible}`);svg.style.height=visible+'px';filter.setAttribute('height',visible+60);
+      svg.setAttribute('viewBox',`0 0 280 ${visible}`);svg.style.height=visible+'px';filter.setAttribute('height',visible+60);grain.setAttribute('height',visible);
       // The extra shoulder overlap is hidden behind the original body sprite.
       const points=[{x:30.6,y:h+30,s:0}],append=(x,y)=>{const prev=points.at(-1);points.push({x,y,s:prev.s+Math.hypot(x-prev.x,y-prev.y)});};
       append(30.6,bend+20);
@@ -77,15 +89,20 @@
       const used=new Set(),start=Math.max(0,Math.floor((h-visible-100)/34)),end=Math.ceil(length/34)+1;
       for(let row=start;row<=end;row++)for(const site of rowSites(row)){
         const polygon=cell(row,site).map(p=>surface(p.u,p.d));if(polygon.every(p=>p.y>visible+30)||polygon.every(p=>p.y< -30))continue;
-        let path=nodes.get(site.key);if(!path){path=node('path',{'data-neck-spot':site.key,fill:['#a9610d','#b66b10','#af650e','#bf7617'][Math.floor(random(site.seed+91)*4)]},coat);nodes.set(site.key,path);}
+        let path=nodes.get(site.key);if(!path){path=node('path',{'data-neck-spot':site.key,fill:['#cd860a','#d99010','#d28a0d','#cf8307'][Math.floor(random(site.seed+91)*4)]},coat);nodes.set(site.key,path);}
         path.setAttribute('d',rounded(polygon));used.add(site.key);
       }
       for(const [key,path]of nodes)if(!used.has(key)){path.remove();nodes.delete(key);}
       for(let i=0;i<bands;i++){
         const a=-1+i*2/bands,b=-1+(i+1)*2/bands;
         const edgeA=samples.map(p=>surface(radius(p.s)*a,p.s)),edgeB=samples.map(p=>surface(radius(p.s)*b,p.s));
-        shade[i].setAttribute('d',line([...edgeA,...edgeB.reverse()])+'Z');
+        const strip=line([...edgeA,...edgeB.reverse()])+'Z';
+        shade[i].setAttribute('d',strip);gloss[i].setAttribute('d',strip);
       }
+      chin.forEach((path,i)=>{
+        const a=length-24+i*2.4,b=a+2.6;
+        path.setAttribute('d',line([surface(-radius(a),a),surface(radius(a),a),surface(radius(b),b),surface(-radius(b),b)])+'Z');
+      });
       if(fallback)fallback.style.display='none';art.style.display='';
     }
     function safePaint(){try{paint();}catch{art.style.display='none';if(fallback)fallback.style.display='';}}

@@ -157,3 +157,13 @@ a curva distribui o movimento pelo trecho superior. A renderização acompanha a
 altura efetiva durante a transição, sem loop quando parada. Teste de navegador
 compara o tamanho da mesma mancha em duas alturas e confere o último andar,
 bote, deglutição, queda, retomada e prêmio protegido. A aparência aguarda feedback.
+
+### 2026-10-25 — Pelagem integrada à cabeça e ao corpo
+
+Feedback do usuário: a construção contínua foi aceita, mas a cor destoou dos sprites.
+Ajuste localizado da paleta SVG com os assets originais como referência: amarelo mais
+luminoso, manchas âmbar, sombra quente menos intensa e brilho suave. Grão discreto
+no material e sombra curta sob o queixo aproximam o acabamento dos sprites pintados.
+Sem alterar ou gerar imagens; sem créditos. Conferidos os enquadramentos esticado e
+lateral durante a mordida e o teste de movimento/retomada/prêmio protegido. O aceite
+estético deste ajuste depende do próximo feedback do usuário.
