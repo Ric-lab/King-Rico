@@ -201,3 +201,11 @@ recebem um andar visual de altura; câmera acompanha apenas os andares jogados.
 Piso inicial, apostas e pagamentos preservados. Manchas âmbar levemente escurecidas,
 com o mesmo brilho e tamanho. Conferidos início, mordida, estabilidade da primeira
 subida, retomada e prêmio protegido. Sem geração de imagens ou créditos.
+
+### 2026-10-25 — Pôr do sol na região do x1,7
+
+Pedido do usuário: antecipar o escurecimento do céu para a região do x1,7.
+Reenquadramento vertical de `bg-sky33.webp` por CSS (altura 5.400 px): a faixa quente
+aparece antes, com transição contínua pela subida, noite e planetas preservados.
+Conferidos os enquadramentos 0/6/7/10/16/28/33. Imagem original preservada,
+sem geração ou créditos; nenhuma regra de aposta alterada.

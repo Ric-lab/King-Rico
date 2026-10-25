@@ -48,7 +48,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <div onPointerDown="{{ swDown }}" onPointerUp="{{ swUp }}" style="position: absolute; left: 0; top: 0; width: 453px; height: {{ sceneHeight }}px; overflow: hidden; touch-action: none;">
       <div style="position:absolute;left:0;bottom:{{ worldBottom }}px;width:453px;height:4100px;transform:translateY({{ camY }}px);transition:transform .55s cubic-bezier(.3,.7,.3,1);background:linear-gradient(#00002f,#1c0734 65%,#3b061b);">
         <!-- Circus courtyard: the entrance frames Nick on the left, the apple tree is outside. -->
-        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;inset:0;background:url('assets/neck/bg-sky33.webp') center top/453px 4500px no-repeat;"></div>
+        <div class="fn-circus-space" aria-hidden="true" style="position:absolute;inset:0;background:url('assets/neck/bg-sky33.webp') center top/453px 5400px no-repeat;"></div>
         <div class="fn-yard-ground" aria-hidden="true" style="position:absolute;left:0;right:0;bottom:-{{ sceneHeight }}px;height:{{ sceneHeight }}px;background:linear-gradient(#d57a31,#bc612e);"></div>
         <div class="fn-yard-backdrop" aria-hidden="true" style="position:absolute;left:0;bottom:-167px;width:477px;height:802px;background:url('assets/neck/courtyard-hd.webp') center/477px 802px no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 75px,#000 calc(100% - 55px),transparent);mask-image:linear-gradient(transparent,#000 75px,#000 calc(100% - 55px),transparent);"></div>
         <!-- Branches overlap the bark; the trunk continues beyond every viewport edge. -->
