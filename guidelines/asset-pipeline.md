@@ -219,3 +219,13 @@ quando a fruta é comida ou cai. Definição explícita do usuário: “ancorar�
 parecer uma coisa única, com contato/profundidade/luz, e não assets sobrepostos.
 Imagens preservadas, sem geração/créditos. Conferidos início, x1,7 e último andar,
 contato ampliado, mordida, queda, primeira subida estável e retomada/prêmio protegido.
+
+### 2026-10-25 — Mais espaço e emenda limpa no tronco
+
+Intervalo passa de 104 para 112 px. Retirada a sombra externa artificial do tronco
+e alinhada sua borda interna à árvore do quintal (410 px), evitando a faixa de
+textura semitransparente sobre o céu perto da base. Cena ampliada para 4.500 px e
+céu reenquadrado para 6.000 px para cobrir os 33 andares, mantendo pôr do sol na
+região do x1,7. Sem edição de imagens/créditos. Conferidos início, x1,7 e final;
+teste de queda agora mede deslocamento em relação ao galho, sem confundir o retorno
+da câmera com movimento da maçã. Subida estável, mordida e retomada passaram.

@@ -36,13 +36,16 @@ def check_neck_motion(browser, login, restored, observer):
         assert page.evaluate('k=>__fn.state.fr[k]!=="fall"',k),'Apple fell before contact'
         mouth=page.locator('[data-mouth-anchor]').bounding_box()
         fruit=page.locator(f'[data-neck-fruit="{k}"]').bounding_box()
+        branch_y=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>el.parentElement.getBoundingClientRect().top')
         assert abs(mouth['x']+mouth['width']/2-fruit['x']-fruit['width']/2)<9,(mouth,fruit)
         assert abs(mouth['y']+mouth['height']/2-fruit['y']-fruit['height']/2)<11,(mouth,fruit)
         page.screenshot(path='/tmp/neck-knock-contact-'+str(k)+'.png')
         page.wait_for_function('k=>__fn.state.fr[k]==="fall"',arg=k)
         page.wait_for_timeout(220)
-        moved=page.locator(f'[data-neck-fruit="{k}"]').bounding_box()
-        assert moved['y']+moved['height']/2>fruit['y']+fruit['height']/2+10,(fruit,moved)
+        # A slower screenshot can overlap the camera returning after the lunge.
+        # Check the fall relative to its branch, independent of camera movement.
+        moved=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>{const b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};}')
+        assert moved['y']+moved['height']/2-moved['branchY']>fruit['y']+fruit['height']/2-branch_y+10,(fruit,moved)
         assert page.evaluate('KingRicoCloud.player.neckRound') is None
         page.screenshot(path='/tmp/neck-knock-falling-'+str(k)+'.png')
 
