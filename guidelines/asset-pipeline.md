@@ -167,3 +167,14 @@ no material e sombra curta sob o queixo aproximam o acabamento dos sprites pinta
 Sem alterar ou gerar imagens; sem créditos. Conferidos os enquadramentos esticado e
 lateral durante a mordida e o teste de movimento/retomada/prêmio protegido. O aceite
 estético deste ajuste depende do próximo feedback do usuário.
+
+### 2026-10-25 — Recorte do pescoço antigo nas cabeças
+
+O usuário identificou um pedaço da pelagem antiga preso ao sprite da cabeça.
+Máscaras SVG em CSS seguem o contorno do queixo nas vistas frontal e lateral;
+a camada que esconde a maçã na deglutição usa o mesmo recorte. Os WebP originais
+foram preservados. A ponta do pescoço contínuo agora sobrepõe a região sob a cabeça
+recortada; o viewport SVG inclui essa sobreposição para não cortar a curva. Sem
+novas imagens ou créditos. Conferidos cinco ângulos ampliados, contato, deglutição,
+queda/retomada/prêmio protegido e encaixe com o renderizador indisponível. Não
+constitui aprovação estética do autor.

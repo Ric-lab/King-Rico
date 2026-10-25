@@ -18,7 +18,7 @@
     const id='kr-neck-'+(++sequence),defs=node('defs',{},art),clip=node('clipPath',{id:id+'-clip',clipPathUnits:'userSpaceOnUse'},defs),contour=node('path',{},clip);
     const filter=node('filter',{id:id+'-soft',filterUnits:'userSpaceOnUse',x:-30,y:-30,width:340,height:1000},defs);
     node('feGaussianBlur',{stdDeviation:.7},filter);
-    const grain=node('filter',{id:id+'-grain',filterUnits:'userSpaceOnUse',x:0,y:0,width:280,height:1000},defs);
+    const grain=node('filter',{id:id+'-grain',filterUnits:'userSpaceOnUse',x:0,y:-32,width:280,height:1032},defs);
     node('feTurbulence',{type:'fractalNoise',baseFrequency:.65,numOctaves:2,seed:19,result:'grain'},grain);
     node('feColorMatrix',{in:'grain',type:'saturate',values:0},grain);
     const levels=node('feComponentTransfer',{},grain);
@@ -62,11 +62,12 @@
     }
     function paint(){
       if(dead)return;
-      const h=Math.max(1,Number.parseFloat(getComputedStyle(root).height)||34),bend=Math.min(300,h),{lean=0,lift=0,tipScale=1}=latest;
+      const h=Math.max(1,Number.parseFloat(getComputedStyle(root).height)||34),bend=Math.min(300,h),{lean=0,lift:headLift=0,socketLift=0,tipScale=1}=latest,lift=headLift+socketLift;
       const scene=root.closest('[data-screen-label]'),sceneRect=scene?.getBoundingClientRect(),rootRect=root.getBoundingClientRect(),scale=sceneRect?sceneRect.width/453:1;
       const available=sceneRect?(sceneRect.bottom-rootRect.top)/scale+60:1000,visible=Math.min(h+44,Math.max(80,available));
       const signature=[h,lean,lift,tipScale,visible].map(n=>number(n)).join('/');if(signature===lastPaint)return;lastPaint=signature;
-      svg.setAttribute('viewBox',`0 0 280 ${visible}`);svg.style.height=visible+'px';filter.setAttribute('height',visible+60);grain.setAttribute('height',visible);
+      // Keep the socket above the viewport origin visible beneath the trimmed jaw.
+      svg.setAttribute('viewBox',`0 -32 280 ${visible+32}`);svg.style.top='-52px';svg.style.height=(visible+32)+'px';filter.setAttribute('height',visible+60);grain.setAttribute('height',visible+32);
       // The extra shoulder overlap is hidden behind the original body sprite.
       const points=[{x:30.6,y:h+30,s:0}],append=(x,y)=>{const prev=points.at(-1);points.push({x,y,s:prev.s+Math.hypot(x-prev.x,y-prev.y)});};
       append(30.6,bend+20);
