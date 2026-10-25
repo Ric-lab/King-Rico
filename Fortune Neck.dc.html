@@ -28,6 +28,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 /* Trim the painted neck stubs, following the jaw instead of a straight crop. */
 .fn-head-front { -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20560%20470%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H560V430H366C337%20450%20310%20460%20281%20460C253%20460%20231%20451%20209%20435H0Z%22%2F%3E%3C%2Fsvg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20560%20470%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H560V430H366C337%20450%20310%20460%20281%20460C253%20460%20231%20451%20209%20435H0Z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-size:100% 100%; mask-size:100% 100%; }
 .fn-head-side,.fn-bite-lips { -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20640%20533%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H640V533H365V469C300%20469%20234%20445%20199%20414H0Z%22%2F%3E%3C%2Fsvg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20640%20533%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H640V533H365V469C300%20469%20234%20445%20199%20414H0Z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-size:100% 100%; mask-size:100% 100%; }
+.fn-body { -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20567%20650%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H195C196%2023%20208%2042%20236%2049Q283%2068%20329%2049C353%2039%20369%2023%20372%200H567V650H0Z%22%2F%3E%3C%2Fsvg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20567%20650%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M0%200H195C196%2023%20208%2042%20236%2049Q283%2068%20329%2049C353%2039%20369%2023%20372%200H567V650H0Z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-size:100% 100%; mask-size:100% 100%; }
 </style>
 </helmet>
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
@@ -69,13 +70,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div class="fn-neck" ref="{{ neckRef }}" style="position:absolute;left:70.1px;bottom:257.6px;width:280px;height:{{ neckH }}px;transition:height {{ neckT }};pointer-events:none;">
           <svg class="fn-neck-vector" aria-hidden="true" width="280" height="{{ neckFallbackH }}" viewBox="0 -32 280 {{ neckFallbackH }}" style="position:absolute;left:0;top:-52px;width:280px;height:{{ neckFallbackH }}px;overflow:hidden;pointer-events:none;">
             <g data-neck-fallback transform="translate(0 20)">
-              <defs><pattern id="fn-neck-simple-coat" patternUnits="userSpaceOnUse" width="52" height="168"><rect width="52" height="168" fill="#ffcd22"></rect><path d="M3 4Q20-4 23 16L18 37Q4 43-2 26ZM31 33Q48 22 55 43L50 68Q32 75 28 58ZM0 81Q17 63 24 87L19 110Q4 124-3 105ZM31 121Q50 109 55 132L48 159Q29 165 27 143Z" fill="#d28a0d"></path></pattern></defs>
+              <defs><pattern id="fn-neck-simple-coat" patternUnits="userSpaceOnUse" width="52" height="168"><rect width="52" height="168" fill="#ffc51b"></rect><path d="M3 4Q20-4 23 16L18 37Q4 43-2 26ZM31 33Q48 22 55 43L50 68Q32 75 28 58ZM0 81Q17 63 24 87L19 110Q4 124-3 105ZM31 121Q50 109 55 132L48 159Q29 165 27 143Z" fill="#d48611"></path></pattern></defs>
               <path d="{{ neckFallbackPath }}" fill="none" stroke="url(#fn-neck-simple-coat)" stroke-width="52" stroke-linecap="round"></path>
             </g>
             <g data-neck-art-root></g>
           </svg>
         </div>
-        <img class="fn-body" src="assets/neck/g-body.webp" alt="" draggable="false" style="position:absolute;left:3.5px;bottom:40px;width:192.8px;height:221px;transform-origin:50% 100%;transform:skewX({{ bodySkew }}deg);-webkit-mask-image:linear-gradient(transparent,#000 9px);mask-image:linear-gradient(transparent,#000 9px);">
+        <img class="fn-body" src="assets/neck/g-body.webp" alt="" draggable="false" style="position:absolute;left:3.5px;bottom:40px;width:192.8px;height:221px;transform-origin:50% 100%;transform:skewX({{ bodySkew }}deg);">
         <div class="fn-head" role="img" aria-label="Girafa" style="position:absolute;left:{{ headX }}px;bottom:{{ headB }}px;width:192.8px;height:159.8px;transform-origin:50% 90%;transform:translateY({{ headDY }}px) rotate({{ headRot }}deg) scale({{ headSc }});transition:bottom {{ neckT }};perspective:500px;">
           <img class="fn-head-front" src="assets/neck/g-head.webp" alt="" draggable="false" style="position:absolute;inset:0;width:192.8px;height:159.8px;opacity:{{ frontOpacity }};transform:rotateY({{ frontYaw }}deg);transform-origin:50% 90%;">
           <img class="fn-head-side" src="assets/neck/g-head-side.webp" alt="" draggable="false" ref="{{ sideRef }}" style="position:absolute;left:12.5px;top:-6.9px;width:200px;height:166.67px;opacity:{{ sideOpacity }};transform:rotateY({{ sideYaw }}deg);transform-origin:42% 94%;">
@@ -168,7 +169,7 @@ class Component extends DCLogic {
   sideLoaded=()=>{this._sideLoaded=true;if(!this.state.busy)this.setState({sideReady:true});};
   neckPose(){
     const lean=this.state.lean||0,t=this.state.sideReady?Math.max(0,Math.min(1,(lean-.1)/.45)):0,turn=t*t*(3-2*t);
-    return {lean:lean*(this.state.sideReady?120.4:208),lift:lean*(this.state.sideReady?18.4:12),socketLift:28*turn,turn,tipScale:1-.2*turn};
+    return {lean:lean*(this.state.sideReady?120.4:208),lift:lean*(this.state.sideReady?18.4:12),socketLift:14+18*turn,turn};
   }
   drawNeckArt(){this._neckArt?.draw(this.neckPose());}
   applyCloudPlayer() {

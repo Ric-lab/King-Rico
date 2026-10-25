@@ -178,3 +178,17 @@ recortada; o viewport SVG inclui essa sobreposição para não cortar a curva. S
 novas imagens ou créditos. Conferidos cinco ângulos ampliados, contato, deglutição,
 queda/retomada/prêmio protegido e encaixe com o renderizador indisponível. Não
 constitui aprovação estética do autor.
+
+### 2026-10-25 — Encaixe por sobreposição e gola
+
+O usuário rejeitou a ponta afunilada e especificou a solução: mesma largura,
+extremidade arredondada passando para dentro da cabeça, com a cabeça à frente.
+A renderização segue essa orientação, sem estreitar a parte superior. A ponta
+arredondada fica oculta pelos sprites frontal/lateral e a região SVG cobre a
+sobreposição. Na base, uma máscara acompanha a abertura da gola original; o
+pescoço passa atrás dela e da gravata, removendo o recorte de pele anterior.
+Amarelo/âmbar e brilho foram comparados aos pixels dos sprites, com manchas menores
+e sombreado suave. Sem alterar ou gerar arquivos de imagem; sem créditos.
+Conferidos início, crescimento, virada, mordida e gola ampliados; teste de retomada
+na queda e prêmio protegido passou, assim como os enquadramentos com o renderizador
+indisponível. O acabamento ainda depende do feedback do usuário.
