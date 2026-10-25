@@ -229,3 +229,14 @@ céu reenquadrado para 6.000 px para cobrir os 33 andares, mantendo pôr do sol 
 região do x1,7. Sem edição de imagens/créditos. Conferidos início, x1,7 e final;
 teste de queda agora mede deslocamento em relação ao galho, sem confundir o retorno
 da câmera com movimento da maçã. Subida estável, mordida e retomada passaram.
+
+### 2026-10-25 — Espaço para a mordida e queda legível
+
+Intervalo de 112 para 120 px: conferência dos contornos alpha da cabeça lateral
+e da próxima maçã encontrou sobreposição em 112 e nenhuma em 120; o contato foi
+conferido no navegador. Cena/céu ganham altura para os 33 andares, com dia→pôr do
+sol→espaço preservados. Bote errado: queda de 1,8 s, câmera retida no galho até a
+maçã descer e resultado depois da queda. A opção de movimento reduzido usa 240 ms.
+Teste de navegador confere contato antes da queda, maçã ainda visível e câmera
+retida durante a queda lenta, primeira subida e retomada/prêmio protegido; conferida
+também a apresentação reduzida. Alterações visuais, sem novas imagens ou créditos.

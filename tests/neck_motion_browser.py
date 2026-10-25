@@ -45,7 +45,15 @@ def check_neck_motion(browser, login, restored, observer):
         # A slower screenshot can overlap the camera returning after the lunge.
         # Check the fall relative to its branch, independent of camera movement.
         moved=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>{const b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};}')
-        assert moved['y']+moved['height']/2-moved['branchY']>fruit['y']+fruit['height']/2-branch_y+10,(fruit,moved)
+        initial_y=fruit['y']+fruit['height']/2-branch_y
+        early_y=moved['y']+moved['height']/2-moved['branchY']
+        assert early_y>initial_y+4,(fruit,moved)
+        page.wait_for_timeout(450)
+        assert page.evaluate('k=>__fn.state.reach===k&&__fn.state.busy&&!__fn.state.msg',k),'Camera returned or result covered the apple before the slow fall was readable'
+        middle=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>{const b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};}')
+        middle_y=middle['y']+middle['height']/2-middle['branchY']
+        assert early_y+15<middle_y<initial_y+400,(moved,middle)
+        assert 60<middle['y']+middle['height']/2<page.viewport_size['height'],'Falling apple already left the visible game'
         assert page.evaluate('KingRicoCloud.player.neckRound') is None
         page.screenshot(path='/tmp/neck-knock-falling-'+str(k)+'.png')
 
@@ -92,4 +100,4 @@ def check_neck_motion(browser, login, restored, observer):
     page.reload();restored(page,uid);page.wait_for_function('__fn.state.balance===995.5&&!__fn.state.busy')
     assert not errors,errors
     context.close()
-    return {'neck_motion':'passed','continuous_coat':True,'spots_do_not_stretch':True,'stable_first_climb':True,'contact_before_fall':True,'reload_during_fall':True,'protected_prize_once':True}
+    return {'neck_motion':'passed','continuous_coat':True,'spots_do_not_stretch':True,'stable_first_climb':True,'contact_before_fall':True,'readable_slow_fall':True,'reload_during_fall':True,'protected_prize_once':True}
