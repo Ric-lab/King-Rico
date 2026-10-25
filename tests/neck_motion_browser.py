@@ -1,4 +1,4 @@
-"""Regression for the opaque yellow outline and contact-before-fall presentation."""
+"""Regression for a continuous coat, contact-before-fall and swallowing presentation."""
 import uuid
 from new_games_browser import forced_pop
 
@@ -9,13 +9,21 @@ def check_neck_motion(browser, login, restored, observer):
     page=context.new_page();errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto('http://127.0.0.1:5000/neck');login(page,'knock-'+uuid.uuid4().hex[:8])
-    page.wait_for_function('window.__fn?.state.sideReady&&document.querySelector(".fn-neck canvas")?.hidden===false')
+    page.wait_for_function("window.__fn?.state.sideReady&&document.querySelectorAll('[data-neck-spot]').length>0")
     uid=page.evaluate('KingRicoCloud.uid')
     # Layout fixture only: no operation or change to the real emulated wallet.
     page.evaluate('__fn.setState({busy:true,reach:3,floor:3,round:true,roundBet:10})');page.wait_for_timeout(650)
-    samples=page.evaluate('''()=>{const c=document.querySelector('.fn-neck canvas'),d=c.width/Number.parseFloat(c.style.width),x=c.getContext('2d');
-      return [2,7,53,59].map(n=>x.getImageData(Math.round(n*d),Math.round(70*d),1,1).data[3]);}''')
-    assert samples[0]==0 and samples[3]==0 and samples[1]>240 and samples[2]>240,samples
+    assert page.locator('.fn-neck image,[data-neck-straight]').count()==0
+    assert page.locator('[data-neck-spot]').count()>8
+    material=page.locator('[data-neck-spot="3:0"]')
+    before=material.evaluate('el=>{const b=el.getBBox();return {width:b.width,height:b.height}}')
+    page.screenshot(path='/tmp/neck-continuous-straight.png')
+    page.evaluate('__fn.setState({reach:4,floor:4})');page.wait_for_timeout(650)
+    after=material.evaluate('el=>{const b=el.getBBox();return {width:b.width,height:b.height}}')
+    assert abs(before['width']-after['width'])<.2 and abs(before['height']-after['height'])<.2,(before,after)
+    page.evaluate('__fn.setState({reach:33,floor:33})');page.wait_for_timeout(650)
+    assert 8<page.locator('[data-neck-spot]').count()<100
+    page.screenshot(path='/tmp/neck-continuous-top.png')
     assert page.evaluate('KingRicoCloud.player.balance')==1000
     page.screenshot(path='/tmp/neck-fixed-ribbon.png')
     page.evaluate('()=>{__fn.setState({busy:false});__fn._cloudDeferred=KingRicoCloud.player;__fn.applyCloudPlayer()}');page.wait_for_timeout(600)
@@ -67,4 +75,4 @@ def check_neck_motion(browser, login, restored, observer):
     page.reload();restored(page,uid);page.wait_for_function('__fn.state.balance===995.5&&!__fn.state.busy')
     assert not errors,errors
     context.close()
-    return {'neck_motion':'passed','textured_width':True,'contact_before_fall':True,'reload_during_fall':True,'protected_prize_once':True}
+    return {'neck_motion':'passed','continuous_coat':True,'spots_do_not_stretch':True,'contact_before_fall':True,'reload_during_fall':True,'protected_prize_once':True}

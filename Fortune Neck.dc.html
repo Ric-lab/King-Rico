@@ -64,14 +64,15 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div class="fn-hoof-contact" aria-hidden="true" style="position:absolute;left:42px;bottom:40px;width:46px;height:8px;border-radius:50%;background:radial-gradient(ellipse,#44200cb8,transparent 72%);pointer-events:none;"></div>
         <div class="fn-hoof-contact" aria-hidden="true" style="position:absolute;left:111px;bottom:40px;width:46px;height:8px;border-radius:50%;background:radial-gradient(ellipse,#44200cb8,transparent 72%);pointer-events:none;"></div>
         <div class="fn-neck" ref="{{ neckRef }}" style="position:absolute;left:70.1px;bottom:257.6px;width:280px;height:{{ neckH }}px;transition:height {{ neckT }};pointer-events:none;">
-          <div data-neck-straight style="position:absolute;left:0;bottom:0;width:61.2px;height:calc(100% - {{ neckCap }}px);background:url('assets/neck/g-neck.webp') 0 100%/61.2px 34px repeat-y;opacity:0;"></div>
-          <canvas hidden style="position:absolute;left:0;top:-20px;width:280px;height:{{ neckCanvasH }}px;"></canvas>
-        <svg class="fn-neck-fallback" aria-hidden="true" width="280" height="{{ neckH }}" viewBox="0 0 280 {{ neckH }}" preserveAspectRatio="none" style="position:absolute;left:0;bottom:0;width:280px;height:{{ neckH }}px;overflow:visible;pointer-events:none;">
-          <defs><pattern id="fn-neck-spots" patternUnits="userSpaceOnUse" width="52" height="34"><svg width="52" height="34" viewBox="18 0 146 100" preserveAspectRatio="none"><image href="assets/neck/g-neck.webp" width="180" height="100"></image></svg></pattern></defs>
-          <path class="fn-neck-path" d="{{ neckPath }}" fill="none" stroke="url(#fn-neck-spots)" stroke-width="52" stroke-linecap="butt"></path>
-        </svg>
+          <svg class="fn-neck-vector" aria-hidden="true" width="280" height="{{ neckFallbackH }}" style="position:absolute;left:0;top:-20px;width:280px;height:{{ neckFallbackH }}px;overflow:hidden;pointer-events:none;">
+            <g data-neck-fallback transform="translate(0 20)">
+              <defs><pattern id="fn-neck-simple-coat" patternUnits="userSpaceOnUse" width="52" height="168"><rect width="52" height="168" fill="#efb236"></rect><path d="M3 4Q20-4 23 16L18 37Q4 43-2 26ZM31 33Q48 22 55 43L50 68Q32 75 28 58ZM0 81Q17 63 24 87L19 110Q4 124-3 105ZM31 121Q50 109 55 132L48 159Q29 165 27 143Z" fill="#af701c"></path></pattern></defs>
+              <path d="{{ neckFallbackPath }}" fill="none" stroke="url(#fn-neck-simple-coat)" stroke-width="52" stroke-linecap="round"></path>
+            </g>
+            <g data-neck-art-root></g>
+          </svg>
         </div>
-        <img class="fn-body" src="assets/neck/g-body.webp" alt="" draggable="false" style="position:absolute;left:3.5px;bottom:40px;width:192.8px;height:221px;transform-origin:50% 100%;transform:skewX({{ bodySkew }}deg);">
+        <img class="fn-body" src="assets/neck/g-body.webp" alt="" draggable="false" style="position:absolute;left:3.5px;bottom:40px;width:192.8px;height:221px;transform-origin:50% 100%;transform:skewX({{ bodySkew }}deg);-webkit-mask-image:linear-gradient(transparent,#000 9px);mask-image:linear-gradient(transparent,#000 9px);">
         <div class="fn-head" role="img" aria-label="Girafa" style="position:absolute;left:{{ headX }}px;bottom:{{ headB }}px;width:192.8px;height:159.8px;transform-origin:50% 90%;transform:translateY({{ headDY }}px) rotate({{ headRot }}deg) scale({{ headSc }});transition:bottom {{ neckT }};perspective:500px;">
           <img class="fn-head-front" src="assets/neck/g-head.webp" alt="" draggable="false" style="position:absolute;inset:0;width:192.8px;height:159.8px;opacity:{{ frontOpacity }};transform:rotateY({{ frontYaw }}deg);transform-origin:50% 90%;">
           <img class="fn-head-side" src="assets/neck/g-head-side.webp" alt="" draggable="false" ref="{{ sideRef }}" style="position:absolute;left:12.5px;top:-6.9px;width:200px;height:166.67px;opacity:{{ sideOpacity }};transform:rotateY({{ sideYaw }}deg);transform-origin:42% 94%;-webkit-mask-image:linear-gradient(#000 94%,transparent);mask-image:linear-gradient(#000 94%,transparent);">
@@ -166,7 +167,7 @@ class Component extends DCLogic {
     const lean=this.state.lean||0,t=this.state.sideReady?Math.max(0,Math.min(1,(lean-.1)/.45)):0,turn=t*t*(3-2*t);
     return {lean:lean*(this.state.sideReady?120.4:208),lift:lean*(this.state.sideReady?18.4:12),turn,tipScale:1-.2*turn};
   }
-  drawNeckArt(){const bend=Math.min(180,34+this.state.reach*STEP);this._neckArt?.draw({bend,...this.neckPose()});}
+  drawNeckArt(){this._neckArt?.draw(this.neckPose());}
   applyCloudPlayer() {
     const p=this._cloudDeferred; if(!p) return; this._cloudDeferred=null;
     const r=p.neckRound;this._cloudRoundId=r?.id || null;
@@ -310,7 +311,7 @@ class Component extends DCLogic {
     const pr = s.round && s.floor > 0 ? Math.round(s.roundBet * M[s.floor - 1] * 10) / 10 : 0, nextM = M[Math.min(M.length, (s.round ? s.floor : 0) + 1) - 1];
     return {
       scale:viewScale,sceneHeight,groundHeight:sceneHeight+124,worldBottom:sceneHeight-635,walletProps:{value: txt,hold:!!(s.msg||s.busy),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome,
-      camY:cameraY,neckRef:this.neckRef,neckCap:bend,neckCanvasH:bend+40,neckH,neckPath,headX:3.5+lean,headB:281.4+e,headDY:-lift, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot:s.headRot+(1-turn)*(s.lean||0)*3,headSc:1,
+      camY:cameraY,neckRef:this.neckRef,neckFallbackH:neckH+40,neckFallbackPath:neckPath,neckH,headX:3.5+lean,headB:281.4+e,headDY:-lift, neckT: '.5s cubic-bezier(.3,.8,.35,1.15)', headRot:s.headRot+(1-turn)*(s.lean||0)*3,headSc:1,
       mouthX:s.sideReady?184.1:96.4,mouthY:s.sideReady?128.8:122.4,
       swallowing:!!s.biteFloor,swallowSrc:s.biteFloor===s.peachAt?'assets/fx/peach-plain.webp':SRC(s.biteFloor||1),foodX:(s.sideReady?184.1:96.4)-28,foodY:(s.sideReady?128.8:122.4)-28,
       frontOpacity:1-turn,sideOpacity:turn,frontYaw:turn*25,sideYaw:(turn-1)*-25,bodySkew:-(s.lean||0)*.8,sideRef:this.sideRef,

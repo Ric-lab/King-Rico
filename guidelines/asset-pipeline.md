@@ -146,3 +146,14 @@ aproximação; ajuste da ponta do pescoço, alinhamento com a entrada e duas som
 curtas sob os cascos. Imagem frontal continua como alternativa se a lateral falhar.
 Validação no navegador: contato da boca com a fruta, apoio dos pés, retomada e prêmio;
 também com imagem lateral/Canvas indisponíveis e redução de movimento.
+
+### 2026-10-25 — Pescoço contínuo
+
+O usuário rejeitou o aspecto de recortes empilhados ao esticar. A pequena textura
+`g-neck.webp` deixa de compor o pescoço: uma única silhueta SVG recebe manchas
+irregulares em coordenadas do corpo, sombra de seção arredondada e encaixe sob os
+sprites existentes. O crescimento revela a pelagem sem esticar suas manchas;
+a curva distribui o movimento pelo trecho superior. A renderização acompanha a
+altura efetiva durante a transição, sem loop quando parada. Teste de navegador
+compara o tamanho da mesma mancha em duas alturas e confere o último andar,
+bote, deglutição, queda, retomada e prêmio protegido. A aparência aguarda feedback.
