@@ -192,3 +192,12 @@ e sombreado suave. Sem alterar ou gerar arquivos de imagem; sem créditos.
 Conferidos início, crescimento, virada, mordida e gola ampliados; teste de retomada
 na queda e prêmio protegido passou, assim como os enquadramentos com o renderizador
 indisponível. O acabamento ainda depende do feedback do usuário.
+
+### 2026-10-25 — Repouso mais alto e manchas mais escuras
+
+Pedido do usuário: cabeça inicialmente na altura visual da antiga primeira maçã,
+para destacar a girafa do amarelo do circo. Pescoço/cabeça e sequência de frutas
+recebem um andar visual de altura; câmera acompanha apenas os andares jogados.
+Piso inicial, apostas e pagamentos preservados. Manchas âmbar levemente escurecidas,
+com o mesmo brilho e tamanho. Conferidos início, mordida, estabilidade da primeira
+subida, retomada e prêmio protegido. Sem geração de imagens ou créditos.

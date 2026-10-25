@@ -17,7 +17,7 @@
     const id='kr-neck-'+(++sequence),defs=node('defs',{},art),clip=node('clipPath',{id:id+'-clip',clipPathUnits:'userSpaceOnUse'},defs),contour=node('path',{},clip);
     const filter=node('filter',{id:id+'-soft',filterUnits:'userSpaceOnUse',x:-30,y:-30,width:340,height:1000},defs);
     node('feGaussianBlur',{stdDeviation:.7},filter);
-    const dyes=[['#e8a52f','#d88710','#bf7005'],['#e39a24','#d47d08','#bd6903'],['#e9a128','#dc8610','#c27304'],['#e6a12c','#d3820c','#bc6b02']];
+    const dyes=[['#e09e2b','#ce800e','#b56a04'],['#db9321','#c97607','#b36303'],['#e19a24','#d17f0e','#b86d03'],['#de9a28','#c97b0a','#b26502']];
     dyes.forEach((colors,i)=>{const gradient=node('radialGradient',{id:id+'-coat-'+i,cx:'32%',cy:'25%',r:'85%'},defs);colors.forEach((color,j)=>node('stop',{offset:[0,.55,1][j],'stop-color':color},gradient));});
     const grain=node('filter',{id:id+'-grain',filterUnits:'userSpaceOnUse',x:0,y:-64,width:280,height:1064},defs);
     node('feTurbulence',{type:'fractalNoise',baseFrequency:.65,numOctaves:2,seed:19,result:'grain'},grain);
