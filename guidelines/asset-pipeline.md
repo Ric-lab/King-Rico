@@ -209,3 +209,13 @@ Reenquadramento vertical de `bg-sky33.webp` por CSS (altura 5.400 px): a faixa q
 aparece antes, com transição contínua pela subida, noite e planetas preservados.
 Conferidos os enquadramentos 0/6/7/10/16/28/33. Imagem original preservada,
 sem geração ou créditos; nenhuma regra de aposta alterada.
+
+### 2026-10-25 — Intervalo dos galhos e contato das maçãs
+
+Intervalo vertical aumentado de 96 para 104 px, conservando a altura de repouso.
+A maçã desce 1 px e recebe sombra curta sobre a folhagem. Um recorte das mesmas
+folhas, alinhado à base original, passa à frente dos pés; a sombra de contato sai
+quando a fruta é comida ou cai. Definição explícita do usuário: “ancorar” significa
+parecer uma coisa única, com contato/profundidade/luz, e não assets sobrepostos.
+Imagens preservadas, sem geração/créditos. Conferidos início, x1,7 e último andar,
+contato ampliado, mordida, queda, primeira subida estável e retomada/prêmio protegido.
