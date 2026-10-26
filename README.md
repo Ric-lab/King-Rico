@@ -47,3 +47,7 @@ Instalação no celular como **Fortune Circus**, tela cheia, ícone e endereços
 [instruções e limites](docs/INSTALAR-NO-CELULAR.md).
 
 Claw Machine: [mecânica, persistência e modelo 3D](docs/CLAW-MACHINE.md).
+
+Balanceamento e auditoria dos oito jogos: [economia](docs/ECONOMIA.md) e
+[comparação de sessões](docs/BALANCEAMENTO-DE-SESSOES.md). Reproduza com
+`npm run audit:sessions -- --compare-ref 0c3c12e`.

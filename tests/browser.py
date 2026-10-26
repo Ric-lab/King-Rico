@@ -3,6 +3,7 @@ import json
 import re
 import time
 import uuid
+import sys
 from tempfile import TemporaryDirectory
 from playwright.sync_api import sync_playwright
 from login_ui import check_wallet_retry
@@ -348,7 +349,7 @@ with sync_playwright() as p:
         if column<4:
             page.wait_for_function('(used)=>window.__fg.state.used===used && window.__fg.state.phase==="spin"',arg=column+1,timeout=25000)
     page.wait_for_function('window.__fg.state.win?.title==="FINGO!"',timeout=25000)
-    expected_fingo=round(before_fingo-2.5+62.5,2)
+    expected_fingo=round(before_fingo-2.5+125,2)
     assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==expected_fingo
     page.get_by_text('OK',exact=True).click()
     page.wait_for_function('!window.__fg.state.win && !window.__fg.state.active',timeout=20000)
@@ -429,11 +430,12 @@ with sync_playwright() as p:
     print(json.dumps(check_new_games(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_round_controls(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps(check_home_rewards(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
-    print(json.dumps(check_claw(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
-    print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
-    print(json.dumps(check_bridge(browser,login,restored_without_login,LOGIN_OBSERVER)))
+    if '--public-only' not in sys.argv:
+        print(json.dumps(check_claw(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+        print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+        print(json.dumps(check_bridge(browser,login,restored_without_login,LOGIN_OBSERVER)))
     print(json.dumps(check_neck_motion(browser,login,restored_without_login,LOGIN_OBSERVER)))
-    print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo'],
+    print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo','penalty','clown','flying','33'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,
                       'one_primary_login_button':True,'neck_loss_reload_preserves_debit':True,

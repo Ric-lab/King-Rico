@@ -186,8 +186,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // 13 casas: 0 = FORTUNE (verde, casa da banca), 1..12 alternam vermelho (ímpar) e creme (par) → 6 + 6; a girafa (cabeça) é uma das vermelhas
 const POCKETS = [[-2, 'Fortune'], [6, 'Moeda'], [1, 'Bumbo'], [8, 'Diamante'], [2, 'Circo'], [7, 'Coroa'], [4, 'Trevo'], [-1, 'Girafa'], [9, 'King Rico'], [3, 'Nuvem'], [0, 'Capa'], [5, 'Cetro'], [11, 'Happeach']];
 const ORDER = POCKETS.map((_, i) => i);
-// RTP 98%: exato x10 (4%), mesma cor x2 (29%), FORTUNE x25 (3,92%).
-const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 2, PAY_FORT = 25, P_EXACT = 0.04, P_COLOR = 0.29, P_FORT = 0.98 / 25;
+// RTP 98%: exato x10 (2,5%), mesma cor x2 (36,5%), FORTUNE x25 (3,92%).
+const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 2, PAY_FORT = 25, P_EXACT = 0.025, P_COLOR = 0.365, P_FORT = 0.98 / 25;
 const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#2fa83a' : i % 2 ? '#e0321f' : '#fbefd8';

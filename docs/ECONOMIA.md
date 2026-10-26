@@ -1,6 +1,6 @@
-# Economia de moedas — 23/10/2026
+# Economia de moedas — 26/10/2026
 
-Versão `2026-10-23-ladder-v7`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-26-session-v8`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
 Isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
@@ -17,7 +17,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
 | Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
-| Fingo | 98,006% | Mirar sempre em um tubo dourado |
+| Fingo | 98,000% | Mirar sempre em um tubo dourado |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
 | Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
 
@@ -38,14 +38,17 @@ guardados Bounce, Claw e Race conservam sua matemática anterior.
 
 ## Ritmo de prêmios
 
-A Wheel paga outro desenho da mesma cor em **×2**, com probabilidade de 29%;
-desenho exato continua **×10**, com 4%. Somam 33% de rodadas com prêmio.
+A Wheel paga outro desenho da mesma cor em **×2**, com probabilidade de 36,5%;
+desenho exato continua **×10**, com 2,5%. Somam 39% de rodadas com prêmio.
 Escolher Fortune mantém **×25**, com 3,92%. Assim há uma opção de prêmios menores
 e mais frequentes e outra mais rara.
 
 O Circus mantém seus símbolos, cinco linhas e animações. O cálculo exato separa
-73,554% de retorno do jogo base e 24,446% da Rodada Especial. A especial chega,
-em média, a cada 68,48 giros e paga em média 16,74 vezes sua aposta de referência.
+73,304% de retorno do jogo base e 24,696% da Rodada Especial. A especial chega,
+em média, a cada 68,01 giros e paga em média 16,79 vezes sua aposta de referência.
+A linha de bumbos agora paga 1,2× em vez de apenas devolver a aposta. O peso
+do curinga e a frequência de Happeach compensam a mudança, preservando 98%
+a longo prazo. Isso melhora o valor do acerto comum, sem prometer mais acertos.
 Cada Happeach guarda a aposta que o coletou; o prêmio usa a média dos cinco.
 Coletar quatro com aposta pequena e aumentar apenas na ativação não multiplica
 as quatro contribuições antigas. O sexto Happeach já pertence ao próximo ciclo.
@@ -55,7 +58,38 @@ Fortune 33 paga **2,08×** incluindo a aposta nas novas mãos; empates devolvem 
 aposta. Mãos antigas já abertas mantêm seu fator salvo (ou **2×** quando ainda não havia fator). O fator fica salvo e imutável na mão.
 O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribuição é dirigida na abertura e permanece fixa. A banca reage à pontuação do jogador, podendo parar abaixo de 27 ou comprar acima de 27; em empate alto, preserva o empate. Mãos antigas conservam a política em 27.
 
+O Fingo mantém uma aposta por cartela e até 30 bolas. Nas cartelas novas, a
+chance por bola ao mirar em um tubo dourado é 0,15370947831009096; fora dele,
+usa-se 85% dessa chance. Completar a cartela tem probabilidade de 49,84% com
+mira dourada, contra 27,52% na versão anterior. O retorno de referência continua
+98%, com prêmios menores e mais frequentes. As faixas são:
+
+| Bola de conclusão | Prêmio total / aposta |
+| --- | ---: |
+| 5 | 50× |
+| 6–7 | 15× |
+| 8–9 | 8× |
+| 10–12 | 5× |
+| 13–15 | 3,5× |
+| 16–18 | 2,5× |
+| 19–21 | 2× |
+| 22–24 | 1,5× |
+| 25–27 | 1,2× |
+| 28–30 | 1× |
+
+O 50× agora é alcançável: antes a faixa terminava na terceira bola, mas a cartela
+precisa de cinco acertos. `payoutVersion:2` fica salvo e imutável. Cartelas antigas
+já pagas continuam com as chances e a tabela originais até encerrar; a interface
+também mostra essa tabela. Recarregar ou mudar de aparelho não migra a cartela.
+No Clown, retornos abaixo da aposta aparecem como “RETORNO PARCIAL” e a devolução
+como “APOSTA DEVOLVIDA”. Seus valores e probabilidades não mudaram.
+Neck, Flying, Pênalti e 33 também mantêm sua matemática nesta revisão.
+
 ## Auditoria reproduzível
+
+`npm run audit:sessions -- --compare-ref 0c3c12e` compara os oito jogos em sessões
+curtas com o código anterior. Veja [o relatório de sessões](BALANCEAMENTO-DE-SESSOES.md).
+Recargas de 1.000, bônus diário e tempo do anúncio não mudaram.
 
 `npm run audit:economy` usa o motor publicado e produz JSON com expectativas,
 frequências, simulações e sessões. `npm run audit:neck` verifica todas as apostas,
@@ -66,8 +100,9 @@ As fronteiras de sorteio são verificadas na grade de 32 bits do Web Crypto.
 O Circus é calculado por máscaras de Happeach, probabilidades das linhas e
 enumeração dos estados finais da especial, incluindo curinga, tela cheia e mínimo.
 A simulação não substitui esse cálculo: jackpots raros fazem amostras grandes
-oscilarem. Na amostra fixa de 500 mil giros, semente 472831, o retorno observado
-foi 96,65%, com prêmio em 30,53% dos giros; isso não altera o RTP teórico de 98%.
+oscilarem. Amostras finitas podem oscilar em torno do RTP teórico de 98%.
+Sessões curtas que começam sem Happeach acumulado ainda têm parte do valor
+na coleção incompleta; seu retorno em caixa não representa o RTP de longo prazo.
 
 No 33 v2, a distribuição seleciona o resultado de referência com 8% de empates,
 `(0,98 − 0,08) / 2,08` de vitórias e o restante de derrotas, preparando um baralho

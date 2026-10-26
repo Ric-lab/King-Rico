@@ -38,12 +38,12 @@ export function ladderMath(game,bet) {
   }
   return floors;
 }
-export function fingoMath(bet=10) {
+export function fingoMath(bet=10,version=2) {
   const choose=(n,k)=>{let x=1;for(let i=0;i<k;i++)x=x*(n-i)/(i+1);return x;};
-  const h=engine.FINGO_HIT,stake=engine.units(bet);let rtp=0,prizeRate=0;
+  const h=version===2?engine.FINGO_HIT:engine.FINGO_LEGACY_HIT,stake=engine.units(bet);let rtp=0,prizeRate=0;
   for(let n=5;n<=engine.FINGO_BALLS;n++){
     const chance=choose(n-1,4)*h**5*(1-h)**(n-5);
-    const prize=Math.round(stake*engine.FINGO_MULTIPLIERS[Math.floor((n-1)/3)]);
+    const prize=Math.round(stake*engine.fingoMultiplier(n,version));
     rtp+=chance*prize/stake;prizeRate+=chance;
   }
   return {rtp,prizeRate};

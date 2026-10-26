@@ -156,7 +156,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <div style="position: absolute; inset: 0; z-index: 50; background: rgba(10,2,20,.9); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
         <div style="width: 100%; padding: 20px; box-sizing: border-box; border-radius: 20px; background: #3d0a63; border: 2px solid #f0b41f; color: #fff3c4;">
           <h2 style="font-size: 24px; color: #ffd257;">TABELA DE PAGAMENTOS</h2>
-          <p>Uma aposta vale até 10 rounds de 3 bolas. Acerte os cinco números para receber o prêmio. O multiplicador diminui a cada round.</p>
+          <p>Uma aposta vale até 30 bolas. Acerte os cinco números para receber o prêmio. A tabela mostra o valor para cada faixa de bolas.</p>
           <sc-for list="{{ payList }}" as="p" hint-placeholder-count="10">
             <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #ffffff22;"><span>{{ p.balls }}</span><strong>{{ p.mult }}</strong></div>
           </sc-for>
@@ -178,12 +178,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// Fortune Fingo: uma aposta, cinco alvos fixos e até 30 bolas (10 rounds de 3).
+// Fortune Fingo: uma aposta, cinco alvos fixos e até 30 bolas.
 // GIRAR grava os canos; escolher uma coluna grava a queda antes da física.
-// O prêmio por trio segue a tabela do design, sem prêmios parciais ou poderes.
+// O prêmio segue a faixa salva na cartela, sem prêmios parciais ou poderes.
 const COLS = ['L', 'U', 'C', 'K', 'Y'], TH = ['#e11d48', '#0284c7', '#059669', '#d97706', '#7c3aed'];
-// 30 bolas em 10 rounds de 3; fechar os 5 no round k paga TRIO[k]. Exato: RTP 98,00%, fecha 27,5%. Todo giro tem ≥1 cano dourado.
-const TRIO = [50, 25, 12.5, 10, 9, 7, 5, 3, 2, 1], TIERS = TRIO.map((m, i) => [(i + 1) * 3, m]), BALLS = 30, HIT = 0.11783, G = 0.28;
+// New cards: attainable 50x at five balls and about half of golden-pipe cards complete. Old paid cards keep their saved terms.
+const TRIO = [50, 15, 8, 5, 3.5, 2.5, 2, 1.5, 1.2, 1], ENDS = [5,7,9,12,15,18,21,24,27,30], TIERS = TRIO.map((m,i)=>[ENDS[i],m]), BALLS = 30, HIT = 0.15370947831009096, G = 0.28;
+const LEGACY_TRIO=[50,25,12.5,10,9,7,5,3,2,1],LEGACY_TIERS=LEGACY_TRIO.map((m,i)=>[(i+1)*3,m]);
 const TC = [['#fb7185', '#e11d48', '#881337'], ['#38bdf8', '#0284c7', '#0c4a6e'], ['#34d399', '#059669', '#064e3b'], ['#fbbf24', '#d97706', '#78350f'], ['#a78bfa', '#7c3aed', '#3b0764']];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const SKEY = 'fortuneCircus.slot.v3', FKEY = 'fortuneCircus.fingo.v5';
@@ -193,7 +194,7 @@ const W = 453, H = 509, BW = W / 5, INSET = 45, inset = y => INSET * Math.max(0,
 const PC = { BALL_R: 0.039, BALL_REST: 0.75, BALL_FRIC: 0.005, BALL_AIR: 0.004, BALL_DENS: 1.5, CHAOS: 3, PEG_R: 0.022, PEG_RS: 0.03, PEG_REST_L: 0.9, PEG_REST_S: 1.0, PEG_COLS: 7, GAP: 2.4, ROWS_MIN: 10, ROWS_MAX: 16, WALL_REST: 1.3, GRAV: 1.6 };
 const LINES = []; for (let r = 0; r < 5; r++) LINES.push([0, 1, 2, 3, 4].map(c => r * 5 + c)); for (let c = 0; c < 5; c++) LINES.push([0, 1, 2, 3, 4].map(r => r * 5 + c)); LINES.push([0, 6, 12, 18, 24], [4, 8, 12, 16, 20]);
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-const multAt = u => { for (const [t, m] of TIERS) if (u <= t) return m; return 0; };
+const multAt = (u,version=2) => { for (const [t, m] of (version===2?TIERS:LEGACY_TIERS)) if (u <= t) return m; return 0; };
 const rint = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const CONF = ['#ffd257', '#e8352b', '#2ec962', '#7fcfff', '#fff3c4', '#c86bff'];
 const img = src => { const i = new Image(); i.src = src; return i; };
@@ -203,7 +204,7 @@ function nonAdjacent(avail, k) { const s = [...avail].sort((a, b) => a - b);
   for (let n = Math.min(k, s.length); n >= 1; n--) { const combos = [], bt = (i, cur) => { if (cur.length === n) { combos.push([...cur]); return; } for (let j = i; j < s.length; j++) if (!cur.length || s[j] - cur[cur.length - 1] >= 2) { cur.push(s[j]); bt(j + 1, cur); cur.pop(); } };
     bt(0, []); if (combos.length) return combos[Math.floor(Math.random() * combos.length)]; } return []; }
 class Component extends DCLogic {
-  state = { balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 802, justMarked: -1, winLine: null };
+  state = { balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:2, phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 802, justMarked: -1, winLine: null };
   stageRef = React.createRef(); canvasRef = React.createRef();
   IM = { ball: img('assets/fingo/ball.webp'), peg: img('assets/fingo/peg.webp'), tri: img('assets/fingo/triangle.webp') };
   async bakeBall() { try { const T = await import('./runtime/three.module.js'), S = 128, N = 32;
@@ -225,7 +226,7 @@ class Component extends DCLogic {
     this.setState({balance:p.balance,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,
       betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.fingoBetIdx ?? 3,
       roundId:r?.id || null,targets:r?.targets || null,tmarks:r?.marks || [false,false,false,false,false],
-      active:!!r,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
+      active:!!r,payoutVersion:r?(r.payoutVersion||0):2,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
       revealed:r?.slots ? 5 : 0,phase:r?.slots ? 'drop' : 'spin',landed:null,justMarked:-1,win:null});
   }
   componentDidMount() { this.bakeBall();window.__fg=this;
@@ -236,7 +237,7 @@ class Component extends DCLogic {
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const f = JSON.parse(localStorage.getItem(FKEY)); // A round saved with no balls left (page closed mid-drop or before ACABOU) restarts fresh instead of locking the board.
       if (f && (f.balls ?? BALLS) <= 0) this.setState({ betIdx: f.betIdx ?? 3, handSeen: !!f.handSeen });
-      else if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, handSeen: !!f.handSeen }); } catch (e) {}
+      else if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, payoutVersion:f.active?(f.payoutVersion||0):2, handSeen: !!f.handSeen }); } catch (e) {}
     }
     this.particles = []; this.lit = new Map();
     const boot = () => { if(this._dead) return; if (!window.Matter) return setTimeout(boot, 50); this.initWorld();
@@ -324,13 +325,14 @@ class Component extends DCLogic {
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) {cloud.settings({fingoBetIdx:s.betIdx,sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2});return;}
     try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = bal ?? s.balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv));
-      localStorage.setItem(FKEY, JSON.stringify({ betIdx: s.betIdx, targets: s.targets, tmarks: s.tmarks, balls: s.balls, used: s.used, active: s.active, handSeen: s.handSeen })); } catch (e) {} }
+      localStorage.setItem(FKEY, JSON.stringify({ betIdx: s.betIdx, targets: s.targets, tmarks: s.tmarks, balls: s.balls, used: s.used, active: s.active, payoutVersion:s.payoutVersion, handSeen: s.handSeen })); } catch (e) {} }
   ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
   tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
   buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(8, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
   useful(n, c) { const s = this.state; return !!s.targets && c != null && !s.tmarks[c] && s.targets[c] === n; }
   goldCols() { const s = this.state; return s.slots ? [0, 1, 2, 3, 4].filter(c => this.useful(s.slots[c], c)) : []; }
-  prize() { const s = this.state; return BETS[s.betIdx] * multAt(s.used + 1); }
+  tiers(){return this.state.active&&this.state.payoutVersion!==2?LEGACY_TIERS:TIERS;}
+  prize() { const s = this.state; return BETS[s.betIdx] * multAt(s.used + 1,s.payoutVersion); }
   onSpin = async () => {
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) {
@@ -340,7 +342,7 @@ class Component extends DCLogic {
         const r=await cloud.fingo('roll',BETS[s.betIdx],s.roundId || crypto.randomUUID(),s.used);
         const x=r.outcome;
         this.setState({balance:cloud.player?.balance ?? r.player.balance,targets:x.targets,tmarks:x.marks,used:x.used,
-          balls:BALLS-x.used,roundId:x.roundId,active:true},()=>this.roll(x.slots,{}));
+          balls:BALLS-x.used,roundId:x.roundId,active:true,payoutVersion:x.payoutVersion||0},()=>this.roll(x.slots,{}));
         this.tone(500,.06,'square',.05);this.buzz(20);
       } catch(e) {this._cloudDeferred=cloud.player;cloud.error(e);}
       finally {this._cloudRequest=false;if(this._cloudDeferred && !this.cloudLocked()) this.applyCloudPlayer();}
@@ -378,7 +380,7 @@ class Component extends DCLogic {
         this._cloudDrop=r.outcome;target=r.outcome.bin;
       } catch(e) {this._cloudDeferred=cloud.player;cloud.error(e);this._cloudRequest=false;this.applyCloudPlayer();return;}
     } else if (s.fire) target = col;
-    else { const p = HIT * (onGold ? 1 : 0.6), hit = gold.length > 0 && Math.random() < p;
+    else { const p = (s.payoutVersion===2?HIT:.11783) * (onGold ? 1 : s.payoutVersion===2?.85:.6), hit = gold.length > 0 && Math.random() < p;
       const pool = hit ? gold : [0, 1, 2, 3, 4].filter(i => !gold.includes(i)), near = pool.slice().sort((a, b) => Math.abs(a - col) - Math.abs(b - col));
       target = hit && onGold ? col : near[Math.random() < 0.7 ? 0 : Math.min(near.length - 1, 1)]; if (target == null) target = col; }
     const M = window.Matter, rad = W * PC.BALL_R, sx = s.fire ? col * BW + BW / 2 : (col + 1) * (W / PC.PEG_COLS) - (W / PC.PEG_COLS) / 2 + (col - 2) * 6;
@@ -396,9 +398,9 @@ class Component extends DCLogic {
     if (!hit) { this.tone(260, 0.18, 'sine', 0.07, 180); return this.next(); }
     const tmarks = s.tmarks.slice(); tmarks[bin] = true; [784, 988, 1318].forEach((f, j) => setTimeout(() => this.tone(f, 0.14, 'triangle', 0.08), j * 70)); this.buzz([30, 30, 50]);
     this.setState({ tmarks, justMarked: bin }, () => this.save());
-    if (tmarks.every(Boolean)) { const w = window.KingRicoCloud?.enabled ? this._cloudDrop.winUnits/100 : Math.round(BETS[s.betIdx] * multAt(s.used) * 100) / 100; this.setState({ phase: 'won', lucky: 'FINGO!' }); this.confetti(bin);
+    if (tmarks.every(Boolean)) { const w = window.KingRicoCloud?.enabled ? this._cloudDrop.winUnits/100 : Math.round(BETS[s.betIdx] * multAt(s.used,s.payoutVersion) * 100) / 100; this.setState({ phase: 'won', lucky: 'FINGO!' }); this.confetti(bin);
       [523, 659, 784, 1046, 1318].forEach((f, j) => setTimeout(() => this.tone(f, 0.2, 'triangle', 0.09), 300 + j * 90));
-      this._t1 = setTimeout(() => { this.buzz([70, 60, 70, 60, 140]); this.setState({ lucky: null, win: { w, title: 'FINGO!' } }); }, 1500); return; }
+      this._t1 = setTimeout(() => { this.buzz([70, 60, 70, 60, 140]); this.setState({ lucky: null, win: { w, title: w>BETS[s.betIdx]?'FINGO!':'APOSTA DEVOLVIDA' } }); }, 1500); return; }
     this.setState({ lucky: 'LUCKY!' }); clearTimeout(this._lt); this._lt = setTimeout(() => this.setState({ lucky: null }), 1300); this.next();
   }
   next() { const s = this.state;
@@ -415,7 +417,7 @@ class Component extends DCLogic {
         this.setState({win:null,phase:'spin',lucky:null},()=>this.applyCloudPlayer());};
       if(w>0) this.flyCoins(done);else done();return;
     }
-    const reset = () => this.setState({ targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());
+    const reset = () => this.setState({ targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, payoutVersion:2, phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());
     this.setState({ win: null });
     if (w > 0) this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal }, () => { this.save(bal); reset(); }); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); else reset(); };
   flyCoins(done) { const wallet=this.stageRef.current?.querySelector('.kr-hud-balance');if(window.KingRicoWallet&&wallet){window.KingRicoWallet.fly(wallet,{onFirst:done});return;} const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
@@ -446,15 +448,16 @@ class Component extends DCLogic {
   betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save()); };
   goHome = e => { if (this.state.phase === 'falling' && e) e.preventDefault(); };
   panel() { const s = this.state, TCOL = ['#fff0a0', '#ffe680', '#ffd257', '#ffc447', '#ffb43a', '#ffa236', '#ff9030', '#f86b2a', '#ee5a2a', '#e5482a'];
-    const cur = Math.min(TRIO.length - 1, Math.floor(s.used / 3)), bet = BETS[s.betIdx];
-    // Equal neighbouring trios (25, 25) form one step: the side shows the next value that is actually LOWER.
-    let first = cur; while (first > 0 && TRIO[first - 1] === TRIO[cur]) first--;
-    let drop = cur + 1; while (drop < TRIO.length && TRIO[drop] === TRIO[cur]) drop++;
-    const hasNext = drop < TRIO.length && s.used < BALLS;
-    const tierDots = Array.from({ length: (drop - first) * 3 }, (_, j) => { const used = first * 3 + j + 1 <= s.used;
+    const tiers=this.tiers(),values=tiers.map(t=>t[1]),found=tiers.findIndex(t=>s.used+1<=t[0]),cur=found<0?tiers.length-1:found,bet=BETS[s.betIdx];
+    // Equal neighbouring bands form one step; the side shows the next lower prize.
+    let first = cur; while (first > 0 && values[first - 1] === values[cur]) first--;
+    let drop = cur + 1; while (drop < values.length && values[drop] === values[cur]) drop++;
+    const hasNext = drop < values.length && s.used < BALLS;
+    const from=first?tiers[first-1][0]:0,end=tiers[drop-1][0];
+    const tierDots = Array.from({ length: end-from }, (_, j) => { const used = from+j+1 <= s.used;
       return { bg: used ? 'radial-gradient(circle at 35% 30%, #7ef0a0 0%, #22a650 60%, #147a36 100%)' : 'radial-gradient(circle at 35% 30%, #ffffff 0%, #f1ede2 55%, #c9c0aa 100%)', sh: used ? '0 1px 2px rgba(0,0,0,.45)' : '0 1px 2px rgba(0,0,0,.45)', mark: used ? '✓' : '' }; });
-    const leftInTier = drop * 3 - s.used;
-    return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * TRIO[drop]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
+    const leftInTier = end - s.used;
+    return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * values[drop]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
   renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
@@ -483,7 +486,7 @@ class Component extends DCLogic {
       scale: Math.min(s.vw / W, s.vh / 802), stageRef: this.stageRef, canvasRef: this.canvasRef,
       walletProps:{value: txt,hold:!!s.win,external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       betText: fmt(BETS[s.betIdx]), betCursor: s.active ? 'default' : 'pointer', prizeSize: '22px', betAnim: s.noMoney ? 'fgNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      multText: 'x' + fmt(multAt(s.used + 1)), ...(() => { const n = s.active ? Math.min(TRIO.length, Math.floor(s.used / 3) + 1) : 0; return { roundMark: n ? String(n) : 'K', roundSize: n >= 10 ? '21px' : '27px', roundLabel: n ? 'Round ' + n + ' de ' + TRIO.length : 'King Rico' }; })(), ...this.panel(), prizeText: fmt(this.prize()),
+      multText: 'x' + fmt(multAt(s.used + 1,s.payoutVersion)), ...(() => { const i=this.tiers().findIndex(t=>s.used+1<=t[0]),n = s.active ? (i<0?TRIO.length:i+1) : 0; return { roundMark: n ? String(n) : 'K', roundSize: n >= 10 ? '21px' : '27px', roundLabel: n ? 'Faixa ' + n + ' de ' + TRIO.length : 'King Rico' }; })(), ...this.panel(), prizeText: fmt(this.prize()),
       tballs, buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
       showSpin: canSpin, countOp: 1, boardLit: ['rolling', 'falling', 'won'].includes(s.phase) ? 1 : 0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand: s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
@@ -495,8 +498,8 @@ class Component extends DCLogic {
       magicCells: card.nums.map((n, i) => { const m = card.marks[i]; return { text: n === 0 ? '★' : String(n), pick: () => this.pickMagic(i), cursor: m ? 'default' : 'pointer', op: m ? 0.3 : 1, bg: m ? 'rgba(255,255,255,.12)' : '#ffffff', color: m ? '#cfe' : TH[i % 5] }; }),
       betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       menuButton:{onClick:this.openMenu,disabled:!!(this._cloudRequest || s.phase==='falling' || s.phase==='rolling'),style:{zIndex:25}},
-      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:'Uma aposta vale até 10 rounds de 3 bolas. Acerte os cinco números para receber o prêmio; sua rodada fica salva na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
-      pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: TIERS.map(([t, m], i) => ({ balls: 'Round ' + (i + 1) + ' · bolas ' + (t - 2) + '–' + t, mult: 'x' + fmt(m) })),
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:'Uma aposta vale até 30 bolas. Acerte os cinco números; sua rodada e a tabela de prêmios ficam salvas na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: this.tiers().map(([t,m],i,tiers)=>({balls:'Bolas '+(i?tiers[i-1][0]+1:tiers===TIERS?5:1)+'–'+t,mult:'x'+fmt(m)})),
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? (s.win.w > 0 ? '+' + fmt(s.win.w) : 'Nova cartela') : '', closeWin: this.closeWin
     };

@@ -23,13 +23,13 @@ test('Fingo preserves the design table and settles the five-number game by balls
     assert.equal(rolled.winUnits,0);assert.equal(rolled.used,used);
     const drop=engine.fingo(2.5,rolled,'drop','round',used,()=>0);
     assert.equal(drop.used,used+1);assert.equal(drop.marks[used],true);
-    assert.equal(drop.ended,used===4);assert.equal(drop.winUnits,used===4?6250:0);
+    assert.equal(drop.ended,used===4);assert.equal(drop.winUnits,used===4?12500:0);
     previous={...drop,slots:null};
   }
 });
-test('Fingo pays 98% with 10 trios when every ball is dropped on a golden pipe',()=>{
+test('Fingo pays 98% with 10 attainable prize bands when every ball is dropped on a golden pipe',()=>{
   const C=(n,k)=>{let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return r;},h=engine.FINGO_HIT;let rtp=0;
-  for(let n=5;n<=engine.FINGO_BALLS;n++)rtp+=C(n-1,4)*h**5*(1-h)**(n-5)*engine.FINGO_MULTIPLIERS[Math.floor((n-1)/3)];
+  for(let n=5;n<=engine.FINGO_BALLS;n++)rtp+=C(n-1,4)*h**5*(1-h)**(n-5)*engine.fingoMultiplier(n);
   assert.equal(engine.FINGO_MULTIPLIERS.length*3,engine.FINGO_BALLS);assert.ok(Math.abs(rtp-.98)<.0005,String(rtp));
 });
 test('Fingo always offers a golden target and ends an incomplete round at 30 balls',()=>{
@@ -54,9 +54,9 @@ test('shared evaluation matches the actual game on 20,000 generated grids',()=>{
 });
 test('wild substitutes normal symbols, but Happeach never pays a line',()=>{
   const normal=[1,9,1,2,3,4,5,6,7];
-  assert.equal(engine.evaluate(normal,10).win,10);
+  assert.equal(engine.evaluate(normal,10).win,12);
   assert.equal(engine.evaluate([11,11,11,2,3,4,5,6,7],10).win,0);
-  assert.equal(engine.evaluate(Array(9).fill(1),10).win,500);
+  assert.equal(engine.evaluate(Array(9).fill(1),10).win,600);
 });
 test('slot caps Happeach per spin and settles the whole special round',()=>{
   const rng=seeded(); let triggered=0;

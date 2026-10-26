@@ -8,6 +8,7 @@
     "build:emulator": "node scripts/build.mjs --emulator",
     "test": "node --test tests/*.test.cjs tests/*.test.mjs",
     "audit:economy": "node scripts/economy-audit.mjs",
+    "audit:sessions": "node scripts/session-audit.mjs",
     "audit:neck": "node scripts/neck-audit.mjs",
     "test:rules": "node scripts/emulators.mjs --test-rules",
     "deploy:hosting": "npm run build:production && firebase deploy --project king-rico --only hosting",

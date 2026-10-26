@@ -401,7 +401,7 @@ a:hover { color: #fff3c4; }
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:453,&quot;height&quot;:802},&quot;startingBalance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1000,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:50,&quot;max&quot;:100000,&quot;step&quot;:50,&quot;section&quot;:&quot;Jogo&quot;},&quot;defaultBet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:10,&quot;options&quot;:[1,2.5,5,10,25,50],&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;},&quot;featureChance&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogo&quot;}}">
 const SYMBOLS = [
   { id: 'curtain', pay: 10, w: 3 },
-  { id: 'drum', pay: 1, w: 30 },
+  { id: 'drum', pay: 1.2, w: 30 },
   { id: 'tent', pay: 2.5, w: 20 },
   { id: 'candy', pay: 7.5, w: 8 },
   { id: 'clover', pay: 5, w: 12 },
@@ -409,7 +409,7 @@ const SYMBOLS = [
   { id: 'coin', pay: 15, w: 4 },
   { id: 'crown', pay: 17.5, w: 3 },
   { id: 'gem', pay: 20, w: 2 },
-  { id: 'wild', pay: 33.3, w: 2.85 }
+  { id: 'wild', pay: 33.3, w: 2.4 }
 ];
 const WILD = 9;
 // Haptics: one table for the whole game. Web can't set amplitude, so "intensity" = pulse length (ms).
@@ -431,7 +431,7 @@ const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
 const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
 // every Happeach frame as a literal path (dynamic 'f-'+name paths were missing from published builds)
 const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
-const PEACH = 11, PEACH_P = 0.008117510618322589, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
+const PEACH = 11, PEACH_P = 0.008174081789857218, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];

@@ -378,3 +378,19 @@ test('Wheel center always marks the chosen bet regardless of the landed pocket',
   }
  }
 });
+
+
+test('Clown distinguishes partial return, returned stake and a profitable round',()=>{
+ for(const [sumUnits,title]of[[150,'RETORNO PARCIAL'],[1000,'APOSTA DEVOLVIDA'],[1500,'VOCÊ GANHOU!']]){
+  const {instance:g,timers}=component('Fortune Clown.dc.html',{});
+  g._shot={used:10,sumUnits,betUnits:1000,results:Array(10).fill(0)};
+  g.score(null);timers();assert.equal(g.state.win.title,title);
+ }
+});
+test('Fingo displays the saved legacy table and the attainable new bands',()=>{
+ const {instance:g}=component('Fortune Fingo.dc.html',{});
+ g.state={...g.state,betIdx:3,active:true,used:5,payoutVersion:0};
+ assert.equal(g.prize(),250);assert.equal(g.panel().leftInTier,1);
+ g.state.payoutVersion=2;assert.equal(g.prize(),150);assert.equal(g.panel().leftInTier,2);
+ g.state.used=0;assert.equal(g.prize(),500);assert.equal(g.panel().tierDots.length,5);
+});

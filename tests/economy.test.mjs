@@ -16,7 +16,7 @@ test('Wheel, Clown and stopping ladders keep 98% across all legal stakes and cho
     for(const game of ['penalty'])for(const floor of ladderMath(game,bet))assert.ok(Math.abs(floor.rtp-.98)<3e-8);
     assert.ok(Math.abs(fingoMath(bet).rtp-.98)<.0001);
   }
-  assert.ok(Math.abs(wheelMath(10,1).prizeRate-.33)<1e-12);
+  assert.ok(Math.abs(wheelMath(10,1).prizeRate-.39)<1e-12);
 });
 test('Clown never changes odds from lifetime wins, previous misses or wallet history',()=>{
   for(const stats of [{betUnits:0,winUnits:0},{betUnits:1000000,winUnits:2000000},{betUnits:1000000,winUnits:0}]){
@@ -51,4 +51,23 @@ test('33 reference strategy is near 98% over reproducible hands, with wins and l
   const x=cardSimulation(100000,28,326729);
   assert.ok(x.rtp>.965 && x.rtp<.995,JSON.stringify(x));
   assert.ok(x.winRate>.4 && x.winRate<.5);assert.ok(x.winRate+x.pushRate<.6);
+});
+
+
+test('session pacing makes common Circus payouts profitable and Fingo completion more frequent',()=>{
+  assert.equal(engine.evaluate([1,1,1,2,3,4,5,6,7],10).win,12);
+  const modern=fingoMath(),legacy=fingoMath(10,1);
+  assert.ok(modern.prizeRate>.49&&modern.prizeRate<.51,JSON.stringify(modern));
+  assert.ok(legacy.prizeRate>.27&&legacy.prizeRate<.28,JSON.stringify(legacy));
+  assert.ok(Math.abs(modern.rtp-.98)<1e-10);
+  assert.ok(wheelMath(10,1).prizeRate>.38&&wheelMath(10,0).prizeRate<.04);
+});
+test('Fingo keeps paid legacy cards and makes the advertised top prize attainable',()=>{
+  const targets=[1,16,31,46,61],base={betUnits:1000,targets,marks:[true,true,true,true,false],used:4,slots:targets};
+  const old=engine.fingo(10,base,'drop','old',4,()=>0);
+  const modern=engine.fingo(10,{...base,payoutVersion:2},'drop','new',4,()=>0);
+  assert.equal(old.winUnits,25000);assert.equal(old.payoutVersion,undefined);
+  assert.equal(modern.winUnits,50000);assert.equal(modern.payoutVersion,2);
+  assert.equal(engine.fingo(10,base,'drop','old',4,()=>.13).marks[4],false);
+  assert.equal(engine.fingo(10,{...base,payoutVersion:2},'drop','new',4,()=>.13).marks[4],true);
 });

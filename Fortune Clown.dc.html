@@ -210,7 +210,7 @@ class Component extends DCLogic {
     if (hole) { const point=this.facePoint(hole);[784, 988, 1318].forEach((f, i) => setTimeout(() => this.tone(f + hole.m * 20, 0.16), i * 70)); this.buzz([30, 30, 50]); this.setState({ floatOn: true, floatX: point.x + 'px', floatY: (point.y - 30) + 'px', floatText: '+' + fmt(w), fk: Date.now() }); setTimeout(() => this.setState({ floatOn: false }), 900); }
     this.setState({ left, sum, results: x.results });
     if (left > 0) { setTimeout(() => { this.setBall(B0.x, B0.y, 1, 1); this.setState({ busy: false }, () => {this.applyCloudPlayer();this.nextColor();}); }, 350); return; }
-    setTimeout(() => this.setState({ win: { w: sum, title: sum > 0 ? 'VOCÊ GANHOU!' : 'TENTE DE NOVO' } }), 500);
+    setTimeout(() => this.setState({ win: { w: sum, title: sum>x.betUnits/100?'VOCÊ GANHOU!':sum===x.betUnits/100?'APOSTA DEVOLVIDA':sum>0?'RETORNO PARCIAL':'TENTE DE NOVO' } }), 500);
   }
   closeWin = () => {if(!this.state.win) return;
     this.setState({win:null,left:BALLS,sum:0,active:false,busy:false,results:[],roundId:null},()=>{this._cloudDeferred=window.KingRicoCloud.player;this.applyCloudPlayer();this.nextColor();});

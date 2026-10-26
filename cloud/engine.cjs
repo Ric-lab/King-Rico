@@ -2,21 +2,21 @@
 // Shared browser/Node engine. Spark stores these client-generated results; it does not verify the lottery.
 const random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
 const SYMBOLS = [
-  { id: 'curtain', pay: 10, w: 3 }, { id: 'drum', pay: 1, w: 30 },
+  { id: 'curtain', pay: 10, w: 3 }, { id: 'drum', pay: 1.2, w: 30 },
   { id: 'tent', pay: 2.5, w: 20 }, { id: 'candy', pay: 7.5, w: 8 },
   { id: 'clover', pay: 5, w: 12 }, { id: 'scepter', pay: 12.5, w: 5 },
   { id: 'coin', pay: 15, w: 4 }, { id: 'crown', pay: 17.5, w: 3 },
-  { id: 'gem', pay: 20, w: 2 }, { id: 'wild', pay: 33.3, w: 2.85 }
+  { id: 'gem', pay: 20, w: 2 }, { id: 'wild', pay: 33.3, w: 2.4 }
 ];
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
-const WILD = 9, PEACH = 11, PEACH_P = .008117510618322589, PEACH_GOAL = 5;
+const WILD = 9, PEACH = 11, PEACH_P = .008174081789857218, PEACH_GOAL = 5;
 const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-23-ladder-v7';
+const RULES_VERSION = '2026-10-26-session-v8';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
 const {claw} = require('./claw.cjs');
@@ -43,9 +43,12 @@ function flying(bet,previous,move,roundId,selected,rng=random) {
 const twentyOneRound = (bet,previous,move,roundId,rng=random,target=21) =>
   (move==='start' ? target===33 : previous?.target===33)
     ? thirtyThree(bet,previous,move,roundId,rng) : twentyOne(bet,previous,move,roundId,rng);
-// 30 balls in 10 trios. Approximate RTP with the player always dropping on a golden pipe: 98,006%; card closes 27,5%.
-const FINGO_BALLS = 30, FINGO_HIT = .11783, FINGO_GOLD = .28;
-const FINGO_MULTIPLIERS = [50,25,12.5,10,9,7,5,3,2,1];
+// New cards close more often; the first 50x band is attainable in five balls.
+const FINGO_BALLS=30,FINGO_HIT=.15370947831009096,FINGO_GOLD=.28;
+const FINGO_MULTIPLIERS=[50,15,8,5,3.5,2.5,2,1.5,1.2,1];
+const FINGO_BANDS=[5,7,9,12,15,18,21,24,27,30];
+const FINGO_LEGACY_HIT=.11783,FINGO_LEGACY_MULTIPLIERS=[50,25,12.5,10,9,7,5,3,2,1];
+function fingoMultiplier(used,version=2){return version===2?FINGO_MULTIPLIERS[FINGO_BANDS.findIndex(end=>used<=end)]:FINGO_LEGACY_MULTIPLIERS[Math.floor((used-1)/3)];}
 const PENALTY_MULTIPLIERS = [1.5,3,5,7,10,15,20,25,50,100], PENALTY_LEGACY_MULTIPLIERS = [1.2,1.8,3,5,10], PENALTY_BASE = TARGET_RTP;
 function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
   const modern = !previous || previous.ladderVersion === 2;
@@ -59,6 +62,7 @@ function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
   return {move,roundId,betUnits,step,quality,goal,ended,winUnits,...(modern?{ladderVersion:2}:{})};
 }
 function fingo(bet, previous, move, roundId, selected, rng = random) {
+  const modern=!previous||previous.payoutVersion===2,hitChance=modern?FINGO_HIT:FINGO_LEGACY_HIT;
   const targets = previous?.targets || Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));
   const marks = [...(previous?.marks || Array(5).fill(false))];
   let used = previous?.used || 0, slots, bin = -1;
@@ -77,7 +81,7 @@ function fingo(bet, previous, move, roundId, selected, rng = random) {
   } else {
     slots=previous.slots;
     const gold=slots.flatMap((n,c)=>!marks[c] && n===targets[c]?[c]:[]),onGold=gold.includes(selected);
-    const hit=gold.length>0 && rng()<FINGO_HIT*(onGold?1:.6);
+    const hit=gold.length>0 && rng()<hitChance*(onGold?1:modern?.85:.6);
     const pool=hit?gold:[0,1,2,3,4].filter(c=>!gold.includes(c));
     const near=pool.slice().sort((a,b)=>Math.abs(a-selected)-Math.abs(b-selected));
     bin=hit && onGold ? selected : near[rng()<.7?0:Math.min(near.length-1,1)] ?? selected;
@@ -86,7 +90,7 @@ function fingo(bet, previous, move, roundId, selected, rng = random) {
   }
   const complete=marks.every(Boolean),ended=complete || used===FINGO_BALLS;
   return {move,roundId,betUnits:units(bet),targets,marks,used,slots,bin,ended,
-    winUnits:complete ? Math.round(units(bet)*FINGO_MULTIPLIERS[Math.floor((used-1)/3)]) : 0};
+    winUnits:complete ? Math.round(units(bet)*fingoMultiplier(used,modern?2:1)) : 0,...(modern?{payoutVersion:2}:{})};
 }
 const NECK_MULTIPLIERS = [1.1,1.2,1.3,1.4,1.5,1.55,1.7,1.8,2,2.2,2.5,2.8,3,3.33,3.5,4,4.5,5,5.5,5.8,7,8,9,10,12,14,15.5,18,20,25,30,40,50];
 const NECK_BASE = .9320338677939342, NECK_GUARANTEED_FACTOR = GUARANTEED_FACTOR, NECK_PEACH_PROBABILITY = PEACH_PROBABILITY;
@@ -152,7 +156,7 @@ function slot(bet, peaches = 0, rng = random, bank = null) {
     winUnits: units(res.win) + (bonus ? units(bonus.res.win) : 0) };
 }
 // Match the current 13-pocket Claude Design wheel, including same-color prizes.
-const WHEEL_EXACT_P=.04, WHEEL_COLOR_P=.29, WHEEL_FORTUNE_P=TARGET_RTP/25, WHEEL_COLOR_PAY=2;
+const WHEEL_EXACT_P=.025, WHEEL_COLOR_P=.365, WHEEL_FORTUNE_P=TARGET_RTP/25, WHEEL_COLOR_PAY=2;
 const wheelPrize=(bet,selected,target)=>units(bet*(target===selected ? selected===0 ? 25 : 10 : selected!==0 && target!==0 && selected%2===target%2 ? WHEEL_COLOR_PAY : 0));
 function wheel(bet,selected,rng=random) {
   const all=Array.from({length:13},(_,i)=>i),r=rng();
@@ -203,5 +207,5 @@ function bonusFor(last, streak, now) {
 }
 module.exports = { bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
-  NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, fingo,
+  NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, FINGO_BANDS, FINGO_LEGACY_HIT, FINGO_LEGACY_MULTIPLIERS, fingoMultiplier, fingo,
   FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_LEGACY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };
