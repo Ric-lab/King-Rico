@@ -42,7 +42,7 @@ def acknowledge_mark(page,winning=False):
     dialog.wait_for(state='visible',timeout=25000)
     if winning:
         assert dialog.get_by_text('QUINA!',exact=True).count()==1
-        assert '5 moedas' in page.locator('[aria-label^="Prêmio atual:"]').get_attribute('aria-label')
+        assert page.evaluate('__fg._cardDrop.winUnits')==500
         page.screenshot(path='/tmp/fingo-card-quina.png')
         dialog.get_by_role('button',name='RECEBER',exact=True).click()
     else:
@@ -90,6 +90,7 @@ def play_fingo_card(page,uid,restored):
             assert page.evaluate('KingRicoCloud.player.fingoRound')==snapshot
         drop(page,c);acknowledge_mark(page,c==4)
     page.wait_for_function('__fg.state.win?.title==="FINGO!"')
+    assert page.get_by_text('+5',exact=True).is_visible()
     expected=round(before-2.5+5,2)
     assert round(page.evaluate('KingRicoCloud.player.balance'),2)==expected
     page.get_by_text('OK',exact=True).click();page.wait_for_function('!__fg.state.win&&!__fg.state.active')
