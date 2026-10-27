@@ -1,6 +1,6 @@
-# Economia de moedas — 26/10/2026
+# Economia de moedas — 27/10/2026
 
-Versão `2026-10-26-session-v8`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-27-fingo-card-v9`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
 Isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
@@ -17,7 +17,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
 | Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
-| Fingo | 98,000% | Mirar sempre em um tubo dourado |
+| Fingo 5×5 | 98,73% observado | 20 mil cartelas, política que prioriza linhas adiantadas; não é prova de RTP teórico |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
 | Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
 
@@ -58,13 +58,29 @@ Fortune 33 paga **2,08×** incluindo a aposta nas novas mãos; empates devolvem 
 aposta. Mãos antigas já abertas mantêm seu fator salvo (ou **2×** quando ainda não havia fator). O fator fica salvo e imutável na mão.
 O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribuição é dirigida na abertura e permanece fixa. A banca reage à pontuação do jogador, podendo parar abaixo de 27 ou comprar acima de 27; em empate alto, preserva o empate. Mãos antigas conservam a política em 27.
 
-O Fingo mantém uma aposta por cartela e até 30 bolas. Nas cartelas novas, a
-chance por bola ao mirar em um tubo dourado é 0,15370947831009096; fora dele,
-usa-se 85% dessa chance. Completar a cartela tem probabilidade de 49,84% com
-mira dourada, contra 27,52% na versão anterior. O retorno de referência continua
-98%, com prêmios menores e mais frequentes. As faixas são:
+O Fingo agora usa cartela 5×5, sem casa livre, e vence com cinco números de uma
+linha, coluna ou diagonal. Uma aposta continua valendo até 30 lançamentos. Os
+cinco tubos são sorteados antes da consulta à cartela; a consulta não sorteia de
+novo. A chance fixa de alcançar um tubo útil é 0,27 ao mirar no dourado, com fator
+0,85 fora dele. O sorteio oferece números úteis de colunas diferentes; cada
+marcação pode contribuir para linhas diferentes. Os pagamentos continuam nas
+mesmas faixas de bolas da versão anterior.
 
-| Bola de conclusão | Prêmio total / aposta |
+A simulação de 20 mil cartelas, semente 90431, observou retorno de 98,734% e quina
+em 51,04% usando uma política que prioriza linhas adiantadas. Escolher o primeiro
+dourado observou 93,183% e 48,96%; escolher tubos aleatoriamente observou 12,615%
+e 8,74%. São amostras do motor, não prova de estratégia ótima ou RTP teórico.
+Não há ajuste de chance pelo saldo, pelo lucro ou pela sequência do jogador.
+Reproduza com `node scripts/fingo-card-audit.mjs`.
+
+`cardVersion:1` identifica a cartela nova. As cinco bases salvas geram seus 25
+números de forma determinística; as marcas são índices de casas. As regras
+verificam o número alcançado, uma única marca válida, a quina e o pagamento.
+Cartelas antigas sem `cardVersion` mantêm os cinco alvos, chances e tabela já
+contratados até encerrar. `payoutVersion:2` mantém a tabela mais recente; cartelas
+anteriores a ela mantêm a tabela original. Veja [o fluxo e a validação](FINGO-CARTELA.md).
+
+| Bola da quina | Prêmio total / aposta |
 | --- | ---: |
 | 5 | 50× |
 | 6–7 | 15× |
@@ -77,13 +93,9 @@ mira dourada, contra 27,52% na versão anterior. O retorno de referência contin
 | 25–27 | 1,2× |
 | 28–30 | 1× |
 
-O 50× agora é alcançável: antes a faixa terminava na terceira bola, mas a cartela
-precisa de cinco acertos. `payoutVersion:2` fica salvo e imutável. Cartelas antigas
-já pagas continuam com as chances e a tabela originais até encerrar; a interface
-também mostra essa tabela. Recarregar ou mudar de aparelho não migra a cartela.
 No Clown, retornos abaixo da aposta aparecem como “RETORNO PARCIAL” e a devolução
 como “APOSTA DEVOLVIDA”. Seus valores e probabilidades não mudaram.
-Neck, Flying, Pênalti e 33 também mantêm sua matemática nesta revisão.
+Os outros sete jogos mantêm sua matemática nesta revisão da cartela.
 
 ## Auditoria reproduzível
 

@@ -19,6 +19,7 @@ from bridge_browser import check_bridge
 from neck_motion_browser import check_neck_motion
 from app_shell_browser import check_app_shell
 from loading_browser import check_loading
+from fingo_card_browser import play_fingo_card,check_fingo_card
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -132,6 +133,9 @@ def check_menu(page, screen, paytable):
 
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
+    if '--fingo-only' in sys.argv:
+        print(json.dumps(check_fingo_card(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
+        browser.close();sys.exit(0)
     context=browser.new_context(viewport={'width':453,'height':802},timezone_id='America/Sao_Paulo')
     context.add_init_script(LOGIN_OBSERVER)
     page=context.new_page();errors=[];http_errors=[]
@@ -279,84 +283,7 @@ with sync_playwright() as p:
     restored_without_login(page,account_uid)
     assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==round(final-bet,2),'Reload refunded a missed first step'
     assert page.evaluate('window.__fn.state.round') is False
-    # Enter Fingo through the published Home card with the same account/wallet.
-    before_fingo=page.evaluate('window.KingRicoCloud.player.balance')
-    page.goto(BASE+'/Home.dc.html',wait_until='domcontentloaded')
-    restored_without_login(page,account_uid)
-    page.get_by_role('link',name='Jogar Fortune Fingo',exact=True).click()
-    page.wait_for_function('window.__fg?.engine && window.KingRicoCloud?.player',timeout=20000)
-    restored_without_login(page,account_uid)
-    assert page.evaluate('window.__fg.state.balance')==before_fingo
-    assert check_menu(page,'Fortune Fingo',True)==common_menu
-    def fingo_wins(tab):
-        tab.evaluate('''()=>{
-          const original=crypto.getRandomValues.bind(crypto);
-          crypto.getRandomValues=array=>array instanceof Uint32Array && array.length===1
-            ? (array[0]=0,array) : original(array);
-        }''')
-    def fingo_drop(tab,column):
-        canvas=tab.locator('canvas[width="906"][height="1018"]')
-        # Wait for the rendered board to accept a drop after the rolling phase.
-        tab.wait_for_function('''(column)=>{
-          const c=document.querySelector('canvas[width="906"]');if(!c) return false;
-          const r=c.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width*(column+.5)/5,r.y+20);
-          return getComputedStyle(c).cursor==='pointer' && c.parentElement.contains(hit);
-        }''',arg=column)
-        box=canvas.bounding_box();assert box
-        tab.mouse.click(box['x']+box['width']*(column+.5)/5,box['y']+20)
-    def fingo_spin(tab):
-        # The pulsing button continuously changes size, so press its center.
-        button=tab.get_by_role('button',name=re.compile('^Girar,'))
-        button.wait_for(state='visible')
-        tab.wait_for_function('''()=>{
-          const b=document.querySelector('[role="button"][aria-label^="Girar,"]');
-          if(!b) return false;const r=b.getBoundingClientRect();
-          return b.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));
-        }''')
-        box=button.bounding_box();assert box
-        tab.mouse.click(box['x']+box['width']/2,box['y']+box['height']/2)
-    fingo_wins(page)
-    page.get_by_role('button',name=re.compile('^Aposta ')).click()
-    page.get_by_role('button',name='Diminuir aposta',exact=True).click()
-    page.get_by_role('button',name='Diminuir aposta',exact=True).click()
-    page.get_by_role('button',name='OK',exact=True).click()
-    assert page.evaluate('window.__fg.state.betIdx')==1
-    fingo_spin(page)
-    page.wait_for_function('window.__fg.state.phase==="drop" && !!window.KingRicoCloud.player.fingoRound?.slots',timeout=20000)
-    pending=page.evaluate('window.KingRicoCloud.player.fingoRound')
-    assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==round(before_fingo-2.5,2)
-    page.reload(wait_until='domcontentloaded')
-    restored_without_login(page,account_uid)
-    assert page.evaluate('window.KingRicoCloud.player.fingoRound')==pending,'Reload rerolled the golden pipes'
-    page.wait_for_function('window.__fg?.state.phase==="drop" && window.__fg.engine',timeout=20000)
-    fingo_wins(page);fingo_drop(page,0)
-    page.wait_for_function('window.KingRicoCloud.player.fingoRound?.used===1 && window.__fg.state.phase==="falling"',timeout=20000)
-    # The ball was committed already: reload cannot restore it or refund the bet.
-    page.reload(wait_until='domcontentloaded');restored_without_login(page,account_uid)
-    page.wait_for_function('window.__fg?.state.used===1 && window.__fg.state.phase==="spin"',timeout=20000)
-    assert page.evaluate('window.__fg.state.tmarks')==[True,False,False,False,False]
-    another=context.new_page();another.goto(BASE+'/Fortune%20Fingo.dc.html',wait_until='domcontentloaded')
-    restored_without_login(another,account_uid);fingo_wins(another)
-    another.wait_for_function('window.__fg?.state.used===1 && window.__fg.engine',timeout=20000)
-    fingo_spin(another)
-    another.wait_for_function('window.__fg.state.phase==="drop"',timeout=20000);fingo_drop(another,1)
-    another.wait_for_function('window.__fg.state.used===2 && window.__fg.state.phase==="spin"',timeout=25000)
-    page.wait_for_function('window.__fg.state.used===2 && window.__fg.state.phase==="spin"',timeout=20000)
-    another.close();fingo_wins(page)
-    for column in range(2,5):
-        fingo_spin(page)
-        page.wait_for_function('window.__fg.state.phase==="drop"',timeout=20000);fingo_drop(page,column)
-        if column<4:
-            page.wait_for_function('(used)=>window.__fg.state.used===used && window.__fg.state.phase==="spin"',arg=column+1,timeout=25000)
-    page.wait_for_function('window.__fg.state.win?.title==="FINGO!"',timeout=25000)
-    expected_fingo=round(before_fingo-2.5+125,2)
-    assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==expected_fingo
-    page.get_by_text('OK',exact=True).click()
-    page.wait_for_function('!window.__fg.state.win && !window.__fg.state.active',timeout=20000)
-    assert round(page.evaluate('window.__fg.state.balance'),2)==expected_fingo
-    page.reload(wait_until='domcontentloaded');restored_without_login(page,account_uid)
-    assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==expected_fingo
-    assert page.evaluate('window.KingRicoCloud.player.fingoRound') is None
+    expected_fingo=play_fingo_card(page,account_uid,restored_without_login)
     page.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
     restored_without_login(page,account_uid)
     assert round(page.evaluate('window.KingRicoCloud.player.balance'),2)==expected_fingo

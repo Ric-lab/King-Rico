@@ -4,6 +4,7 @@ import engine from '../cloud/engine.cjs';
 import {slotMath} from './economy-math.mjs';
 import {auditNeck} from './neck-audit.mjs';
 import {auditFlying} from './flying-audit.mjs';
+import {auditFingoCard} from './fingo-card-audit.mjs';
 import {pathToFileURL} from 'node:url';
 
 export const seeded=seed=>()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32);
@@ -97,7 +98,7 @@ export function auditEconomy() {
     circus:{theoretical:slotMath(),sample:slotSample(),sessions:sessions('circus')},
     wheel:{ordinary:wheelMath(10,1),fortune:wheelMath(10,0),sessions:sessions('wheel')},
     clown:engine.CLOWN_MULTIPLIERS.map((m,i)=>({multiplier:m,...clownMath(10,i)})),
-    fingo:fingoMath(),flying:{maxOptimalRtp:flying.maxOptimalRtp,firstFloor:flying.bets[3].fixedFloors[0]},penalty:ladderMath('penalty',10),
+    fingo:{card:auditFingoCard(10000),paidFiveTargets:fingoMath()},flying:{maxOptimalRtp:flying.maxOptimalRtp,firstFloor:flying.bets[3].fixedFloors[0]},penalty:ladderMath('penalty',10),
     neck:{maxOptimalRtp:neck.maxOptimalRtp,firstFloor:neck.bets.find(b=>b.bet===10).fixedFloors[0]},
     thirtyThree:{strategies:[24,25,26,27,28,29,30].map(t=>cardSimulation(200000,t)),sessions:sessions('33')},
     excluded:'Legacy 21 and parked Bounce/Claw/Race retain their previous math.'};

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
+import {rollDraws} from './helpers/fingo.cjs';
 import {Timestamp} from 'firebase/firestore';
 import {createGameStore,dayIndex} from '../cloud/store.mjs';
 
@@ -63,10 +64,11 @@ test('Penalty preserves losses and the final prize across retries and rejects st
   await assert.rejects(call({...base,quality:1001}),{code:'king-rico/invalid-argument'});
 });
 test('Fingo debits one bet, resumes the same targets and slots, and pays a completed round once',async()=>{
-  const m=memory(()=>0),call=m.client('fingo');await call(request({action:'bootstrap'}));
+  let draws=[];const m=memory(()=>draws.shift()??0),call=m.client('fingo');await call(request({action:'bootstrap'}));
   m.records.get('players/fingo').balanceUnits=100025;
   const roundId=randomUUID(),base={action:'fingo',game:'fingo',bet:2.5,roundId};
   for(let used=0;used<5;used++) {
+    draws=rollDraws(used);
     const roll=request({...base,move:'roll',used}),[r,replay]=await Promise.all([call(roll),call(roll)]);
     assert.equal(r.player.balance,997.75);assert.equal(replay.replayed,true);
     const restored=await m.client('fingo')(request({action:'bootstrap'}));
@@ -74,6 +76,7 @@ test('Fingo debits one bet, resumes the same targets and slots, and pays a compl
     assert.equal(restored.player.fingoRound.used,used);
     await assert.rejects(call(request({...base,move:'roll',used})),{code:'king-rico/round-conflict'});
     m.advance(350);
+    draws=[];
     const drop=request({...base,move:'drop',used,selected:used});
     const [paid,again]=await Promise.all([call(drop),call(drop)]);
     assert.equal(again.replayed,true);assert.deepEqual(again.outcome,paid.outcome);
@@ -96,7 +99,7 @@ test('Fingo records a miss before animation and rejects forged steps and bets du
   m.setRng(()=>{throw Error('A lost response cannot redraw the ball');});
   assert.equal((await call(id)).replayed,true);
   const restored=(await call(request({action:'bootstrap'}))).player.fingoRound;
-  assert.equal(restored.used,1);assert.equal(restored.slots,null);assert.deepEqual(restored.marks,Array(5).fill(false));
+  assert.equal(restored.used,1);assert.equal(restored.slots,null);assert.deepEqual(restored.marks,[]);
 });
 test('an exhausted wallet recharges after the daily gift, keeps cents and only credits once',async()=>{
   const m=memory(),call=m.client('recharge');await call(request({action:'bootstrap'}));

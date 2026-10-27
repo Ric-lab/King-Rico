@@ -1,0 +1,30 @@
+{
+  "rulesVersion": "2026-10-27-fingo-card-v9",
+  "note": "Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; existing payout bands. Gifts and refills excluded.",
+  "results": [
+    {
+      "policy": "lines",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.98734,
+      "prizeRate": 0.5104,
+      "meanPlays": 26.0759
+    },
+    {
+      "policy": "gold",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.93183,
+      "prizeRate": 0.4896,
+      "meanPlays": 26.2962
+    },
+    {
+      "policy": "random",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.12615,
+      "prizeRate": 0.0874,
+      "meanPlays": 29.5737
+    }
+  ]
+}

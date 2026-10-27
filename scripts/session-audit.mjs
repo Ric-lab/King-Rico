@@ -30,7 +30,7 @@ export function playRound(e,p,bet,rng,carry={}){
   let prior=null;
   do{
    const rolled=e.fingo(bet,prior,'roll',ROUND,undefined,rng);
-   const selected=p.aim==='gold'?rolled.slots.findIndex((v,c)=>!rolled.marks[c]&&v===rolled.targets[c]):Math.floor(rng()*5);
+   const selected=p.aim==='gold'?(rolled.cardVersion===1?e.fingoCard.chooseSlot(rolled):rolled.slots.findIndex((v,c)=>!rolled.marks[c]&&v===rolled.targets[c])):Math.floor(rng()*5);
    x=e.fingo(bet,rolled,'drop',ROUND,selected,rng);prior={...x,slots:null};actions+=2;
   }while(!x.ended);
  }else if(p.game==='33'){

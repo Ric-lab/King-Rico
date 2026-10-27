@@ -16,7 +16,7 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-26-session-v8';
+const RULES_VERSION = '2026-10-27-fingo-card-v9';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
 const {claw} = require('./claw.cjs');
@@ -61,7 +61,13 @@ function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
   const winUnits = ended && goal ? Math.round(betUnits * multipliers[step-1]) : 0;
   return {move,roundId,betUnits,step,quality,goal,ended,winUnits,...(modern?{ladderVersion:2}:{})};
 }
-function fingo(bet, previous, move, roundId, selected, rng = random) {
+const fingoCard=require('./fingo-card.cjs');
+function fingo(bet,previous,move,roundId,selected,rng=random){
+ return !previous||previous.cardVersion===1
+  ? fingoCard.cardRound(units(bet),previous,move,roundId,selected,rng,n=>fingoMultiplier(n,2))
+  : fingoLegacy(bet,previous,move,roundId,selected,rng);
+}
+function fingoLegacy(bet, previous, move, roundId, selected, rng = random) {
   const modern=!previous||previous.payoutVersion===2,hitChance=modern?FINGO_HIT:FINGO_LEGACY_HIT;
   const targets = previous?.targets || Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));
   const marks = [...(previous?.marks || Array(5).fill(false))];
@@ -205,7 +211,7 @@ function bonusFor(last, streak, now) {
   const index = gap === 1 ? (streak || 0) % 7 : 0;
   return { day: today, streak: index + 1, amount: [50,100,150,200,250,500,1000][index] };
 }
-module.exports = { bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
+module.exports = { fingoLegacy, fingoCard, bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, FINGO_BANDS, FINGO_LEGACY_HIT, FINGO_LEGACY_MULTIPLIERS, fingoMultiplier, fingo,
   FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_LEGACY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

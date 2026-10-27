@@ -42,9 +42,9 @@ test('Happeach averages contributing stakes, carries a sixth symbol and preserve
   assert.equal(engine.slot(2.5,4,peachGrid(1),{count:2,units:200}).feature.bet,2.5);
 });
 test('Fingo always leaves a losing pipe and a sampled miss remains a miss',()=>{
-  const rolled=engine.fingo(10,null,'roll','r',undefined,()=>0);
+  const rolled=engine.fingoLegacy(10,null,'roll','r',undefined,()=>0);
   assert.ok(rolled.slots.some((n,c)=>n!==rolled.targets[c]));
-  const lost=engine.fingo(10,rolled,'drop','r',0,()=>.99);
+  const lost=engine.fingoLegacy(10,rolled,'drop','r',0,()=>.99);
   assert.deepEqual(lost.marks,Array(5).fill(false));assert.equal(lost.winUnits,0);
 });
 test('33 reference strategy is near 98% over reproducible hands, with wins and losses',()=>{

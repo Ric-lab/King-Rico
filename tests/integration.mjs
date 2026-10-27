@@ -8,6 +8,7 @@ import {getFirestore,connectFirestoreEmulator,doc,getDoc,setDoc,updateDoc,delete
 import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/rules-unit-testing';
 import {createGameStore,publicPlayer} from '../cloud/store.mjs';
 import engine from '../cloud/engine.cjs';
+import {rollDraws} from './helpers/fingo.cjs';
 const apps=[];let environment;
 before(async()=>{
   environment=await initializeTestEnvironment({projectId:'demo-king-rico',firestore:{host:'127.0.0.1',port:8085,rules:await readFile('firestore.rules','utf8')}});
@@ -200,7 +201,8 @@ test('Neck Rules preserve an early loss after reentry and replay without another
     roundId:start.roundId,floor:1})),{code:'king-rico/round-conflict'});
 });
 test('Fingo Rules debit once, preserve a pending roll across devices and settle one prize before animation',async()=>{
-  const identity='fingo-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});
+  let drawA=[],drawB=[];
+  const identity='fingo-'+randomUUID(),c=await client(identity,identity,{rng:()=>drawA.shift()??0});
   await c.call(request({action:'bootstrap'}));
   // Existing players arrive with a daily gift, previous spins and legacy fields.
   await c.call(request({action:'bonus'}));
@@ -208,17 +210,19 @@ test('Fingo Rules debit once, preserve a pending roll across devices and settle 
   const ref=doc(c.db,'players',c.uid);
   await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid),{balanceUnits:100025,peaches:2,neckRound:null}));
   await new Promise(resolve=>setTimeout(resolve,350));
-  const other=await client(identity+'-device',identity,{rng:()=>0});
+  const other=await client(identity+'-device',identity,{rng:()=>drawB.shift()??0});
   const base={action:'fingo',game:'fingo',bet:2.5,roundId:randomUUID()};
   for(let used=0;used<5;used++) {
+    drawA=rollDraws(used);drawB=rollDraws(used);
     const id=request({...base,move:'roll',used}),[a,b]=await Promise.all([c.call(id),other.call(id)]).catch(error=>{error.message='Fingo roll '+used+': '+error.message;throw error;});
     assert.equal(a.player.balance,997.75);assert.ok(a.replayed || b.replayed);
     assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.fingoRound.slots,a.outcome.slots);
     await assert.rejects(c.call(request({...base,move:'roll',used})),{code:'king-rico/round-conflict'});
     await new Promise(resolve=>setTimeout(resolve,350));
+    drawA=[];drawB=[];
     const drop=request({...base,move:'drop',used,selected:used});
     const [paid,replay]=await Promise.all([other.call(drop),c.call(drop)]).catch(error=>{error.message='Fingo drop '+used+': '+error.message;throw error;});
-    assert.ok(paid.replayed || replay.replayed);assert.equal(paid.outcome.marks[used],true);
+    assert.ok(paid.replayed || replay.replayed);assert.equal(paid.outcome.marks.includes(used),true);
     assert.equal((await getDoc(ref)).data().balanceUnits,used===4?112275:99775);
     assert.equal(paid.player.fingoRound===null,used===4);
     await new Promise(resolve=>setTimeout(resolve,350));
@@ -237,7 +241,7 @@ test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and
     const x={...engine.fingo(2.5,old.fingoRound,'drop',base.roundId,0,()=>0),...changes};
     const next={...old,balanceUnits:old.balanceUnits+x.winUnits,revision:old.revision+1,lastOperationId:id,
       updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),
-      fingoRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,targets:x.targets,marks:x.marks,used:x.used,slots:x.move==='roll'?x.slots:null,...(x.payoutVersion===2?{payoutVersion:2}:{})},...profileChanges};
+      fingoRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,targets:x.targets,marks:x.marks,used:x.used,slots:x.move==='roll'?x.slots:null,...(x.payoutVersion===2?{payoutVersion:2}:{}),...(x.cardVersion===1?{cardVersion:1}:{})},...profileChanges};
     const batch=writeBatch(c.db);batch.set(ref,next);
     batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'fingo',game:'fingo',selected:x.move==='roll'?-1:0,
       fingerprint:'forged',betUnits:0,winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
@@ -249,10 +253,16 @@ test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and
   await forged({move:'roll',bin:-1,used:0,marks:[false,false,false,false,false]});
   await forged({marks:[true,true,true,true,true],ended:true,winUnits:6250});
   await forged({used:21,ended:true});await forged({betUnits:1000});
-  await forged({payoutVersion:0});await forged({payoutVersion:3});await forged({}, {fingoRound:{}});
+  await forged({payoutVersion:0});await forged({payoutVersion:3});await forged({cardVersion:0});await forged({}, {fingoRound:{}});
   await forged({targets:[2,17,32,47,62]});await forged({winUnits:999999});await forged({}, {peaches:4});
   await assertFails(getDoc(doc(c.db,'players','another-fingo-player')));
   await forged({}, {},true); // Same batch shape must accept the unmodified transition.
+  await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
+    lastSpinAt:null,fingoRound:{id:base.roundId,betUnits:250,targets:[1,16,31,46,61],marks:[1,7,13,24],used:4,
+      slots:[3,21,36,51,64],payoutVersion:2,cardVersion:1}}));
+  await forged({ended:true,winUnits:12500}); // Five unrelated cells are not a quina.
+  await forged({}, {},true);
+
 });
 
 test('Fingo Rules accept a first roll with the only golden pipe in any column',async()=>{
@@ -262,26 +272,39 @@ test('Fingo Rules accept a first roll with the only golden pipe in any column',a
   for(let column=0;column<5;column++){
     await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
       fingoRound:null,balanceUnits:100000,lastSpinAt:null}));
-    draws=[...Array(5).fill(.5),...Array.from({length:5},(_,i)=>i===column?[0]:[.99,.5]).flat()];
+    draws=[...Array(5).fill(.5),...Array.from({length:5},(_,i)=>i===column?[0,.5]:[.99,.5]).flat()];
     const rolled=await c.call(request({action:'fingo',game:'fingo',bet:10,roundId:randomUUID(),move:'roll',used:0}));
-    assert.deepEqual(rolled.outcome.slots.flatMap((n,c)=>n===rolled.outcome.targets[c]?[c]:[]),[column]);
+    assert.deepEqual(rolled.outcome.slots.flatMap((n,c)=>engine.fingoCard.expandCard(rolled.outcome.targets).includes(n)?[c]:[]),[column]);
     assert.equal(rolled.player.balance,990);
   }
 });
 test('Fingo Rules pay every modern completion band at the saved multiplier',async()=>{
   const name='fingo-bands-'+randomUUID(),c=await client(name,name,{rng:()=>0});
   await c.call(request({action:'bootstrap'}));
-  const ref=doc(c.db,'players',c.uid),targets=[1,16,31,46,61];
+  const ref=doc(c.db,'players',c.uid),targets=engine.fingoCard.newCard(()=>0);
   for(let used=5;used<=30;used++){
     const roundId=randomUUID();
     await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
       balanceUnits:99000,lastSpinAt:null,fingoRound:{id:roundId,betUnits:1000,targets,
-        marks:[true,true,true,true,false],used:used-1,slots:targets,payoutVersion:2}}));
+        marks:[0,1,2,3],used:used-1,slots:[6,21,36,51,61],payoutVersion:2,cardVersion:1}}));
     const move=request({action:'fingo',game:'fingo',bet:10,roundId,move:'drop',used:used-1,selected:4});
     const paid=await c.call(move);
     assert.equal(paid.outcome.winUnits,Math.round(1000*engine.fingoMultiplier(used,2)),'ball '+used);
     assert.equal(paid.player.fingoRound,null);
     assert.equal((await c.call(move)).replayed,true);
+  }
+});
+test('Fingo card Rules accept all rows, columns and diagonals with a single final credit',async()=>{
+  const name='fingo-lines-'+randomUUID(),c=await client(name,name,{rng:()=>0});
+  await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),targets=[1,16,31,46,61],card=engine.fingoCard.expandCard(targets);
+  for(const line of engine.fingoCard.CARD_LINES){
+    const roundId=randomUUID(),i=line[4],column=i%5,slots=[6,21,36,51,64];slots[column]=card[i];
+    await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
+      balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:1000,targets,marks:line.slice(0,4),used:4,slots,payoutVersion:2,cardVersion:1}}));
+    const move=request({action:'fingo',game:'fingo',bet:10,roundId,move:'drop',used:4,selected:column});
+    const paid=await c.call(move);assert.equal(paid.outcome.mark,i);assert.equal(paid.player.balance,500);
+    assert.equal(paid.player.fingoRound,null);assert.equal((await c.call(move)).replayed,true);
   }
 });
 test('Fingo resumes paid legacy cards on v8 without changing odds or prizes',async()=>{

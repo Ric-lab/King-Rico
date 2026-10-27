@@ -30,6 +30,7 @@ for (const [name,[key,relative]] of Object.entries(packages)) {
   tags.push(`<script defer src="./runtime/${name}" integrity="${expected}" crossorigin="anonymous"></script>`);
 }
 await build({entryPoints:['cloud/client-src.js'],outfile:'cloud/client.js',bundle:true,format:'iife',target:'es2022',minify:true});
+await build({entryPoints:['cloud/fingo-card.cjs'],outfile:'runtime/fingo-card.js',bundle:true,format:'iife',globalName:'KingRicoFingoCard',target:'es2022',minify:true});
 // Pin the Fingo physics/renderer in the lockfile and serve them with the game.
 for(const [source,name] of [['matter-js/build/matter.min.js','matter.min.js'],['three/build/three.module.js','three.module.js'],['three/build/three.core.js','three.core.js'],['matter-js/LICENSE','matter.LICENSE'],['three/LICENSE','three.LICENSE']])
   await copyFile('node_modules/'+source,'runtime/'+name);
