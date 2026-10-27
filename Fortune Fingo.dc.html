@@ -45,23 +45,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; cursor: pointer; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6) saturate(1.2);"></a>
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
-    <!-- prêmio agora + bolas até ele cair + próximo valor (aposta fica junto do GIRAR) -->
-    <div aria-label="Ganha {{ prizeText }}. Cai para {{ nextText }} em {{ leftInTier }} bolas" style="position: absolute; z-index: 21; left: 0; right: 0; top: 76px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <!-- Prêmio atual; jogadas restantes aparecem apenas no medalhão do tabuleiro. -->
+    <div aria-label="Prêmio atual: {{ prizeText }} moedas" style="position: absolute; z-index: 21; left: 0; right: 0; top: 76px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;">
       <div style="height: 44px; padding: 0 16px 0 5px; box-sizing: border-box; border-radius: 22px; display: flex; align-items: center; gap: 7px; background: {{ prizeBg }}; box-shadow: 0 3px 0 #8a4a05, 0 0 0 2px #6b2e05; transition: background .4s;">
         <img src="assets/symbols/sym-coin.webp" alt="" style="width: 32px; height: 32px;">
         <span style="font-size: 24px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ prizeText }}</span>
       </div>
-      <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}">
-        <div style="height: 44px; padding: 0 12px 0 9px; box-sizing: border-box; border-radius: 22px; display: flex; align-items: center; gap: 8px; background: rgba(2,22,6,.75);">
-          <div style="display: flex; gap: 3px;">
-            <sc-for list="{{ tierDots }}" as="d" hint-placeholder-count="6">
-              <div style="width: 26px; height: 26px; border-radius: 50%; background: {{ d.bg }}; box-shadow: {{ d.sh }}; transition: background .3s; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; line-height: 1; color: #fff;">{{ d.mark }}</div>
-            </sc-for>
-          </div>
-          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75);">→</span>
-          <span style="font-size: 20px; font-weight: 800; line-height: 1; color: rgba(255,243,196,.75); font-variant-numeric: tabular-nums;">{{ nextText }}</span>
-        </div>
-      </sc-if>
+
     </div>
 
     <!-- linha de 5 bolas: números sorteados no início (1 por coluna) -->
@@ -79,7 +69,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <!-- Plinko (física Matter.js com os valores do original) -->
     <img src="assets/fingo/board-off.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none;">
     <img src="assets/fingo/board-lit.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none; opacity: {{ boardLit }};">
-    <div style="position: absolute; z-index: 5; left: 207.5px; top: 241px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Rammetto One', 'Baloo 2', sans-serif; line-height: 1; color: #8a4f06; text-shadow: 0 1.5px 0 #fff3c0, 0 -1px 0 rgba(90,45,0,.6); font-size: {{ roundSize }};" aria-label="{{ roundLabel }}">{{ roundMark }}</div>
+    <div data-fingo-plays="remaining" role="status" aria-label="{{ playsLabel }}" style="position: absolute; z-index: 5; left: 207.5px; top: 241px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Rammetto One', 'Baloo 2', sans-serif; line-height: 1; color: #8a4f06; text-shadow: 0 1.5px 0 #fff3c0, 0 -1px 0 rgba(90,45,0,.6); font-size: {{ playsSize }}; font-variant-numeric: tabular-nums;">{{ playsLeft }}</div>
+    <div aria-hidden="true" style="position: absolute; z-index: 5; left: 185.5px; top: 279px; width: 84px; text-align: center; pointer-events: none; font-size: 10px; font-weight: 800; line-height: 1; letter-spacing: .6px; color: #fff3c4; text-shadow: 0 1px 2px #123b19;">JOGADAS</div>
     <div style="position: absolute; z-index: 4; left: 29px; top: 290px; width: 453px; height: 509px; transform: scale(.87); transform-origin: 0 0;">
     <div onPointerDown="{{ boardDown }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 509px; touch-action: none; cursor: {{ boardCursor }}; animation: {{ shakeAnim }};">
       <canvas ref="{{ canvasRef }}" width="906" height="1018" style="position: absolute; inset: 0; width: 453px; height: 509px;"></canvas>
@@ -115,11 +106,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
             <span style="font-size: 16px; line-height: 1; color: #ffd257;">✎</span>
           </div>
         </sc-if>
-        <div onClick="{{ onSpin }}" role="button" aria-label="Girar, {{ ballsLeft }} bolas" class="kr-button" style="pointer-events: auto; position: relative; overflow: hidden; height: 76px; padding: 0 26px 0 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; animation: fgPulse 1.4s ease-in-out infinite;">
-          <div style="height: 52px; padding: 0 12px 0 4px; border-radius: 26px; display: flex; align-items: center; gap: 6px; background: rgba(10,60,25,.45);">
-            <img data-ballicon="1" src="assets/fingo/ball.webp" alt="" style="width: 44px; height: 44px;">
-            <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #fff; font-variant-numeric: tabular-nums;">{{ ballsLeft }}</span>
-          </div>
+        <div onClick="{{ onSpin }}" role="button" aria-label="Girar, {{ playsLabel }}" class="kr-button" style="pointer-events: auto; position: relative; overflow: hidden; height: 76px; padding: 0 26px 0 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; animation: fgPulse 1.4s ease-in-out infinite;">
+          <img data-ballicon="1" src="assets/fingo/ball.webp" alt="" style="width: 44px; height: 44px;">
           <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 28px; color: #fff; text-shadow: 0 2px 0 #147a36;">GIRAR</span>
         </div>
       </div>
@@ -486,7 +474,7 @@ class Component extends DCLogic {
       scale: Math.min(s.vw / W, s.vh / 802), stageRef: this.stageRef, canvasRef: this.canvasRef,
       walletProps:{value: txt,hold:!!s.win,external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       betText: fmt(BETS[s.betIdx]), betCursor: s.active ? 'default' : 'pointer', prizeSize: '22px', betAnim: s.noMoney ? 'fgNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      multText: 'x' + fmt(multAt(s.used + 1,s.payoutVersion)), ...(() => { const i=this.tiers().findIndex(t=>s.used+1<=t[0]),n = s.active ? (i<0?TRIO.length:i+1) : 0; return { roundMark: n ? String(n) : 'K', roundSize: n >= 10 ? '21px' : '27px', roundLabel: n ? 'Faixa ' + n + ' de ' + TRIO.length : 'King Rico' }; })(), ...this.panel(), prizeText: fmt(this.prize()),
+      multText: 'x' + fmt(multAt(s.used + 1,s.payoutVersion)), playsLeft: String(Math.max(0,BALLS-s.used)), playsSize: BALLS-s.used>=10?'21px':'27px', playsLabel: Math.max(0,BALLS-s.used)+' '+(BALLS-s.used===1?'jogada restante':'jogadas restantes'), ...this.panel(), prizeText: fmt(this.prize()),
       tballs, buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
       showSpin: canSpin, countOp: 1, boardLit: ['rolling', 'falling', 'won'].includes(s.phase) ? 1 : 0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand: s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
