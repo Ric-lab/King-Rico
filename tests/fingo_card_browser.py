@@ -10,11 +10,11 @@ def install_draws(page):
         ? (a[0]=Math.floor((window.__fingoDraws?.shift()??0)*2**32),a) : __fingoNative(a);
     }''')
 
-def spin(page):
-    page.evaluate('''()=>{
+def spin(page,row=0):
+    page.evaluate('''row=>{
       const s=__fg.state;
-      window.__fingoDraws=[...(s.active?[]:Array(5).fill(0)),...Array.from({length:5},(_,c)=>c===(s.used+1)%5?[.99,0]:[0,0]).flat()];
-    }''')
+      window.__fingoDraws=[...(s.active?[]:Array(5).fill(0)),...Array.from({length:5},(_,c)=>c===(s.used+1)%5?[.99,0]:[0,c===0?row:0]).flat()];
+    }''',row)
     b=page.get_by_role('button',name=re.compile('^Girar,')).bounding_box();assert b
     page.mouse.click(b['x']+b['width']/2,b['y']+b['height']/2)
     page.wait_for_function('__fg.state.phase==="drop"&&__fg.state.cardOpen',timeout=20000)
@@ -103,18 +103,24 @@ def check_fingo_card(browser,login,restored,claim_gift,observer):
     page.on('response',lambda r:missing.append(r.url) if r.status==404 else None)
     page.goto(BASE+'/Home.dc.html');login(page,'fingo-card-'+uuid.uuid4().hex[:12]);claim_gift(page)
     uid=page.evaluate('KingRicoCloud.uid');after_win=play_fingo_card(page,uid,restored)
-    install_draws(page);spin(page);page.evaluate('window.__fingoDraws=[.99,.99]');drop(page,0)
-    page.wait_for_function('__fg.state.used===1&&__fg.state.phase==="spin"',timeout=25000)
+    install_draws(page)
+    page.evaluate("window.__fingoEvents=[];const track=KingRicoCloud.track;KingRicoCloud.track=(name,data)=>{if(name==='fingo_step')__fingoEvents.push(data);return track?.(name,data);}")
+    spin(page,.25);drop(page,0);acknowledge_mark(page)
+    assert page.evaluate('KingRicoCloud.player.fingoRound.marks')==[5]
+    assert page.evaluate('__fingoEvents.filter(e=>e.move==="drop").at(-1).success') is True
+    spin(page);page.evaluate('window.__fingoDraws=[.99,.99]');drop(page,0)
+    page.wait_for_function('__fg.state.used===2&&__fg.state.phase==="spin"',timeout=25000)
     assert not page.get_by_role('dialog',name='Sua cartela',exact=True).is_visible()
-    assert page.evaluate('KingRicoCloud.player.fingoRound.marks')==[]
+    assert page.evaluate('KingRicoCloud.player.fingoRound.marks')==[5]
+    assert page.evaluate('__fingoEvents.filter(e=>e.move==="drop").at(-1).success') is False
     assert page.evaluate('KingRicoCloud.player.balance')==round(after_win-2.5,2)
     page.get_by_role('button',name='CARTELA',exact=True).click()
     assert page.locator('[data-fingo-cell]').count()==25
     page.get_by_role('dialog',name='Sua cartela',exact=True).get_by_role('button',name='CONTINUAR',exact=True).click()
     page.goto(BASE+'/neck');restored(page,uid)
     assert page.evaluate('KingRicoCloud.player.balance')==round(after_win-2.5,2)
-    assert page.evaluate('KingRicoCloud.player.fingoRound.used')==1
+    assert page.evaluate('KingRicoCloud.player.fingoRound.used')==2
     assert not errors,errors
     assert not missing,missing
     context.close()
-    return {'fingo_card_25_cells':True,'saved_draw_and_card':True,'single_stake':True,'aim_consult_launch':True,'mark_reopens_card':True,'miss_stays_on_plinko':True,'quina_and_single_prize':True,'refresh_and_two_tabs':True,'shared_wallet':True,'console_errors':errors}
+    return {'fingo_card_25_cells':True,'saved_draw_and_card':True,'single_stake':True,'aim_consult_launch':True,'mark_reopens_card':True,'miss_stays_on_plinko':True,'quina_and_single_prize':True,'refresh_and_two_tabs':True,'shared_wallet':True,'card_mark_telemetry':True,'console_errors':errors}
