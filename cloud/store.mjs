@@ -46,7 +46,7 @@ export function createGameStore(db, uid, dependencies={}) {
     if(data.action==='neck' && (data.game!=='neck' || !engine.BETS.includes(data.bet) || !['start','climb','collect'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.floor) || data.floor<0 || data.floor>32 || data.move==='start' && data.floor!==0))
       fail('king-rico/invalid-argument','Rodada inválida.');
-    if(data.action==='fingo' && (data.game!=='fingo' || !engine.BETS.includes(data.bet) || !['roll','drop'].includes(data.move)
+    if(data.action==='fingo' && (data.game!=='fingo' || !engine.BETS.includes(data.bet) || !['roll','drop','cancel'].includes(data.move)
       || !requestIdPattern.test(data.roundId || '') || !Number.isInteger(data.used) || data.used<0 || data.used>=engine.FINGO_BALLS
       || (data.move==='drop' ? !Number.isInteger(data.selected) || data.selected<0 || data.selected>4 : data.selected!==undefined)))
       fail('king-rico/invalid-argument','Rodada inválida.');
@@ -141,17 +141,23 @@ export function createGameStore(db, uid, dependencies={}) {
       } else if(data.action==='fingo') {
         const round=p.fingoRound || null;
         if(round ? round.id!==data.roundId || round.used!==data.used || round.betUnits!==engine.units(data.bet)
-          || (data.move==='roll' ? round.slots!==null : !round.slots) : data.move!=='roll' || data.used!==0)
+          || (data.move==='roll' ? round.slots!==null : data.move==='drop' && !round.slots) : data.move!=='roll' || data.used!==0)
           fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
-        if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
-        betUnits=round ? 0 : engine.units(data.bet);
-        if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
-        const outcome=engine.fingo(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
-        winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
-        p.fingoRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,targets:outcome.targets,
-          marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion>=2?{payoutVersion:outcome.payoutVersion}:{}),...(outcome.cardVersion===1?{cardVersion:1}:{})};
-        p.settings.fingoBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
-        result={game:'fingo',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+        if(data.move==='cancel') {
+          p.fingoRound=null;
+          result={game:'fingo',bet:data.bet,balanceBefore:p.balanceUnits/100,balanceDebited:p.balanceUnits/100,
+            baseBalance:p.balanceUnits/100,outcome:{move:'cancel',roundId:round.id,betUnits:round.betUnits,used:round.used,bin:-1,ended:true,winUnits:0}};
+        } else {
+          if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
+          betUnits=round ? 0 : engine.units(data.bet);
+          if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
+          const outcome=engine.fingo(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
+          winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
+          p.fingoRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,targets:outcome.targets,
+            marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion>=2?{payoutVersion:outcome.payoutVersion}:{}),...(outcome.cardVersion===1?{cardVersion:1}:{})};
+          p.settings.fingoBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
+          result={game:'fingo',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
+        }
       } else if(data.action==='penalty') {
         const round=p.penaltyRound || null;
         if(round ? round.id!==data.roundId || round.step!==data.step || round.betUnits!==engine.units(data.bet)

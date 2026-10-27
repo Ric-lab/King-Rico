@@ -365,10 +365,22 @@ service cloud.firestore {
         && result.balanceBefore == old.balanceUnits / 100.0 && result.balanceDebited == (old.balanceUnits - o.betUnits) / 100.0
         && result.baseBalance == p.balanceUnits / 100.0;
     }
+    function fingoCancel(p,old,o) {
+      let r=old.fingoRound;
+      let b=old.balanceUnits / 100.0;
+      let result=o.result;
+      return r != null && o.game == 'fingo' && o.selected == -1 && o.betUnits == 0 && o.winUnits == 0
+        && p.diff(old).affectedKeys().hasOnly(['fingoRound','updatedAt','revision','lastOperationId'])
+        && p.fingoRound == null
+        && result.keys().hasOnly(['game','bet','balanceBefore','balanceDebited','baseBalance','outcome'])
+        && result.game == 'fingo' && result.bet == r.betUnits / 100.0
+        && result.balanceBefore == b && result.balanceDebited == b && result.baseBalance == b
+        && result.outcome == {'move':'cancel','roundId':r.id,'betUnits':r.betUnits,'used':r.used,'bin':-1,'ended':true,'winUnits':0};
+    }
     function fingo(p,old,o) {
       let r=old.get('fingoRound',null);
-      return (r == null ? o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] : r.get('cardVersion',0) == 1)
-        ? fingoCard(p,old,o) : fingoTargets(p,old,o);
+      return o.result.outcome.move == 'cancel' ? fingoCancel(p,old,o) : ((r == null ? o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] : r.get('cardVersion',0) == 1)
+        ? fingoCard(p,old,o) : fingoTargets(p,old,o));
     }
     function penalty(p, old, o) {
       let x = o.result.outcome;

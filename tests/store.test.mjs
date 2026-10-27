@@ -429,3 +429,16 @@ test('Bridge rejects stale/invalid choices and persists losses and final prizes 
     assert.equal((await call(request({action:'bootstrap'}))).player.bridgeRound,null);
   }
 });
+
+test('Fingo cancels a pending or idle paid card without refund, reward, or replay affecting the next card',async()=>{
+ const m=memory(()=>0),call=m.client('fingo-cancel');await call(request({action:'bootstrap'}));
+ const base={action:'fingo',game:'fingo',bet:10,roundId:randomUUID()};
+ await call(request({...base,move:'roll',used:0}));
+ const cancel=request({...base,move:'cancel',used:0}),a=await call(cancel);
+ assert.equal(a.player.balance,990);assert.equal(a.player.fingoRound,null);assert.equal(a.outcome.winUnits,0);
+ m.advance(350);const next={...base,roundId:randomUUID()};await call(request({...next,move:'roll',used:0}));
+ const replay=await call(cancel);assert.equal(replay.replayed,true);assert.equal(replay.player.fingoRound.id,next.roundId);assert.equal(replay.player.balance,980);
+ m.advance(350);await call(request({...next,move:'drop',used:0,selected:0}));
+ const idle=await call(request({...next,move:'cancel',used:1}));assert.equal(idle.player.fingoRound,null);assert.equal(idle.player.balance,980);
+ await assert.rejects(call(request({...next,move:'cancel',used:1})),{code:'king-rico/round-conflict'});
+});

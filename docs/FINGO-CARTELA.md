@@ -51,3 +51,20 @@ O retorno observado não é prova de estratégia ótima ou garantia de retorno.
   duas abas e saldo compartilhado.
 - `node scripts/fingo-card-audit.mjs`: 20 mil cartelas por política, semente fixa,
   sem bônus ou recargas.
+
+## Nova cartela e testes
+
+NOVA CARTELA e ENCERRAR CARTELA pedem confirmação e encerram a partida atual,
+sem prêmio, devolução ou novo débito. O cancelamento é uma transação vinculada
+à cartela e ao contador salvos: repetir a requisição não encerra uma cartela nova.
+Funciona também nas cartelas antigas. As demais partidas e o saldo são preservados.
+
+Nos links entregues para o autor testar mudanças, usar `/fingo?nova-cartela=1`.
+Esse link encerra a cartela da própria conta ao abrir e remove o parâmetro depois
+da confirmação do Firestore. Não é um reset global: não altera outras contas.
+A navegação normal e recargas posteriores continuam retomando a partida salva.
+A cada nova entrega de teste, fornecer esse link para não exigir terminar 30 bolas.
+
+A composição usa um único fundo no viewport e um único elemento de tabuleiro,
+sem repetir o cenário no palco interno. O Plinko fica oculto ao abrir a cartela, evitando um tabuleiro aparecendo por trás do outro. O valor de prêmio deixou de aparecer
+sobre o cenário; o pagamento fixo permanece na tabela e no aviso de vitória.

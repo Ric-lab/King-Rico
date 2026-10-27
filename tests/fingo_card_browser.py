@@ -122,7 +122,48 @@ def check_fingo_card(browser,login,restored,claim_gift,observer):
     page.goto(BASE+'/neck');restored(page,uid)
     assert page.evaluate('KingRicoCloud.player.balance')==round(after_win-2.5,2)
     assert page.evaluate('KingRicoCloud.player.fingoRound.used')==2
+    check_fingo_cancel(page,uid,restored)
     assert not errors,errors
     assert not missing,missing
     context.close()
     return {'fingo_card_25_cells':True,'saved_draw_and_card':True,'single_stake':True,'aim_consult_launch':True,'mark_reopens_card':True,'miss_stays_on_plinko':True,'quina_and_single_prize':True,'refresh_and_two_tabs':True,'shared_wallet':True,'card_mark_telemetry':True,'console_errors':errors}
+
+def check_fingo_cancel(page,uid,restored):
+    page.goto(BASE+'/fingo');restored(page,uid);page.wait_for_function('__fg?.engine')
+    if not page.evaluate('KingRicoCloud.player.fingoRound'):
+        install_draws(page);spin(page)
+        page.get_by_role('dialog',name='Sua cartela',exact=True).get_by_role('button',name='LANÇAR',exact=True).click()
+    before=page.evaluate('KingRicoCloud.player.balance')
+    saved=page.evaluate('KingRicoCloud.player.fingoRound')
+    assert page.locator('[data-fingo-prize]').count()==0
+    assert page.locator('[data-fingo-board]').count()==1
+    assert page.locator('[data-screen-label="Fortune Fingo"]').evaluate('e=>getComputedStyle(e).backgroundImage')=='none'
+    page.get_by_role('button',name='NOVA CARTELA',exact=True).click()
+    modal=page.get_by_role('dialog',name='Encerrar cartela',exact=True)
+    modal.get_by_role('button',name='CONTINUAR JOGANDO',exact=True).click()
+    assert page.evaluate('KingRicoCloud.player.fingoRound')==saved
+    page.get_by_role('button',name='NOVA CARTELA',exact=True).click()
+    modal.get_by_role('button',name='ENCERRAR',exact=True).click()
+    page.wait_for_function('!KingRicoCloud.player.fingoRound&&!__fg.state.active&&!__fg.state.endConfirm')
+    assert page.evaluate('KingRicoCloud.player.balance')==before
+    install_draws(page);spin(page)
+    after=page.evaluate('KingRicoCloud.player.balance')
+    page.goto(BASE+'/fingo?nova-cartela=1');restored(page,uid)
+    page.wait_for_function('window.__fg&&!__fg._freshLink&&!__fg.state.active&&!KingRicoCloud.player.fingoRound')
+    assert page.evaluate('KingRicoCloud.player.balance')==after
+    assert 'nova-cartela' not in page.url
+    assert page.locator('[data-fingo-plays]').inner_text()=='30'
+    # Ordinary reloads continue preserving the next round: the link is consumed once.
+    install_draws(page);spin(page);new_round=page.evaluate('KingRicoCloud.player.fingoRound')
+    page.reload();restored(page,uid);page.wait_for_function('__fg?.engine')
+    assert page.evaluate('KingRicoCloud.player.fingoRound')==new_round
+    page.get_by_role('dialog',name='Sua cartela',exact=True).get_by_role('button',name='ENCERRAR CARTELA',exact=True).click()
+    page.get_by_role('dialog',name='Encerrar cartela',exact=True).get_by_role('button',name='ENCERRAR',exact=True).click()
+    page.wait_for_function('!KingRicoCloud.player.fingoRound&&!__fg.state.active')
+    for width,height in [(375,667),(390,844),(430,932)]:
+        page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(200)
+        counter=page.locator('[data-fingo-plays]').bounding_box()
+        assert counter['y']>=60 and counter['y']+counter['height']<height
+        assert page.locator('[data-fingo-bucket-ball]').count()==5
+        page.screenshot(path='/tmp/fingo-clean-'+str(width)+'.png')
+    return {'cancel_card_and_link':True,'cancel_without_refund_or_new_charge':True,'next_card_survives_normal_reload':True,'single_backdrop_and_board':True,'prize_badge_removed':True}
