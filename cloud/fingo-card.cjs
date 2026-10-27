@@ -12,6 +12,7 @@ function newCard(rng){return Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng(
 function expandCard(targets){return Array.from({length:25},(_,i)=>{const c=i%5;return c*15+1+(targets[c]-c*15-1+STEPS[c]*Math.floor(i/5))%15;});}
 function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier){
  const targets=previous?.targets||newCard(rng),card=expandCard(targets),marks=[...(previous?.marks||[])];
+ const payoutVersion=previous?.payoutVersion??3;
  let used=previous?.used||0,slots,bin=-1,mark=-1;
  if(move==='roll'){
   slots=Array.from({length:5},(_,c)=>{
@@ -38,7 +39,7 @@ function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier){
  }
  const won=!!winningLine(marks),ended=won||used===30;
  return {move,roundId,betUnits,targets,marks,used,slots,bin,mark,ended,
-  winUnits:won?Math.round(betUnits*multiplier(used)):0,payoutVersion:2,cardVersion:1};
+  winUnits:won?Math.round(betUnits*(payoutVersion===3?2:multiplier(used))):0,payoutVersion,cardVersion:1};
 }
 // Reference policy: prefer a draw that advances the most developed open line.
 function chooseSlot(round){

@@ -1,12 +1,12 @@
 {
-  "rulesVersion": "2026-10-27-fingo-card-v9",
-  "note": "Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; existing payout bands. Gifts and refills excluded.",
+  "rulesVersion": "2026-10-27-fingo-double-v10",
+  "note": "Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; a quina pays 2x at any play. Gifts and refills excluded.",
   "results": [
     {
       "policy": "lines",
       "count": 20000,
       "seed": 90431,
-      "rtp": 0.98734,
+      "rtp": 1.0208,
       "prizeRate": 0.5104,
       "meanPlays": 26.0759
     },
@@ -14,7 +14,7 @@
       "policy": "gold",
       "count": 20000,
       "seed": 90431,
-      "rtp": 0.93183,
+      "rtp": 0.9792,
       "prizeRate": 0.4896,
       "meanPlays": 26.2962
     },
@@ -22,7 +22,7 @@
       "policy": "random",
       "count": 20000,
       "seed": 90431,
-      "rtp": 0.12615,
+      "rtp": 0.1748,
       "prizeRate": 0.0874,
       "meanPlays": 29.5737
     }

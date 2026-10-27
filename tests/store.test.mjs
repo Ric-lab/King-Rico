@@ -80,7 +80,7 @@ test('Fingo debits one bet, resumes the same targets and slots, and pays a compl
     const drop=request({...base,move:'drop',used,selected:used});
     const [paid,again]=await Promise.all([call(drop),call(drop)]);
     assert.equal(again.replayed,true);assert.deepEqual(again.outcome,paid.outcome);
-    assert.equal(paid.player.balance,used===4?1122.75:997.75);
+    assert.equal(paid.player.balance,used===4?1002.75:997.75);
     assert.equal(paid.player.fingoRound===null,used===4);
     m.advance(350);
   }

@@ -149,7 +149,7 @@ export function createGameStore(db, uid, dependencies={}) {
         const outcome=engine.fingo(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
         p.fingoRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,targets:outcome.targets,
-          marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion===2?{payoutVersion:2}:{}),...(outcome.cardVersion===1?{cardVersion:1}:{})};
+          marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion>=2?{payoutVersion:outcome.payoutVersion}:{}),...(outcome.cardVersion===1?{cardVersion:1}:{})};
         p.settings.fingoBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         result={game:'fingo',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
       } else if(data.action==='penalty') {

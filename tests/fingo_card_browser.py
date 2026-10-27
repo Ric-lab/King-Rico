@@ -27,6 +27,8 @@ def drop(page,column):
     modal=page.get_by_role('dialog',name='Sua cartela',exact=True)
     modal.get_by_role('button',name='LANÇAR',exact=True).click()
     modal.wait_for(state='hidden')
+    assert page.locator('[data-fingo-bucket-ball]').count()==5
+    assert page.locator('[data-fingo-bucket]').evaluate_all('els=>els.every(e=>e.contains(e.querySelector("[data-fingo-bucket-ball]")))')
     page.wait_for_function('''c=>{
       const e=document.querySelector('canvas[width="906"]');const r=e.getBoundingClientRect();
       return e.parentElement.contains(document.elementFromPoint(r.x+r.width*(c+.5)/5,r.y+20));
@@ -40,7 +42,7 @@ def acknowledge_mark(page,winning=False):
     dialog.wait_for(state='visible',timeout=25000)
     if winning:
         assert dialog.get_by_text('QUINA!',exact=True).count()==1
-        assert '125' in page.locator('[aria-label^="Prêmio atual:"]').get_attribute('aria-label')
+        assert '5 moedas' in page.locator('[aria-label^="Prêmio atual:"]').get_attribute('aria-label')
         page.screenshot(path='/tmp/fingo-card-quina.png')
         dialog.get_by_role('button',name='RECEBER',exact=True).click()
     else:
@@ -59,7 +61,7 @@ def play_fingo_card(page,uid,restored):
     page.wait_for_function('KingRicoCloud.player.settings.fingoBetIdx===1')
     install_draws(page);spin(page)
     initial=page.evaluate('KingRicoCloud.player.fingoRound')
-    assert initial['cardVersion']==1 and initial['marks']==[]
+    assert initial['payoutVersion']==3 and initial['cardVersion']==1 and initial['marks']==[]
     assert page.evaluate('KingRicoCloud.player.balance')==round(before-2.5,2)
     assert page.locator('[data-fingo-cell]').evaluate_all('els=>els.every(e=>parseFloat(getComputedStyle(e).fontSize)>=25)')
     page.wait_for_timeout(250)
@@ -88,7 +90,7 @@ def play_fingo_card(page,uid,restored):
             assert page.evaluate('KingRicoCloud.player.fingoRound')==snapshot
         drop(page,c);acknowledge_mark(page,c==4)
     page.wait_for_function('__fg.state.win?.title==="FINGO!"')
-    expected=round(before-2.5+125,2)
+    expected=round(before-2.5+5,2)
     assert round(page.evaluate('KingRicoCloud.player.balance'),2)==expected
     page.get_by_text('OK',exact=True).click();page.wait_for_function('!__fg.state.win&&!__fg.state.active')
     page.reload();restored(page,uid);page.wait_for_function('__fg?.engine')

@@ -37,7 +37,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 <div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a url('assets/fingo/stage-bg.webp') 50% 50% / cover;">
   <div style="position: absolute; inset: 0; background: rgba(20,4,36,.35);"></div>
 
-  <div ref="{{ stageRef }}" data-screen-label="Fortune Fingo" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none; background: url('assets/fingo/stage-bg.webp') 50% 0 / 453px auto;">
+  <div ref="{{ stageRef }}" data-screen-label="Fortune Fingo" style="position: relative; flex: 0 0 auto; width: 453px; height: 862px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none; background: url('assets/fingo/stage-bg.webp') 50% 0 / 453px auto;">
 
 
     <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
@@ -48,40 +48,30 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; cursor: pointer; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6) saturate(1.2);"></a>
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 
-    <!-- Prêmio atual; jogadas restantes aparecem apenas no medalhão do tabuleiro. -->
-    <div aria-label="Prêmio atual: {{ prizeText }} moedas" style="position: absolute; z-index: 21; left: 0; right: 0; top: 76px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-      <div style="height: 44px; padding: 0 16px 0 5px; box-sizing: border-box; border-radius: 22px; display: flex; align-items: center; gap: 7px; background: {{ prizeBg }}; box-shadow: 0 3px 0 #8a4a05, 0 0 0 2px #6b2e05; transition: background .4s;">
-        <img src="assets/symbols/sym-coin.webp" alt="" style="width: 32px; height: 32px;">
-        <span style="font-size: 24px; font-weight: 800; line-height: 1; color: #3a1400; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ prizeText }}</span>
+    <!-- Prêmio fixo da cartela; partidas já pagas mantêm a tabela original. -->
+    <div data-fingo-prize="current" aria-label="Prêmio atual: {{ prizeText }} moedas" style="position:absolute;z-index:21;left:22px;top:108px;min-width:184px;height:72px;padding:8px 18px 8px 10px;box-sizing:border-box;border-radius:22px;display:flex;align-items:center;gap:9px;background:{{ prizeBg }};box-shadow:0 3px 0 #8a4a05,0 0 0 2px #6b2e05;">
+      <img src="assets/symbols/sym-coin.webp" alt="" style="width:38px;height:38px;">
+      <div style="display:flex;flex-direction:column;gap:3px;color:#3a1400;line-height:1;">
+        <span style="font-size:17px;font-weight:800;">{{ prizeCaption }}</span>
+        <span style="font-size:29px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ prizeText }}</span>
       </div>
-
     </div>
-
-    <sc-if value="{{ showCardButton }}" hint-placeholder-val="{{ false }}"><button class="kr-button fg-card-peek" onClick="{{ openCard }}" style="position:absolute;right:16px;top:84px;z-index:22;padding:7px 12px;font-size:16px;">CARTELA</button></sc-if>
-    <!-- linha de 5 bolas: números sorteados no início (1 por coluna) -->
-    <div style="position: absolute; z-index: 5; left: 22px; right: 22px; top: 138px; height: 82px; box-sizing: border-box; padding: 0 8px; border-radius: 41px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; justify-items: center; background: #fffaf0; box-shadow: inset 0 -3px 0 rgba(160,110,40,.25), 0 0 0 3px #f0b41f, 0 6px 14px rgba(0,0,0,.4);">
-      <sc-for list="{{ tballs }}" as="t" hint-placeholder-count="5">
-        <div style="position: relative; width: 70px; height: 70px; border-radius: 50%; background: url('assets/fingo/target-balls.webp') {{ t.pos }} 0 / 350px 70px no-repeat; box-shadow: {{ t.sh }}; filter: {{ t.filter }}; animation: {{ t.anim }}; transition: filter .3s; display: flex; align-items: center; justify-content: center;">
-          <sc-if value="{{ t.marked }}" hint-placeholder-val="{{ false }}">
-            <div style="position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: radial-gradient(circle at 38% 30%, #fbecc4 0%, #e6bc62 35%, #c98f2e 70%, #8a5510 100%); box-shadow: inset 0 -2px 3px rgba(100,50,0,.45), 0 0 8px rgba(220,160,60,.7);"></div>
-          </sc-if>
-          <span style="position: relative; font-size: 24px; font-weight: 800; line-height: 1; color: {{ t.color }}; font-variant-numeric: tabular-nums; transform: translateY(1px); text-shadow: {{ t.numShadow }};">{{ t.text }}</span>
-        </div>
-      </sc-for>
-    </div>
+    <sc-if value="{{ showCardButton }}" hint-placeholder-val="{{ false }}"><button class="kr-button fg-card-peek" onClick="{{ openCard }}" style="position:absolute;right:16px;top:120px;z-index:22;padding:10px 14px;font-size:18px;">CARTELA</button></sc-if>
 
     <!-- Plinko (física Matter.js com os valores do original) -->
-    <img src="assets/fingo/board-off.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none;">
-    <img src="assets/fingo/board-lit.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 222px; width: 485px; height: 564px; pointer-events: none; opacity: {{ boardLit }};">
-    <div data-fingo-plays="remaining" role="status" aria-label="{{ playsLabel }}" style="position: absolute; z-index: 5; left: 207.5px; top: 241px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Rammetto One', 'Baloo 2', sans-serif; line-height: 1; color: #8a4f06; text-shadow: 0 1.5px 0 #fff3c0, 0 -1px 0 rgba(90,45,0,.6); font-size: {{ playsSize }}; font-variant-numeric: tabular-nums;">{{ playsLeft }}</div>
-    <div aria-hidden="true" style="position: absolute; z-index: 5; left: 185.5px; top: 279px; width: 84px; text-align: center; pointer-events: none; font-size: 10px; font-weight: 800; line-height: 1; letter-spacing: .6px; color: #fff3c4; text-shadow: 0 1px 2px #123b19;">JOGADAS</div>
-    <div style="position: absolute; z-index: 4; left: 29px; top: 290px; width: 453px; height: 509px; transform: scale(.87); transform-origin: 0 0;">
+    <img src="assets/fingo/board-off.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 240px; width: 485px; height: 600px; pointer-events: none;">
+    <img src="assets/fingo/board-lit.webp" alt="" style="position: absolute; z-index: 3; left: -16px; top: 240px; width: 485px; height: 600px; pointer-events: none; opacity: {{ boardLit }};">
+    <div data-fingo-plays="remaining" role="status" aria-label="{{ playsLabel }}" style="position: absolute; z-index: 5; left: 203.5px; top: 259px; width: 48px; height: 44px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', sans-serif; font-weight:800;line-height:1;color:#143e24;text-shadow:0 1px 0 #fff3c0; font-size: {{ playsSize }}; font-variant-numeric: tabular-nums;">{{ playsLeft }}</div>
+    <div aria-hidden="true" style="position: absolute; z-index: 5; left: 185.5px; top: 304px; width: 84px; text-align: center; pointer-events: none; font-size: 14px; font-weight: 800; line-height: 1; letter-spacing: .6px; color: #fff3c4; text-shadow: 0 1px 2px #123b19;">BOLAS</div>
+    <div style="position: absolute; z-index: 4; left: 29px; top: 312px; width: 453px; height: 509px; transform: scale(.87,.93); transform-origin: 0 0;">
     <div onPointerDown="{{ boardDown }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 509px; touch-action: none; cursor: {{ boardCursor }}; animation: {{ shakeAnim }};">
       <canvas ref="{{ canvasRef }}" width="906" height="1018" style="position: absolute; inset: 0; width: 453px; height: 509px;"></canvas>
       <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 70px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); pointer-events: none;">
         <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="5">
-          <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 6px;">
-            <span style="font-size: 42px; font-weight: 800; line-height: 1; color: {{ b.color }}; font-variant-numeric: tabular-nums; text-shadow: 0 2px 2px rgba(0,0,0,.85), 0 0 {{ b.glow }} rgba(255,220,80,.9); filter: {{ b.blur }}; opacity: {{ b.op }}; animation: {{ b.anim }};">{{ b.text }}</span>
+          <div data-fingo-bucket="{{ b.index }}" style="display:flex;align-items:center;justify-content:center;padding-bottom:6px;">
+            <div data-fingo-bucket-ball="{{ b.index }}" style="width:66px;height:66px;border-radius:50%;background:url('assets/fingo/target-balls.webp') {{ b.pos }} 0 / 330px 66px no-repeat;display:flex;align-items:center;justify-content:center;box-shadow:{{ b.shadow }};filter:{{ b.blur }};opacity:{{ b.op }};animation:{{ b.anim }};transform:scaleY(.9355);">
+              <span style="font-size:29px;font-weight:800;line-height:1;color:{{ b.color }};font-variant-numeric:tabular-nums;">{{ b.text }}</span>
+            </div>
           </div>
         </sc-for>
       </div>
@@ -102,7 +92,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <!-- GIRAR flutuante sobre o tabuleiro (some durante a queda) -->
     <sc-if value="{{ showSpin }}" hint-placeholder-val="{{ true }}">
-      <div style="position: absolute; z-index: 8; left: 0; right: 0; top: 430px; display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; animation: fgPop .25s ease-out;">
+      <div style="position: absolute; z-index: 8; left: 0; right: 0; top: 454px; display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; animation: fgPop .25s ease-out;">
         <sc-if value="{{ showBetChip }}" hint-placeholder-val="{{ true }}">
           <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="pointer-events: auto; height: 40px; padding: 0 14px 0 5px; border-radius: 20px; display: flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(2,22,6,.88); box-shadow: inset 0 0 0 2px rgba(255,210,87,.7); animation: {{ betAnim }};" style-active="transform: scale(.95);">
             <img src="assets/symbols/sym-coin.webp" alt="" style="width: 30px; height: 30px;">
@@ -162,8 +152,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; inset: 0; z-index: 50; background: rgba(10,2,20,.9); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
         <div style="width: 100%; padding: 20px; box-sizing: border-box; border-radius: 20px; background: #3d0a63; border: 2px solid #f0b41f; color: #fff3c4;">
-          <h2 style="font-size: 24px; color: #ffd257;">TABELA DE PAGAMENTOS</h2>
-          <p>Uma aposta vale até 30 bolas. Acerte os cinco números para receber o prêmio. A tabela mostra o valor para cada faixa de bolas.</p>
+          <h2 style="font-size: 24px; color: #ffd257;">PRÊMIO</h2>
+          <p>{{ payExplanation }}</p>
           <sc-for list="{{ payList }}" as="p" hint-placeholder-count="10">
             <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #ffffff22;"><span>{{ p.balls }}</span><strong>{{ p.mult }}</strong></div>
           </sc-for>
@@ -189,7 +179,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // GIRAR grava os canos; escolher uma coluna grava a queda antes da física.
 // O prêmio segue a faixa salva na cartela, sem prêmios parciais ou poderes.
 const COLS = ['L', 'U', 'C', 'K', 'Y'], TH = ['#e11d48', '#0284c7', '#059669', '#d97706', '#7c3aed'];
-// New cards: attainable 50x at five balls and about half of golden-pipe cards complete. Old paid cards keep their saved terms.
+// New cards pay a fixed 2x for any quina. Saved paid cards keep their original terms.
 const TRIO = [50, 15, 8, 5, 3.5, 2.5, 2, 1.5, 1.2, 1], ENDS = [5,7,9,12,15,18,21,24,27,30], TIERS = TRIO.map((m,i)=>[ENDS[i],m]), BALLS = 30, HIT = 0.15370947831009096, G = 0.28;
 const LEGACY_TRIO=[50,25,12.5,10,9,7,5,3,2,1],LEGACY_TIERS=LEGACY_TRIO.map((m,i)=>[(i+1)*3,m]);
 const TC = [['#fb7185', '#e11d48', '#881337'], ['#38bdf8', '#0284c7', '#0c4a6e'], ['#34d399', '#059669', '#064e3b'], ['#fbbf24', '#d97706', '#78350f'], ['#a78bfa', '#7c3aed', '#3b0764']];
@@ -211,7 +201,7 @@ function nonAdjacent(avail, k) { const s = [...avail].sort((a, b) => a - b);
   for (let n = Math.min(k, s.length); n >= 1; n--) { const combos = [], bt = (i, cur) => { if (cur.length === n) { combos.push([...cur]); return; } for (let j = i; j < s.length; j++) if (!cur.length || s[j] - cur[cur.length - 1] >= 2) { cur.push(s[j]); bt(j + 1, cur); cur.pop(); } };
     bt(0, []); if (combos.length) return combos[Math.floor(Math.random() * combos.length)]; } return []; }
 class Component extends DCLogic {
-  state = { balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:2, cardVersion:1, cardOpen:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 802, justMarked: -1, winLine: null };
+  state = { balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:3, cardVersion:1, cardOpen:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 862, justMarked: -1, winLine: null };
   stageRef = React.createRef(); canvasRef = React.createRef();
   IM = { ball: img('assets/fingo/ball.webp'), peg: img('assets/fingo/peg.webp'), tri: img('assets/fingo/triangle.webp') };
   async bakeBall() { try { const T = await import('./runtime/three.module.js'), S = 128, N = 32;
@@ -234,7 +224,7 @@ class Component extends DCLogic {
       betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.fingoBetIdx ?? 3,
       roundId:r?.id || null,targets:r?.targets || null,tmarks:r?.cardVersion===1?[false,false,false,false,false]:r?.marks || [false,false,false,false,false],
       cardVersion:r?r.cardVersion||0:1,card:r?.cardVersion===1?this.cardFrom(r.targets,r.marks):this.state.card,cardOpen:!!(r?.cardVersion===1&&(keepCard||r.slots&&this._reviewedRoll!==r.id+':'+r.used)),cardMode:keepCard?(!r.slots?'consult':this.state.cardMode):'aim',
-      active:!!r,payoutVersion:r?(r.payoutVersion||0):2,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
+      active:!!r,payoutVersion:r?(r.payoutVersion||0):3,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
       revealed:r?.slots ? 5 : 0,phase:r?.slots ? 'drop' : 'spin',landed:null,justMarked:-1,winLine:null,win:null});
   }
   componentDidMount() { this.bakeBall();window.__fg=this;
@@ -245,7 +235,7 @@ class Component extends DCLogic {
     try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
     try { const f = JSON.parse(localStorage.getItem(FKEY)); // A round saved with no balls left (page closed mid-drop or before ACABOU) restarts fresh instead of locking the board.
       if (f && (f.balls ?? BALLS) <= 0) this.setState({ betIdx: f.betIdx ?? 3, handSeen: !!f.handSeen });
-      else if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, cardVersion:f.active?(f.cardVersion||0):1,card:f.card||this.state.card,payoutVersion:f.active?(f.payoutVersion||0):2, handSeen: !!f.handSeen }); } catch (e) {}
+      else if (f) this.setState({ betIdx: f.betIdx ?? 3, targets: f.targets || null, tmarks: f.tmarks || [false, false, false, false, false], balls: f.balls ?? BALLS, used: f.used || 0, active: !!f.active, cardVersion:f.active?(f.cardVersion||0):1,card:f.card||this.state.card,payoutVersion:f.active?(f.payoutVersion||0):3, handSeen: !!f.handSeen }); } catch (e) {}
     }
     this.particles = []; this.lit = new Map();
     const boot = () => { if(this._dead) return; if (!window.Matter) return setTimeout(boot, 50); this.initWorld();
@@ -340,7 +330,7 @@ class Component extends DCLogic {
   useful(n, c) { const s=this.state;if(s.cardVersion===1){const i=s.card.nums.indexOf(n);return i>=0&&!s.card.marks[i];}return !!s.targets&&c!=null&&!s.tmarks[c]&&s.targets[c]===n; }
   goldCols() { const s = this.state; return s.slots ? [0, 1, 2, 3, 4].filter(c => this.useful(s.slots[c], c)) : []; }
   cardFrom(seeds,marks){const nums=Array.from({length:25},(_,i)=>{const c=i%5;return c*15+1+(seeds[c]-c*15-1+[1,2,4,7,8][c]*Math.floor(i/5))%15;});return {nums,marks:nums.map((_,i)=>marks.includes(i))};}
-  cardRound(){const s=this.state;return {targets:s.targets,marks:s.card.marks.flatMap((v,i)=>v?[i]:[]),used:s.used,slots:s.slots,cardVersion:1};}
+  cardRound(){const s=this.state;return {targets:s.targets,marks:s.card.marks.flatMap((v,i)=>v?[i]:[]),used:s.used,slots:s.slots,payoutVersion:s.payoutVersion,cardVersion:1};}
   openCard=()=>{if(this.state.cardVersion!==1||!this.state.active||this._cloudRequest||['falling','rolling','won','card-mark'].includes(this.state.phase))return;this.setState({cardOpen:true,cardMode:this.state.phase==='drop'?'aim':'consult'});};
   continueCard=()=>{
     const s=this.state;
@@ -368,8 +358,8 @@ class Component extends DCLogic {
       cardDraw:slots.map((n,c)=>({text:String(n),index:String(c),color:TH[c],gold:(reviewing?c===s.landed:this.useful(n,c))?'3px solid #ffd257':'3px solid transparent',opacity:(reviewing?c===s.landed:this.useful(n,c))?1:.45})),
       cardCells:card.nums.map((n,i)=>{const marked=card.marks[i],available=slots.includes(n)&&!marked&&!reviewing;return {text:String(n),index:String(i),label:n+(marked?', marcado':available?', disponível nos tubos':''),color:marked?'#fff9df':TH[i%5],bg:marked?'linear-gradient(#37b963,#147236)':'#fff8df',border:available?'3px solid #ffb900':near.includes(i)?'2px solid #d49620':'2px solid #d8bb75',shadow:s.winLine?.includes(i)?'0 0 15px #ffd257':available?'0 0 12px #ffd257aa':'inset 0 -3px 0 #9d6c2922',anim:s.justMarked===i?'fgCellMark .7s ease-out':'none',check:marked};})};
   }
-  tiers(){return this.state.active&&this.state.payoutVersion!==2?LEGACY_TIERS:TIERS;}
-  prize() { const s=this.state;if(s.cardVersion===1&&s.phase==='won'&&this._cardDrop?.winUnits>0)return this._cardDrop.winUnits/100;const play=['falling','card-mark'].includes(s.phase)?s.used:s.used+1;return BETS[s.betIdx]*multAt(play,s.payoutVersion); }
+  tiers(){return this.state.payoutVersion===3?[[30,2]]:this.state.active&&this.state.payoutVersion!==2?LEGACY_TIERS:TIERS;}
+  prize() { const s=this.state;if(s.cardVersion===1&&s.phase==='won'&&this._cardDrop?.winUnits>0)return this._cardDrop.winUnits/100;if(s.payoutVersion===3)return BETS[s.betIdx]*2;const play=['falling','card-mark'].includes(s.phase)?s.used:s.used+1;return BETS[s.betIdx]*multAt(play,s.payoutVersion); }
   onSpin = async () => {
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) {
@@ -391,7 +381,7 @@ class Component extends DCLogic {
       bal = Math.round((bal - bet) * 100) / 100; active = true; }
     if(s.cardVersion===1&&window.KingRicoFingoCard){
       const x=window.KingRicoFingoCard.cardRound(Math.round(BETS[s.betIdx]*100),s.active?this.cardRound():null,'roll',s.roundId||crypto.randomUUID(),0,Math.random,n=>multAt(n,2));
-      this.setState({targets:x.targets,card:this.cardFrom(x.targets,x.marks),roundId:x.roundId,payoutVersion:2});
+      this.setState({targets:x.targets,card:this.cardFrom(x.targets,x.marks),roundId:x.roundId,payoutVersion:x.payoutVersion});
       this.roll(x.slots,{balance:bal,active});return;
     }
     let targets = s.targets; if (!targets) targets = [0, 1, 2, 3, 4].map(c => rint(c * 15 + 1, c * 15 + 15));
@@ -449,7 +439,7 @@ class Component extends DCLogic {
   next() { const s = this.state;
     if (s.balls <= 0) { this.setState({ phase: 'won' }); this._t1 = setTimeout(() => { this.tone(220, 0.3, 'sine', 0.08, 150); this.setState({ win: { w: 0, title: 'ACABOU' } }); }, 900); return; }
     this._t2 = setTimeout(() => this.setState({ phase: 'spin', slots: null, landed: null, justMarked: -1 }, () => this.save()), 700); }
-  confetti(bin) { const cx = 29 + (bin * BW + BW / 2) * 0.87, cy = 290 + (H - 70) * 0.87; const conf = Array.from({ length: 22 }, (_, j) => { const a = -Math.PI / 2 + (j / 21 - 0.5) * 2.6, v = 90 + (j * 37 % 70);
+  confetti(bin) { const cx = 29 + (bin * BW + BW / 2) * 0.87, cy = 312 + (H - 70) * 0.93; const conf = Array.from({ length: 22 }, (_, j) => { const a = -Math.PI / 2 + (j / 21 - 0.5) * 2.6, v = 90 + (j * 37 % 70);
       return { x: (cx - 5) + 'px', y: cy + 'px', dx: Math.round(Math.cos(a) * v * 1.7) + 'px', dy: Math.round(Math.sin(a) * v * 1.7 + 40) + 'px', bg: CONF[j % CONF.length] }; });
     clearTimeout(this._ct); this.setState({ conf }); this._ct = setTimeout(() => this.setState({ conf: [] }), 1000); }
   closeWin = () => { const s = this.state; if (!s.win || this._paying) return; const w = s.win.w;
@@ -460,7 +450,7 @@ class Component extends DCLogic {
         this.setState({win:null,phase:'spin',lucky:null,cardOpen:false},()=>this.applyCloudPlayer());};
       if(w>0) this.flyCoins(done);else done();return;
     }
-    const reset = () => this.setState({ targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, payoutVersion:2,cardVersion:1,card:newCard(),cardOpen:false,phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());
+    const reset = () => this.setState({ targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, payoutVersion:3,cardVersion:1,card:newCard(),cardOpen:false,phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());
     this.setState({ win: null });
     if (w > 0) this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal }, () => { this.save(bal); reset(); }); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); else reset(); };
   flyCoins(done) { const wallet=this.stageRef.current?.querySelector('.kr-hud-balance');if(window.KingRicoWallet&&wallet){window.KingRicoWallet.fly(wallet,{onFirst:done});return;} const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
@@ -514,23 +504,18 @@ class Component extends DCLogic {
         anim: s.justMarked === i ? 'fgMark .5s ease-out forwards' : inWin ? 'fgPulse .8s ease-in-out infinite' : 'none' }; });
     const rolling = s.phase === 'rolling', shown = !!s.slots && s.phase !== 'spin';
     const buckets = [0, 1, 2, 3, 4].map(c => { const fin = shown && (!rolling || c < s.revealed), n = shown ? (fin ? s.slots[c] : s.rollNums[c]) : null, gold = fin && this.useful(n, c);
-      return { text: shown ? String(n) : COLS[c], color: gold ? '#fde047' : '#ffffff', glow: gold ? '14px' : '0px', blur: shown && !fin ? 'blur(1px)' : 'none', op: shown && !fin ? 0.8 : s.landed != null && s.landed !== c ? 0.55 : 1,
+      return { index:String(c),pos:(-c*66)+'px',shadow:gold?'0 0 0 3px #ffe281,0 0 18px #ffdc5088,0 3px 5px #0006':'0 3px 5px #0006',text: shown ? String(n) : COLS[c], color: TC[c][2], glow: gold ? '14px' : '0px', blur: shown && !fin ? 'blur(1px)' : 'none', op: shown && !fin ? 0.8 : s.landed != null && s.landed !== c ? 0.55 : 1,
         anim: gold && fin ? 'fgBounce .6s ease-out forwards' : 'none' }; });
     const gold = this.goldCols();
-    const tballs = [0, 1, 2, 3, 4].map(c => { const k=TC[c],has=s.cardVersion===1?!!s.slots&&(s.phase!=='rolling'||c<s.revealed):!!s.targets,n=s.cardVersion===1?s.slots?.[c]:s.targets?.[c],m=s.cardVersion===1?(has&&s.card.nums.includes(n)&&s.card.marks[s.card.nums.indexOf(n)]):s.tmarks[c];
-      return { pos: (-c * 70) + 'px', text:has?String(n):COLS[c], color: m ? '#5a2a00' : k[2], numShadow: m ? '0 1px 0 rgba(255,246,200,.9)' : 'none', bg: 'radial-gradient(circle at 35% 28%, ' + k[0] + ' 0%, ' + k[1] + ' 45%, ' + k[2] + ' 100%)',
-        // Light off → on: numbers still missing sit greyed out; a marked number lights up in full colour, gold ring and a ✓.
-        sh: m ? '0 0 16px rgba(255,190,50,.95), 0 4px 8px rgba(0,0,0,.3)' : '0 4px 8px rgba(0,0,0,.25)', filter: 'none', marked: m,
-        anim: s.justMarked === c ? 'fgBounce .6s ease-out' : m && s.phase === 'won' ? 'fgPulse .8s ease-in-out infinite' : 'none' }; });
     // Safety net: never sit in 'spin' with zero balls and no result card.
     if (s.phase === 'spin' && !s.win && s.balls <= 0 && !this._endQueued) { this._endQueued = true; setTimeout(() => { this._endQueued = false; this.next(); }, 0); }
     const canSpin = s.phase === 'spin' && !s.win && s.balls > 0;
     return {
-      scale: Math.min(s.vw / W, s.vh / 802), stageRef: this.stageRef, canvasRef: this.canvasRef,
+      scale: Math.min(s.vw / W, s.vh / 862), stageRef: this.stageRef, canvasRef: this.canvasRef,
       walletProps:{value: txt,hold:!!s.win,external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px', goHome: this.goHome, openMenu: this.openMenu,
       betText: fmt(BETS[s.betIdx]), betCursor: s.active ? 'default' : 'pointer', prizeSize: '22px', betAnim: s.noMoney ? 'fgNo .6s ease-in-out' : 'none', openBet: this.openBet,
-      multText: 'x' + fmt(multAt(s.used + 1,s.payoutVersion)), playsLeft: String(Math.max(0,BALLS-s.used)), playsSize: BALLS-s.used>=10?'21px':'27px', playsLabel: Math.max(0,BALLS-s.used)+' '+(BALLS-s.used===1?'jogada restante':'jogadas restantes'), ...this.panel(), prizeText: fmt(this.prize()),
-      tballs, buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
+      multText: 'x' + fmt(s.payoutVersion===3?2:multAt(s.used + 1,s.payoutVersion)), playsLeft: String(Math.max(0,BALLS-s.used)), playsSize: BALLS-s.used>=10?'34px':'38px', playsLabel: Math.max(0,BALLS-s.used)+' '+(BALLS-s.used===1?'jogada restante':'jogadas restantes'), ...this.panel(), prizeText: fmt(this.prize()),prizeCaption:s.payoutVersion===3?'QUINA PAGA 2×':'PRÊMIO DA QUINA',
+      buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
       showSpin: canSpin, countOp: 1, boardLit: ['rolling', 'falling', 'won'].includes(s.phase) ? 1 : 0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand: s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
       lucky: !!s.lucky, luckyText: s.lucky || '', luckySize: s.lucky === 'FINGO!' ? '64px' : '48px', confetti: s.conf,
@@ -541,8 +526,8 @@ class Component extends DCLogic {
       magicCells: card.nums.map((n, i) => { const m = card.marks[i]; return { text: n === 0 ? '★' : String(n), pick: () => this.pickMagic(i), cursor: m ? 'default' : 'pointer', op: m ? 0.3 : 1, bg: m ? 'rgba(255,255,255,.12)' : '#ffffff', color: m ? '#cfe' : TH[i % 5] }; }),
       betOpen: !!s.betOpen, closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       menuButton:{onClick:this.openMenu,disabled:!!(this._cloudRequest || s.cardOpen || s.phase==='falling' || s.phase==='rolling'),style:{zIndex:25}},
-      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:s.cardVersion===1?'Uma aposta vale até 30 jogadas. Consulte a cartela e mire no tubo escolhido. Feche uma linha, coluna ou diagonal para fazer quina.':'Conclua os cinco alvos da partida já iniciada; os pagamentos originais ficam preservados.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
-      pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: this.tiers().map(([t,m],i,tiers)=>({balls:'Bolas '+(i?tiers[i-1][0]+1:tiers===TIERS?5:1)+'–'+t,mult:'x'+fmt(m)})),
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Fingo',details:s.cardVersion===1&&s.payoutVersion===3?'Uma aposta vale até 30 jogadas. Consulte a cartela e mire no tubo escolhido. Feche uma linha, coluna ou diagonal para fazer quina e ganhar 2× a aposta.':'Esta partida já estava em andamento e mantém os pagamentos originais. Complete os alvos indicados.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      payExplanation:s.payoutVersion===3?'Uma aposta vale até 30 bolas. Complete uma linha, coluna ou diagonal e receba 2× o valor apostado. O prêmio total inclui a aposta.':'Esta partida já estava em andamento e mantém seus pagamentos originais.',pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: this.tiers().map(([t,m],i,tiers)=>({balls:s.payoutVersion===3?'Qualquer quina':'Bolas '+(i?tiers[i-1][0]+1:tiers===TIERS?5:1)+'–'+t,mult:'x'+fmt(m)})),
       ...this.cardView(),
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? (s.win.w > 0 ? '+' + fmt(s.win.w) : 'Nova cartela') : '', closeWin: this.closeWin

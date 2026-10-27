@@ -16,8 +16,7 @@ diferentes; cinco marcações isoladas não bastam.
    o voo de moedas e a contagem animada do saldo já existentes.
 
 CARTELA permite consultar novamente antes de lançar. Ela não cobra, não altera
-os números e não consome jogadas. O medalhão continua mostrando as jogadas
-restantes de 30 a 0. A interface se atualiza quando outra aba muda a partida.
+os números e não consome jogadas. As cinco bolas numeradas aparecem dentro dos buckets. O tabuleiro foi alongado e reposicionado para baixo; o medalhão ampliado mostra as bolas restantes de 30 a 0. A interface se atualiza quando outra aba muda a partida.
 
 ## Persistência e compatibilidade
 
@@ -38,7 +37,7 @@ chances e a tabela originais. As novas começam no modo 5×5.
 
 ## Pagamentos e verificação
 
-As faixas de prêmio por quantidade de lançamentos foram preservadas. As chances
+Novas cartelas (`payoutVersion:3`) pagam **2× a aposta** por qualquer quina, da quinta à trigésima bola. Esse é o prêmio total, incluindo a aposta; por exemplo, aposta de 10 recebe 20. Cartelas já pagas (`payoutVersion:2`) mantêm suas faixas originais até terminar. As chances
 da cartela são fixas; não consultam histórico ou saldo. A medição por estratégia
 fica em [ECONOMIA.md](ECONOMIA.md) e nos [dados da amostra](fingo-card-audit.json).
 O retorno observado não é prova de estratégia ótima ou garantia de retorno.

@@ -387,10 +387,14 @@ test('Clown distinguishes partial return, returned stake and a profitable round'
   g.score(null);timers();assert.equal(g.state.win.title,title);
  }
 });
-test('Fingo displays the saved legacy table and the attainable new bands',()=>{
+test('Fingo displays fixed 2x on new cards and preserves the saved legacy tables',()=>{
  const {instance:g}=component('Fortune Fingo.dc.html',{});
  g.state={...g.state,betIdx:3,active:true,used:5,payoutVersion:0};
  assert.equal(g.prize(),250);assert.equal(g.panel().leftInTier,1);
  g.state.payoutVersion=2;assert.equal(g.prize(),150);assert.equal(g.panel().leftInTier,2);
  g.state.used=0;assert.equal(g.prize(),500);assert.equal(g.panel().tierDots.length,5);
+ g.state.payoutVersion=3;
+ for(const used of [0,4,12,29]){g.state.used=used;assert.equal(g.prize(),20);}
+ assert.deepEqual(JSON.parse(JSON.stringify(g.renderVals().payList)),[{balls:'Qualquer quina',mult:'x2'}]);
+ assert.match(g.renderVals().payExplanation,/2×/);assert.equal(g.renderVals().prizeCaption,'QUINA PAGA 2×');
 });

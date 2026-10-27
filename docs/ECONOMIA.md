@@ -1,8 +1,8 @@
 # Economia de moedas — 27/10/2026
 
-Versão `2026-10-27-fingo-card-v9`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-27-fingo-double-v10`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
-Isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo.
+Quando o retorno é 98%, isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo. O Fingo usa agora prêmio fixo de 2×: sua amostra por estratégia aparece abaixo e não deve ser anunciada como RTP de 98%.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
 Bônus diários e recargas são entradas externas e ficam fora dessa conta.
 
@@ -17,7 +17,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
 | Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
-| Fingo 5×5 | 98,73% observado | 20 mil cartelas, política que prioriza linhas adiantadas; não é prova de RTP teórico |
+| Fingo 5×5 | 102,08% observado | 20 mil cartelas, política que prioriza linhas adiantadas; não é prova de RTP teórico |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
 | Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
 
@@ -63,12 +63,11 @@ linha, coluna ou diagonal. Uma aposta continua valendo até 30 lançamentos. Os
 cinco tubos são sorteados antes da consulta à cartela; a consulta não sorteia de
 novo. A chance fixa de alcançar um tubo útil é 0,27 ao mirar no dourado, com fator
 0,85 fora dele. O sorteio oferece números úteis de colunas diferentes; cada
-marcação pode contribuir para linhas diferentes. Os pagamentos continuam nas
-mesmas faixas de bolas da versão anterior.
+marcação pode contribuir para linhas diferentes. Novas cartelas (`payoutVersion:3`) pagam 2× a aposta por qualquer quina, incluindo a aposta no prêmio total. Não há redução por bolas usadas. As chances de marcação foram mantidas nesta alteração.
 
-A simulação de 20 mil cartelas, semente 90431, observou retorno de 98,734% e quina
+A simulação de 20 mil cartelas, semente 90431, observou retorno de 102,08% e quina
 em 51,04% usando uma política que prioriza linhas adiantadas. Escolher o primeiro
-dourado observou 93,183% e 48,96%; escolher tubos aleatoriamente observou 12,615%
+dourado observou 97,92% e 48,96%; escolher tubos aleatoriamente observou 17,48%
 e 8,74%. São amostras do motor, não prova de estratégia ótima ou RTP teórico.
 Não há ajuste de chance pelo saldo, pelo lucro ou pela sequência do jogador.
 Reproduza com `node scripts/fingo-card-audit.mjs`.
@@ -79,6 +78,8 @@ verificam o número alcançado, uma única marca válida, a quina e o pagamento.
 Cartelas antigas sem `cardVersion` mantêm os cinco alvos, chances e tabela já
 contratados até encerrar. `payoutVersion:2` mantém a tabela mais recente; cartelas
 anteriores a ela mantêm a tabela original. Veja [o fluxo e a validação](FINGO-CARTELA.md).
+
+Tabela apenas de cartelas já pagas na versão 2 (novas pagam sempre 2×):
 
 | Bola da quina | Prêmio total / aposta |
 | --- | ---: |

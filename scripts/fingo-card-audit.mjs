@@ -17,6 +17,6 @@ export function auditFingoCard(count=20000){
   }
   results.push({policy,count,seed:90431,rtp:paid/(1000*count),prizeRate:wins/count,meanPlays:used/count});
  }
- return {rulesVersion:engine.RULES_VERSION,note:'Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; existing payout bands. Gifts and refills excluded.',results};
+ return {rulesVersion:engine.RULES_VERSION,note:'Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; a quina pays 2x at any play. Gifts and refills excluded.',results};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)console.log(JSON.stringify(auditFingoCard(),null,2));
