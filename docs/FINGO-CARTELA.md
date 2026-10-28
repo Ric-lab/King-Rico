@@ -1,6 +1,6 @@
 # Fortune Fingo — cartela e Plinko
 
-Uma aposta compra até 30 jogadas. Cada sorteio oferece cinco números e pelo
+Uma aposta dá 30 bolas para fazer quina. Cada sorteio oferece cinco números e pelo
 menos uma opção útil para a cartela. A pessoa escolhe uma entrada na cartela ou
 no bucket; a bola cai no Plinko. Qualquer dourado atingido marca seu próprio
 número, mesmo quando outro foi escolhido. A escolha favorece a entrada desejada,
@@ -63,3 +63,11 @@ própria conta e consome esse parâmetro uma vez; a navegação normal retoma o 
   atualização durante a queda, duas abas e cancelamento.
 - Gerar `npm run build:production` depois dos testes de integração e conferir o
   resultado real do workflow em `https://king-rico.web.app/fingo`.
+
+
+Os sons dos pinos seguem a escala pentatônica já usada no Circus, por fileira,
+com timbre suave, ataque curto e intensidade proporcional ao contato. Impactos
+repetidos têm intervalo mínimo para evitar ruído. A luz nasce no contato, aquece
+o pino e abre uma onda curta no feltro, com pequenos brilhos que se dissipam.
+O modo de movimento reduzido mantém apenas a iluminação breve, sem onda ou raios.
+VOLTAR AO PLINKO usa o mesmo acabamento vermelho e dourado de GIRAR e JOGAR.
