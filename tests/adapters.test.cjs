@@ -139,6 +139,19 @@ test('Fingo restores the cloud round and animates its committed roll without a l
  f.roll=(slots)=>{assert.deepEqual(slots,targets);};f.tone=()=>{};f.buzz=()=>{};
  await f.onSpin();assert.equal(calls,1);assert.equal(f.state.balance,997.75);
 });
+test('Fingo explains a restored old round without discarding its stake and opens the new game only after confirmation',async()=>{
+ const round={id:'old-round',betUnits:250,targets:[1,16,31,46,61],marks:[true,false,false,false,false],used:3,slots:null,payoutVersion:2};
+ const player={balance:997.5,settings:{},fingoRound:round};let calls=0;
+ const cloud={enabled:true,player,fingo:async(...args)=>{calls++;assert.deepEqual(args,['cancel',2.5,'old-round',3]);cloud.player={...player,fingoRound:null};},error:e=>{throw e;}};
+ const {instance:f}=component('Fortune Fingo.dc.html',cloud);
+ const restore=()=>{f._cloudDeferred=cloud.player;f.applyCloudPlayer();};
+ restore();assert.equal(f.state.legacyNotice,true);assert.equal(f.state.cardVersion,0);assert.equal(f.state.balls,27);assert.equal(calls,0);
+ f.resumeLegacy();restore();assert.equal(f.state.legacyNotice,false);assert.equal(cloud.player.fingoRound,round);
+ f.replaceLegacy();assert.equal(f.state.endConfirm,true);assert.equal(calls,0);
+ f.keepRound();assert.equal(calls,0);assert.equal(cloud.player.fingoRound,round);
+ f.replaceLegacy();await f.endRound();
+ assert.equal(calls,1);assert.equal(f.state.balance,997.5);assert.equal(f.state.betOpen,true);assert.equal(f.state.cardVersion,2);assert.equal(f.state.payoutVersion,3);assert.equal(f.state.legacyNotice,false);
+});
 test('Fingo does not change the wallet or roll locally if its cloud request fails',async()=>{
  let errors=0;
  const player={balance:1000,settings:{},fingoRound:null};

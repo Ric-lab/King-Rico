@@ -129,6 +129,19 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <sc-if value="{{ showMarkNumber }}" hint-placeholder-val="{{ false }}"><div data-fingo-hit-number="" aria-hidden="true" style="position:absolute;z-index:14;pointer-events:none;left:176.5px;top:150px;width:100px;height:100px;border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#fff7da;border:5px solid #ffda62;box-shadow:0 5px 0 #87520c,0 8px 24px #15051c88;color:#65370b;font-size:60px;font-weight:800;font-variant-numeric:tabular-nums;">{{ markedNumber }}</div></sc-if>
 
+    <sc-if value="{{ legacyNotice }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:44;display:flex;align-items:center;justify-content:center;background:#140320dd;">
+        <section role="dialog" aria-modal="true" aria-label="Partida da versão anterior" style="width:365px;padding:24px;box-sizing:border-box;border:3px solid #edbd49;border-radius:24px;background:#3d0a63;color:#fff3c4;text-align:center;">
+          <img src="assets/symbols/sym-wild-s.webp" alt="" style="width:82px;height:82px;object-fit:contain;">
+          <h2 style="margin:4px 0 12px;font-size:27px;line-height:1.2;">O Fingo foi renovado!</h2>
+          <p style="font-size:21px;line-height:1.3;">Você tem uma partida da versão anterior em andamento.</p>
+          <p style="font-size:20px;line-height:1.3;">Na nova cartela, o King Rico é coringa e a quina paga 2×.</p>
+          <button class="kr-button fg-spin" onClick="{{ resumeLegacy }}" style="width:100%;min-height:64px;margin-top:8px;font-size:22px;">CONTINUAR PARTIDA</button>
+          <button class="kr-button" onClick="{{ replaceLegacy }}" style="width:100%;min-height:64px;margin-top:20px;font-size:22px;">NOVA CARTELA</button>
+        </section>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ endConfirm }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;background:#140320cc;">
         <section role="dialog" aria-modal="true" aria-label="Encerrar cartela" style="width:365px;padding:24px;box-sizing:border-box;border:3px solid #edbd49;border-radius:24px;background:#3d0a63;color:#fff3c4;text-align:center;">
@@ -258,7 +271,11 @@ class Component extends DCLogic {
   applyCloudPlayer() {
     const p=this._cloudDeferred;if(!p) return;this._cloudDeferred=null;
     const r=p.fingoRound,keepCard=!!(r?.cardVersion>=1&&this.state.cardOpen&&r.id===this.state.roundId);
+    const legacy=!!r&&(r.cardVersion!==2||r.payoutVersion!==3);
+    const legacyNotice=legacy&&(this.state.legacyNotice||this._legacyNoticedRound!==r.id);
+    this._legacyNoticedRound=r?.id;
     this.setState({balance:p.balance,sfxLvl:p.settings.sfxLvl,vibLvl:p.settings.vibLvl,
+      legacyNotice,
       betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.fingoBetIdx ?? 3,
       roundId:r?.id || null,targets:r?.targets || null,tmarks:r?.cardVersion>=1?[false,false,false,false,false]:r?.marks || [false,false,false,false,false],
       cardVersion:r?r.cardVersion||0:2,card:r?.cardVersion>=1?this.cardFrom(r.targets,r.marks,r.cardVersion):this.state.card,cardOpen:!!(r?.cardVersion>=1&&(keepCard||r.slots&&this._reviewedRoll!==r.id+':'+r.used)),cardMode:keepCard?(!r.slots?'consult':this.state.cardMode):'aim',
@@ -431,6 +448,8 @@ class Component extends DCLogic {
   cardFrom(seeds,marks,version=this.state.cardVersion){const nums=window.KingRicoFingoCard?window.KingRicoFingoCard.expandCard(seeds,version):Array.from({length:25},(_,i)=>{const c=i%5;return version===2&&i===12?0:c*15+1+(seeds[c]-c*15-1+[1,2,4,7,8][c]*Math.floor(i/5))%15;});return {nums,marks:nums.map((_,i)=>marks.includes(i))};}
   cardRound(){const s=this.state;return {targets:s.targets,marks:s.card.marks.flatMap((v,i)=>v?[i]:[]),used:s.used,slots:s.slots,payoutVersion:s.payoutVersion,cardVersion:s.cardVersion};}
   askEndRound=()=>{if(this._cloudRequest||this.state.win||['rolling','launching','falling','won'].includes(this.state.phase))return;this.setState({endConfirm:true});};
+  resumeLegacy=()=>{this.setState({legacyNotice:false});};
+  replaceLegacy=()=>{this.setState({legacyNotice:false},this.askEndRound);};
   keepRound=()=>{if(!this._cloudRequest)this.setState({endConfirm:false});};
   endRound=async fromLink=>{
     const cloud=window.KingRicoCloud;
@@ -442,7 +461,7 @@ class Component extends DCLogic {
       clearInterval(this._ri);[this._t1,this._t2,this._markTimer].forEach(clearTimeout);
       this._cardDrop=null;this._cloudDrop=null;this._reviewedRoll=null;
       this._freshLink=false;this._cloudRequest=false;
-      this._betChosen=false;this.setState({betOpen:true,ending:false,endConfirm:false,markFeedback:false,cardOpen:false,win:null,phase:'spin',active:false,targets:null,tmarks:[false,false,false,false,false],card:newCard(),balls:BALLS,used:0,slots:null,landed:null,winLine:null,justMarked:-1,payoutVersion:3,cardVersion:2},()=>{
+      this._betChosen=false;this.setState({betOpen:true,legacyNotice:false,ending:false,endConfirm:false,markFeedback:false,cardOpen:false,win:null,phase:'spin',active:false,targets:null,tmarks:[false,false,false,false,false],card:newCard(),balls:BALLS,used:0,slots:null,landed:null,winLine:null,justMarked:-1,payoutVersion:3,cardVersion:2},()=>{
         if(cloud?.enabled){this._cloudDeferred=cloud.player;this.applyCloudPlayer();}else this.save();
       });
       if(fromLink===true){const url=new URL(window.location.href);url.searchParams.delete('nova-cartela');window.history.replaceState(null,'',url.pathname+url.search+url.hash);}
@@ -655,7 +674,7 @@ class Component extends DCLogic {
     return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * values[drop]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
-  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
+  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge,legacyNotice:!!this.state.legacyNotice,resumeLegacy:this.resumeLegacy,replaceLegacy:this.replaceLegacy};}
   _rv() {
     const s = this.state, txt = fmt(s.balance), card = s.card, wl = s.winLine || [];
     const cells = card.nums.map((n, i) => { const m = card.marks[i], free = n === 0, inWin = wl.includes(i);

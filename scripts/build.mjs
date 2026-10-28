@@ -132,6 +132,15 @@ for(const {file,game,title} of routes) {
     const revision=createHash('sha256').update(bytes).digest('hex').slice(0,12);
     html=html.replaceAll(`href="${href}"`,`href="${href}?v=${revision}"`);
   }
+  // Existing installations may still have the old board art cached for an hour.
+  // Couple each Fingo image URL to its bytes so a new page cannot mix releases.
+  if(game==='fingo') {
+    const images=[...new Set([...html.matchAll(/assets\/fingo\/[\w.-]+\.(?:webp|png)/g)].map(m=>m[0]))];
+    for(const image of images) {
+      const revision=createHash('sha256').update(await readFile(path.join(destination,image))).digest('hex').slice(0,12);
+      html=html.replaceAll(image,`${image}?v=${revision}`);
+    }
+  }
   await writeFile(path.join(destination,file),html);
 }
 console.log(`Built ${emulator?'local emulator':'production'} web app in dist/`);

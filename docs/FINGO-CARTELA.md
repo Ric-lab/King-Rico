@@ -71,3 +71,10 @@ repetidos têm intervalo mínimo para evitar ruído. A luz nasce no contato, aqu
 o pino e abre uma onda curta no feltro, com pequenos brilhos que se dissipam.
 O modo de movimento reduzido mantém apenas a iluminação breve, sem onda ou raios.
 VOLTAR AO PLINKO usa o mesmo acabamento vermelho e dourado de GIRAR e JOGAR.
+
+O build identifica cada imagem do Fingo por seu conteúdo na URL. Assim uma
+instalação que já guardou a arte antiga não mistura o tabuleiro anterior com
+a interface nova. O Hosting também revalida os arquivos de `assets/fingo`.
+Ao retomar uma partida anterior à cartela com coringa e prêmio 2×, o jogo explica
+a diferença e oferece continuar ou abrir uma nova cartela. Encerrar ainda exige
+confirmação, sem descartar aposta ou progresso automaticamente.

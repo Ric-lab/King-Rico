@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile,access} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 test('production artifact serves every Home game and the Penalty renderer with local dependencies',async()=>{
   const result=spawnSync(process.execPath,['scripts/build.mjs','--production'],{encoding:'utf8'});
@@ -12,6 +13,13 @@ test('production artifact serves every Home game and the Penalty renderer with l
   const games=[...new Set([...home.matchAll(/href="([^"#?]+)(?:[?#][^"]*)?"/g)].map(m=>routes.find(r=>r.path===m[1])?.file).filter(Boolean))];
   assert.ok(games.includes('Fortune Penalty.dc.html'));
   assert.match(await readFile('dist/Fortune Fingo.dc.html','utf8'),/src="\.\/runtime\/matter\.min\.js"/);
+  const fingo=await readFile('dist/Fortune Fingo.dc.html','utf8');
+  const images=[...fingo.matchAll(/(assets\/fingo\/[\w.-]+\.(?:webp|png))([^'"\s)]*)/g)];
+  assert.ok(images.length>5,'Check actual Fingo board, counter, ball and betting assets');
+  for(const [,asset,suffix] of images) {
+    const hash=createHash('sha256').update(await readFile(path.join('dist',asset))).digest('hex').slice(0,12);
+    assert.equal(suffix,'?v='+hash,asset+' must bypass a previously cached old image');
+  }
   for(const game of ['Circus','Wheel','Neck','Fingo','Penalty','Clown','Flying Clown','33']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
   for(const file of ['clownball.js','bounce3d.js']) {const source=await readFile(path.join('dist',file),'utf8');assert.match(source,/const SRC = '\.\/runtime\/three\.module\.js'/);assert.doesNotMatch(source,/unpkg\.com/);}
   const archived=['Bounce','Claw','Race','Bridge'].map(game=>`Fortune ${game}.dc.html`);
