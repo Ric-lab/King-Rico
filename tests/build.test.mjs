@@ -14,6 +14,8 @@ test('production artifact serves every Home game and the Penalty renderer with l
   assert.ok(games.includes('Fortune Penalty.dc.html'));
   assert.match(await readFile('dist/Fortune Fingo.dc.html','utf8'),/src="\.\/runtime\/matter\.min\.js"/);
   const fingo=await readFile('dist/Fortune Fingo.dc.html','utf8');
+  assert.match(fingo,/data-fingo-free-icon="" src="data:image\/webp;base64,/,'The free King Rico cell cannot depend on another network request');
+  for(const name of ['bet-panel','counter-plaque'])assert.ok((await readFile('dist/assets/fingo/'+name+'.webp')).length<250000,'Mobile Fingo art must stay small');
   const images=[...fingo.matchAll(/(assets\/fingo\/[\w.-]+\.(?:webp|png))([^'"\s)]*)/g)];
   assert.ok(images.length>5,'Check actual Fingo board, counter, ball and betting assets');
   for(const [,asset,suffix] of images) {

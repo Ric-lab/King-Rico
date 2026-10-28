@@ -140,6 +140,8 @@ for(const {file,game,title} of routes) {
       const revision=createHash('sha256').update(await readFile(path.join(destination,image))).digest('hex').slice(0,12);
       html=html.replaceAll(image,`${image}?v=${revision}`);
     }
+    const wild=(await readFile('assets/symbols/sym-wild-s.webp')).toString('base64');
+    html=html.replace('data-fingo-free-icon="" src="assets/symbols/sym-wild-s.webp"',`data-fingo-free-icon="" src="data:image/webp;base64,${wild}"`);
   }
   await writeFile(path.join(destination,file),html);
 }

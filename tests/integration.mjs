@@ -844,10 +844,10 @@ test('Bridge Rules settle a broken pane and all six safe jumps, with replay afte
 test('Fingo cancellation ends only the current card with no refund or prize and replay preserves a newer card',async()=>{
  const identity='fingo-cancel-'+randomUUID(),c=await client(identity,identity,{rng:()=>0});await c.call(request({action:'bootstrap'}));
  const ref=doc(c.db,'players',c.uid),base={action:'fingo',game:'fingo',bet:10};
- for(const card of [null,{payoutVersion:2,cardVersion:1},{payoutVersion:3,cardVersion:1}])for(const slots of [null,[1,16,31,46,61]]){
+ for(const card of [null,{payoutVersion:2,cardVersion:1},{payoutVersion:3,cardVersion:1},{payoutVersion:3,cardVersion:2}])for(const slots of [null,[1,16,31,46,61]]){
   const roundId=randomUUID();
   await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
-   balanceUnits:99000,fingoRound:{id:roundId,betUnits:1000,targets:[1,16,31,46,61],marks:card?[]:[false,false,false,false,false],used:0,slots,...card}}));
+   balanceUnits:99000,fingoRound:{id:roundId,betUnits:1000,targets:[1,16,31,46,61],marks:card?.cardVersion===2?[12]:card?[]:[false,false,false,false,false],used:0,slots,...card}}));
   const before=(await getDoc(ref)).data(),id=randomUUID(),outcome={move:'cancel',roundId,betUnits:1000,used:0,bin:-1,ended:true,winUnits:0};
   // Clearing progress cannot credit a refund or a made-up reward.
   for(const extra of [1000,2000]){

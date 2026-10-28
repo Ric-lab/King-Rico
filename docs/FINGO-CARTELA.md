@@ -20,7 +20,11 @@ prêmio em destaque. JOGAR confirma a única cobrança e inicia o sorteio.
 O suporte claro das cinco bolas é inteiro clicável para CARTELA: o mesmo toque
 abre ou fecha a consulta. As bolas preservam o tamanho e têm respiro nas bordas.
 A consulta funciona durante o sorteio, mas fica bloqueada no lançamento e na queda.
-Fechar a seleção mantém os buckets utilizáveis sem refazer o sorteio.
+Enquanto a cartela está aberta, os buckets ficam ocultos e DESISTIR ocupa a base.
+Fechar a seleção mantém os buckets utilizáveis sem refazer o sorteio. DESISTIR
+abre confirmação: continuar mantém o progresso; encerrar descarta a cartela sem
+estorno ou prêmio e abre o seletor para uma nova aposta. Fica indisponível na queda
+e após uma quina. Uma confirmação antiga não encerra uma nova partida de outra aba.
 
 A primeira fileira tem cinco espaços livres iguais, considerando os diâmetros
 dos pinos. Cada espaço tem uma linha curta, centralizada e pintada no feltro.
@@ -78,3 +82,8 @@ a interface nova. O Hosting também revalida os arquivos de `assets/fingo`.
 Ao retomar uma partida anterior à cartela com coringa e prêmio 2×, o jogo explica
 a diferença e oferece continuar ou abrir uma nova cartela. Encerrar ainda exige
 confirmação, sem descartar aposta ou progresso automaticamente.
+
+O King Rico do centro fica incorporado ao HTML de produção e posicionado acima
+dos demais elementos da casa. As molduras usam WebP, reduzindo juntas de 3,6 MB
+para cerca de 380 KB. A partida só é liberada depois que os assets necessários
+carregam e são decodificados; em falha aparece TENTAR NOVAMENTE, sem cobrar aposta.

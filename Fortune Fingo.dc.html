@@ -12,7 +12,6 @@
 <body>
 <x-dc>
 <helmet>
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
 <style>
 @font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
@@ -76,13 +75,13 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <!-- Plinko (física Matter.js com os valores do original) -->
     <div data-fingo-board="" aria-hidden="true" style="visibility:{{ boardVisibility }};position:absolute;z-index:3;left:-38.5px;top:208px;width:530px;height:696px;pointer-events:none;clip-path:polygon(0 0,42% 0,42% 11%,58% 11%,58% 0,100% 0,100% 100%,0 100%);background:{{ boardBackground }};"></div>
-    <div aria-hidden="true" style="visibility:{{ boardVisibility }};position:absolute;z-index:5;left:151.5px;top:207px;width:150px;height:94px;background:url('assets/fingo/counter-plaque.png') center/100% 100% no-repeat;pointer-events:none;"></div>
+    <div aria-hidden="true" style="visibility:{{ boardVisibility }};position:absolute;z-index:5;left:151.5px;top:207px;width:150px;height:94px;background:url('assets/fingo/counter-plaque.webp') center/100% 100% no-repeat;pointer-events:none;"></div>
     <div data-fingo-plays="remaining" role="status" aria-label="{{ playsLabel }}" style="visibility:{{ boardVisibility }};position: absolute; z-index: 5; left: 203.5px; top: 236px; width: 48px; height: 44px; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', sans-serif; font-weight:800;line-height:1;color:#fff6c9;text-shadow:0 2px 1px #082b19; font-size: {{ playsSize }}; font-variant-numeric: tabular-nums;">{{ playsLeft }}</div>
     <div data-fingo-playfield="" style="visibility:{{ playfieldVisibility }};">
     <div style="position: absolute; z-index: 4; left: 6.8px; top: 292px; width: 453px; height: 570px; transform: scale(.97); transform-origin: 0 0;">
     <div onPointerDown="{{ boardDown }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 570px; touch-action: none; cursor: {{ boardCursor }}; animation: {{ shakeAnim }};">
       <canvas ref="{{ canvasRef }}" width="906" height="1140" style="position: absolute; inset: 0; width: 453px; height: 570px;"></canvas>
-      <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 100px; visibility:{{ boardVisibility }}; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); pointer-events: auto;">
+      <div data-fingo-buckets="" style="position: absolute; left: 0; right: 0; bottom: 0; height: 100px; visibility:{{ bucketVisibility }}; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); pointer-events: auto;">
         <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="5">
           <button data-fingo-bucket="{{ b.index }}" class="fg-bucket" aria-label="Lançar número {{ b.text }} pelo bucket" onClick="{{ b.pick }}" disabled="{{ b.disabled }}" style="display:flex;align-items:flex-end;justify-content:center;padding:0 0 6px;cursor:{{ b.cursor }};">
             <span style="font-size:40px;font-weight:800;color:{{ b.color }};text-shadow:0 2px 2px #000b,0 0 {{ b.glow }} #ffdc50;opacity:{{ b.op }};">{{ b.text }}</span>
@@ -119,12 +118,16 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
       <section role="region" aria-label="Sua cartela" id="fingo-card" data-fingo-card="" class="fg-card-screen" style="position:absolute;z-index:6;left:40px;right:40px;top:{{ cardTop }};bottom:{{ cardBottom }};box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:{{ cardGap }};animation:fgFade .2s ease-out;">
         <div style="font-family:'Rammetto One','Baloo 2',sans-serif;font-size:26px;color:#ffe59a;text-shadow:0 3px #724712;transform:translateY({{ cardTitleShift }});">{{ cardTitle }}</div>
         <div data-fingo-grid="" style="width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:8px;box-sizing:border-box;border-radius:16px;background:#ba812f;box-shadow:inset 0 0 0 2px #ffe49c,0 6px 0 #542b12;">
-          <sc-for list="{{ cardCells }}" as="c" hint-placeholder-count="25"><button data-fingo-cell="{{ c.index }}" aria-label="{{ c.label }}" onClick="{{ c.pick }}" disabled="{{ c.disabled }}" style="height:50px;box-sizing:border-box;position:relative;border-radius:9px;border:{{ c.border }};background:{{ c.bg }};box-shadow:{{ c.shadow }};color:{{ c.color }};display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;animation:{{ c.anim }};opacity:{{ c.opacity }};padding:0;cursor:{{ c.cursor }};font-family:inherit;"><sc-if value="{{ c.paint }}" hint-placeholder-val="{{ false }}"><span data-bingo-ink="" aria-hidden="true" style="position:absolute;inset:0;border-radius:inherit;background:linear-gradient(#24874b,#12532b);animation:{{ markInkAnimation }};"></span></sc-if><span data-bingo-number="{{ c.paint }}" style="position:relative;z-index:2;animation:{{ c.numberAnim }};">{{ c.text }}</span><sc-if value="{{ c.available }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;right:2px;bottom:1px;width:17px;height:17px;border-radius:50%;background:#087c38;color:white;font-size:15px;line-height:17px;text-align:center;">↓</span></sc-if><sc-if value="{{ c.free }}" hint-placeholder-val="{{ false }}"><img src="assets/symbols/sym-wild-s.webp" alt="King Rico, coringa" style="position:absolute;width:52px;height:52px;object-fit:contain;"></sc-if><sc-if value="{{ c.check }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:3px;bottom:1px;z-index:2;font-size:13px;color:#ffe59a;animation:{{ c.checkAnim }};" data-bingo-check="">✓</span></sc-if></button></sc-for>
+          <sc-for list="{{ cardCells }}" as="c" hint-placeholder-count="25"><button data-fingo-cell="{{ c.index }}" aria-label="{{ c.label }}" onClick="{{ c.pick }}" disabled="{{ c.disabled }}" style="height:50px;box-sizing:border-box;position:relative;border-radius:9px;border:{{ c.border }};background:{{ c.bg }};box-shadow:{{ c.shadow }};color:{{ c.color }};display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;animation:{{ c.anim }};opacity:{{ c.opacity }};padding:0;cursor:{{ c.cursor }};font-family:inherit;"><sc-if value="{{ c.paint }}" hint-placeholder-val="{{ false }}"><span data-bingo-ink="" aria-hidden="true" style="position:absolute;inset:0;border-radius:inherit;background:linear-gradient(#24874b,#12532b);animation:{{ markInkAnimation }};"></span></sc-if><span data-bingo-number="{{ c.paint }}" style="position:relative;z-index:2;animation:{{ c.numberAnim }};">{{ c.text }}</span><sc-if value="{{ c.available }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;right:2px;bottom:1px;width:17px;height:17px;border-radius:50%;background:#087c38;color:white;font-size:15px;line-height:17px;text-align:center;">↓</span></sc-if><sc-if value="{{ c.free }}" hint-placeholder-val="{{ false }}"><img data-fingo-free-icon="" src="assets/symbols/sym-wild-s.webp" alt="King Rico, coringa" style="position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:54px;object-fit:contain;"></sc-if><sc-if value="{{ c.check }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:3px;bottom:1px;z-index:2;font-size:13px;color:#ffe59a;animation:{{ c.checkAnim }};" data-bingo-check="">✓</span></sc-if></button></sc-for>
         </div>
         <div role="status" style="font-size:19px;line-height:1.2;text-align:center;color:#fff4cc;min-height:38px;display:flex;align-items:center;">{{ cardNote }}</div>
         <sc-if value="{{ autoCardReturn }}" hint-placeholder-val="{{ false }}"><div style="color:#fff4cc;font-size:18px;margin-top:6px;">Voltando ao Plinko…</div></sc-if>
         <sc-if value="{{ showCardAction }}" hint-placeholder-val="{{ false }}"><button class="kr-button fg-spin" onClick="{{ continueCard }}" style="margin-top:auto;min-width:236px;height:64px;min-height:64px;padding:8px 18px;font-size:23px;">{{ cardAction }}</button></sc-if>
       </section>
+    </sc-if>
+
+    <sc-if value="{{ showGiveUp }}" hint-placeholder-val="{{ false }}">
+      <button data-fingo-give-up="" type="button" class="kr-button fg-spin" onClick="{{ askEndRound }}" style="position:absolute;z-index:8;left:100px;right:100px;top:772px;height:64px;font-size:24px;">DESISTIR</button>
     </sc-if>
 
     <sc-if value="{{ showMarkNumber }}" hint-placeholder-val="{{ false }}"><div data-fingo-hit-number="" aria-hidden="true" style="position:absolute;z-index:14;pointer-events:none;left:176.5px;top:150px;width:100px;height:100px;border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#fff7da;border:5px solid #ffda62;box-shadow:0 5px 0 #87520c,0 8px 24px #15051c88;color:#65370b;font-size:60px;font-weight:800;font-variant-numeric:tabular-nums;">{{ markedNumber }}</div></sc-if>
@@ -145,7 +148,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <sc-if value="{{ endConfirm }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;background:#140320cc;">
         <section role="dialog" aria-modal="true" aria-label="Encerrar cartela" style="width:365px;padding:24px;box-sizing:border-box;border:3px solid #edbd49;border-radius:24px;background:#3d0a63;color:#fff3c4;text-align:center;">
-          <h2 style="margin:0 0 12px;font-size:27px;">Encerrar a cartela?</h2>
+          <h2 style="margin:0 0 12px;font-size:27px;">Desistir da partida?</h2>
           <p style="font-size:20px;line-height:1.3;">A aposta desta partida não será devolvida.</p>
           <button class="kr-button" onClick="{{ endRound }}" disabled="{{ ending }}" style="width:100%;padding:12px;font-size:22px;">{{ endLabel }}</button>
           <button onClick="{{ keepRound }}" disabled="{{ ending }}" style="margin-top:12px;padding:10px;border:0;background:transparent;color:#fff3c4;font:800 19px 'Baloo 2';cursor:pointer;">CONTINUAR JOGANDO</button>
@@ -155,7 +158,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <sc-if value="{{ betOpen }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;inset:-500px;z-index:40;background:#140320d9;display:flex;align-items:center;justify-content:center;">
-        <section role="dialog" aria-modal="true" aria-label="Escolher aposta" data-fingo-bet-panel="" style="position:relative;width:407px;height:540px;transform:scale({{ betModalScale }});background:url('assets/fingo/bet-panel.png') center/100% 100% no-repeat;color:#683409;text-align:center;">
+        <section role="dialog" aria-modal="true" aria-label="Escolher aposta" data-fingo-bet-panel="" style="position:relative;width:407px;height:540px;transform:scale({{ betModalScale }});background:url('assets/fingo/bet-panel.webp') center/100% 100% no-repeat;color:#683409;text-align:center;">
           <img src="assets/symbols/sym-wild-s.webp" alt="King Rico" style="position:absolute;left:150.5px;top:-49px;width:106px;height:106px;object-fit:contain;filter:drop-shadow(0 4px 2px #33104066);">
           <h2 style="position:absolute;left:30px;right:30px;top:48px;margin:0;color:#fff3c4;font:30px 'Rammetto One','Baloo 2';text-shadow:0 3px #6c2318;">APOSTA</h2>
           <div style="position:absolute;left:52px;right:52px;top:171px;height:87px;display:flex;align-items:center;justify-content:center;gap:16px;">
@@ -165,8 +168,18 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
           </div>
           <div style="position:absolute;left:54px;right:54px;top:292px;font:23px/1.2 'Rammetto One','Baloo 2',sans-serif;color:#386031;">QUINA ×2</div>
           <strong data-fingo-bet-prize="" style="position:absolute;left:54px;right:54px;top:327px;font-size:62px;line-height:1.2;font-weight:800;color:#176633;font-variant-numeric:tabular-nums;">{{ betPrize }}</strong>
-          <button class="kr-button fg-spin" onClick="{{ confirmBet }}" style="position:absolute;left:62px;right:62px;top:425px;height:64px;font-size:26px;">JOGAR</button>
+          <button class="kr-button fg-spin" onClick="{{ confirmBet }}" disabled="{{ artBlocked }}" style="position:absolute;left:62px;right:62px;top:425px;height:64px;font-size:26px;">JOGAR</button>
         </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ artBlocked }}" hint-placeholder-val="{{ false }}">
+      <div role="status" aria-live="polite" data-fingo-art-loading="" style="position:absolute;inset:-500px;z-index:70;background:#250626;display:flex;align-items:center;justify-content:center;">
+        <div style="width:330px;text-align:center;color:#fff3c4;font-size:24px;line-height:1.3;">
+          <div style="font-family:'Rammetto One','Baloo 2';color:#ffd257;margin-bottom:20px;">FORTUNE FINGO</div>
+          <p>{{ artMessage }}</p>
+          <sc-if value="{{ artError }}" hint-placeholder-val="{{ false }}"><button class="kr-button fg-spin" onClick="{{ prepareArt }}" style="min-height:64px;padding:10px 24px;font-size:24px;">TENTAR NOVAMENTE</button></sc-if>
+        </div>
       </div>
     </sc-if>
 
@@ -240,9 +253,23 @@ function nonAdjacent(avail, k) { const s = [...avail].sort((a, b) => a - b);
   for (let n = Math.min(k, s.length); n >= 1; n--) { const combos = [], bt = (i, cur) => { if (cur.length === n) { combos.push([...cur]); return; } for (let j = i; j < s.length; j++) if (!cur.length || s[j] - cur[cur.length - 1] >= 2) { cur.push(s[j]); bt(j + 1, cur); cur.pop(); } };
     bt(0, []); if (combos.length) return combos[Math.floor(Math.random() * combos.length)]; } return []; }
 class Component extends DCLogic {
-  state = { betOpen:true,balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:3, cardVersion:2, cardOpen:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 862, justMarked: -1, winLine: null };
+  state = { artReady:false,artError:false,betOpen:true,balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:3, cardVersion:2, cardOpen:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 862, justMarked: -1, winLine: null };
   stageRef = React.createRef(); canvasRef = React.createRef();launchCanvasRef=React.createRef();
   IM = { ball: img('assets/fingo/ball.webp'), peg: img('assets/fingo/peg.webp'), tri: img('assets/fingo/triangle.webp'),numberBalls:img('assets/fingo/target-balls.webp') };
+  prepareArt=async()=>{
+    const loadId=(this._artLoadId||0)+1;this._artLoadId=loadId;
+    this.setState({artReady:false,artError:false});
+    const sources=['assets/fingo/stage-bg.webp','assets/fingo/board-off.webp','assets/fingo/board-lit.webp','assets/fingo/counter-plaque.webp','assets/fingo/bet-panel.webp','assets/fingo/target-balls.webp','assets/fingo/ball.webp','assets/symbols/sym-wild-s.webp'];
+    const loaded=[];
+    const results=await Promise.all(sources.map((src,index)=>new Promise(resolve=>{
+      const image=new Image();loaded[index]=image;let settled=false;
+      const finish=ok=>{if(settled)return;settled=true;clearTimeout(timer);image.onload=image.onerror=null;resolve(ok);};
+      const timer=setTimeout(()=>finish(false),12000);
+      image.onload=()=>{if(image.decode)image.decode().then(()=>finish(image.naturalWidth>0),()=>finish(false));else finish(image.naturalWidth>0);};
+      image.onerror=()=>finish(false);image.src=src;
+    })));
+    if(!this._dead&&this._artLoadId===loadId){const ready=results.every(Boolean);if(ready){this.IM.numberBalls=loaded[5];this.IM.ball=loaded[6];}this.setState({artReady:ready,artError:!ready});}
+  };
   async bakeBall(){try{
     const T=await import('./runtime/three.module.js');if(this._dead)return;
     const renderer=new T.WebGLRenderer({alpha:true,antialias:true});renderer.setSize(160,160);renderer.setPixelRatio(1);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
@@ -282,7 +309,7 @@ class Component extends DCLogic {
       betOpen:!r&&!this._betChosen,active:!!r,payoutVersion:r?(r.payoutVersion||0):3,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
       revealed:r?.slots ? 5 : 0,phase:r?.slots ? 'drop' : 'spin',landed:null,justMarked:-1,winLine:null,win:null,markFeedback:false});
   }
-  componentDidMount() { this.bakeBall();window.__fg=this;this._freshLink=new URLSearchParams(window.location.search).get('nova-cartela')==='1';
+  componentDidMount() { this.prepareArt();this.bakeBall();window.__fg=this;this._freshLink=new URLSearchParams(window.location.search).get('nova-cartela')==='1';
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) {this._unwatchCloud=cloud.watch(p=>{this._cloudDeferred=p;if(!this.cloudLocked()) this.applyCloudPlayer();});if(this._freshLink)cloud.ready.then(()=>{if(!this._dead)this.endRound(true);});}
     this._rs = () => this.setState({ vw: window.innerWidth || W, vh: (window.KingRicoViewport?.height ?? window.innerHeight) || 802 }); this._rs(); window.addEventListener('resize', this._rs); requestAnimationFrame(this._rs); setTimeout(this._rs, 300); if (window.ResizeObserver) { this._ro = new ResizeObserver(() => this._rs()); this._ro.observe(document.documentElement); }
@@ -410,7 +437,7 @@ class Component extends DCLogic {
     x.fillStyle = 'rgba(0,30,6,.22)'; x.fillRect(0, H - 96, W, 96);
     if(this.state.phase==='launching'){
       const canvas=this.launchCanvasRef.current,c=this.state.selectedColumn,n=this.state.slots?.[c];
-      if(canvas&&n!=null){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,160,160);const sphere=this.renderNumberedBall(n,c);if(sphere)ctx.drawImage(sphere,0,0,160,160);else if(IM.numberBalls.complete){const tile=IM.numberBalls.naturalWidth/5;ctx.drawImage(IM.numberBalls,c*tile,0,tile,IM.numberBalls.naturalHeight,0,0,160,160);ctx.fillStyle=TC[c][2];ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 72px "Baloo 2"';ctx.fillText(String(n),80,84);}}
+      if(canvas&&n!=null){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,160,160);const sphere=this.renderNumberedBall(n,c);if(sphere)ctx.drawImage(sphere,0,0,160,160);else if(IM.numberBalls.complete&&IM.numberBalls.naturalWidth>0){const tile=IM.numberBalls.naturalWidth/5;ctx.drawImage(IM.numberBalls,c*tile,0,tile,IM.numberBalls.naturalHeight,0,0,160,160);ctx.fillStyle=TC[c][2];ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 72px "Baloo 2"';ctx.fillText(String(n),80,84);}}
     }
     const b = this.ball;
     for (const p of this.particles) { x.beginPath(); x.arc(p.x, p.y, p.size, 0, Math.PI * 2); x.fillStyle = p.t === 'core' ? 'rgba(255,' + Math.floor(255 * p.life) + ',0,' + p.life + ')' : 'rgba(255,255,200,' + p.life + ')'; x.fill(); }
@@ -421,9 +448,9 @@ class Component extends DCLogic {
     x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.ellipse(b.position.x + 3, b.position.y + 5, r * 0.95, r * 0.8, 0, 0, Math.PI * 2); x.fill();
     x.fillStyle = 'rgba(255,255,255,.22)'; x.beginPath(); x.arc(b.position.x, b.position.y, r * 1.45, 0, Math.PI * 2); x.fill();
     if(b.number!=null){const sphere=this.renderNumberedBall(b.number,b.column);if(sphere){x.drawImage(sphere,b.position.x-r,b.position.y-r,r*2,r*2);return;}}
-    if(b.number!=null&&IM.numberBalls.complete){const tile=IM.numberBalls.naturalWidth/5;x.drawImage(IM.numberBalls,b.column*tile,0,tile,IM.numberBalls.naturalHeight,b.position.x-r,b.position.y-r,r*2,r*2);x.save();x.textAlign='center';x.textBaseline='middle';x.font='800 '+Math.round(r*1.15)+'px "Baloo 2"';x.fillStyle=TC[b.column][2];x.fillText(String(b.number),b.position.x,b.position.y+1);x.restore();return;}
+    if(b.number!=null&&IM.numberBalls.complete&&IM.numberBalls.naturalWidth>0){const tile=IM.numberBalls.naturalWidth/5;x.drawImage(IM.numberBalls,b.column*tile,0,tile,IM.numberBalls.naturalHeight,b.position.x-r,b.position.y-r,r*2,r*2);x.save();x.textAlign='center';x.textBaseline='middle';x.font='800 '+Math.round(r*1.15)+'px "Baloo 2"';x.fillStyle=TC[b.column][2];x.fillText(String(b.number),b.position.x,b.position.y+1);x.restore();return;}
     const F = this.ballFrames; if (F) { const i = ((Math.floor(b.position.x / 4) % F.length) + F.length) % F.length; x.drawImage(F[i], b.position.x - r, b.position.y - r, r * 2, r * 2); }
-    else { x.save(); x.translate(b.position.x, b.position.y); x.rotate(b.angle); if (IM.ball.complete) x.drawImage(IM.ball, -r, -r, r * 2, r * 2); x.restore(); } }
+    else { x.save(); x.translate(b.position.x, b.position.y); x.rotate(b.angle); if (IM.ball.complete&&IM.ball.naturalWidth>0) x.drawImage(IM.ball, -r, -r, r * 2, r * 2); x.restore(); } }
   save(bal) { const s = this.state;
     const cloud=window.KingRicoCloud;
     if(cloud?.enabled) {cloud.settings({fingoBetIdx:s.betIdx,sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2});return;}
@@ -457,6 +484,7 @@ class Component extends DCLogic {
     this._cloudRequest=true;this.setState({ending:true});
     try{
       const r=cloud?.enabled?cloud.player?.fingoRound:null;
+      if(r&&fromLink!==true&&r.id!==this.state.roundId)throw {code:'king-rico/round-conflict'};
       if(r)await cloud.fingo('cancel',r.betUnits/100,r.id,r.used);
       clearInterval(this._ri);[this._t1,this._t2,this._markTimer].forEach(clearTimeout);
       this._cardDrop=null;this._cloudDrop=null;this._reviewedRoll=null;
@@ -674,7 +702,7 @@ class Component extends DCLogic {
     return { tierDots, leftInTier, hasNext, nextText: hasNext ? fmt(bet * values[drop]) : '', prizeBg: 'linear-gradient(180deg, #fff6c8, ' + TCOL[cur] + ')', showBetChip: !s.active }; }
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
-  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge,legacyNotice:!!this.state.legacyNotice,resumeLegacy:this.resumeLegacy,replaceLegacy:this.replaceLegacy};}
+  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge,artBlocked:!this.state.artReady,artError:!!this.state.artError,artMessage:this.state.artError?'Não foi possível carregar as imagens. Tente novamente.':'Preparando o tabuleiro…',prepareArt:this.prepareArt,legacyNotice:!!this.state.legacyNotice,resumeLegacy:this.resumeLegacy,replaceLegacy:this.replaceLegacy};}
   _rv() {
     const s = this.state, txt = fmt(s.balance), card = s.card, wl = s.winLine || [];
     const cells = card.nums.map((n, i) => { const m = card.marks[i], free = n === 0, inWin = wl.includes(i);
@@ -701,7 +729,7 @@ class Component extends DCLogic {
       topBalls:[0,1,2,3,4].map(c=>{const fin=shown&&(!rolling||c<s.revealed),n=shown?(fin?s.slots[c]:s.rollNums[c]):COLS[c],chosen=s.selectedColumn===c&&['launching','falling'].includes(s.phase);const useful=fin&&this.useful(n,c);return {index:String(c),text:String(n),useful,pos:(-c*52)+'px',color:TC[c][2],opacity:chosen?0:(fin&&!useful?0.42:1),filter:fin&&!useful?'grayscale(.85)':'none',shadow:useful?'0 0 0 3px #087c38,0 0 0 6px #ffda42,0 0 16px #ffdc6577':'0 2px 5px #0006'};}),
       launching:s.phase==='launching',launchShift:(6.8+ENTRY_CENTERS[s.selectedColumn||0]*.97-TOP_BALL_X(s.selectedColumn||0))+'px',launchLeft:(TOP_BALL_X(s.selectedColumn||0)-26)+'px',launchPos:(-(s.selectedColumn||0)*52)+'px',launchText:s.slots?.[s.selectedColumn]||'',launchColor:TC[s.selectedColumn||0][2],
       buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
-      showEndButton:s.active&&!['rolling','launching','falling','won'].includes(s.phase),askEndRound:this.askEndRound,endRound:this.endRound,keepRound:this.keepRound,endConfirm:!!s.endConfirm,ending:!!s.ending,endLabel:s.ending?'ENCERRANDO…':'ENCERRAR',canEndCard:s.cardMode!=='win',showSpin:canSpin&&!this._freshLink,countOp:1,boardBackground:"url('"+(['rolling','launching','falling','won'].includes(s.phase)?'assets/fingo/board-lit.webp':'assets/fingo/board-off.webp')+"') 0 0 / 100% 100% no-repeat", ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
+      bucketVisibility:s.cardOpen?'hidden':'visible',showGiveUp:s.cardOpen&&s.active&&!s.win&&!this._cloudRequest&&!['rolling','launching','falling','won'].includes(s.phase),showEndButton:s.active&&!['rolling','launching','falling','won'].includes(s.phase),askEndRound:this.askEndRound,endRound:this.endRound,keepRound:this.keepRound,endConfirm:!!s.endConfirm,ending:!!s.ending,endLabel:s.ending?'ENCERRANDO…':'ENCERRAR',canEndCard:s.cardMode!=='win',showSpin:canSpin&&!this._freshLink,countOp:1,boardBackground:"url('"+(['rolling','launching','falling','won'].includes(s.phase)?'assets/fingo/board-lit.webp':'assets/fingo/board-off.webp')+"') 0 0 / 100% 100% no-repeat", ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand:s.cardVersion<1&&s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
       lucky: !!s.lucky, luckyText: s.lucky || '', luckySize: s.lucky === 'FINGO!' ? '64px' : '48px', confetti: s.conf,
       onSpin: this.onSpin, ballsLeft: String(s.balls), spinText: String(s.balls), spinOp: canSpin ? 1 : 0.55, spinAnim: canSpin && s.used > 0 ? 'fgPulse 1.4s ease-in-out infinite' : 'none',

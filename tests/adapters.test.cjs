@@ -152,6 +152,17 @@ test('Fingo explains a restored old round without discarding its stake and opens
  f.replaceLegacy();await f.endRound();
  assert.equal(calls,1);assert.equal(f.state.balance,997.5);assert.equal(f.state.betOpen,true);assert.equal(f.state.cardVersion,2);assert.equal(f.state.payoutVersion,3);assert.equal(f.state.legacyNotice,false);
 });
+test('Fingo waits for decoded art and allows retry after an image fails without touching the wallet',async()=>{
+ const {instance:f,context}=component('Fortune Fingo.dc.html',{enabled:true});let fail=true;
+ context.Image=class {naturalWidth=100;decode(){return Promise.resolve();}set src(value){if(fail&&value.includes('counter-plaque'))this.onerror();else this.onload();}};
+ await f.prepareArt();assert.equal(f.state.artReady,false);assert.equal(f.state.artError,true);assert.equal(f.state.balance,1000);
+ fail=false;await f.prepareArt();assert.equal(f.state.artReady,true);assert.equal(f.state.artError,false);assert.equal(f.state.balance,1000);
+});
+test('Fingo give-up never cancels a newer round created in another tab',async()=>{
+ let calls=0,errors=0;const cloud={enabled:true,player:{balance:990,settings:{},fingoRound:{id:'new-round',betUnits:1000,used:0}},fingo:async()=>{calls++;},error:e=>{assert.equal(e.code,'king-rico/round-conflict');errors++;}};
+ const {instance:f}=component('Fortune Fingo.dc.html',cloud);f.state.roundId='old-round';
+ await f.endRound();assert.equal(calls,0);assert.equal(errors,1);assert.equal(cloud.player.fingoRound.id,'new-round');assert.equal(cloud.player.balance,990);
+});
 test('Fingo does not change the wallet or roll locally if its cloud request fails',async()=>{
  let errors=0;
  const player={balance:1000,settings:{},fingoRound:null};

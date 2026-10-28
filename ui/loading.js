@@ -25,6 +25,7 @@
     const mounted=game==='home'
       ? document.querySelector('[data-screen-label="Home"]')
       : hooks[game] ? window[hooks[game]] : document.querySelector('[data-screen-label],#game');
+    if(game==='fingo' && mounted && !mounted.state?.artReady && !mounted.state?.artError)return;
     if(mounted && !paint)paint=requestAnimationFrame(()=>requestAnimationFrame(dismiss));
   }
   retry.addEventListener('click',()=>location.reload());

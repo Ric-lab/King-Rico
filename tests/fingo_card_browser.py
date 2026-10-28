@@ -24,6 +24,12 @@ def spin(page,row=0):
     page.get_by_role('region',name='Sua cartela',exact=True).wait_for(state='visible',timeout=20000)
     assert page.locator('[data-fingo-cell]').count()==25
     assert page.locator('[data-fingo-top-ball]').count()==5
+    page.locator('[data-fingo-free-icon]').wait_for(state='visible')
+    page.wait_for_function('document.querySelector("[data-fingo-free-icon]")?.naturalWidth>0')
+    assert page.locator('[data-fingo-free-icon]').get_attribute('src').startswith('data:image/webp;base64,')
+    assert page.locator('[data-fingo-cell="12"]').get_attribute('aria-label')=='King Rico, coringa livre'
+    assert page.locator('[data-fingo-bucket]:visible').count()==0
+    assert page.get_by_role('button',name='DESISTIR',exact=True).is_visible()
 
 def drop(page,column):
     page.bring_to_front()
@@ -98,7 +104,7 @@ def check_fingo_card(browser,login,restored,claim_gift,observer):
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('response',lambda r:missing.append(r.url) if r.status==404 else None)
     page.goto(BASE+'/Home.dc.html');login(page,'fingo-card-'+uuid.uuid4().hex[:12]);claim_gift(page)
-    uid=page.evaluate('KingRicoCloud.uid');after_win=play_fingo_card(page,uid,restored)
+    uid=page.evaluate('KingRicoCloud.uid');check_fingo_assets(page,uid,restored);after_win=play_fingo_card(page,uid,restored)
     install_draws(page)
     page.evaluate("window.__fingoEvents=[];const track=KingRicoCloud.track;KingRicoCloud.track=(name,data)=>{if(name==='fingo_step')__fingoEvents.push(data);return track?.(name,data);}")
     spin(page,.25);drop(page,0);acknowledge_mark(page)
@@ -128,7 +134,29 @@ def check_fingo_card(browser,login,restored,claim_gift,observer):
     assert not errors,errors
     assert not missing,missing
     context.close()
-    return {'fingo_card_25_cells':True,'saved_draw_and_card':True,'single_stake':True,'aim_consult_launch':True,'mark_reopens_card':True,'miss_stays_on_plinko':True,'quina_and_single_prize':True,'refresh_and_two_tabs':True,'shared_wallet':True,'card_mark_telemetry':True,'different_gold_matches_physical_bucket':True,'free_center':True,'console_errors':errors}
+    return {'fingo_card_25_cells':True,'saved_draw_and_card':True,'single_stake':True,'aim_consult_launch':True,'mark_reopens_card':True,'miss_stays_on_plinko':True,'quina_and_single_prize':True,'refresh_and_two_tabs':True,'shared_wallet':True,'card_mark_telemetry':True,'different_gold_matches_physical_bucket':True,'free_center':True,'asset_failure_and_retry_without_bet':True,'give_up_without_refund_or_new_charge':True,'card_without_buckets':True,'console_errors':errors}
+
+def check_fingo_assets(page,uid,restored):
+    before=page.evaluate('KingRicoCloud.player.balance');pending=[];hold=[True]
+    def art(route):
+        if hold[0]:pending.append(route)
+        else:route.continue_()
+    page.route('**/assets/fingo/counter-plaque.webp*',art)
+    page.goto(BASE+'/fingo');restored(page,uid);page.wait_for_function('__fg?.engine&&__fg.state.betOpen')
+    assert not page.evaluate('__fg.state.artReady')
+    assert page.get_by_role('button',name='JOGAR',exact=True).is_disabled()
+    assert page.evaluate('KingRicoCloud.player.balance')==before
+    assert page.evaluate('KingRicoCloud.player.fingoRound') is None
+    hold[0]=False
+    for route in pending:route.abort('failed')
+    page.wait_for_function('__fg.state.artError')
+    page.get_by_text('Não foi possível carregar as imagens. Tente novamente.',exact=True).wait_for(state='visible')
+    page.get_by_role('button',name='TENTAR NOVAMENTE',exact=True).click()
+    page.wait_for_function('__fg.state.artReady&&!__fg.state.artError')
+    page.wait_for_selector('[data-fingo-art-loading]',state='detached')
+    assert page.get_by_role('button',name='JOGAR',exact=True).is_enabled()
+    assert page.evaluate('KingRicoCloud.player.balance')==before
+    page.unroute('**/assets/fingo/counter-plaque.webp*',art)
 
 def check_fingo_cancel(page,uid,restored):
     page.goto(BASE+'/fingo');restored(page,uid);page.wait_for_function('__fg?.engine')
@@ -140,11 +168,21 @@ def check_fingo_cancel(page,uid,restored):
     assert page.locator('[data-fingo-prize]').count()==0
     assert page.locator('[data-fingo-board]').count()==1
     assert page.locator('[data-screen-label="Fortune Fingo"]').evaluate('e=>getComputedStyle(e).backgroundImage')=='none'
-    page.get_by_role('button',name='Abrir menu',exact=True).click();page.get_by_role('button',name='Nova cartela',exact=True).click()
+    page.evaluate('__fg.openCard()')
+    page.wait_for_function('__fg.state.cardOpen')
+    for width,height in [(375,667),(390,844),(430,932)]:
+        page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(250)
+        give_up=page.get_by_role('button',name='DESISTIR',exact=True);box=give_up.bounding_box()
+        assert box['height']>=44 and box['y']+box['height']<height and box['x']>=0 and box['x']+box['width']<=width,box
+        assert page.locator('[data-fingo-bucket]:visible').count()==0
+        icon=page.locator('[data-fingo-free-icon]')
+        assert icon.is_visible() and icon.evaluate('e=>e.complete&&e.naturalWidth>0')
+        page.screenshot(path='/tmp/fingo-card-give-up-'+str(width)+'.png')
+    page.get_by_role('button',name='DESISTIR',exact=True).click()
     modal=page.get_by_role('dialog',name='Encerrar cartela',exact=True)
     modal.get_by_role('button',name='CONTINUAR JOGANDO',exact=True).click()
     assert page.evaluate('KingRicoCloud.player.fingoRound')==saved
-    page.get_by_role('button',name='Abrir menu',exact=True).click();page.get_by_role('button',name='Nova cartela',exact=True).click()
+    page.get_by_role('button',name='DESISTIR',exact=True).click()
     modal.get_by_role('button',name='ENCERRAR',exact=True).click()
     page.wait_for_function('!KingRicoCloud.player.fingoRound&&!__fg.state.active&&!__fg.state.endConfirm')
     assert page.evaluate('KingRicoCloud.player.balance')==before
@@ -168,4 +206,4 @@ def check_fingo_cancel(page,uid,restored):
         assert counter['y']>=60 and counter['y']+counter['height']<height
         assert page.locator('[data-fingo-bucket]').count()==5
         page.screenshot(path='/tmp/fingo-clean-'+str(width)+'.png')
-    return {'cancel_card_and_link':True,'cancel_without_refund_or_new_charge':True,'next_card_survives_normal_reload':True,'single_backdrop_and_board':True,'prize_badge_removed':True}
+    return {'cancel_card_and_link':True,'cancel_without_refund_or_new_charge':True,'next_card_survives_normal_reload':True,'single_backdrop_and_board':True,'prize_badge_removed':True,'give_up_on_card_three_sizes':True,'card_has_visible_embedded_free_king':True,'buckets_hidden_on_card':True}
