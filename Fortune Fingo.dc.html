@@ -26,6 +26,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 .fg-card-control:not(:disabled):active [data-fingo-card-face]{transform:translateY(2px)}
 .fg-spin{--kr-button-top:#f47b59;--kr-button-mid:#ca342d;--kr-button-bottom:#941d27;--kr-button-edge:#772015;border:3px solid #ffe49d;border-radius:22px;box-shadow:0 0 0 3px #b58122,0 6px 0 #633608,inset 0 2px 0 #ffb88d,inset 0 -4px 0 #8b1a2666;color:#fff3c4;text-shadow:0 2px 0 #771d1c}
 .fg-spin:active:not(:disabled){box-shadow:0 0 0 3px #b58122,0 2px 0 #633608,inset 0 2px 3px #8b1a2666}
+.fg-blue{--kr-button-top:#66bcff;--kr-button-mid:#2482df;--kr-button-bottom:#1454aa;--kr-button-edge:#103e82;box-shadow:0 0 0 3px #b58122,0 6px 0 #633608,inset 0 2px 0 #b9e6ff,inset 0 -4px 0 #103e8266;text-shadow:0 2px 0 #103e82}
+.fg-blue:active:not(:disabled){box-shadow:0 0 0 3px #b58122,0 2px 0 #633608,inset 0 2px 3px #103e8266}
 .fg-purple{--kr-button-top:#bd85f6;--kr-button-mid:#8a3ed2;--kr-button-bottom:#6720ad;--kr-button-edge:#41116e}
 @keyframes fgReadyGlow {0%,100%{filter:brightness(1)}50%{filter:brightness(1.12)}}
 @keyframes fgBingoInk {from{clip-path:circle(0% at 50% 50%)}to{clip-path:circle(78% at 50% 50%)}}
@@ -106,8 +108,8 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     <!-- GIRAR flutuante sobre o tabuleiro (some durante a queda) -->
     <sc-if value="{{ showSpin }}" hint-placeholder-val="{{ true }}">
       <div style="position: absolute; z-index: 8; left: 0; right: 0; top: 486px; display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; animation: fgPop .25s ease-out;">
-        <button type="button" onClick="{{ onSpin }}" aria-label="Girar, {{ playsLabel }}" class="kr-button fg-spin" style="pointer-events:auto;position:relative;height:78px;min-width:236px;justify-content:center;padding:0 30px;display:flex;align-items:center;cursor:pointer;">
-          <span style="font-family:'Rammetto One','Baloo 2',sans-serif;font-size:28px;color:#fff3c4;text-shadow:0 2px 0 #771d1c;">GIRAR</span>
+        <button type="button" onClick="{{ onSpin }}" aria-label="Girar, {{ playsLabel }}" class="kr-button fg-spin fg-blue" style="pointer-events:auto;position:relative;height:78px;min-width:236px;justify-content:center;padding:0 30px;display:flex;align-items:center;cursor:pointer;">
+          <span style="font-family:'Rammetto One','Baloo 2',sans-serif;font-size:28px;color:#fff3c4;text-shadow:inherit;">GIRAR</span>
         </button>
       </div>
     </sc-if>
@@ -122,7 +124,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         </div>
         <div role="status" style="font-size:19px;line-height:1.2;text-align:center;color:#fff4cc;min-height:38px;display:flex;align-items:center;">{{ cardNote }}</div>
         <sc-if value="{{ autoCardReturn }}" hint-placeholder-val="{{ false }}"><div style="color:#fff4cc;font-size:18px;margin-top:6px;">Voltando ao Plinko…</div></sc-if>
-        <sc-if value="{{ showCardAction }}" hint-placeholder-val="{{ false }}"><button class="kr-button fg-spin" onClick="{{ continueCard }}" style="margin-top:auto;min-width:236px;height:64px;min-height:64px;padding:8px 18px;font-size:23px;">{{ cardAction }}</button></sc-if>
+        <sc-if value="{{ showCardAction }}" hint-placeholder-val="{{ false }}"><button class="{{ cardActionClass }}" onClick="{{ continueCard }}" style="margin-top:auto;min-width:236px;height:64px;min-height:64px;padding:8px 18px;font-size:23px;">{{ cardAction }}</button></sc-if>
       </section>
     </sc-if>
 
@@ -550,6 +552,7 @@ class Component extends DCLogic {
       markInkAnimation:'fgBingoInk '+MARK_TIMING.paint+'ms '+MARK_TIMING.paintDelay+'ms ease-out both',showCardAction:!['aim','marked'].includes(s.cardMode),autoCardReturn:s.cardMode==='marked',showMarkNumber:reviewing&&s.justMarked>=0,cardGap:s.cardMode==='consult'?'5px':'8px',cardTop:reviewing?'277px':'303px',cardBottom:reviewing?'176px':'120px',cardTitleShift:reviewing?'-170px':'0px',boardVisibility:s.cardOpen&&reviewing?'hidden':'visible',cardTitle:s.cardMode==='win'?'QUINA!':s.cardMode==='marked'?'ACERTOU!':'SUA CARTELA',
       cardNote:s.cardMode==='win'?'Você completou uma linha!':s.cardMode==='marked'?s.card.nums[s.justMarked]+' marcado na sua cartela.':s.cardMode==='aim'?'Escolha a entrada. Vale o dourado onde cair.':best.n>=3?(best.n===4?'Falta 1':'Faltam '+(5-best.n))+' para fechar a linha em destaque.':'Feche uma linha, coluna ou diagonal.',
       cardAction:s.cardMode==='win'?'RECEBER':s.cardMode==='marked'?'PRÓXIMA BOLA':'VOLTAR AO PLINKO',
+      cardActionClass:s.cardMode==='consult'?'kr-button fg-spin fg-blue':'kr-button fg-spin',
       cardDraw:slots.map((n,c)=>({text:String(n),index:String(c),color:TH[c],gold:(reviewing?c===s.landed:this.useful(n,c))?'3px solid #ffd257':'3px solid transparent',opacity:(reviewing?c===s.landed:this.useful(n,c))?1:.45})),
       cardCells:card.nums.map((n,i)=>{const free=n===0,marked=card.marks[i],paint=marked&&!free&&reviewing&&s.justMarked===i,available=s.cardMode==='aim'&&slots.includes(n)&&!marked&&!free;return {free,available,paint,numberAnim:paint?'fgBingoNumber '+MARK_TIMING.paint+'ms '+MARK_TIMING.paintDelay+'ms both':'none',checkAnim:paint?'fgBingoCheck 180ms '+(MARK_TIMING.paintDelay+MARK_TIMING.paint-100)+'ms both':'none',opacity:marked||available?1:.72,text:free?'':String(n),pick:()=>this.pickCardCell(i),disabled:!available,cursor:available?'pointer':'default',index:String(i),label:free?'King Rico, coringa livre':n+(marked?', marcado':available?', disponível nos tubos':''),color:available?'#38220d':marked?'#fff9df':'#655f4f',bg:available?'linear-gradient(#fffbb5,#ffe342 55%,#ffc928)':paint?'#ede8d8':marked?'linear-gradient(#24874b,#12532b)':'#ede8d8',border:available?'3px solid #fffdf0':near.includes(i)?'2px solid #d49620':'2px solid #d8bb75',shadow:s.winLine?.includes(i)?'0 0 15px #ffd257':available?'0 0 0 3px #ecaa08,0 0 18px #ffdf63bb,inset 0 -4px 0 #b9791966':'inset 0 -3px 0 #9d6c2922',anim:paint?'none':available?'fgReadyGlow 1.2s ease-in-out infinite':'none',check:marked&&!free};})};
   }
