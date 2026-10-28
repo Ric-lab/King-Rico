@@ -99,7 +99,7 @@ test('Fingo records a miss before animation and rejects forged steps and bets du
   m.setRng(()=>{throw Error('A lost response cannot redraw the ball');});
   assert.equal((await call(id)).replayed,true);
   const restored=(await call(request({action:'bootstrap'}))).player.fingoRound;
-  assert.equal(restored.used,1);assert.equal(restored.slots,null);assert.deepEqual(restored.marks,[]);
+  assert.equal(restored.used,1);assert.equal(restored.slots,null);assert.deepEqual(restored.marks,[12]);
 });
 test('an exhausted wallet recharges after the daily gift, keeps cents and only credits once',async()=>{
   const m=memory(),call=m.client('recharge');await call(request({action:'bootstrap'}));
@@ -441,4 +441,15 @@ test('Fingo cancels a pending or idle paid card without refund, reward, or repla
  m.advance(350);await call(request({...next,move:'drop',used:0,selected:0}));
  const idle=await call(request({...next,move:'cancel',used:1}));assert.equal(idle.player.fingoRound,null);assert.equal(idle.player.balance,980);
  await assert.rejects(call(request({...next,move:'cancel',used:1})),{code:'king-rico/round-conflict'});
+});
+
+
+test('Fingo keeps the free center and credits a different golden number exactly once',async()=>{
+ let draws=rollDraws(0);const m=memory(()=>draws.shift()??0),call=m.client('other-gold');await call(request({action:'bootstrap'}));
+ const base={action:'fingo',game:'fingo',bet:10,roundId:randomUUID()};
+ const roll=await call(request({...base,move:'roll',used:0}));assert.equal(roll.outcome.cardVersion,2);assert.deepEqual(roll.outcome.marks,[12]);
+ m.advance(350);draws=[0,.99,0];const move=request({...base,move:'drop',used:0,selected:0});
+ const hit=await call(move);assert.equal(hit.outcome.bin,2);assert.equal(hit.outcome.mark,2);assert.deepEqual(hit.player.fingoRound.marks,[12,2]);
+ assert.equal(hit.player.balance,990);m.setRng(()=>{throw Error('No new draw on replay');});
+ assert.equal((await m.client('other-gold')(move)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,990);
 });

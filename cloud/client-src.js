@@ -82,7 +82,7 @@ else {
       }
       if(data.action==='fingo') {
         Cloud.track?.('fingo_step',{game:'fingo',move:data.move,ballsUsed:response.outcome.used,
-          success:response.outcome.cardVersion===1 ? response.outcome.mark>=0 : response.outcome.bin>=0 && response.outcome.slots[response.outcome.bin]===response.outcome.targets[response.outcome.bin],operationId:data.requestId});
+          success:response.outcome.cardVersion>=1 ? response.outcome.mark>=0 : response.outcome.bin>=0 && response.outcome.slots[response.outcome.bin]===response.outcome.targets[response.outcome.bin],operationId:data.requestId});
         if(response.outcome.ended) Cloud.track?.('spin_settled',{game:'fingo',bet:data.bet,payout:response.outcome.winUnits/100,
           specialRound:false,operationId:data.roundId});
       }

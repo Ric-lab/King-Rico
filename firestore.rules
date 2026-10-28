@@ -78,7 +78,7 @@ service cloud.firestore {
     function operation(o) {
       return o.keys().hasAll(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
         && o.keys().hasOnly(['action','game','selected','fingerprint','betUnits','winUnits','result','createdAt','rulesVersion'])
-        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10']
+        && o.createdAt == request.time && o.rulesVersion in ['2026-10-12-spark-v1','2026-10-13-spark-v2','2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11']
         && o.fingerprint is string && o.fingerprint.size() <= 500
         && o.betUnits is int && o.winUnits is int && o.winUnits >= 0 && o.result is map;
     }
@@ -86,7 +86,7 @@ service cloud.firestore {
       let t = o.result.outcome.target;
       let selected = o.selected;
       return t is int && t >= 0 && t <= 12 && o.winUnits == o.betUnits *
-        (t == selected ? selected == 0 ? 25 : 10 : selected != 0 && t != 0 && selected % 2 == t % 2 ? (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? 2 : 5) : 0);
+        (t == selected ? selected == 0 ? 25 : 10 : selected != 0 && t != 0 && selected % 2 == t % 2 ? (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? 2 : 5) : 0);
     }
     function circusBank(p, old, o) {
       let x=o.result.outcome; let count=x.res.peach.size();
@@ -195,9 +195,9 @@ service cloud.firestore {
         // affectedKeys above already preserves bonuses, consent and every other saved game.
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
-        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? 12 : 11)
-            && (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
-          : o.selected == -1 && (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))
+        && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? 12 : 11)
+            && (o.rulesVersion in ['2026-10-19-spark-v3','2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
+          : o.selected == -1 && (o.rulesVersion in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))
         && o.result.keys().hasOnly(['player','game','bet','balanceBefore','balanceDebited','outcome','baseBalance'])
         && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
         && o.result.balanceBefore == old.balanceUnits / 100.0
@@ -337,26 +337,27 @@ service cloud.firestore {
       let preferences=p.settings;
       let prior=old.get('fingoRound',null);
       let first=prior == null;
-      let r=first ? {'id':x.roundId,'betUnits':x.betUnits,'targets':x.targets,'marks':[],'used':0,'slots':null} : prior;
+      let r=first ? {'id':x.roundId,'betUnits':x.betUnits,'targets':x.targets,'marks':o.rulesVersion == '2026-10-28-fingo-free-v11' ? [12] : [],'used':0,'slots':null,'cardVersion':o.rulesVersion == '2026-10-28-fingo-free-v11' ? 2 : 1} : prior;
       let card=x.targets;
       let marks=x.marks;
       let slots=x.slots;
       let used=x.used;
-      return o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] && o.action == 'fingo' && o.game == 'fingo'
+      return o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] && o.action == 'fingo' && o.game == 'fingo'
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','fingoRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['fingoBetIdx'])
         && preferences.fingoBetIdx is int && preferences.fingoBetIdx >= 0 && preferences.fingoBetIdx <= 9
         && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.fingoBetIdx]
         && x.keys().hasOnly(['move','roundId','betUnits','targets','marks','used','slots','bin','mark','ended','winUnits','payoutVersion','cardVersion'])
-        && x.cardVersion == 1 && x.payoutVersion == (first ? (o.rulesVersion == '2026-10-27-fingo-double-v10' ? 3 : 2) : r.payoutVersion) && x.move in ['roll','drop'] && x.ended is bool && x.bin is int
+        && x.cardVersion == r.cardVersion && x.payoutVersion == (first ? (o.rulesVersion in ['2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? 3 : 2) : r.payoutVersion) && x.move in ['roll','drop'] && x.ended is bool && x.bin is int
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$') && x.roundId == r.id
         && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
-        && card == r.targets && (!first || fingoNumbers(card))
-        && marks is list && marks.size() <= 25 && used is int && used >= 0 && used <= 30
+        && (first ? fingoNumbers(card) : card == r.targets)
+        // Exact mark-array equality below preserves type, uniqueness and bounds.
+        && used is int
         && (x.move == 'roll' ? r.slots == null && used == r.used && used < 30 && marks == r.marks && x.mark == -1
           && o.selected == -1 && x.bin == -1 && !x.ended && x.winUnits == 0 && o.winUnits == 0 && fingoNumbers(slots) : !first && fingoCardDrop(x,r,o))
-        && p.get('fingoRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'targets':card,'marks':marks,'used':used,'slots':x.move == 'roll' ? slots : null,'payoutVersion':x.payoutVersion,'cardVersion':1})
+        && p.get('fingoRound',null) == (x.ended ? null : {'id':x.roundId,'betUnits':x.betUnits,'targets':card,'marks':marks,'used':used,'slots':x.move == 'roll' ? slots : null,'payoutVersion':x.payoutVersion,'cardVersion':x.cardVersion})
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(300,'ms'))
@@ -379,7 +380,7 @@ service cloud.firestore {
     }
     function fingo(p,old,o) {
       let r=old.get('fingoRound',null);
-      return o.result.outcome.move == 'cancel' ? fingoCancel(p,old,o) : ((r == null ? o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] : r.get('cardVersion',0) == 1)
+      return o.result.outcome.move == 'cancel' ? fingoCancel(p,old,o) : ((r == null ? o.rulesVersion in ['2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] : r.get('cardVersion',0) in [1,2])
         ? fingoCard(p,old,o) : fingoTargets(p,old,o));
     }
     function penalty(p, old, o) {
@@ -469,7 +470,7 @@ service cloud.firestore {
       let first = previous == null;
       let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'step':0,'popped':[]} : previous;
       let prize = x.step > 0 ? int(x.betUnits * [120,150,200,250,300,400,500,800,1200,2000][x.step-1] / 100) : 0;
-      let protected = first ? o.rulesVersion in ['2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] : r.get('ladderVersion',0) == 2;
+      let protected = first ? o.rulesVersion in ['2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] : r.get('ladderVersion',0) == 2;
       let round = {'id':x.roundId,'betUnits':x.betUnits,'step':x.step,'popped':x.popped};
       return o.action == 'flying' && o.game == 'flying' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly(['balanceUnits','settings','flyingRound','lastSpinAt','firstSpinAt','revision','updatedAt','lastOperationId'])
@@ -551,7 +552,7 @@ service cloud.firestore {
     // Fortune 33 uses the same saved-hand slot; target is immutable during a hand.
     function thirtyThreeOpening(r, version) {
       let d=r.deck;
-      return r.target == 33 && (version in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? r.get('winFactor',0) == 208 : !('winFactor' in r)) && (version in ['2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? r.get('dealVersion',0) == 2 : !('dealVersion' in r)) && d is list && d.size() == 52 && d.toSet() == [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51].toSet()
+      return r.target == 33 && (version in ['2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? r.get('winFactor',0) == 208 : !('winFactor' in r)) && (version in ['2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? r.get('dealVersion',0) == 2 : !('dealVersion' in r)) && d is list && d.size() == 52 && d.toSet() == [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51].toSet()
         && r.turn == 1 && r.cursor == 4 && r.phase == 'player'
         && r.player == [d[0],d[2]] && r.dealer == [d[1],d[3]]
         && r.playerHard == d[0]%13+d[2]%13+2 && r.dealerHard == d[1]%13+d[3]%13+2
@@ -724,7 +725,7 @@ service cloud.firestore {
       let o = getAfter(path).data;
       return p.lastOperationId is string && p.lastOperationId.matches('^[0-9a-fA-F-]{36}$')
         && p.lastOperationId != old.lastOperationId && !exists(path) && operation(o)
-        && (o.rulesVersion in ['2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10'] ? !('player' in o.result) : legacyFinancialPlayer(p,o))
+        && (o.rulesVersion in ['2026-10-20-spark-v4','2026-10-22-balance-v5','2026-10-23-guided-v6','2026-10-23-ladder-v7','2026-10-26-session-v8','2026-10-27-fingo-card-v9','2026-10-27-fingo-double-v10','2026-10-28-fingo-free-v11'] ? !('player' in o.result) : legacyFinancialPlayer(p,o))
         && (o.action == 'fingo' ? fingo(p,old,o) : o.action == 'bridge' ? bridge(p,old,o) : o.action == 'race' ? race(p,old,o) : o.action == 'claw' ? claw(p,old,o) : o.action == 'twentyOne' ? twentyOne(p,old,o) : o.action == 'flying' ? flying(p,old,o) : o.action == 'bounce' ? bounce(p, old, o) : o.action == 'clown' ? clown(p, old, o) : o.action == 'penalty' ? penalty(p, old, o) : o.action == 'neck' ? neck(p, old, o) : (o.action == 'recharge' ? recharge(p, old, o) : spin(p, old, o) || bonus(p, old, o)));
     }
     function playerUpdate(uid, p, old) {

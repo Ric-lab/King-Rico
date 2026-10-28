@@ -9,9 +9,10 @@ const useful=(card,marks,n)=>{const i=cardIndex(card,n);return i>=0&&!marks.incl
 const winningLine=marks=>CARD_LINES.find(line=>line.every(i=>marks.includes(i)))||null;
 const STEPS=[1,2,4,7,8];
 function newCard(rng){return Array.from({length:5},(_,c)=>c*15+1+Math.floor(rng()*15));}
-function expandCard(targets){return Array.from({length:25},(_,i)=>{const c=i%5;return c*15+1+(targets[c]-c*15-1+STEPS[c]*Math.floor(i/5))%15;});}
-function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier){
- const targets=previous?.targets||newCard(rng),card=expandCard(targets),marks=[...(previous?.marks||[])];
+function expandCard(targets,version=1){return Array.from({length:25},(_,i)=>{if(version===2&&i===12)return 0;const c=i%5;return c*15+1+(targets[c]-c*15-1+STEPS[c]*Math.floor(i/5))%15;});}
+function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier,requestedVersion=1){
+ const cardVersion=previous?.cardVersion??requestedVersion;
+ const targets=previous?.targets||newCard(rng),card=expandCard(targets,cardVersion),marks=[...(previous?.marks||(cardVersion===2?[12]:[]))];
  const payoutVersion=previous?.payoutVersion??3;
  let used=previous?.used||0,slots,bin=-1,mark=-1;
  if(move==='roll'){
@@ -33,17 +34,22 @@ function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier){
   const hit=rng()<CARD_HIT*(onGold?1:.85),pool=hit?gold:[0,1,2,3,4].filter(c=>!gold.includes(c));
   const near=pool.slice().sort((a,b)=>Math.abs(a-selected)-Math.abs(b-selected));
   bin=hit&&onGold?selected:near[rng()<.7?0:Math.min(1,near.length-1)];
+  // Free-center cards favor the chosen gold, but a different gold also counts.
+  // Keep the same hit draw and preserve saved v1 cards' landing behavior.
+  if(cardVersion===2&&hit&&onGold&&gold.length>1&&rng()>=.7){
+   const others=gold.filter(c=>c!==selected);bin=others[Math.floor(rng()*others.length)];
+  }
   const i=cardIndex(card,slots[bin]);
   if(i>=0&&!marks.includes(i)){mark=i;marks.push(i);}
   used++;
  }
  const won=!!winningLine(marks),ended=won||used===30;
  return {move,roundId,betUnits,targets,marks,used,slots,bin,mark,ended,
-  winUnits:won?Math.round(betUnits*(payoutVersion===3?2:multiplier(used))):0,payoutVersion,cardVersion:1};
+  winUnits:won?Math.round(betUnits*(payoutVersion===3?2:multiplier(used))):0,payoutVersion,cardVersion};
 }
 // Reference policy: prefer a draw that advances the most developed open line.
 function chooseSlot(round){
- const {marks,slots}=round,targets=expandCard(round.targets);
+ const {marks,slots}=round,targets=expandCard(round.targets,round.cardVersion||1);
  let best=-Infinity,selected=0;
  for(let c=0;c<5;c++){
   const i=targets.indexOf(slots[c]);if(i<0||marks.includes(i))continue;

@@ -16,7 +16,7 @@ const FEAT_P_SYM = .14, FEAT_P_WILD = .04, FEAT_MIN = 10, FEAT_SPINS = 5;
 const WHEEL_HIT_P = .095, WHEEL_PAY = 10;
 const units = value => Math.round(value * 100);
 const coins = value => value / 100;
-const RULES_VERSION = '2026-10-27-fingo-double-v10';
+const RULES_VERSION = '2026-10-28-fingo-free-v11';
 const {twentyOne} = require('./twenty-one.cjs');
 const {thirtyThree} = require('./thirty-three.cjs');
 const {claw} = require('./claw.cjs');
@@ -63,8 +63,8 @@ function penalty(bet, previous, move, roundId, quality = 0, rng = random) {
 }
 const fingoCard=require('./fingo-card.cjs');
 function fingo(bet,previous,move,roundId,selected,rng=random){
- return !previous||previous.cardVersion===1
-  ? fingoCard.cardRound(units(bet),previous,move,roundId,selected,rng,n=>fingoMultiplier(n,2))
+ return !previous||previous.cardVersion>=1
+  ? fingoCard.cardRound(units(bet),previous,move,roundId,selected,rng,n=>fingoMultiplier(n,2),2)
   : fingoLegacy(bet,previous,move,roundId,selected,rng);
 }
 function fingoLegacy(bet, previous, move, roundId, selected, rng = random) {

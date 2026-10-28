@@ -241,7 +241,7 @@ test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and
     const x={...engine.fingo(2.5,old.fingoRound,'drop',base.roundId,0,()=>0),...changes};
     const next={...old,balanceUnits:old.balanceUnits+x.winUnits,revision:old.revision+1,lastOperationId:id,
       updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),
-      fingoRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,targets:x.targets,marks:x.marks,used:x.used,slots:x.move==='roll'?x.slots:null,...(x.payoutVersion>=2?{payoutVersion:x.payoutVersion}:{}),...(x.cardVersion===1?{cardVersion:1}:{})},...profileChanges};
+      fingoRound:x.ended?null:{id:x.roundId,betUnits:x.betUnits,targets:x.targets,marks:x.marks,used:x.used,slots:x.move==='roll'?x.slots:null,...(x.payoutVersion>=2?{payoutVersion:x.payoutVersion}:{}),...(x.cardVersion>=1?{cardVersion:x.cardVersion}:{})},...profileChanges};
     const batch=writeBatch(c.db);batch.set(ref,next);
     batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'fingo',game:'fingo',selected:x.move==='roll'?-1:0,
       fingerprint:'forged',betUnits:0,winUnits:x.winUnits,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,
@@ -253,7 +253,7 @@ test('Fingo Rules reject rerolls, invented marks, skipped balls, bet changes and
   await forged({move:'roll',bin:-1,used:0,marks:[false,false,false,false,false]});
   await forged({marks:[true,true,true,true,true],ended:true,winUnits:6250});
   await forged({used:21,ended:true});await forged({betUnits:1000});
-  await forged({payoutVersion:0});await forged({payoutVersion:2});await forged({cardVersion:0});await forged({}, {fingoRound:{}});
+  await forged({payoutVersion:0});await forged({payoutVersion:2});await forged({cardVersion:0});await forged({cardVersion:1});await forged({}, {fingoRound:{}});
   await forged({targets:[2,17,32,47,62]});await forged({winUnits:999999});await forged({}, {peaches:4});
   await assertFails(getDoc(doc(c.db,'players','another-fingo-player')));
   await forged({}, {},true); // Same batch shape must accept the unmodified transition.
@@ -274,7 +274,7 @@ test('Fingo Rules accept a first roll with the only golden pipe in any column',a
       fingoRound:null,balanceUnits:100000,lastSpinAt:null}));
     draws=[...Array(5).fill(.5),...Array.from({length:5},(_,i)=>i===column?[0,.5]:[.99,.5]).flat()];
     const rolled=await c.call(request({action:'fingo',game:'fingo',bet:10,roundId:randomUUID(),move:'roll',used:0}));
-    assert.deepEqual(rolled.outcome.slots.flatMap((n,c)=>engine.fingoCard.expandCard(rolled.outcome.targets).includes(n)?[c]:[]),[column]);
+    assert.deepEqual(rolled.outcome.slots.flatMap((n,c)=>engine.fingoCard.expandCard(rolled.outcome.targets,rolled.outcome.cardVersion).includes(n)?[c]:[]),[column]);
     assert.equal(rolled.player.balance,990);
   }
 });
@@ -861,5 +861,35 @@ test('Fingo cancellation ends only the current card with no refund or prize and 
   await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{lastSpinAt:null}));
   const next=request({...base,move:'roll',roundId:randomUUID(),used:0});await c.call(next).catch(e=>{e.message='NEXT: '+e.message;throw e;});
   const replay=await c.call(cancel);assert.equal(replay.replayed,true);assert.equal(replay.player.fingoRound.id,next.roundId);assert.equal(replay.player.balance,980);
+ }
+});
+
+test('Fingo free-center cards persist another golden bucket and replay it without another mark or debit',async()=>{
+ const name='fingo-other-gold-'+randomUUID();let draws=rollDraws(0);
+ const c=await client(name,name,{rng:()=>draws.shift()??0});await c.call(request({action:'bootstrap'}));
+ const base={action:'fingo',game:'fingo',bet:10,roundId:randomUUID()};
+ const rolled=await c.call(request({...base,move:'roll',used:0}));
+ assert.equal(rolled.outcome.cardVersion,2);assert.deepEqual(rolled.outcome.marks,[12]);
+ await new Promise(resolve=>setTimeout(resolve,350));draws=[0,.99,0];
+ const move=request({...base,move:'drop',used:0,selected:0}),hit=await c.call(move);
+ assert.equal(hit.outcome.bin,2);assert.equal(hit.outcome.mark,2);
+ assert.deepEqual(hit.player.fingoRound.marks,[12,2]);assert.equal(hit.player.balance,990);
+ const other=await client(name+'-device',name,{rng:()=>{throw Error('A replay cannot redraw');}});
+ const replay=await other.call(move);assert.ok(replay.replayed);assert.deepEqual(replay.outcome,hit.outcome);
+ assert.equal((await other.call(request({action:'bootstrap'}))).player.fingoRound.cardVersion,2);
+ assert.equal((await getDoc(doc(c.db,'players',c.uid))).data().balanceUnits,99000);
+});
+
+test('Fingo free-center rules accept all twelve quinas and credit fixed 2x once',async()=>{
+ const name='fingo-free-lines-'+randomUUID(),c=await client(name,name,{rng:()=>0});
+ await c.call(request({action:'bootstrap'}));const targets=[1,16,31,46,61],card=engine.fingoCard.expandCard(targets,2);
+ for(const line of engine.fingoCard.CARD_LINES){
+  const i=line.filter(j=>j!==12).at(-1),marks=[...new Set([12,...line.filter(j=>j!==i)])],used=marks.length-1;
+  const slots=[6,21,36,51,64];slots[i%5]=card[i];const roundId=randomUUID();
+  await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{
+   balanceUnits:0,lastSpinAt:null,fingoRound:{id:roundId,betUnits:1000,targets,marks,used,slots,payoutVersion:3,cardVersion:2}}));
+  const move=request({action:'fingo',game:'fingo',bet:10,roundId,move:'drop',used,selected:i%5});
+  const won=await c.call(move);assert.equal(won.outcome.mark,i);assert.equal(won.player.balance,20);assert.equal(won.player.fingoRound,null);
+  assert.ok((await c.call(move)).replayed);
  }
 });

@@ -1,70 +1,65 @@
-# Fingo: cartela e Plinko
+# Fortune Fingo — cartela e Plinko
 
-A nova cartela tem 25 números grandes, sem casa livre. Vence ao completar uma
-linha, coluna ou diagonal de cinco casas. Cada dourado pode ajudar linhas
-diferentes; cinco marcações isoladas não bastam.
+Uma aposta compra até 30 jogadas. Cada sorteio oferece cinco números e pelo
+menos uma opção útil para a cartela. A pessoa escolhe uma entrada na cartela ou
+no bucket; a bola cai no Plinko. Qualquer dourado atingido marca seu próprio
+número, mesmo quando outro foi escolhido. A escolha favorece a entrada desejada,
+sem garantir o número. Linha, coluna ou diagonal completa paga **2× a aposta**,
+incluindo o valor apostado; aposta de 10 recebe 20.
 
-## Fluxo
+Novas partidas usam `cardVersion:2`, com King Rico livre no centro (índice 12).
+Partidas salvas com versão 1 ou com os antigos cinco alvos terminam com sua
+cartela e seus pagamentos originais. A versão da cartela não muda no meio da partida.
 
-1. GIRAR sorteia as cinco opções nos tubos do Plinko atual.
-2. Depois que os cinco números aparecem, a cartela abre com as opções e suas
-   casas disponíveis destacadas. A pessoa consulta pelo tempo que precisar.
-3. LANÇAR volta ao Plinko. A escolha da coluna e o lançamento continuam nele.
-4. Uma marcação reabre a cartela, evidencia a casa alcançada e a linha adiantada.
-   CONTINUAR prepara o próximo sorteio. Um erro fica no Plinko.
-5. QUINA destaca a linha completa. RECEBER abre o aviso do prêmio; o OK mantém
-   o voo de moedas e a contagem animada do saldo já existentes.
+## Apresentação e interação
 
-CARTELA permite consultar novamente antes de lançar. Ela não cobra, não altera
-os números e não consome jogadas. As cinco bolas numeradas aparecem dentro dos buckets. O tabuleiro foi alongado e reposicionado para baixo; o medalhão ampliado mostra as bolas restantes de 30 a 0. A interface se atualiza quando outra aba muda a partida.
+O seletor inicial abre automaticamente e ocupa a largura da tela. Mantém APOSTA
+no letreiro, o valor escolhido com controles grandes e, abaixo, QUINA ×2 e o
+prêmio em destaque. JOGAR confirma a única cobrança e inicia o sorteio.
 
-## Persistência e compatibilidade
+O suporte claro das cinco bolas é inteiro clicável para CARTELA: o mesmo toque
+abre ou fecha a consulta. As bolas preservam o tamanho e têm respiro nas bordas.
+A consulta funciona durante o sorteio, mas fica bloqueada no lançamento e na queda.
+Fechar a seleção mantém os buckets utilizáveis sem refazer o sorteio.
 
-Apenas o primeiro sorteio debita a aposta. As cinco bases da cartela, as marcas,
-os tubos pendentes, a aposta e o contador são gravados no Firestore. Atualizar,
-trocar de página, consultar a cartela ou repetir a requisição preserva esse estado.
-Cada queda é confirmada antes da física; uma resposta repetida não marca nem paga
-novamente. Não há importação de saldo local, novo backend ou Cloud Functions.
+A primeira fileira tem cinco espaços livres iguais, considerando os diâmetros
+dos pinos. Cada espaço tem uma linha curta, centralizada e pintada no feltro.
+A esfera numerada é renderizada com Three.js local. A física apresenta o resultado
+já salvo, inclusive no fim da queda e na recuperação por tempo limite; não usa
+um bucket visual diferente daquele que será marcado.
 
-`cardVersion:1` usa as cinco bases para gerar 25 números por passos coprimos de
-15 em cada coluna. As marcas são índices de 0 a 24. A regra usa a permutação
-inversa para conferir a casa do número alcançado e uma das 12 linhas válidas,
-sem ultrapassar o orçamento de avaliação do Firestore. As bases e a versão
-permanecem imutáveis durante a partida.
+No acerto, o Plinko sai de cena e a cartela reaparece. O número surge em círculo
+branco, fica verde ainda parado e viaja até sua casa, iniciando o preenchimento
+verde. A pausa permite acompanhar a marcação; depois volta ao Plinko com GIRAR,
+sem sorteio automático. Redução de movimento mostra o estado final diretamente.
+Uma quina usa RECEBER e o aviso de prêmio, mantendo voo de moedas e saldo animado.
 
-Partidas pagas sem `cardVersion` concluem o jogo anterior de cinco alvos com as
-chances e a tabela originais. As novas começam no modo 5×5.
+## Persistência e publicação
 
-## Pagamentos e verificação
+Identidade e saldo vêm do mesmo login Google e Firestore dos outros jogos.
+Não se importam moedas do localStorage. Só o primeiro sorteio debita a aposta;
+quedas e sorteios seguintes reutilizam a cartela salva. O resultado é confirmado
+antes da física. Repetições, recarga da página e outra aba preservam os números,
+as marcas, o contador e o saldo, sem duplicar cobranças ou prêmios.
 
-Novas cartelas (`payoutVersion:3`) pagam **2× a aposta** por qualquer quina, da quinta à trigésima bola. Esse é o prêmio total, incluindo a aposta; por exemplo, aposta de 10 recebe 20. Cartelas já pagas (`payoutVersion:2`) mantêm suas faixas originais até terminar. As chances
-da cartela são fixas; não consultam histórico ou saldo. A medição por estratégia
-fica em [ECONOMIA.md](ECONOMIA.md) e nos [dados da amostra](fingo-card-audit.json).
-O retorno observado não é prova de estratégia ótima ou garantia de retorno.
+A regra `2026-10-28-fingo-free-v11` aceita as cartelas novas e mantém clientes e
+partidas antigos compatíveis. Valida a casa pelo número do bucket atingido,
+preserva a versão e confere a quina e o prêmio na mesma transação. Não exige
+Cloud Functions ou plano Blaze. As regras são publicadas pelo publicador REST
+existente antes do Hosting no workflow da main.
 
-- `node --test tests/fingo-card.test.cjs`: 25 números distintos, correspondência
-  entre geração e regra inversa, todas as quinas, escolhas diferentes e erro final.
-- `npm run test:rules`: débito único, todas as faixas e 12 linhas, marcas falsas,
-  cinco casas sem quina, versões antigas, retomada e repetição de operações.
-- Com emuladores e build de emulador: `python3 tests/browser.py --fingo-only`.
-  Exercita Home, consulta, mira, marcação, erro, quina, recebimento, atualização,
-  duas abas e saldo compartilhado.
-- `node scripts/fingo-card-audit.mjs`: 20 mil cartelas por política, semente fixa,
-  sem bônus ou recargas.
+O menu compartilhado oferece NOVA CARTELA com confirmação, sem devolução ou
+nova cobrança. O link de teste `/fingo?nova-cartela=1` encerra apenas a cartela da
+própria conta e consome esse parâmetro uma vez; a navegação normal retoma o progresso.
 
-## Nova cartela e testes
+## Validação
 
-NOVA CARTELA e ENCERRAR CARTELA pedem confirmação e encerram a partida atual,
-sem prêmio, devolução ou novo débito. O cancelamento é uma transação vinculada
-à cartela e ao contador salvos: repetir a requisição não encerra uma cartela nova.
-Funciona também nas cartelas antigas. As demais partidas e o saldo são preservados.
-
-Nos links entregues para o autor testar mudanças, usar `/fingo?nova-cartela=1`.
-Esse link encerra a cartela da própria conta ao abrir e remove o parâmetro depois
-da confirmação do Firestore. Não é um reset global: não altera outras contas.
-A navegação normal e recargas posteriores continuam retomando a partida salva.
-A cada nova entrega de teste, fornecer esse link para não exigir terminar 30 bolas.
-
-A composição usa um único fundo no viewport e um único elemento de tabuleiro,
-sem repetir o cenário no palco interno. O Plinko fica oculto ao abrir a cartela, evitando um tabuleiro aparecendo por trás do outro. O valor de prêmio deixou de aparecer
-sobre o cenário; o pagamento fixo permanece na tabela e no aviso de vitória.
+- `npm test`: regras do motor, adaptadores, transações e build com dependências locais.
+- `npm run test:rules`: Firestore real emulado, repetição entre dispositivos,
+  versões antigas, coringa, outro dourado, marcas falsas e as 12 quinas.
+- Com `npm run build:emulator` e os emuladores ligados:
+  `python3 tests/browser.py --fingo-only`. Exercita Home, aposta, saldo compartilhado,
+  marcação, erro, outro dourado com bucket físico correspondente, prêmio único,
+  atualização durante a queda, duas abas e cancelamento.
+- Gerar `npm run build:production` depois dos testes de integração e conferir o
+  resultado real do workflow em `https://king-rico.web.app/fingo`.
