@@ -111,6 +111,8 @@ jobs:
               detail = ' '.join(report[1:]).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
               print(f'::error title=Diagnóstico Firebase Rules::{detail}')
           PY
+      - name: Limpar versões antigas do Hosting preservando as cinco recentes
+        run: node scripts/cleanup-hosting.mjs --apply
       - name: Publicar o site
         run: npx --no-install firebase deploy --project king-rico --only hosting --non-interactive
       - name: Endereço publicado

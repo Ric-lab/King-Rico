@@ -84,3 +84,14 @@ A barra da Home usa `recharge` com `source: home`: acrescenta 1.000 moedas mesmo
 Nesta etapa não há SDK nem anúncio real. A barra abre uma simulação identificada de anúncio: tela preta, contagem circular de 30 segundos visíveis e retorno automático após confirmar 1.000 moedas. Fechar antes ou recarregar a página durante a contagem não concede moedas. Ocultar a página pausa o tempo. Uma falha na confirmação permite tentar novamente sem repetir a espera, usando a mesma operação pendente. `rechargeCount` continua contando recargas confirmadas; não deve ser usado como métrica de anúncios reais assistidos.
 
 O projeto Android mencionado em `ANDROID.md` não está completo neste checkout. Esta integração cobre o Web; login nativo, certificados SHA e APK são uma etapa posterior.
+
+## Histórico do Hosting no Spark
+
+Antes de publicar, `scripts/cleanup-hosting.mjs --apply` remove versões antigas
+somente de `sites/king-rico`. Preserva as cinco versões mais recentes de cada
+canal e todas as versões ativas, inclusive de canais de prévia. Uploads sem
+publicação só são removidos depois de 24 horas. O canal live fica configurado
+para reter cinco publicações anteriores. Se a versão ativa mudar durante a
+limpeza, ela é interrompida. A rotina não acessa Auth ou Firestore.
+Sem `--apply`, o script apenas lista o plano. Usa as credenciais temporárias do
+workflow existente; não exige chave privada ou mudança para Blaze.

@@ -87,3 +87,7 @@ O King Rico do centro fica incorporado ao HTML de produção e posicionado acima
 dos demais elementos da casa. As molduras usam WebP, reduzindo juntas de 3,6 MB
 para cerca de 380 KB. A partida só é liberada depois que os assets necessários
 carregam e são decodificados; em falha aparece TENTAR NOVAMENTE, sem cobrar aposta.
+
+A moldura e o feltro são uma camada permanente; acender e apagar altera apenas
+a opacidade de uma segunda imagem já montada. O sorteio e a queda não substituem
+o fundo, evitando o intervalo em branco ao trocar a imagem na mesma propriedade.

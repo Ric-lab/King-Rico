@@ -2,6 +2,25 @@
 import re,uuid
 BASE='http://127.0.0.1:5000'
 
+def observe_board(page):
+    page.evaluate('''()=>{
+      window.__boardProbe={node:document.querySelector('[data-fingo-board]'),frames:[],stop:false};
+      const sample=()=>{const p=__boardProbe,n=document.querySelector('[data-fingo-board]');
+        if(p.stop)return;
+        if(['rolling','drop','launching','falling'].includes(__fg.state.phase)){
+          const r=n.getBoundingClientRect(),s=getComputedStyle(n);
+          p.frames.push({phase:__fg.state.phase,same:n===p.node,visible:s.visibility==='visible'&&r.width>0&&r.height>0,background:s.backgroundImage});
+        }requestAnimationFrame(sample);
+      };requestAnimationFrame(sample);
+    }''')
+
+def assert_board_continuity(page):
+    frames=page.evaluate('()=>{__boardProbe.stop=true;return __boardProbe.frames;}')
+    assert len(frames)>30
+    assert all(f['same'] and f['visible'] for f in frames),frames
+    assert len({f['background'] for f in frames})==1
+    assert {'rolling','drop','launching','falling'}<={f['phase'] for f in frames}
+
 def install_draws(page):
     page.evaluate('''()=>{
       if(window.__fingoNative)return;
@@ -76,7 +95,7 @@ def play_fingo_card(page,uid,restored):
     assert page.locator('[data-fingo-plays]').inner_text()=='29'
     # Another tab continues the same saved card; both observe its marks.
     other=page.context.new_page();other.goto(BASE+'/fingo');restored(other,uid);other.wait_for_function('__fg?.engine')
-    install_draws(other);spin(other);drop(other,1);acknowledge_mark(other)
+    install_draws(other);observe_board(other);spin(other);drop(other,1);acknowledge_mark(other);assert_board_continuity(other)
     page.wait_for_function('__fg.state.card.marks[1]&&__fg.state.used===2');other.close();page.bring_to_front()
     if page.get_by_role('region',name='Sua cartela',exact=True).is_visible():page.get_by_role('region',name='Sua cartela',exact=True).get_by_role('button',name='VOLTAR AO PLINKO',exact=True).click()
     install_draws(page)
