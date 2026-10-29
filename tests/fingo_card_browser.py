@@ -47,7 +47,7 @@ def spin(page,row=0):
     page.wait_for_function('document.querySelector("[data-fingo-free-icon]")?.naturalWidth>0')
     assert page.locator('[data-fingo-free-icon]').get_attribute('src').startswith('data:image/webp;base64,')
     assert page.locator('[data-fingo-cell="12"]').get_attribute('aria-label')=='King Rico, coringa livre'
-    assert page.locator('[data-fingo-bucket]:visible').count()==0
+    assert page.locator('[data-fingo-bucket]:visible').count()==5
     assert page.get_by_role('button',name='DESISTIR',exact=True).count()==0
 
 def drop(page,column):

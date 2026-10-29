@@ -20,7 +20,8 @@ prêmio em destaque. JOGAR confirma a única cobrança e inicia o sorteio.
 O suporte claro das cinco bolas é inteiro clicável para CARTELA: o mesmo toque
 abre ou fecha a consulta. As bolas preservam o tamanho e têm respiro nas bordas.
 A consulta funciona durante o sorteio, mas fica bloqueada no lançamento e na queda.
-Enquanto a cartela está aberta, os buckets ficam ocultos. DESISTIR só aparece
+Na seleção automática, os buckets ficam visíveis e permitem escolher a entrada.
+Na consulta manual, ficam ocultos. DESISTIR só aparece
 na base se a pessoa abrir a cartela manualmente; não aparece nas aberturas
 automáticas para escolher ou marcar um número. A opção também fica no menu.
 Fechar a seleção mantém os buckets utilizáveis sem refazer o sorteio. DESISTIR
