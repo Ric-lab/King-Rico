@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./runtime/matter.min.js"></script>
 <script defer src="./runtime/fingo-card.js"></script>
+<script defer src="./runtime/fingo-physics.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -328,26 +329,13 @@ class Component extends DCLogic {
       let last = performance.now(), acc = 0; const tick = now => { acc += Math.min(100, now - last); last = now; while (acc >= 1000 / 60) { this.step(); acc -= 1000 / 60; } this.draw(); this._raf = requestAnimationFrame(tick); }; this._raf = requestAnimationFrame(tick); };
     boot();
   }
-  componentWillUnmount() { this._dead=true;if(this.ball3D){const a=this.ball3D;a.texture.dispose();a.mesh.material.dispose();a.mesh.geometry.dispose();a.renderer.dispose();this.ball3D=null;}this._unwatchCloud?.();if(window.__fg===this) delete window.__fg;window.removeEventListener('resize', this._rs); if (this._ro) this._ro.disconnect(); cancelAnimationFrame(this._raf); clearInterval(this._ri); [this._t1, this._t2, this._ct, this._lt, this._st, this._markTimer].forEach(clearTimeout); }
+  componentWillUnmount() { this._dead=true;if(this.ball3D){const a=this.ball3D;a.texture.dispose();a.mesh.material.dispose();a.mesh.geometry.dispose();a.renderer.dispose();this.ball3D=null;}this._unwatchCloud?.();if(window.__fg===this) delete window.__fg;window.removeEventListener('resize', this._rs); if (this._ro) this._ro.disconnect(); cancelAnimationFrame(this._raf); clearInterval(this._ri); [this._t1, this._t2, this._ct, this._lt, this._st, this._markTimer, this._landReplay, this._removeReplay].forEach(clearTimeout); }
   // ---------- mundo físico (porta de plinkoPhysics.buildStaticWorld) ----------
   dropOutcome(){return this._cloudDrop||(this.state.cardVersion>=1?this._cardDrop:null);}
   initWorld() {
-    const { Engine, Bodies, Composite, Events, Body, Vector } = window.Matter, e = this.engine = Engine.create(); e.world.gravity.y = PC.GRAV;
-    const add = [], wall = 60;
-    // Slanted side walls follow the felt edge (INSET at the top, flush at the buckets).
-    const slant = (side) => { const x0 = side < 0 ? INSET : W - INSET, x1 = side < 0 ? 0 : W, y0 = -60, y1 = H + 40, len = Math.hypot(x1 - x0, y1 - y0), a = Math.atan2(x1 - x0, y1 - y0), nx = Math.cos(a) * side, ny = -Math.sin(a) * side;
-      return Bodies.rectangle((x0 + x1) / 2 + nx * wall / 2, (y0 + y1) / 2 + ny * wall / 2, wall, len, { isStatic: true, angle: -a, label: side < 0 ? 'wall-left' : 'wall-right', friction: 0, restitution: PC.WALL_REST }); };
-    add.push(slant(-1), slant(1), Bodies.rectangle(W / 2, H + 25, W, 50, { isStatic: true, label: 'floor', restitution: 0, friction: 1 }));
-    const pr = W * PC.PEG_R, y0 = 44, y1 = H - 150, sp = W / 6; // Gaps sized for the bigger ball: rows at least 52 px apart so it never wedges between two pegs.
-    let rows = Math.floor((y1 - y0) / 52) + 1; if (rows % 2) rows--; const gy = (y1 - y0) / (rows - 1);
-    this.pegs = []; this.endY = y1; this.gy = gy;
-    // Pegs inset from the walls so none is cut by the frame; odd rows sit halfway between.
-    for (let r = 0; r < rows; r++) { const yy = y0 + r * gy, m = pr + 8 + inset(yy), sp2 = (W - 2 * m) / 6, B = r % 2 === 1, xs = r===0?ENTRY_PEG_XS:B ? [0, 1, 2, 3, 4, 5].map(c => m + sp2 / 2 + c * sp2) : [0, 1, 2, 3, 4, 5, 6].map(c => m + c * sp2);
-      for (const x0 of xs) { const b = Bodies.circle(x0, yy, pr, { isStatic: true, restitution: PC.PEG_REST_L, label: 'peg' }); b.half = x0 <= 0 || x0 >= W; this.pegs.push(b); add.push(b); } }
-    this.funnels = [];
-    for (let i = 1; i <= 4; i++) { const f = Bodies.rectangle(i * BW, H - 46, 12, 92, { isStatic: true, friction: 0, frictionStatic: 0, label: 'funnel', restitution: 0.1 }), cap = Bodies.circle(i * BW, H - 94, 10, { isStatic: true, restitution: 0.5, label: 'funnel' }); add.push(cap); this.funnels.push(f); add.push(f); }
-    for (let i = 0; i < 5; i++) add.push(Bodies.rectangle(i * BW + BW / 2, H - 16, BW + 2, 10, { isStatic: true, isSensor: true, label: 'bin-' + i }));
-    Composite.add(e.world, add);
+    const {Events,Body,Vector}=window.Matter;
+    const world=window.KingRicoFingoPhysics.createWorld(window.Matter),e=this.engine=world.engine;
+    this.pegs=world.pegs;this.funnels=world.funnels;this.endY=world.endY;this.gy=world.gy;
     Events.on(e, 'collisionStart', ev => ev.pairs.forEach(({ bodyA: a, bodyB: b }) => {
       const ball = a.label === 'ball' ? a : b.label === 'ball' ? b : null; if (!ball) return; const o = ball === a ? b : a;
       if (o.label === 'peg') { const n = Vector.normalise(Vector.sub(ball.position, o.position));
@@ -366,6 +354,7 @@ class Component extends DCLogic {
     }));
   }
   step() { const M = window.Matter; if (!this.engine) return; const b = this.ball,committed=this.dropOutcome();
+    if(b?.replay){this.stepReplay(b);return;}
     if (b && !b.done && !b.isSensor) { const tx = b.target * BW + BW / 2, y = b.position.y, x = b.position.x;
       // Steering spread over the whole fall: each frame the sideways speed leans a little toward
       // what is still needed to reach the target over the height left. Small early, firmer low down,
@@ -388,6 +377,22 @@ class Component extends DCLogic {
     M.Engine.update(this.engine, 1000 / 60); if (b && !b.done) { (this.trail = this.trail || []).push({ x: b.position.x, y: b.position.y }); if (this.trail.length > 7) this.trail.shift(); } else this.trail = [];
     if (b && b.isSensor && !b.done) for (let i = 0; i < 5; i++) this.particles.push({ x: b.position.x + (Math.random() - 0.5) * 10, y: b.position.y + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 2, vy: -Math.random() * 3 - 1, life: 1, decay: 0.05 + Math.random() * 0.05, size: 6 + Math.random() * 6, t: 'core' }), i < 2 && this.particles.push({ x: b.position.x, y: b.position.y, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, life: 1, decay: 0.03, size: 2 + Math.random() * 2, t: 'spark' });
     for (let i = this.particles.length - 1; i >= 0; i--) { const p = this.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= p.decay; if (p.life <= 0) this.particles.splice(i, 1); } }
+  stepReplay(ball){
+    if(ball.done)return;
+    const previous=ball.position,index=Math.min(ball.frame+1,ball.replay.frames.length-1),next=ball.replay.frames[index];
+    ball.frame=index;ball.position={x:next.x,y:next.y};ball.angle=next.angle;
+    ball.velocity={x:next.x-previous.x,y:next.y-previous.y};
+    for(const [frame,id] of ball.replay.hits)if(frame===index){
+      const peg=this.pegs[id],dx=next.x-peg.position.x,dy=next.y-peg.position.y,d=Math.hypot(dx,dy)||1;
+      this.pegImpact(peg,ball,{x:dx/d,y:dy/d});
+    }
+    (this.trail=this.trail||[]).push({...ball.position});if(this.trail.length>7)this.trail.shift();
+    if(index===ball.replay.frames.length-1){
+      ball.done=true;this.setState({landed:ball.target});this.playNote(FINGO_NOTES[2],.035,.19);this.buzz(15);
+      this._removeReplay=setTimeout(()=>{if(this.ball===ball)this.ball=null;},1000);
+      this._landReplay=setTimeout(()=>{if(!this._dead)this.land(ball.target,false);},1200);
+    }
+  }
   pegImpact(peg,ball,normal){
     const now=performance.now(),last=this.lit.get(peg.id);
     if(last&&now-last.t<75)return;
@@ -627,6 +632,13 @@ class Component extends DCLogic {
       this._ballStartTime=performance.now();this.setState({phase:'launching',selectedColumn:col});
       await new Promise(resolve=>{this._launchTimer=setTimeout(resolve,460);});
       if(this._dead){this._cloudRequest=false;return;}
+    }
+    if(s.cardVersion===2){
+      const outcome=this.dropOutcome(),replay=window.KingRicoFingoPhysics.pathFor(col,outcome.bin,s.roundId+':'+(s.used+1));
+      if(!replay){this._cloudRequest=false;if(cloud?.enabled){this._cloudDeferred=cloud.player;this.applyCloudPlayer();cloud.error({code:'king-rico/round-conflict'});}return;}
+      this.ball={replay,frame:0,position:{...replay.frames[0]},velocity:{x:0,y:0},angle:0,circleRadius:W*PC.BALL_R,number:s.slots[col],column:col,target:outcome.bin,done:false};
+      this.setState({phase:'falling',balls:s.balls-1,used:s.used+1,handSeen:true},()=>this.save());
+      this._cloudRequest=false;this.playNote(FINGO_NOTES[0],.038,.15);this.buzz(20);return;
     }
     const M = window.Matter, rad = W * PC.BALL_R, sx = s.fire ? col * BW + BW / 2 : (col + 1) * (W / PC.PEG_COLS) - (W / PC.PEG_COLS) / 2 + (col - 2) * 6;
     const ball = M.Bodies.circle(s.fire ? sx : s.cardVersion>=1?ENTRY_CENTERS[col]:col * BW + BW / 2, -20, rad, { restitution: s.fire ? 0 : PC.BALL_REST, friction: s.fire ? 0 : PC.BALL_FRIC, frictionAir: s.fire ? 0.07 : PC.BALL_AIR, density: PC.BALL_DENS, label: 'ball', isSensor: !!s.fire });

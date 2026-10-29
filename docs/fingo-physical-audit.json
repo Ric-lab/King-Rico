@@ -1,0 +1,38 @@
+{
+  "rulesVersion": "2026-10-28-fingo-free-v11",
+  "note": "Seeded simulation, not proof of optimal play or theoretical RTP. Fixed odds; a quina pays 2x at any play. Gifts and refills excluded.",
+  "results": [
+    {
+      "policy": "lines",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.9353,
+      "prizeRate": 0.46765,
+      "meanPlays": 27.022
+    },
+    {
+      "policy": "physical",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.9694,
+      "prizeRate": 0.4847,
+      "meanPlays": 26.8022
+    },
+    {
+      "policy": "gold",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.8755,
+      "prizeRate": 0.43775,
+      "meanPlays": 27.2257
+    },
+    {
+      "policy": "random",
+      "count": 20000,
+      "seed": 90431,
+      "rtp": 0.216,
+      "prizeRate": 0.108,
+      "meanPlays": 29.39695
+    }
+  ]
+}

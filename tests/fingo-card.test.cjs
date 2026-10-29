@@ -1,4 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),e=require('../cloud/engine.cjs');
+const {dropDraws}=require('./helpers/fingo.cjs');
 const {newCard,expandCard,CARD_LINES,winningLine,chooseSlot}=e.fingoCard;
 test('saved card seeds generate 25 distinct, readable numbers and match the rules inverse in all columns',()=>{
  for(let shift=0;shift<15;shift++){
@@ -27,13 +28,14 @@ test('two golden choices have different strategic value and five unrelated marks
  assert.equal(complete.winUnits,2000);assert.equal(chooseSlot(prior),4);
  assert.equal(winningLine([0,1,7,13,24]),null);
 });
-test('card rolls always offer a missing number and a losing pipe, and misses consume a play',()=>{
+test('card rolls offer useful numbers and physical landings always mark the number actually reached',()=>{
  let seed=9731;const rng=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32);
  for(let n=0;n<300;n++){
   const r=e.fingo(10,null,'roll','r',0,rng),card=expandCard(r.targets,r.cardVersion);
-  assert.equal(r.cardVersion,2);assert.ok(r.slots.some(v=>card.includes(v)));assert.ok(r.slots.some(v=>!card.includes(v)));
-  const x=e.fingo(10,r,'drop','r',chooseSlot(r),()=>.99);
-  assert.equal(x.used,1);assert.deepEqual(x.marks,[12]);assert.equal(x.mark,-1);assert.equal(x.winUnits,0);
+  assert.equal(r.cardVersion,2);assert.ok(r.slots.some(v=>card.includes(v)));
+  const x=e.fingo(10,r,'drop','r',chooseSlot(r),rng),i=card.indexOf(r.slots[x.bin]);
+  assert.equal(x.used,1);assert.equal(x.mark,i>=0&&!r.marks.includes(i)?i:-1);
+  assert.deepEqual(x.marks,x.mark<0?r.marks:[...r.marks,x.mark]);
  }
 });
 test('an incomplete card closes at 30 without awarding a prize',()=>{
@@ -68,17 +70,17 @@ test('preview card v2 has a real free King Rico center, and a center line wins o
 test('preview marks the gold actually reached even when another gold was selected',()=>{
  const targets=newCard(()=>0),card=expandCard(targets,2);
  const prior={targets,marks:[12],used:0,slots:[card[0],card[1],36,51,64],cardVersion:2,payoutVersion:3};
- const before=structuredClone(prior),draws=[0,.99,0];
+ const before=structuredClone(prior),draws=dropDraws(0,1);
  const hit=e.fingoCard.cardRound(1000,prior,'drop','preview',0,()=>draws.shift(),()=>2);
  assert.equal(hit.bin,1);assert.equal(hit.mark,1);assert.deepEqual(hit.marks,[12,1]);
  assert.equal(hit.used,1);assert.equal(hit.winUnits,0);assert.deepEqual(prior,before);
  const aimed=e.fingoCard.cardRound(1000,prior,'drop','preview',0,()=>0,()=>2);
  assert.equal(aimed.bin,0);assert.equal(aimed.mark,0);
- const closing={...prior,marks:[0,2,3,4,12],used:4,slots:[card[5],card[1],36,51,64]},winDraws=[0,.99,0];
+ const closing={...prior,marks:[0,2,3,4,12],used:4,slots:[card[5],card[1],36,51,64]},winDraws=dropDraws(0,1);
  const win=e.fingoCard.cardRound(1000,closing,'drop','preview',0,()=>winDraws.shift(),()=>2);
  assert.equal(win.bin,1);assert.equal(win.mark,1);assert.equal(win.ended,true);assert.equal(win.winUnits,2000);
 
- const miss=e.fingoCard.cardRound(1000,prior,'drop','preview',0,()=>.99,()=>2);
+ const miss=e.fingoCard.cardRound(1000,prior,'drop','preview',0,()=>dropDraws(0,2)[0],()=>2);
  assert.equal(miss.mark,-1);assert.deepEqual(miss.marks,[12]);
  const legacy=e.fingoCard.cardRound(1000,{...prior,cardVersion:1,marks:[]},'drop','legacy',0,(()=>{const d=[0,.99,0];return()=>d.shift();})(),()=>2);
  assert.equal(legacy.bin,0);assert.equal(legacy.mark,0);

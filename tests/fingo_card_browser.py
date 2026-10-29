@@ -131,13 +131,13 @@ def check_fingo_card(browser,login,restored,claim_gift,observer):
     assert page.evaluate('__fingoEvents.filter(e=>e.move==="drop").at(-1).success') is True
     # Selecting one gold can settle in a different gold; the physical bucket,
     # persisted mark, painted number and telemetry must all agree.
-    spin(page);page.evaluate('window.__fingoDraws=[0,.99,0]');drop(page,0)
+    spin(page);page.evaluate('window.__fingoDraws=[(KingRicoFingoCard.PHYSICAL_BINS[0].indexOf(1)+.5)/64]');drop(page,0)
     page.wait_for_function('__fg.ball?.done===true',timeout=20000)
     landing=page.evaluate('({selected:__fg.state.selectedColumn,bin:__fg._cardDrop.bin,physical:Math.floor(__fg.ball.position.x/(453/5)),mark:__fg._cardDrop.mark})')
     assert landing['selected']!=landing['bin'] and landing['physical']==landing['bin'],landing
     acknowledge_mark(page)
     assert page.evaluate('KingRicoCloud.player.fingoRound.marks')==[12,5,1]
-    spin(page);page.evaluate('window.__fingoDraws=[.99,.99]');drop(page,0)
+    spin(page);page.evaluate('window.__fingoDraws=[(KingRicoFingoCard.PHYSICAL_BINS[0].indexOf(3)+.5)/64]');drop(page,0)
     page.wait_for_function('__fg.state.used===3&&__fg.state.phase==="spin"',timeout=25000)
     assert not page.get_by_role('region',name='Sua cartela',exact=True).is_visible()
     assert page.evaluate('KingRicoCloud.player.fingoRound.marks')==[12,5,1]

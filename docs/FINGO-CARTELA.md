@@ -31,9 +31,10 @@ e após uma quina. Uma confirmação antiga não encerra uma nova partida de out
 
 A primeira fileira tem cinco espaços livres iguais, considerando os diâmetros
 dos pinos. Cada espaço tem uma linha curta, centralizada e pintada no feltro.
-A esfera numerada é renderizada com Three.js local. A física apresenta o resultado
-já salvo, inclusive no fim da queda e na recuperação por tempo limite; não usa
-um bucket visual diferente daquele que será marcado.
+A esfera numerada é renderizada com Three.js local. As cartelas com coringa sorteiam a chegada a partir de quedas reais de Matter.js,
+sem condução para um alvo. A animação reproduz uma trajetória do mesmo conjunto,
+com entrada e bucket correspondentes ao resultado salvo. Não reposiciona a bola
+na base, não atravessa divisórias e não veta acertos quando há vários dourados.
 
 No acerto, o Plinko sai de cena e a cartela reaparece. O número surge em círculo
 branco, fica verde ainda parado e viaja até sua casa, iniciando o preenchimento
@@ -94,3 +95,24 @@ carregam e são decodificados; em falha aparece TENTAR NOVAMENTE, sem cobrar apo
 A moldura e o feltro são uma camada permanente; acender e apagar altera apenas
 a opacidade de uma segunda imagem já montada. O sorteio e a queda não substituem
 o fundo, evitando o intervalo em branco ao trocar a imagem na mesma propriedade.
+
+## Queda física sem correção de resultado
+
+`games/fingo/world.cjs` define o mesmo tabuleiro para a geração e para a tela.
+`node scripts/generate-fingo-paths.cjs` gera 64 quedas completas por entrada,
+somente com gravidade, impulso inicial e colisões. Nenhum alvo, número da cartela
+ou estado de vitória participa da simulação. Trajetórias que não terminam em
+12 segundos são descartadas por duração, sem considerar prêmio.
+
+O motor sorteia uniformemente entre os 64 destinos físicos da entrada escolhida.
+O navegador reproduz uma das trajetórias desse destino. Assim quatro dourados
+adjacentes podem cobrir todas as chegadas daquela entrada e garantir a marcação;
+não existe um sorteio separado de erro que desvie a bola para o único cinza.
+O sorteio usa probabilidade fixa de 0,16 por coluna para número útil e preserva
+pelo menos uma escolha útil. Todos os dourados valem; 30 bolas e prêmio 2× seguem
+iguais. Não usa histórico, saldo ou valor apostado para alterar chances.
+
+A simulação em `scripts/fingo-card-audit.mjs` compara escolhas por linha, cobertura
+física, primeiro dourado e acaso. É uma estimativa de estratégias de referência,
+não garantia de RTP teórico ou de estratégia ótima. Os testes reproduzem amostras
+no Matter.js e conferem continuidade das 320 quedas e concordância do bucket.

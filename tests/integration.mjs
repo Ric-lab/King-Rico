@@ -8,7 +8,7 @@ import {getFirestore,connectFirestoreEmulator,doc,getDoc,setDoc,updateDoc,delete
 import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/rules-unit-testing';
 import {createGameStore,publicPlayer} from '../cloud/store.mjs';
 import engine from '../cloud/engine.cjs';
-import {rollDraws} from './helpers/fingo.cjs';
+import {rollDraws,dropDraws} from './helpers/fingo.cjs';
 const apps=[];let environment;
 before(async()=>{
   environment=await initializeTestEnvironment({projectId:'demo-king-rico',firestore:{host:'127.0.0.1',port:8085,rules:await readFile('firestore.rules','utf8')}});
@@ -870,7 +870,7 @@ test('Fingo free-center cards persist another golden bucket and replay it withou
  const base={action:'fingo',game:'fingo',bet:10,roundId:randomUUID()};
  const rolled=await c.call(request({...base,move:'roll',used:0}));
  assert.equal(rolled.outcome.cardVersion,2);assert.deepEqual(rolled.outcome.marks,[12]);
- await new Promise(resolve=>setTimeout(resolve,350));draws=[0,.99,0];
+ await new Promise(resolve=>setTimeout(resolve,350));draws=dropDraws(0,2);
  const move=request({...base,move:'drop',used:0,selected:0}),hit=await c.call(move);
  assert.equal(hit.outcome.bin,2);assert.equal(hit.outcome.mark,2);
  assert.deepEqual(hit.player.fingoRound.marks,[12,2]);assert.equal(hit.player.balance,990);

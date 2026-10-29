@@ -3,7 +3,8 @@ const CARD_LINES=[];
 for(let r=0;r<5;r++)CARD_LINES.push(Array.from({length:5},(_,c)=>r*5+c));
 for(let c=0;c<5;c++)CARD_LINES.push(Array.from({length:5},(_,r)=>r*5+c));
 CARD_LINES.push([0,6,12,18,24],[4,8,12,16,20]);
-const CARD_GOLD=.55,CARD_HIT=.27;
+const CARD_GOLD=.16,CARD_HIT=.27; // CARD_HIT only keeps already-paid v1 cards compatible.
+const PHYSICAL_BINS=require('../games/fingo/bins.json');
 const cardIndex=(card,n)=>card.indexOf(n);
 const useful=(card,marks,n)=>{const i=cardIndex(card,n);return i>=0&&!marks.includes(i);};
 const winningLine=marks=>CARD_LINES.find(line=>line.every(i=>marks.includes(i)))||null;
@@ -19,25 +20,25 @@ function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier,reques
   slots=Array.from({length:5},(_,c)=>{
    const missing=card.filter((n,i)=>i%5===c&&!marks.includes(i));
    const other=Array.from({length:15},(_,i)=>c*15+i+1).filter(n=>!useful(card,marks,n));
-   const pool=missing.length&&rng()<CARD_GOLD?missing:other;
+   const pool=missing.length&&rng()<(cardVersion===2?CARD_GOLD:.55)?missing:other;
    return pool[Math.floor(rng()*pool.length)];
   });
   if(!slots.some(n=>useful(card,marks,n))){
    const missing=card.map((n,i)=>({n,i})).filter(x=>!marks.includes(x.i));
    const chosen=missing[Math.floor(rng()*missing.length)];slots[chosen.i%5]=chosen.n;
   }
-  // A sampled miss must have somewhere to land without awarding a mark.
-  if(slots.every(n=>useful(card,marks,n))){const c=Math.floor(rng()*5);slots[c]=Array.from({length:15},(_,i)=>c*15+i+1).find(n=>!useful(card,marks,n));}
+  if(cardVersion===1&&slots.every(n=>useful(card,marks,n))){const c=Math.floor(rng()*5);slots[c]=Array.from({length:15},(_,i)=>c*15+i+1).find(n=>!useful(card,marks,n));}
  }else{
   slots=previous.slots;
   const gold=slots.flatMap((n,c)=>useful(card,marks,n)?[c]:[]),onGold=gold.includes(selected);
+  if(cardVersion===2){
+   // Uniformly sample actual unsteered Matter.js falls from this entry.
+   // Gold coverage can increase the chance of marking; there is no hit/miss veto.
+   const outcomes=PHYSICAL_BINS[selected];bin=outcomes[Math.min(outcomes.length-1,Math.floor(rng()*outcomes.length))];
+  }else{
   const hit=rng()<CARD_HIT*(onGold?1:.85),pool=hit?gold:[0,1,2,3,4].filter(c=>!gold.includes(c));
   const near=pool.slice().sort((a,b)=>Math.abs(a-selected)-Math.abs(b-selected));
   bin=hit&&onGold?selected:near[rng()<.7?0:Math.min(1,near.length-1)];
-  // Free-center cards favor the chosen gold, but a different gold also counts.
-  // Keep the same hit draw and preserve saved v1 cards' landing behavior.
-  if(cardVersion===2&&hit&&onGold&&gold.length>1&&rng()>=.7){
-   const others=gold.filter(c=>c!==selected);bin=others[Math.floor(rng()*others.length)];
   }
   const i=cardIndex(card,slots[bin]);
   if(i>=0&&!marks.includes(i)){mark=i;marks.push(i);}
@@ -58,4 +59,4 @@ function chooseSlot(round){
  }
  return selected;
 }
-module.exports={CARD_LINES,CARD_HIT,CARD_GOLD,newCard,expandCard,winningLine,useful,cardRound,chooseSlot};
+module.exports={CARD_LINES,CARD_HIT,CARD_GOLD,PHYSICAL_BINS,newCard,expandCard,winningLine,useful,cardRound,chooseSlot};
