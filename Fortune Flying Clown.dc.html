@@ -37,19 +37,23 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-for>
 
     <!-- topo: saldo, casa, menu -->
-    <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; transform: scale(1.25); transform-origin: 0 50%;">
+    <div class="kr-hud-row">
+<div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
         <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
       </div>
     </div>
-    <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6);"></a>
-    <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+<a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6);"></a>
+<x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+</div>
+
+
 
     <!-- escada de prêmios: 10 degraus, o atual aceso e o próximo pulsando -->
     <div aria-label="Prêmio atual {{ multText }}" style="position: absolute; z-index: 10; right: 10px; top: 92px; width: 64px; display: flex; flex-direction: column-reverse; gap: 5px; pointer-events: none;">
       <sc-for list="{{ rungs }}" as="r" hint-placeholder-count="10">
         <div style="position: relative; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: {{ r.bg }}; box-shadow: {{ r.sh }}; opacity: {{ r.op }}; animation: {{ r.anim }}; transition: background .3s, opacity .3s;">
-          <img src="assets/symbols/sym-peach.png" alt="Happeach" style="display: {{ r.peachDisplay }}; position: absolute; right: 48px; top: 4px; width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 3px #200329);">
+          <img src="assets/symbols/sym-peach-lossless.webp" alt="Happeach" style="display: {{ r.peachDisplay }}; position: absolute; right: 48px; top: 4px; width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 3px #200329);">
           <span style="font-size: {{ r.size }}; font-weight: 800; line-height: 1; color: {{ r.color }}; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.text }}</span>
         </div>
       </sc-for>
@@ -57,7 +61,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 
     <sc-if value="{{ hasPeach }}">
       <div data-testid="flying-protection" style="position: absolute; z-index: 11; left: 18px; top: 94px; display: flex; align-items: center; gap: 7px; padding: 7px 12px 7px 5px; border-radius: 16px; background: rgba(35,7,50,.9); border: 2px solid #edbd47; color: #fff3c4; pointer-events: none;">
-        <img src="assets/symbols/sym-peach.png" alt="" style="width: 38px; height: 38px; object-fit: contain;">
+        <img src="assets/symbols/sym-peach-lossless.webp" alt="" style="width: 38px; height: 38px; object-fit: contain;">
         <div style="font-size: 15px; font-weight: 800; line-height: 1.15;">{{ peachTitle }}<br><span style="font-size: 20px; color: #ffd257;">{{ peachText }}</span></div>
       </div>
     </sc-if>

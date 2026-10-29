@@ -16,7 +16,15 @@ function component(file,cloud,random=Math.random){
   requestAnimationFrame:fn=>{const id=++frameId;frames.push({id,fn});return id;},cancelAnimationFrame:id=>cancelled.add(id),
   setTimeout:(fn,ms)=>(timers.push({fn,ms}),timers.length),clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};
  const Class=vm.runInNewContext(script+'\nComponent;',context),instance=new Class();
- return {instance,context,frame:(at=10000)=>{now=at;while(frames.length){const f=frames.shift();if(!cancelled.has(f.id)){f.fn();break;}}},timers:()=>{let count=0;while(timers.length && ++count<1000)timers.shift().fn();assert.ok(count<1000);}};
+ return {instance,context,frame:(at=10000)=>{now=at;while(frames.length){const f=frames.shift();if(!cancelled.has(f.id)){f.fn();break;}}},timers:()=>{let count=0;while(timers.length && ++count<1000)timers.shift().fn();assert.ok(count<1000);},settle:()=>{
+   let count=0;
+   while((timers.length||frames.length)&&++count<1000){
+     while(timers.length)timers.shift().fn();
+     now+=500;
+     if(frames.length){const f=frames.shift();if(!cancelled.has(f.id))f.fn();}
+   }
+   assert.ok(count<1000,'Animation did not settle');
+ }};
 }
 test('Circus uses the committed grid and debit even when local balance differs',async()=>{
  const outcome={grid:[1,2,3,4,5,6,7,8,0],res:{win:0,cells:[],lines:[],full:false,peach:[]},feature:null};
@@ -38,9 +46,9 @@ test('Neck animates committed outcomes and collects once without a local lottery
    requests.push(args);const collected=args[0]==='collect';cloud.player={...player,balance:collected?1001.25:990.25,neckRound:collected?null:player.neckRound};
    return {player:cloud.player,balanceDebited:990.25,outcome:{move:args[0],roundId:args[2],betUnits:1000,peachAt:0,floor:1,savedUnits:0,ok:true,ended:collected,winUnits:collected?1100:0}};
  },error:()=>{throw Error('Unexpected error');}};
- const {instance:n,timers}=component('Fortune Neck.dc.html',cloud,()=>{throw Error('No local lottery');});n.tone=()=>{};n.buzz=()=>{};
- await n.climb();timers();assert.equal(requests[0][0],'start');assert.equal(n.state.floor,1);assert.equal(n.state.balance,990.25);
- await n.collect();timers();assert.equal(requests.length,2);assert.equal(requests[1][0],'collect');assert.equal(n.state.balance,1001.25);assert.equal(n.state.round,false);
+ const {instance:n,settle}=component('Fortune Neck.dc.html',cloud,()=>{throw Error('No local lottery');});n.tone=()=>{};n.buzz=()=>{};
+ await n.climb();settle();assert.equal(requests[0][0],'start');assert.equal(n.state.floor,1);assert.equal(n.state.balance,990.25);
+ await n.collect();settle();assert.equal(requests.length,2);assert.equal(requests[1][0],'collect');assert.equal(n.state.balance,1001.25);assert.equal(n.state.round,false);
  assert.equal(n.renderVals().balanceText,'1.001,25');
 });
 test('Neck restores the current account round and refuses an offline debit',async()=>{

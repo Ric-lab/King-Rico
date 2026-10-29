@@ -11,6 +11,7 @@ const production = process.argv.includes('--production');
 if (emulator && production) throw new Error('Choose production or emulator build');
 const destination = path.join(root, 'dist');
 const routes = JSON.parse(await readFile('site/routes.json','utf8'));
+const artManifest=JSON.parse(await readFile('ui/art-manifest.json','utf8'));
 await rm(destination, { recursive:true, force:true });
 await mkdir(destination, {recursive:true});
 await mkdir('runtime',{recursive:true});
@@ -32,6 +33,7 @@ for (const [name,[key,relative]] of Object.entries(packages)) {
 await build({entryPoints:['cloud/client-src.js'],outfile:'cloud/client.js',bundle:true,format:'iife',target:'es2022',minify:true});
 await build({entryPoints:['cloud/fingo-card.cjs'],outfile:'runtime/fingo-card.js',bundle:true,format:'iife',globalName:'KingRicoFingoCard',target:'es2022',minify:true});
 await build({entryPoints:['games/fingo/playback.cjs'],outfile:'runtime/fingo-physics.js',bundle:true,format:'iife',globalName:'KingRicoFingoPhysics',target:'es2022',minify:true});
+await build({entryPoints:['games/fingo/layout.cjs'],outfile:'runtime/fingo-layout.js',bundle:true,format:'iife',globalName:'KingRicoFingoLayout',target:'es2022',minify:true});
 // Pin the Fingo physics/renderer in the lockfile and serve them with the game.
 for(const [source,name] of [['matter-js/build/matter.min.js','matter.min.js'],['three/build/three.module.js','three.module.js'],['three/build/three.core.js','three.core.js'],['matter-js/LICENSE','matter.LICENSE'],['three/LICENSE','three.LICENSE']])
   await copyFile('node_modules/'+source,'runtime/'+name);
@@ -98,7 +100,7 @@ for(const {file,game,title} of routes) {
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script defer src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';
   // Content-version stylesheet URLs so a cached old theme cannot override a new release.
-  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script defer src="./ui/banner.js"></script>\n<script defer src="./ui/wallet.js"></script>';
+  const bannerTags='<link rel="stylesheet" href="./ui/banner.css">\n<script defer src="./ui/banner.js"></script>\n<script defer src="./ui/interface.js"></script>\n<script defer src="./ui/wallet.js"></script>';
   const appTags=`<title>${title}</title>
 <style>x-dc{display:none!important}</style>
 <meta name="king-rico-game" content="${game}">
@@ -117,6 +119,7 @@ for(const {file,game,title} of routes) {
 <script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
   let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
+  if(['home','circus'].includes(game))html=html.replace('<head>','<head>\n<script defer src="./runtime/fingo-layout.js"></script>');
   // The illustrated loading screen can paint while the large runtime downloads.
   // Deferred scripts retain their document order: React/Babel, cloud, then DC support.
   html=html.replace('<script src="./support.js">','<script defer src="./support.js">')
@@ -144,6 +147,11 @@ for(const {file,game,title} of routes) {
     const wild=(await readFile('assets/symbols/sym-wild-s.webp')).toString('base64');
     html=html.replace('data-fingo-free-icon="" src="assets/symbols/sym-wild-s.webp"',`data-fingo-free-icon="" src="data:image/webp;base64,${wild}"`);
   }
+  const art=[...new Set([...(artManifest.common||[]),...(artManifest[game]||[]),...(game==='circus'?artManifest.home:[])])];
+  for(const asset of art)await accessAsset(asset);
+  const urls=await Promise.all(art.map(async asset=>game==='fingo'&&asset.startsWith('assets/fingo/')?asset+'?v='+createHash('sha256').update(await readFile(asset)).digest('hex').slice(0,12):asset));
+  html=html.replace('<head>','<head>\n<script id="kr-essential-art" type="application/json">'+JSON.stringify(urls)+'</script>');
   await writeFile(path.join(destination,file),html);
 }
+async function accessAsset(asset){await readFile(path.join(destination,asset.split('?')[0]));}
 console.log(`Built ${emulator?'local emulator':'production'} web app in dist/`);

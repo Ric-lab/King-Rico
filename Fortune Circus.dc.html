@@ -58,7 +58,7 @@ a:hover { color: #fff3c4; }
  <div style="position: absolute; inset: -60px; background-image: url('assets/stage-lit.webp'); background-size: cover; background-position: center; filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.08); pointer-events: none;"></div>
  <div style="position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, rgba(29,7,51,0) 0%, rgba(20,4,36,.55) 70%, rgba(12,2,22,.85) 100%); pointer-events: none;"></div>
  <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
- <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v5.png'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
+ <div style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v5-lossless.webp'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
  <div style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
@@ -157,11 +157,15 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
 
-  <div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+  <div class="kr-hud-row">
+<div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
   </div>
   </div>
+<div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Voltar para o início" class="kr-hud-home" style="margin-top: {{ hudLift }}; cursor: pointer; border-radius: 50%; overflow: hidden; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; "></div>
+<x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+</div>
 
   <div style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
@@ -171,15 +175,15 @@ a:hover { color: #fff3c4; }
     <span style="font-size: {{ betSize }}; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); letter-spacing: 1.5px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ betText }}</span>
   </div>
 
-  <div onClick="{{ decBet }}" role="button" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
+  <div onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">−</span>
   </div>
-  <div onClick="{{ incBet }}" role="button" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
+  <div onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
     <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">+</span>
   </div>
 
   <!-- botão de giro: a arte original (escura) + pontos de luz no aro dourado que piscam em volta -->
-  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 48px; top: 685px; width: 357px; height: 78px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
+  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 48px; top: 685px; width: 357px; height: 78px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
     <img src="assets/spin/spin-base.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none;">
     <img src="assets/spin/spin-pressed.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ spinPressedOp }}; transition: {{ spinTrans }};">
     <img src="assets/spin/rim-off.webp?v=3" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ rimOffOp }}; transition: {{ glassTrans }};">
@@ -189,7 +193,7 @@ a:hover { color: #fff3c4; }
   </div>
 
   <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
+  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar mais rápido" aria-pressed="{{ turbo }}" data-kr-hit="" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
   </div>
   <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
   <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
@@ -198,7 +202,7 @@ a:hover { color: #fff3c4; }
     </div>
   </sc-if>
   <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
+  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar automático" aria-pressed="{{ auto }}" data-kr-hit="" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
   </div>
   <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
   <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
@@ -207,8 +211,8 @@ a:hover { color: #fff3c4; }
     </div>
   </sc-if>
 
-  <div onClick="{{ goHome }}" onPointerDown="{{ pressHome }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Voltar para o início" class="kr-hud-home" style="margin-top: {{ hudLift }}; cursor: pointer; border-radius: 50%; overflow: hidden; filter: {{ homeFilter }}; box-shadow: {{ homeShadow }}; transition: {{ homeTrans }}; "></div>
-  <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+
+
 
 
   <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
@@ -231,7 +235,7 @@ a:hover { color: #fff3c4; }
         <sc-for list="{{ basketTop }}" as="p" hint-placeholder-count="0">
           <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
         </sc-for>
-        
+
         <div style="position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 2px 9px 3px; border-radius: 999px; background: linear-gradient(180deg, rgba(74,10,106,.96), rgba(36,4,58,.96)); border: 2px solid #f0b41f; box-shadow: 0 3px 8px rgba(0,0,0,.5); white-space: nowrap;">
           <span style="font-size: 17px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 1px 0 rgba(0,0,0,.45); font-variant-numeric: tabular-nums;">{{ peachText }}</span>
           <div style="display: flex; gap: 2px;">
@@ -296,14 +300,14 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
     <div data-overlay="pays" onClick="{{ togglePays }}" role="button" style="position: absolute; left: {{ ovX }}; right: {{ ovX }}; top: {{ ovT }}; bottom: {{ ovB }}; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: rgba(12,2,24,.95); cursor: pointer; animation: fcFade .2s ease-out;">
       <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; line-height: 1.1; color: #ffd257; text-align: center;">TABELA DE PAGAMENTOS</div>
-      
+
       <div style="display: flex; align-items: center; gap: 12px; width: 400px; max-width: calc(100% - 24px); box-sizing: border-box; padding: 8px 14px 8px 8px; border-radius: 14px; background: linear-gradient(180deg, rgba(214,70,110,.55), rgba(140,24,70,.55)); border: 1.5px solid #ffd257;">
         <div style="flex: 0 0 auto; width: 60px; height: 60px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: 100%;"></div>
         <div style="flex: 1; display: flex; flex-direction: column; gap: 1px;">
           <span style="font-size: 22px; font-weight: 800; line-height: 1.1; color: #fff3c4;">Happeach</span>
           <span style="font-size: 17px; font-weight: 700; line-height: 1.25; color: #ffe6ee">Junte 5 para ganhar a Rodada Especial</span>
         </div>
-        
+
       </div><div style="display: grid; grid-template-columns: repeat(2, 192px); gap: 8px 16px;">
         <sc-for list="{{ payList }}" as="row" hint-placeholder-count="10">
           <div style="display: flex; align-items: center; gap: 12px; padding: 5px 10px 5px 6px; border-radius: 10px; background: rgba(255,255,255,.08);">
@@ -387,10 +391,10 @@ a:hover { color: #fff3c4; }
     <img data-asset="assets|spin|spin-base.webp" src="assets/spin/spin-base.webp" alt="">
     <img data-asset="assets|spin|spin-pressed.webp" src="assets/spin/spin-pressed.webp" alt="">
     <img data-asset="assets|stage-off6.webp" src="assets/stage-off6.webp" alt="">
-    <img data-asset="assets|bleed|stage-bleed-v5.png" src="assets/bleed/stage-bleed-v5.png" alt="">
+    <img data-asset="assets|bleed|stage-bleed-v5.png" src="assets/bleed/stage-bleed-v5-lossless.webp" alt="">
     <img data-asset="assets|stage-hd-c.webp" src="assets/stage-hd-c.webp" alt="">
-    <img data-asset="assets|symbols|sym-crown.png" src="assets/symbols/sym-crown.png" alt="">
-    <img data-asset="assets|symbols|sym-tent.png" src="assets/symbols/sym-tent.png" alt="">
+    <img data-asset="assets|symbols|sym-crown.png" src="assets/symbols/sym-crown-lossless.webp" alt="">
+    <img data-asset="assets|symbols|sym-tent.png" src="assets/symbols/sym-tent-lossless.webp" alt="">
     <img data-asset="assets|fx|peach-body.webp" src="assets/fx/peach-body.webp" alt="">
     <img data-asset="assets|fx|peach-leaf.webp" src="assets/fx/peach-leaf.webp" alt="">
   </div>
@@ -547,7 +551,7 @@ class Component extends DCLogic {
     if (w < 50 || h < 50) { requestAnimationFrame(this.fit); return; }
     // Uma regra só para qualquer tela em pé (celular baixo, alto, tablet):
     // topo = barra de status + faixa do anúncio; o quadro 453×802 ocupa o maior tamanho que couber;
-    // ao redor, o palco com sangria (assets/bleed/stage-bleed-v5.png) continua o cenário. Tela deitada (computador) = moldura centralizada.
+    // ao redor, o palco com sangria (assets/bleed/stage-bleed-v5-lossless.webp) continua o cenário. Tela deitada (computador) = moldura centralizada.
     const inset = w > h;
     const safe = inset ? { top: 0, bottom: 0 } : FC_SAFE_AREA(), band = inset || !window.__fcAdBanner ? 0 : FC_AD_BAND;
     const avail = h - safe.top - band - safe.bottom;

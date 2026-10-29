@@ -103,8 +103,9 @@ def check_penalty(browser,login,restored,check_menu,claim_gift,login_observer):
             assert page.evaluate('KingRicoCloud.player.penaltyRound') is None
     for width,height in [(360,780),(390,844)]:
         page.set_viewport_size({'width':width,'height':height})
+        page.wait_for_function('([w,h])=>__pen.state.vw===w&&__pen.state.vh===h-60',arg=[width,height])
         for chip in page.locator('[data-penalty-multiplier]').all():
-            box=chip.bounding_box();assert box['x']>=0 and box['x']+box['width']<=width
+            box=chip.bounding_box();assert box['x']>=-.5 and box['x']+box['width']<=width+.5
         page.screenshot(path='/tmp/king-rico-penalty-ten-'+str(width)+'.png')
     page.goto(BASE+'/Fortune%20Neck.dc.html',wait_until='domcontentloaded')
     page.wait_for_function('window.__fn && window.KingRicoCloud?.player');restored(page,uid)

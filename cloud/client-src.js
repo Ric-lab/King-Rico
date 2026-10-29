@@ -4,14 +4,16 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signI
 import { getFirestore, doc, getDoc, runTransaction, onSnapshot, connectFirestoreEmulator } from 'firebase/firestore';
 import { createGameStore, publicPlayer } from './store.mjs';
 import { createTelemetry } from './telemetry.mjs';
+import { createSettingsBuffer } from './settings-buffer.mjs';
 
 const config = window.KING_RICO_FIREBASE || { enabled: false };
 const watchers = new Set(), SKEY = 'fortuneCircus.slot.v3';
 let resolveReady, selectedConsent, lastInteraction = Date.now();
+let confirmedPlayer=null,settingsBuffer;
 const Cloud = window.KingRicoCloud = {
   enabled: config.enabled === true, player: null, uid: null,
   ready: new Promise(resolve => { resolveReady = resolve; }),
-  watch(handler) { watchers.add(handler); if (Cloud.player) handler(Cloud.player); return () => watchers.delete(handler); },
+  watch(handler) { watchers.add(handler); if (Cloud.player) handler({...Cloud.player,settings:settingsBuffer?.overlay(Cloud.player.settings)||Cloud.player.settings}); return () => watchers.delete(handler); },
   dayKey() {
     const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Sao_Paulo', year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
     return Number(['year','month','day'].map(key => parts.find(p => p.type === key).value).join(''));
@@ -24,7 +26,8 @@ const storage = {
 };
 function accept(player) {
   if (!player || !Cloud.uid) return;
-  if (Cloud.player && player.revision < Cloud.player.revision) return;
+  if (confirmedPlayer && player.revision < confirmedPlayer.revision) return;
+  confirmedPlayer=player;
   Cloud.player = player;
   Cloud.syncTelemetry?.(player);
   const old = localStorage.getItem(SKEY);
@@ -36,7 +39,8 @@ function accept(player) {
   storage.set('fortuneCircus.wheel.v2', { betIdx: player.settings.wheelBetIdx });
   storage.set('fortuneCircus.neck.v1', { betIdx: player.settings.neckBetIdx ?? 3 });
   storage.set('fortuneCircus.home.bonus', { d: player.bonus.day ? Number(player.bonus.day.replaceAll('-','')) : 0, s: player.bonus.streak });
-  watchers.forEach(handler => handler(player));
+  const visible={...player,settings:settingsBuffer?.overlay(player.settings)||player.settings};
+  watchers.forEach(handler => handler(visible));
 }
 let noticeTimer;
 function notify(message) {
@@ -127,20 +131,10 @@ else {
   Cloud.twentyOne = (move,bet,roundId,turn,target) => mutate({action:'twentyOne',game:'twentyOne',move,bet,roundId,turn,...(target===undefined?{}:{target})});
   Cloud.bonus = () => mutate({ action:'bonus' });
   Cloud.recharge = source => mutate({ action:'recharge',...(source==='home'?{source:'home'}:{}) });
-  let settingsTimer, changes = {};
-  Cloud.settings = settings => {
-    const owner = Cloud.uid;
-    if (!owner) return;
-    settings = Object.fromEntries(Object.entries(settings).filter(([key,value]) => value !== Cloud.player?.settings[key]));
-    if (!Object.keys(settings).length) return;
-    changes = { ...changes, ...settings }; clearTimeout(settingsTimer);
-    settingsTimer = setTimeout(async () => {
-      const next = changes; changes = {};
-      if (Cloud.uid !== owner) return;
-      try { await Cloud.ready; await call({action:'settings',requestId:id(),settings:next}); }
-      catch (error) { Cloud.error(error); }
-    }, 400);
-  };
+  settingsBuffer=createSettingsBuffer({owner:()=>Cloud.uid,confirmed:()=>confirmedPlayer?.settings,
+    send:async(settings,owner)=>{await Cloud.ready;if(Cloud.uid===owner)await call({action:'settings',requestId:id(),settings});},
+    changed:()=>{if(confirmedPlayer)accept(confirmedPlayer);},error:error=>Cloud.error(error)});
+  Cloud.settings=settingsBuffer.set;
   const game = document.querySelector('meta[name="king-rico-game"]')?.content || (/Fortune(?:%20| )Race/.test(location.pathname) ? 'race' : /Fortune(?:%20| )Claw/.test(location.pathname) ? 'claw' : /Fortune(?:%20| )(?:21|33)/.test(location.pathname) ? 'twentyOne' : /Fortune(?:%20| )Flying/.test(location.pathname) ? 'flying' : /Fortune(?:%20| )Bounce/.test(location.pathname) ? 'bounce' : /Fortune(?:%20| )Clown/.test(location.pathname) ? 'clown' : /Fortune(?:%20| )Penalty/.test(location.pathname) ? 'penalty' : /Fortune(?:%20| )Fingo/.test(location.pathname) ? 'fingo' : /Fortune(?:%20| )Neck/.test(location.pathname) ? 'neck' : /Fortune(?:%20| )Wheel/.test(location.pathname) ? 'wheel' : /Home/.test(location.pathname) ? 'home' : 'circus');
   let sessionId = sessionStorage.getItem('kingRico.session');
   if (!sessionId) { sessionId=id(); sessionStorage.setItem('kingRico.session',sessionId); }
@@ -267,7 +261,7 @@ else {
   }
   let unsubscribe, generation=0;
   async function connect(user) {
-    const current=++generation; unsubscribe?.(); clearTimeout(settingsTimer); changes={}; telemetry.clear();
+    const current=++generation; unsubscribe?.(); settingsBuffer.reset();confirmedPlayer=null; telemetry.clear();
     Cloud.uid=user?.uid || null; Cloud.player=null; telemetry.sync(null,null);
     if (!user) { showLogin(); return; }
     startLoading('Carregando seu saldo…');
@@ -298,7 +292,7 @@ else {
     if(event.target.closest('[data-cloud-signout]')) {
       const g=window.__fc, w=window.__fw, n=window.__fn, f=window.__fg, p=window.__pen;
       if(g && (g.state.spinning || g.state.queued || g.state.feature || g.isCeleb()) || w?.state.spinning || n?.state.busy || n?._cloudRequest || f?._cloudRequest || f?.state.phase==='falling' || f?.state.phase==='rolling' || p?.cloudLocked() || window.__flying?._request || window.__flying?.state.busy || window.KingRico21?.isBusy() || window.KingRicoClaw?.isBusy() || window.KingRicoRace?.isBusy() || window.__bridge?.state.busy) { notify('Espere a jogada terminar para sair.'); return; }
-      unsubscribe?.(); selectedConsent=undefined; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
+      unsubscribe?.(); selectedConsent=undefined;settingsBuffer.reset();confirmedPlayer=null; telemetry.sync(null,null); Cloud.uid=null; Cloud.player=null;
       if(dialog) {
         dialog.querySelector('[data-cloud-consent]').checked=false;
         dialog.querySelector('[data-cloud-preferences]').open=false;

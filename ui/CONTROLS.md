@@ -9,7 +9,7 @@ Fortune Wheel é a referência para gradiente dourado, aro escuro e profundidade
 
 Reutilize as classes e ajuste apenas a geometria necessária. Não duplique gradientes, sombras e estados de toque em estilos locais. Preserve eventos, estados desabilitados, feedback e arte dos controles integrados à máquina Circus.
 
-`header.css` define uma posição única para saldo, Home e menu: `--kr-hud-top:14px` na cena de 453×802. A Home acompanha a mesma escala; o cabeçalho do 21/33 compensa sua cena de 810 unidades. Ajuste esse valor compartilhado, sem sobrescrever a posição em cada jogo. O build coloca a revisão do conteúdo nos links dos estilos, e o Hosting manda revalidar CSS, para não misturar uma página nova com um tema antigo do cache.
+`header.css` e `interface.js` definem uma posição única para saldo, Home e menu. Cada tela usa `.kr-hud-row`; sua escala se baseia na mesma referência de 453×802 e compensa a escala da cena, inclusive no Fingo e 33. A arte dos ícones continua proporcional ao saldo, dentro de alvos de toque de 44 px separados por pelo menos 4 px. Steppers têm extensão transparente de toque. A Wheel recompõe os controles em telas baixas para manter escolhas de 44 px sem sobreposição. O build versiona CSS; o Hosting manda revalidá-lo.
 
 A placa do saldo usa CSS e o asset da moeda. Ela cresce com o texto para acomodar `100.000.000,65`, com números de 19 unidades em todas as telas, sem redução por quantidade de dígitos. A escala geral de cada cena continua acompanhando o aparelho.
 

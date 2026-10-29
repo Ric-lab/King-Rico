@@ -20,6 +20,7 @@ from neck_motion_browser import check_neck_motion
 from app_shell_browser import check_app_shell
 from loading_browser import check_loading
 from fingo_card_browser import play_fingo_card,check_fingo_card
+from ui_consistency_browser import check_ui_consistency
 
 BASE = 'http://127.0.0.1:5000'
 LOGIN_OBSERVER = '''(() => {
@@ -362,6 +363,7 @@ with sync_playwright() as p:
         print(json.dumps(check_race(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
         print(json.dumps(check_bridge(browser,login,restored_without_login,LOGIN_OBSERVER)))
     print(json.dumps(check_neck_motion(browser,login,restored_without_login,LOGIN_OBSERVER)))
+    print(json.dumps(check_ui_consistency(browser,login,restored_without_login,claim_gift,LOGIN_OBSERVER)))
     print(json.dumps({'browser':'passed','google_identity':'emulated','games':['circus','wheel','neck','fingo','penalty','clown','flying','33'],
                       'legacy_backup':True,'reload':True,'neck_round_resume':True,'cross_tab_collection':True,
                       'account_isolation':True,'browser_restart_keeps_login_and_wallet':True,

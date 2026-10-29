@@ -8,7 +8,7 @@ def check_home_covers(page):
     assert objects.count()==8
     for obj in objects.all():
         if 'kr-cover-object-fingo' in obj.get_attribute('class'):
-            assert obj.locator('.kr-cover-fingo-peg').count()==39
+            assert obj.locator('.kr-cover-fingo-peg').count()==49
             assert obj.locator('.kr-cover-fingo-funnel').count()==4
             assert obj.locator('.kr-cover-fingo-ball').all_text_contents()==['15','16','32','52','64']
             continue

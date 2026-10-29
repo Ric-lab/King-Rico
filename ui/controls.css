@@ -10,6 +10,24 @@
 .kr-button:disabled,.kr-stepper:disabled{opacity:.45;cursor:default}
 .kr-button:focus-visible,.kr-stepper:focus-visible{outline:3px solid #fff3c4;outline-offset:5px}
 @media(prefers-reduced-motion:reduce){.kr-button,.kr-stepper{transition:none}}
+.kr-stepper,[data-kr-hit]{position:relative;overflow:visible}
+.kr-stepper::after,[data-kr-hit]::after{content:'';position:absolute;inset:calc(-1 * var(--kr-hit-y,0px)) calc(-1 * var(--kr-hit-x,0px));border-radius:inherit}
+.fw-compact .fw-choice-panel,.fw-compact .fw-bet-bar{left:50%!important;right:auto!important;box-sizing:border-box;transform:scale(var(--fw-ui-inverse));transform-origin:50% 0}
+.fw-compact .fw-choice-panel{width:var(--fw-panel-width);margin-left:calc(var(--fw-panel-width)/-2);top:var(--fw-panel-top)!important;padding:8px!important;gap:6px!important}
+.fw-compact .fw-choice-grid{gap:4px!important}
+.fw-compact .fw-choice-grid>[role=button]{height:44px!important}
+.fw-compact .fw-bet-bar{width:var(--fw-bet-width);margin-left:calc(var(--fw-bet-width)/-2);top:var(--fw-bet-top)!important;height:58px;display:grid!important;grid-template-columns:44px 44px minmax(56px,1fr) 44px 44px;gap:6px!important;align-items:center}
+.fw-compact .fw-bet-bar>.kr-stepper{--kr-step-size:44px!important}
+.fw-compact .fw-bet-bar>[role=button]:not(.kr-stepper){width:44px!important;height:44px!important}
+.fw-compact .fw-bet-bar>div:not([role=button]){width:auto!important}
+.fw-compact .fw-machine{top:var(--fw-machine-top)!important;transform:scale(var(--fw-machine-scale))!important}
+.fw-tiny .fw-choice-panel>div:first-child{height:44px}
+.fw-tiny .fw-choice-panel>div:first-child>div:first-child{width:calc(100% - 134px);gap:6px!important}
+.fw-tiny .fw-choice-panel>div:first-child>div:first-child>span:first-child{width:24px!important;height:24px!important;flex-shrink:0;font-size:16px!important}
+.fw-tiny .fw-choice-panel>div:first-child>div:first-child>span:last-child{font-size:16px!important;white-space:normal!important;line-height:1.15}
+.fw-tiny .fw-choice-grid>[aria-label^="Apostar no FORTUNE"]{position:absolute;right:8px;top:8px;width:126px;gap:6px!important}
+.fw-tiny .fw-choice-grid>[aria-label^="Apostar no FORTUNE"]>span:first-child{font-size:13px!important;letter-spacing:0!important}
+.fw-tiny .fw-choice-grid>[aria-label^="Apostar no FORTUNE"]>span:last-child{font-size:18px!important}
 /* The same two-slot bar switches from betting to climb/collect in both games. */
 .kr-round-controls{position:absolute;z-index:12;left:14px;right:14px;top:704px;height:86px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .kr-round-action{width:100%;min-width:0;height:86px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;line-height:1}

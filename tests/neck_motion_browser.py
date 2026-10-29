@@ -33,24 +33,31 @@ def check_neck_motion(browser, login, restored, observer):
         forced_pop(page,False)
         bar.get_by_role('button',name='JOGAR' if k==1 else 'SUBIR',exact=True).click()
         page.wait_for_function('__fn.state.lean>.98&&__fn.state.busy')
-        assert page.evaluate('k=>__fn.state.fr[k]!=="fall"',k),'Apple fell before contact'
-        mouth=page.locator('[data-mouth-anchor]').bounding_box()
-        fruit=page.locator(f'[data-neck-fruit="{k}"]').bounding_box()
-        branch_y=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>el.parentElement.getBoundingClientRect().top')
+        contact=page.evaluate('''k=>{const f=document.querySelector('[data-neck-fruit="'+k+'"]');return {fall:__fn.state.fr[k]==='fall',mouth:document.querySelector('[data-mouth-anchor]').getBoundingClientRect().toJSON(),fruit:f.getBoundingClientRect().toJSON(),branch:f.parentElement.getBoundingClientRect().top}}''',k)
+        assert not contact['fall'],'Apple fell before contact'
+        mouth=contact['mouth'];fruit=contact['fruit'];branch_y=contact['branch']
         assert abs(mouth['x']+mouth['width']/2-fruit['x']-fruit['width']/2)<9,(mouth,fruit)
         assert abs(mouth['y']+mouth['height']/2-fruit['y']-fruit['height']/2)<11,(mouth,fruit)
-        page.screenshot(path='/tmp/neck-knock-contact-'+str(k)+'.png')
         page.wait_for_function('k=>__fn.state.fr[k]==="fall"',arg=k)
-        page.wait_for_timeout(220)
-        # A slower screenshot can overlap the camera returning after the lunge.
-        # Check the fall relative to its branch, independent of camera movement.
-        moved=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>{const b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};}')
+        # Sample the actual CSS transition at known frames. A software GPU can
+        # hold its first frame while JS timers continue; never infer its phase
+        # from screenshot encoding or Python/CDP round-trip duration.
+        samples=page.evaluate('''async k=>{
+          const read=()=>{const el=document.querySelector('[data-neck-fruit="'+k+'"]'),b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};};
+          const el=document.querySelector('[data-neck-fruit="'+k+'"]');
+          const a=el.getAnimations().find(a=>a.transitionProperty==='transform');
+          if(!a)throw new Error('The apple has no falling transition');
+          a.pause();await a.ready;
+          a.currentTime=220;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const early=read();
+          a.currentTime=670;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const middle=read();
+          const held=__fn.state.reach===k&&__fn.state.busy&&!__fn.state.msg;a.play();return {early,middle,held};
+        }''',k)
+        moved=samples['early']
         initial_y=fruit['y']+fruit['height']/2-branch_y
         early_y=moved['y']+moved['height']/2-moved['branchY']
         assert early_y>initial_y+4,(fruit,moved)
-        page.wait_for_timeout(450)
-        assert page.evaluate('k=>__fn.state.reach===k&&__fn.state.busy&&!__fn.state.msg',k),'Camera returned or result covered the apple before the slow fall was readable'
-        middle=page.locator(f'[data-neck-fruit="{k}"]').evaluate('el=>{const b=el.getBoundingClientRect();return {y:b.y,height:b.height,branchY:el.parentElement.getBoundingClientRect().top};}')
+        assert samples['held'],'Camera returned or result covered the apple before the slow fall was readable'
+        middle=samples['middle']
         middle_y=middle['y']+middle['height']/2-middle['branchY']
         assert early_y+15<middle_y<initial_y+400,(moved,middle)
         assert 60<middle['y']+middle['height']/2<page.viewport_size['height'],'Falling apple already left the visible game'
@@ -88,11 +95,11 @@ def check_neck_motion(browser, login, restored, observer):
     page.screenshot(path='/tmp/neck-swallow-midpoint.png')
     assert page.evaluate('KingRicoCloud.player.balance')==990
     page.evaluate('()=>{__fn.setState({busy:false});__fn._cloudDeferred=KingRicoCloud.player;__fn.applyCloudPlayer()}');page.wait_for_timeout(600)
+    page.evaluate('''()=>{window.__neckBitesSeen={};const sample=()=>{if(__fn.state.biteFloor)__neckBitesSeen[__fn.state.biteFloor]=document.querySelectorAll('.fn-mouth-food').length;requestAnimationFrame(sample);};requestAnimationFrame(sample);}''')
     for floor in range(1,7):
         forced_pop(page,True)
         bar.get_by_role('button',name='JOGAR' if floor==1 else 'SUBIR',exact=True).click()
-        page.wait_for_function('n=>__fn.state.biteFloor===n',arg=floor)
-        assert page.locator('.fn-mouth-food').count()==1
+        page.wait_for_function('n=>__neckBitesSeen[n]===1',arg=floor)
         page.wait_for_function('n=>__fn.state.floor===n&&!__fn.state.busy',arg=floor)
     assert page.evaluate('KingRicoCloud.player.neckRound.savedUnits')==1550
     contact_before_drop(7)

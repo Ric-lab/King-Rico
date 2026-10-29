@@ -1,0 +1,78 @@
+{
+  "common": [
+    "assets/stage-lit.webp",
+    "assets/symbols/sym-coin.webp"
+  ],
+  "home": [
+    "assets/bleed/stage-bleed.webp?v=3",
+    "assets/brand/covers/stage.webp",
+    "assets/brand/covers/machine-front.webp",
+    "assets/brand/covers/wheel.webp",
+    "assets/brand/covers/clown.webp",
+    "assets/brand/covers/penalty.webp",
+    "assets/brand/covers/neck.webp",
+    "assets/brand/covers/flying.webp",
+    "assets/brand/covers/33.webp",
+    "assets/fingo/board-lit.webp",
+    "assets/fingo/target-balls.webp",
+    "assets/symbols-v7.webp"
+  ],
+  "circus": [
+    "assets/stage-off6.webp",
+    "assets/symbols-v7.webp",
+    "assets/reel-strip.webp",
+    "assets/reel-strip-blur.webp",
+    "assets/spin/spin-base.webp",
+    "assets/fx/machine-front5.webp",
+    "assets/fx/machine-front6-off.webp",
+    "assets/fx/basket.webp",
+    "assets/fx/top-layer3.webp",
+    "assets/fx/basket-front.webp",
+    "assets/symbols/sym-candy.webp",
+    "assets/king-rico/fw6/master.webp",
+    "assets/king-rico/fw6/wave.webp",
+    "assets/bleed/stage-bleed-v5-lossless.webp"
+  ],
+  "wheel": [
+    "assets/wheel/stage-bg.webp",
+    "assets/wheel/gold-atlas.webp",
+    "assets/wheel/hub-ring.webp",
+    "assets/symbols-v7.webp",
+    "assets/girafa/head.webp"
+  ],
+  "clown": [
+    "assets/clown/clown.webp"
+  ],
+  "penalty": [
+    "assets/penalty/field.webp",
+    "assets/penalty/jump.webp"
+  ],
+  "neck": [
+    "assets/neck/courtyard-hd.webp",
+    "assets/neck/bg-sky33.webp",
+    "assets/neck/branch-v2.webp",
+    "assets/neck/trunk-tile.webp",
+    "assets/neck/g-body.webp",
+    "assets/neck/g-head.webp",
+    "assets/neck/g-head-side.webp",
+    "assets/neck/apple-f1.webp"
+  ],
+  "flying": [
+    "assets/flying/bg2.webp",
+    "assets/flying/floor.webp",
+    "assets/flying/clown.webp?v=dc397ed34816",
+    "assets/flying/b0.webp",
+    "assets/flying/b1.webp",
+    "assets/flying/b2.webp",
+    "assets/flying/b3.webp",
+    "assets/flying/b4.webp",
+    "assets/flying/b5.webp",
+    "assets/symbols/sym-peach-lossless.webp"
+  ],
+  "twentyOne": [
+    "assets/brand/king-rico-sitting-lossless.webp",
+    "assets/symbols-v7.webp",
+    "assets/clown/clown.webp",
+    "assets/girafa/head.webp"
+  ]
+}
