@@ -1,3 +1,5 @@
+Leia primeiro [AGENTS.md](AGENTS.md), instruções atuais de manutenção.
+
 # Fortune Circus — regras de trabalho (sempre ler antes de gerar assets)
 
 Leia `guidelines/asset-pipeline.md` ANTES de qualquer geração 2D/3D ou gasto de créditos.

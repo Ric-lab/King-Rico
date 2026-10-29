@@ -24,7 +24,7 @@ anteriores foram preservadas. Na Machine, a máquina fica de frente, sem o elefa
 atlas original `symbols-v7.webp`, sobre as células vazias da máquina.
 
 O Fingo mantém cinco bolas acima do plinko, usando a moldura original do jogo
-e a geometria atual por código: seis fileiras alternadas (39 pinos) e quatro
+e a geometria atual por código: oito fileiras alternadas (49 pinos), compartilhadas com `games/fingo/layout.cjs` e quatro
 separadores com topo arredondado, formando cinco saídas; o 33 mantém três cartas 10–13–10;
 o Flying usa o palhaço atual vermelho/verde. O Pênalti conserva gol, goleira,
 bola e uma pequena base de grama, deixando o cenário compartilhado visível.
@@ -48,10 +48,6 @@ O CSS da abertura e uma prévia WebP pequena vêm no próprio HTML, para aparece
 antes do download da imagem completa. A tela anterior, no app instalado, pertence
 ao sistema operacional: o manifesto fornece fundo e ícone, não uma cena arbitrária.
 
-Aceite estético do autor ainda pendente. Conferir futuros ajustes na própria Home,
-com suas bordas, rótulos e tamanho de uso, além de examinar o arquivo grande.
-
-Feedback do autor: a cartela de bingo foi rejeitada. O conceito aprovado como
-referência é o antigo plinko com cinco bolas; o excesso de lâmpadas, halos e
-faíscas deve ser removido. A nova capa retoma essa composição sem luzes no fundo.
-Aceite estético da nova execução ainda pendente.
+A direção atual preserva o plinko com cinco bolas e fundo compartilhado. A cartela
+como capa foi rejeitada pelo autor. Para ajustes futuros, conferir hierarquia no
+tamanho real da Home e não tratar uma proposta antiga como nova pendência aprovada.

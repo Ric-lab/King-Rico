@@ -1,66 +1,55 @@
-# Atualizar o site pelo GitHub
+# Publicar pelo GitHub
 
-Quando a conexão inicial estiver configurada, cada atualização em `main` no repositório `Ric-lab/King-Rico` executa os testes, compila e publica o site em `https://king-rico.web.app`. Alterações em outra branch ou em um pull request executam a verificação, sem publicar. O painel Actions do GitHub mostra progresso e falhas. Uma falha nos testes impede a publicação; o site continua com a última versão publicada.
+A conexão GitHub → Firebase já está configurada. O fluxo oficial é
+[Publicar King Rico no Firebase](../.github/workflows/firebase-hosting.yml), no
+repositório `Ric-lab/King-Rico`. O site é **https://king-rico.web.app** e o projeto
+é **king-rico**, plano **Spark**.
 
-O fluxo usa Firebase Hosting estático no Spark. Não há Cloud Functions nem App Hosting. Google e GitHub mantêm suas próprias cotas gratuitas. O workflow publica as regras do Firestore antes do site, para que o Neck e os outros jogos usem a mesma carteira. Se as regras falharem, o site novo não é publicado. A publicação não apaga os dados dos jogadores. Índices exigem implantação separada.
+## Fluxo normal
 
-As regras são compiladas e publicadas pela API REST oficial de Firebase Rules, com as mesmas credenciais temporárias do workflow. O script `scripts/publish-firestore-rules.mjs` verifica a versão ativa após a atualização e reutiliza uma versão idêntica. Esse caminho usa Firebase Rules Admin diretamente e dispensa a consulta de ativação de serviços que a CLI faz antes de publicar regras. Não altera APIs habilitadas ou permissões IAM. Erros de autorização interrompem a publicação e aparecem nas anotações do GitHub, sem credenciais ou respostas completas.
+1. Conferir atualizações em `main`, preservar alterações existentes e testar a mudança.
+2. Gerar produção depois dos testes de integração; enviar a alteração revisada à `main`.
+3. Acompanhar **verificar** e **publicar** em GitHub Actions até concluírem.
+4. Conferir o site e os arquivos/fluxos afetados. Uma falha deixa a versão anterior;
+   commit enviado ou build local aprovado não comprovam publicação.
 
-## Conexão inicial, uma vez
+Push na `main` publica. Pull request com destino à `main` verifica sem publicar.
+Um push isolado em outra branch não é gatilho deste workflow. A execução manual
+por Actions também existe; selecione `main` para publicar.
 
-O GitHub precisa de autorização para publicar no Google. O script `scripts/setup-github-hosting.sh` configura Workload Identity Federation: a branch `main` deste repositório recebe credenciais temporárias de uma conta com as funções Firebase Hosting Admin e Firebase Rules Admin. Não recebe acesso administrativo direto aos documentos dos jogadores e não cria chaves privadas ou secrets permanentes no GitHub. Executar o script não vincula faturamento.
+O job de verificação usa o lockfile, roda `npm test`, testes reais de regras e
+transações emuladas com Java 21 e gera produção. O job de publicação usa esse
+mesmo artefato, sem recompilar uma versão diferente.
 
-Quem configurou a publicação antiga, que incluía somente Hosting, precisa executar uma vez no Google Cloud Shell:
+## Regras, Hosting e credenciais
 
-```sh
-gcloud projects add-iam-policy-binding king-rico --member=serviceAccount:king-rico-hosting@king-rico.iam.gserviceaccount.com --role=roles/firebaserules.admin --condition=None --quiet
-```
+A ordem é: **regras compatíveis → limpeza controlada do Hosting → site**.
+`scripts/publish-firestore-rules.mjs` compila e publica pela API REST oficial de
+Firebase Rules, reutiliza regras idênticas e confirma a versão ativa. Preserve
+esse publicador; não o substituir por um deploy genérico da CLI. Falha nas regras
+interrompe a publicação do site.
 
-Isso autoriza o workflow a publicar regras. Não habilita Blaze nem concede leitura dos saldos pela API administrativa. Após conceder, repetir o job de publicação se uma execução falhou por falta dessa permissão.
+Workload Identity Federation fornece credenciais temporárias à conta já
+configurada, sem chave privada no Git. `scripts/setup-github-hosting.sh` é uma
+ferramenta de configuração administrativa inicial, não uma etapa de toda release.
+Não repetir configuração IAM para resolver falhas sem antes conferir o diagnóstico.
 
-No [Google Cloud Shell](https://shell.cloud.google.com/?project=king-rico), com a conta dona do projeto, obtenha o repositório:
+`scripts/cleanup-hosting.mjs` preserva as cinco versões recentes por canal e todas
+as ativas; uploads órfãos só podem ser removidos após 24 horas. Não apaga Auth ou
+Firestore. Não exige Blaze, Cloud Functions ou mudança de faturamento.
 
-```sh
-git clone https://github.com/Ric-lab/King-Rico.git
-cd King-Rico
-git switch codex/firebase-spark
-bash scripts/setup-github-hosting.sh
-```
+A configuração pública Web fica em `cloud/firebase-config.production.js`.
+Sua apiKey identifica o app; a autorização depende de login e regras. O build de
+produção usa esse arquivo mesmo com uma configuração local diferente.
+Nunca enviar chaves administrativas ou tokens ao repositório.
 
-Se o repositório for privado, autorize primeiro o GitHub pelo fluxo oficial da CLI `gh auth login --web --git-protocol https` e use `gh repo clone Ric-lab/King-Rico`. Não usar senha como credencial de Git nem colar tokens no chat. Se já houver um checkout, use `git fetch origin` e selecione a branch com o script, preservando alterações locais.
+## Cuidados de manutenção
 
-Se a conta de publicação acabou de ser criada, o Google pode responder que ela ainda não existe ao aplicar a permissão. O script repete apenas esse erro, com até 90 segundos de espera total. Outros erros interrompem a configuração. Para atualizar o script e retomar uma execução interrompida, no mesmo checkout da branch `codex/firebase-spark`:
+As páginas publicadas estão em `site/routes.json`. Preservar os caminhos antigos,
+o menu compartilhado, a sessão Google e o saldo ao incorporar exports de design.
+Os protótipos guardados seguem no build por compatibilidade, fora da Home.
+Confira versões de matemática em [Economia](ECONOMIA.md), não em instruções de deploy.
 
-```sh
-git pull --ff-only
-bash scripts/setup-github-hosting.sh
-```
-
-O script reutiliza a conta e a conexão já criadas. Só considere a configuração concluída quando aparecer `Conexão GitHub → Firebase configurada.`
-
-Depois de revisar as alterações, incorpore a branch em `main`. O workflow inicia a primeira publicação. Para repetir sem mudar o código: GitHub → Actions → Publicar King Rico no Firebase → Run workflow → main. Uma autorização recém-criada pode levar alguns minutos para propagar; se esse for o erro confirmado, repita o job após a propagação.
-
-Essa conexão não foi executada no projeto real por este ambiente: requer o login do dono do projeto no Google. Não considerar o site publicado até o job de publicação terminar com sucesso e testar o endereço.
-
-## Mudanças futuras
-
-1. Editar o jogo, testar e enviar as mudanças ao GitHub.
-2. Revisar e incorporar em `main`.
-3. Conferir o resultado em Actions e abrir o site atualizado.
-
-Exportações do editor visual precisam preservar as ligações da Home com `KingRicoCloud` e com o menu compartilhado. Um card novo também exige incluir a página no build e integrar suas apostas, prêmios e progresso à carteira; copiar somente a tela não publica um jogo funcional na nuvem. Os testes de adaptadores e o fluxo de navegador verificam saldo, bônus, menus e retomada de sessão.
-
-Clown e Bounce também fazem parte da publicação. O Clown salva cada uma das dez bolas antes da animação e credita o total no último lançamento; fechar o painel de resultado não altera moedas. O Bounce salva cada plataforma, os prêmios dourados e o valor protegido antes do próximo salto. Recarregar a página restaura a rodada, sem importar moedas locais. Os renderizadores de Pênalti, Clown e Bounce carregam o Three.js do próprio Hosting.
-
-A Wheel atual tem 13 casas: FORTUNE x25 (3,92%), desenho exato x10 (4%) e outro desenho da mesma cor x2 (29%). Isso fecha RTP de 98% nas novas operações v5. Clientes antigos v3/v4 ainda usam sua tabela x5. Ao exportar outra versão, manter motor, regras e tabela exibida em acordo. A auditoria e os limites de cada jogo estão em `docs/ECONOMIA.md`.
-
-Os dados públicos do Firebase estão em `cloud/firebase-config.production.js`, incluído no Git. A chave Web é um identificador público; a autorização continua nos tokens de login e nas regras do Firestore. O build de produção usa esse arquivo mesmo que um desenvolvedor tenha configuração local diferente. JavaScript usa validação de cache para que uma recarga obtenha a nova versão.
-
-Para publicar manualmente, em um terminal autenticado:
-
-```sh
-npm ci
-npm run deploy:hosting
-```
-
-A publicação automática e o acesso Google real precisam ser verificados depois da conexão. Os testes locais não substituem essa verificação.
+`npm run deploy:hosting` é um atalho **somente de Hosting**, para um terminal já
+autenticado. Ele não publica regras; o caminho normal completo é o workflow.
+Índices Firestore também não fazem parte dessa publicação automática.

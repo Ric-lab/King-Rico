@@ -13,3 +13,7 @@ cloud/firebase-config.js
 *-debug.log
 __pycache__/
 gha-creds-*.json
+
+# Evidências locais e export do editor; game.html é gerado pelo build.
+/work/
+/game.html

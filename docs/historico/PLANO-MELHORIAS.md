@@ -1,3 +1,5 @@
+> **Registro histórico.** Preservado em 29/10/2026; não é instrução atual nem lista de tarefas pendentes. Consulte o [índice atual](../README.md). Caminhos e comandos abaixo refletem a época do registro.
+
 # Plano de melhorias — Fortune Circus (a partir dos 3 vídeos de referência)
 
 Detalhes de cada observação: `guidelines/benchmark-video1.md` · quadros em `screenshots/v1-*`, `v2-*`, `v3-*`.

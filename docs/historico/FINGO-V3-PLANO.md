@@ -1,3 +1,5 @@
+> **Registro histórico.** Preservado em 29/10/2026; não é instrução atual nem lista de tarefas pendentes. Consulte o [índice atual](../README.md). Caminhos e comandos abaixo refletem a época do registro.
+
 # Fortune Fingo v3 — plano aprovado (executar na próxima sessão)
 
 ## Regra

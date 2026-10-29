@@ -1,53 +1,60 @@
-# Fortune Circus
+# King Rico
 
-Slot game (cassino social, sem dinheiro real) com King Rico e Happeach.
+Jogos casuais de moedas virtuais, com identidade de circo e interface em português.
+Site oficial: **https://king-rico.web.app**. Repositório: **Ric-lab/King-Rico**;
+branch de publicação: **main**. Firebase **king-rico**, plano Spark, sem Cloud Functions.
 
-- `Home.dc.html` — tela inicial
-- `Fortune Circus.dc.html` — o jogo
-- `King Rico.dc.html` — animações do King Rico
-- `3D Library.html` — biblioteca 3D
-- `DESIGN-SYSTEM.md` — guia do design system (cores, tipo, luz, animação, tabela, regras para terceira idade)
-- `MANUAL.md` — manual completo do projeto (lições, geração de assets, publicação)
+## Jogos e fontes
 
-App Android (Capacitor), testes da matemática e APK de teste: veja `docs/ANDROID.md`.
+As páginas `.dc.html` são fontes editáveis. O catálogo de publicação é
+[site/routes.json](site/routes.json); a Home escolhe quais jogos aparecem ao público.
 
-Abra os arquivos `.dc.html` direto no navegador (precisam de `support.js` na mesma pasta). Para servir localmente: `npx serve .`
+| Na Home | Fonte | Endereço |
+|---|---|---|
+| Fortune Machine / Circus | [Fortune Circus.dc.html](<Fortune Circus.dc.html>) | `/circus` |
+| Fortune Wheel | [Fortune Wheel.dc.html](<Fortune Wheel.dc.html>) | `/wheel` |
+| Fortune Neck | [Fortune Neck.dc.html](<Fortune Neck.dc.html>) | `/neck` |
+| Fortune Fingo | [Fortune Fingo.dc.html](<Fortune Fingo.dc.html>) | `/fingo` |
+| Fortune Pênalti | [Fortune Penalty.dc.html](<Fortune Penalty.dc.html>) | `/penalty` |
+| Fortune Clown | [Fortune Clown.dc.html](<Fortune Clown.dc.html>) | `/clown` |
+| Fortune Flying Clown | [Fortune Flying Clown.dc.html](<Fortune Flying Clown.dc.html>) | `/flying-clown` |
+| Fortune 33 | [Fortune 33.dc.html](<Fortune 33.dc.html>) | `/33` |
 
-> A chave da API do Meshy foi removida dos scripts (`MESHY_API_KEY`).
+Bounce, Claw, Race e Bridge estão **guardados fora da Home**. Seus fontes e
+endereços diretos continuam preservados. `/21` mantém a compatibilidade com o
+Fortune 33. Não tratar esses protótipos como jogos oficiais novos.
 
+## Rodar localmente
 
-## Jogos
-- **Fortune Circus** — slot 3×3 (`Fortune Circus.dc.html`)
-- **Fortune Wheel** — roda de 13 casas, escolha um símbolo e gire com swipe; mesma cor x2, desenho exato x10 e Fortune x25 (`Fortune Wheel.dc.html`)
+Use Node indicado em [.nvmrc](.nvmrc) e Java 21 para o Firestore emulado:
 
-- **Fortune 33** — cartas numeradas, você contra a banca (`Fortune 33.dc.html`)
-- **Fortune Flying Clown** — estoure balões e escolha quando pegar o prêmio (`Fortune Flying Clown.dc.html`)
+```sh
+nvm use
+npm ci
+npm run emulators
+```
 
-## Experimento jogável
-- **Fortune Bridge** — Nick Neck numa passarela de vidro no circo, seis escolhas entre esquerda e direita. Prévia em `/bridge`; não substitui o Neck da Home. Ver [regras e validação](docs/FORTUNE-BRIDGE.md).
+Abra **http://127.0.0.1:5000**. O ambiente usa contas fictícias e o projeto
+`demo-king-rico`, sem mexer nas moedas reais. Não abra o HTML diretamente como
+substituto desse ambiente. Requisitos do navegador e sequência dos testes estão
+em [Desenvolvimento](docs/DESENVOLVIMENTO.md).
 
-## Guardados (fora da Home)
-- **Fortune Bounce** (`Fortune Bounce.dc.html`)
-- **Claw Machine** — máquina e prêmios 3D do Happeach (`Fortune Claw.dc.html`). Faltam os 3 modelos .glb no projeto.
-- **Fortune 21** — versão antiga do Fortune 33 (`Fortune 21.dc.html`)
-- **Fortune Hoop** (`Fortune Hoop.dc.html`)
-- **Fortune Race** — corrida de 5 bolinhas, aposta no vencedor ou 1º e 2º (`Fortune Race.dc.html`, prévia em `Fortune Race Preview.html`). Pausado: bolas ainda lentas. Ver [docs/FORTUNE-RACE.md](docs/FORTUNE-RACE.md).
+## Onde mexer
 
-Detalhes e garantias de persistência: [Fortune 33 e Flying Clown](docs/FORTUNE-21-E-FLYING.md).
+- Interface em uso: `ui/`, páginas `.dc.html` e renderizadores em `games/`.
+- Conta, carteira e matemática: `cloud/`, `firestore.rules` e `tests/`.
+- Arte: `assets/`; referências de design: `components/`, `tokens/`, `guidelines/` e `ui_kits/`.
+- Build e publicação: `scripts/`, `site/routes.json`, `firebase.json` e `.github/workflows/`.
+- `dist/`, `runtime/` e bundles Firebase são gerados; não editar nem versionar.
 
-## Login e dados
-Login Google, saldo/progresso no Firestore e Google Analytics usam o plano gratuito Firebase Spark. A integração está em `cloud/`. Os sorteios são calculados no navegador: esta versão usa moedas virtuais e não garante proteção contra resultados adulterados.
-Preparação, emuladores e ativação real: [docs/FIREBASE.md](docs/FIREBASE.md).
-Indicadores e eventos iniciais: [docs/ANALYTICS.md](docs/ANALYTICS.md).
-Sem a configuração Firebase (`enabled: true`), o jogo continua sendo o protótipo local.
+Comece pelo [índice de documentação](docs/README.md), pelas
+[instruções de manutenção](AGENTS.md) e pelo [mapa do projeto](docs/ORGANIZACAO.md).
+A direção visual está no [Design System](DESIGN-SYSTEM.md).
 
-Atualizações do site pelo GitHub: [docs/PUBLICACAO.md](docs/PUBLICACAO.md). Depois da conexão inicial, alterações em `main` passam pelos testes e são publicadas no Firebase Hosting.
+## Publicar
 
-Instalação no celular como **Fortune Circus**, tela cheia, ícone e endereços curtos:
-[instruções e limites](docs/INSTALAR-NO-CELULAR.md).
-
-Claw Machine: [mecânica, persistência e modelo 3D](docs/CLAW-MACHINE.md).
-
-Balanceamento e auditoria dos oito jogos: [economia](docs/ECONOMIA.md) e
-[comparação de sessões](docs/BALANCEAMENTO-DE-SESSOES.md). Reproduza com
-`npm run audit:sessions -- --compare-ref 0c3c12e`.
+O workflow existente testa, gera o build de produção, publica as regras pelo
+publicador REST e publica o Hosting ao atualizar `main`. Confirme os dois jobs
+no GitHub Actions; enviar um commit não comprova publicação.
+Veja [Publicação](docs/PUBLICACAO.md). O último commit deve ser consultado no Git,
+e não em um arquivo de sincronização escrito à mão.

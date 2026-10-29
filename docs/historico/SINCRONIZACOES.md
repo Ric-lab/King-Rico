@@ -1,3 +1,5 @@
+> **Registro histórico.** Preservado em 29/10/2026; não é instrução atual nem lista de tarefas pendentes. Consulte o [índice atual](../README.md). Caminhos e comandos abaixo refletem a época do registro.
+
 repo: Ric-lab/King-Rico
 branch: main
 

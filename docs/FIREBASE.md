@@ -1,6 +1,6 @@
 # Firebase gratuito: login Google, saldo e métricas
 
-Esta versão usa o plano **Spark**, sem vincular faturamento. Fortune Circus, Fortune Wheel, Fortune Neck e Fortune Fingo compartilham uma conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente regras do Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
+Esta versão usa o plano **Spark**, sem vincular faturamento. Os oito jogos da Home e os protótipos preservados usam a mesma integração de conta Google e saldo no Firestore. Google Analytics (GA4) recebe os eventos consentidos. O deploy inclui somente regras do Firestore e Hosting; não há Cloud Functions, TTL ou exportação BigQuery.
 
 A matemática do saque cedo, a garantia Happeach e os limites contra adulteração
 do sorteio estão em [FORTUNE-NECK-MATEMATICA.md](FORTUNE-NECK-MATEMATICA.md).
@@ -15,24 +15,17 @@ Ao trocar de tela ou reabrir o navegador com uma sessão salva, o jogo recupera 
 
 As regras não conseguem provar que um sorteio do navegador foi honesto. Um cliente modificado pode escolher vitórias dentro dos limites. Esta arquitetura atende o cassino social com moedas virtuais; não deve servir como uma economia de prêmios de valor. Um sorteio confiável exigiria backend confiável, como Cloud Functions (que exige Blaze), ou um serviço externo. Nenhum desses serviços é necessário para ativar esta versão Spark.
 
-## Criar o projeto gratuito
+## Projeto e configuração
 
-1. No [Firebase Console](https://console.firebase.google.com/), criar um projeto e **manter Spark**. Não ativar Blaze nem vincular uma conta de faturamento. Habilitar Google Analytics durante a criação ou depois nas configurações do projeto.
-2. Registrar um aplicativo **Web** e copiar a configuração pública. Não usar uma chave privada de service account.
-3. Authentication → Sign-in method → Google: ativar e definir e-mail de suporte. Em Authorized domains, conferir os domínios de produção. Adicionar `localhost` somente para desenvolvimento real, se necessário; projetos recentes não o adicionam automaticamente.
-4. Criar Cloud Firestore, em modo de produção, na região escolhida. A região não muda depois. Publicar as regras deste repositório antes de testar o aplicativo.
-5. Copiar `cloud/firebase-config.example.js` para `cloud/firebase-config.js`, preencher `apiKey`, `authDomain`, `projectId`, `appId` e `measurementId` e colocar `enabled: true`. São identificadores públicos, não credenciais administrativas. O arquivo local é ignorado pelo Git. Sem `measurementId`, login e saldo funcionam, mas os eventos não são coletados.
-6. Em uma máquina autorizada, usar o fluxo oficial `firebase login`. Nunca enviar tokens, chaves privadas ou senhas no chat.
-7. Após validar os emuladores, executar:
+O projeto oficial **king-rico** já está configurado e publicado. A configuração
+Web pública fica em `cloud/firebase-config.production.js`; o build de produção
+a usa explicitamente. Não substituir pelo exemplo nem repetir uma configuração
+administrativa inicial para atualizar jogos.
 
-```sh
-npm run build
-npx firebase deploy --project SEU_PROJECT_ID --only firestore,hosting
-```
-
-8. Conferir login Google real, saldo depois de recarregar, outro navegador com a mesma conta, conta diferente, ambos os jogos, bônus diário e revogação de analytics. Esta etapa ainda exige um projeto real e acesso do dono; não foi publicada automaticamente.
-
-Para atualizações automáticas do site a partir de `main`, seguir [PUBLICACAO.md](PUBLICACAO.md). A configuração pública real está em `cloud/firebase-config.production.js`; `npm run build:production` a utiliza explicitamente. O workflow publica primeiro regras compatíveis e depois Hosting. Índices continuam sendo implantados separadamente.
+O desenvolvimento local usa `demo-king-rico`, sem conta Google real. Consulte
+[Desenvolvimento](DESENVOLVIMENTO.md) para emuladores e testes, e
+[Publicação](PUBLICACAO.md) para o workflow existente. Ele publica regras pela
+API REST antes do Hosting; índices exigem implantação separada.
 
 ## Cotas e consumo
 
@@ -54,7 +47,7 @@ npm test
 npm run test:integration
 ```
 
-`npm run emulators` inicia Auth (9099), Firestore (8085) e Hosting (5000), no projeto fictício `demo-king-rico`. A tela de login indica explicitamente a conta fictícia. A simulação não acessa uma conta Google verdadeira e não envia Analytics. `npm run test:integration` executa testes das regras e transações no Firestore emulado, depois um fluxo de navegador dos dois jogos, recarga e isolamento de contas.
+`npm run emulators` inicia Auth (9099), Firestore (8085) e Hosting (5000), no projeto fictício `demo-king-rico`. A tela de login indica explicitamente a conta fictícia. A simulação não acessa uma conta Google verdadeira e não envia Analytics. `npm run test:integration` executa testes das regras e transações no Firestore emulado, depois os fluxos de navegador, recarga e isolamento de contas.
 
 O primeiro uso baixa o JAR oficial do Firestore de `storage.googleapis.com`; esse domínio precisa ser permitido na rede. O cache fica em `.firebase-cache/emulators/`. Testes unitários usam transações em memória. A integração executa as regras compiladas no Firestore emulado; login Google real, GA4 e persistência em produção exigem validação no projeto real.
 
@@ -71,7 +64,14 @@ Conta nova recebe 1.000 moedas. O saldo antigo do aparelho fica em `kingRico.leg
 
 O Neck preserva os 33 multiplicadores do design, de x1,1 a x50, sem o dígito 6. Seus prêmios são arredondados a uma casa decimal, como no protótipo; o saldo compartilhado mantém os centésimos vindos dos outros jogos. Happeach garante o prêmio do andar 6–20 onde aparece. As mesmas limitações de sorteio no cliente do Spark também se aplicam ao Neck.
 
-O Fingo preserva a rodada de 21 bolas e os multiplicadores por trio: x25, x25, x8, x4, x2, x1 e x0,4. A primeira rolagem debita uma única aposta e salva os cinco alvos. Cada rolagem salva os canos antes de mostrá-los; cada queda salva o balde, as marcações e o uso da bola antes da animação. Uma recarga da página ou outro aparelho recupera a rodada sem novo débito, sorteio dos mesmos canos ou devolução de bola usada. Completar os cinco alvos paga uma única vez; a bola 21 encerra uma rodada incompleta sem prêmio. A física anima o resultado gravado e não cria créditos locais. As regras limitam as transições, preservam campos dos outros jogos e vinculam o prêmio à operação imutável. O sorteio continua no cliente, com a mesma limitação do protótipo Spark.
+O Fingo atual dá **30 bolas**, cartela **5×5 com King Rico livre no centro**
+(`cardVersion:2`) e prêmio fixo de **2×** por quina (`payoutVersion:3`). Só o
+primeiro sorteio debita a aposta. Cada sorteio e queda persiste a transição antes
+da apresentação. Qualquer dourado atingido marca seu próprio número; a chegada
+é sorteada entre quedas físicas da entrada escolhida, sem veto separado de acerto.
+Atualizar ou abrir outro aparelho retoma a rodada sem nova cobrança ou prêmio
+repetido. Partidas antigas preservam cartelas e pagamentos contratados até encerrar.
+Veja [Fingo](FINGO-CARTELA.md) para interação, versões e validação.
 
 Os eventos consentidos `fingo_step` registram movimento, bolas usadas e acerto; `spin_settled` registra aposta e prêmio no encerramento da rodada. Sem consentimento, a coleta permanece desativada. Matter.js e three.js são instalados pelo lockfile e servidos no próprio Hosting.
 

@@ -5,11 +5,15 @@ estrelado por **King Rico**, um elefante violeta coroado de capa vermelha. O pro
 jogo casual de moedas virtuais em pt-BR: gira, ganha, sobe de nível. Não há dinheiro real,
 e a comunicação deixa isso explícito.
 
-Produto atual (out/2026): **Home** (`Home.dc.html` — escolha de jogo, saldo, bônus semanal)
-e o primeiro jogo, **Fortune Circus** (`Fortune Circus.dc.html` — rolos, menu, tabela,
-Happeach, Rodada Especial). Publicado como web app em GitHub Pages
-(https://ric-lab.github.io/King-Rico/) e empacotado para Android (`docs/ANDROID.md`).
-Público piloto: **terceira idade** — tudo grande, legível e impossível de perder.
+Produto atual: oito jogos na Home, com conta e saldo compartilhados. O site oficial
+é https://king-rico.web.app, publicado pelo workflow da main no Firebase Spark.
+Veja o catálogo no [README](README.md). O Android disponível é a instalação PWA,
+conforme [o guia](docs/INSTALAR-NO-CELULAR.md), sem projeto nativo neste checkout.
+Público piloto: **terceira idade**, com prioridade em legibilidade e resposta clara.
+
+A descrição de placa e coordenadas abaixo é referência do **Circus**. Os controles
+compartilhados atuais estão em [ui/CONTROLS.md](ui/CONTROLS.md); não aplicar a
+geometria antiga do slot como regra para todos os jogos.
 
 A tela de jogo é uma **placa única de arte** 453 × 802 em dois estados — apagada
 (`assets/stage-off6.webp`) e acesa (`assets/stage-lit.webp`), 3x — com a UI sobreposta em
@@ -20,7 +24,7 @@ esticada nem recomposta em CSS.
 ## Fontes deste design system
 
 Tudo aqui foi extraído de material do autor do jogo. Repositório: **Ric-lab/King-Rico**
-(`github.md` guarda o último commit). Processo de geração de assets e custos: `guidelines/asset-pipeline.md`;
+(consulte `git log origin/main` para o último commit). Processo de geração de assets e custos: `guidelines/asset-pipeline.md`;
 manual completo do projeto: `MANUAL.md`.
 
 - Arte do personagem e da marca enviada em `uploads/` e copiada para `assets/brand/`
@@ -67,13 +71,13 @@ justamente como o antes de um depois.
 
 **Responsabilidade:** onde couber, lembrar que são moedas virtuais
 (`Moedas virtuais · sem dinheiro real`), e ser honesto sobre limites do produto
-(`A cartela em andamento não é salva.`, `Backup Google indisponível nesta versão.`).
+(`Não foi possível confirmar. Tente novamente.`, `Sua partida será retomada.`).
 Nunca prometer ganho, sorte ou retorno.
 
 **Exemplos reais:**
 - `SALDO 8.420` · `GANHO +250` · `APOSTA 1.000`
 - `KING RICO` (barra de giro) · `FORTUNE CIRCUS` (card do jogo na Home) · `Coletar`
-- `Moedas e níveis são salvos automaticamente neste aparelho.`
+- `Suas moedas e seu progresso ficam salvos na sua conta.`
 
 ## VISUAL FOUNDATIONS
 
@@ -93,7 +97,7 @@ gorda, arredondada, com sombra de texto escura. **Rammetto One** (`--fc-font-bra
 títulos de marca com poucas letras (KING RICO, FORTUNE CIRCUS), grande, com degradê dourado e
 contorno grosso. **Luckiest Guy** em letreiros de celebração. Nunito (400/700) só em copy longa.
 Todas locais em `assets/fonts/` (exceto Nunito). Entrelinha 1 em números e rótulos, 1.45 em corpo.
-Números sempre `tabular-nums`. Nada abaixo de 19px nos números do quadro (saldo encolhe até 14px só quando o valor é longo); rótulos em caixa alta com tracking 1.2px.
+Números sempre `tabular-nums`. Nada abaixo de 19px nos números do quadro. A placa do saldo deve acomodar até 100.000.000,65 sem diminuir a fonte; rótulos em caixa alta com tracking 1.2px.
 
 **Fundos.** No jogo, o palco é a própria placa + sangria (`stage-bleed.webp`), com o topo limpo
 para o King Rico e a cesta. Home e carregamento: gradiente radial roxo (`--fc-bg-app`) com

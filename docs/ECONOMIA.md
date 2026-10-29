@@ -1,6 +1,6 @@
-# Economia de moedas — 27/10/2026
+# Economia de moedas — referência revisada em 29/10/2026
 
-Versão `2026-10-27-fingo-double-v10`. A meta é devolver aproximadamente 98 moedas por
+Versão `2026-10-28-fingo-free-v11`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
 Quando o retorno é 98%, isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo. O Fingo usa agora prêmio fixo de 2×: sua amostra por estratégia aparece abaixo e não deve ser anunciada como RTP de 98%.
 Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
@@ -17,7 +17,7 @@ O ajuste histórico que existia no Clown foi removido.
 | Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
 | Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
 | Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
-| Fingo 5×5 | 102,08% observado | 20 mil cartelas, política que prioriza linhas adiantadas; não é prova de RTP teórico |
+| Fingo 5×5 | 96,94% observado | 20 mil cartelas, política de cobertura física; amostra, sem prova de estratégia ótima |
 | Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
 | Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
 
@@ -58,26 +58,37 @@ Fortune 33 paga **2,08×** incluindo a aposta nas novas mãos; empates devolvem 
 aposta. Mãos antigas já abertas mantêm seu fator salvo (ou **2×** quando ainda não havia fator). O fator fica salvo e imutável na mão.
 O baralho contém 52 cartas e quatro cópias de cada rank de 1 a 13. A distribuição é dirigida na abertura e permanece fixa. A banca reage à pontuação do jogador, podendo parar abaixo de 27 ou comprar acima de 27; em empate alto, preserva o empate. Mãos antigas conservam a política em 27.
 
-O Fingo agora usa cartela 5×5, sem casa livre, e vence com cinco números de uma
-linha, coluna ou diagonal. Uma aposta continua valendo até 30 lançamentos. Os
-cinco tubos são sorteados antes da consulta à cartela; a consulta não sorteia de
-novo. A chance fixa de alcançar um tubo útil é 0,27 ao mirar no dourado, com fator
-0,85 fora dele. O sorteio oferece números úteis de colunas diferentes; cada
-marcação pode contribuir para linhas diferentes. Novas cartelas (`payoutVersion:3`) pagam 2× a aposta por qualquer quina, incluindo a aposta no prêmio total. Não há redução por bolas usadas. As chances de marcação foram mantidas nesta alteração.
+O Fingo atual usa cartela 5×5 com **coringa King Rico no centro** e vence com
+linha, coluna ou diagonal completa. Uma aposta dá até 30 lançamentos e paga
+**2×** por qualquer quina, incluindo a aposta. Números já marcados não contam de
+novo. O sorteio oferece pelo menos uma opção útil; cada coluna tem probabilidade
+base de 0,16 de número útil antes dessa garantia.
 
-A simulação de 20 mil cartelas, semente 90431, observou retorno de 102,08% e quina
-em 51,04% usando uma política que prioriza linhas adiantadas. Escolher o primeiro
-dourado observou 97,92% e 48,96%; escolher tubos aleatoriamente observou 17,48%
-e 8,74%. São amostras do motor, não prova de estratégia ótima ou RTP teórico.
-Não há ajuste de chance pelo saldo, pelo lucro ou pela sequência do jogador.
-Reproduza com `node scripts/fingo-card-audit.mjs`.
+Nas novas cartelas (`cardVersion:2`, `payoutVersion:3`), o destino é sorteado
+uniformemente entre 64 quedas físicas da entrada escolhida. Qualquer dourado
+atingido marca seu próprio número, sem um sorteio separado que vete o acerto.
+A animação reproduz uma trajetória correspondente ao resultado salvo.
 
-`cardVersion:1` identifica a cartela nova. As cinco bases salvas geram seus 25
-números de forma determinística; as marcas são índices de casas. As regras
-verificam o número alcançado, uma única marca válida, a quina e o pagamento.
-Cartelas antigas sem `cardVersion` mantêm os cinco alvos, chances e tabela já
-contratados até encerrar. `payoutVersion:2` mantém a tabela mais recente; cartelas
-anteriores a ela mantêm a tabela original. Veja [o fluxo e a validação](FINGO-CARTELA.md).
+A [auditoria física registrada](fingo-physical-audit.json), com 20 mil partidas
+por política e semente 90431, observou:
+
+| Política de referência | Retorno observado | Partidas com quina |
+|---|---:|---:|
+| Cobertura física | 96,94% | 48,47% |
+| Linhas adiantadas | 93,53% | 46,765% |
+| Primeiro dourado | 87,55% | 43,775% |
+| Entrada aleatória | 21,60% | 10,80% |
+
+São amostras de estratégias específicas, sem prova de RTP teórico ou de política
+ótima. A entrada aleatória é um controle da auditoria, não representa a escolha
+orientada da interface. O relatório `fingo-card-audit.json` registra o motor
+anterior e não deve ser usado como retorno atual. Reproduza a revisão atual com
+`node scripts/fingo-card-audit.mjs`; veja [o fluxo e a validação](FINGO-CARTELA.md).
+Não há ajuste pelo saldo, lucro ou sequência do jogador.
+
+Cartelas salvas com `cardVersion:1`, sem versão ou com pagamentos antigos mantêm
+suas regras até encerrar; não recebem a matemática nova no meio da aposta.
+As regras verificam o número alcançado, a marcação, a quina e o pagamento.
 
 Tabela apenas de cartelas já pagas na versão 2 (novas pagam sempre 2×):
 
@@ -96,7 +107,7 @@ Tabela apenas de cartelas já pagas na versão 2 (novas pagam sempre 2×):
 
 No Clown, retornos abaixo da aposta aparecem como “RETORNO PARCIAL” e a devolução
 como “APOSTA DEVOLVIDA”. Seus valores e probabilidades não mudaram.
-Os outros sete jogos mantêm sua matemática nesta revisão da cartela.
+A revisão física do Fingo não alterou a matemática dos outros jogos.
 
 ## Auditoria reproduzível
 

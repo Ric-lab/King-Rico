@@ -1,3 +1,5 @@
+> **Amostra histórica de balanceamento.** O texto e os dados refletem a revisão descrita, não o estado de todas as revisões posteriores. Para o motor atual, consulte [Economia](ECONOMIA.md).
+
 # Balanceamento de sessões — 26/10/2026
 
 Comparação do motor de `0c3c12e` com `2026-10-26-session-v8`.
