@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {rollDraws} from './helpers/fingo.cjs';
+import {rollDraws,dropDraws} from './helpers/fingo.cjs';
 import {Timestamp} from 'firebase/firestore';
 import {createGameStore,dayIndex} from '../cloud/store.mjs';
 
@@ -448,7 +448,7 @@ test('Fingo keeps the free center and credits a different golden number exactly 
  let draws=rollDraws(0);const m=memory(()=>draws.shift()??0),call=m.client('other-gold');await call(request({action:'bootstrap'}));
  const base={action:'fingo',game:'fingo',bet:10,roundId:randomUUID()};
  const roll=await call(request({...base,move:'roll',used:0}));assert.equal(roll.outcome.cardVersion,2);assert.deepEqual(roll.outcome.marks,[12]);
- m.advance(350);draws=[0,.99,0];const move=request({...base,move:'drop',used:0,selected:0});
+ m.advance(350);draws=dropDraws(0,2);const move=request({...base,move:'drop',used:0,selected:0});
  const hit=await call(move);assert.equal(hit.outcome.bin,2);assert.equal(hit.outcome.mark,2);assert.deepEqual(hit.player.fingoRound.marks,[12,2]);
  assert.equal(hit.player.balance,990);m.setRng(()=>{throw Error('No new draw on replay');});
  assert.equal((await m.client('other-gold')(move)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,990);
