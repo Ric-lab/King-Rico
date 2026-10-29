@@ -257,7 +257,7 @@ function nonAdjacent(avail, k) { const s = [...avail].sort((a, b) => a - b);
   for (let n = Math.min(k, s.length); n >= 1; n--) { const combos = [], bt = (i, cur) => { if (cur.length === n) { combos.push([...cur]); return; } for (let j = i; j < s.length; j++) if (!cur.length || s[j] - cur[cur.length - 1] >= 2) { cur.push(s[j]); bt(j + 1, cur); cur.pop(); } };
     bt(0, []); if (combos.length) return combos[Math.floor(Math.random() * combos.length)]; } return []; }
 class Component extends DCLogic {
-  state = { artReady:false,artError:false,betOpen:true,balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:3, cardVersion:2, cardOpen:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 862, justMarked: -1, winLine: null };
+  state = { artReady:false,artError:false,betOpen:true,balance: 1000, betIdx: 3, targets: null, tmarks: [false, false, false, false, false], card: newCard(), balls: BALLS, used: 0, active: false, payoutVersion:3, cardVersion:2, cardOpen:false,cardOpenedManually:false, cardMode:'aim', phase: 'spin', slots: null, rollNums: null, revealed: 0, fire: false, conf: [], win: null, vw: W, vh: 862, justMarked: -1, winLine: null };
   stageRef = React.createRef(); canvasRef = React.createRef();launchCanvasRef=React.createRef();
   IM = { ball: img('assets/fingo/ball.webp'), peg: img('assets/fingo/peg.webp'), tri: img('assets/fingo/triangle.webp'),numberBalls:img('assets/fingo/target-balls.webp') };
   prepareArt=async()=>{
@@ -309,7 +309,7 @@ class Component extends DCLogic {
       legacyNotice,
       betIdx:r ? BETS.indexOf(r.betUnits/100) : p.settings.fingoBetIdx ?? 3,
       roundId:r?.id || null,targets:r?.targets || null,tmarks:r?.cardVersion>=1?[false,false,false,false,false]:r?.marks || [false,false,false,false,false],
-      cardVersion:r?r.cardVersion||0:2,card:r?.cardVersion>=1?this.cardFrom(r.targets,r.marks,r.cardVersion):this.state.card,cardOpen:!!(r?.cardVersion>=1&&(keepCard||r.slots&&this._reviewedRoll!==r.id+':'+r.used)),cardMode:keepCard?(!r.slots?'consult':this.state.cardMode):'aim',
+      cardVersion:r?r.cardVersion||0:2,card:r?.cardVersion>=1?this.cardFrom(r.targets,r.marks,r.cardVersion):this.state.card,cardOpen:!!(r?.cardVersion>=1&&(keepCard||r.slots&&this._reviewedRoll!==r.id+':'+r.used)),cardOpenedManually:keepCard&&!!this.state.cardOpenedManually,cardMode:keepCard?(!r.slots?'consult':this.state.cardMode):'aim',
       betOpen:!r&&!this._betChosen,active:!!r,payoutVersion:r?(r.payoutVersion||0):3,used:r?.used || 0,balls:BALLS-(r?.used || 0),slots:r?.slots || null,rollNums:r?.slots || null,
       revealed:r?.slots ? 5 : 0,phase:r?.slots ? 'drop' : 'spin',landed:null,justMarked:-1,winLine:null,win:null,markFeedback:false});
   }
@@ -493,19 +493,19 @@ class Component extends DCLogic {
       clearInterval(this._ri);[this._t1,this._t2,this._markTimer].forEach(clearTimeout);
       this._cardDrop=null;this._cloudDrop=null;this._reviewedRoll=null;
       this._freshLink=false;this._cloudRequest=false;
-      this._betChosen=false;this.setState({betOpen:true,legacyNotice:false,ending:false,endConfirm:false,markFeedback:false,cardOpen:false,win:null,phase:'spin',active:false,targets:null,tmarks:[false,false,false,false,false],card:newCard(),balls:BALLS,used:0,slots:null,landed:null,winLine:null,justMarked:-1,payoutVersion:3,cardVersion:2},()=>{
+      this._betChosen=false;this.setState({betOpen:true,legacyNotice:false,ending:false,endConfirm:false,markFeedback:false,cardOpen:false,cardOpenedManually:false,win:null,phase:'spin',active:false,targets:null,tmarks:[false,false,false,false,false],card:newCard(),balls:BALLS,used:0,slots:null,landed:null,winLine:null,justMarked:-1,payoutVersion:3,cardVersion:2},()=>{
         if(cloud?.enabled){this._cloudDeferred=cloud.player;this.applyCloudPlayer();}else this.save();
       });
       if(fromLink===true){const url=new URL(window.location.href);url.searchParams.delete('nova-cartela');window.history.replaceState(null,'',url.pathname+url.search+url.hash);}
     }catch(error){this._freshLink=false;this._cloudRequest=false;this.setState({ending:false,endConfirm:true});cloud?.error(error);}
   };
-  openCard=()=>{const s=this.state;if(s.cardVersion<1||!s.active||s.win||this._cloudRequest||['launching','falling'].includes(s.phase))return;if(s.cardOpen){this.continueCard();return;}this.setState({cardOpen:true,cardMode:s.phase==='drop'?'aim':'consult'});};
+  openCard=()=>{const s=this.state;if(s.cardVersion<1||!s.active||s.win||this._cloudRequest||['launching','falling'].includes(s.phase))return;if(s.cardOpen){this.continueCard();return;}this.setState({cardOpen:true,cardOpenedManually:true,cardMode:s.phase==='drop'?'aim':'consult'});};
   continueMark=()=>{if(this.state.phase!=='card-mark'||!this.state.markFeedback)return;this.setState({markFeedback:false},()=>this.next());};
   continueCard=()=>{
     const s=this.state;
-    if(s.cardMode==='win'){const w=this._cardDrop.winUnits/100;this.setState({cardOpen:false,win:{w,title:w>BETS[s.betIdx]?'FINGO!':'APOSTA DEVOLVIDA'}});return;}
+    if(s.cardMode==='win'){const w=this._cardDrop.winUnits/100;this.setState({cardOpen:false,cardOpenedManually:false,win:{w,title:w>BETS[s.betIdx]?'FINGO!':'APOSTA DEVOLVIDA'}});return;}
     this._reviewedRoll=s.roundId+':'+s.used;
-    this.setState({cardOpen:false},()=>{if(s.phase==='card-mark')this.next();else if(this._cloudDeferred&&!this.cloudLocked())this.applyCloudPlayer();});
+    this.setState({cardOpen:false,cardOpenedManually:false},()=>{if(s.phase==='card-mark')this.next();else if(this._cloudDeferred&&!this.cloudLocked())this.applyCloudPlayer();});
   };
   landCard(bin){
     const x=this._cardDrop;if(!x)return;
@@ -514,7 +514,7 @@ class Component extends DCLogic {
     if(x.mark<0){this.tone(260,.18,'sine',.07,180);return this.next();}
     [FINGO_NOTES[2],FINGO_NOTES[3],FINGO_NOTES[5]].forEach((f,j)=>setTimeout(()=>this.playNote(f,.035,.27),j*100));this.buzz([30,30,50]);
     this.setState({phase:won?'won':'card-mark'});
-    this._t1=setTimeout(()=>{if(!this._dead)this.setState({cardOpen:true,markFeedback:false,cardMode:won?'win':'marked'},()=>{this.animateCardMark();if(!won)this.queueMarkedReturn();});},500);
+    this._t1=setTimeout(()=>{if(!this._dead)this.setState({cardOpen:true,cardOpenedManually:false,markFeedback:false,cardMode:won?'win':'marked'},()=>{this.animateCardMark();if(!won)this.queueMarkedReturn();});},500);
     if(won)this.confetti(bin);
   }
   animateCardMark(){
@@ -554,7 +554,7 @@ class Component extends DCLogic {
       markInkAnimation:'fgBingoInk '+MARK_TIMING.paint+'ms '+MARK_TIMING.paintDelay+'ms ease-out both',showCardAction:!['aim','marked'].includes(s.cardMode),autoCardReturn:s.cardMode==='marked',showMarkNumber:reviewing&&s.justMarked>=0,cardGap:s.cardMode==='consult'?'5px':'8px',cardTop:reviewing?'277px':'303px',cardBottom:reviewing?'176px':'120px',cardTitleShift:reviewing?'-170px':'0px',boardVisibility:s.cardOpen&&reviewing?'hidden':'visible',cardTitle:s.cardMode==='win'?'QUINA!':s.cardMode==='marked'?'ACERTOU!':'SUA CARTELA',
       cardNote:s.cardMode==='win'?'Você completou uma linha!':s.cardMode==='marked'?s.card.nums[s.justMarked]+' marcado na sua cartela.':s.cardMode==='aim'?'Escolha a entrada. Vale o dourado onde cair.':best.n>=3?(best.n===4?'Falta 1':'Faltam '+(5-best.n))+' para fechar a linha em destaque.':'Feche uma linha, coluna ou diagonal.',
       cardAction:s.cardMode==='win'?'RECEBER':s.cardMode==='marked'?'PRÓXIMA BOLA':'VOLTAR AO PLINKO',
-      cardActionClass:s.cardMode==='consult'?'kr-button fg-spin fg-blue':'kr-button fg-spin',
+      cardActionClass:'kr-button fg-spin fg-blue',
       cardDraw:slots.map((n,c)=>({text:String(n),index:String(c),color:TH[c],gold:(reviewing?c===s.landed:this.useful(n,c))?'3px solid #ffd257':'3px solid transparent',opacity:(reviewing?c===s.landed:this.useful(n,c))?1:.45})),
       cardCells:card.nums.map((n,i)=>{const free=n===0,marked=card.marks[i],paint=marked&&!free&&reviewing&&s.justMarked===i,available=s.cardMode==='aim'&&slots.includes(n)&&!marked&&!free;return {free,available,paint,numberAnim:paint?'fgBingoNumber '+MARK_TIMING.paint+'ms '+MARK_TIMING.paintDelay+'ms both':'none',checkAnim:paint?'fgBingoCheck 180ms '+(MARK_TIMING.paintDelay+MARK_TIMING.paint-100)+'ms both':'none',opacity:marked||available?1:.72,text:free?'':String(n),pick:()=>this.pickCardCell(i),disabled:!available,cursor:available?'pointer':'default',index:String(i),label:free?'King Rico, coringa livre':n+(marked?', marcado':available?', disponível nos tubos':''),color:available?'#38220d':marked?'#fff9df':'#655f4f',bg:available?'linear-gradient(#fffbb5,#ffe342 55%,#ffc928)':paint?'#ede8d8':marked?'linear-gradient(#24874b,#12532b)':'#ede8d8',border:available?'3px solid #fffdf0':near.includes(i)?'2px solid #d49620':'2px solid #d8bb75',shadow:s.winLine?.includes(i)?'0 0 15px #ffd257':available?'0 0 0 3px #ecaa08,0 0 18px #ffdf63bb,inset 0 -4px 0 #b9791966':'inset 0 -3px 0 #9d6c2922',anim:paint?'none':available?'fgReadyGlow 1.2s ease-in-out infinite':'none',check:marked&&!free};})};
   }
@@ -593,19 +593,19 @@ class Component extends DCLogic {
   };
   roll(slots, extra) {
     this.playNote(392,.028,.12);
-    this.setState({ ...extra, phase: 'rolling',markFeedback:false,selectedColumn:null,cardOpen:false, slots, revealed: 0, rollNums: slots.map(() => rint(1, 75)), landed: null }, () => {this._preparingRoll=false;this.save();});
+    this.setState({ ...extra, phase: 'rolling',markFeedback:false,selectedColumn:null,cardOpen:false,cardOpenedManually:false, slots, revealed: 0, rollNums: slots.map(() => rint(1, 75)), landed: null }, () => {this._preparingRoll=false;this.save();});
     const t0 = performance.now(); clearInterval(this._ri);
     this._ri = setInterval(() => { const el = performance.now() - t0, rev = Math.max(0, Math.min(5, Math.floor((el - 300) / 260) + 1));
       if(rev>this.state.revealed){const useful=this.useful(slots[rev-1],rev-1);this.playNote(FINGO_NOTES[rev-1],useful ? .044 : .026,.19);this.buzz(useful?25:8);}
       this.setState({ revealed: rev, rollNums: slots.map(() => rint(1, 75)) });
-      if (rev >= 5 && el > 300 + 5 * 260 + 200) { clearInterval(this._ri); this.setState({phase:'drop',cardOpen:this.state.cardVersion>=1,cardMode:'aim'}); } }, 60);
+      if (rev >= 5 && el > 300 + 5 * 260 + 200) { clearInterval(this._ri); this.setState({phase:'drop',cardOpen:this.state.cardVersion>=1,cardOpenedManually:false,cardMode:'aim'}); } }, 60);
   }
   pickBucket=column=>{const s=this.state;if(s.phase!=='drop'||this._cloudRequest)return;const i=s.card.nums.indexOf(s.slots?.[column]);if(i>=0)this.pickCardCell(i);};
   confirmBet=()=>{if(this._cloudRequest||this.state.active)return;this._betChosen=true;this.setState({betOpen:false},()=>this.onSpin());};
   pickCardCell=i=>{
     const s=this.state,n=s.card.nums[i],col=s.slots?.indexOf(n);
     if(s.phase!=='drop'||s.cardMode!=='aim'||this._cloudRequest||n===0||s.card.marks[i]||col<0||col==null)return;
-    this.setState({markFeedback:false,cardOpen:false,selectedColumn:col},()=>this.dropColumn(col));
+    this.setState({markFeedback:false,cardOpen:false,cardOpenedManually:false,selectedColumn:col},()=>this.dropColumn(col));
   };
   boardDown=e=>{if(this.state.cardVersion>=1)return;const rc=e.currentTarget.getBoundingClientRect();this.dropColumn(Math.max(0,Math.min(4,Math.floor((e.clientX-rc.left)*5/rc.width))));};
   dropColumn=async col=>{
@@ -618,7 +618,7 @@ class Component extends DCLogic {
       try {
         const r=await cloud.fingo('drop',BETS[s.betIdx],s.roundId,s.used,col);
         this._cloudDrop=r.outcome;this._cardDrop=r.outcome;target=r.outcome.bin;
-      } catch(e) {this._cloudDeferred=cloud.player;cloud.error(e);this._cloudRequest=false;this.applyCloudPlayer();this.setState({cardOpen:s.cardVersion>=1,cardMode:'aim',selectedColumn:null});return;}
+      } catch(e) {this._cloudDeferred=cloud.player;cloud.error(e);this._cloudRequest=false;this.applyCloudPlayer();this.setState({cardOpen:s.cardVersion>=1,cardOpenedManually:false,cardMode:'aim',selectedColumn:null});return;}
     } else if(s.cardVersion>=1&&window.KingRicoFingoCard){this._cardDrop=window.KingRicoFingoCard.cardRound(Math.round(BETS[s.betIdx]*100),this.cardRound(),'drop',s.roundId,col,Math.random,n=>multAt(n,2),2);target=this._cardDrop.bin;} else if (s.fire) target = col;
     else { const p = (s.payoutVersion===2?HIT:.11783) * (onGold ? 1 : s.payoutVersion===2?.85:.6), hit = gold.length > 0 && Math.random() < p;
       const pool = hit ? gold : [0, 1, 2, 3, 4].filter(i => !gold.includes(i)), near = pool.slice().sort((a, b) => Math.abs(a - col) - Math.abs(b - col));
@@ -661,10 +661,10 @@ class Component extends DCLogic {
     if(cloud?.enabled) {
       this._paying=true;
       const done=()=>{this._betChosen=false;this._cloudDrop=null;this._paying=false;this._cloudDeferred=cloud.player;
-        this.setState({win:null,phase:'spin',lucky:null,cardOpen:false},()=>this.applyCloudPlayer());};
+        this.setState({win:null,phase:'spin',lucky:null,cardOpen:false,cardOpenedManually:false},()=>this.applyCloudPlayer());};
       if(w>0) this.flyCoins(done);else done();return;
     }
-    const reset = () => {this._betChosen=false;this.setState({ betOpen:true,targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, payoutVersion:3,cardVersion:2,card:newCard(),markFeedback:false,cardOpen:false,phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());};
+    const reset = () => {this._betChosen=false;this.setState({ betOpen:true,targets: null, tmarks: [false, false, false, false, false], balls: BALLS, used: 0, active: false, payoutVersion:3,cardVersion:2,card:newCard(),markFeedback:false,cardOpen:false,cardOpenedManually:false,phase: 'spin', slots: null, landed: null, winLine: null, justMarked: -1, fire: false }, () => this.save());};
     this.setState({ win: null });
     if (w > 0) this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal }, () => { this.save(bal); reset(); }); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); }); else reset(); };
   flyCoins(done) { const wallet=this.stageRef.current?.querySelector('.kr-hud-balance');if(window.KingRicoWallet&&wallet){window.KingRicoWallet.fly(wallet,{onFirst:done});return;} const st = this.stageRef.current; if (!st || !st.animate) return done(); const from = { x: 258, y: 50 }, to = { x: 40, y: 42 }, n = 10;
@@ -734,7 +734,7 @@ class Component extends DCLogic {
       topBalls:[0,1,2,3,4].map(c=>{const fin=shown&&(!rolling||c<s.revealed),n=shown?(fin?s.slots[c]:s.rollNums[c]):COLS[c],chosen=s.selectedColumn===c&&['launching','falling'].includes(s.phase);const useful=fin&&this.useful(n,c);return {index:String(c),text:String(n),useful,pos:(-c*52)+'px',color:TC[c][2],opacity:chosen?0:(fin&&!useful?0.42:1),filter:fin&&!useful?'grayscale(.85)':'none',shadow:useful?'0 0 0 3px #087c38,0 0 0 6px #ffda42,0 0 16px #ffdc6577':'0 2px 5px #0006'};}),
       launching:s.phase==='launching',launchShift:(6.8+ENTRY_CENTERS[s.selectedColumn||0]*.97-TOP_BALL_X(s.selectedColumn||0))+'px',launchLeft:(TOP_BALL_X(s.selectedColumn||0)-26)+'px',launchPos:(-(s.selectedColumn||0)*52)+'px',launchText:s.slots?.[s.selectedColumn]||'',launchColor:TC[s.selectedColumn||0][2],
       buckets, boardDown: this.boardDown, boardCursor: s.phase === 'drop' ? 'pointer' : 'default', shakeAnim: s.shake ? 'fgShake .5s ease-in-out' : 'none',
-      bucketVisibility:s.cardOpen?'hidden':'visible',showGiveUp:s.cardOpen&&s.active&&!s.win&&!this._cloudRequest&&!['rolling','launching','falling','won'].includes(s.phase),showEndButton:s.active&&!['rolling','launching','falling','won'].includes(s.phase),askEndRound:this.askEndRound,endRound:this.endRound,keepRound:this.keepRound,endConfirm:!!s.endConfirm,ending:!!s.ending,endLabel:s.ending?'ENCERRANDO…':'ENCERRAR',canEndCard:s.cardMode!=='win',showSpin:canSpin&&!this._freshLink,countOp:1,boardLightOpacity:['rolling','launching','falling','won'].includes(s.phase)?1:0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
+      bucketVisibility:s.cardOpen?'hidden':'visible',showGiveUp:s.cardOpen&&s.cardOpenedManually&&s.active&&!s.win&&!this._cloudRequest&&!['rolling','launching','falling','won'].includes(s.phase),showEndButton:s.active&&!['rolling','launching','falling','won'].includes(s.phase),askEndRound:this.askEndRound,endRound:this.endRound,keepRound:this.keepRound,endConfirm:!!s.endConfirm,ending:!!s.ending,endLabel:s.ending?'ENCERRANDO…':'ENCERRAR',canEndCard:s.cardMode!=='win',showSpin:canSpin&&!this._freshLink,countOp:1,boardLightOpacity:['rolling','launching','falling','won'].includes(s.phase)?1:0, ballIcon: s.ballIcon || 'assets/fingo/ball.webp',
       showHand:s.cardVersion<1&&s.phase === 'drop' && !s.handSeen && gold.length > 0, handX: (gold.length ? gold[0] * BW + BW / 2 : W / 2) + 'px',
       lucky: !!s.lucky, luckyText: s.lucky || '', luckySize: s.lucky === 'FINGO!' ? '64px' : '48px', confetti: s.conf,
       onSpin: this.onSpin, ballsLeft: String(s.balls), spinText: String(s.balls), spinOp: canSpin ? 1 : 0.55, spinAnim: canSpin && s.used > 0 ? 'fgPulse 1.4s ease-in-out infinite' : 'none',
@@ -744,7 +744,7 @@ class Component extends DCLogic {
       magicCells: card.nums.map((n, i) => { const m = card.marks[i]; return { text: n === 0 ? '★' : String(n), pick: () => this.pickMagic(i), cursor: m ? 'default' : 'pointer', op: m ? 0.3 : 1, bg: m ? 'rgba(255,255,255,.12)' : '#ffffff', color: m ? '#cfe' : TH[i % 5] }; }),
       betOpen: !!s.betOpen,confirmBet:this.confirmBet,betPrize:fmt(BETS[s.betIdx]*2), closeBet: this.closeBet, betDown: this.betDown, betUp: this.betUp, downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1,
       menuButton:{onClick:this.openMenu,disabled:!!(this._cloudRequest || s.phase==='launching' || s.phase==='falling' || s.phase==='rolling'),style:{zIndex:25}},
-      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,onNewRound:s.active?()=>{this.closeMenu();this.askEndRound();}:null,screen:'Fortune Fingo',details:s.cardVersion>=1&&s.payoutVersion===3?'Cada aposta dá 30 bolas para fazer quina. Toque em um número dourado para escolher a entrada. Qualquer dourado onde a bola cair marca o número na cartela.'+(s.cardVersion===2?' O King Rico no centro já vale uma casa marcada.':'')+' Complete uma linha, coluna ou diagonal e receba 2× a aposta. A partida acaba na quina ou ao usar as 30 bolas.':'Esta partida já estava em andamento e mantém os pagamentos originais. Complete os alvos indicados.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
+      menuProps:{open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,onNewRound:s.active&&!s.win&&!['rolling','launching','falling','won'].includes(s.phase)?()=>{this.closeMenu();this.askEndRound();}:null,newRoundLabel:'Desistir da partida',screen:'Fortune Fingo',details:s.cardVersion>=1&&s.payoutVersion===3?'Cada aposta dá 30 bolas para fazer quina. Toque em um número dourado para escolher a entrada. Qualquer dourado onde a bola cair marca o número na cartela.'+(s.cardVersion===2?' O King Rico no centro já vale uma casa marcada.':'')+' Complete uma linha, coluna ou diagonal e receba 2× a aposta. A partida acaba na quina ou ao usar as 30 bolas.':'Esta partida já estava em andamento e mantém os pagamentos originais. Complete os alvos indicados.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
       payExplanation:s.payoutVersion===3?'Sua aposta dá 30 bolas. Complete uma linha, coluna ou diagonal para fazer quina e receber 2× o valor apostado. A partida termina na quina ou ao usar as 30 bolas. O prêmio total inclui a aposta.':'Esta partida já estava em andamento e mantém seus pagamentos originais.',pays:!!s.pays,closePays:this.closePays,menu: !!s.menu, closeMenu: this.closeMenu, payList: this.tiers().map(([t,m],i,tiers)=>({balls:s.payoutVersion===3?'Qualquer quina':'Bolas '+(i?tiers[i-1][0]+1:tiers===TIERS?5:1)+'–'+t,mult:'x'+fmt(m)})),
       ...this.cardView(),
       ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),

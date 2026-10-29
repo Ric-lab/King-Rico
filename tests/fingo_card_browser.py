@@ -48,7 +48,7 @@ def spin(page,row=0):
     assert page.locator('[data-fingo-free-icon]').get_attribute('src').startswith('data:image/webp;base64,')
     assert page.locator('[data-fingo-cell="12"]').get_attribute('aria-label')=='King Rico, coringa livre'
     assert page.locator('[data-fingo-bucket]:visible').count()==0
-    assert page.get_by_role('button',name='DESISTIR',exact=True).is_visible()
+    assert page.get_by_role('button',name='DESISTIR',exact=True).count()==0
 
 def drop(page,column):
     page.bring_to_front()
@@ -216,7 +216,7 @@ def check_fingo_cancel(page,uid,restored):
     install_draws(page);spin(page);new_round=page.evaluate('KingRicoCloud.player.fingoRound')
     page.reload();restored(page,uid);page.wait_for_function('__fg?.engine')
     assert page.evaluate('KingRicoCloud.player.fingoRound')==new_round
-    page.get_by_role('button',name='Abrir menu',exact=True).click();page.get_by_role('button',name='Nova cartela',exact=True).click()
+    page.get_by_role('button',name='Abrir menu',exact=True).click();page.get_by_role('button',name='Desistir da partida',exact=True).click()
     page.get_by_role('dialog',name='Encerrar cartela',exact=True).get_by_role('button',name='ENCERRAR',exact=True).click()
     page.wait_for_function('!KingRicoCloud.player.fingoRound&&!__fg.state.active')
     for width,height in [(375,667),(390,844),(430,932)]:

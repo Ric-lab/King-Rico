@@ -43,7 +43,7 @@ function MenuButton({onClick,style,hidden,disabled,onPointerDown,onPointerUp}) {
     onPointerLeave:onPointerUp,onPointerCancel:onPointerUp});
 }
 
-function MenuPanel({open,onClose,onPaytable,onNewRound,screen,details,sfxLvl=2,vibLvl=2,onSfx,onVib}) {
+function MenuPanel({open,onClose,onPaytable,onNewRound,newRoundLabel='Nova cartela',screen,details,sfxLvl=2,vibLvl=2,onSfx,onVib}) {
   const cloud=window.KingRicoCloud;
   const [player,setPlayer]=React.useState(cloud?.player);
   const app=window.KingRicoApp;
@@ -100,7 +100,7 @@ function MenuPanel({open,onClose,onPaytable,onNewRound,screen,details,sfxLvl=2,v
         appState && !appState.installed && appButton('Instalar no celular','↓',app.install),
         appHelp && h('p',{className:'kr-menu-app-help',role:'status'},appHelp),
         levels('Efeitos sonoros','♫',sfxLvl,onSfx),levels('Vibração','≈',vibLvl,onVib),
-        onNewRound && h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:onNewRound},h('span',{className:'kr-menu-label'},'Nova cartela'),h('span',{className:'kr-menu-arrow','aria-hidden':true},'›')),
+        onNewRound && h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:onNewRound},h('span',{className:'kr-menu-label'},newRoundLabel),h('span',{className:'kr-menu-arrow','aria-hidden':true},'›')),
         onPaytable && h('button',{type:'button',className:'kr-menu-row kr-menu-paytable',
           'aria-label':'Tabela de pagamentos',onClick:onPaytable},
           h('span',{className:'kr-menu-icon','aria-hidden':true},'◇'),
