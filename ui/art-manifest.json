@@ -4,6 +4,7 @@
     "assets/symbols/sym-coin.webp"
   ],
   "home": [
+    "assets/scenes/circus-daylight-v1.webp",
     "assets/bleed/stage-bleed.webp?v=3",
     "assets/brand/covers/stage.webp",
     "assets/brand/covers/machine-front.webp",
@@ -18,6 +19,7 @@
     "assets/symbols-v7.webp"
   ],
   "circus": [
+    "assets/scenes/circus-daylight-v1.webp",
     "assets/stage-off6.webp",
     "assets/symbols-v7.webp",
     "assets/reel-strip.webp",
@@ -26,12 +28,10 @@
     "assets/fx/machine-front5.webp",
     "assets/fx/machine-front6-off.webp",
     "assets/fx/basket.webp",
-    "assets/fx/top-layer3.webp",
     "assets/fx/basket-front.webp",
     "assets/symbols/sym-candy.webp",
     "assets/king-rico/fw6/master.webp",
-    "assets/king-rico/fw6/wave.webp",
-    "assets/bleed/stage-bleed-v5-lossless.webp"
+    "assets/king-rico/fw6/wave.webp"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

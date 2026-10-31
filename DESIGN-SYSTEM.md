@@ -5,7 +5,8 @@ estrelado por **King Rico**, um elefante violeta coroado de capa vermelha. O pro
 jogo casual de moedas virtuais em pt-BR: gira, ganha, sobe de nível. Não há dinheiro real,
 e a comunicação deixa isso explícito.
 
-Produto atual: oito jogos na Home, com conta e saldo compartilhados. O site oficial
+Produto atual: Circus e quatro atrações do parque na Home, com conta e saldo
+compartilhados; os demais jogos mantêm seus endereços. O site oficial
 é https://king-rico.web.app, publicado pelo workflow da main no Firebase Spark.
 Veja o catálogo no [README](README.md). O Android disponível é a instalação PWA,
 conforme [o guia](docs/INSTALAR-NO-CELULAR.md), sem projeto nativo neste checkout.
@@ -20,6 +21,16 @@ A tela de jogo é uma **placa única de arte** 453 × 802 em dois estados — ap
 coordenadas fixas (travadas em `ui_kits/slot-game/README.md`). Em telas mais altas o palco
 continua para cima e para baixo por `assets/bleed/stage-bleed.webp`; a máquina nunca é
 esticada nem recomposta em CSS.
+
+## Parque diurno (31/10/2026)
+
+A Home e o Circus usam céu azul, praça dourada e vegetação em um parque ao ar
+livre. O cenário é `assets/scenes/circus-daylight-v1.webp`, sem escurecimento ou
+desfoque global. A Home usa superfícies creme com texto azul, mantendo os assets
+dos jogos. No Circus, as classes `park-machine-plate` e `park-machine-lights`
+recortam somente a apresentação: a máquina e o pulso original ficam preservados
+e as antigas cortinas deixam de aparecer. Os assets antigos seguem necessários
+aos controles e a outras telas.
 
 ## Fontes deste design system
 

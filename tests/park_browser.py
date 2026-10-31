@@ -55,7 +55,7 @@ def run():
     page.get_by_role('link',name='Jogar Fortune Circus',exact=True).click();ready(page)
     page.wait_for_function('window.__fc?._parkHook');assert page.evaluate('KingRicoCloud.uid')==uid
     backdrop=page.locator('.park-circus-ambient').evaluate('n=>({image:getComputedStyle(n).backgroundImage,position:getComputedStyle(n).backgroundPosition,filter:getComputedStyle(n).filter})')
-    assert 'stage-bleed.webp' in backdrop['image'] and backdrop['position']=='50% 100%' and backdrop['filter']=='blur(6px) brightness(0.8)',backdrop
+    assert 'circus-daylight-v1.webp' in backdrop['image'] and backdrop['position']=='50% 50%' and backdrop['filter']=='none',backdrop
     page.screenshot(path='/tmp/park-circus-production.png')
     # Real first button/spin, then accelerate setup through the same persisted API.
     page.evaluate('''()=>{const native=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>a instanceof Uint32Array&&a.length===1?(a[0]=Math.floor(.99*2**32),a):native(a);__fc.setState({betIdx:0});__fc.spin();}''')

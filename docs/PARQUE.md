@@ -29,7 +29,9 @@ já sorteada apresenta o mesmo multiplicador. Falha de animação não desfaz cr
 
 A apresentação conserva o líquido sincronizado com o pulso, a união das roletas,
 o multiplicador viajando ao prêmio e as moedas viajando ao saldo. O fundo normal
-do Circus usa a mesma imagem e enquadramento do Fortune Clown.
+do Circus e da Home usa o parque diurno em `assets/scenes/circus-daylight-v1.webp`.
+A máquina conserva seus pixels e a máscara do pulso; as cortinas pintadas são
+excluídas por recorte de apresentação, sem alterar apostas, saldo ou ingressos.
 
 ## Persistência e publicação
 
