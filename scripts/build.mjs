@@ -121,7 +121,8 @@ for(const {file,game,title} of routes) {
 <script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
   const parkTags=['home','circus','clown','penalty','flying','fingo'].includes(game)?'<link rel="stylesheet" href="./ui/park/park.css"><script defer src="./ui/park/client.js"></script>':'';
-  let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags+'\n'+parkTags);
+  const cabinetTag=['home','circus'].includes(game)?'<link rel="stylesheet" href="./ui/park/cabinet.css">':'';
+  let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags+'\n'+parkTags+'\n'+cabinetTag);
   if(['home','circus'].includes(game))html=html.replace('<head>','<head>\n<script defer src="./runtime/fingo-layout.js"></script>');
   // The illustrated loading screen can paint while the large runtime downloads.
   // Deferred scripts retain their document order: React/Babel, cloud, then DC support.

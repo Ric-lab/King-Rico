@@ -34,7 +34,7 @@ import {RewardReceipt} from '../reward-receipt.js';
   render();
  });
  const icons=['sym-crown-lossless.webp','sym-gem.png','sym-coin.webp','sym-clover.png','sym-wild-s.webp','sym-tent-lossless.webp','sym-drum.png','sym-candy.webp','sym-scepter.png'];
- document.querySelector('.park-hero-symbols').innerHTML=icons.map(x=>`<img src="/assets/symbols/${x}" alt="">`).join('');
+ document.querySelector('.park-hero-symbols').innerHTML=icons.map((x,i)=>`<span class="park-part-reel-${['top','middle','bottom'][Math.floor(i/3)]}"><img src="/assets/symbols/${x}" alt=""></span>`).join('');
  recharge.onclick=()=>{if(view.ad||view.receipt||view.busy)return;view.ad=true;view.complete=false;view.error=false;render();};
  document.querySelector('.park-home-menu').onclick=()=>{view.menu=true;render();};daily();
 })();

@@ -25,7 +25,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;rails.style.setProperty('--park-fill',charge.target*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
   for(const [side,tube]of tubes.entries()){
    const fill=tube.querySelector('.park-meter-fill'),stream=tube.querySelector('.park-liquid-stream'),drops=[...tube.querySelectorAll('.park-liquid-drop')];
-   const h=334,from=h*charge.before/10,to=h*charge.target/10,x=side===0?17:436,y=254+h-from;
+   const h=334,from=h*charge.before/10,to=h*charge.target/10,x=side===0?22:431,y=254+h-from;
    // The exact origin, distance and propagation speed used by Circus.lightsPulse.
    const arrival=cue.at+Number(cue.delay||0)+Math.hypot(x-223.5,y-722)/2.2;
    const delay=Math.max(0,arrival-performance.now()),pourLead=Math.min(150,delay),startDelay=Math.max(0,delay-pourLead);
@@ -52,7 +52,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  }
  function celebrateFull(){
   if(fc._parkFillCelebrating)return;fc._parkFillCelebrating=true;rails.classList.add('is-overflowing');record(fc,'reservoir:full');
-  confetti(rails,[{x:17,y:231},{x:436,y:231}],{count:32,spread:135});
+  confetti(rails,[{x:22,y:231},{x:431,y:231}],{count:32,spread:135});
   const end=()=>{rails.classList.remove('is-overflowing');fc._parkFillCelebrating=false;record(fc,'reservoir:celebrated');if(fc._parkWheelWaiting){fc._parkWheelWaiting=false;showWheel();}};
   setTimeout(end,reduced()?120:1250);
  }

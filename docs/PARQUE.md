@@ -30,8 +30,11 @@ já sorteada apresenta o mesmo multiplicador. Falha de animação não desfaz cr
 A apresentação conserva o líquido sincronizado com o pulso, a união das roletas,
 o multiplicador viajando ao prêmio e as moedas viajando ao saldo. O fundo normal
 do Circus e da Home usa o parque diurno em `assets/scenes/circus-daylight-v1.webp`.
-A máquina conserva seus pixels e a máscara do pulso; as cortinas pintadas são
-excluídas por recorte de apresentação, sem alterar apostas, saldo ou ingressos.
+A máquina é montada com seis peças independentes em `assets/machine/`: base,
+visor, vidro de carga e superfícies superior, central e inferior dos rolos.
+`ui/park/cabinet.css` integra a montagem e a curva suave nas linhas externas.
+A altura do líquido e sua sincronização com o pulso são preservadas, assim como
+os controles da aposta, os símbolos, o saldo e os ingressos.
 
 ## Persistência e publicação
 

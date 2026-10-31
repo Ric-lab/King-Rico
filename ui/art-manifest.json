@@ -4,6 +4,12 @@
     "assets/symbols/sym-coin.webp"
   ],
   "home": [
+    "assets/machine/base-v1.webp",
+    "assets/machine/gauge-v1.webp",
+    "assets/machine/prize-v1.webp",
+    "assets/machine/reel-top-v1.webp",
+    "assets/machine/reel-middle-v1.webp",
+    "assets/machine/reel-bottom-v1.webp",
     "assets/scenes/circus-daylight-v1.webp",
     "assets/bleed/stage-bleed.webp?v=3",
     "assets/brand/covers/stage.webp",
@@ -19,6 +25,12 @@
     "assets/symbols-v7.webp"
   ],
   "circus": [
+    "assets/machine/base-v1.webp",
+    "assets/machine/gauge-v1.webp",
+    "assets/machine/prize-v1.webp",
+    "assets/machine/reel-top-v1.webp",
+    "assets/machine/reel-middle-v1.webp",
+    "assets/machine/reel-bottom-v1.webp",
     "assets/scenes/circus-daylight-v1.webp",
     "assets/stage-off6.webp",
     "assets/symbols-v7.webp",

@@ -1,0 +1,44 @@
+/* Independent GPT Image components; transparent source pixels are unchanged.
+   Visible bounds/exports: assets/machine/README.md. Native stage: 453 × 802. */
+.park-circus-stage .park-machine-plate,.park-legacy-front{display:none!important}
+.park-part-base,.park-part-prize{position:absolute;pointer-events:none}
+.park-part-base{left:0;top:607px;width:453px;height:63px}
+.park-part-idle{filter:brightness(.82)}
+.park-part-prize{left:165.333px;top:180px;width:125px;height:32px}
+[data-park-prize]>span{color:#73371c!important;text-shadow:0 1px #fff6d7!important;font-size:24px!important}
+.park-reels{position:absolute;inset:0;transform:scaleX(.936);transform-origin:50% 50%;pointer-events:none}
+.park-reel-cell{border-radius:0!important;backface-visibility:hidden}
+.park-reels>.park-part-reel-top{transform:perspective(650px) rotateX(9deg);transform-origin:50% 100%}
+.park-reels>.park-part-reel-bottom{transform:perspective(650px) rotateX(-9deg);transform-origin:50% 0}
+/* Wider live glass, same 334 px liquid height and pulse propagation. */
+.park-meter{width:36px}
+.park-meter-left{left:4px}.park-meter-right{right:4px}
+.park-meter-track{z-index:1;background:linear-gradient(90deg,#125b90,#259ac0 45%,#126592);box-shadow:inset 1px 0 3px #06467099}
+.park-meter-dimmer{background:rgba(12,28,60,.42);clip-path:path('M4 248H40V606H4Z M413 248H449V606H413Z M5 231A17 17 0 1 0 39 231A17 17 0 1 0 5 231Z M414 231A17 17 0 1 0 448 231A17 17 0 1 0 414 231Z')}
+/* Keep legacy animation lamps on the spin button, away from the new glass. */
+.park-machine-lights{clip-path:path('M43 680H410V767H43Z')}
+.park-part-base{background-image:url('/assets/machine/base-v1.webp');background-size:101.65854% 234.47205%;background-position:50.00000% 45.95843%;background-repeat:no-repeat;}
+.park-part-prize{background-image:url('/assets/machine/prize-v1.webp');background-size:109.69697% 152.74262%;background-position:50.00000% 48.40000%;background-repeat:no-repeat;}
+.park-part-reel-top{background-image:url('/assets/machine/reel-top-v1.webp');background-size:105.12821% 111.32404%;background-position:48.33333% 39.23077%;background-repeat:no-repeat;}
+.park-part-reel-middle{background-image:url('/assets/machine/reel-middle-v1.webp');background-size:140.09112% 135.95745%;background-position:50.00000% 53.25444%;background-repeat:no-repeat;}
+.park-part-reel-bottom{background-image:url('/assets/machine/reel-bottom-v1.webp');background-size:128.76569% 117.67956%;background-position:49.81818% 49.47917%;background-repeat:no-repeat;}
+.park-meter:before{inset:auto;left:-1.5200px;top:-28.1834px;width:38.8800px;height:401.4172px;z-index:0;background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
+.park-cabinet-mini{position:absolute;left:0;top:-90px;width:453px;height:802px;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+.park-cabinet-mini .park-part-prize:after{content:'PRÊMIO';display:grid;place-items:center;height:100%;font:800 18px/1 Baloo,sans-serif;color:#82481e}
+.park-cabinet-mini .park-hero-symbols{left:44px;top:219px;width:365px;height:386px;gap:0 3px}
+.park-cabinet-mini .park-hero-symbols>span{display:block;min-width:0;min-height:0;overflow:hidden}
+.park-cabinet-mini .park-hero-symbols img{display:block;width:100%;height:100%;object-fit:contain}
+.park-mini-gauge{position:absolute;top:248px;width:36px;height:346px}
+.park-mini-gauge:before{z-index:1;content:'';position:absolute;inset:0;background:linear-gradient(0deg,#8e24ff,#174fff,#00cfff,#00f27b,#e4ff00,#ff9400,#ff155e);border-radius:5px;margin:6px}
+@media(max-width:360px){.park-cabinet-mini{transform:scale(.45);top:-80px}}
+.park-mini-gauge{background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
+
+/* Continuous backing under the separate faces conceals only their joining seam. */
+.park-reel-bed{position:absolute;top:227px;height:386px;border-radius:10px 10px 6px 6px;border-inline:5px solid #ebb52d;background:#fff6da;box-shadow:inset 1px 0 #fff3a1,inset -1px 0 #a67023;pointer-events:none}
+.park-reel-bed:nth-child(1){left:34.333px;width:126.5px}
+.park-reel-bed:nth-child(2){left:164.333px;width:122.5px}
+.park-reel-bed:nth-child(3){left:290.333px;width:130px}
+.park-cabinet-mini .park-hero-symbols{background:linear-gradient(90deg,#e5aa27 0 1.4%,#fff6da 1.4% 31.8%,#e5aa27 31.8% 34.7%,#fff6da 34.7% 64.9%,#e5aa27 64.9% 68.5%,#fff6da 68.5% 98.6%,#e5aa27 98.6%)}
+
+.park-mini-gauge{background:none}
+.park-mini-gauge:after{content:'';position:absolute;inset:auto;left:-1.5200px;top:-28.1834px;width:38.8800px;height:401.4172px;z-index:0;background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
