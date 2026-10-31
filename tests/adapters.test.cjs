@@ -26,6 +26,20 @@ function component(file,cloud,random=Math.random){
    assert.ok(count<1000,'Animation did not settle');
  }};
 }
+
+async function parkHome(cloud={}) {
+ const p={balance:1050.25,settings:{sfxLvl:0,vibLvl:0},bonus:{day:'2026-10-21',streak:1},...cloud.player};
+ cloud={player:p,park:{tickets:0},dayKey:()=>20261021,ready:Promise.resolve(),error:()=>{},...cloud,player:p};
+ let notify;cloud.watch=fn=>{notify=fn;fn(cloud.player);};
+ const nodes=Object.fromEntries(['[data-home-balance]','[data-recharge]','[data-ticket-count]','.park-hero-symbols','.park-home-menu'].map(k=>[k,{closest:()=>({}),getBoundingClientRect:()=>({x:0,y:0})}]));
+ const props={},wallet=[],dialogs=[];
+ const modal=(html,label)=>{const button={},img={getBoundingClientRect:()=>({x:5,y:5})};const e={html,label,querySelector:s=>s==='button'?button:img,close(){this.closed=true;},button};dialogs.push(e);return e;};
+ const ctx={window:{KingRicoPark:{Cloud:cloud,format:n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2}),modal},KingRicoWallet:{set:(...args)=>wallet.push(args)}},document:{querySelector:s=>nodes[s],querySelectorAll:()=>[],createElement:()=>({}),body:{append:()=>{}}},React:{Fragment:'fragment',createElement:(type,props,...children)=>({type,props,children})},ReactDOM:{createRoot:()=>({render:tree=>{for(const child of tree.children)props[child.type]=child.props;}})},MenuPanel:'menu',RewardAd:'ad',RewardReceipt:'receipt',setTimeout,Date,console};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ui/park/home.js'),'utf8').replace(/^import .*;$/gm,''),ctx);
+ await new Promise(setImmediate);
+ return {cloud,nodes,props,wallet,dialogs,notify:()=>notify?.(cloud.player)};
+}
+
 test('Circus uses the committed grid and debit even when local balance differs',async()=>{
  const outcome={grid:[1,2,3,4,5,6,7,8,0],res:{win:0,cells:[],lines:[],full:false,peach:[]},feature:null};
  let request,payout;
@@ -98,11 +112,10 @@ test('Wheel lands on the committed sector and uses the persisted debit',async()=
  frame();assert.equal(w.state.landed,7);assert.equal(w.state.spinning,false);
 });
 test('Home uses the persisted cloud bonus',async()=>{
- const cloud={enabled:true,bonus:async()=>({amount:50,player:{balance:1050,bonus:{day:'2026-10-12',streak:1}}})};
- const {instance:home}=component('Home.dc.html',cloud);
- home.buzz=()=>{};home.react=()=>{};await home.collectBonus();
- assert.equal(home.state.balance,1050);assert.equal(home.state.last,20261012);assert.equal(home.state.streak,1);
+ let calls=0;const h=await parkHome({player:{bonus:{day:null,streak:0}},bonus:async()=>{calls++;h.cloud.player={...h.cloud.player,balance:1100.25,bonus:{day:'2026-10-21',streak:1}};}});
+ assert.equal(h.dialogs.length,1);await h.dialogs[0].button.onclick();assert.equal(calls,1);assert.equal(h.wallet.at(-1)[1],'1.100,25');assert.equal(h.dialogs[0].closed,true);
 });
+
 test('Penalty waits for the committed shot and never adds its prize locally',async()=>{
   const requests=[],player={balance:1000.75,settings:{penaltyBetIdx:1},penaltyRound:null};
   const cloud={enabled:true,player,penalty:async(...args)=>{
@@ -184,16 +197,11 @@ test('Fingo shows an already committed prize without crediting it again on dismi
  f.flyCoins=done=>done();f.closeWin();assert.equal(f.state.balance,1240.25);assert.equal(f.state.win,null);
  f.closeWin();assert.equal(f.state.balance,1240.25);
 });
-test('the daily gift uses the saved weekly reward without a scratch lottery',()=>{
- const cloud={enabled:true,dayKey:()=>20261015};
- const {instance:home}=component('Home.dc.html',cloud,()=>.99);
- home.props.testGift=true;home.props.testDay=7;
- const cycle=home.cycle();assert.equal(cycle.today,20261015);assert.equal(cycle.idx,0);
- assert.equal(home.prize(cycle),50);
- // A wallet restored after the first render may already be on a later day.
- home.state.last=20261014;home.state.streak=3;
- assert.equal(home.prize(home.cycle()),200);
+test('the daily gift uses the saved weekly reward without a scratch lottery',async()=>{
+ const first=await parkHome({player:{bonus:{day:null,streak:0}}});assert.match(first.dialogs[0].html,/\+50 moedas/);
+ const third=await parkHome({player:{bonus:{day:'2026-10-20',streak:3}}});assert.match(third.dialogs[0].html,/\+200 moedas/);
 });
+
 test('Circus recharges the cloud wallet once without reusing the already claimed daily gift',async()=>{
  let finish,calls=0;
  const cloud={enabled:true,recharge:()=>{calls++;return new Promise(resolve=>{finish=resolve;});},
@@ -223,13 +231,11 @@ test('Circus coin arrivals keep whole prizes whole and preserve real fractional 
   else assert.ok(pending.some(n=>!Number.isInteger(n)));
  }
 });
-test('Home and Wheel preserve cents earned in Circus',()=>{
- const cloud={enabled:false};
- const {instance:home}=component('Home.dc.html',cloud);home.state.balance=1050.25;
- assert.equal(home.renderVals().balanceText,'1.050,25');
- const {instance:wheel}=component('Fortune Wheel.dc.html',cloud);wheel.state.balance=1050.25;
- assert.equal(wheel.renderVals().balanceText,'1.050,25');
+test('Home and Wheel preserve cents earned in Circus',async()=>{
+ const h=await parkHome();assert.equal(h.wallet.at(-1)[1],'1.050,25');
+ const {instance:wheel}=component('Fortune Wheel.dc.html',{enabled:false});wheel.state.balance=1050.25;assert.equal(wheel.renderVals().balanceText,'1.050,25');
 });
+
 test('Clown refuses offline throws, restores progress and never credits a dismissed prize',async()=>{
  let errors=0;const player={balance:997.5,settings:{clownBetIdx:1,sfxLvl:0,vibLvl:0},clownRound:{id:'round',betUnits:250,used:3,sumUnits:38,results:[1.5,0,0]}};
  const cloud={enabled:true,player,clown:async()=>{throw Error('offline');},settings:()=>{},error:()=>errors++};
@@ -293,52 +299,32 @@ test('Flying restores persisted balloons and refuses an offline pop without draw
  assert.equal(f.state.balance,997.5);assert.equal(f.balls.length,8);assert.equal(f.state.busy,false);assert.equal(errors,1);
 });
 
-test('Home waits for the saved profile before deciding whether the daily gift is due',()=>{
- let watch;const cloud={enabled:true,dayKey:()=>20261021,watch:fn=>(watch=fn,()=>{})};
- const {instance:home,context}=component('Home.dc.html',cloud);
- context.window.addEventListener=()=>{};home.componentDidMount();
- assert.equal(home.state.loaded,false);assert.equal(home.renderVals().bonusOpen,false);
- watch({balance:1050,rechargeCount:2,settings:{sfxLvl:0,vibLvl:0},bonus:{day:'2026-10-21',streak:1}});
- assert.equal(home.state.loaded,true);assert.equal(home.renderVals().bonusOpen,false);assert.equal(home.state.rechargeCount,2);
-});
-test('Home counts one recharge while confirmation is pending and never changes the daily gift',async()=>{
- let finish,calls=0;const player={balance:2050,rechargeCount:1,bonus:{day:'2026-10-21',streak:1}};
- const cloud={enabled:true,player,dayKey:()=>20261021,recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>finish=r)},error:()=>{throw Error('Unexpected failure')}};
- const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.last=20261021;home.state.streak=1;home.buzz=()=>{};
- home.recharge();home.recharge();assert.equal(calls,0);assert.equal(home.state.adOpen,true);
- const first=home.finishAd();await home.finishAd();assert.equal(calls,1);finish({amount:1000,player});await first;
- assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);assert.equal(home.state.rechargeCount,1);assert.equal(home.state.last,20261021);assert.equal(home.state.streak,1);assert.equal(home.state.recharging,false);
- assert.equal(home.state.rewardOpen,true);assert.equal(home.state.rewardPending,1000);
- assert.equal(home.renderVals().balanceText,'1.050');
- home.recharge();assert.equal(home.state.adOpen,false);assert.equal(calls,1);
- home.rewardProgress(250);assert.equal(home.state.rewardPending,0);assert.equal(home.renderVals().balanceText,'2.050');
- home.rewardDone();home.rewardDone();assert.equal(home.state.rewardPending,0);assert.equal(home.state.rewardOpen,false);assert.equal(home.state.balance,2050);assert.equal(calls,1);
- assert.equal(home.renderVals().balanceText,'2.050');
+test('Home waits for the saved profile before deciding whether the daily gift is due',async()=>{
+ let ready;const h=await parkHome({ready:new Promise(r=>ready=r)});assert.equal(h.dialogs.length,0);assert.equal(h.wallet.length,0);
+ ready();await new Promise(setImmediate);assert.equal(h.dialogs.length,0);assert.equal(h.wallet.at(-1)[1],'1.050,25');
 });
 
-test('closing the simulated ad before completion grants no coins and can be reopened',()=>{
- let calls=0;const cloud={enabled:true,recharge:()=>calls++};const {instance:home}=component('Home.dc.html',cloud);
- home.state.loaded=true;home.state.balance=1050;home.recharge();assert.equal(home.state.adOpen,true);
- home.cancelAd();assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,1050);assert.equal(calls,0);
- home.recharge();assert.equal(home.state.adOpen,true);assert.equal(home.state.adComplete,false);
+test('Home counts one recharge while confirmation is pending and never changes the daily gift',async()=>{
+ let done,calls=0;const h=await parkHome({recharge:source=>{assert.equal(source,'home');calls++;return new Promise(r=>done=r);}});
+ h.nodes['[data-recharge]'].onclick();assert.equal(h.props.ad.open,true);
+ const pending=h.props.ad.onComplete();await h.props.ad.onComplete();assert.equal(calls,1);
+ h.cloud.player={...h.cloud.player,balance:2050.25};h.notify();assert.equal(h.wallet.at(-1)[2].hold,true);
+ done({amount:1000});await pending;assert.equal(h.props.receipt.open,true);assert.equal(h.props.ad.open,false);
+ h.props.receipt.onProgress(250);assert.equal(h.wallet.at(-1)[1],'1.300,25');h.props.receipt.onDone();assert.equal(h.wallet.at(-1)[1],'2.050,25');assert.equal(h.cloud.player.bonus.day,'2026-10-21');
+});
+
+test('closing the simulated ad before completion grants no coins and can be reopened',async()=>{
+ let calls=0;const h=await parkHome({recharge:()=>calls++});h.nodes['[data-recharge]'].onclick();h.props.ad.onCancel();assert.equal(h.props.ad.open,false);assert.equal(calls,0);h.nodes['[data-recharge]'].onclick();assert.equal(h.props.ad.open,true);
 });
 
 test('a failed ad reward can be confirmed again without another countdown',async()=>{
- let calls=0,errors=0;const player={balance:2050,rechargeCount:1};
- const cloud={enabled:true,player,recharge:async()=>{if(++calls===1)throw Error('offline');return {amount:1000,player}},error:()=>errors++};
- const {instance:home}=component('Home.dc.html',cloud);home.state.loaded=true;home.state.balance=1050;home.buzz=()=>{};
- home.recharge();await home.finishAd();assert.equal(errors,1);assert.equal(home.state.adOpen,true);
- assert.equal(home.state.adComplete,true);assert.equal(home.state.adError,true);assert.equal(home.state.balance,1050);
- await home.finishAd();assert.equal(calls,2);assert.equal(home.state.adOpen,false);assert.equal(home.state.balance,2050);
+ let calls=0,errors=0;const h=await parkHome({recharge:async()=>{if(++calls===1)throw Error('offline');h.cloud.player={...h.cloud.player,balance:2050.25};return {amount:1000};},error:()=>errors++});
+ h.nodes['[data-recharge]'].onclick();await h.props.ad.onComplete();assert.equal(errors,1);assert.equal(h.props.ad.open,true);assert.equal(h.props.ad.complete,true);assert.equal(h.props.ad.error,true);
+ await h.props.ad.onComplete();assert.equal(calls,2);assert.equal(h.props.receipt.open,true);
 });
 
-test('Home allows another ad after five rewards and resets only the displayed count next day',()=>{
- let key=20261022;const cloud={enabled:true,dayKey:()=>key};const {instance:home}=component('Home.dc.html',cloud);
- home.state.loaded=true;home.state.rechargeDaily={dayIndex:home.rechargeDay(),count:5};
- assert.equal(home.renderVals().rechargeCounter,'5 hoje');assert.equal(home.renderVals().rechargeDisabled,false);
- home.recharge();assert.equal(home.state.adOpen,true);home.cancelAd();
- key=20261023;assert.equal(home.renderVals().rechargeCounter,'0 hoje');assert.equal(home.renderVals().rechargeDisabled,false);
- home.recharge();assert.equal(home.state.adOpen,true);
+test('Home allows another ad after five rewards',async()=>{
+ const h=await parkHome({player:{rechargeCount:5,rechargeDaily:{dayIndex:1,count:5}}});assert.equal(h.nodes['[data-recharge]'].disabled,false);h.nodes['[data-recharge]'].onclick();assert.equal(h.props.ad.open,true);
 });
 
 test('Flying restores the Happeach checkpoint and protected amount from its shared round',()=>{

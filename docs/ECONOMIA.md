@@ -10,6 +10,12 @@ As chances não consultam nome, saldo, lucro acumulado ou sequência de resultad
 Não há ajuste para punir quem ganhou nem derrotas agendadas para corrigir uma sessão.
 O ajuste histórico que existia no Clown foi removido.
 
+A tabela abaixo descreve as versões anteriores à integração do [parque](PARQUE.md).
+O Circus com ingressos, prêmio no décimo giro e roleta multiplicadora altera o
+retorno total; **98% não descreve esse conjunto**. O Fingo rápido tem dez bolas;
+a amostra de trinta bolas abaixo não estima seu retorno. As rodadas já pagas
+continuam com suas versões originais.
+
 | Jogo | Retorno de referência | Condição |
 | --- | ---: | --- |
 | Circus / Machine | 98,000% teórico | Aposta constante; inclui linhas, telas cheias, mínimo e Rodada Especial |

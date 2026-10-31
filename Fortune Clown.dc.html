@@ -227,7 +227,7 @@ class Component extends DCLogic {
     return {
       menuButton:{onClick:this.openMenu,onPointerDown:this.stop,disabled:!!s.busy,style:{zIndex:25}},
       menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Clown',details:'Arraste a bola até um buraco. São 10 bolas por aposta. Os multiplicadores indicam quanto cada acerto paga sobre a aposta da rodada: boca x0,15, nariz x0,25, olhos x0,5 e orelhas x1. Exemplo: apostando 10 moedas, um acerto na boca soma 1,50 moedas. Sem acertos, o palhaço fica parado. Do primeiro ao quinto, ele se move e pode esquivar; a partir do sexto, também gira no sentido horário em torno do próprio centro. O prêmio da rodada é creditado ao terminar. Seu progresso fica salvo na conta.',sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v)},
-      broke:s.balance<1 && !s.active && !s.busy && !s.win && !s.menu,recharge:this.recharge,
+      broke:!window.KingRicoCloud?.parkMode && s.balance<1 && !s.active && !s.busy && !s.win && !s.menu,recharge:this.recharge,
       faceRef: this.faceRef, menu: !!s.menu, openMenu: this.openMenu, closeMenu: this.closeMenu, balanceSize: (bt.length <= 6 ? 19 : bt.length <= 8 ? 16.5 : 14) + 'px',
       payList: [['Boca', 1.5], ['Nariz', 2.5], ['Olho', 5], ['Orelha', 10]].map(([n, m]) => ({ n, m: 'x' + fmt(m / BALLS) })), scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, ballRef: this.ballRef, boardRef: this.boardRef, trailRef: this.trailRef,
       down: this.down, move: this.move, up: this.up, cancel:this.cancel, stop: this.stop, walletProps:{value: fmt(s.balance),hold:!!(s.win||s.busy),external:false}, balanceText: fmt(s.balance),
@@ -235,7 +235,7 @@ class Component extends DCLogic {
         return { img: this.marker(i % 4), markerProps:{src:this.marker(i % 4)}, miss: used && !hit, sh: hit ? '0 0 0 3px #ffd257, 0 0 10px rgba(255,210,87,.9)' : now ? '0 0 0 3px #fff3c4' : '0 2px 0 rgba(0,0,0,.4)', k: now ? 1.15 : used ? 0.85 : 1 }; }),
       roundText: '+' + fmt(s.sum), tags: HOLES.map(h => ({ x: h.x + 'px', y: (h.n === 'orelha' ? h.y + h.ry + 4 : h.n === 'boca' ? h.y - h.ry * 0.3 : h.y - 10) + 'px', m: 'x' + fmt(h.m / BALLS), label: h.n + ': x' + fmt(h.m / BALLS) + ' da aposta por acerto' })),
       floatOn: !!s.floatOn, floatX: s.floatX, floatY: s.floatY, floatText: s.floatText,
-      showHand: !s.touched && !s.busy, showBet: !s.active, betText: fmt(BETS[s.betIdx]), betDown: this.betDown, betUp: this.betUp,
+      showHand: !s.touched && !s.busy, showBet: !window.KingRicoCloud?.parkMode && !s.active, betText: fmt(BETS[s.betIdx]), betDown: this.betDown, betUp: this.betUp,
       win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin }; }
 }
 </script>

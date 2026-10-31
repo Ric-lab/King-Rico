@@ -9,7 +9,7 @@ branch de publicação: **main**. Firebase **king-rico**, plano Spark, sem Cloud
 As páginas `.dc.html` são fontes editáveis. O catálogo de publicação é
 [site/routes.json](site/routes.json); a Home escolhe quais jogos aparecem ao público.
 
-| Na Home | Fonte | Endereço |
+| Jogo / rota preservada | Fonte | Endereço |
 |---|---|---|
 | Fortune Machine / Circus | [Fortune Circus.dc.html](<Fortune Circus.dc.html>) | `/circus` |
 | Fortune Wheel | [Fortune Wheel.dc.html](<Fortune Wheel.dc.html>) | `/wheel` |
@@ -19,6 +19,10 @@ As páginas `.dc.html` são fontes editáveis. O catálogo de publicação é
 | Fortune Clown | [Fortune Clown.dc.html](<Fortune Clown.dc.html>) | `/clown` |
 | Fortune Flying Clown | [Fortune Flying Clown.dc.html](<Fortune Flying Clown.dc.html>) | `/flying-clown` |
 | Fortune 33 | [Fortune 33.dc.html](<Fortune 33.dc.html>) | `/33` |
+
+A Home destaca o **Circus** e o **parque** com Clown, Pênalti, Flying Clown e
+Fingo rápido. A entrada custa um ingresso ou 25 moedas; veja [as regras do parque](docs/PARQUE.md).
+Wheel, Neck e 33 continuam disponíveis pelos endereços acima.
 
 Bounce, Claw, Race e Bridge estão **guardados fora da Home**. Seus fontes e
 endereços diretos continuam preservados. `/21` mantém a compatibilidade com o

@@ -9,14 +9,14 @@ def check_app_shell(browser,login,restore,claim_gift,login_observer):
     page=context.new_page();errors=[];failed=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
     page.on('response',lambda response:failed.append([response.status,response.url]) if response.status>=400 and not response.url.endswith('/favicon.ico') else None)
-    page.goto(BASE+'/');page.wait_for_url('**/circus')
+    page.goto(BASE+'/');page.wait_for_url('**/home')
     login(page,'install-'+uuid.uuid4().hex[:10]);claim_gift(page)
     uid=page.evaluate('KingRicoCloud.uid');balance=page.evaluate('KingRicoCloud.player.balance')
-    assert page.title()=='Fortune Circus'
+    assert page.title().startswith('Fortune Circus')
     assert page.locator('link[rel="apple-touch-icon"]').get_attribute('href')=='/assets/app/apple-touch-icon-v2.png'
     manifest=page.evaluate('async()=>await (await fetch(document.querySelector("link[rel=manifest]").href)).json()')
     assert manifest['name']=='Fortune Circus' and manifest['display']=='standalone'
-    assert manifest['start_url']=='/circus?source=app'
+    assert manifest['start_url']=='/home?source=app'
     for icon in manifest['icons']:
         assert page.evaluate('''async icon=>{const image=new Image();image.src=icon.src;await image.decode();return image.naturalWidth+'x'+image.naturalHeight===icon.sizes;}''',icon)
     session=context.new_cdp_session(page)

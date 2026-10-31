@@ -265,11 +265,11 @@ class Component extends DCLogic {
         betText:fmt(BETS[s.betIdx]),prizeText:j?fmt(s.bet*M[j-1]):'0',
         onBetDown:this.betDown,onBetUp:this.betUp,onStart:this.popBtn,onClimb:this.popBtn,onCollect:this.collectBtn,
         betDownDisabled:s.betIdx===0,betUpDisabled:s.betIdx===BETS.length-1,
-        startDisabled:s.balance<BETS[s.betIdx],collectDisabled:j<1,collectLabel:'Pegar '+(j?fmt(s.bet*M[j-1]):'0')+' moedas'},
+        startDisabled:!window.KingRicoCloud?.parkMode && s.balance<BETS[s.betIdx],collectDisabled:j<1,collectLabel:'Pegar '+(j?fmt(s.bet*M[j-1]):'0')+' moedas'},
       tapBalloon:this.tapBalloon,balloonCursor:j>0&&!s.busy?'pointer':'default',
       menuButton:{onClick:this.openMenu,disabled:!!s.busy||!!this._request,style:{zIndex:25}},
       menuProps:{open:!!s.menu,onClose:this.closeMenu,screen:'Fortune Flying Clown',details:'Estoure um balão para subir. Pegue o prêmio antes de arriscar o próximo. O décimo acerto paga x20. Happeach guarda o prêmio do andar marcado, mesmo se cair depois. Continuar após a proteção tem risco maior, como no Neck. O resultado é salvo antes da animação, e a rodada continua ao voltar.',sfxLvl:s.sfxLvl??2,vibLvl:s.vibLvl??2,onSfx:v=>this.setLvl('sfxLvl',v),onVib:v=>this.setLvl('vibLvl',v),onPaytable:this.openPays},
-      broke:s.balance<1&&!s.step&&!s.busy&&!s.win&&!s.menu,recharge:this.recharge,
+      broke:!window.KingRicoCloud?.parkMode && s.balance<1&&!s.step&&!s.busy&&!s.win&&!s.menu,recharge:this.recharge,
       menu: !!s.menu, closeMenu: this.closeMenu,pays:!!s.pays,closePays:this.closePays, payList: M.map(m => 'x' + fmt(m)),
       confetti: s.conf, win: !!s.win, winTitle: s.win ? s.win.title : '',winTitleSize:s.win?.title==='PRÊMIO GARANTIDO!'?'23px':'28px', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin
     };

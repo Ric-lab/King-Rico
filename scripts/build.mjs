@@ -71,6 +71,8 @@ catch(error) {
 await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
 await cp('ui',path.join(destination,'ui'),{recursive:true});
+await build({entryPoints:['ui/park/index.js'],outfile:path.join(destination,'ui/park/client.js'),bundle:true,format:'iife',target:'es2022',minify:true});
+await build({entryPoints:['ui/park/home.js'],outfile:path.join(destination,'ui/park/home.js'),bundle:true,format:'iife',target:'es2022',minify:true});
 // The DC loader has no CommonJS dependency resolver; bundle the preview's shared components.
 await build({entryPoints:['ui/bridge-game.js'],outfile:path.join(destination,'ui/bridge-game.js'),bundle:true,format:'cjs',target:'es2022',minify:true});
 await cp('assets',path.join(destination,'assets'),{recursive:true});
@@ -118,7 +120,8 @@ for(const {file,game,title} of routes) {
 </style>
 <script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
-  let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags);
+  const parkTags=['home','circus','clown','penalty','flying','fingo'].includes(game)?'<link rel="stylesheet" href="./ui/park/park.css"><script defer src="./ui/park/client.js"></script>':'';
+  let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags+'\n'+parkTags);
   if(['home','circus'].includes(game))html=html.replace('<head>','<head>\n<script defer src="./runtime/fingo-layout.js"></script>');
   // The illustrated loading screen can paint while the large runtime downloads.
   // Deferred scripts retain their document order: React/Babel, cloud, then DC support.

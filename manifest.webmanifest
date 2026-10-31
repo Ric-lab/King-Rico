@@ -4,7 +4,7 @@
   "short_name": "Fortune Circus",
   "description": "Os jogos do King Rico, com moedas virtuais e seu progresso salvo.",
   "lang": "pt-BR",
-  "start_url": "/circus?source=app",
+  "start_url": "/home?source=app",
   "scope": "/",
   "display": "standalone",
   "background_color": "#250626",

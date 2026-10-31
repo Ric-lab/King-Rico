@@ -9,7 +9,7 @@ const binary=path.join(root,'node_modules/firebase-tools/lib/bin/firebase.js');
 const rulesOnly=process.argv.includes('--test-rules');
 const test=process.argv.includes('--test') || rulesOnly;
 const args=[binary,test?'emulators:exec':'emulators:start','--project','demo-king-rico','--only',rulesOnly?'auth,firestore':'auth,firestore,hosting'];
-if(test) args.push(rulesOnly?'node --test tests/integration.mjs':'node --test tests/integration.mjs && python3 tests/browser.py');
+if(test) args.push(rulesOnly?'node --test tests/integration.mjs':'node --test tests/integration.mjs && python3 tests/park_browser.py');
 const child=spawn(process.execPath,args,{cwd:root,env:environment,stdio:'inherit'});
 for(const signal of ['SIGINT','SIGTERM']) process.on(signal,()=>child.kill(signal));
 child.on('exit',code=>process.exit(code ?? 1));

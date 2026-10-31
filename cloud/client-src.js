@@ -5,13 +5,14 @@ import { getFirestore, doc, getDoc, runTransaction, onSnapshot, connectFirestore
 import { createGameStore, publicPlayer } from './store.mjs';
 import { createTelemetry } from './telemetry.mjs';
 import { createSettingsBuffer } from './settings-buffer.mjs';
+import parkEngine from './park.cjs';
 
 const config = window.KING_RICO_FIREBASE || { enabled: false };
 const watchers = new Set(), SKEY = 'fortuneCircus.slot.v3';
 let resolveReady, selectedConsent, lastInteraction = Date.now();
 let confirmedPlayer=null,settingsBuffer;
 const Cloud = window.KingRicoCloud = {
-  enabled: config.enabled === true, player: null, uid: null,
+  enabled: config.enabled === true, player: null, uid: null,park:parkEngine.publicState(),parkMode:false,
   ready: new Promise(resolve => { resolveReady = resolve; }),
   watch(handler) { watchers.add(handler); if (Cloud.player) handler({...Cloud.player,settings:settingsBuffer?.overlay(Cloud.player.settings)||Cloud.player.settings}); return () => watchers.delete(handler); },
   dayKey() {
@@ -24,10 +25,11 @@ const storage = {
   get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
   set(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
 };
-function accept(player) {
+function acceptPark(state){if(state&&(!Cloud.park||state.revision>=Cloud.park.revision))Cloud.park=parkEngine.publicState(state);}
+function accept(player,park) {
   if (!player || !Cloud.uid) return;
   if (confirmedPlayer && player.revision < confirmedPlayer.revision) return;
-  confirmedPlayer=player;
+  acceptPark(park);confirmedPlayer=player;
   Cloud.player = player;
   Cloud.syncTelemetry?.(player);
   const old = localStorage.getItem(SKEY);
@@ -74,7 +76,7 @@ else {
     if (!uid || uid !== Cloud.uid) throw Object.assign(new Error('Disconnected'),{code:'auth/disconnected'});
     const response = await createGameStore(db,uid)(data);
     if (auth.currentUser?.uid !== uid) throw Object.assign(new Error('Account changed'),{code:'auth/changed'});
-    accept(response.player);
+    accept(response.player,response.park);
     if (!response.replayed) {
       if (response.isNew) Cloud.track?.('account_created');
       if (data.action==='spin') Cloud.track?.('spin_settled',{game:data.game,bet:data.bet,payout:response.outcome.winUnits/100,
@@ -102,7 +104,7 @@ else {
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
       && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
-      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2 && pending.source===payload.source;
+      && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2 && pending.source===payload.source && pending.park===payload.park && pending.method===payload.method && pending.wheelId===payload.wheelId;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
       throw Object.assign(new Error('Recovered previous operation'), {code:'king-rico/recovered'});
@@ -116,14 +118,18 @@ else {
       throw error;
     }
   }
-  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {}) });
+  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true}) });
+  Cloud.parkEntry=(game,method)=>mutate({action:'parkEntry',game,method});
+  Cloud.parkBonus=wheelId=>mutate({action:'parkBonus',wheelId});
+  Cloud.parkBonusClose=wheelId=>mutate({action:'parkBonusClose',wheelId});
+  const parkFlags=game=>Cloud.parkMode&&(!Cloud.player?.[game+'Round']||Cloud.park?.passes[game]?.started)?{park:true}:{};
   Cloud.bridge = (move,bet,roundId,step,selected=-1) => mutate({action:'bridge',game:'bridge',move,bet,roundId,step,selected});
   Cloud.neck = (move,bet,roundId,floor) => mutate({action:'neck',game:'neck',move,bet,roundId,floor});
-  Cloud.fingo = (move,bet,roundId,used,selected) => mutate({action:'fingo',game:'fingo',move,bet,roundId,used,...(move==='drop'?{selected}:{})});
+  Cloud.fingo = (move,bet,roundId,used,selected) => mutate({action:'fingo',game:'fingo',move,bet,roundId,used,...(move==='drop'?{selected}:{}),...parkFlags('fingo')});
   Cloud.bounce = (move,bet,roundId,n,gold=false) => mutate({action:'bounce',game:'bounce',move,bet,roundId,n,gold});
-  Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected});
-  Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality});
-  Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected});
+  Cloud.clown = (bet,roundId,used,selected) => mutate({action:'clown',game:'clown',bet,roundId,used,selected,...parkFlags('clown')});
+  Cloud.penalty = (move,bet,roundId,step,quality=0) => mutate({action:'penalty',game:'penalty',move,bet,roundId,step,quality,...parkFlags('penalty')});
+  Cloud.flying = (move,bet,roundId,step,selected=-1) => mutate({action:'flying',game:'flying',move,bet,roundId,step,selected,...parkFlags('flying')});
   Cloud.race = (bet,selected,seed,roundId,version=1,selected2=-1) => mutate({action:'race',game:'race',bet,selected,seed,roundId,...(version>=2?{version}:{}),...(version===4?{selected2}:{})});
   Cloud.raceResult = async roundId => {await Cloud.ready;return runTransaction(db,async transaction=>{const saved=await transaction.get(doc(db,'players',Cloud.uid,'operations',roundId));return saved.exists()&&saved.data().action==='race'?saved.data().result:null;});};
   Cloud.claw = (bet,selected,aimX,aimZ,seed,roundId) => mutate({action:'claw',game:'claw',bet,selected,aimX,aimZ,seed,roundId});
@@ -259,9 +265,9 @@ else {
     refreshLogin();
     dialog.style.display='flex';
   }
-  let unsubscribe, generation=0;
+  let unsubscribe,unsubscribePark,generation=0;
   async function connect(user) {
-    const current=++generation; unsubscribe?.(); settingsBuffer.reset();confirmedPlayer=null; telemetry.clear();
+    const current=++generation; unsubscribe?.();unsubscribePark?.(); settingsBuffer.reset();confirmedPlayer=null;Cloud.park=parkEngine.publicState(); telemetry.clear();
     Cloud.uid=user?.uid || null; Cloud.player=null; telemetry.sync(null,null);
     if (!user) { showLogin(); return; }
     startLoading('Carregando seu saldo…');
@@ -281,6 +287,7 @@ else {
         if(current!==generation || !snapshot.exists() || snapshot.metadata.hasPendingWrites) return;
         accept(publicPlayer(snapshot.data()));
       },()=>notify('Não foi possível atualizar o progresso. Verifique a conexão.'));
+      unsubscribePark=onSnapshot(doc(db,'players',user.uid,'park','state'),snapshot=>{if(current!==generation||snapshot.metadata.hasPendingWrites)return;acceptPark(snapshot.exists()?snapshot.data():parkEngine.fresh());if(Cloud.player)accept(Cloud.player);},()=>notify('Não foi possível atualizar seus ingressos. Verifique a conexão.'));
       selectedConsent=undefined;
       stopLoading();gateGameplay(false);
       dialog && (dialog.style.display='none'); resolveReady(Cloud.player);

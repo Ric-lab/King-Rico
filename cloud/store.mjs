@@ -1,5 +1,6 @@
 import { doc, getDoc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import engine from './engine.cjs';
+import parkEngine from './park.cjs';
 
 const fail = (code, message) => { throw Object.assign(new Error(message), {code}); };
 const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -18,21 +19,24 @@ export function createGameStore(db, uid, dependencies={}) {
   const now = dependencies.now || Date.now;
   const rng = dependencies.rng;
   const playerRef = reference(['players',uid]);
+  const parkRef=reference(['players',uid,'park','state']);
   return async data => {
-    const allowed={bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected'],
+    const allowed={parkEntry:['action','requestId','game','method'],parkBonus:['action','requestId','wheelId'],parkBonusClose:['action','requestId','wheelId'],bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected','park'],
       bridge:['action','requestId','game','bet','move','roundId','step','selected'],
       neck:['action','requestId','game','bet','move','roundId','floor'],
-      fingo:['action','requestId','game','bet','move','roundId','used','selected'],
+      fingo:['action','requestId','game','bet','move','roundId','used','selected','park'],
       bounce:['action','requestId','game','bet','roundId','n','move','gold'],
-      clown:['action','requestId','game','bet','roundId','used','selected'],
-      penalty:['action','requestId','game','bet','move','roundId','step','quality'],
-      flying:['action','requestId','game','bet','move','roundId','step','selected'],
+      clown:['action','requestId','game','bet','roundId','used','selected','park'],
+      penalty:['action','requestId','game','bet','move','roundId','step','quality','park'],
+      flying:['action','requestId','game','bet','move','roundId','step','selected','park'],
       race:['action','requestId','game','bet','roundId','selected','seed','version','selected2'],
       claw:['action','requestId','game','bet','roundId','selected','aimX','aimZ','seed'],
       twentyOne:['action','requestId','game','bet','move','roundId','turn','target'],
       bonus:['action','requestId'],recharge:['action','requestId','source'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
+    if(data.park!==undefined&&data.park!==true)fail('king-rico/invalid-argument','Entrada inválida.');
+    if(['parkBonus','parkBonusClose'].includes(data.action)&&!requestIdPattern.test(data.wheelId||''))fail('king-rico/invalid-argument','Roleta inválida.');
     if(data.action==='recharge' && data.source!==undefined && data.source!=='home')fail('king-rico/invalid-argument','Origem de recarga inválida.');
     if (data.analyticsConsent !== undefined && typeof data.analyticsConsent !== 'boolean') fail('king-rico/invalid-argument','Preferência inválida.');
     if (data.action==='spin' && (!engine.BETS.includes(data.bet) || !['circus','wheel'].includes(data.game) ||
@@ -80,17 +84,20 @@ export function createGameStore(db, uid, dependencies={}) {
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
       Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['bridgeBetIdx','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
-    const financial = ['bridge','spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
+    const financial = ['parkEntry','parkBonus','parkBonusClose','bridge','spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;
     const fingerprint=JSON.stringify(Object.keys(data).sort().map(k=>[k,data[k]]));
     const execute = () => transact(async tx => {
       // Read before writing, including on SDK retries caused by another device.
       const player=await tx.get(playerRef);
       const operation=financial ? await tx.get(operationRef) : null;
+      const usesPark=data.action==='bootstrap'||data.action==='spin'&&data.game==='circus'||['parkEntry','parkBonus','parkBonusClose','clown','penalty','flying','fingo'].includes(data.action);
+      const parkSnapshot=usesPark?await tx.get(parkRef):null,park=parkSnapshot?.exists()?parkSnapshot.data():parkEngine.fresh();let parkDirty=false;
+      const parkResult=()=>usesPark?{park:parkEngine.publicState(park)}:{};
       if (operation?.exists()) {
         const saved=operation.data();
         if (saved.fingerprint!==fingerprint) fail('king-rico/already-exists','Pedido já utilizado.');
-        return {...saved.result,player:publicPlayer(player.data()),replayed:true};
+        return {...saved.result,player:publicPlayer(player.data()),...parkResult(),replayed:true};
       }
       const time=now(), isNew=!player.exists();
       if (isNew && data.action!=='bootstrap') fail('king-rico/failed-precondition','Conecte sua conta novamente.');
@@ -99,15 +106,19 @@ export function createGameStore(db, uid, dependencies={}) {
         analyticsFromCreation:data.analyticsConsent===true,createdAt:stamp(),updatedAt:stamp(),
         firstSpinAt:null,lastSpinAt:null,revision:0,lastOperationId:null} : player.data();
       let result={}, betUnits=0, winUnits=0;
-      if (data.action==='bootstrap' && !isNew) return {player:publicPlayer(p),isNew:false};
-      if (data.action==='spin') {
+      const parkPayment=parkEngine.payment(p,park,data);
+      if (data.action==='bootstrap' && !isNew) return {player:publicPlayer(p),...parkResult(),isNew:false};
+      if(data.action==='parkEntry'){result=parkEngine.entry(p,park,data.game,data.method);parkDirty=true;
+      }else if(data.action==='parkBonus'){winUnits=parkEngine.bonus(park,data.wheelId,rng);p.balanceUnits+=winUnits;result={wheel:structuredClone(park.wheel)};parkDirty=true;
+      }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');park.spins=0;park.wheel=null;parkDirty=true;
+      }else if (data.action==='spin') {
         if (p.lastSpinAt && time-p.lastSpinAt.toMillis()<700) fail('king-rico/resource-exhausted','Aguarde antes de girar.');
         betUnits=engine.units(data.bet);
         if (p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
-        const outcome=data.game==='circus' ? engine.slot(data.bet,p.peaches,rng,p.peachBank) : engine.wheel(data.bet,data.selected,rng);
+        const outcome=data.game==='circus' ? (data.park?parkEngine.spin(p,park,data.bet,data.requestId,rng):engine.slot(data.bet,p.peaches,rng,p.peachBank)) : engine.wheel(data.bet,data.selected,rng);
         const before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
-        if (data.game==='circus') {p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;}
+        if (data.game==='circus') {p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;parkDirty=!!data.park;}
         p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
         p.settings[data.game==='circus'?'slotBetIdx':'wheelBetIdx']=engine.BETS.indexOf(data.bet);
         result={game:data.game,bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,
@@ -149,12 +160,12 @@ export function createGameStore(db, uid, dependencies={}) {
             baseBalance:p.balanceUnits/100,outcome:{move:'cancel',roundId:round.id,betUnits:round.betUnits,used:round.used,bin:-1,ended:true,winUnits:0}};
         } else {
           if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
-          betUnits=round ? 0 : engine.units(data.bet);
+          betUnits=parkPayment?parkPayment.debit:(round ? 0 : engine.units(data.bet));
           if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
-          const outcome=engine.fingo(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
+          const outcome=engine.fingo(data.bet,parkPayment&&!round?{ballLimit:10,cardVersion:2,payoutVersion:3}:round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
           winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
           p.fingoRound=outcome.ended ? null : {id:data.roundId,betUnits:outcome.betUnits,targets:outcome.targets,
-            marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion>=2?{payoutVersion:outcome.payoutVersion}:{}),...(outcome.cardVersion>=1?{cardVersion:outcome.cardVersion}:{})};
+            marks:outcome.marks,used:outcome.used,slots:data.move==='roll'?outcome.slots:null,...(outcome.payoutVersion>=2?{payoutVersion:outcome.payoutVersion}:{}),...(outcome.cardVersion>=1?{cardVersion:outcome.cardVersion}:{}),...(outcome.ballLimit?{ballLimit:outcome.ballLimit}:{})};
           p.settings.fingoBetIdx=engine.BETS.indexOf(data.bet);p.lastSpinAt=stamp();p.firstSpinAt ||= stamp();
           result={game:'fingo',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-betUnits)/100,outcome,baseBalance:p.balanceUnits/100};
         }
@@ -164,7 +175,7 @@ export function createGameStore(db, uid, dependencies={}) {
           : data.move!=='shoot' || data.step!==0)
           fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de jogar.');
-        betUnits=round ? 0 : engine.units(data.bet);
+        betUnits=parkPayment?parkPayment.debit:(round ? 0 : engine.units(data.bet));
         if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
         const outcome=engine.penalty(data.bet,round,data.move,data.roundId,data.quality,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
@@ -188,7 +199,7 @@ export function createGameStore(db, uid, dependencies={}) {
         if(round ? round.id!==data.roundId || round.used!==data.used || round.betUnits!==engine.units(data.bet) : data.used!==0)
           fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de lançar.');
-        betUnits=round ? 0 : engine.units(data.bet);
+        betUnits=parkPayment?parkPayment.debit:(round ? 0 : engine.units(data.bet));
         if(p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
         const stats=p.clownStats || {betUnits:0,winUnits:0},outcome=engine.clown(data.bet,round,data.roundId,data.selected,stats,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;
@@ -258,16 +269,18 @@ export function createGameStore(db, uid, dependencies={}) {
         p.settings={...p.settings,...settings};
         if (data.analyticsConsent!==undefined) p.analyticsConsent=data.analyticsConsent;
       }
+      if(parkPayment&&result.outcome){parkEngine.settle(park,data,result.outcome,parkPayment);parkDirty=true;}
       if (!isNew) p.revision++;
       p.updatedAt=stamp();
       if (financial) p.lastOperationId=data.requestId;
-      result={...result,player:publicPlayer(p)};
+      if(parkDirty){park.revision++;park.lastOperationId=data.requestId;park.playerRevision=p.revision;tx.set(parkRef,park);}
+      result={...result,player:publicPlayer(p),...parkResult()};
       tx.set(playerRef,p);
       if (financial) {
         // The immutable operation stores the outcome; the current player is
         // already read by the transaction. Avoid duplicating every active hand
         // and its deck into every operation and revalidating that snapshot.
-        const {player:ignored,...savedResult}=result;
+        const {player:ignored,park:ignoredPark,...savedResult}=result;
         tx.set(operationRef,{action:data.action,game:data.game || 'home',selected:data.selected ?? -1,
           fingerprint,betUnits,winUnits,result:savedResult,createdAt:stamp(),rulesVersion:engine.RULES_VERSION});
       }
@@ -284,7 +297,7 @@ export function createGameStore(db, uid, dependencies={}) {
           const operation=saved.data();
           if (operation.fingerprint!==fingerprint) fail('king-rico/already-exists','Pedido já utilizado.');
           const current=await read(playerRef);
-          return {...operation.result,player:publicPlayer(current.data()),replayed:true};
+          const currentPark=await read(parkRef);return {...operation.result,player:publicPlayer(current.data()),park:parkEngine.publicState(currentPark.exists()?currentPark.data():undefined),replayed:true};
         }
         // Another tab may have recharged with a different ID. Re-read in a fresh
         // transaction once; the same operation ID never creates another credit.

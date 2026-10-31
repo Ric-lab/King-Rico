@@ -44,9 +44,10 @@ function cardRound(betUnits,previous,move,roundId,selected,rng,multiplier,reques
   if(i>=0&&!marks.includes(i)){mark=i;marks.push(i);}
   used++;
  }
- const won=!!winningLine(marks),ended=won||used===30;
+ const ballLimit=previous?.ballLimit||30;
+ const won=!!winningLine(marks),ended=won||used===ballLimit;
  return {move,roundId,betUnits,targets,marks,used,slots,bin,mark,ended,
-  winUnits:won?Math.round(betUnits*(payoutVersion===3?2:multiplier(used))):0,payoutVersion,cardVersion};
+  winUnits:won?Math.round(betUnits*(payoutVersion===3?2:multiplier(used))):0,payoutVersion,cardVersion,...(ballLimit===10?{ballLimit:10}:{})};
 }
 // Reference policy: prefer a draw that advances the most developed open line.
 function chooseSlot(round){

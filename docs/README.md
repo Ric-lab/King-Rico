@@ -15,6 +15,8 @@ O código, os testes e o histórico Git resolvem divergências com textos antigo
 
 ## Interface e regras
 
+- [Circus e parque: ingressos, roleta e Fingo rápido](PARQUE.md)
+
 - [Design System](../DESIGN-SYSTEM.md)
 - [Controles compartilhados](../ui/CONTROLS.md)
 - [Pipeline de assets](../guidelines/asset-pipeline.md)

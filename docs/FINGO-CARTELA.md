@@ -1,6 +1,7 @@
 # Fortune Fingo — cartela e Plinko
 
-Uma aposta dá 30 bolas para fazer quina. Cada sorteio oferece cinco números e pelo
+No parque, uma entrada de um ingresso ou 25 moedas dá **10 bolas** para fazer
+quina. Partidas já pagas fora desse modo conservam suas **30 bolas**. Cada sorteio oferece cinco números e pelo
 menos uma opção útil para a cartela. A pessoa escolhe uma entrada na cartela ou
 no bucket; a bola cai no Plinko. Qualquer dourado atingido marca seu próprio
 número, mesmo quando outro foi escolhido. A escolha favorece a entrada desejada,
@@ -13,7 +14,8 @@ cartela e seus pagamentos originais. A versão da cartela não muda no meio da p
 
 ## Apresentação e interação
 
-O seletor inicial abre automaticamente e ocupa a largura da tela. Mantém APOSTA
+No parque, o seletor de entrada oferece ingresso ou moedas; a primeira jogada
+confirma a cobrança. O seletor de aposta das partidas anteriores mantém APOSTA
 no letreiro, o valor escolhido com controles grandes e, abaixo, QUINA ×2 e o
 prêmio em destaque. JOGAR confirma a única cobrança e inicia o sorteio.
 

@@ -292,7 +292,7 @@ class Component extends DCLogic {
   closeBet = () => { this.tone(1100, 0.04, 'square', 0.04); this.setState({ betOpen: false }); };
   rcBroke() { const s=this.state; return s.balance<1 && !s.win && !s.menu && !s.spinning && !s.flying && !s.step && !s.active && !s.round && !s.busy && !s.paying && (!s.phase || s.phase==='idle' || s.phase==='spin'); }
   recharge = async () => {const cloud=window.KingRicoCloud;if(!cloud?.enabled || this._recharging) return;this._recharging=true;try {const r=await cloud.recharge();this.setState({balance:cloud.player?.balance ?? r.player.balance});if(r.reason) cloud.error({code:'king-rico/round-conflict'});}catch(e){cloud.error(e);}finally{this._recharging=false;}};
-  renderVals() {return {...this._rv(),broke:this.rcBroke(),recharge:this.recharge};}
+  renderVals() {return {...this._rv(),broke:!window.KingRicoCloud?.parkMode && this.rcBroke(),recharge:this.recharge};}
   _rv() {
     const s = this.state, j = s.step, txt = fmt(s.balance);
     const ladder = this.multipliers.map((m, k) => { const done = k < j, next = k === j && !s.win;
@@ -307,7 +307,7 @@ class Component extends DCLogic {
       ladder,collectTop:this.multipliers.length>5?'194px':'158px',goalTop:this.multipliers.length>5?'260px':'230px',goalSize:this.multipliers.length>5?'64px':'76px',confetti: s.conf, gol: s.gol, dimOp: s.flying ? 0 : 0.12,
       walletProps:{value: txt,hold:!!(s.win||s.paying),external:false}, balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
       showHand: j === 0 && (!s.touched || s.idle) && !s.flying && !s.win, down: this.down, move: this.move, up: this.up,
-      showBet: j === 0 && !s.paying && !s.flying, betOpen: !!s.betOpen, openBet: this.openBet, closeBet: this.closeBet, showCollect: j > 0 && j < this.multipliers.length, collectText: cv, collectOp: s.flying ? 0.55 : 1, collectBtn: this.collectBtn,
+      showBet: !window.KingRicoCloud?.parkMode && j === 0 && !s.paying && !s.flying, betOpen: !!s.betOpen, openBet: this.openBet, closeBet: this.closeBet, showCollect: j > 0 && j < this.multipliers.length, collectText: cv, collectOp: s.flying ? 0.55 : 1, collectBtn: this.collectBtn,
       betText: fmt(BETS[s.betIdx]), betBg: s.noMoney ? '#8a1010' : '#2a0a4a', betAnim: s.noMoney ? 'fpNo .6s ease-in-out' : 'none', downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1, betDown: this.betDown, betUp: this.betUp, goHome: this.goHome,
       menu: !!s.menu, openMenu: this.openMenu, closeMenu: this.closeMenu,
       menuButton:{onClick:this.openMenu,disabled:!!this.cloudLocked(),style:{zIndex:25}},

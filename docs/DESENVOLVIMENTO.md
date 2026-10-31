@@ -40,11 +40,13 @@ Com emuladores já disponíveis e build emulado pronto:
 
 ```sh
 node --test tests/integration.mjs
-python3 tests/browser.py --public-only
+python3 tests/park_browser.py
 ```
 
-Há seletores específicos no próprio `tests/browser.py`; veja também o guia do
-jogo afetado, como [Fingo](FINGO-CARTELA.md). O fluxo local não comprova login
+A suíte atual do navegador é `tests/park_browser.py`; `KING_RICO_TEST_URL`
+permite escolher outra porta local. Os módulos anteriores de navegador preservam
+as verificações detalhadas de versões anteriores e não definem o catálogo atual.
+Veja também o guia do jogo afetado, como [Fingo](FINGO-CARTELA.md). O fluxo local não comprova login
 Google real ou publicação: confira esses pontos no ambiente oficial quando cabível.
 
 ## Fontes e saídas

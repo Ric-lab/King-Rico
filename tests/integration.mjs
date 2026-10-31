@@ -184,7 +184,7 @@ test('Spark wallet survives relogin and rules forbid unauthorized reads and arbi
   assert.equal((await again.call(request({action:'bootstrap'}))).player.balance,slot.player.balance);
 });
 test('Neck Rules preserve an early loss after reentry and replay without another draw',async()=>{
-  const identity='neck-early-miss';
+  const identity='neck-early-miss-'+randomUUID();
   const first=await client('neck-early-miss-first',identity,{rng:()=>.99});
   await first.call(request({action:'bootstrap'}));
   const start=request({action:'neck',game:'neck',move:'start',bet:10,roundId:randomUUID(),floor:0});
@@ -892,4 +892,85 @@ test('Fingo free-center rules accept all twelve quinas and credit fixed 2x once'
   const won=await c.call(move);assert.equal(won.outcome.mark,i);assert.equal(won.player.balance,20);assert.equal(won.player.fingoRound,null);
   assert.ok((await c.call(move)).replayed);
  }
+});
+
+test('Park tickets are awarded once and pay an attraction without a second coin debit',async()=>{
+ const name='park-tickets-'+randomUUID();let draws=[];const c=await client(name,name,{rng:()=>draws.shift()??.99});
+ const start=await c.call(request({action:'bootstrap'}));assert.equal(start.player.balance,1000);assert.equal(start.park.tickets,0);
+ draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0];
+ const spin=request({action:'spin',game:'circus',bet:1,park:true});const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.park.tickets,3);assert.equal(a.outcome.ticketAward,3);
+ const other=await client(name+'-other',name);assert.equal((await other.call(request({action:'bootstrap'}))).park.tickets,3);
+ const before=a.player.balance;await c.call(request({action:'parkEntry',game:'clown',method:'ticket'}));await new Promise(r=>setTimeout(r,350));
+ const roundId=randomUUID(),play={action:'clown',requestId:roundId,roundId,game:'clown',bet:25,used:0,selected:0,park:true};
+ const [paid,replay]=await Promise.all([c.call(play),c.call(play)]);assert.ok(paid.replayed||replay.replayed);
+ assert.equal(paid.player.balance,before);assert.equal(paid.park.tickets,2);assert.equal(paid.player.clownRound.betUnits,2500);
+ assert.equal((await other.call(request({action:'bootstrap'}))).park.tickets,2);
+ await assertFails(updateDoc(doc(c.db,'players',c.uid,'park','state'),{tickets:999}));
+});
+test('Park charges ten real spins and credits only the wheel extra, once across reloads',async()=>{
+ const name='park-wheel-'+randomUUID(),c=await client(name,name,{rng:()=>.99});await c.call(request({action:'bootstrap'}));let s;
+ for(let n=0;n<10;n++){if(n)await new Promise(r=>setTimeout(r,730));s=await c.call(request({action:'spin',game:'circus',bet:1,park:true}));assert.equal(s.park.spins,n+1);}
+ assert.ok(s.park.wheel.baseUnits>0);assert.equal(s.park.wheel.baseUnits,engine.units(s.outcome.res.win));
+ const before=s.player.balance,wheelId=s.park.wheel.id,operation=request({action:'parkBonus',wheelId});
+ // All three records must agree; neither an inflated wheel nor unrelated state
+ // changes can hitchhike on an otherwise well-formed monetary operation.
+ const playerRef=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
+ const previous=(await getDoc(playerRef)).data(),savedPark=(await getDoc(parkRef)).data();
+ for(const alter of [w=>w.result.multiplier=100,w=>w.result.extraUnits++,w=>w.result.index=13,w=>w.baseUnits++,(_w,p)=>p.tickets+=3]){
+  const id=randomUUID(),p=structuredClone(savedPark),w=p.wheel;
+  w.result={index:0,multiplier:10,winUnits:w.baseUnits*10,extraUnits:w.baseUnits*9};alter(w,p);
+  const extra=w.result.extraUnits,next={...previous,balanceUnits:previous.balanceUnits+extra,revision:previous.revision+1,lastOperationId:id,updatedAt:serverTimestamp()};
+  Object.assign(p,{revision:savedPark.revision+1,playerRevision:next.revision,lastOperationId:id});
+  const batch=writeBatch(c.db);batch.set(playerRef,next);batch.set(parkRef,p);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'parkBonus',game:'home',selected:-1,fingerprint:'forged-park',betUnits:0,winUnits:extra,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION,result:{wheel:w}});await assertFails(batch.commit());
+ }
+
+ const [a,b]=await Promise.all([c.call(operation),c.call(operation)]);assert.ok(a.replayed||b.replayed);assert.equal(a.wheel.result.multiplier,10);
+ assert.equal(a.player.balance,before+a.wheel.result.extraUnits/100);
+ const other=await client(name+'-device',name);assert.equal((await other.call(request({action:'bootstrap'}))).park.wheel.result.winUnits,a.wheel.result.winUnits);
+ const again=await other.call(request({action:'parkBonus',wheelId}));assert.equal(again.player.balance,a.player.balance);
+ const close=request({action:'parkBonusClose',wheelId});const [closed,replayed]=await Promise.all([c.call(close),other.call(close)]);assert.ok(closed.replayed||replayed.replayed);
+ assert.equal(closed.park.wheel,null);assert.equal(closed.park.spins,0);assert.equal(closed.player.balance,a.player.balance);
+});
+test('Park Fingo persists a ten-ball card and a coin entry is charged once',async()=>{
+ const name='park-fingo-'+randomUUID(),c=await client(name,name,{rng:()=>.99});await c.call(request({action:'bootstrap'}));
+ const slot=await c.call(request({action:'spin',game:'circus',bet:1,park:true})),balance=slot.player.balance-25;await new Promise(r=>setTimeout(r,320));
+ await c.call(request({action:'parkEntry',game:'fingo',method:'coins'}));const roundId=randomUUID();
+ let r=await c.call(request({action:'fingo',game:'fingo',move:'roll',bet:25,roundId,used:0,park:true}));
+ assert.equal(r.player.balance,balance);assert.equal(r.player.fingoRound.ballLimit,10);assert.equal(r.park.passes.fingo.started,true);
+ const restored=await c.call(request({action:'bootstrap'}));assert.equal(restored.player.fingoRound.ballLimit,10);
+ while(r.player.fingoRound){let hand=r.player.fingoRound;await new Promise(resolve=>setTimeout(resolve,320));
+  r=await c.call(request({action:'fingo',game:'fingo',move:'drop',bet:25,roundId,used:hand.used,selected:0,park:true}));
+  if(r.outcome.ended){assert.ok(r.outcome.used<=10);assert.equal(r.player.fingoRound,null);assert.equal(r.park.passes.fingo,undefined);break;}
+  await new Promise(resolve=>setTimeout(resolve,320));r=await c.call(request({action:'fingo',game:'fingo',move:'roll',bet:25,roundId,used:r.outcome.used,park:true}));
+ }
+ assert.equal(r.player.balance,balance+r.outcome.winUnits/100);
+});
+test('Park Penalty and Flying charge one coin entry, restore and collect their native prize once',async()=>{
+ for(const game of ['penalty','flying']){
+  const name='park-'+game+'-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+  await c.call(request({action:'parkEntry',game,method:'coins'}));const roundId=randomUUID();
+  const data=game==='penalty'?{move:'shoot',quality:1000}:{move:'pop',selected:0};
+  const first={requestId:roundId,roundId,action:game,game,bet:25,step:0,park:true,...data};
+  const play=await c.call(first);assert.equal(play.player.balance,975);assert.equal(play.park.passes[game].roundId,roundId);
+  const other=await client(name+'-device',name),restored=await other.call(request({action:'bootstrap'}));assert.deepEqual(restored.player[game+'Round'],play.player[game+'Round']);
+  await new Promise(r=>setTimeout(r,320));const collect=request({action:game,game,move:'collect',roundId,bet:25,step:1,park:true,...(game==='penalty'?{quality:0}:{selected:-1})});
+  const [a,b]=await Promise.all([c.call(collect),other.call(collect)]);assert.ok(a.replayed||b.replayed);assert.equal(a.player[game+'Round'],null);assert.equal(a.park.passes[game],undefined);assert.equal(a.player.balance,975+a.outcome.winUnits/100);assert.ok(a.outcome.winUnits>0);
+ }
+});
+test('Atomic operation envelope rejects missing, reused and malformed ledger records',async()=>{
+ const name='operation-envelope-'+randomUUID(),c=await client(name);await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),old=(await getDoc(ref)).data();
+ async function attempt(change=()=>{},writeOperation=true,writePlayer=true,allowed=false){
+  const id=randomUUID(),outcome=engine.wheel(1,0,()=>.99);
+  const p={...old,balanceUnits:old.balanceUnits-100+outcome.winUnits,settings:{...old.settings,wheelBetIdx:0},revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),firstSpinAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const o={action:'spin',game:'wheel',selected:0,fingerprint:'envelope',betUnits:100,winUnits:outcome.winUnits,rulesVersion:engine.RULES_VERSION,createdAt:serverTimestamp(),result:{game:'wheel',bet:1,balanceBefore:1000,balanceDebited:999,baseBalance:p.balanceUnits/100,outcome}};
+  change(o,p);const batch=writeBatch(c.db);if(writePlayer)batch.set(ref,p);if(writeOperation)batch.set(doc(c.db,'players',c.uid,'operations',id),o);
+  await (allowed?assertSucceeds(batch.commit()):assertFails(batch.commit()));return id;
+ }
+ await attempt(()=>{},false,true);await attempt(()=>{},true,false);
+ for(const change of [o=>delete o.fingerprint,o=>o.fingerprint=7,o=>o.fingerprint='x'.repeat(501),o=>o.rulesVersion='unknown',o=>o.createdAt=0,o=>o.winUnits=0.5,o=>o.betUnits='100',o=>o.extra='injected'])await attempt(change);
+ const id=await attempt(()=>{},true,true,true),paid=(await getDoc(ref)).data();
+ await assertFails(updateDoc(ref,{revision:paid.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),balanceUnits:paid.balanceUnits+1000}));
+ await assertFails(updateDoc(doc(c.db,'players',c.uid,'operations',id),{winUnits:1000}));
 });

@@ -22,7 +22,10 @@ test('production artifact serves every Home game and the Penalty renderer with l
     const hash=createHash('sha256').update(await readFile(path.join('dist',asset))).digest('hex').slice(0,12);
     assert.equal(suffix,'?v='+hash,asset+' must bypass a previously cached old image');
   }
-  for(const game of ['Circus','Wheel','Neck','Fingo','Penalty','Clown','Flying Clown','33']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
+  for(const game of ['Circus','Fingo','Penalty','Clown','Flying Clown']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
+  for(const game of ['Wheel','Neck','33']) await access(`dist/Fortune ${game}.dc.html`);
+  assert.match(await readFile('dist/ui/park/client.js','utf8'),/parkEntry/);
+  assert.doesNotMatch(await readFile('dist/ui/park/client.js','utf8'),/mobile-preview|mock-wallet|test-wallet/);
   for(const file of ['clownball.js','bounce3d.js']) {const source=await readFile(path.join('dist',file),'utf8');assert.match(source,/const SRC = '\.\/runtime\/three\.module\.js'/);assert.doesNotMatch(source,/unpkg\.com/);}
   const archived=['Bounce','Claw','Race','Bridge'].map(game=>`Fortune ${game}.dc.html`);
   for(const game of archived)assert.ok(!games.includes(game),`${game} stays archived outside Home`);
