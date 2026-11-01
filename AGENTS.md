@@ -42,3 +42,16 @@ Para arte, leia `guidelines/asset-pipeline.md` e `DESIGN-SYSTEM.md`. Reaproveite
 padrão visual existente. Evidências locais ficam em `work/`, ignorado pelo Git.
 Documente comportamento atual no guia pertinente; propostas e relatórios antigos
 precisam de data e identificação clara, sem virar instruções permanentes.
+
+
+## Manter os padrões documentados
+
+Ao finalizar uma mudança aprovada, confira no mesmo commit o guia do assunto:
+`DESIGN-SYSTEM.md` para direção visual, `ui/CONTROLS.md` para controles comuns,
+`docs/PARQUE.md` para Circus/parque e `assets/machine/README.md` para peças da
+máquina. Atualize somente o que mudou e remova orientações contraditórias.
+Diferencie estado publicado, prévia, proposta e tentativa rejeitada. Geometrias
+e comportamentos antigos nos registros não devem voltar por engano ao produto.
+Reutilize os módulos de `ui/`; documentos e tokens do editor não substituem os
+componentes ativos. Uma mudança só de documentação exige conferir coerência,
+links e diff, sem repetir partidas nem publicar outro build do jogo.

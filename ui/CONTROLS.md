@@ -18,3 +18,20 @@ A placa do saldo usa CSS e o asset da moeda. Ela cresce com o texto para acomoda
 `banner.js` e `banner.css`, incluídos pelo build em todas as páginas jogáveis, reservam uma faixa preta de 60 px com BANNER. `KingRicoViewport.height` desconta esse espaço para a escala das cenas; o cabeçalho mantém o mesmo alinhamento dentro da área restante. Menus, login e a simulação de anúncio usam portais no body e continuam cobrindo a janela inteira. É apenas um espaço de teste, sem SDK nem impressões de anúncio.
 
 `wallet.js` e `WalletValue` compartilham a apresentação do saldo em todas as telas. Ganhos aguardam o fechamento do prêmio e começam a contar na chegada da primeira moeda; descontos contam para baixo sem voo. O contador mantém centavos e recebe o valor confirmado da conta, sem escrever saldos ou criar transações. `hold` mantém um prêmio visível antes da coleta, e `external`/`fly` evitam duplicar voos próprios dos jogos. Falhas de animação têm temporizadores independentes para concluir a apresentação. Restaurar a conta mostra o saldo salvo diretamente.
+
+
+## Controles integrados do Circus
+
+A família aprovada do Circus usa spin, auto e turbo azuis com aro dourado fixo,
+separando face, lateral e sombra. O spin mede 373 × 88 na cena 453 × 802 e afunda
+3 unidades por translação; pressão de 34 ms e retorno de 160 ms. Auto/turbo
+movem apenas a face e distinguem ligado/desligado. Não usar escala, perspectiva,
+deformação ou brilho animado para simular o clique desses três controles.
+
+A montagem fica em `ui/park/cabinet.css`, a resposta de toque em
+`ui/park/spin-tactility.js` e os SVGs atuais em `assets/machine/`. Aro e alvo
+permanecem imóveis; cancelar restaura o estado, sem aposta. Os sons obedecem às
+preferências existentes e não são repetidos pela fila de giro. Movimento reduzido
+remove transições. Esta montagem específica não substitui `kr-button` nos demais
+jogos. Veja [Design System](../DESIGN-SYSTEM.md) e
+[peças ativas](../assets/machine/README.md).

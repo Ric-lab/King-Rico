@@ -44,6 +44,43 @@ origens dos efeitos acompanham a nova altura. A carga usa 283 px de líquido.
 As bases das barras encostam na área dos controles. As roletas pequena e grande
 compartilham a paleta em `ui/park/wheel-palette.js`, sem alterar multiplicadores.
 
+## Estado publicado — 01/11/2026
+
+A prévia v43 foi integrada ao cliente nativo e publicada no commit
+[`a738f8a`](https://github.com/Ric-lab/King-Rico/commit/a738f8af50602e7c855d55d83f8a6f9f1d5fff4f),
+com [workflow concluído](https://github.com/Ric-lab/King-Rico/actions/runs/41357801533).
+O site oficial foi conferido contra o build de produção; 13 arquivos afetados,
+incluindo configuração Firebase, HTML, bundle e assets, coincidiram.
+
+| Camada atual | Fonte |
+|---|---|
+| Face azul do spin e aro fixo fosco | `spin-front-blue-v1.svg`, `spin-rim-matte-v1.svg` |
+| Faces de auto e turbo | `auto-socket-face-v6.svg`, `turbo-socket-face-v6.svg` |
+| Encaixes fixos e barra | `auto-socket-rim-v3.svg`, `turbo-socket-rim-v3.svg`, `base-controls-v4.svg` |
+| Contador de ingressos e símbolo | `ticket-wallet-v2.webp`, `ticket-symbol-v1.webp` |
+| Rolos e moldura | `reel-paper-v2.webp`, `reel-frame-v1.webp` |
+| Visor e barras | `prize-v2.webp`, `gauge-v2.webp` |
+| Geometria e clique | `ui/park/cabinet.css`, `ui/park/spin-tactility.js` |
+| Fita contínua e paleta da roleta | `ui/park/reel-tape.js`, `ui/park/wheel-palette.js` |
+
+Spin: 373 × 88, x = 40, topo efetivo 667 e base 755 na cena 453 × 802.
+Face rígida com curso de 3 px, pressão de 34 ms e retorno de 160 ms; aro e alvo
+fixos. Auto/turbo também usam translação. A pintura é reproduzida por
+`scripts/export-tactile-buttons.mjs`. Não restaurar relevo de 10/14/18 px,
+faces verdes ou deformações de tentativas anteriores.
+
+A publicação usa Google e Firestore reais. Testes locais cobriram código,
+regras/transações e navegador emulado, inclusive retomada da roleta, crédito
+único, Fingo rápido e assets dos demais jogos. A carteira fictícia do servidor
+de prévia não foi incorporada ao site oficial.
+
+## Histórico de experimentação
+
+As seções seguintes descrevem cada tentativa **na época da prévia**. Frases como
+“somente na prévia” são registros daquele momento; não definem o estado atual.
+Versões intermediárias rejeitadas não devem ser reaplicadas como especificação.
+Use a tabela acima, o CSS e o manifesto para identificar as peças atuais.
+
 ## Acabamento da prévia privada — 01/11/2026
 
 - `auto-v1.webp` e `turbo-v1.webp`: botões isolados de 256 × 256, com alpha,

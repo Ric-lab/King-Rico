@@ -30,11 +30,18 @@ já sorteada apresenta o mesmo multiplicador. Falha de animação não desfaz cr
 A apresentação conserva o líquido sincronizado com o pulso, a união das roletas,
 o multiplicador viajando ao prêmio e as moedas viajando ao saldo. O fundo normal
 do Circus e da Home usa o parque diurno em `assets/scenes/circus-daylight-v1.webp`.
-A máquina é montada com seis peças independentes em `assets/machine/`: base,
-visor, vidro de carga e superfícies superior, central e inferior dos rolos.
-`ui/park/cabinet.css` integra a montagem e a curva suave nas linhas externas.
-A altura do líquido e sua sincronização com o pulso são preservadas, assim como
-os controles da aposta, os símbolos, o saldo e os ingressos.
+A máquina usa peças separadas para visor, barras, base e rolos, com montagem em
+`ui/park/cabinet.css`. Os três rolos usam fitas contínuas; os nove resultados
+numéricos não são nove animações independentes. A janela conserva as nove posições
+visíveis e uma curva suave nas linhas externas.
+
+Spin, auto e turbo compartilham azul-turquesa, aro fixo e face rígida que afunda
+por translação. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
+A roleta aceita botão e gesto e compartilha sua paleta arco-íris com as roletas
+pequenas das barras. O multiplicador viaja em dourado até o prêmio antes das
+moedas irem ao saldo. Detalhes de geometria e estados no
+[Design System](../DESIGN-SYSTEM.md); peças ativas e tentativas anteriores no
+[registro da máquina](../assets/machine/README.md).
 
 ## Persistência e publicação
 
@@ -48,6 +55,6 @@ rejeitam um ID já existente. Não há Cloud Functions nem plano Blaze.
 As moedas de teste e o servidor da prévia não fazem parte do build publicado.
 
 Verificações relevantes: `tests/integration.mjs`, `tests/adapters.test.cjs`,
-`tests/build.test.mjs` e `tests/park_browser.py`. O navegador usa os emuladores;
+`tests/build.test.mjs`, `tests/reel-tape.test.cjs` e `tests/park_browser.py`. O navegador usa os emuladores;
 `KING_RICO_TEST_URL` seleciona o Hosting local. Gere produção após essa validação,
 e confirme os jobs do workflow existente antes de considerar a entrega publicada.
