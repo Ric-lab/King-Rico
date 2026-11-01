@@ -94,7 +94,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-result[hidden]{display:none}
 .park-wheel-hub strong{font-size:46px}
 .park-wheel-panel>.park-action{margin-top:28px}
-.park-flying-multiplier{position:fixed;left:0;top:0;width:140px;height:90px;display:flex;align-items:center;justify-content:center;color:#fff0a5;font:64px/1 Rammetto,sans-serif;text-shadow:0 3px #8b411b,0 0 18px #ffce5288;z-index:2147483646;pointer-events:none;transform-origin:center;will-change:transform,opacity}
+.park-flying-multiplier{position:fixed;left:0;top:0;width:140px;height:90px;display:flex;align-items:center;justify-content:center;color:#ffbd24;font:64px/1 Rammetto,sans-serif;-webkit-text-stroke:3px #713718;paint-order:stroke fill;text-shadow:0 3px #713718,0 5px 10px #71371866;z-index:2147483646;pointer-events:none;transform-origin:center;will-change:transform,opacity}
 
 /* Outdoor circus: the same scene sits behind the Home and the real machine. */
 .park-circus-scene{background:#52c9ef!important}
@@ -112,3 +112,10 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-home .kr-game-cover{background-image:url('/assets/scenes/circus-daylight-v1.webp');background-position:center 65%!important}
 .park-home .park-eyebrow{color:#215574;text-shadow:0 1px #fff9}
 .park-home .park-fingo-cover{position:absolute;inset:4% 10%;width:80%;height:92%;object-fit:contain;filter:drop-shadow(0 3px 3px #5b682b44)}
+
+.park-wheel-modal{backdrop-filter:blur(2px)}
+
+.park-wheel>span>b,.park-wheel .is-winning>b{color:#fff3c4;text-shadow:0 2px #492021,-1px 0 #492021,1px 0 #492021}
+.park-wheel-machine{touch-action:none;user-select:none;cursor:grab}
+.park-wheel-machine.is-dragging{cursor:grabbing}
+.park-wheel-machine.is-spinning,.park-wheel-machine.is-won{cursor:default}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="264" height="216" viewBox="0 0 264 216"><defs>
+<linearGradient id="gold" x2="0" y2="1"><stop stop-color="#fff2ae"/><stop offset=".18" stop-color="#ffda58"/><stop offset=".5" stop-color="#efb52c"/><stop offset="1" stop-color="#8e520b"/></linearGradient>
+<linearGradient id="edge" x2="0" y2="1"><stop stop-color="#fff8d0"/><stop offset=".5" stop-color="#dca127"/><stop offset="1" stop-color="#633008"/></linearGradient>
+<mask id="ring"><rect width="264" height="216" fill="white"/><rect x="14" y="14" width="236" height="188" rx="42" fill="black"/></mask></defs>
+<rect x="1.5" y="1.5" width="261" height="213" rx="55" fill="url(#gold)" stroke="url(#edge)" stroke-width="3" mask="url(#ring)"/>
+<rect x="13" y="13" width="238" height="190" rx="43" fill="none" stroke="#9b5c12" stroke-width="2"/></svg>

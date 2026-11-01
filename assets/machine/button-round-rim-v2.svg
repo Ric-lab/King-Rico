@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+ <defs>
+  <linearGradient id="gold" x1="0" y1="0" x2=".12" y2="1"><stop stop-color="#fff2ae"/><stop offset=".18" stop-color="#ffda58"/><stop offset=".48" stop-color="#efb52c"/><stop offset=".76" stop-color="#d39516"/><stop offset="1" stop-color="#8e520b"/></linearGradient>
+  <linearGradient id="edge" x2="0" y2="1"><stop stop-color="#fff8d0"/><stop offset=".46" stop-color="#e5ac22"/><stop offset="1" stop-color="#6a3607"/></linearGradient>
+  <linearGradient id="lip" x2="0" y2="1"><stop stop-color="#734009"/><stop offset=".45" stop-color="#bd7b10"/><stop offset="1" stop-color="#ffe28a"/></linearGradient>
+ </defs>
+ <path d="M128 1a127 127 0 1 1 0 254a127 127 0 1 1 0-254M128 26a102 102 0 1 0 0 204a102 102 0 1 0 0-204" fill="url(#gold)" fill-rule="evenodd"/>
+ <circle cx="128" cy="128" r="125.5" fill="none" stroke="url(#edge)" stroke-width="3"/>
+ <circle cx="128" cy="128" r="103.5" fill="none" stroke="url(#lip)" stroke-width="3"/>
+</svg>

@@ -9,6 +9,7 @@
 <script src="./cloud/firebase-config.js"></script>
 <script defer src="./cloud/client.js"></script>
 <script src="./support.js"></script>
+<script defer src="./ui/park/reel-tape.js"></script>
 </head>
 <body>
 <x-dc>
@@ -60,7 +61,7 @@ a:hover { color: #fff3c4; }
  <!-- palco com sangria: mesma escala do quadro, centro alinhado a ele (151 unidades de cada lado, 130 em cima, 200 embaixo) -->
  <div class="park-circus-backdrop" style="position: absolute; left: {{ bleedL }}; top: {{ bleedT }}; width: {{ bleedW }}; height: {{ bleedH }}; background-image: url('assets/bleed/stage-bleed-v5-lossless.webp'); background-size: 100% 100%; opacity: {{ bleedOn }}; pointer-events: none;"></div>
  <sc-if value="{{ pageDim }}" hint-placeholder-val="{{ false }}"><div onClick="{{ pageDimClick }}" style="position: absolute; inset: 0; background: {{ pageDimBg }}; cursor: pointer; animation: fcFade .2s ease-out;"></div></sc-if>
- <div class="park-circus-stage" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
+ <div class="park-circus-stage" data-pressed="{{ pressedButton }}" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; overflow: visible; font-family: 'Baloo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: {{ stageBg }}; border-radius: {{ radius }}; box-shadow: {{ frameShadow }}; transform-origin: top center; margin-top: {{ stageTop }}; transform: scale({{ scale }}); opacity: {{ stageOpacity }}; transition: opacity .5s ease;">
  <div style="position: absolute; inset: 0; animation: {{ shake }};">
   <div class="park-part-base" aria-hidden="true"></div>
   <div class="park-machine-plate" style="position: absolute; inset: 0; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-repeat: no-repeat; -webkit-mask-image: {{ edgeMask }}; mask-image: {{ edgeMask }}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect; pointer-events: none;"></div>
@@ -72,7 +73,7 @@ a:hover { color: #fff3c4; }
   <div class="park-old-curtains" style="position: absolute; left: 0; top: 0; width: 453px; height: 235px; background-image: url('assets/fx/top-layer3.webp'); background-size: 100% 100%; pointer-events: none; -webkit-mask-image: {{ topMask }}; mask-image: {{ topMask }}; -webkit-mask-size: 453px 802px; mask-size: 453px 802px; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
   <div ref="{{ lightsBleedRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible; opacity: {{ bleedOn }};"></div>
   <div class="park-machine-lights" ref="{{ lightsRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
-  <div style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
+  <div class="park-mascot" style="position: absolute; z-index: 0; left: 60px; top: 0; width: 330px; height: 215px; pointer-events: none; opacity: {{ kingOn }}; transition: opacity .45s ease;">
     <div style="position: absolute; left: 33px; top: 0px; width: 264px; height: 205px; background-image: url('assets/symbols/sym-candy.webp'); background-size: 100% 100%; opacity: .9;"></div>
     <div style="position: absolute; left: 80px; top: 24px; width: 170px; height: 210px;">
       <dc-import name="KingRico" mood="{{ kingMood }}" mood-key="{{ kingKey }}" size="{{ 170 }}" demo="{{ false }}" hint-size="170px,210px"></dc-import>
@@ -86,74 +87,69 @@ a:hover { color: #fff3c4; }
   <div class="park-machine-lights" ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
 
   <div class="park-part-prize" aria-hidden="true"></div>
-  <div class="park-reels">
-    <div class="park-reel-bed" aria-hidden="true"></div><div class="park-reel-bed" aria-hidden="true"></div><div class="park-reel-bed" aria-hidden="true"></div>
-  <div class="park-reel-cell park-part-reel-top" style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-window-back" aria-hidden="true"></div>
+  <div class="park-reels" data-reel-moving="{{ reelMoving }}">
+    <div class="park-reel-shell park-reel-shell-0" aria-hidden="true"></div>
+    <div class="park-reel-shell park-reel-shell-1" aria-hidden="true"></div>
+    <div class="park-reel-shell park-reel-shell-2" aria-hidden="true"></div>
+    <div class="park-reel-separator park-reel-separator-0" aria-hidden="true"></div><div class="park-reel-separator park-reel-separator-1" aria-hidden="true"></div>
+  <div class="park-reel-cell park-part-reel-top" data-park-column="0" data-reel-spinning="{{ c0.spin }}" data-dimmed="{{ c0.dimmed }}" data-held="{{ c0.lock }}" style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="0" data-park-ticket="{{ c0.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
-    <sc-if value="{{ c0.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="0" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="0" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c0.winFx }};"></div></sc-if>
-    <sc-if value="{{ c0.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c0.winFx }};"></div></sc-if>
+    <sc-if value="{{ c0.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c0.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-top" style="position: absolute; left: 164.333px; top: 219.5px; width: 122.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-top" data-park-column="1" data-reel-spinning="{{ c1.spin }}" data-dimmed="{{ c1.dimmed }}" data-held="{{ c1.lock }}" style="position: absolute; left: 164.333px; top: 219.5px; width: 122.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="1" data-park-ticket="{{ c1.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c1.pos }}; opacity: {{ c1.dim }}; animation: {{ c1.anim }};"></div>
-    <sc-if value="{{ c1.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="1" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c1.winFx }};"></div></sc-if>
-    <sc-if value="{{ c1.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c1.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c1.winFx }};"></div></sc-if>
+    <sc-if value="{{ c1.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c1.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-top" style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-top" data-park-column="2" data-reel-spinning="{{ c2.spin }}" data-dimmed="{{ c2.dimmed }}" data-held="{{ c2.lock }}" style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="2" data-park-ticket="{{ c2.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c2.pos }}; opacity: {{ c2.dim }}; animation: {{ c2.anim }};"></div>
-    <sc-if value="{{ c2.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="2" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="2" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c2.winFx }};"></div></sc-if>
-    <sc-if value="{{ c2.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c2.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c2.winFx }};"></div></sc-if>
+    <sc-if value="{{ c2.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c2.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-middle" style="position: absolute; left: 34.333px; top: 351px; width: 126.5px; height: 126px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-middle" data-park-column="0" data-reel-spinning="{{ c3.spin }}" data-dimmed="{{ c3.dimmed }}" data-held="{{ c3.lock }}" style="position: absolute; left: 34.333px; top: 351px; width: 126.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="3" data-park-ticket="{{ c3.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c3.pos }}; opacity: {{ c3.dim }}; animation: {{ c3.anim }};"></div>
-    <sc-if value="{{ c3.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="3" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="3" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c3.winFx }};"></div></sc-if>
-    <sc-if value="{{ c3.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c3.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c3.winFx }};"></div></sc-if>
+    <sc-if value="{{ c3.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c3.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-middle" style="position: absolute; left: 164.333px; top: 351px; width: 122.5px; height: 126px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-middle" data-park-column="1" data-reel-spinning="{{ c4.spin }}" data-dimmed="{{ c4.dimmed }}" data-held="{{ c4.lock }}" style="position: absolute; left: 164.333px; top: 351px; width: 122.5px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="4" data-park-ticket="{{ c4.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c4.pos }}; opacity: {{ c4.dim }}; animation: {{ c4.anim }};"></div>
-    <sc-if value="{{ c4.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="4" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="4" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c4.winFx }};"></div></sc-if>
-    <sc-if value="{{ c4.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c4.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c4.winFx }};"></div></sc-if>
+    <sc-if value="{{ c4.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c4.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-middle" style="position: absolute; left: 290.333px; top: 351px; width: 130px; height: 126px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-middle" data-park-column="2" data-reel-spinning="{{ c5.spin }}" data-dimmed="{{ c5.dimmed }}" data-held="{{ c5.lock }}" style="position: absolute; left: 290.333px; top: 351px; width: 130px; height: 126px; overflow: hidden; border-radius: 6px;">
     <div data-sym="5" data-park-ticket="{{ c5.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c5.pos }}; opacity: {{ c5.dim }}; animation: {{ c5.anim }};"></div>
-    <sc-if value="{{ c5.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="5" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="5" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c5.winFx }};"></div></sc-if>
-    <sc-if value="{{ c5.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c5.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c5.winFx }};"></div></sc-if>
+    <sc-if value="{{ c5.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c5.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-bottom" style="position: absolute; left: 34.333px; top: 481px; width: 126.5px; height: 120px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-bottom" data-park-column="0" data-reel-spinning="{{ c6.spin }}" data-dimmed="{{ c6.dimmed }}" data-held="{{ c6.lock }}" style="position: absolute; left: 34.333px; top: 481px; width: 126.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="6" data-park-ticket="{{ c6.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c6.pos }}; opacity: {{ c6.dim }}; animation: {{ c6.anim }};"></div>
-    <sc-if value="{{ c6.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="6" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="6" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c6.winFx }};"></div></sc-if>
-    <sc-if value="{{ c6.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c6.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c6.winFx }};"></div></sc-if>
+    <sc-if value="{{ c6.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c6.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-bottom" style="position: absolute; left: 164.333px; top: 481px; width: 122.5px; height: 120px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-bottom" data-park-column="1" data-reel-spinning="{{ c7.spin }}" data-dimmed="{{ c7.dimmed }}" data-held="{{ c7.lock }}" style="position: absolute; left: 164.333px; top: 481px; width: 122.5px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="7" data-park-ticket="{{ c7.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c7.pos }}; opacity: {{ c7.dim }}; animation: {{ c7.anim }};"></div>
-    <sc-if value="{{ c7.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="7" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="7" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c7.winFx }};"></div></sc-if>
-    <sc-if value="{{ c7.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c7.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c7.winFx }};"></div></sc-if>
+    <sc-if value="{{ c7.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c7.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-  <div class="park-reel-cell park-part-reel-bottom" style="position: absolute; left: 290.333px; top: 481px; width: 130px; height: 120px; overflow: hidden; border-radius: 6px;">
+  <div class="park-reel-cell park-part-reel-bottom" data-park-column="2" data-reel-spinning="{{ c8.spin }}" data-dimmed="{{ c8.dimmed }}" data-held="{{ c8.lock }}" style="position: absolute; left: 290.333px; top: 481px; width: 130px; height: 120px; overflow: hidden; border-radius: 6px;">
     <div data-sym="8" data-park-ticket="{{ c8.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c8.pos }}; opacity: {{ c8.dim }}; animation: {{ c8.anim }};"></div>
-    <sc-if value="{{ c8.spin }}" hint-placeholder-val="{{ false }}"><div data-rs="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rb="8" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 124px; margin-left: -62px; background-image: url('assets/reel-strip-blur.webp'); background-size: 124px 1240px; background-repeat: repeat-y; opacity: 0;"></div><div data-rh="8" style="position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(58,16,4,.72) 0%, rgba(58,16,4,.28) 16%, rgba(255,240,210,0) 34%, rgba(255,246,225,.14) 50%, rgba(255,240,210,0) 66%, rgba(58,16,4,.28) 84%, rgba(58,16,4,.72) 100%);"></div></sc-if>
-    <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c8.winFx }};"></div></sc-if>
-    <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; animation: fcLock 1s ease-in-out infinite;"></div></sc-if>
+    <sc-if value="{{ c8.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c8.winFx }};"></div></sc-if>
+    <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
 
   <sc-if value="{{ antic }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; border-radius: 6px; animation: fcAntic .45s ease-in-out infinite; pointer-events: none;"></div>
+    <div class="park-antic-fx" style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; border-radius: 6px; animation: parkReelAntic .45s ease-in-out infinite; pointer-events: none;"></div>
   </sc-if>
 
   <sc-if value="{{ l0 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 280.75px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
@@ -163,6 +159,7 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
 
   </div>
+  <div class="park-reel-frame" aria-hidden="true"></div>
   <div class="kr-hud-row">
 <div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
@@ -173,46 +170,47 @@ a:hover { color: #fff3c4; }
 <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 </div>
 
-  <div style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
+  <div class="park-prize-value" style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
   </div>
 
-  <div style="position: absolute; left: 151.333px; top: 614.5px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
+  <div class="park-bet-well" aria-hidden="true"></div>
+  <div class="park-bet-value" style="position: absolute; left: 151.333px; top: 614.5px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
     <span style="font-size: {{ betSize }}; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); letter-spacing: 1.5px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ betText }}</span>
   </div>
 
   <div onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">−</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
   </div>
   <div onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <span style="font-size: 36px; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); line-height: 1;">+</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19M12 5V19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
   </div>
 
   <!-- botão de giro: a arte original (escura) + pontos de luz no aro dourado que piscam em volta -->
-  <div data-spin-btn="1" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 48px; top: 685px; width: 357px; height: 78px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
-    <img src="assets/spin/spin-base.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none;">
-    <img src="assets/spin/spin-pressed.webp" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ spinPressedOp }}; transition: {{ spinTrans }};">
-    <img src="assets/spin/rim-off.webp?v=3" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 357px; height: 78px; display: block; pointer-events: none; opacity: {{ rimOffOp }}; transition: {{ glassTrans }};">
-    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: #4fbf55; text-shadow: 0 -1px 0 rgba(0,40,10,.55), 0 1.5px 0 rgba(170,255,170,.35); opacity: {{ spinTextOp }}; transition: {{ spinTrans }};">KING RICO</div>
-    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: transparent; text-shadow: 0 0 10px rgba(255,214,80,.95), 0 0 22px rgba(255,180,40,.7); opacity: {{ glassOp }}; transition: {{ glassTrans }};">KING RICO</div>
-    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 0.42em; padding-left: 0.42em; color: transparent; background-image: linear-gradient(100deg, #ffd23c 0%, #ffd23c 38%, #fffbe6 48%, #ffffff 50%, #fffbe6 52%, #ffd23c 62%, #ffd23c 100%), linear-gradient(180deg, #fff6c8 0%, #ffcf3a 55%, #f39a10 100%); background-size: 300% 100%, 100% 100%; background-blend-mode: soft-light; -webkit-background-clip: text; background-clip: text; animation: {{ glassAnim }}; opacity: {{ glassOp }}; transition: {{ glassTrans }};">KING RICO</div>
+  <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
+    <div class="park-button-well park-spin-well"></div>
+    <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"></i><div class="park-spin-face">
+      <img class="park-spin-art-solid" src="assets/machine/spin-front-blue-v1.svg" alt="" draggable="false">
+      <span class="park-spin-label">KING RICO</span>
+    </div></div>
+    <img class="park-button-rim park-spin-rim" src="assets/machine/spin-rim-matte-v1.svg" alt="" draggable="false">
   </div>
 
-  <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar mais rápido" aria-pressed="{{ turbo }}" data-kr-hit="" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
-  </div>
-  <div style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
+  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
+  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar mais rápido" aria-pressed="{{ turbo }}" data-kr-hit="" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
+  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/turbo-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/turbo-socket-rim-v3.svg" alt="" draggable="false"></div>
+  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
   <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; left: 19.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
+    <div class="park-mode-label" style="position: absolute; left: 26px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
       <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">TURBO</span>
     </div>
   </sc-if>
-  <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar automático" aria-pressed="{{ auto }}" data-kr-hit="" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
-  </div>
-  <div style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
+  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
+  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar automático" aria-pressed="{{ auto }}" data-kr-hit="" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
+  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/auto-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/auto-socket-rim-v3.svg" alt="" draggable="false"></div>
+  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
   <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; left: 387.833px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
+    <div class="park-mode-label" style="position: absolute; left: 379px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
       <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">AUTO</span>
     </div>
   </sc-if>
@@ -224,15 +222,31 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ feature }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; left: 106.5px; top: -22px; width: 240px; height: 240px; pointer-events: none; border-radius: 50%; mix-blend-mode: screen; background: repeating-conic-gradient(from 0deg, rgba(255,214,90,.5) 0deg 9deg, rgba(255,214,90,0) 9deg 22.5deg); -webkit-mask-image: radial-gradient(circle, #000 28%, transparent 68%); mask-image: radial-gradient(circle, #000 28%, transparent 68%); animation: fcHalo 14s linear infinite;"></div>
   </sc-if>
-  <div style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <div class="park-reel-effects" aria-hidden="true">
+    <div class="park-reel-fx-column park-reel-shell-0">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
   <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
   </sc-if>
+    </div>
+    <div class="park-reel-fx-column park-reel-shell-1">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
+    </div>
+    <div class="park-reel-fx-column park-reel-shell-2">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
+    </div>
+  </div>
   <sc-if value="{{ peachShow }}" hint-placeholder-val="{{ true }}">
-    <div title="Junte 5 Happeach para abrir a Rodada Especial" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 96px; height: 96px; transform: scale({{ peachScale }}); transform-origin: 50% 50%; transition: right .55s cubic-bezier(.3,1.25,.5,1), top .55s cubic-bezier(.3,1.25,.5,1), transform .55s cubic-bezier(.3,1.25,.5,1); pointer-events: none;">
-      <div style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 70%;">
-        <div style="position: absolute; left: -34px; top: -26px; width: 164px; height: 150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,2,26,.72) 0%, rgba(16,2,26,.5) 45%, rgba(16,2,26,0) 100%); pointer-events: none;"></div>
-        <div style="position: absolute; left: 8px; top: 84px; width: 80px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(10,0,18,.7), rgba(10,0,18,0)); pointer-events: none;"></div>
+    <div class="park-basket" data-park-side="{{ peachSide }}" title="Junte 5 Happeach para abrir a Rodada Especial" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 96px; height: 96px; transform: scale({{ peachScale }}); transform-origin: 50% 50%; transition: right .55s cubic-bezier(.3,1.25,.5,1), top .55s cubic-bezier(.3,1.25,.5,1), transform .55s cubic-bezier(.3,1.25,.5,1); pointer-events: none;">
+      <div class="park-basket-content" style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 70%;">
+        <div class="park-basket-halo" style="position: absolute; left: -34px; top: -26px; width: 164px; height: 150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,2,26,.72) 0%, rgba(16,2,26,.5) 45%, rgba(16,2,26,0) 100%); pointer-events: none;"></div>
+        <div class="park-basket-halo" style="position: absolute; left: 8px; top: 84px; width: 80px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(10,0,18,.7), rgba(10,0,18,0)); pointer-events: none;"></div>
         <img src="assets/fx/basket.webp" alt="Cesta de Happeach" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; filter: drop-shadow(0 4px 5px rgba(0,0,0,.55)) drop-shadow(0 0 1px rgba(0,0,0,.6));">
         <sc-for list="{{ basketLow }}" as="p" hint-placeholder-count="0">
           <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
@@ -242,7 +256,7 @@ a:hover { color: #fff3c4; }
           <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
         </sc-for>
 
-        <div style="position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 2px 9px 3px; border-radius: 999px; background: linear-gradient(180deg, rgba(74,10,106,.96), rgba(36,4,58,.96)); border: 2px solid #f0b41f; box-shadow: 0 3px 8px rgba(0,0,0,.5); white-space: nowrap;">
+        <div class="park-peach-count" style="position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 2px 9px 3px; border-radius: 999px; background: linear-gradient(180deg, rgba(74,10,106,.96), rgba(36,4,58,.96)); border: 2px solid #f0b41f; box-shadow: 0 3px 8px rgba(0,0,0,.5); white-space: nowrap;">
           <span style="font-size: 17px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 1px 0 rgba(0,0,0,.45); font-variant-numeric: tabular-nums;">{{ peachText }}</span>
           <div style="display: flex; gap: 2px;">
             <sc-for list="{{ peachDots }}" as="d" hint-placeholder-count="5">
@@ -427,6 +441,7 @@ const WILD = 9;
 const HAPTIC = {
   // Motores de celular quase não giram abaixo de ~20 ms: nenhum pulso fica abaixo disso.
   tap: 22,                      // menu items, +/-, modal OK — light confirmation
+  spinPress: 20, spinRelease: 16,
   press: 35,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
   reelStop: 18, lastStop: 35,   // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
   tease: [25, 70, 25, 70, 35],  // C1 suspense in auto (rising heartbeat)
@@ -435,7 +450,7 @@ const HAPTIC = {
   error: [40, 80, 40], preview: 35
 };
 const HAP_PASSIVE_SKIP = { reelStop: 1, lastStop: 1 };
-const HAP_TOUCH = { tap: 1, press: 1, preview: 1 };
+const HAP_TOUCH = { tap: 1, press: 1, spinPress: 1, spinRelease: 1, preview: 1 };
 // RTP teórico 98% incluindo a Rodada Especial; cálculo reproduzível em scripts/economy-math.mjs.
 // pay = multiplicador da aposta por linha. Frequência de prêmios e sessões: npm run audit:economy.
 const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
@@ -651,7 +666,8 @@ class Component extends DCLogic {
   dance(cell) {
     const layer = this.fxRef.current, sym = document.querySelector('[data-sym="' + cell + '"]');
     if (!layer || !sym || !sym.animate) return;
-    const box = sym.parentElement, cx = box.offsetLeft + box.offsetWidth / 2, cy = box.offsetTop + box.offsetHeight / 2;
+    const stage=document.querySelector('.park-circus-stage').getBoundingClientRect(),r=sym.getBoundingClientRect(),sc=stage.width/453;
+    const cx=(r.x+r.width/2-stage.x)/sc,cy=(r.y+r.height/2-stage.y)/sc;
     const S = 121, feetY = cy + S * 0.43, nodes = [];
     const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
     const T = 2400;
@@ -704,7 +720,8 @@ class Component extends DCLogic {
         { duration: 1000, delay: T * .44 + i * 230, easing: 'ease-out', fill: 'forwards' });
     });
     // after the samba: shrink + fly in an arc into the counter icon
-    const tx = 394.333, ty = 138, dx = tx - cx, dy = ty - cy;
+    const basket=document.querySelector('.park-basket img[src$="basket.webp"]')?.getBoundingClientRect();
+    const tx=basket?(basket.x+basket.width*.5-stage.x)/sc:394.333,ty=basket?(basket.y+basket.height*.48-stage.y)/sc:138,dx=tx-cx,dy=ty-cy;
     const fly = el('left:' + (cx - 30) + 'px;top:' + (cy - 30) + 'px;width:60px;height:60px;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/fx/peach-plain.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
     const arc = [];
     for (let i = 0; i <= 10; i++) { const u = i / 10, e = u * u * (3 - 2 * u), lift = -70 * Math.sin(Math.PI * u); arc.push({ offset: u, opacity: u < .05 ? u * 20 : 1, transform: 'translate(' + (dx * e).toFixed(1) + 'px,' + (dy * e + lift).toFixed(1) + 'px) rotate(' + (360 * e).toFixed(0) + 'deg) scale(' + (1.3 - 0.5 * e).toFixed(2) + ')' }); }
@@ -741,7 +758,8 @@ class Component extends DCLogic {
     this.setState({ featReady: true });
     if (!layer || !layer.animate) { go(); return; }
     // peach pops up onto the basket rim, stands, crouches, then a back-flip that accelerates toward the button, landing upright
-    const feat = !!this.state.feature, sx = feat ? 226.5 : 394.333, rimY = feat ? 100 : 134, bx = 226.833, by = 712, landY = 697;
+    const feat=!!this.state.feature,stage=document.querySelector('.park-circus-stage').getBoundingClientRect(),basket=document.querySelector('.park-basket img[src$="basket.webp"]')?.getBoundingClientRect(),sc=stage.width/453;
+    const sx=basket?(basket.x+basket.width*.5-stage.x)/sc:(feat?226.5:394.333),rimY=basket?(basket.y+basket.height*.45-stage.y)/sc:(feat?100:134),bx=226.833,by=712-this.machineCut(),landY=697-this.machineCut();
     const dx = bx - sx, dy = landY - rimY, nodes = [];
     const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
     const sp = this.state.turbo ? 0.7 : 1, UP = 300 * sp, HOLD = 520 * sp, FD = 780 * sp, P = 220 * sp, PRE = UP + HOLD + FD, D = PRE;
@@ -846,38 +864,54 @@ class Component extends DCLogic {
   reelsHalt() {
     cancelAnimationFrame(this._raf); clearTimeout(this._raf); this._raf = 0;
     if (this._rs) Object.keys(this._rs.cells).forEach(i => { const t = document.querySelector('[data-sym="' + i + '"]'); if (t) t.style.transform = ''; });
+    if(this._rs?.tapes)Object.values(this._rs.tapes).forEach(t=>t.dispose());
+    if(this._rs)this._lastReelTicket=!this.state.feature&&this._cloudSpin?.outcome?.ticketAward===3;
     this._rs = null;
   }
-  reelsStart(cells) {
+  reelsStart(cells,target=this.state.grid) {
     this.reelsHalt();
     const turbo = !!this.state.turbo, spT = turbo ? 0.6 : 1;
     this._rs = { t0: this.now(), spT, v0: 1.24 * (turbo ? 1.35 : 1), A: 650 * spT, cells: {} };
-    cells.forEach(i => { this._rs.cells[i] = null; });
+    this._rs.groups=this.reelColumns(cells);this._rs.tapes={};this._rs.from=this.state.grid.slice();this._rs.target=target.slice();
+    this._rs.groups.forEach(group=>{this._rs.cells[group[0]]=null;});
     // rAF freezes in background tabs; fall back to a timer so a spin always resolves
     const tick = () => { this.reelsFrame(); if (this._rs) { if (document.hidden) this._raf = setTimeout(tick, 60); else this._raf = requestAnimationFrame(tick); } };
     this._raf = document.hidden ? setTimeout(tick, 60) : requestAnimationFrame(tick);
   }
+  // A physical reel owns the three symbol windows of its column.
+  reelColumns(cells) {
+    return [0, 1, 2].map(col => cells.filter(i => i % 3 === col).sort((a, b) => a - b)).filter(group => group.length);
+  }
+  reelColumnStop(cells, T, callbacks) {
+    let done=false;
+    this.reelStop(cells[0],T,{...callbacks,onDone:()=>{if(done)return;done=true;callbacks.onDone?.();}});
+  }
+
   reelStop(i, T, o) {
     const R = this._rs, v0 = R.v0, A = R.A, K = 4.2, P0 = -v0 * A / 2, Dmin = 900 * R.spT;
     const pAt = t => t < A ? v0 * t * t / (2 * A) : P0 + v0 * t;
-    let s0 = Math.max(A, T - Dmin), pe = Math.floor((pAt(s0) + v0 * (T - s0) / K) / 124) * 124;
+    let s0 = Math.max(A, T - Dmin), pe = Math.floor((pAt(s0) + v0 * (T - s0) / K) / 128) * 128;
     let s = (pe - P0 - v0 * T / K) / (v0 * (1 - 1 / K)), D = T - s;
-    if (s < A) { s = A; pe = Math.max(124, Math.ceil(pAt(A) / 124) * 124 + 124); D = K * (pe - pAt(A)) / v0; }
+    if (s < A) { s = A; pe = Math.max(128, Math.ceil(pAt(A) / 128) * 128 + 128); D = K * (pe - pAt(A)) / v0; }
     if (o.suspense === 'soft') {
       // long gentle approach: reaches the teaser still rolling slowly, then creeps one more symbol and settles
       const r = 0.42, D1 = 1500 * R.spT;
-      pe = Math.floor((pAt(T - D1) + r * v0 * D1) / 124) * 124;
+      pe = Math.floor((pAt(T - D1) + r * v0 * D1) / 128) * 128;
       s = Math.max(A, (pe - P0 - r * v0 * T) / ((1 - r) * v0)); D = T - s;
     }
-    R.cells[i] = Object.assign({ s, D, ps: pAt(s), pe, pf: pe + (o.suspense ? 124 : 0), H: 420 * R.spT, L: 700 * R.spT, S2: 950 * R.spT, vT: 0.25, pAt, tile: false, hit: false }, o);
+    R.cells[i] = Object.assign({ s, D, ps: pAt(s), pe, pf: pe + (o.suspense ? 128 : 0), H: 420 * R.spT, L: 700 * R.spT, S2: 950 * R.spT, vT: 0.25, pAt, tile: false, hit: false }, o);
+    const container=typeof document!=='undefined'&&document.querySelector('.park-circus-stage .park-reels');
+    if(container&&window.KingRicoReelTape){
+      const col=i%3,group=R.groups.find(g=>g[0]===i),ticket=!this.state.feature&&this._cloudSpin?.outcome?.ticketAward===3;
+      R.tapes[col]=window.KingRicoReelTape.create(container,col,group,{from:R.from,target:R.target,seed:Math.floor(R.t0),ticket,wasTicket:!!this._lastReelTicket});
+      R.tapes[col].configure(R.cells[i].pf);
+    }
   }
   reelsFrame() {
     const R = this._rs; if (!R) return;
     const t = this.now() - R.t0, v0 = R.v0, A = R.A;
     const eob = u => { const x = u - 1; return 1 + 2.2 * x * x * x + 1.2 * x * x; };
     const deob = u => { const x = u - 1; return 6.6 * x * x + 2.4 * x; };
-    const CY = [1.75, 1.75, 1.75, 1, 1, 1, -2, -2, -2];
-    const PH = [0, 496, 868, 1116, 372, 744, 992, 248, 620];
     Object.keys(R.cells).forEach(key => {
       const i = +key, c = R.cells[key];
       let p, v, land = false;
@@ -896,28 +930,17 @@ class Component extends DCLogic {
         } else
         if (t < e1) { const u = (t - c.s) / c.D; p = c.ps + d * eob(u); v = Math.abs(d * deob(u) / c.D); if (!c.suspense && !c.hit && u >= 0.4545) { c.hit = true; c.onImpact && c.onImpact(); } if (c.suspense && !c.teased && u >= 0.4545) { c.teased = true; c.onTease && c.onTease(); } }
         else if (c.suspense && t < e1 + c.H) { const u = (t - e1) / c.H; p = c.pe + 10 * u * u; v = 20 * u / c.H; }
-        else if (c.suspense && t < e1 + c.H + c.L) { const u = (t - e1 - c.H) / c.L, w = u * u * (3 - 2 * u); p = c.pe + 10 + 114 * eob(w); v = Math.abs(114 * deob(w) * 6 * u * (1 - u) / c.L); if (!c.hit && eob(w) >= 1) { c.hit = true; c.onImpact && c.onImpact(); } }
+        else if (c.suspense && t < e1 + c.H + c.L) { const u = (t - e1 - c.H) / c.L, w = u * u * (3 - 2 * u); p = c.pe + 10 + 118 * eob(w); v = Math.abs(118 * deob(w) * 6 * u * (1 - u) / c.L); if (!c.hit && eob(w) >= 1) { c.hit = true; c.onImpact && c.onImpact(); } }
         else { p = c.pf; v = 0; land = true; }
       }
-      const k = Math.min(1, v / v0), y = ((p + CY[i] + PH[i]) % 1240 + 1240) % 1240;
-      const blur = Math.max(0, Math.min(1, (k - 0.28) / 0.45));
-      const rs = document.querySelector('[data-rs="' + i + '"]'), rb = document.querySelector('[data-rb="' + i + '"]'), rh = document.querySelector('[data-rh="' + i + '"]'), sym = document.querySelector('[data-sym="' + i + '"]');
-      let mask = 'none';
-      if (c && c.tile && sym) {
-        const ty = p - c.pf, a = CY[i] + ty, b = a + 124;
-        sym.style.opacity = '1'; sym.style.transform = 'translateY(' + ty.toFixed(2) + 'px)';
-        mask = 'linear-gradient(to bottom, #000 ' + a.toFixed(1) + 'px, transparent ' + a.toFixed(1) + 'px, transparent ' + b.toFixed(1) + 'px, #000 ' + b.toFixed(1) + 'px)';
-      }
-      [rs, rb].forEach(el => { if (!el) return; el.style.backgroundPosition = '50% ' + y.toFixed(2) + 'px'; el.style.webkitMaskImage = mask; el.style.maskImage = mask; });
-      if (rs) rs.style.opacity = String(1 - blur);
-      if (rb) rb.style.opacity = String(blur);
-      if (rh) rh.style.opacity = String(Math.min(1, k * 1.2));
-      if (land) { delete R.cells[key]; if (sym) sym.style.transform = ''; c.onDone && c.onDone(); }
+      const tape=R.tapes?.[i%3];tape?.draw(p,v);
+      if(land){delete R.cells[key];c.onDone?.();tape?.dispose();}
+
     });
     if (!Object.keys(R.cells).length) this.reelsHalt();
   }
   // pausable game clock: timers, reels, 3D loop and VFX all freeze while the menu/paytable is open
-  now() { return performance.now() - (this._pausedMs || 0) - (this._paused ? performance.now() - this._pauseAt : 0); }
+  now() { return (this._paused ? this._pauseAt : performance.now()) - (this._pausedMs || 0); }
   later(fn, ms) {
     const r = { fn, due: this.now() + ms, id: 0 };
     this.timers.push(r);
@@ -929,6 +952,7 @@ class Component extends DCLogic {
   pauseGame() {
     if (this._paused) return;
     this._paused = true; this._pauseAt = performance.now();
+    if(this._rs)this.reelsFrame(); // freeze the visible tape at the same instant as the game clock
     this.timers.forEach(r => clearTimeout(r.id));
     const over = document.querySelectorAll('[data-overlay]');
     this._pausedAnims = document.getAnimations().filter(a => a.playState === 'running' && !(a.effect && a.effect.target && [...over].some(o => o.contains(a.effect.target))));
@@ -1036,7 +1060,23 @@ class Component extends DCLogic {
     car.connect(g); g.connect(out);
     car.start(t); mod.start(t); car.stop(t + dur + 0.05); mod.stop(t + dur + 0.05);
   }
-  click(down) {
+  spinClick(down) {
+    if (!this.gate()) return;
+    const ac = this.ac(), out = this.out(); if (!ac || !out) return;
+    const t = ac.currentTime + 0.001, r = 0.99 + Math.random() * 0.02;
+    const body = ac.createOscillator(), g = ac.createGain(); body.type = 'triangle';
+    body.frequency.setValueAtTime((down ? 185 : 310) * r, t);
+    body.frequency.exponentialRampToValueAtTime(down ? 155 : 270, t + (down ? .022 : .018));
+    g.gain.setValueAtTime(.0001, t);g.gain.exponentialRampToValueAtTime(down ? .13 : .045, t + .002);
+    g.gain.exponentialRampToValueAtTime(.0001, t + (down ? .042 : .028));
+    body.connect(g);g.connect(out);body.start(t);body.stop(t + .055);
+    const n = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain();n.buffer = this.noise(ac);
+    f.type = 'bandpass';f.frequency.value = down ? 1450 : 2150;f.Q.value = .8;
+    ng.gain.setValueAtTime(down ? .085 : .035, t);ng.gain.exponentialRampToValueAtTime(.0001, t + (down ? .018 : .012));
+    n.connect(f);f.connect(ng);ng.connect(out);n.start(t);n.stop(t + .03);
+  }
+  click(down, kind) {
+    if (kind === 'spin') return this.spinClick(down);
     const ac = this.ac(), out = this.out(); if (!ac) return;
     const t = ac.currentTime + 0.001;
     if (!this._white || this._white.sampleRate !== ac.sampleRate) {
@@ -1064,9 +1104,9 @@ class Component extends DCLogic {
       s2.connect(g2); g2.connect(out); s2.start(t); s2.stop(t + 0.12);
     }
   }
-  pressDown = () => { this._pressed = true; this.hap('press'); this.click(true); };
-  pressUp = () => { if (this._pressed) { this._pressed = false; this.click(false); } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
-  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this.pressDown(); };
+  pressDown = (kind) => { this._pressed = true; this._spinTouchHeld = kind === 'spin'; if (this._spinTouchHeld) this._spinTouchAt = performance.now(); this.hap(this._spinTouchHeld ? 'spinPress' : 'press'); this.click(true, kind); };
+  pressUp = () => { if (this._pressed) { const spin = this._spinTouchHeld; this._pressed = false; if (spin) { this._spinTouchAt = performance.now(); this._spinTouchUp?.(); this.hap('spinRelease'); } this.click(false, spin ? 'spin' : null); this._spinTouchHeld = false; } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
+  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); };
   pressTurbo = () => { this.setState({ pressed: 'turbo' }); this.pressDown(); };
   pressAuto = () => { this.setState({ pressed: 'auto' }); this.pressDown(); };
   pressHome = () => { this.setState({ pressed: 'home' }); this.pressDown(); };
@@ -1265,7 +1305,7 @@ class Component extends DCLogic {
     if (this._featPending || this.state.featLock) { if (this.state.showWin) { this._spinAfterFly = false; this.dismissWin(); } return; }
     if (this.state.showWin) { const manual = !this.state.auto && !this.state.free && !this._afterWinChains; this._spinAfterFly = manual; this.dismissWin(); return; }
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
-    if (!this._pressed && !this._autoSpin) { this.hap('press'); this.click(true); }
+    if (!this._pressed && !this._autoSpin && performance.now() - (this._spinTouchAt ?? -Infinity) > 300) { this.hap('spinPress'); this.click(true, 'spin'); this._spinTouchDown?.(); setTimeout(() => { this._spinTouchUp?.(); this.click(false, 'spin'); }, 65); }
     this._spinQueued = true; this.setState({ queued: true });
     if (!this.state.free) { this.spinFx(false); this._fxFired = true; }
     setTimeout(() => { this._spinQueued = false; this.setState({ queued: false }); this.doSpin(); }, 280);
@@ -1289,7 +1329,7 @@ class Component extends DCLogic {
     { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
     const near = (a, b) => a === b || a === WILD || b === WILD;
-    const anticipate = near(target[0], target[1]) || near(target[4], target[6]);
+    const anticipate = LINES.some(line => { const a = line.find(i => i % 3 === 0), b = line.find(i => i % 3 === 1); return target[a] !== PEACH && target[b] !== PEACH && near(target[a], target[b]); });
     const trigger = false; // Rodada Especial only opens via 3 Happeach
 
     this.danceClear();
@@ -1304,18 +1344,19 @@ class Component extends DCLogic {
     try { this.sfxWhoosh(); this.startWhirr(); } catch (e) {}
 
     clearInterval(this.ticker);
-    this.reelsStart(STOP_ORDER);
-    const spT = this.state.turbo ? 0.6 : 1; let left = 9;
-    STOP_ORDER.forEach((cell, k) => {
-      const suspense = k === 8 && anticipate ? (this.state.auto ? 'big' : 'soft') : false;
-      this.reelStop(cell, spT * (1940 + k * 300), {
+    this.reelsStart(STOP_ORDER,target);
+    const spT = this.state.turbo ? 0.6 : 1, columns = this.reelColumns(STOP_ORDER); let left = columns.length;
+    columns.forEach((cells, k) => {
+      const suspense = k === columns.length - 1 && anticipate ? (this.state.auto ? 'big' : 'soft') : false;
+      const note = NOTES[k * 3 + 2];
+      this.reelColumnStop(cells, spT * (1800 + k * 620), {
         suspense,
-        onTile: () => this.setState(s => { const grid = s.grid.slice(); grid[cell] = target[cell]; return { grid }; }),
-        onTease: () => { try { if (suspense === 'big') { this.sfxAntic(); this.hap('tease'); } else this.pluck(NOTES[k] * 0.75, 0.03, 0.3); } catch (e) {} },
-        onImpact: () => { try { this.pluck(NOTES[k], 0.085, 0.5); this.burst(900, 2.5, 0.016, 0.05); } catch (e) {} this.hap(k === 8 ? 'lastStop' : 'reelStop'); },
+        onTile: () => this.setState(s => { const grid = s.grid.slice(); cells.forEach(cell => { grid[cell] = target[cell]; }); return { grid }; }),
+        onTease: () => { try { if (suspense === 'big') { this.sfxAntic(); this.hap('tease'); } else this.pluck(note * 0.75, 0.03, 0.3); } catch (e) {} },
+        onImpact: () => { try { this.pluck(note, 0.085, 0.5); this.burst(900, 2.5, 0.016, 0.05); } catch (e) {} this.hap(k === columns.length - 1 ? 'lastStop' : 'reelStop'); },
         onDone: () => {
-          this.setState(s => ({ spinCells: s.spinCells.filter(c => c !== cell), antic: k === 6 ? anticipate : (k === 8 ? false : s.antic) }));
-          if (k === 6 && anticipate) this.later(() => this.sfxAntic(), 40);
+          this.setState(s => ({ spinCells: s.spinCells.filter(cell => !cells.includes(cell)), antic: k === 1 ? anticipate : (k === 2 ? false : s.antic) }));
+          if (k === 1 && anticipate) this.later(() => this.sfxAntic(), 40);
           if (--left === 0) this.later(() => { this.stopWhirr(); this.payout(cloudResult ? cloudResult.outcome.res : this.evaluate(target, bet), bet, trigger); }, 240);
         }
       });
@@ -1375,20 +1416,31 @@ class Component extends DCLogic {
       const calm = () => { if (this.state.winCells.length) this.setState({ winCalm: true }); }; const pend = this.state.balPending || 0; if (pend > 0) { this.setState({ lineGone: true }); this.coinFly(pend, () => { calm(); finish(); }); } else { calm(); finish(); }
     }, 2700);
   }
+  layoutMetric(name) {
+    const node = this.lightsRef.current;
+    return node && typeof getComputedStyle === 'function' ? (parseFloat(getComputedStyle(node).getPropertyValue(name)) || 0) : 0;
+  }
+  machineCut() { return this.layoutMetric('--park-machine-cut'); }
+  reelY(y) { return this.layoutMetric('--park-machine-drop') + 219.5 + (y - 219.5) * (this.layoutMetric('--park-reel-scale') || 1); }
+  reelFrameBox() {
+    const node = typeof document !== 'undefined' && document.querySelector('.park-circus-stage .park-reel-frame');
+    if (node && typeof getComputedStyle === 'function') { const s = getComputedStyle(node); return { x: parseFloat(s.left), y: parseFloat(s.top), width: parseFloat(s.width), height: parseFloat(s.height) }; }
+    return { x: 28, y: 212, width: 398, height: 396 };
+  }
   spinFx(late) {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
     // energy pulse, synced to the reels: wave travels during the 280ms press delay and HITS the frame when the
     // reels start; then two comets run the frame. Anti-flicker: all layers are pre-rendered bitmaps (no CSS
     // gradients/box-shadows re-rastered per frame), created ONCE and kept composited (persistent will-change),
     // then reused every spin — creating/destroying GPU layers mid-animation is what flashed black on mobile.
-    const D = late ? 0 : 280;
+    const D = late ? 0 : 280, cut = this.machineCut(), frame = this.reelFrameBox();
     const P = this._pulse || (this._pulse = (() => {
       const bmp = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); return c.toDataURL('image/png'); };
       const wave = bmp(256, 256, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
         g.addColorStop(0, 'rgba(255,240,180,0)'); g.addColorStop(.4, 'rgba(255,240,180,0)'); g.addColorStop(.53, 'rgba(255,236,160,.95)'); g.addColorStop(.63, 'rgba(255,190,70,.55)'); g.addColorStop(.74, 'rgba(255,190,70,0)'); g.addColorStop(1, 'rgba(255,190,70,0)');
         x.fillStyle = g; x.fillRect(0, 0, w, w); });
-      const PAD = 34, glow = bmp(398 + PAD * 2, 396 + PAD * 2, (x, w, h) => { x.shadowColor = 'rgba(255,190,70,.9)'; x.shadowBlur = 26;
-        x.strokeStyle = 'rgba(255,222,110,1)'; x.lineWidth = 3; const r = 12, X = PAD - 1.5, Y = PAD - 1.5, W = 401, H = 399;
+      const PAD = 34, glow = bmp(Math.ceil(frame.width + PAD * 2), Math.ceil(frame.height + PAD * 2), (x, w, h) => { x.shadowColor = 'rgba(255,190,70,.9)'; x.shadowBlur = 26;
+        x.strokeStyle = 'rgba(255,222,110,1)'; x.lineWidth = 3; const r = 12, X = PAD - 1.5, Y = PAD - 1.5, W = frame.width + 3, H = frame.height + 3;
         for (let k = 0; k < 3; k++) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); x.stroke(); } });
       const comet = bmp(64, 64, (x, w) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
         g.addColorStop(0, '#fffbe8'); g.addColorStop(.22, '#ffe08a'); g.addColorStop(.4, 'rgba(255,214,100,.7)'); g.addColorStop(.7, 'rgba(255,200,80,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
@@ -1403,8 +1455,8 @@ class Component extends DCLogic {
       const core = bmp(BW * 2, Math.ceil(BH * 2), x => { x.scale(2, 2); rr(x, 0, 0, BW, BH, 13); x.clip();
         const g = x.createRadialGradient(BW / 2, BH / 2, 0, BW / 2, BH / 2, BW / 2); g.addColorStop(0, 'rgba(255,252,225,.95)'); g.addColorStop(.35, 'rgba(255,230,140,.55)'); g.addColorStop(1, 'rgba(255,200,80,0)');
         x.fillStyle = g; x.fillRect(0, 0, BW, BH); });
-      const bc = 'translate3d(58.333px,693px,0)';
-      return { sparks, PAD, bc, core: img(core, 'width:337px;height:60.5px;'), wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (398 + PAD * 2) + 'px;height:' + (396 + PAD * 2) + 'px;'),
+      const bc = 'translate3d(58.333px,' + (693 - cut) + 'px,0)';
+      return { sparks, PAD, bc, core: img(core, 'width:337px;height:60.5px;'), wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (frame.width + PAD * 2) + 'px;height:' + (frame.height + PAD * 2) + 'px;'),
         c1: img(comet, 'width:34px;height:34px;'), c2: img(comet, 'width:34px;height:34px;') };
     })());
     if (late === 'prebuild') { this.buildLights(); return; } // built at load so the first spin has no build/decode hitch
@@ -1412,20 +1464,20 @@ class Component extends DCLogic {
     [P.wave, P.glow, P.c1, P.c2, P.core, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
     // a luz nasce no botão: clarão interno + aro acende no toque, depois a energia sai pelas pontas do botão
     P.core.animate([{ transform: P.bc, opacity: 0 }, { transform: P.bc, opacity: .9, offset: .15 }, { transform: P.bc, opacity: 0 }], { duration: D + 160, easing: 'ease-out', fill: 'forwards' });
-    const WX = 223.5 - 30, WY = 722 - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
+    const WX = 223.5 - 30, WY = 722 - cut - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
     if (!late) P.wave.animate([{ transform: wt(.3), opacity: 0 }, { transform: wt(2), opacity: 1, offset: .2 }, { transform: wt(9), opacity: .9, offset: .85 }, { transform: wt(10.5), opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
-    const gt = 'translate3d(' + (28 - P.PAD) + 'px,' + (212 - P.PAD) + 'px,0)';
+    const gt = 'translate3d(' + (frame.x - P.PAD) + 'px,' + (frame.y - P.PAD) + 'px,0)';
     P.glow.animate([{ transform: gt, opacity: 0 }, { transform: gt, opacity: 1, offset: .12 }, { transform: gt, opacity: .55, offset: .5 }, { transform: gt, opacity: 0 }], { duration: 650, delay: D + 34, easing: 'ease-out', fill: 'forwards' });
-    const T = 212, R = 426, B = 608, CX = 227, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
+    const T = frame.y, R = frame.x + frame.width, B = frame.y + frame.height, CX = frame.x + frame.width / 2, s1 = (R - CX), s2 = (B - T), tot = s1 * 2 + s2, o1 = s1 / tot, o2 = (s1 + s2) / tot;
     // cometas: saem do meio do botão, correm o aro dele até a ponta, sobem para o canto da moldura e dão a volta nela
     [[P.c1, 1], [P.c2, -1]].forEach(([el, side]) => {
       const X = v => CX + (v - CX) * side, K = (x, y, o, op) => ({ offset: o, transform: 'translate3d(' + (X(x) - 17) + 'px,' + (y - 17) + 'px,0)', opacity: op });
       if (late) { el.animate([K(CX, B, 0, 0), K(CX + 30, B, .04, 1), K(R, B, o1, 1), K(R, T, o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: 520, delay: 50, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' }); return; }
-      const BY = 694, BR = 390, lead = D + 50, tt = lead + 520, f = t => t / tt;
+      const BY = 694 - cut, BR = 390, lead = D + 50, tt = lead + 520, f = t => t / tt;
       el.animate([K(CX, BY, 0, 0), K(CX + 20, BY, f(30), 1), K(BR, BY, f(lead * .7), 1), K(R - 6, B + 6, f(lead), 1),
         K(R, B, f(lead) + (1 - f(lead)) * o1 * .15, 1), K(R, T, f(lead) + (1 - f(lead)) * o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: tt, easing: 'linear', fill: 'forwards' });
     });
-    const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722;
+    const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722 - cut;
     // sparks reuse the persistent pool (no per-spin DOM churn)
     P.sparks.forEach((st, i) => {
       const a = Math.PI + (i / 7) * Math.PI, r = 40 + Math.random() * 50, s = st._s, x0 = bx + (Math.random() - .5) * 220 - s / 2, y0 = by - s / 2;
@@ -1579,7 +1631,8 @@ class Component extends DCLogic {
     const bet = this.bet(), sp = this.state.turbo ? 0.7 : 1;
     const n = Math.min(P.max, amount >= bet * 12 ? 32 : amount >= bet * 4 ? 22 : 14);
     const LC = [283.25, 414, 541, 410.25, 410.25], wl = (this.state.winLines || [])[0];
-    const sx = 227.3, sy = this._parkPrizeOrigin ? 196 : (wl != null ? LC[wl] : 400), tx = 36.8, ty = 48, STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
+    const prizeStyle = this._parkPrizeOrigin && this._parkPrizeTarget ? getComputedStyle(this._parkPrizeTarget) : null;
+    const sx = prizeStyle ? parseFloat(prizeStyle.left) + parseFloat(prizeStyle.width) / 2 : 227.3, sy = this._parkPrizeOrigin ? (prizeStyle ? parseFloat(prizeStyle.top) + parseFloat(prizeStyle.height) / 2 : 196) : this.reelY(wl != null ? LC[wl] : 400), tx = 36.8, ty = 48, STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
     const coins = Array.from({ length: n }, (_, i) => {
       const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.6, rr = 45 + Math.random() * 55;
       return { d: i * STG, bx: sx + Math.cos(a) * rr, by: sy + Math.sin(a) * rr * 0.8, cx: 60 + Math.random() * 90, cy: 120 + Math.random() * 120,
@@ -1685,16 +1738,19 @@ class Component extends DCLogic {
     clearInterval(this.ticker);
     const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
     const result = plan ? plan.rounds[this._cloudFeatureRound++].result : open.map(i => { const r = Math.random(); return { i, v: r < FEAT_P_SYM ? sym : (r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1) }; });
-    const spT = this.state.turbo ? 0.6 : 1; let left = result.length;
-    this.reelsStart(open);
-    result.forEach((o, k) => {
-      const note = NOTES[STOP_ORDER.indexOf(o.i)];
-      this.reelStop(o.i, spT * (1375 + k * 238), {
-        onTile: () => this.setState(s => { const grid = s.grid.slice(); grid[o.i] = o.v; return { grid }; }),
-        onImpact: () => { try { this.pluck(note, o.v >= 0 ? 0.09 : 0.05, 0.45); if (o.v >= 0) this.bell(note * 4, 0.3, 0.05, 0.04); } catch (e) {} },
+    const spT = this.state.turbo ? 0.6 : 1, columns = this.reelColumns(open); let left = columns.length;
+    const tapeTarget=this.state.grid.slice();result.forEach(o=>{tapeTarget[o.i]=o.v;});
+    this.reelsStart(open,tapeTarget);
+    columns.forEach((cells, k) => {
+      const outcomes = cells.map(i => result.find(o => o.i === i));
+      const note = NOTES[(cells[0] % 3) * 3 + 2];
+      this.reelColumnStop(cells, spT * (1400 + k * 520), {
+        onTile: () => this.setState(s => { const grid = s.grid.slice(); outcomes.forEach(o => { grid[o.i] = o.v; }); return { grid }; }),
+        onImpact: () => { const good = outcomes.some(o => o.v >= 0); try { this.pluck(note, good ? 0.09 : 0.05, 0.45); if (good) this.bell(note * 4, 0.3, 0.05, 0.04); } catch (e) {} },
         onDone: () => {
-          if (o.v >= 0) this.hap('lock');
-          this.setState(s => ({ locked: o.v >= 0 ? s.locked.concat([o.i]) : s.locked, spinCells: s.spinCells.filter(c => c !== o.i) }));
+          const matched = outcomes.filter(o => o.v >= 0).map(o => o.i);
+          if (matched.length) this.hap('lock');
+          this.setState(s => ({ locked: s.locked.concat(matched.filter(i => !s.locked.includes(i))), spinCells: s.spinCells.filter(cell => !cells.includes(cell)) }));
           if (--left === 0) this.later(() => this._respinEnd(), 260);
         }
       });
@@ -1818,10 +1874,12 @@ class Component extends DCLogic {
           ovT: s.inset ? '0px' : -Math.ceil((s.stageTop ?? 0) / sc) + 'px',
           ovB: s.inset ? '0px' : -Math.ceil(((s.vh || 802 * sc) - (s.stageTop ?? 0)) / sc - 802) + 'px',
           hudLift: -(s.hudD || 0) + 'px', topMask: s.inset ? FC_HUD_MASK : FC_TOP_MASK + ', ' + FC_HUD_MASK }; })(),
+      pressedButton:s.pressed||'',
       scale: s.scale ?? 1, stageTop: (s.stageTop ?? 0) + 'px', stageBg: s.inset ? '#1d0733' : 'transparent' /* o palco com sangria aparece pelas bordas suaves */,
       radius: s.inset ? '20px' : '0px',
       frameShadow: s.inset && !(s.showWin || s.menu || s.pays) ? '0 0 0 1px rgba(255,210,120,.18), 0 30px 80px rgba(0,0,0,.6)' : 'none',
       stageOpacity: s.ready ? 1 : 0,
+      reelMoving: s.spinning || !!this._rs ? 'true' : 'false',
       balanceSize: (() => { const l = this.shownBalance().toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
       walletProps:{value: this.shownBalance().toLocaleString('pt-BR',{maximumFractionDigits:2}),hold:s.showWin,external:!!(this._cfRun||s.winDim)}, balanceText: this.shownBalance().toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
       ...(() => { const b = this.bet(), t = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }); return { betText: t, betSize: (t.length <= 4 ? 36 : t.length <= 5 ? 32 : 28) + 'px' }; })(),
@@ -1864,7 +1922,7 @@ class Component extends DCLogic {
       pageDimBg: s.pays ? 'rgba(12,2,24,.93)' : s.menu ? 'rgba(10,2,20,.78)' : 'rgba(18,2,34,.62)',
       pageDimClick: s.pays ? this.togglePays : s.menu ? this.closeMenu : this.dismissTap,
       peachShow: !s.free || feat || pv >= PEACH_GOAL,
-      peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : (84 - (s.hudD || 0)) + 'px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
+      peachSide: !feat, peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : (84 - (s.hudD || 0)) + 'px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
       peachDots: Array.from({ length: PEACH_GOAL }, (_, i) => ({ bg: i < cv ? '#ff9a5a' : 'rgba(255,255,255,.18)', sh: i < cv ? '0 0 6px rgba(255,150,90,.9)' : 'none' })),
       peachText: cv + '/' + PEACH_GOAL,
       basketLow: [[18, 46, -6, 1], [48, 47, 3, 0], [78, 46, 7, 2]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
@@ -1913,14 +1971,14 @@ class Component extends DCLogic {
       const win = s.winCells.indexOf(i) >= 0;
       const lock = feat && s.locked.indexOf(i) >= 0;
       vals['c' + i] = {
-        ticket: v === 10 ? 'true' : 'false', pos: (v < 0 ? 10 : v) * 100 / 11 + '%',
+        dimmed: s.winDim&&!win?'true':'false',ticket: v === 10 ? 'true' : 'false', pos: (v < 0 ? 10 : v) * 100 / 11 + '%',
         win, lock,
-        dim: spinning ? 0 : (feat && !lock && v < 0 ? 0.75 : (s.winDim && !win ? 0.42 : 1)),
+        dim: spinning||v<0?0:1,
         lbl: (s.lineLbl && s.lineLbl[i]) || '', empty: !!(feat && v < 0 && !spinning),
         spin: spinning,
         anim: spinning || s.stopped.indexOf(i) >= 0 ? 'none'
           : win && !s.winCalm ? 'fcBeat .5s ease-in-out infinite' : 'none',
-        winFx: s.winCalm ? 'none' : 'fcWin .7s ease-in-out infinite'
+        winFx: s.winCalm ? 'none' : 'parkReelWin .7s ease-in-out infinite'
       };
     });
     return vals;

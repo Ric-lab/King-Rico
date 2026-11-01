@@ -9,9 +9,10 @@ export async function applyMultiplier(fc,w,source){
    node=document.createElement('b');node.className='park-flying-multiplier';node.textContent='×'+w.result.multiplier;node.setAttribute('aria-hidden','true');document.body.append(node);
    const sx=source.x+source.width/2,sy=source.y+source.height/2,tx=end.x+end.width/2,ty=end.y+end.height/2;
    const startScale=Math.max(.3,source.height/90),endScale=Math.max(.25,Math.min(.6,end.height/80));
-   const frames=Array.from({length:13},(_,i)=>{const t=i/12,q=1-t,x=q*sx+t*tx+Math.sin(t*Math.PI)*36,y=q*sy+t*ty-65*Math.sin(t*Math.PI),scale=startScale+(endScale-startScale)*t+Math.sin(t*Math.PI)*.25;return {transform:`translate(${x-70}px,${y-45}px) scale(${scale})`,opacity:1,offset:t};});
-   animation=node.animate(frames,{duration:1050,easing:'cubic-bezier(.3,.1,.25,1)',fill:'both'});
-   await Promise.race([animation.finished.catch(()=>{}),new Promise(r=>timer=setTimeout(r,1250))]);
+   // A brief lift, a smooth arc, then a precise arrival on the prize.
+   const frames=Array.from({length:31},(_,i)=>{const t=i/30,u=Math.max(0,(t-.1)/.9),v=u*u*(3-2*u),q=1-v,arc=Math.sin(v*Math.PI),x=q*sx+v*tx+arc*32,y=q*sy+v*ty-arc*60,scale=startScale+(endScale-startScale)*v+arc*.16+(t<.1?Math.sin(t/.1*Math.PI)*.08:0);return {transform:`translate(${x-70}px,${y-45}px) rotate(${-arc*8}deg) scale(${scale})`,opacity:1,offset:t};});
+   animation=node.animate(frames,{duration:1550,easing:'linear',fill:'both'});
+   await Promise.race([animation.finished.catch(()=>{}),new Promise(r=>timer=setTimeout(r,1850))]);
   }
  }catch{/* The authoritative prize is already saved. */}
  finally{clearTimeout(timer);animation?.cancel();node?.remove();}

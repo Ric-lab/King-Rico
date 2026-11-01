@@ -16,17 +16,18 @@ export async function enterWheel(el){
    const at=(x,y,s)=>`translate(${x-17}px,${y-17}px) scale(${s})`;
    animations.push(copy.animate([
     {transform:at(sx,sy,scale),opacity:1},
-    {transform:at(sx+(i?-20:20),sy-12,scale*2.3),opacity:1,offset:.27},
-    {transform:at(tx+(i?38:-38),ty,3.3),opacity:1,offset:.7},
-    {transform:at(tx,ty,5.2),opacity:0}
-   ],{duration:1400,easing:'cubic-bezier(.3,.05,.2,1)',fill:'both'}));
+    {transform:at(sx+(tx-sx)*.45,sy+(ty-sy)*.45-12,scale*1.15),opacity:1,offset:.45},
+    {transform:at(tx+(i?5:-5),ty,1.35),opacity:1,offset:.8},
+    {transform:at(tx,ty,1.35),opacity:0}
+   ],{duration:480,easing:'cubic-bezier(.3,.05,.2,1)',fill:'both'}));
+   animations.at(-1).finished.then(()=>copy.remove()).catch(()=>{});
   }
   const scale=Number(machine.style.getPropertyValue('--park-wheel-scale'));
   const tr=s=>`translate(-50%,-50%) scale(${scale*s})`;
-  animations.push(machine.animate([{transform:tr(.18),opacity:0},{transform:tr(.28),opacity:0,offset:.46},{transform:tr(1.04),opacity:1,offset:.86},{transform:tr(1),opacity:1}],{duration:1750,easing:'cubic-bezier(.2,.75,.2,1)',fill:'both'}));
-  for(const node of panel.children)if(node!==wrap)animations.push(node.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{delay:1250,duration:500,fill:'both',easing:'ease-out'}));
-  animations.push(el.animate([{backgroundColor:'rgba(16,3,25,0)',backdropFilter:'blur(0px)'},{backgroundColor:'rgba(16,3,25,.78)',backdropFilter:'blur(4px)'}],{duration:950,fill:'both'}));
-  await Promise.race([Promise.allSettled(animations.map(a=>a.finished)),new Promise(r=>safety=setTimeout(r,2150))]);
+  animations.push(machine.animate([{transform:tr(.12),opacity:0},{transform:tr(.12),opacity:0,offset:.33},{transform:tr(.14),opacity:1,offset:.42,easing:'cubic-bezier(.2,.75,.2,1)'},{transform:tr(1.02),opacity:1,offset:.88},{transform:tr(1),opacity:1}],{duration:1150,easing:'linear',fill:'both'}));
+  for(const node of panel.children)if(node!==wrap)animations.push(node.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{delay:800,duration:350,fill:'both',easing:'ease-out'}));
+  animations.push(el.animate([{backgroundColor:'rgba(16,3,25,0)'},{backgroundColor:'rgba(16,3,25,.78)'}],{duration:500,fill:'both'}));
+  await Promise.race([Promise.allSettled(animations.map(a=>a.finished)),new Promise(r=>safety=setTimeout(r,1500))]);
  }catch{/* A missing animation API must not hide a paid wheel. */}
  finally{clearTimeout(safety);animations.forEach(a=>a.cancel());copies.forEach(c=>c.remove());el.classList.remove('is-entering');}
 }

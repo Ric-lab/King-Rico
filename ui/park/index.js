@@ -1,5 +1,7 @@
+import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion,confetti} from './motion.js';
+import {installSpinTactility} from './spin-tactility.js';
 import {enterWheel} from './wheel-transition.js';
 import {applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
 const Cloud=window.KingRicoCloud,id=()=>crypto.randomUUID();
@@ -59,13 +61,14 @@ function bootCircus(){
   const backdrop=[...document.querySelectorAll('div')].find(e=>e.style.backgroundImage.includes('stage-bleed-v5-lossless.webp'));
   if(backdrop){backdrop.classList.add('park-circus-backdrop');const scene=backdrop.parentElement;scene.classList.add('park-circus-scene');[...scene.children].find(e=>e.style.filter.includes('blur(34px)'))?.classList.add('park-circus-ambient');fc.lightsBleedRef?.current?.classList.add('park-circus-bleed-lights');}
   fc._parkPrizeTarget=[...stage.querySelectorAll('span')].find(n=>n.parentElement.style.top==='180px'&&n.parentElement.style.left==='165.333px')?.parentElement;fc._parkPrizeTarget?.setAttribute('data-park-prize','');
-  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso da roleta" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="/home#parque" aria-label="Ingressos do parque"><img class="park-ticket-wallet-art" src="/ui/park/ticket-wallet.svg" alt=""><span class="park-ticket-wallet-label">INGRESSOS</span><b data-tickets>0</b></a>`;stage.append(rails);
-  const miniGradient=Array.from({length:13},(_,i)=>(i===0?'#2fa83a':i%2?'#e0321f':'#fbefd8')+' '+i*360/13+'deg '+(i+1)*360/13+'deg').join(',');
+  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso da roleta" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="/home#parque" aria-label="Ingressos do parque"><span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="/assets/machine/ticket-wallet-v2.webp" alt=""><b data-tickets>0</b></span></a>`;stage.append(rails);
+  const miniGradient=pocketColors(13).map((color,i)=>color+' '+i*360/13+'deg '+(i+1)*360/13+'deg').join(',');
   rails.querySelectorAll('.park-meter').forEach(tube=>{const goal=document.createElement('span');goal.className='park-meter-goal';goal.setAttribute('role','img');goal.setAttribute('aria-label','Barra cheia libera a roleta multiplicadora');goal.innerHTML=`<i class="park-goal-disk" style="background:conic-gradient(from -13.846deg,${miniGradient})"></i><i class="park-goal-rim"></i><b>×</b><i class="park-goal-pointer"></i>`;tube.append(goal);});
   const originalVals=fc.renderVals.bind(fc);
-  fc.renderVals=(...args)=>{const vals=originalVals(...args);if(fc._parkWheelVisible)vals.winAnim='none';rails.style.setProperty('--park-light-y',vals.frameOff);rails.style.setProperty('--park-light-transition',vals.frameOffT);rails.style.setProperty('--park-basket-top',(84-(fc.state.hudD||0))+'px');return vals;};
+  fc.renderVals=(...args)=>{const vals=originalVals(...args);if(fc._parkWheelVisible)vals.winAnim='none';rails.style.setProperty('--park-shade-opacity',vals.frameOff==='100%'?'0':'.28');rails.style.setProperty('--park-goal-brightness',vals.frameOff==='100%'?'1':'.82');rails.style.setProperty('--park-light-y',vals.frameOff);rails.style.setProperty('--park-light-transition',vals.frameOffT);rails.style.setProperty('--park-basket-top',(84-(fc.state.hudD||0))+'px');return vals;};
   fc.renderVals();
   installMotion(fc,rails,{refresh:renderRails,showWheel});
+  installSpinTactility(fc);
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
@@ -85,7 +88,7 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',displayState.spins);
  el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${displayState.spins} de ${displayState.meterSpins} giros`);
  const tickets=fc?._parkVisibleTickets??displayState.tickets;const count=format(tickets);el.querySelector('[data-tickets]').textContent=count;
- el.style.setProperty('--park-ticket-font',count.length>7?'17px':count.length>5?'21px':'27px');
+ el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  el.querySelector('.park-pocket').setAttribute('aria-label',`Parque: ${tickets} ingressos`);
  el.classList.toggle('is-ready',!!displayState.wheel);
 }
@@ -93,16 +96,17 @@ function showWheel(){
  if(wheelOpen||!state.wheel)return;if(window.__fc?._parkMeterBusy||window.__fc?._parkFillCelebrating){window.__fc._parkWheelWaiting=true;return;}wheelOpen=true;const wheelId=state.wheel.id;
  const fc=window.__fc;if(fc){fc._parkWheelVisible=true;fc.setState({balance:Cloud.player.balance,balPending:(state.wheel.result?.winUnits||state.wheel.baseUnits)/100,auto:false});}
  const values=state.wheel.pockets||[1,2,3,5,10],n=values.length,seg=360/n;
- const colors=values.map((_,i)=>i===0?'#2fa83a':i%2?'#e0321f':'#fbefd8');
+ const colors=pocketColors(n);
  const gradient=colors.map((c,i)=>`${c} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
- const el=modal(`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Roleta bônus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:${i===0||i%2?'#fff3c4':'#6c2922'}"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><span>MULTIPLIQUE</span><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`, 'Roleta multiplicadora');
+ const el=modal(`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Roleta bônus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:#fff3c4"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`, 'Roleta multiplicadora');
  el.classList.add('park-wheel-modal');el.querySelector('.park-panel').classList.add('park-wheel-panel');
  const entrance=enterWheel(el);
- const btn=el.querySelector('[data-wheel-spin]'),rotor=el.querySelector('.park-wheel');let busy=false;
+ const btn=el.querySelector('[data-wheel-spin]'),rotor=el.querySelector('.park-wheel');let busy=false,ready=false,spun=false,wheelAngle=0,direction=1,drag=null;
+ const machine=el.querySelector('.park-wheel-machine');
  async function finish(w){
   el.querySelector('.park-wheel-machine').classList.add('is-spinning');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reduced){const anim=rotor.animate([{transform:'rotate(0deg)'},{transform:`rotate(${2160-w.result.index*seg}deg)`}],{duration:4200,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,4600))]);}
+  if(!reduced){const stop=-w.result.index*seg,end=stop+360*(direction>0?Math.ceil((wheelAngle-stop)/360)+6:Math.floor((wheelAngle-stop)/360)-6);const anim=rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${end}deg)`}],{duration:4200,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,4600))]);anim.cancel();rotor.style.transform=`rotate(${end}deg)`;}
   else rotor.style.transform=`rotate(${-w.result.index*seg}deg)`;
   el.querySelector('.park-wheel-machine').classList.remove('is-spinning');
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
@@ -122,7 +126,32 @@ function showWheel(){
    wheelOpen=false;
   }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.disabled=false;busy=false;}};
  }
- btn.onclick=async()=>{if(busy)return;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';try{const r=await call({action:'wheel',wheelId,requestId:id()});busy=false;await finish(r.wheel);}catch(e){Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;}};
+ async function startSpin(){
+  if(busy||!ready||spun)return;spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');
+  const coast=matchMedia('(prefers-reduced-motion: reduce)').matches?null:rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${wheelAngle+direction*720}deg)`}],{duration:1200,iterations:Infinity,easing:'linear'});
+  const settle=()=>{if(!coast)return;try{const m=new DOMMatrix(getComputedStyle(rotor).transform);wheelAngle=Math.atan2(m.b,m.a)*180/Math.PI;}finally{coast.cancel();rotor.style.transform=`rotate(${wheelAngle}deg)`;}};
+  try{const r=await call({action:'wheel',wheelId,requestId:id()});settle();busy=false;await finish(r.wheel);}
+  catch(e){settle();machine.classList.remove('is-spinning');Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;spun=false;}
+ }
+ btn.onclick=startSpin;
+ machine.onpointerdown=e=>{
+  if(!e.isPrimary||busy||!ready||spun||drag)return;
+  const r=machine.getBoundingClientRect(),cx=r.x+r.width/2,cy=r.y+r.height/2;
+  drag={id:e.pointerId,x:e.clientX,y:e.clientY,cx,cy,last:Math.atan2(e.clientY-cy,e.clientX-cx),distance:0};
+  machine.setPointerCapture(e.pointerId);machine.classList.add('is-dragging');e.preventDefault();
+ };
+ machine.onpointermove=e=>{
+  if(!drag||drag.id!==e.pointerId)return;
+  const angle=Math.atan2(e.clientY-drag.cy,e.clientX-drag.cx),delta=Math.atan2(Math.sin(angle-drag.last),Math.cos(angle-drag.last));
+  wheelAngle+=delta*180/Math.PI;drag.last=angle;drag.distance=Math.max(drag.distance,Math.hypot(e.clientX-drag.x,e.clientY-drag.y));rotor.style.transform=`rotate(${wheelAngle}deg)`;e.preventDefault();
+ };
+ function release(e,cancel=false){
+  if(!drag||drag.id!==e.pointerId)return;const distance=drag.distance;drag=null;machine.classList.remove('is-dragging');
+  if(machine.hasPointerCapture(e.pointerId))machine.releasePointerCapture(e.pointerId);
+  if(!cancel&&distance>=22){direction=Math.sign(wheelAngle)||1;startSpin();}
+  else{rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:'rotate(0deg)'}],{duration:180,easing:'ease-out'});wheelAngle=0;rotor.style.transform='rotate(0deg)';}
+ }
+ machine.onpointerup=e=>release(e);machine.onpointercancel=e=>release(e,true);machine.onlostpointercapture=e=>release(e,true);
  btn.disabled=true;
- entrance.finally(()=>{if(state.wheel?.result)finish(state.wheel);else btn.disabled=false;});
+ entrance.finally(()=>{ready=true;if(state.wheel?.result){spun=true;finish(state.wheel);}else btn.disabled=false;});
 }

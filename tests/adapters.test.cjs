@@ -416,3 +416,63 @@ test('Fingo displays fixed 2x on new cards and preserves the saved legacy tables
  assert.deepEqual(JSON.parse(JSON.stringify(g.renderVals().payList)),[{balls:'Qualquer quina',mult:'x2'}]);
  assert.match(g.renderVals().payExplanation,/2×/);assert.equal(g.renderVals().prizeCaption,'QUINA PAGA 2×');
 });
+
+test('Circus reveals and stops whole columns, then settles the committed result once',async()=>{
+ const outcome={grid:[1,2,3,4,5,6,7,8,0],res:{win:0,cells:[],lines:[],full:false,peach:[]},feature:null};
+ const {instance:g}=component('Fortune Circus.dc.html',{enabled:true,spin:async()=>({balanceBefore:500,outcome})},()=>{throw Error('Animation must not draw another grid');});
+ const scheduled=[],settlements=[],notes=[];
+ for(const method of ['spinFx','danceClear','startWhirr','sfxWhoosh','stopWhirr','burst','hap'])g[method]=()=>{};
+ g.pluck=note=>notes.push(note);g.reelsStart=()=>{};
+ g.reelStop=(cell,time,callbacks)=>scheduled.push({cell,time,callbacks});
+ g.later=(fn,ms)=>{if(ms===240)settlements.push(fn);};
+ let paid=0;g.payout=(res,bet)=>{assert.equal(res,outcome.res);assert.equal(bet,10);paid++;};
+ await g.doSpin();assert.equal(scheduled.length,3);
+ const groups=[0,1,2].map(c=>scheduled.filter(x=>x.cell%3===c));
+ assert.deepEqual(groups.map(a=>new Set(a.map(x=>x.time)).size),[1,1,1]);
+ assert.ok(groups[0][0].time<groups[1][0].time&&groups[1][0].time<groups[2][0].time);
+ for(let col=0;col<3;col++){
+  const group=groups[col],members=[col,col+3,col+6];
+  group[0].callbacks.onTile();
+  for(const cell of members)assert.equal(g.state.grid[cell],outcome.grid[cell]);
+  for(const x of group)x.callbacks.onImpact();
+  group[0].callbacks.onDone();
+  assert.ok(members.every(i=>!g.state.spinCells.includes(i)));
+  for(const x of group)x.callbacks.onDone(); // Repeated completion cannot settle twice.
+  assert.equal(settlements.length,col===2?1:0);
+ }
+ assert.equal(notes.length,3);assert.ok(notes[0]<notes[1]&&notes[1]<notes[2]);
+ assert.deepEqual(Array.from(g.state.grid),outcome.grid);assert.equal(g.state.balance,490);
+ settlements[0]();assert.equal(paid,1);
+});
+
+test('Circus respins skip a fully locked column and keep the other column stops atomic',()=>{
+ const result=[1,4,7,2,5,8].map(i=>({i,v:i===7?2:-1}));
+ const {instance:g}=component('Fortune Circus.dc.html',{enabled:true},()=>{throw Error('No local special-round draw');});
+ g._cloudSpin={outcome:{feature:{sym:2,rounds:[{result}]}}};g._cloudFeatureRound=0;
+ g.state.feature={sym:2,round:0};g.state.locked=[0,3,6];g.state.grid=[2,-1,-1,2,-1,-1,2,-1,-1];
+ const scheduled=[],finish=[];g.startWhirr=()=>{};g.reelsStart=()=>{};g.hap=()=>{};
+ g.reelStop=(cell,time,callbacks)=>scheduled.push({cell,time,callbacks});g.later=(fn,ms)=>{if(ms===260)finish.push(fn);};
+ g.respin(2,10);assert.equal(scheduled.length,2);assert.ok(scheduled.every(x=>x.cell%3!==0));
+ const first=scheduled.filter(x=>x.cell%3===1),last=scheduled.filter(x=>x.cell%3===2);
+ assert.equal(new Set(first.map(x=>x.time)).size,1);assert.equal(new Set(last.map(x=>x.time)).size,1);assert.ok(first[0].time<last[0].time);
+ first[0].callbacks.onTile();first.forEach(x=>x.callbacks.onDone());
+ assert.deepEqual(Array.from(g.state.locked),[0,3,6,7]);assert.deepEqual(Array.from(g.state.spinCells).sort(),[2,5,8]);
+ last[0].callbacks.onTile();last.forEach(x=>x.callbacks.onDone());
+ assert.deepEqual(Array.from(g.state.grid),[2,-1,-1,2,-1,-1,2,2,-1]);assert.equal(finish.length,1);
+});
+
+test('Circus freezes the reel clock exactly while the menu is open',()=>{
+ const {instance:g,context}=component('Fortune Circus.dc.html',{});
+ let clock=1000;context.performance.now=()=>clock++;
+ g._pausedMs=100;g._paused=true;g._pauseAt=500;
+ assert.equal(g.now(),400);assert.equal(g.now(),400);
+ g._paused=false;assert.equal(g.now(),900);assert.equal(g.now(),901);
+});
+
+test('Circus samples its physical reels immediately when the menu pauses the clock',()=>{
+ const {instance:g,context}=component('Fortune Circus.dc.html',{});
+ context.document={querySelectorAll:()=>[],getAnimations:()=>[]};
+ const samples=[];g._rs={};g.reelsFrame=()=>samples.push(g.now());g._pausedMs=10;
+ g.pauseGame();assert.equal(samples.length,1);assert.equal(samples[0],g._pauseAt-10);
+ g.pauseGame();assert.equal(samples.length,1);
+});

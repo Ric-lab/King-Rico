@@ -1,44 +1,222 @@
-/* Independent GPT Image components; transparent source pixels are unchanged.
+/* Circus cabinet components; raster art and procedural button assets.
    Visible bounds/exports: assets/machine/README.md. Native stage: 453 × 802. */
 .park-circus-stage .park-machine-plate,.park-legacy-front{display:none!important}
 .park-part-base,.park-part-prize{position:absolute;pointer-events:none}
-.park-part-base{left:0;top:607px;width:453px;height:63px}
+.park-part-base{left:18px;top:calc(544px + var(--park-machine-drop,0px));width:417px;height:54px}
 .park-part-idle{filter:brightness(.82)}
-.park-part-prize{left:165.333px;top:180px;width:125px;height:32px}
-[data-park-prize]>span{color:#73371c!important;text-shadow:0 1px #fff6d7!important;font-size:24px!important}
-.park-reels{position:absolute;inset:0;transform:scaleX(.936);transform-origin:50% 50%;pointer-events:none}
-.park-reel-cell{border-radius:0!important;backface-visibility:hidden}
-.park-reels>.park-part-reel-top{transform:perspective(650px) rotateX(9deg);transform-origin:50% 100%}
-.park-reels>.park-part-reel-bottom{transform:perspective(650px) rotateX(-9deg);transform-origin:50% 0}
-/* Wider live glass, same 334 px liquid height and pulse propagation. */
-.park-meter{width:36px}
+.park-part-prize{left:117.833px;top:var(--park-prize-top,165px);width:220px;height:56px;z-index:3}
+[data-park-prize]>span{color:#73371c!important;text-shadow:0 1px #fff6d7!important;font-size:30px!important}
+.park-reels{position:absolute;inset:0;transform:translateY(var(--park-machine-drop,0px)) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
+.park-reel-cell{border-radius:0!important;backface-visibility:hidden;background-image:none}
+.park-reels>.park-part-reel-top{transform:perspective(520px) rotateX(15deg) scaleY(.96);transform-origin:50% 50%}
+.park-reels>.park-part-reel-bottom{transform:perspective(520px) rotateX(-15deg) scaleY(.96);transform-origin:50% 50%}
+/* Wider live glass; liquid and pulse use the current track height. */
+.park-meter{width:36px;height:295px}
 .park-meter-left{left:4px}.park-meter-right{right:4px}
-.park-meter-track{z-index:1;background:linear-gradient(90deg,#125b90,#259ac0 45%,#126592);box-shadow:inset 1px 0 3px #06467099}
-.park-meter-dimmer{background:rgba(12,28,60,.42);clip-path:path('M4 248H40V606H4Z M413 248H449V606H413Z M5 231A17 17 0 1 0 39 231A17 17 0 1 0 5 231Z M414 231A17 17 0 1 0 448 231A17 17 0 1 0 414 231Z')}
+.park-meter-track{z-index:1;background:#fff;box-shadow:inset 1px 0 3px #bda46333}
+.park-meter-dimmer{background:rgba(12,28,60,.35);clip-path:path(evenodd,'M0 248H44V549H0Z M10 254H34V537H10Z M409 248H453V549H409Z M419 254H443V537H419Z M5 231A17 17 0 1 0 39 231A17 17 0 1 0 5 231Z M414 231A17 17 0 1 0 448 231A17 17 0 1 0 414 231Z')}
 /* Keep legacy animation lamps on the spin button, away from the new glass. */
 .park-machine-lights{clip-path:path('M43 680H410V767H43Z')}
-.park-part-base{background-image:url('/assets/machine/base-v1.webp');background-size:101.65854% 234.47205%;background-position:50.00000% 45.95843%;background-repeat:no-repeat;}
-.park-part-prize{background-image:url('/assets/machine/prize-v1.webp');background-size:109.69697% 152.74262%;background-position:50.00000% 48.40000%;background-repeat:no-repeat;}
-.park-part-reel-top{background-image:url('/assets/machine/reel-top-v1.webp');background-size:105.12821% 111.32404%;background-position:48.33333% 39.23077%;background-repeat:no-repeat;}
-.park-part-reel-middle{background-image:url('/assets/machine/reel-middle-v1.webp');background-size:140.09112% 135.95745%;background-position:50.00000% 53.25444%;background-repeat:no-repeat;}
-.park-part-reel-bottom{background-image:url('/assets/machine/reel-bottom-v1.webp');background-size:128.76569% 117.67956%;background-position:49.81818% 49.47917%;background-repeat:no-repeat;}
-.park-meter:before{inset:auto;left:-1.5200px;top:-28.1834px;width:38.8800px;height:401.4172px;z-index:0;background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
-.park-cabinet-mini{position:absolute;left:0;top:-90px;width:453px;height:802px;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+.park-part-base{background-image:url('/assets/machine/base-controls-v4.svg');background-size:100% 100%;background-position:50% 50%;background-repeat:no-repeat;}
+.park-part-prize{background-image:url('/assets/machine/prize-v2.webp');background-size:103.97319% 145.38153%;background-position:50.60241% 47.34513%;background-repeat:no-repeat;}
+.park-meter:before{inset:auto;left:-0.4348px;top:-1.3325px;width:36.5217px;height:297.4904px;z-index:0;background-image:url('/assets/machine/gauge-v2.webp');background-size:433.80952% 101.34977%;background-position:50.07133% 52.17391%;background-repeat:no-repeat;}
+.park-cabinet-mini{position:absolute;left:0;top:-75px;width:453px;height:802px;transform:scale(.5);transform-origin:0 0;pointer-events:none}
 .park-cabinet-mini .park-part-prize:after{content:'PRÊMIO';display:grid;place-items:center;height:100%;font:800 18px/1 Baloo,sans-serif;color:#82481e}
 .park-cabinet-mini .park-hero-symbols{left:44px;top:219px;width:365px;height:386px;gap:0 3px}
 .park-cabinet-mini .park-hero-symbols>span{display:block;min-width:0;min-height:0;overflow:hidden}
 .park-cabinet-mini .park-hero-symbols img{display:block;width:100%;height:100%;object-fit:contain}
-.park-mini-gauge{position:absolute;top:248px;width:36px;height:346px}
+.park-mini-gauge{position:absolute;top:248px;width:36px;height:284px}
 .park-mini-gauge:before{z-index:1;content:'';position:absolute;inset:0;background:linear-gradient(0deg,#8e24ff,#174fff,#00cfff,#00f27b,#e4ff00,#ff9400,#ff155e);border-radius:5px;margin:6px}
-@media(max-width:360px){.park-cabinet-mini{transform:scale(.45);top:-80px}}
-.park-mini-gauge{background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
+@media(max-width:360px){.park-cabinet-mini{transform:scale(.45);top:-66px}}
 
-/* Continuous backing under the separate faces conceals only their joining seam. */
-.park-reel-bed{position:absolute;top:227px;height:386px;border-radius:10px 10px 6px 6px;border-inline:5px solid #ebb52d;background:#fff6da;box-shadow:inset 1px 0 #fff3a1,inset -1px 0 #a67023;pointer-events:none}
-.park-reel-bed:nth-child(1){left:34.333px;width:126.5px}
-.park-reel-bed:nth-child(2){left:164.333px;width:122.5px}
-.park-reel-bed:nth-child(3){left:290.333px;width:130px}
-.park-cabinet-mini .park-hero-symbols{background:linear-gradient(90deg,#e5aa27 0 1.4%,#fff6da 1.4% 31.8%,#e5aa27 31.8% 34.7%,#fff6da 34.7% 64.9%,#e5aa27 64.9% 68.5%,#fff6da 68.5% 98.6%,#e5aa27 98.6%)}
+/* One continuous paper surface per drum; no horizontal card frames. */
+.park-reel-window-back{position:absolute;left:44px;top:calc(217.5px + var(--park-machine-drop,0px));width:365px;height:326px;border-radius:9px;background:#634320;box-shadow:inset 0 3px 6px #2e1b0d66;pointer-events:none}
+.park-reel-frame{position:absolute;left:40px;top:calc(213.5px + var(--park-machine-drop,0px));width:373px;height:333.5px;border:10px solid transparent;border-image-source:url('/assets/machine/reel-frame-v1.webp');border-image-slice:200;border-image-width:10px;border-image-repeat:stretch;pointer-events:none}
+.park-reel-shell{position:absolute;top:219.5px;height:382px;overflow:hidden;border-radius:4px;pointer-events:none;background-image:url('/assets/machine/reel-paper-v2.webp');background-size:120.11331% 106.60920%;background-position:50.00000% 47.82609%;background-repeat:no-repeat;}
+.park-reel-shell-0{left:34.333px;width:126px}
+.park-reel-shell-1{left:164.333px;width:126px}
+.park-reel-shell-2{left:294.333px;width:126px}
+.park-reel-cell[data-park-column="0"]{left:34.333px!important;width:126px!important}
+.park-reel-cell[data-park-column="1"]{left:164.333px!important;width:126px!important}
+.park-reel-cell[data-park-column="2"]{left:294.333px!important;width:126px!important}
+.park-reel-separator{position:absolute;top:220px;width:3px;height:381px;border-radius:1px;background:linear-gradient(90deg,#996b27,#ffe3a0 45%,#be8c3b);pointer-events:none}
+.park-reel-separator-0{left:160.8px}.park-reel-separator-1{left:290.8px}
+.park-reel-cell [data-rh]{background:none!important}
+.park-legacy-control-rim{display:none}
+/* The bet well stays within the red face, at the existing hit-target positions. */
+.park-bet-well{position:absolute;left:91px;top:calc(550.5px + var(--park-machine-drop,0px));width:265px;height:38px;border:1px solid #efb73f88;border-radius:12px;background:linear-gradient(#3f0c2177,#8d1b3722);box-shadow:inset 0 2px 4px #23000e77,inset 0 -1px #ffd66733;pointer-events:none}
+.park-bet-value{top:calc(548.5px + var(--park-machine-drop,0px))!important}
+.park-circus-stage [aria-label="Diminuir aposta"],.park-circus-stage [aria-label="Aumentar aposta"]{top:calc(548px + var(--park-machine-drop,0px))!important}
+.park-cabinet-mini .park-hero-symbols{top:219.5px;left:34.333px;width:386px;height:382px;display:block;background:none}
+.park-cabinet-mini .park-hero-symbols>span{position:absolute;width:126px;height:130px;background-image:none}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(3n+1){left:0}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(3n+2){left:130px;width:126px}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(3n){left:260px;width:126px}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(-n+3){top:0}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(n+4):nth-child(-n+6){top:131.5px}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(n+7){top:261.5px;height:120px}
+.park-cabinet-mini .park-hero-reel-skins{position:absolute;inset:0}
 
 .park-mini-gauge{background:none}
-.park-mini-gauge:after{content:'';position:absolute;inset:auto;left:-1.5200px;top:-28.1834px;width:38.8800px;height:401.4172px;z-index:0;background-image:url('/assets/machine/gauge-v1.webp');background-size:374.89712% 102.12892%;background-position:50.00000% 36.11111%;background-repeat:no-repeat;}
+.park-mini-gauge:after{content:'';position:absolute;inset:auto;left:-0.4348px;top:-1.0475px;width:36.5217px;height:285.9260px;z-index:0;background-image:url('/assets/machine/gauge-v2.webp');background-size:433.80952% 101.34977%;background-position:50.07133% 52.17391%;background-repeat:no-repeat;}
+
+.park-cabinet-mini .park-hero-symbols>span:nth-child(-n+3){transform:perspective(520px) rotateX(15deg) scaleY(.96)}
+.park-cabinet-mini .park-hero-symbols>span:nth-child(n+7){transform:perspective(520px) rotateX(-15deg) scaleY(.96)}
+
+.park-cabinet-mini .park-hero-reel-skins{transform:scale(.936,.8376963351);transform-origin:50% 219.5px}
+.park-cabinet-mini .park-hero-symbols{transform:scale(.936,.8376963351);transform-origin:50% 0}
+
+/* Touching film viewports hide no horizontal strip of the moving reels.
+   Symbol centers stay at the native coordinates; curvature settles after a stop. */
+.park-reels>.park-part-reel-top{height:131.5px!important;transform-origin:50% calc(50% - 2px)}
+.park-reels>.park-part-reel-middle{height:130px!important}
+.park-reels>.park-part-reel-bottom{height:120.5px!important;transform-origin:50% calc(50% - .25px)}
+.park-reels>.park-part-reel-top>[data-sym],.park-reels>.park-part-reel-middle>[data-sym]{top:calc(50% - 2px)!important}
+.park-reels>.park-part-reel-bottom>[data-sym]{top:calc(50% - .25px)!important}
+.park-reel-cell{transition:transform .14s ease-out}
+.park-reels>.park-reel-cell[data-reel-spinning="true"]{transform:none;transition:none}
+@media(prefers-reduced-motion:reduce){.park-reel-cell{transition:none}}
+
+/* The prize plaque follows the machine, with breathing room below the mascot.
+   Inline native coordinates remain the stable lookup for coin/multiplier flights. */
+.park-prize-value{left:117.833px!important;top:var(--park-prize-top,165px)!important;width:220px!important;height:56px!important;padding-inline:15px;z-index:4}
+/* Symbol highlights are soft elliptical halos, not square painted tiles. */
+.park-win-fx,.park-lock-fx{inset:3px 6px 7px!important;border-radius:50%!important;pointer-events:none;transform-origin:50% 50%}
+.park-part-reel-bottom .park-win-fx,.park-part-reel-bottom .park-lock-fx{inset:5px 6px 5.5px!important}
+.park-win-fx{background:radial-gradient(ellipse,#ffe79900 40%,#ffd34d22 64%,#ffc13a55 84%,#ffc13a00 100%);box-shadow:inset 0 0 15px 4px #ffca4766}
+.park-lock-fx{background:radial-gradient(ellipse,#79ffb000 40%,#79ffb022 68%,#49e68c44 86%,#49e68c00 100%);box-shadow:inset 0 0 15px 4px #49e68c66}
+.park-antic-fx{left:294.333px!important;top:219.5px!important;width:126px!important;height:382px!important;border-radius:50% / 3%!important;mask-image:url('/assets/machine/reel-paper-v2.webp');mask-size:120.11331% 106.60920%;mask-position:50% 47.82609%;mask-repeat:no-repeat;background:radial-gradient(ellipse,#ffba4a00 40%,#ffba4a22 68%,#ff9e4544 86%,#ff9e4500 100%)}
+@keyframes parkReelWin{0%,100%{box-shadow:inset 0 0 15px 3px #ffce5266,0 0 6px #ffc74833;opacity:.75;transform:scale(.96)}50%{box-shadow:inset 0 0 23px 6px #ffbd46bb,0 0 9px #ffcf6866;opacity:1;transform:scale(1)}}
+@keyframes parkReelLock{0%,100%{box-shadow:inset 0 0 14px 3px #60ee9a66;opacity:.75}50%{box-shadow:inset 0 0 22px 5px #8cffb399;opacity:1}}
+@keyframes parkReelAntic{0%,100%{box-shadow:inset 0 0 15px 3px #ffb85055;opacity:.7}50%{box-shadow:inset 0 0 23px 6px #ffc55c99;opacity:1}}
+/* Global dimming and the golden celebration follow each drum's alpha silhouette. */
+.park-reel-effects{position:absolute;inset:0;transform:translateY(var(--park-machine-drop,0px)) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
+.park-reel-fx-column{position:absolute;top:219.5px;height:382px;pointer-events:none;-webkit-mask-image:url('/assets/machine/reel-paper-v2.webp');mask-image:url('/assets/machine/reel-paper-v2.webp');-webkit-mask-size:120.11331% 106.60920%;mask-size:120.11331% 106.60920%;-webkit-mask-position:50% 47.82609%;mask-position:50% 47.82609%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.park-grid-shade,.park-grid-gold{left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0!important}
+
+/* Intermediate height with all nine symbols visible. Tape coordinates stay native. */
+.park-circus-stage{--park-block-drop:42px;--park-prize-top:192.75px;--park-machine-drop:54px;--park-machine-cut:8px;--park-reel-scale:.8376963351}
+.park-circus-rails{--park-track-height:283px}
+.park-circus-stage [data-spin-btn]{top:calc(613px + var(--park-machine-drop,0px))!important}
+.park-circus-stage [aria-label="Girar mais rápido"]{top:calc(551.2px + var(--park-machine-drop,0px))!important}
+.park-circus-stage [aria-label="Girar automático"]{top:calc(552.1px + var(--park-machine-drop,0px))!important}
+.park-circus-stage .park-mode-label{top:calc(594px + var(--park-machine-drop,0px))!important}
+.park-machine-lights{transform:translateY(calc(-62px + var(--park-machine-drop,0px)))}
+/* A small inner lip adds depth to the reel window. */
+.park-reel-frame:after{content:'';position:absolute;inset:-4px -5px;pointer-events:none;background:linear-gradient(#583b231f,transparent 18px,transparent calc(100% - 18px),#583b231f);border-radius:4px}
+
+/* Compensate the shorter window in the sprite width so symbols keep their aspect.
+   Tape pitch stays native: stops, landings and masks use the same coordinates. */
+.park-reel-cell [data-sym],.park-reel-cell [data-rs],.park-reel-cell [data-rb]{width:103.87435px!important;margin-left:-51.937175px!important}
+.park-reel-cell [data-rs],.park-reel-cell [data-rb]{background-size:103.87435px 1240px!important}
+.park-cabinet-mini .park-hero-symbols img{width:103.87435px;height:124px;margin:3px auto 0;object-fit:fill}
+
+/* The plaque hides the lower body at the belly; both share one anchor. */
+.park-circus-stage .park-mascot{top:calc(var(--park-prize-top) - 169.5px)!important}
+.park-circus-stage .park-meter{top:calc(248px + var(--park-machine-drop))}
+.park-circus-stage .park-meter-dimmer{transform:translateY(var(--park-machine-drop))}
+
+/* The entire play composition moves together; the shared account header stays put. */
+.park-circus-stage .park-pocket{top:calc(var(--park-prize-top) - 78px)}
+.park-circus-stage .park-basket{translate:0 var(--park-block-drop)}
+
+/* Side rewards share the mascot/plaque anchor instead of following the header. */
+.park-circus-stage .park-basket[data-park-side="true"]{top:calc(var(--park-prize-top) - 105px)!important;translate:none}
+
+/* Three drums: one uninterrupted tape per column, including through row boundaries. */
+.park-reels>.park-part-reel-top{top:219.5px!important;height:128px!important;transform-origin:50% 50%}
+.park-reels>.park-part-reel-middle{top:347.5px!important;height:128px!important}
+.park-reels>.park-part-reel-bottom{top:475.5px!important;height:128px!important;transform-origin:50% 50%}
+.park-reels>.park-reel-cell>[data-sym]{top:50%!important}
+.park-reel-cell[data-physical-moving="true"]{visibility:hidden}
+.park-reel-cell:not([data-physical-moving="true"]){z-index:2}
+.park-physical-reel{position:absolute;top:219.5px;width:126px;height:382px;overflow:hidden;z-index:1;pointer-events:none;contain:paint}
+.park-physical-film{position:absolute;inset:0;will-change:transform;pointer-events:none}
+.park-tape-symbol{position:absolute;left:11.062825px;width:103.87435px;height:124px;background:url('/assets/symbols-v7.webp') 0 50%/1200% 100% no-repeat;backface-visibility:hidden;transform-origin:50% 50%}
+.park-tape-symbol.is-ticket,[data-park-ticket="true"]{background-image:url('/assets/machine/ticket-symbol-v1.webp')!important;background-size:contain!important;background-position:50% 50%!important;background-repeat:no-repeat}
+/* Each darkener follows the source alpha; empty sky and the white glass stay clear. */
+.park-meter-dimmer{display:none}
+.park-meter:after{content:'';position:absolute;left:-.4348px;top:-1.3325px;width:36.5217px;height:297.4892px;z-index:2;pointer-events:none;background:#18223a;opacity:var(--park-shade-opacity,.25);mask-image:url('/assets/machine/gauge-v2.webp');mask-size:433.80952% 101.34977%;mask-position:50.07133% 52.17391%;mask-repeat:no-repeat;transition:opacity .18s ease-out}
+.park-meter-goal{filter:brightness(var(--park-goal-brightness,.85))}
+.park-circus-stage [aria-label="Girar mais rápido"],.park-circus-stage [aria-label="Girar automático"]{background:none!important;box-shadow:none!important;filter:none!important;overflow:visible}
+.park-control-face{display:block;width:100%;height:100%;pointer-events:none;transform-origin:50% 50%;filter:brightness(.94);transition:transform 140ms cubic-bezier(.2,.8,.3,1),filter .12s ease-out}
+.park-circus-stage [aria-pressed="true"] .park-control-face{filter:brightness(1.08) drop-shadow(0 0 3px #ffe69b88)}
+.park-circus-stage[data-pressed="turbo"] [aria-label="Girar mais rápido"] .park-control-face,.park-circus-stage[data-pressed="auto"] [aria-label="Girar automático"] .park-control-face,.park-circus-stage [aria-label="Girar mais rápido"]:active .park-control-face,.park-circus-stage [aria-label="Girar automático"]:active .park-control-face{transform:translateY(0);filter:brightness(.8);transition-duration:34ms}
+/* Counters sit below the mascot, on the same baseline as the prize plaque. */
+.park-circus-stage .park-pocket{left:5px;top:calc(var(--park-prize-top) + 56px - 52px);width:112px;height:52px;transform:none}
+.park-pocket .park-ticket-wallet-label{left:36%;right:6%;top:10px;font-size:10px;line-height:12px;letter-spacing:.3px}
+.park-pocket [data-tickets]{left:36%;right:6%;top:22px;height:23px;font-size:var(--park-ticket-font,26px)}
+.park-circus-stage .park-basket[data-park-side="true"]{right:5px!important;top:calc(var(--park-prize-top) + 56px - 83.64px)!important;transform:scale(.82)!important;transform-origin:100% 0;translate:none}
+.park-basket-halo{display:none!important}
+.park-basket img[src$="basket.webp"],.park-basket img[src$="basket-front.webp"]{filter:none!important}
+.park-peach-count{box-shadow:none!important}
+.park-circus-stage .park-basket[data-park-side="true"]{transform-origin:100% 0!important}
+.park-peach-count{gap:4px!important}
+.park-peach-count>span{font-size:21px!important}
+.park-peach-count>div>div{width:5px!important;height:5px!important}
+
+.park-reel-cell>[data-sym]{transition:filter .18s ease-out}
+.park-reel-cell[data-dimmed="true"]>[data-sym]{filter:brightness(.58) saturate(.85)}
+/* A held feature symbol is an opaque stationary window above the shared tape. */
+.park-reel-cell[data-held="true"]{transform:none!important;background-image:url('/assets/machine/reel-paper-v2.webp')!important;background-size:151.343px 407.247px!important;background-position:50% calc(-12.075px - var(--park-held-row,0px))!important;background-repeat:no-repeat}
+.park-part-reel-middle{--park-held-row:128px}.park-part-reel-bottom{--park-held-row:256px}
+.park-part-reel-top[data-held="true"]>[data-sym]{transform:perspective(520px) rotateX(15deg) scaleY(.96)}
+.park-part-reel-bottom[data-held="true"]>[data-sym]{transform:perspective(520px) rotateX(-15deg) scaleY(.96)}
+
+/* The approved art is exported into fixed gold frames and independently moving centers. */
+.park-button-rim{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:3;transform:none!important;filter:brightness(.8)}
+.park-button-aperture{position:absolute;inset:0;pointer-events:none;z-index:2}
+.park-round-aperture{clip-path:circle(39.84375% at 50% 50%)}
+.park-button-well{position:absolute;inset:0;pointer-events:none;z-index:1}
+.park-round-well{clip-path:circle(39.84375% at 50% 50%);background:radial-gradient(#cc7d15,#54260b);box-shadow:inset 0 2px 4px #321606}
+.park-control-face{transform:translateY(-1.8px);filter:brightness(.58)}
+.park-circus-stage [aria-pressed="true"]>.park-button-rim{filter:brightness(1.08)}
+
+.park-ticket-wallet-face{position:absolute;inset:0;display:block;transform:scale(.875);transform-origin:0 100%}
+.park-ticket-wallet-face .park-ticket-wallet-label{font-size:11px}
+
+/* A contour extracted from the actual green pixels excludes every gold fringe. */
+.park-circus-stage .park-panel-control{width:52px!important;height:46px!important;border-radius:10px!important;top:calc(548px + var(--park-machine-drop))!important}
+.park-circus-stage .park-panel-control[aria-label="Girar mais rápido"]{left:24px!important}
+.park-circus-stage .park-panel-control[aria-label="Girar automático"]{left:377px!important}
+.park-panel-control .park-round-aperture,.park-panel-control .park-round-well{clip-path:none;mask-size:100% 100%;mask-repeat:no-repeat}
+.park-panel-control[aria-label="Girar mais rápido"] .park-round-aperture,.park-panel-control[aria-label="Girar mais rápido"] .park-round-well{mask-image:url('/assets/machine/turbo-socket-mask-v2.svg')}
+.park-panel-control[aria-label="Girar automático"] .park-round-aperture,.park-panel-control[aria-label="Girar automático"] .park-round-well{mask-image:url('/assets/machine/auto-socket-mask-v2.svg')}
+.park-pocket [data-tickets]{top:9px;height:34px;line-height:1}
+
+/* A tall green plunger sits above the stationary rim; its side collapses on press. */
+.park-circus-stage [data-spin-btn]:before{content:'';position:absolute;inset:0;z-index:5}
+.park-panel-control .park-round-well{background:#092d40;box-shadow:inset 0 0 3px #041b28}
+.park-panel-control .park-control-face{filter:brightness(.58) saturate(.8)}
+.park-panel-control[aria-pressed="true"] .park-control-face{filter:brightness(1.18) saturate(1.15)}
+.park-panel-control[aria-pressed="true"]>.park-button-rim{filter:brightness(1.12)}
+
+/* Top view: the whole blue cap settles uniformly into a stationary socket. */
+.park-circus-stage .park-panel-control .park-round-aperture{mask-image:none!important}
+
+/* Separate fixed-depth shell and moving top show a bevel on every side. */
+.park-control-depth{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#063e52,#075c73 12%,#075c73 88%,#063e52);mask-size:100% 100%;mask-repeat:no-repeat;filter:brightness(.62) saturate(.8);transition:filter .12s ease-out}
+.park-panel-control[aria-label="Girar mais rápido"] .park-control-depth{mask-image:url('/assets/machine/turbo-socket-mask-v2.svg')}
+.park-panel-control[aria-label="Girar automático"] .park-control-depth{mask-image:url('/assets/machine/auto-socket-mask-v2.svg')}
+.park-panel-control[aria-pressed="true"] .park-control-depth{filter:brightness(1.15)}
+.park-control-face{position:relative;z-index:1}
+
+/* A single rigid cap keeps its material and lighting throughout the stroke. */
+.park-circus-stage .park-machine-lights{visibility:hidden}
+
+/* Adapted after researching separate face/edge/shadow and immediate press feedback.
+   Geometry stays rigid: only translation changes; the fixed target and matte rim do not. */
+.park-spin-aperture{clip-path:none;mask-image:none;z-index:2}
+.park-spin-well{inset:8px 9px;border-radius:23px;clip-path:none;mask-image:none;background:#092d3d}
+.park-spin-contact,.park-spin-edge,.park-spin-face{position:absolute;inset:11px 12px 9px;border-radius:22px;pointer-events:none}
+.park-spin-contact{background:#001b2d66;filter:blur(2px);transform:translateY(2px);transition:transform 160ms cubic-bezier(.2,.8,.3,1),opacity 160ms ease-out;opacity:.75}
+.park-spin-edge{background:linear-gradient(90deg,#064358,#075b74 10%,#075b74 90%,#064358);z-index:1}
+.park-spin-face{z-index:2;transform:translateY(-3px);transform-origin:50% 50%;transition:transform 160ms cubic-bezier(.2,.8,.3,1);will-change:transform;filter:none;mask-image:none}
+.park-spin-art-solid{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;filter:none}
+.park-spin-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font:800 30px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.42em;padding-left:.42em;color:#fff0bd;text-shadow:0 1px #07536b}
+.park-spin-rim{filter:none!important}
+.park-circus-stage[data-pressed="spin"] .park-spin-face,[data-spin-btn][data-tactile-held] .park-spin-face,[data-spin-btn]:active .park-spin-face{transform:translateY(0);transition-duration:34ms}
+.park-circus-stage[data-pressed="spin"] .park-spin-contact,[data-spin-btn][data-tactile-held] .park-spin-contact,[data-spin-btn]:active .park-spin-contact{transform:translateY(0);opacity:.4;transition-duration:34ms}
+[data-spin-btn]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+[data-spin-btn]:focus-visible{outline:2px solid #fff0bd;outline-offset:4px;border-radius:30px}
+@media(prefers-reduced-motion:reduce){.park-spin-face,.park-spin-contact,.park-control-face{transition:none!important}}
