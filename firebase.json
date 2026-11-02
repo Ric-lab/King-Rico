@@ -213,12 +213,21 @@
             "value": "no-store"
           }
         ]
+      },
+      {
+        "source": "/park",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
       }
     ],
     "rewrites": [
       {
         "source": "/home",
-        "destination": "/Home.dc.html"
+        "destination": "/Fortune Circus.dc.html"
       },
       {
         "source": "/circus",
@@ -271,6 +280,10 @@
       {
         "source": "/bridge",
         "destination": "/Fortune Bridge.dc.html"
+      },
+      {
+        "source": "/park",
+        "destination": "/Home.dc.html"
       }
     ]
   },

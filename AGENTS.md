@@ -6,7 +6,7 @@ entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovad
 ## Fontes e limites
 
 - Páginas `.dc.html` e `site/routes.json` definem as telas publicadas. A Home
-  destaca Circus e parque; preserve também os demais jogos, as rotas dos
+  abre no Circus; `/park` reúne as atrações. Preserve também os demais jogos, as rotas dos
   protótipos guardados e `/21`.
 - `ui/` é a interface compartilhada em execução. `components/`, `tokens/`,
   `ui_kits/` e os cards HTML de `guidelines/` são referências de design.

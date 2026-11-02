@@ -20,8 +20,11 @@ As páginas `.dc.html` são fontes editáveis. O catálogo de publicação é
 | Fortune Flying Clown | [Fortune Flying Clown.dc.html](<Fortune Flying Clown.dc.html>) | `/flying-clown` |
 | Fortune 33 | [Fortune 33.dc.html](<Fortune 33.dc.html>) | `/33` |
 
-A Home destaca o **Circus** e o **parque** com Clown, Pênalti, Flying Clown e
-Fingo rápido. A entrada custa um ingresso ou 25 moedas; veja [as regras do parque](docs/PARQUE.md).
+Circus é a tela inicial (`/circus`, com `/home`
+compatível). O **parque** em `/park` reúne Clown, Pênalti, Flying Clown e Fingo
+rápido. Toque nos ingressos ou deslize para baixo a partir do cenário do Circus
+para abri-lo; os controles e rodadas ativas não acionam o gesto. A entrada custa
+um ingresso ou 25 moedas; veja [as regras do parque](docs/PARQUE.md).
 Wheel, Neck e 33 continuam disponíveis pelos endereços acima.
 
 Bounce, Claw, Race e Bridge estão **guardados fora da Home**. Seus fontes e

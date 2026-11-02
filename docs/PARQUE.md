@@ -1,7 +1,22 @@
 # Circus e parque
 
-O endereço principal e o atalho instalado abrem a nova Home. Ela apresenta o Fortune Circus e quatro atrações opcionais: Clown, Pênalti,
-Flying Clown e Fingo rápido. Wheel, Neck, 33 e os protótipos mantêm seus endereços.
+Na versão aprovada em 02/11/2026 (prévia v54), Circus é a tela inicial. O endereço principal e o atalho
+instalado apontam para `/circus`; `/home` mantém compatibilidade com a mesma
+tela. O parque passa a `/park`, mantendo `Home.dc.html` como fonte por
+compatibilidade. Reúne Clown, Pênalti, Flying Clown e Fingo rápido. Wheel, Neck,
+33 e protótipos preservam seus endereços. A entrega oficial usa o workflow
+Firebase existente, com Google e carteira Firestore reais.
+
+Tocar no contador de ingressos ou deslizar para baixo sobre o cenário do Circus
+abre o parque. `ui/park/navigation.js` exige gesto vertical deliberado e ignora
+controles, cancelamentos, gestos horizontais, rodadas e modais ativos. A Home dos
+jogos volta ao Circus; o link PARQUE e o fechamento da escolha de entrada voltam
+a `/park`. A tela do parque tem volta explícita para o Circus, presente diário,
+recarga e os quatro jogos; não repete a capa de entrada da slot.
+
+A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
+acendimento circular continua em 420 ms.
+A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
 ## Ingressos e entrada
 
@@ -58,3 +73,9 @@ Verificações relevantes: `tests/integration.mjs`, `tests/adapters.test.cjs`,
 `tests/build.test.mjs`, `tests/reel-tape.test.cjs` e `tests/park_browser.py`. O navegador usa os emuladores;
 `KING_RICO_TEST_URL` seleciona o Hosting local. Gere produção após essa validação,
 e confirme os jobs do workflow existente antes de considerar a entrega publicada.
+
+
+Na v54, o parque foi simplificado: título e ingressos identificados, custo da
+partida numa linha, quatro cards com assets dos jogos e JOGAR/CONTINUAR, recarga
+separada abaixo. Sem cenários repetidos ou frases promocionais. A aparência fica
+em `ui/park/park-home.css`; economia e confirmação da entrada continuam iguais.

@@ -44,7 +44,19 @@ origens dos efeitos acompanham a nova altura. A carga usa 283 px de líquido.
 As bases das barras encostam na área dos controles. As roletas pequena e grande
 compartilham a paleta em `ui/park/wheel-palette.js`, sem alterar multiplicadores.
 
-## Estado publicado — 01/11/2026
+## Versão aprovada — 02/11/2026
+
+A prévia v54 foi aprovada para publicação oficial. Mantém a máquina e a economia
+da v43, com spin colorido em camadas de CSS, letras LED, aro
+`spin-rim-gold-v2.svg`, curso rígido de 8 unidades (55 ms / 180 ms). A pintura
+apaga instantaneamente; o LED em 40 ms e o pulso acende em 420 ms. O Circus é
+a Home e `/park` recebe o parque reorganizado. Google e Firestore nativos
+continuam no build de produção; a carteira de teste da prévia não é incorporada.
+
+O registro abaixo descreve a publicação anterior, não substitui os parâmetros
+atuais. Confirme a entrega desta revisão no workflow associado ao commit.
+
+## Publicação anterior — 01/11/2026
 
 A prévia v43 foi integrada ao cliente nativo e publicada no commit
 [`a738f8a`](https://github.com/Ric-lab/King-Rico/commit/a738f8af50602e7c855d55d83f8a6f9f1d5fff4f),
@@ -52,7 +64,7 @@ com [workflow concluído](https://github.com/Ric-lab/King-Rico/actions/runs/4135
 O site oficial foi conferido contra o build de produção; 13 arquivos afetados,
 incluindo configuração Firebase, HTML, bundle e assets, coincidiram.
 
-| Camada atual | Fonte |
+| Camada da v43 | Fonte |
 |---|---|
 | Face azul do spin e aro fixo fosco | `spin-front-blue-v1.svg`, `spin-rim-matte-v1.svg` |
 | Faces de auto e turbo | `auto-socket-face-v6.svg`, `turbo-socket-face-v6.svg` |
@@ -79,7 +91,7 @@ de prévia não foi incorporada ao site oficial.
 As seções seguintes descrevem cada tentativa **na época da prévia**. Frases como
 “somente na prévia” são registros daquele momento; não definem o estado atual.
 Versões intermediárias rejeitadas não devem ser reaplicadas como especificação.
-Use a tabela acima, o CSS e o manifesto para identificar as peças atuais.
+Use a seção de versão aprovada, o CSS e o manifesto para identificar as peças atuais.
 
 ## Acabamento da prévia privada — 01/11/2026
 
@@ -319,3 +331,185 @@ O botão passa de 357 × 78 para 373 × 88 px, centralizado em x = 226,5.
 O topo sobe de 677 para 667 px e a base permanece em 755 px. Os encaixes internos
 acompanham a nova altura; cor, clique e som são preservados. Conferidos três
 tamanhos de tela, respiro abaixo da barra e pressão/cancelamento. Só na prévia.
+
+
+## Ajuste em prévia v44 — 02/11/2026
+
+Pedido do autor após a publicação: devolver um pouco do brilho dourado ao aro e
+acender as letras em amarelo como parte do pulso. `spin-rim-gold-v2.svg` conserva
+o contorno e usa um degradê suave de ouro; `export-tactile-buttons.mjs` o reproduz.
+A pré-carga aponta para essa versão. O aro fosco anterior fica no histórico.
+
+A classe `.park-spin-label` reage ao `data-rim-off` nativo e ao toque segurado:
+creme em repouso, amarelo com halo curto enquanto o pulso está ativo. Não há
+relógio separado nem varredura de reflexo. Geometria, alvo, curso rígido e som
+permanecem os mesmos. Movimento reduzido desativa a transição de cor.
+Validado no navegador em três tamanhos, pressão/cancelamento, giro por toque
+com uma única operação, assets e console. Esta seção descreve a prévia; não
+altera o registro da publicação anterior.
+
+
+## Cor da carga nas letras — prévia v45, 02/11/2026
+
+O autor substituiu o amarelo fixo pela cor do líquido que vai cair. O toque e o
+início do pulso preparam a cor da próxima carga; a confirmação usa o nível real
+da resposta. Letras, halo e vertimento das duas barras compartilham `colorAt`
+em `ui/park/motion.js`. A cor fica estável até terminar a carga. Não há outra
+paleta ou sorteio, e a mudança não interfere no preenchimento ou na carteira.
+Um traço creme de 0,4 unidade mantém o texto legível nas cores azul/violeta.
+Repouso continua creme, com o aro dourado da v44 e o mesmo clique rígido.
+
+Validação da v45: quatro cores conferidas em tela; cargas 1 e 7 exercitadas por
+toque com coincidência entre letras e líquido nas duas barras, sem troca de cor
+ao completar o vertimento. Cancelamento retorna ao creme, um toque gera uma
+operação, três tamanhos sem overflow/assets faltantes, console limpo e movimento
+reduzido respeitado. Resultado visual permanece para avaliação do autor.
+
+
+## Face branca e inversão — prévia v46, 02/11/2026
+
+Feedback do autor: a v45 ficou ruim. A alternativa mantém o aro dourado da v44,
+mas elimina `spin-front-blue-v1.svg` da montagem e da pré-carga do spin. A face
+é branca lisa em CSS, com lateral cinza-clara e texto separado. O arquivo azul
+permanece preservado para histórico; não é a superfície desta prévia.
+
+Relevo rígido de 8 unidades, pressão em 55 ms e retorno em 180 ms. Em repouso,
+as letras têm a cor da próxima carga. Ao apertar, face colorida e texto branco
+brilhante são revelados juntos por máscaras de 360 ms, do centro para os lados.
+`data-spin-active` diferencia a rodada da animação de introdução. Cancelamento
+volta ao branco; alvos e aro não se movem. Movimento reduzido troca sem transição.
+
+Conferidos frames normal, intermediário e pressionado; simetria e sincronia das
+duas máscaras; cor da face igual ao líquido; uma operação por toque e nenhuma
+ao cancelar; três tamanhos, assets, console e movimento reduzido. A avaliação
+estética continua com o autor. Não houve alteração do Firebase oficial.
+
+
+## Expansão circular e lateral colorida — prévia v47, 02/11/2026
+
+Correção solicitada pelo autor: a cor precisa estar nas letras primeiro, passar
+para o botão em círculo e alcançar também a altura do relevo. Face, cópia branca
+das letras e lateral usam `circle(0px at 50% 50%)` → `circle(190px at 50% 50%)`
+em 420 ms. A lateral recebe a mesma cor com sombra de material, sem ficar cinza.
+
+A próxima cor é preparada em repouso, após o fim da animação anterior. As
+variáveis ficam no elemento estático da superfície para não serem apagadas
+quando o controlador atualiza o estilo do alvo de toque. Isso evita mudar a cor
+somente depois de iniciar a pintura. O contorno dourado e o relevo não mudaram.
+
+Conferidos a abertura circular em frame intermediário, as três máscaras iguais,
+o estado inicial sem forçar a introdução, a próxima cor nas letras antes do
+segundo toque, a cor da carga real nas barras, cancelamento sem aposta, uma
+operação por toque, três tamanhos, assets/console e movimento reduzido. Somente
+na prévia para avaliação do autor; Firebase oficial preservado.
+
+
+## Roxo inicial e transição entre cores — prévia v48, 02/11/2026
+
+O autor retirou a face branca. A base começa no roxo inicial da paleta do
+líquido (`rgb(142,36,255)`), com letras brancas. Cada carga revela a próxima cor
+em círculo sobre a anterior, incluindo a lateral sombreada. A cor confirmada
+permanece após o giro; a cobertura circular só é retirada após atualizar a
+base. Cancelar sem confirmar preserva a cor anterior. O nível já salvo define
+a cor ao reabrir, sem novo dado financeiro ou importação de saldo local.
+
+Relevo, aro, alvos, auto/turbo, fonte sobreposta e máscara de 420 ms mantidos.
+A superfície não usa branco nem como base nem como estado intermediário; branco
+fica apenas nas letras. A proposta com face branca das v46/v47 é histórica.
+
+Validação v48: estado inicial roxo, duas cargas consecutivas mantendo as cores
+confirmadas na face e na lateral, retomada com a última cor, cancelamento
+preservando a base anterior, três máscaras circulares iguais, uma operação por
+toque, alvos fixos, três tamanhos, movimento reduzido e assets/console sem erros.
+
+
+## Letras legíveis no verde e amarelo — prévia v49, 02/11/2026
+
+Feedback do autor: KING RICO desaparecia nas cores mais claras. O contorno das
+duas camadas de texto passa de 0,4 unidade translúcida para 2 unidades sólidas
+em `#24324a`, pintado antes do preenchimento branco. Sombra inferior curta e
+brilho de apenas 2 unidades substituem o halo branco de 8 unidades, preservando
+a borda escura durante o pulso. Cores do botão, altura, máscara e ações iguais.
+
+Conferida toda a paleta em tela, verde e amarelo em repouso/pressionado, três
+tamanhos sem overflow, alvos fixos e assets/console sem falhas. Ajuste restrito
+à apresentação das letras, ainda na prévia para avaliação do autor.
+
+
+## Amarelo quente — prévia v50, 02/11/2026
+
+Feedback do autor: o amarelo parecia verde. O ponto de 70% da paleta muda de
+`#e4ff00` para `#ffda24` (`rgb(255,218,36)`). O mesmo ponto é atualizado na cor
+do botão/vertimento (`motion.js`), no gradiente do líquido (`park.css`) e na
+miniatura das barras (`cabinet.css`). As interpolações vizinhas acompanham a
+paleta. Texto, contorno, relevo e movimento circular permanecem iguais.
+
+Conferidos verde/amarelo/laranja no navegador, amarelo igual entre face e
+gradiente/vertimento das barras, letras em repouso e pressionadas, três tamanhos
+e assets/console sem falhas. Apenas na prévia para avaliação do autor.
+
+
+## Núcleo das letras como LED — prévia v51, 02/11/2026
+
+Pedido do autor: o branco interno deve parecer LED apagado/aceso. A camada
+normal passa a `#b8c3ce`, fosca e sem halo; a camada acesa mantém branco puro
+com halos de apenas 2 e 4 unidades. As duas preservam o contorno escuro de 2
+unidades para leitura no verde e amarelo. A revelação segue a máscara circular
+já existente. Não há novo asset, fonte, animação independente ou mudança nas
+ações do botão. Cor da face, amarelo quente, altura e lateral preservados.
+
+Conferidos os dois estados no roxo, verde e amarelo, acendimento circular,
+contorno preservado durante o toque, alvos fixos, três tamanhos e assets/console
+sem falhas. Ainda é uma prévia para avaliação visual do autor.
+
+
+## Face e lateral em meia-luz — prévia v52, 02/11/2026
+
+Pedido do autor: escurecer o botão, além das letras. Face e lateral recebem uma
+camada neutra de `#08060e` a 34%, limitada ao contorno arredondado e colocada
+sob o vertimento circular e o texto. A nova cor acesa cobre essa camada junto
+ao LED. Quando o pulso fecha, a última cor permanece na base em meia-luz.
+
+Não há filtro global: aro, letras acesas e cor do líquido permanecem íntegros.
+Curso rígido, alvos e máscara de 420 ms são preservados. Apenas apresentação
+na prévia; não muda apostas, pagamentos nem o Firebase oficial.
+
+Conferidos repouso/aceso no roxo, verde e amarelo. A amostragem dos frames
+confirma a face mais escura em repouso e a cor viva durante o pulso; letras e
+contorno permanecem nítidos. Três tamanhos, alvos fixos e assets/console sem
+falhas. Avaliação estética continua com o autor.
+
+
+## Desligamento rápido e Circus como Home — prévia v53, 02/11/2026
+
+O apagar das três camadas luminosas passa de 420 para 40 ms; o acendimento
+circular conserva 420 ms. A translação mecânica e o relevo permanecem iguais.
+Ingressos abrem `/park`, assim como o swipe para baixo no cenário, protegido
+contra gestos em controles e navegação durante rodada/prêmio/menu/roleta.
+Raiz, atalho PWA e Home passam a abrir o Circus; o parque fica em tela própria.
+Nenhum asset ou comportamento financeiro foi trocado por essa navegação.
+
+Verificação: build/adaptadores; navegador com Google Auth/Firestore emulados,
+entrada pelo ingresso, swipe vertical, exclusão de gesto horizontal e sobre o
+spin, presente diário, mesma conta/saldo entre telas, roleta retomada, Fingo
+rápido e assets dos demais jogos. Prévia também conferida em três tamanhos.
+Essa seção descreve a prévia; ainda não foi publicada no Firebase oficial.
+
+
+## LED luminoso e desligamento imediato — prévia v54
+
+A camada acesa das letras recebe núcleo branco com halos de 1/4/8 unidades,
+conservando o contorno escuro. Face e lateral agora apagam sem transição; só o
+LED mantém a saída de 40 ms. O pulso radial continua em 420 ms, sem mudança no
+relevo, no alvo ou nos pagamentos. Parque redesenhado com foco na escolha das
+quatro atrações; seus assets são reutilizados sem cenários duplicados.
+
+A navegação também aceita swipe lento no palco completo, sem exigir uma
+velocidade mínima. Gestos sobre controles continuam excluídos.
+
+Validação v54 concluída: 46 verificações de build/adaptadores; navegador com
+Google Auth/Firestore emulados, navegação por ingresso e swipe, mesma conta e
+saldo, presente diário, roleta retomada, Fingo e demais jogos sem assets
+ausentes. Prévia conferida em três tamanhos e LED no roxo, verde e amarelo.
+O palco aceita gestos lentos e a perda de captura de outro elemento não apaga
+o gesto atual. Ainda não há publicação da v54 no Firebase oficial.

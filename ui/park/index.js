@@ -2,6 +2,7 @@ import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion,confetti} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
+import {installParkNavigation} from './navigation.js';
 import {enterWheel} from './wheel-transition.js';
 import {applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
 const Cloud=window.KingRicoCloud,id=()=>crypto.randomUUID();
@@ -25,7 +26,7 @@ let entryPromise;
 function entry(game){if(entryPromise)return entryPromise;
  entryPromise=new Promise(resolve=>{
  const pic=game==='fingo'?'<img src="/assets/brand/cover-fingo-plinko.webp" alt="">':`<img src="/assets/brand/covers/${images[game]}.webp" alt="">`;
- const el=modal(`<a class="park-close" href="/home#parque" aria-label="Voltar ao parque">×</a><div class="park-entry-art">${pic}</div><p class="park-eyebrow">UMA PARTIDA NO PARQUE</p><h2>${names[game]}</h2><p>Escolha como jogar</p><button class="park-action" data-ticket ${state.tickets<1?'disabled':''}>${ticket}<span>USAR 1 INGRESSO<small>Você tem ${state.tickets}</small></span></button><button class="park-action park-action-blue" data-coins ${Cloud.player.balance<state.price?'disabled':''}><img src="/assets/symbols/sym-coin.webp" alt=""><span>JOGAR POR ${state.price} MOEDAS</span></button><p class="park-footnote">A entrada já inclui a partida inteira.</p>`,names[game]);
+ const el=modal(`<a class="park-close" href="/park" aria-label="Voltar ao parque">×</a><div class="park-entry-art">${pic}</div><p class="park-eyebrow">UMA PARTIDA NO PARQUE</p><h2>${names[game]}</h2><p>Escolha como jogar</p><button class="park-action" data-ticket ${state.tickets<1?'disabled':''}>${ticket}<span>USAR 1 INGRESSO<small>Você tem ${state.tickets}</small></span></button><button class="park-action park-action-blue" data-coins ${Cloud.player.balance<state.price?'disabled':''}><img src="/assets/symbols/sym-coin.webp" alt=""><span>JOGAR POR ${state.price} MOEDAS</span></button><p class="park-footnote">A entrada já inclui a partida inteira.</p>`,names[game]);
  const choose=async method=>{el.querySelectorAll('button').forEach(b=>b.disabled=true);try{await call({action:'entry',game,method,requestId:id()});el.close();resolve(method);}catch(e){el.close();Cloud.error(e);resolve(null);}};
  el.querySelector('[data-ticket]').onclick=()=>choose('ticket');el.querySelector('[data-coins]').onclick=()=>choose('coins');
  }).finally(()=>entryPromise=null);return entryPromise;
@@ -45,9 +46,9 @@ function boot(){
   });
   if(!state.passes[game]&&!Cloud.player[game+'Round'])entry(game);
  });
- document.addEventListener('click',e=>{const a=e.target.closest('.kr-hud-home');if(a){e.preventDefault();e.stopImmediatePropagation();location.href='/home#parque';}},true);
+ document.addEventListener('click',e=>{const a=e.target.closest('.kr-hud-home');if(a){e.preventDefault();e.stopImmediatePropagation();location.href='/circus';}},true);
  if(['clown','penalty','flying','fingo'].includes(game)){
-  const note=document.createElement('a');note.className='park-attraction-tag';note.href='/home#parque';note.textContent='‹ PARQUE · ENTRADA INCLUÍDA';document.body.append(note);
+  const note=document.createElement('a');note.className='park-attraction-tag';note.href='/park';note.textContent='‹ PARQUE · ENTRADA INCLUÍDA';document.body.append(note);
  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
@@ -61,7 +62,7 @@ function bootCircus(){
   const backdrop=[...document.querySelectorAll('div')].find(e=>e.style.backgroundImage.includes('stage-bleed-v5-lossless.webp'));
   if(backdrop){backdrop.classList.add('park-circus-backdrop');const scene=backdrop.parentElement;scene.classList.add('park-circus-scene');[...scene.children].find(e=>e.style.filter.includes('blur(34px)'))?.classList.add('park-circus-ambient');fc.lightsBleedRef?.current?.classList.add('park-circus-bleed-lights');}
   fc._parkPrizeTarget=[...stage.querySelectorAll('span')].find(n=>n.parentElement.style.top==='180px'&&n.parentElement.style.left==='165.333px')?.parentElement;fc._parkPrizeTarget?.setAttribute('data-park-prize','');
-  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso da roleta" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="/home#parque" aria-label="Ingressos do parque"><span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="/assets/machine/ticket-wallet-v2.webp" alt=""><b data-tickets>0</b></span></a>`;stage.append(rails);
+  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso da roleta" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="/park" aria-label="Ingressos do parque"><span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="/assets/machine/ticket-wallet-v2.webp" alt=""><b data-tickets>0</b></span></a>`;stage.append(rails);
   const miniGradient=pocketColors(13).map((color,i)=>color+' '+i*360/13+'deg '+(i+1)*360/13+'deg').join(',');
   rails.querySelectorAll('.park-meter').forEach(tube=>{const goal=document.createElement('span');goal.className='park-meter-goal';goal.setAttribute('role','img');goal.setAttribute('aria-label','Barra cheia libera a roleta multiplicadora');goal.innerHTML=`<i class="park-goal-disk" style="background:conic-gradient(from -13.846deg,${miniGradient})"></i><i class="park-goal-rim"></i><b>×</b><i class="park-goal-pointer"></i>`;tube.append(goal);});
   const originalVals=fc.renderVals.bind(fc);
@@ -69,6 +70,7 @@ function bootCircus(){
   fc.renderVals();
   installMotion(fc,rails,{refresh:renderRails,showWheel});
   installSpinTactility(fc);
+  installParkNavigation(fc,stage.closest('.park-circus-stage')||stage,rails.querySelector('.park-pocket'));
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
@@ -91,6 +93,7 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  el.querySelector('.park-pocket').setAttribute('aria-label',`Parque: ${tickets} ingressos`);
  el.classList.toggle('is-ready',!!displayState.wheel);
+ fc?._parkSyncIdlePulseColor?.();
 }
 function showWheel(){
  if(wheelOpen||!state.wheel)return;if(window.__fc?._parkMeterBusy||window.__fc?._parkFillCelebrating){window.__fc._parkWheelWaiting=true;return;}wheelOpen=true;const wheelId=state.wheel.id;

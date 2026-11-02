@@ -31,7 +31,7 @@ async function parkHome(cloud={}) {
  const p={balance:1050.25,settings:{sfxLvl:0,vibLvl:0},bonus:{day:'2026-10-21',streak:1},...cloud.player};
  cloud={player:p,park:{tickets:0},dayKey:()=>20261021,ready:Promise.resolve(),error:()=>{},...cloud,player:p};
  let notify;cloud.watch=fn=>{notify=fn;fn(cloud.player);};
- const nodes=Object.fromEntries(['[data-home-balance]','[data-recharge]','[data-ticket-count]','.park-hero-symbols','.park-home-menu'].map(k=>[k,{closest:()=>({}),getBoundingClientRect:()=>({x:0,y:0})}]));
+ const nodes=Object.fromEntries(['[data-home-balance]','[data-recharge]','[data-ticket-count]','[data-park-price]','.park-hero-symbols','.park-home-menu'].map(k=>[k,{closest:()=>({}),getBoundingClientRect:()=>({x:0,y:0})}]));
  const props={},wallet=[],dialogs=[];
  const modal=(html,label)=>{const button={},img={getBoundingClientRect:()=>({x:5,y:5})};const e={html,label,querySelector:s=>s==='button'?button:img,close(){this.closed=true;},button};dialogs.push(e);return e;};
  const ctx={window:{KingRicoPark:{Cloud:cloud,format:n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2}),modal},KingRicoWallet:{set:(...args)=>wallet.push(args)}},document:{querySelector:s=>nodes[s],querySelectorAll:()=>[],createElement:()=>({}),body:{append:()=>{}}},React:{Fragment:'fragment',createElement:(type,props,...children)=>({type,props,children})},ReactDOM:{createRoot:()=>({render:tree=>{for(const child of tree.children)props[child.type]=child.props;}})},MenuPanel:'menu',RewardAd:'ad',RewardReceipt:'receipt',setTimeout,Date,console};

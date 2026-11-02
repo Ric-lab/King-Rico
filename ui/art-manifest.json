@@ -4,24 +4,17 @@
     "assets/symbols/sym-coin.webp"
   ],
   "home": [
-    "assets/machine/base-controls-v4.svg",
-    "assets/machine/gauge-v2.webp",
-    "assets/machine/prize-v2.webp",
-    "assets/machine/reel-paper-v2.webp",
-    "assets/machine/reel-frame-v1.webp",
-    "assets/scenes/circus-daylight-v1.webp",
-    "assets/bleed/stage-bleed.webp?v=3",
-    "assets/brand/covers/stage.webp",
-    "assets/brand/covers/machine-front.webp",
-    "assets/brand/covers/wheel.webp",
-    "assets/brand/covers/clown.webp",
-    "assets/brand/covers/penalty.webp",
-    "assets/brand/covers/neck.webp",
-    "assets/brand/covers/flying.webp",
-    "assets/brand/covers/33.webp",
+    "assets/icons/btn-home.png",
+    "assets/machine/ticket-symbol-v1.webp",
+    "assets/clown/clown.webp",
+    "assets/penalty/jump.webp",
+    "assets/flying/clown.webp",
+    "assets/flying/b0.webp",
+    "assets/flying/b1.webp",
+    "assets/flying/b2.webp",
     "assets/fingo/board-lit.webp",
     "assets/fingo/target-balls.webp",
-    "assets/symbols-v7.webp"
+    "assets/icons/reward-video.svg"
   ],
   "circus": [
     "assets/machine/base-controls-v4.svg",
@@ -53,8 +46,7 @@
     "assets/machine/turbo-socket-face-v6.svg",
     "assets/machine/turbo-socket-mask-v2.svg",
     "assets/machine/auto-socket-mask-v2.svg",
-    "assets/machine/spin-rim-matte-v1.svg",
-    "assets/machine/spin-front-blue-v1.svg",
+    "assets/machine/spin-rim-gold-v2.svg",
     "assets/machine/spin-aperture-v2.svg"
   ],
   "wheel": [

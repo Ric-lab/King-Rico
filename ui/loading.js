@@ -39,7 +39,7 @@
     if(!cloud || cloud.enabled && !cloud.player)return;
     if(!artReady||artFailed)return;
     const mounted=game==='home'
-      ? document.querySelector('[data-screen-label="Home"]')
+      ? document.querySelector('[data-screen-label="Parque"],[data-screen-label="Home"]')
       : hooks[game] ? window[hooks[game]] : document.querySelector('[data-screen-label],#game');
     if(game==='fingo' && mounted && !mounted.state?.artReady && !mounted.state?.artError)return;
     if(game==='penalty'&&(!window.Pen3D?.kMat||window.Pen3D?.state!=='ready'))return;

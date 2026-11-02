@@ -7,6 +7,7 @@ def ready(page):
     page.wait_for_function('window.KingRicoCloud?.player',timeout=30000)
     page.evaluate('async()=>{await KingRicoCloud.ready}')
     page.locator('[data-cloud-login]').wait_for(state='hidden')
+    page.locator('#kr-boot-screen').wait_for(state='detached',timeout=30000)
 
 def login(page):
     page.locator('[data-cloud-test-account]').fill('park-ui-'+uuid.uuid4().hex)
@@ -18,17 +19,30 @@ def healthy(page):
     assert not missing,missing
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
 
+def swipe(page,x,y,dx,dy):
+    session=page.context.new_cdp_session(page)
+    try:
+        session.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y,'id':1}]})
+        for step in range(1,6):
+            session.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x+dx*step/5,'y':y+dy*step/5,'id':1}]})
+            page.wait_for_timeout(30)
+        session.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+    finally:session.detach()
+
 def run():
   with sync_playwright() as p:
     browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
-    c=browser.new_context(viewport={'width':390,'height':844},timezone_id='America/Sao_Paulo');page=c.new_page();errors=[];bad=[]
+    c=browser.new_context(viewport={'width':390,'height':844},timezone_id='America/Sao_Paulo',has_touch=True);page=c.new_page();errors=[];bad=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('response',lambda r:bad.append([r.status,r.url]) if r.status>=400 and 'favicon' not in r.url else None)
     page.add_init_script("localStorage.setItem('kingRico.parque.mobile-preview.v1',JSON.stringify({balance:999999,tickets:99}));")
     page.goto(BASE+'/');login(page)
-    assert '/home' in page.url
+    assert '/circus' in page.url
+    page.wait_for_function('window.__fc?._parkNavigationInstalled')
     assert page.evaluate('KingRicoCloud.player.balance')==1000
     assert page.evaluate('KingRicoCloud.park.tickets')==0
+    page.locator('.park-pocket').click();ready(page)
+    assert '/park' in page.url
     page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for()
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('KingRicoCloud.player.balance===1050');healthy(page)
@@ -52,11 +66,34 @@ def run():
     page.get_by_role('dialog',name='Menu — Fortune Circus',exact=True).wait_for()
     assert page.get_by_role('button',name='Sair da conta',exact=True).count()==1
     page.keyboard.press('Escape')
-    page.get_by_role('link',name='Jogar Fortune Circus',exact=True).click();ready(page)
+    page.get_by_role('link',name='Voltar ao Circus',exact=True).click();ready(page)
     page.wait_for_function('window.__fc?._parkHook');assert page.evaluate('KingRicoCloud.uid')==uid
     backdrop=page.locator('.park-circus-ambient').evaluate('n=>({image:getComputedStyle(n).backgroundImage,position:getComputedStyle(n).backgroundPosition,filter:getComputedStyle(n).filter})')
     assert 'circus-daylight-v1.webp' in backdrop['image'] and backdrop['position']=='50% 50%' and backdrop['filter']=='none',backdrop
     page.screenshot(path='/tmp/park-circus-production.png')
+    # Home is Circus; horizontal swipes and controls never open the park.
+    page.wait_for_function('window.__fc._parkNavigationInstalled&&__fc.state.vw===innerWidth')
+    stage=page.locator('.park-circus-stage').bounding_box()
+    sx=stage['x']+stage['width']*.5;sy=stage['y']+stage['height']*.14
+    swipe(page,sx,sy,90,5);assert '/circus' in page.url
+    spinbox=page.get_by_role('button',name='Girar',exact=True).bounding_box()
+    swipe(page,spinbox['x']+spinbox['width']/2,spinbox['y']+spinbox['height']/2,0,80)
+    assert '/circus' in page.url and page.evaluate('KingRicoCloud.park.spins')==0
+    # Turning off is deliberately much faster than the outward pulse.
+    page.wait_for_function('getComputedStyle(document.querySelector(".park-spin-wash")).clipPath==="circle(0px at 50% 50%)"')
+    assert page.locator('.park-spin-wash').evaluate('n=>getComputedStyle(n).transitionDuration')=='0s'
+    assert page.locator('.park-spin-label-lit').evaluate('n=>getComputedStyle(n).transitionDuration')=='0.04s'
+    stage=page.locator('.park-circus-stage').bounding_box()
+    sx=stage['x']+stage['width']*.5;sy=stage['y']+stage['height']*.14
+    swipe(page,sx,sy,0,125)
+    try:page.wait_for_url('**/park',timeout=10000)
+    except Exception:
+      print('NAVIGATION_DIAGNOSTIC',page.evaluate('({point:document.elementFromPoint(195,196)?.outerHTML.slice(0,300),busy:!!__fc.cloudBusy(),pressed:__fc.state.pressed,spins:KingRicoPark.state.spins,menu:__fc.state.menu,win:__fc.state.showWin,stage:document.querySelector(".park-circus-stage").getBoundingClientRect().toJSON()})'),flush=True);raise
+    ready(page);assert '/park' in page.url
+    assert page.evaluate('KingRicoCloud.uid')==uid
+    page.get_by_role('link',name='Voltar ao Circus',exact=True).click();ready(page)
+    page.wait_for_function('window.__fc?._parkNavigationInstalled')
+    assert page.evaluate('KingRicoCloud.park.spins')==0
     # Real first button/spin, then accelerate setup through the same persisted API.
     page.evaluate('''()=>{const native=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>a instanceof Uint32Array&&a.length===1?(a[0]=Math.floor(.99*2**32),a):native(a);__fc.setState({betIdx:0});__fc.spin();}''')
     page.wait_for_function('KingRicoCloud.park.spins===1',timeout=30000)
@@ -83,7 +120,7 @@ def run():
     page.screenshot(path='/tmp/park-wheel-production.png');apply.click()
     page.wait_for_function('KingRicoCloud.park.wheel===null&&!__fc._parkCollecting&&!__fc._parkWheelVisible',timeout=25000)
     assert page.evaluate('KingRicoCloud.player.balance')==balance
-    page.goto(BASE+'/home');ready(page);healthy(page)
+    page.goto(BASE+'/park');ready(page);healthy(page)
     # Entry authorizes; the first real play charges once. Refresh retains round.
     page.locator('[data-game="fingo"]').click();ready(page)
     page.get_by_role('dialog',name='Fingo rápido',exact=True).wait_for()
@@ -114,5 +151,5 @@ def run():
       page.screenshot(path='/tmp/park-compat-'+route+'.png')
     assert not errors,errors
     assert not bad,bad
-    print(json.dumps({'home':'ok','googleSession':'ok','background':backdrop,'wheelRecovery':'ok','multiplier':result['multiplier'],'fingo10':'ok','assets':'ok'}));browser.close()
+    print(json.dumps({'home':'circus','parkClickAndSwipe':'ok','fastLightOff':'ok','googleSession':'ok','background':backdrop,'wheelRecovery':'ok','multiplier':result['multiplier'],'fingo10':'ok','assets':'ok'}));browser.close()
 if __name__=='__main__':run()

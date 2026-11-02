@@ -3,7 +3,7 @@ import {RewardAd} from '../reward-ad.js';
 import {RewardReceipt} from '../reward-receipt.js';
 (async()=>{
  while(!window.KingRicoPark)await new Promise(r=>setTimeout(r,20));
- const {Cloud,format,modal}=window.KingRicoPark;await Cloud.ready;if(!Cloud.player)return;
+ const {Cloud,format,modal,layout}=window.KingRicoPark;await Cloud.ready;if(!Cloud.player)return;
  const value=document.querySelector('[data-home-balance]'),recharge=document.querySelector('[data-recharge]'),host=document.createElement('div');document.body.append(host);
  const root=ReactDOM.createRoot(host),h=React.createElement;
  const view={menu:false,ad:false,complete:false,busy:false,error:false,receipt:false,base:0,target:0,daily:false};
@@ -29,12 +29,12 @@ import {RewardReceipt} from '../reward-receipt.js';
  }
  Cloud.watch(p=>{
   wallet(p.balance,{hold:view.ad||view.receipt||view.daily});document.querySelector('[data-ticket-count]').textContent=Cloud.park?.tickets||0;
-  for(const a of document.querySelectorAll('[data-game]'))a.querySelector('.park-card-price').textContent=p[a.dataset.game+'Round']?'CONTINUAR PARTIDA':'1 ingresso ou 25 moedas';
+  for(const a of document.querySelectorAll('[data-game]'))a.querySelector('[data-park-action]').textContent=p[a.dataset.game+'Round']?'CONTINUAR':'JOGAR';
+  document.querySelector('[data-park-price]').textContent=format(Cloud.park?.price||25);
   recharge.disabled=view.ad||view.receipt||view.busy;
   render();
  });
- const icons=['sym-crown-lossless.webp','sym-gem.png','sym-coin.webp','sym-clover.png','sym-wild-s.webp','sym-tent-lossless.webp','sym-drum.png','sym-candy.webp','sym-scepter.png'];
- document.querySelector('.park-hero-symbols').innerHTML=icons.map((x,i)=>`<span class="park-part-reel-${['top','middle','bottom'][Math.floor(i/3)]}"><img src="/assets/symbols/${x}" alt=""></span>`).join('');
+ const pegs=document.querySelector('[data-park-plinko-pegs]');if(pegs&&layout)pegs.innerHTML=layout.PEGS.map(p=>`<i class="kr-cover-fingo-peg" style="left:${p.x/layout.W*100}%;top:${p.y/layout.H*100}%"></i>`).join('');
  recharge.onclick=()=>{if(view.ad||view.receipt||view.busy)return;view.ad=true;view.complete=false;view.error=false;render();};
  document.querySelector('.park-home-menu').onclick=()=>{view.menu=true;render();};daily();
 })();

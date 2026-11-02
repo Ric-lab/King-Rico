@@ -1,0 +1,50 @@
+/* Park choices: quiet surfaces, one price, and the existing game characters. */
+body.park-home{background:#e8f7ff;background-image:radial-gradient(ellipse at 50% 0,#bdeaff 0,#e9f8ff 46%,#fff2d2 100%);background-attachment:scroll;color:#183e61}
+.park-home .park-home-content{max-width:453px;min-height:100dvh;padding:72px 16px 24px}
+.park-home .park-home-header{margin-bottom:22px;gap:10px}
+.park-home .park-section{margin-top:0;scroll-margin-top:76px}
+.park-home .park-section-heading{align-items:center;gap:12px;margin-bottom:14px}
+.park-home h1{font:28px/1.15 Rammetto,'Rammetto One','Baloo 2',sans-serif;color:#173e69;margin:0;letter-spacing:-.5px;text-shadow:0 2px #fff8}
+.park-home .park-pick{margin:5px 0 0;font:700 17px/1.25 Baloo,'Baloo 2',sans-serif;color:#476b83}
+.park-home .park-ticket-wallet{min-width:0;gap:8px;padding:7px 11px 7px 7px;border:1px solid #d7a23d;border-radius:15px;background:linear-gradient(#fff9dd,#ffe8a9);box-shadow:0 3px #b27c2e}
+.park-ticket-wallet>img{display:block;width:46px;height:29px;object-fit:contain;transform:rotate(-7deg)}
+.park-ticket-wallet>span{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:45px}
+.park-ticket-wallet small{font:800 10px/1 Baloo,'Baloo 2',sans-serif;letter-spacing:.4px;color:#85521c}
+.park-home .park-ticket-wallet strong{font:800 27px/1 Baloo,'Baloo 2',sans-serif;color:#6d3c1e;font-variant-numeric:tabular-nums}
+.park-entry-price{display:flex;justify-content:center;align-items:baseline;flex-wrap:wrap;gap:5px;margin:0 0 18px;padding:9px 8px;border:1px solid #c7dfe9;border-radius:12px;background:#ffffffa6;font:700 15px/1.2 Baloo,'Baloo 2',sans-serif;color:#3f6078}
+.park-entry-price b{font-weight:800;color:#204d6e}.park-entry-price small{font-size:13px;margin-left:2px}
+.park-home .park-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 14px}
+.park-home .park-card{background:#fff9e9;border:1.5px solid #d9af54;border-radius:21px;box-shadow:0 3px #bb893a,0 6px 12px #32617a12;transition:transform 90ms ease-out}
+.park-home .park-card:active{transform:translateY(2px)}
+.park-game-art{height:122px;position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 85%,#fff 0,#e7f4ff 80%)}
+.park-game-art:after{content:'';position:absolute;bottom:5px;left:25%;width:50%;height:8px;background:radial-gradient(ellipse,#304d7430,transparent 70%);pointer-events:none}
+.park-game-character{position:relative;z-index:1;display:block;object-fit:contain;filter:drop-shadow(0 3px 2px #32466426)}
+.park-game-art-clown{background:radial-gradient(ellipse at 50% 85%,#fff9df,#f8e9ef)}
+.park-game-art-clown .park-game-character{width:112px;height:112px;margin-bottom:4px}
+.park-game-art-penalty{background:linear-gradient(#e4f7fc,#d6efcf)}
+.park-game-art-penalty .park-game-character{width:57px;height:116px;margin-bottom:2px}
+.park-icon-goal{position:absolute;left:15%;right:15%;bottom:8px;height:74px;border:4px solid #fff9dc;border-bottom-width:2px;border-radius:9px 9px 3px 3px;background:repeating-linear-gradient(90deg,transparent 0 9px,#fff7 10px 11px),repeating-linear-gradient(0deg,transparent 0 9px,#fff7 10px 11px);box-shadow:0 0 0 1px #6b97a066}
+.park-game-art-flying{background:radial-gradient(ellipse at 50% 70%,#fff,#dcf2ff)}
+.park-game-art-flying .park-game-character{width:52px;height:93px;margin-bottom:1px}
+.park-icon-balloons{position:absolute;left:calc(50% - 43px);top:3px;width:86px;display:flex;align-items:flex-start;justify-content:center}
+.park-icon-balloons img{width:30px;height:43px;object-fit:contain}.park-icon-balloons img:first-child{transform:rotate(-16deg);margin-top:6px}.park-icon-balloons img:last-child{transform:rotate(16deg);margin-top:6px}
+.park-game-art-fingo{background:radial-gradient(ellipse at 50% 75%,#fff,#e9e5f6)}
+.park-plinko-icon{position:relative;z-index:1;width:96px;height:112px;margin-bottom:3px}
+.park-plinko-icon>img{position:absolute;inset:0;width:100%;height:100%}
+.park-plinko-icon .kr-cover-fingo-peg{width:4.18%;box-shadow:0 1px 1px #0006}
+.park-plinko-balls{position:absolute;top:-4px;left:1px;right:1px;display:flex;justify-content:center;gap:1px}
+.park-plinko-balls i{width:17px;height:17px;background-image:url('/assets/fingo/target-balls.webp');background-size:500% 100%;background-repeat:no-repeat;filter:drop-shadow(0 1px 1px #55402e55)}
+.park-icon-buckets{position:absolute;left:0;right:0;bottom:0;height:12%;display:grid;grid-template-columns:repeat(5,1fr)}
+.park-icon-buckets i{border-left:2px solid #efd273;border-right:1px solid #946520;background:#60452333}
+.park-home .park-card-copy{padding:10px 10px 11px;border-top:1px solid #e8dac0;background:#fff9e9}
+.park-home .park-card h3{font:800 18px/1.2 Baloo,'Baloo 2',sans-serif;color:#183e61;letter-spacing:-.35px;white-space:nowrap;text-align:center;margin:0 0 10px}
+.park-card-action{min-height:39px;padding:5px 10px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #176091;border-radius:12px;background:linear-gradient(#3395cc,#1978b3);box-shadow:0 2px #12527f;color:#fff8db;font:800 17px/1 Baloo,'Baloo 2',sans-serif;text-shadow:0 1px #12527f}
+.park-card-action>b{font:800 23px/1 Baloo,'Baloo 2',sans-serif}
+.park-home .park-recharge{margin-top:25px;padding:12px;min-height:68px;border:1px solid #d2b46b;border-radius:17px;box-shadow:0 3px #c39e54;background:#fff6d9;gap:10px}
+.park-home .park-recharge>img{width:38px;height:38px;object-fit:contain}
+.park-home .park-recharge strong{font:800 20px/1.1 Baloo,'Baloo 2',sans-serif;color:#244c6d;display:block}
+.park-home .park-recharge small{font:700 14px/1.2 Baloo,'Baloo 2',sans-serif;color:#617780;display:block;margin-top:4px}
+.park-home .park-recharge-arrow{flex:0 0 auto;margin-left:auto;font:800 29px/1 Baloo,'Baloo 2',sans-serif;color:#a57728}
+.park-home footer{font:700 12px/1.3 Baloo,'Baloo 2',sans-serif;text-align:center;margin-top:21px;color:#688091}
+@media(max-width:360px){.park-home .park-home-content{padding-inline:14px}.park-home .park-card-copy{padding-inline:8px}.park-home .park-card h3{font-size:17px}.park-home .park-grid{gap:14px 12px}.park-game-art{height:116px}.park-home h1{font-size:26px}.park-home .park-ticket-wallet{gap:5px;padding-right:8px}.park-ticket-wallet>img{width:39px}}
+@media(prefers-reduced-motion:reduce){.park-home .park-card{transition:none}}

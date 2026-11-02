@@ -46,6 +46,10 @@ test('production artifact serves every Home game and the Penalty renderer with l
   assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
   const hosting=JSON.parse(await readFile('firebase.json','utf8')).hosting;
   const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));
+  assert.match(await readFile('dist/index.html','utf8'),/location\.replace\('\/circus'/);
+  assert.equal(manifest.start_url.split('?')[0],'/circus');
+  assert.ok(hosting.rewrites.some(r=>r.source==='/home'&&r.destination==='/Fortune Circus.dc.html'));
+  assert.ok(hosting.rewrites.some(r=>r.source==='/park'&&r.destination==='/Home.dc.html'));
   assert.equal(manifest.name,'Fortune Circus');
   assert.equal(manifest.display,'standalone');
   assert.ok(routes.some(r=>r.path===manifest.start_url.split('?')[0]));
@@ -62,11 +66,11 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   await access('dist/ui/app-shell.js');await access('dist/sw.js');
   for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const name of ['machine-front','wheel','neck','clown','penalty','33','flying']) {
-    const asset=`assets/brand/covers/${name}.webp`;
+  for(const asset of ['assets/clown/clown.webp','assets/penalty/jump.webp','assets/flying/clown.webp','assets/flying/b0.webp','assets/fingo/board-lit.webp','assets/fingo/target-balls.webp']) {
     assert.ok(home.includes(asset),asset);
     await access(path.join('dist',asset));
   }
+  await access('dist/ui/park/park-home.css');
   await access('dist/assets/brand/covers/stage.webp');
   for(const route of routes) {
     const html=await readFile(path.join('dist',route.file),'utf8');

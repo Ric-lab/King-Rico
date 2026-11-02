@@ -1,19 +1,37 @@
-const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[228,255,0]],[.86,[255,148,0]],[1,[255,21,94]]];
+const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
 function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
 export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkMeterLevel=window.KingRicoPark.state.spins;fc._parkVisibleTickets=window.KingRicoPark.state.tickets;
+ const spinButton=document.querySelector('[data-spin-btn]');
+ const spinSurface=spinButton?.querySelector('.park-spin-aperture');
+ const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color',colorAt(Math.max(0,Math.min(1,level/10))));
+ commitSpinColor(fc._parkMeterLevel);
+ fc._parkPreparePulseColor=(level=Math.min(10,fc._parkMeterLevel+1))=>{
+  const color=colorAt(Math.max(.05,Math.min(1,level/10)));
+  // This static layer keeps its paint when the native button updates its inline style.
+  spinSurface?.style.setProperty('--park-spin-pulse-color',color);
+  spinSurface?.style.setProperty('--park-spin-pulse-glow',color.replace('rgb(','rgba(').replace(')',',.5)'));
+ };
+ fc._parkPreparePulseColor();
+ fc._parkSyncIdlePulseColor=()=>{
+  if(spinButton?.dataset.spinActive!=='0'||spinButton.hasAttribute('data-tactile-held')||fc._parkMeterBusy||fc.cloudBusy())return;
+  if(spinSurface.querySelector('.park-spin-wash')?.getAnimations().some(a=>a.playState==='running'||a.playState==='paused'))return;
+  fc._parkPreparePulseColor();
+ };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0);});};syncColor(fc._parkMeterLevel);
  const nativePulse=fc.lightsPulse.bind(fc);let pulseNo=0,lastPulse=0,queuedCharge;
- fc.lightsPulse=(delay=0)=>{fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);schedule();};
+ fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);schedule();};
  const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
  const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._parkTicketAward&&res.win<=0)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
-  if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkVisibleTickets=response.park.tickets;syncColor(response.park.spins);refresh();return;}
+  if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkVisibleTickets=response.park.tickets;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.ticket){fc._parkTicketAward={before:response.park.tickets-3,after:response.park.tickets,cells:response.outcome.grid.flatMap((v,i)=>v===10?[i]:[])};fc._parkVisibleTickets=response.park.tickets-3;}
-  queuedCharge={before,target:response.park.spins};fc._parkMeterBusy=true;
+  queuedCharge={before,target:response.park.spins};fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
+  // Keep the circular cover until the confirmed color becomes the new base.
+  spinButton?.setAttribute('data-color-pending','1');
   const pending=queuedCharge;pending.fallback=setTimeout(()=>{if(queuedCharge===pending){fc._parkPulse={at:performance.now(),delay:0,seq:++pulseNo};schedule();}},450);
   schedule();
  };
@@ -22,7 +40,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   if(!queuedCharge||!cue||cue.seq<=lastPulse)return;
   const charge=queuedCharge;queuedCharge=null;clearTimeout(charge.fallback);lastPulse=cue.seq;
   const tubes=[...rails.querySelectorAll('.park-meter')],animations=[],timers=[];let done=false,finished=0;
-  const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;rails.style.setProperty('--park-fill',charge.target*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
+  const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));commitSpinColor(charge.target);spinButton?.removeAttribute('data-color-pending');fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;rails.style.setProperty('--park-fill',charge.target*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
   for(const [side,tube]of tubes.entries()){
    const fill=tube.querySelector('.park-meter-fill'),stream=tube.querySelector('.park-liquid-stream'),drops=[...tube.querySelectorAll('.park-liquid-drop')];
    const track=tube.querySelector('.park-meter-track'),h=track.clientHeight,from=h*charge.before/10,to=h*charge.target/10,x=tube.offsetLeft+track.offsetLeft+track.clientWidth/2,y=tube.offsetTop+track.offsetTop+h-from,originY=722-(fc.machineCut?.()||0);
