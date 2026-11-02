@@ -90,7 +90,7 @@
       this.pos = V(0, R, BZ); this.vel = V(0, 0, 0); this.ball.position.copy(this.pos);
       // goleiro-robô: placa do palhaço num trilho na linha do gol; desliza (x) e gira (θ) como ponteiro
       this.kg = new T.Group(); this.kg.position.set(0, 0, KZ); sc.add(this.kg); this.kx = 0; this.kth = 0;
-      new T.TextureLoader().load('assets/penalty/clown-keeper-v1.webp', tex => { tex.colorSpace = T.SRGBColorSpace; const kw = KH * tex.image.width / tex.image.height;
+      new T.TextureLoader().load('assets/penalty/clown-keeper-v2.webp', tex => { tex.colorSpace = T.SRGBColorSpace; const kw = KH * tex.image.width / tex.image.height;
         const m = this.kMat = new T.MeshBasicMaterial({ name: 'palhaço', map: tex, transparent: true, alphaTest: 0.5, side: T.DoubleSide }), me = new T.Mesh(new T.PlaneGeometry(kw, KH), m);
         me.position.y = KH / 2; me.castShadow = true; me.customDepthMaterial = new T.MeshDepthMaterial({ depthPacking: T.RGBADepthPacking, map: tex, alphaTest: 0.5 }); this.kg.add(me); });
       this.fxTex = radialTex(T, false); this.ringTex = radialTex(T, true); this.fx = [];
