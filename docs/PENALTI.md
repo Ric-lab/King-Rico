@@ -34,8 +34,10 @@ Validação: `npm test`, `npm run test:integration` (regras reais emuladas e Chr
 Palhaço em pose de goleiro equivalente à girafa: de frente, pernas retas,
 pés na mesma base e braços elevados e separados, com luvas brancas e punhos azuis.
 Os braços se conectam visivelmente aos ombros, com separação entre mangas e cabelo.
-Arte dedicada: `assets/penalty/clown-keeper-v2.webp`, gerada a partir do palhaço
-do Flying Clown e da pose de `assets/penalty/jump.webp`. Usa a proporção nativa
+Arte dedicada: `assets/penalty/clown-keeper-v3.webp`, gerada a partir do palhaço
+do Flying Clown e da pose de `assets/penalty/jump.webp`. O rosto de
+`assets/clown/clown.webp` define a identidade: topo central careca e cachos
+somente nas laterais, sem mangas antigas atrás do cabelo. Usa a proporção nativa
 da textura e pré-carregamento na entrada do Pênalti.
 Mantém altura, pivô, movimentos, colisões e regras da rodada. Ainda não publicado
 no Firebase oficial; revisão disponível apenas na prévia privada.
