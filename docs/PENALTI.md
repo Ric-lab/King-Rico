@@ -28,3 +28,10 @@ calculados no navegador: as regras validam posse, transições e valores, sem
 servidor de sorteio confiável. São moedas virtuais sem dinheiro real.
 
 Validação: `npm test`, `npm run test:integration` (regras reais emuladas e Chromium, incluindo os cinco jogos) e, por último, `npm run build:production`. O workflow `.github/workflows/firebase-hosting.yml` permanece responsável por testar, publicar regras pela API REST existente e publicar Hosting. Não há Cloud Functions, alteração de plano ou faturamento.
+
+## Prévia do goleiro — 02/11/2026
+
+Troca visual da girafa pelo palhaço de corpo inteiro (`assets/flying/clown.webp`),
+com proporção nativa da textura e pré-carregamento na entrada do Pênalti.
+Mantém altura, pivô, movimentos, colisões e regras da rodada. Ainda não publicado
+no Firebase oficial; revisão disponível apenas na prévia privada.

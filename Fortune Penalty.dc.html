@@ -141,7 +141,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 <script type="text/x-dc" data-dc-script>
 // Fortune Penalty — dez etapas até x100; rodadas antigas mantêm a tabela de cinco etapas.
 // Chance de chegar ao degrau k = T / M[k] → parar em qualquer degrau devolve T = 98% (quando o chute vai no gol).
-// Habilidade manda: chute pra fora/na trave por mira = erro de verdade. O "roubo" é sutil: chute bom na hora de errar → girafa defende (ou trave, se foi perto dela).
+// Habilidade manda: chute pra fora/na trave por mira = erro de verdade. O "roubo" é sutil: chute bom na hora de errar → palhaço defende (ou trave, se foi perto dela).
 const M = [1.5, 3, 5, 7, 10, 15, 20, 25, 50, 100], LEGACY_M = [1.2, 1.8, 3, 5, 10], T = 0.98;
 const G = { l: 40, r: 413, top: 346, line: 505 }, B0 = { x: 226, y: 640 }, BS = 64;
 const PIV = { x: 226, y: 515 }, LEN = 194; const KC = { w: 152, h: 160 }, KD = { w: 250, h: 107 }, KU = { w: 98, h: 200 }, GD = { x: -105, y: 17 }, GU = -85, KS = { x: 226, y: 505 - 77 }, GLOVE = 70; // luva no mergulho: 78px do centro, na altura do centro
