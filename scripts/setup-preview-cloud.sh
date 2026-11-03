@@ -56,8 +56,22 @@ service_account="king-rico-preview@$preview_project.iam.gserviceaccount.com"
 if ! gcloud iam service-accounts describe "$service_account" --project="$preview_project" >/dev/null 2>&1; then
   gcloud iam service-accounts create king-rico-preview --project="$preview_project" --display-name='Hosting preview only project'
 fi
-gcloud projects add-iam-policy-binding "$preview_project" --member="serviceAccount:$service_account" --role=roles/firebasehosting.admin --condition=None >/dev/null
-gcloud iam service-accounts add-iam-policy-binding "$service_account" --project="$preview_project" --role=roles/iam.workloadIdentityUser --member="principalSet://iam.googleapis.com/projects/$project_number/locations/global/workloadIdentityPools/$pool/attribute.repository_id/1408805633" >/dev/null
+# A newly created service account or WIF principal may take time to reach IAM.
+# Retrying an identical binding is idempotent; never widen the requested roles.
+retry_iam(){
+  local attempt
+  for attempt in $(seq 1 6); do
+    if "$@"; then return 0; fi
+    if [[ "$attempt" -lt 6 ]]; then
+      echo "IAM binding not applied yet; retrying in 10s ($attempt/6)..." >&2
+      sleep 10
+    fi
+  done
+  echo 'IAM binding still failed. Keep the error above for diagnosis.' >&2
+  return 1
+}
+retry_iam gcloud projects add-iam-policy-binding "$preview_project" --member="serviceAccount:$service_account" --role=roles/firebasehosting.admin --condition=None >/dev/null
+retry_iam gcloud iam service-accounts add-iam-policy-binding "$service_account" --project="$preview_project" --role=roles/iam.workloadIdentityUser --member="principalSet://iam.googleapis.com/projects/$project_number/locations/global/workloadIdentityPools/$pool/attribute.repository_id/1408805633" >/dev/null
 provider="projects/$project_number/locations/global/workloadIdentityPools/$pool/providers/github"
 printf '\nProvisioned preview project. No billing linked, production unchanged.\n'
 printf 'KING_RICO_PREVIEW_PROJECT_ID=%s\nKING_RICO_PREVIEW_PROVIDER=%s\n' "$preview_project" "$provider"

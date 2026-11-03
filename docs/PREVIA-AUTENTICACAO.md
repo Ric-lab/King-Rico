@@ -58,6 +58,16 @@ a propagação de IAM do projeto recém-criado é uma causa possível, não conf
 Se ainda falhar, conservar a saída do erro para diagnosticar negação/política.
 Referência: https://docs.cloud.google.com/iam/docs/manage-workload-identity-pools-providers
 
+## Conta criada, mas IAM diz que ela não existe
+
+Depois da criação bem-sucedida da conta, o IAM pode ainda não enxergá-la.
+O script atualizado repete os dois vínculos finais por até seis tentativas,
+com espera de 10s, sem alterar papel, conta ou projeto. Atualize com `git pull
+--ff-only origin codex/penalty-clown-preview` e execute novamente
+`bash scripts/setup-preview-cloud.sh`. Recursos existentes são reaproveitados.
+Se continuar falhando, preservar o erro; não interpretar toda falha como
+propagação nem conceder papéis adicionais de produção.
+
 ## Bloqueio original e diagnóstico
 
 Execução real: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323

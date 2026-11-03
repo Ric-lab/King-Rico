@@ -1,12 +1,27 @@
 # Handoff: a mesma tarefa, contínua
 
 **Prévia online:** aguardando provisionamento Google no Cloud Shell; projeto
-isolado criado (`king-rico-previa-1408805633`); criação do pool WIF
-negada no Cloud Shell. Sem URL confirmada.
+isolado criado (`king-rico-previa-1408805633`); pool WIF, provider e conta criados; falta concluir os vínculos IAM e publicar.
+Sem URL confirmada.
 Execução: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
 
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+
+## 2026-11-03 · Codex · aguardar propagação da conta de serviço
+
+- **Feito no Cloud Shell do dono:** pool `king-rico-preview-github`, provider
+  `github` e conta `king-rico-preview@king-rico-previa-1408805633.iam.gserviceaccount.com`
+  criados. A atribuição de Hosting Admin retornou “service account does not exist”
+  imediatamente após a criação bem-sucedida da conta.
+- **Correção versionada:** os dois vínculos IAM finais são repetidos até seis
+  vezes com espera de 10s. Mesmos papéis e projeto; sem ampliar permissões.
+  A criação não é repetida se os recursos já existem. Sintaxe Bash conferida.
+- **Próximo passo exato:** no clone do Cloud Shell, `git pull --ff-only origin
+  codex/penalty-clown-preview` e `bash scripts/setup-preview-cloud.sh`. Enviar
+  os dois valores públicos finais. Depois configurar GitHub, publicar canal,
+  verificar navegador remoto e registrar a URL. Não pedir nova autorização.
+- **Limite:** retomada ainda depende da sessão administrativa do dono; sem URL.
 
 ## 2026-11-03 · Codex · retomar criação do pool WIF
 
