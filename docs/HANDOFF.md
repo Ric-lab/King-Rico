@@ -1,12 +1,22 @@
 # Handoff: a mesma tarefa, contínua
 
-**Prévia online:** aguardando provisionamento Google no Cloud Shell; projeto
-isolado criado (`king-rico-previa-1408805633`); pool WIF, provider e conta criados; falta concluir os vínculos IAM e publicar.
+**Prévia online:** provisionamento Google concluído; aguardando deploy e QA
+no projeto isolado `king-rico-previa-1408805633`.
 Sem URL confirmada.
 Execução: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
 
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+
+## 2026-11-03 · Codex · provisionamento concluído, disparar deploy
+
+- **Confirmado pelo Cloud Shell do dono:** vínculos IAM aplicados; projeto
+  `king-rico-previa-1408805633`, número `61167555727`, conta e provider dedicados.
+- **Feito:** valores públicos como padrão auditável no workflow (variáveis
+  Actions continuam opcionais). Nenhuma chave, token ou mudança em produção.
+- **Próximo passo exato:** acompanhar o workflow disparado por este commit;
+  corrigir qualquer erro de deploy/QA, registrar URL real no topo deste arquivo
+  e em PREVIA-CIRCUS.md, conferir os nove tambores e carteira fictícia online.
 
 ## 2026-11-03 · Codex · aguardar propagação da conta de serviço
 

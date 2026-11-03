@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      KING_RICO_PREVIEW_PROJECT_ID: ${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}
-      KING_RICO_PREVIEW_PROVIDER: ${{ vars.KING_RICO_PREVIEW_PROVIDER }}
+      KING_RICO_PREVIEW_PROJECT_ID: ${{ vars.KING_RICO_PREVIEW_PROJECT_ID || 'king-rico-previa-1408805633' }}
+      KING_RICO_PREVIEW_PROVIDER: ${{ vars.KING_RICO_PREVIEW_PROVIDER || 'projects/61167555727/locations/global/workloadIdentityPools/king-rico-preview-github/providers/github' }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
@@ -30,9 +30,9 @@ jobs:
       - name: Autorizar GitHub no Google sem chave privada
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
         with:
-          project_id: ${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}
-          workload_identity_provider: ${{ vars.KING_RICO_PREVIEW_PROVIDER }}
-          service_account: king-rico-preview@${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}.iam.gserviceaccount.com
+          project_id: ${{ env.KING_RICO_PREVIEW_PROJECT_ID }}
+          workload_identity_provider: ${{ env.KING_RICO_PREVIEW_PROVIDER }}
+          service_account: king-rico-preview@${{ env.KING_RICO_PREVIEW_PROJECT_ID }}.iam.gserviceaccount.com
       - name: Publicar somente o canal previa
         id: hosting
         shell: bash
