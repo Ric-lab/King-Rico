@@ -14,3 +14,13 @@
 /* The published three-column machine receives one continuous light field per drum. */
 .park-reels[data-reel-optics="three"] :is(.park-reel-shell,.park-physical-reel){background:var(--park-roll-paper)!important}
 .park-roll-light{position:absolute;z-index:3;border-radius:50% / 8px;background:var(--park-roll-light);pointer-events:none}
+
+/* The live 3D material includes its printed symbols and contact shadows. */
+.park-drum-depth{position:absolute;left:25.5px;top:219.5px;width:402px;height:438px;z-index:2;pointer-events:none}
+[data-drum-depth="ready"] .park-reels[data-reel-optics="nine"] .park-reel-paper{background:none!important}
+[data-drum-depth="ready"] .park-reels[data-reel-optics="nine"] .park-reel-cell{background:none!important;box-shadow:none!important;filter:none!important}
+[data-drum-depth="ready"] .park-reels[data-reel-optics="nine"] .park-reel-cell:after{background:none}
+[data-drum-depth="ready"] .park-reels [data-sym]{opacity:0!important}
+[data-drum-depth="ready"] .park-reels .park-physical-reel{visibility:hidden!important}
+[data-drum-depth="ready"] .park-reels .park-reel-cell:not([data-physical-moving="true"]){z-index:3}
+[data-drum-depth="ready"] :is(.park-reel-effects,.park-win-fx,.park-lock-fx){visibility:hidden}

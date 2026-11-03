@@ -28,7 +28,17 @@ O miolo é marfim claro; pontas e laterais perdem luz gradualmente. O alojamento
 fica escuro entre rolos, sem acrescentar divisórias ou mudar seus espaços.
 A revisão v75 usa luz superior: laterais leves e sombra mais forte na curva
 inferior, com contorno elíptico suave e o mesmo campo de luz durante o giro.
-A mesma camada atende três colunas contínuas ou os nove rolos da prévia.
+Na prévia v76 com nove rolos, `ui/park/drum-depth.js` desenha cilindros em
+Three.js local, com os símbolos impressos na superfície, sombra de contato
+e um leve ângulo de visão. A fita existente continua decidindo os símbolos,
+o deslocamento e a parada; a cena apenas acompanha esses dados. Os destaques
+de acerto e trava usam o material do cilindro, respeitando sua curvatura.
+O 2D continua disponível enquanto a cena carrega e assume se WebGL faltar ou
+o contexto gráfico for perdido. Uma cena atende os nove rolos, redesenhada
+apenas quando necessário, sem recalcular o mapa de sombras a cada quadro.
+Validação local da prévia: `python3 tests/circus_depth_browser.py` com a
+carteira fictícia e o servidor da prévia em `127.0.0.1:4178`.
+A iluminação 2D atende três colunas contínuas ou os nove rolos da prévia.
 Sequências, paradas, prêmios e os controles permanecem independentes da luz.
 
 Os WebP preservam as dimensões das gerações PNG. A conversão só comprime o formato;
