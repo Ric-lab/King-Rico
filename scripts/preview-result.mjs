@@ -1,7 +1,9 @@
 import {readFile,appendFile} from 'node:fs/promises';
 const result=JSON.parse(await readFile(process.argv[2],'utf8'));
+const project=process.env.KING_RICO_PREVIEW_PROJECT_ID;
+if(!/^king-rico-previa-[a-z0-9-]+$/.test(project||''))throw Error('An isolated preview project is required.');
 const urls=[];
-function walk(value){if(typeof value==='string'){try{const u=new URL(value);if(u.protocol==='https:'&&/^king-rico--previa-[a-z0-9-]+\.web\.app$/.test(u.hostname))urls.push(u.origin);}catch{}}else if(value&&typeof value==='object')Object.values(value).forEach(walk);}
+function walk(value){if(typeof value==='string'){try{const u=new URL(value);if(u.protocol==='https:'&&u.hostname.startsWith(project+'--previa-')&&u.hostname.endsWith('.web.app'))urls.push(u.origin);}catch{}}else if(value&&typeof value==='object')Object.values(value).forEach(walk);}
 walk(result);
 const url=urls[0];if(!url)throw Error('O Firebase não devolveu uma URL do canal previa; confira a publicação.');
 console.log('Prévia: '+url);

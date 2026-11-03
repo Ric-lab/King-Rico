@@ -65,7 +65,9 @@ publica ao atualizar `main`; não mesclar sem autorização para publicação.
 
 ## Prévia online
 
-O workflow `.github/workflows/preview-channel.yml` atualiza o canal Firebase
+O projeto isolado foi autorizado, mas ainda aguarda o provisionamento descrito
+em [Autenticação da prévia](PREVIA-AUTENTICACAO.md). Depois disso,
+o workflow `.github/workflows/preview-channel.yml` atualiza o canal Firebase
 `previa` a cada push em `codex/**`. O endereço é estável enquanto o canal existir;
 cada publicação renova sua validade por 30 dias. URL: **ainda indisponível**. A primeira execução foi bloqueada na autenticação
 Google (condição de atributos), antes do deploy. Veja o diagnóstico e o próximo

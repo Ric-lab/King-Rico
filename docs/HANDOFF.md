@@ -1,10 +1,32 @@
 # Handoff: a mesma tarefa, contínua
 
-**Prévia online:** bloqueada na autenticação Google; canal ainda sem URL.
+**Prévia online:** aguardando provisionamento Google no Cloud Shell; projeto
+isolado autorizado, mas ainda não criado. Sem URL confirmada.
 Execução: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
 
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+
+## 2026-11-03 · Codex · projeto de prévia isolado autorizado
+
+- **Tarefa em andamento:** colocar a prévia compartilhada em projeto Firebase
+  Spark separado; autorização expressa do proprietário nesta conversa.
+- **Feito:** `scripts/setup-preview-cloud.sh` provisiona projeto, Hosting,
+  conta e WIF dedicados sem tocar em produção. Workflow usa duas variáveis
+  públicas, recusa `king-rico`, gera configuração com Hosting apenas e valida
+  a URL do projeto isolado. Testes de isolamento e sintaxe passaram.
+- **Bloqueio atual:** esta VM não possui gcloud nem identidade Google
+  administrativa; Firebase CLI confirmou `Failed to authenticate`. Autorização
+  do dono não cria uma sessão Google. Nenhum projeto foi criado ainda.
+- **Próximo passo exato:** proprietário executa o comando do topo de
+  `docs/PREVIA-AUTENTICACAO.md` no Cloud Shell e informa as duas variáveis
+  públicas geradas (ou confirma que foram gravadas pelo script). Codex então
+  confere os valores, faz push para disparar Actions, acompanha deploy e QA,
+  registra a URL fixa em `docs/PREVIA-CIRCUS.md` e no topo deste HANDOFF.
+  Não pedir novamente autorização para criar esse projeto ou publicar a prévia.
+- **Como conferir:** `bash -n scripts/setup-preview-cloud.sh` e
+  `node --test tests/preview-isolation.test.mjs`. A criação Google ainda não
+  foi executada; a prévia continua sem URL confirmada.
 
 ## 2026-11-03 · Codex · canal de prévia (`c75bef5` + registro deste commit)
 

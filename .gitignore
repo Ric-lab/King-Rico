@@ -21,3 +21,6 @@ gha-creds-*.json
 # Prévias locais do Claude (projeto de design)
 *previa.dc.html
 scraps/
+
+# Generated isolated Hosting preview configuration
+/firebase.preview.generated.json

@@ -14,26 +14,31 @@ jobs:
     if: startsWith(github.ref, 'refs/heads/codex/')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      KING_RICO_PREVIEW_PROJECT_ID: ${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}
+      KING_RICO_PREVIEW_PROVIDER: ${{ vars.KING_RICO_PREVIEW_PROVIDER }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Validar projeto isolado de prévia
+        run: node scripts/preview-config.mjs
       - run: npm ci --ignore-scripts
       - run: npm run build:preview
       - name: Autorizar GitHub no Google sem chave privada
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
         with:
-          project_id: king-rico
-          workload_identity_provider: projects/776388739192/locations/global/workloadIdentityPools/king-rico-github/providers/github
-          service_account: king-rico-hosting@king-rico.iam.gserviceaccount.com
+          project_id: ${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.KING_RICO_PREVIEW_PROVIDER }}
+          service_account: king-rico-preview@${{ vars.KING_RICO_PREVIEW_PROJECT_ID }}.iam.gserviceaccount.com
       - name: Publicar somente o canal previa
         id: hosting
         shell: bash
         run: |
           set -euo pipefail
-          npx --no-install firebase hosting:channel:deploy previa --project king-rico --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
+          npx --no-install firebase hosting:channel:deploy previa --config firebase.preview.generated.json --project "$KING_RICO_PREVIEW_PROJECT_ID" --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
           node scripts/preview-result.mjs "$RUNNER_TEMP/preview-result.json"
       - name: Preparar navegador da conferência
         run: |
