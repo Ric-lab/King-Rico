@@ -7,6 +7,11 @@ Workflow confirmado: https://github.com/Ric-lab/King-Rico/actions/runs/416475366
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
 
+## 2026-11-03 21:26 · Claude · rolos premium no 3D real (drum-depth.js)
+
+- **Feito:** acabamento dentro do Three.js (não CSS por cima): fundo do recesso ameixa da marca no lugar do bege; luz mais quente; papel marfim com verniz leve (MeshPhysical clearcoat); tinta dos símbolos ~18% mais viva; aro dourado fino nas duas pontas de cada um dos 9 tambores. Geometria, posições, sombras de topo/laterais e lógica intactas. Cache key do shader → v2.
+- **Próximo passo exato:** conferir as capturas do artefato do workflow deste commit; dono avalia na prévia. Depois: parada com quique por coluna + respiro do símbolo.
+
 ## 2026-11-03 · Codex · prévia online publicada e testada
 
 - **Feito:** `2d0b14a` publicou a interface no projeto isolado, usando a conta
