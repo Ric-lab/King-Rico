@@ -1,0 +1,26 @@
+/* Rolos premium (Claude): janela embutida no gabinete, 3 tambores contínuos de papel marfim com curvatura,
+   divisórias douradas, vidro por cima e símbolos com sombra. Só aparência; posições e lógica intactas. */
+.royal-window{position:absolute;left:27px;top:212px;width:400px;height:396px;border-radius:18px;pointer-events:none;
+ background:linear-gradient(180deg,#3a0f4e,#1e0630);
+ box-shadow:0 0 0 2px #fff3c4,0 0 0 5px #f0b41f,0 0 0 7px #b86e0a,0 0 0 9px #5a2a00,0 10px 22px #000a,inset 0 0 0 2px #0008,inset 0 6px 14px #000c}
+.royal-drum{position:absolute;top:216px;height:388px;border-radius:10px / 26px;pointer-events:none;
+ background:linear-gradient(90deg,#d9cdb4 0%,#f5ecd8 9%,#fffaf0 30%,#fffdf6 50%,#fffaf0 70%,#f5ecd8 91%,#d9cdb4 100%)}
+.royal-shade{position:absolute;top:216px;height:388px;border-radius:10px / 26px;pointer-events:none;z-index:4;
+ background:linear-gradient(180deg,#2a0a30d9 0%,#2a0a3073 7%,#2a0a301f 17%,#0000 30%,#0000 70%,#2a0a301f 83%,#2a0a3073 93%,#2a0a30d9 100%),
+  linear-gradient(90deg,#3a1a0a2e 0%,#0000 8%,#0000 92%,#3a1a0a2e 100%)}
+.royal-sep{position:absolute;top:214px;width:6px;height:392px;border-radius:3px;pointer-events:none;z-index:5;
+ background:linear-gradient(90deg,#7a4206,#ffe08a 45%,#fff6cf 55%,#b8720c);box-shadow:0 0 4px #0007}
+.royal-glass{position:absolute;left:30px;top:215px;width:394px;height:390px;border-radius:16px;pointer-events:none;z-index:6;
+ background:linear-gradient(180deg,#ffffff40 0%,#fff0 7%),linear-gradient(112deg,#fff0 24%,#ffffff26 33%,#ffffff0d 40%,#fff0 46%),
+  radial-gradient(120% 60% at 50% 0%,#ffffff14,#fff0 60%)}
+.royal-rivet{position:absolute;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:7;
+ background:radial-gradient(circle at 35% 30%,#fffbe0,#ffd257 45%,#9a5a08);box-shadow:0 1px 2px #000a}
+/* células viram janelas transparentes do tambor (sem caixa, sem vão entre linhas) */
+.park-reels .park-reel-cell{background:none!important;box-shadow:none!important;border-radius:0!important}
+.park-reels .park-reel-cell:after,.park-reels .park-reel-cell:before{display:none!important}
+.park-reels .park-reel-paper{background:none!important}
+.park-reels:after{background:none!important}
+/* símbolo impresso no papel: contato + sombra suave */
+.park-reels [data-sym]{filter:drop-shadow(0 5px 3px #4a1e0059) drop-shadow(0 1px 0 #fff8)}
+.park-reels .park-reel-cell[data-reel-spinning="true"] [data-sym]{filter:blur(1.4px) drop-shadow(0 5px 3px #4a1e0040)}
+.park-reels .park-reel-cell[data-dimmed="true"] [data-sym]{filter:saturate(.55) brightness(.72)}

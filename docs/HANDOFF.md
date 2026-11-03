@@ -128,3 +128,9 @@ exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
   Merge só com autorização do dono.
 - **Como conferir:** `node --test tests/reel-tape.test.cjs tests/adapters.test.cjs`
   e `python3 tests/circus_depth_browser.py` com a prévia aberta.
+
+
+## 2026-11-03 21:10 · Claude
+- Rolos premium (passos 1–2 do plano em docs/MEMORIA.md): nova camada `ui/park/reel-royal.css` + divs `royal-*` em Fortune Circus.dc.html. Janela embutida com chanfro dourado, 3 tambores contínuos de papel marfim com curvatura (topo/base escurecem), divisórias douradas, vidro e sombra nos símbolos; blur leve no giro. Lógica e posições intactas.
+- Memória do projeto: `docs/MEMORIA.md` (gosto do dono, rejeitados, linha de jogos) + bloco no CLAUDE.md.
+- Próximo passo: passos 3–5 dos rolos (respiro do símbolo ao parar, quique + parada em cascata com clack, vitória acendendo a linha) — avaliar na prévia antes.
