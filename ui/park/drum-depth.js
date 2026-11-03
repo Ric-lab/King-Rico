@@ -18,7 +18,7 @@ export async function installDrumDepth(stage,reels){
    dispose(){original.dispose();state.moving=false;state.items=null;paint(cell);}
   };
  };
- let renderer,observer,effectsObserver,raf,geometry,backing,atlas,ticket,shadow,materials=[];
+ let renderer,observer,effectsObserver,raf,geometry,backing,recessShadow,atlas,ticket,shadow,materials=[];
  const cleanup=()=>{
   if(disposed)return;
   disposed=true;active=false;delete stage.dataset.drumDepth;
@@ -26,7 +26,7 @@ export async function installDrumDepth(stage,reels){
   delete stage.dataset.drumDepthCalls;delete stage.dataset.drumDepthSymbols;paint=()=>{};
   cancelAnimationFrame(raf);observer?.disconnect();effectsObserver?.disconnect();
   tape.create=originalCreate;renderer?.dispose();renderer?.domElement.remove();
-  geometry?.dispose();backing?.geometry.dispose();backing?.material.dispose();
+  geometry?.dispose();backing?.geometry.dispose();backing?.material.dispose();recessShadow?.material.dispose();
   for(const m of materials)m.dispose();atlas?.dispose();ticket?.dispose();shadow?.dispose();
  };
  window.addEventListener('pagehide',cleanup,{once:true});
@@ -44,7 +44,7 @@ export async function installDrumDepth(stage,reels){
   renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.setSize(402,438,false);
   renderer.setClearColor(0,0);renderer.outputColorSpace=T.SRGBColorSpace;
   renderer.toneMapping=T.NoToneMapping;
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFShadowMap;renderer.shadowMap.autoUpdate=false;
   renderer.domElement.className='park-drum-depth';renderer.domElement.setAttribute('aria-hidden','true');
   reels.append(renderer.domElement);
   const scene=new T.Scene(),camera=new T.OrthographicCamera(-201,201,219,-219,1,1200);
@@ -55,10 +55,14 @@ export async function installDrumDepth(stage,reels){
   scene.add(new T.HemisphereLight(0xffffff,0x47404c,.9));
   const light=new T.DirectionalLight(0xfff5df,2.1);light.position.set(-145,250,400);light.castShadow=true;
   light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-320,right:320,top:350,bottom:-350,near:1,far:1000});
-  light.shadow.bias=-.0003;light.shadow.normalBias=.25;light.shadow.radius=3;shadow=light.shadow;scene.add(light);
+  light.shadow.bias=-.0003;light.shadow.normalBias=.25;light.shadow.radius=5;shadow=light.shadow;scene.add(light);
   const fill=new T.DirectionalLight(0xdce9ff,.2);fill.position.set(180,-40,300);scene.add(fill);
-  backing=new T.Mesh(new T.PlaneGeometry(402,438),new T.MeshStandardMaterial({color:0x777367,roughness:1}));
-  backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);backing.receiveShadow=true;scene.add(backing);
+  // Warm matte lining and a separate soft shadow keep the recess from becoming
+  // a black grid. The approved drum geometry, printing and lighting stay fixed.
+  backing=new T.Mesh(new T.PlaneGeometry(402,438),new T.MeshBasicMaterial({color:0x7d715f}));
+  backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);scene.add(backing);
+  recessShadow=new T.Mesh(backing.geometry,new T.ShadowMaterial({color:0x29202a,opacity:.26,depthWrite:false}));
+  recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;scene.add(recessShadow);
   geometry=new T.CylinderGeometry(66,66,126,96,1,false,-Math.PI,Math.PI*2);geometry.rotateZ(-Math.PI/2);
   const readSymbol=cell=>{
    const node=cells[cell];if(node.dataset.parkTicket==='true')return 10;

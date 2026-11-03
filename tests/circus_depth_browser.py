@@ -12,8 +12,9 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
  page.on('response',lambda r:bad.append(r.url) if r.status>=400 else None)
- page.goto(BASE+'/Fortune%20Circus.dc.html?v=76')
+ page.goto(BASE+'/Fortune%20Circus.dc.html?v=78')
  page.wait_for_function('document.querySelector("[data-drum-depth=ready]")&&!document.querySelector("#kr-boot-screen")')
+ calls=page.locator("[data-drum-depth]").get_attribute("data-drum-depth-calls")
  def matches():
   page.wait_for_function('''()=>{const node=document.querySelector('[data-drum-depth=ready]');if(!node)return false;const expected=[...document.querySelectorAll('.park-reels [data-sym]')].map(e=>e.dataset.parkTicket==='true'?10:Math.round(parseFloat(e.style.backgroundPositionX)*11/100));return expected.join(',')===node.dataset.drumDepthSymbols}''')
  assert page.evaluate("KingRicoCloud.uid")=="park-preview","Only the local preview wallet is allowed"
@@ -42,12 +43,12 @@ with sync_playwright() as p:
  page.wait_for_function('(n)=>KingRicoCloud.park.spins===n',arg=before+2)
  assert not errors,errors
  assert not bad,bad
- print(json.dumps({'WebGL':'10 draws','sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
+ print(json.dumps({'WebGL':calls+' draws','sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
  # A device without WebGL must start directly in the 2D renderer.
  second=b.new_page(viewport={'width':390,'height':844})
  second.add_init_script("""(()=>{const original=HTMLCanvasElement.prototype.getContext;
  HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl2'?null:original.call(this,type,...args)};})()""")
- second.goto(BASE+'/Fortune%20Circus.dc.html?v=76')
+ second.goto(BASE+'/Fortune%20Circus.dc.html?v=78')
  second.wait_for_function('document.querySelector("[data-drum-depth-init=fallback]")&&!document.querySelector("#kr-boot-screen")')
  assert second.evaluate('KingRicoCloud.uid')=='park-preview'
  assert second.locator('.park-drum-depth').count()==0
