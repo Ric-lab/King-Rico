@@ -14,7 +14,8 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
  page.on('response',lambda r:bad.append(r.url) if r.status>=400 else None)
- page.goto(BASE+'/Fortune%20Circus.dc.html?v=lateral-contact')
+ assert page.request.get(BASE+'/park').ok,'Park route is unavailable'
+ page.goto(BASE+'/circus')
  page.wait_for_function('document.querySelector("[data-drum-depth=ready]")&&!document.querySelector("#kr-boot-screen")')
  calls=page.locator("[data-drum-depth]").get_attribute("data-drum-depth-calls")
  def matches():

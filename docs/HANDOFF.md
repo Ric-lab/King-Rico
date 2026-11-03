@@ -1,12 +1,30 @@
 # Handoff: a mesma tarefa, contínua
 
-**Prévia online:** provisionamento Google concluído; aguardando deploy e QA
-no projeto isolado `king-rico-previa-1408805633`.
-Sem URL confirmada.
-Execução: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
+**Prévia online:** https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
+Projeto isolado Spark: `king-rico-previa-1408805633`. Canal `previa`.
+Workflow confirmado: https://github.com/Ric-lab/King-Rico/actions/runs/41647536617
 
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+
+## 2026-11-03 · Codex · prévia online publicada e testada
+
+- **Feito:** `2d0b14a` publicou a interface no projeto isolado, usando a conta
+  `king-rico-preview`. Actions e teste de navegador remoto concluíram com sucesso.
+- **URL compartilhada:** https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
+- **Conferência real:** 9 tambores com `data-drum-depth=ready`, 18 draws;
+  mesmos símbolos no repouso/parada; um giro contabilizado; carteira `park-preview`;
+  recuperação por perda de contexto e inicialização sem WebGL funcionando;
+  larguras 360/390/430 px; zero erros de console e assets ausentes. As medidas
+  de sombra coincidem com localhost. Capturas no artefato do workflow acima.
+- **Próximo passo exato:** dono e Claude abrem a URL acima para avaliar os rolos.
+  Continuar o ajuste visual solicitado, sem mexer na direção ou publicar em main.
+  Antes de editar, puxar esta branch; depois fazer commit/push e acompanhar
+  `preview-channel.yml` até deploy e QA passarem. Atualiza o mesmo endereço.
+- **Limites:** carteira fictícia separada por navegador; não é saldo compartilhado
+  entre Claude e dono. Canal expira em 30d sem deploy. Site oficial e regras intactos.
+- **Registro deste commit:** teste passa a abrir pela rota limpa `/circus` e
+  verifica `/park` por HTTP, além de já carregar `/assets` e Three.js em `/runtime`.
 
 ## 2026-11-03 · Codex · provisionamento concluído, disparar deploy
 

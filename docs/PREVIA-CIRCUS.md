@@ -65,17 +65,23 @@ publica ao atualizar `main`; não mesclar sem autorização para publicação.
 
 ## Prévia online
 
-O projeto isolado foi autorizado, mas ainda aguarda o provisionamento descrito
-em [Autenticação da prévia](PREVIA-AUTENTICACAO.md). Depois disso,
-o workflow `.github/workflows/preview-channel.yml` atualiza o canal Firebase
-`previa` a cada push em `codex/**`. O endereço é estável enquanto o canal existir;
-cada publicação renova sua validade por 30 dias. URL: **ainda indisponível**. A primeira execução foi bloqueada na autenticação
-Google (condição de atributos), antes do deploy. Veja o diagnóstico e o próximo
-passo em [Autenticação da prévia](PREVIA-AUTENTICACAO.md). Não confundir com
-o site oficial king-rico.web.app.
+**Abra:** https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
 
-A URL real aparece no resumo e nos logs do workflow. O mesmo job verifica
-os tambores e um giro com moedas fictícias pelo navegador e guarda capturas.
-Todos compartilham a mesma versão visual; o saldo de teste é local a cada
-navegador. Evite editar duas branches codex ao mesmo tempo: ambas atualizam
-o mesmo canal. Produção e regras do Firestore não são publicadas neste fluxo.
+Publicação real confirmada em 03/11/2026, commit `2d0b14a`, pelo
+[workflow concluído](https://github.com/Ric-lab/King-Rico/actions/runs/41647536617).
+O teste de navegador remoto confirmou os nove tambores prontos, giro com moedas
+fictícias, recuperação 2D e três tamanhos de tela, sem assets ausentes.
+
+O workflow `.github/workflows/preview-channel.yml` atualiza o canal `previa`
+do projeto isolado `king-rico-previa-1408805633` a cada push em `codex/**`.
+O endereço se mantém enquanto o canal existir; cada deploy renova a validade
+por 30 dias. A URL e o commit aparecem no resumo; capturas ficam nos artefatos.
+
+Claude e dono veem a mesma versão de interface. O saldo de teste é local a cada
+navegador; não compartilha nem acessa a carteira de produção. Não é preciso
+executar npm no ambiente do Claude. Outros caminhos: `/park` para o parque e
+`/Fortune%20Circus.dc.html` para a página direta. Assets e Three.js são locais.
+
+Evite alterar duas branches codex simultaneamente: ambas atualizam o mesmo canal.
+O projeto oficial `king-rico`, seu live e regras Firestore não são publicados
+por esse workflow. Autenticação e histórico: [Configuração](PREVIA-AUTENTICACAO.md).

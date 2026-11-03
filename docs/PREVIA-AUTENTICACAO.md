@@ -1,10 +1,14 @@
-# Configurar a prévia isolada — 03/11/2026
+# Prévia isolada provisionada — 03/11/2026
 
-O proprietário autorizou um projeto Firebase separado no Spark. O workflow
+O proprietário autorizou e provisionou um projeto Firebase separado no Spark.
+Deploy e QA online confirmados: https://github.com/Ric-lab/King-Rico/actions/runs/41647536617
+URL: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
+
+As instruções abaixo ficam para manutenção e recriação, não são uma pendência. O workflow
 agora recusa o projeto oficial e não usa mais sua conta/provider de produção.
 A VM não possui identidade Google administrativa (`projects:list` retornou
-`Failed to authenticate`); por isso o provisionamento precisa ser executado
-uma vez no Cloud Shell do proprietário. Não enviar tokens ou chaves às IAs.
+`Failed to authenticate`); o provisionamento foi executado uma vez no Cloud
+Shell do proprietário. Não enviar tokens ou chaves às IAs.
 
 ## Executar uma vez no Cloud Shell
 
