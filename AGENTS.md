@@ -3,6 +3,10 @@
 Leia `README.md` e `docs/README.md` antes de alterar o projeto. São o ponto de
 entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovadas.
 
+Claude e Codex trabalham em fluxo contínuo: leia `docs/FLUXO-CLAUDE-CODEX.md`
+e a entrada mais recente de `docs/HANDOFF.md` antes de começar, e acrescente
+uma entrada ao terminar.
+
 ## Fontes e limites
 
 - Páginas `.dc.html` e `site/routes.json` definem as telas publicadas. A Home

@@ -17,3 +17,7 @@ gha-creds-*.json
 # Evidências locais e export do editor; game.html é gerado pelo build.
 /work/
 /game.html
+
+# Prévias locais do Claude (projeto de design)
+*previa.dc.html
+scraps/
