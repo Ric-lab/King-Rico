@@ -48,7 +48,7 @@ export async function installDrumDepth(stage,reels){
   renderer.domElement.className='park-drum-depth';renderer.domElement.setAttribute('aria-hidden','true');
   reels.append(renderer.domElement);
   const scene=new T.Scene(),camera=new T.OrthographicCamera(-201,201,219,-219,1,1200);
-  camera.position.set(35,55,600);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  camera.position.set(0,55,600);camera.lookAt(0,0,0);camera.updateMatrixWorld();
   const right=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,0),up=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,1),front=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,2);
   const yz=Math.hypot(front.y,front.z),surfaceFront=new T.Vector3(0,front.y/yz*66,front.z/yz*66);
   const printFront=new T.Vector2(-surfaceFront.dot(right)/right.x,Math.atan2(-front.y,front.z)*66);

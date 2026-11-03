@@ -30,7 +30,7 @@ A revisão v75 usa luz superior: laterais leves e sombra mais forte na curva
 inferior, com contorno elíptico suave e o mesmo campo de luz durante o giro.
 Na prévia v76 com nove rolos, `ui/park/drum-depth.js` desenha cilindros em
 Three.js local, com os símbolos impressos na superfície, sombra de contato
-e um leve ângulo de visão. A fita existente continua decidindo os símbolos,
+e visão centralizada, sem inclinação lateral. A fita existente continua decidindo os símbolos,
 o deslocamento e a parada; a cena apenas acompanha esses dados. Os destaques
 de acerto e trava usam o material do cilindro, respeitando sua curvatura.
 O 2D continua disponível enquanto a cena carrega e assume se WebGL faltar ou
