@@ -2,6 +2,7 @@
 Run against a local visual preview; refuses a production Firebase account.
 """
 from playwright.sync_api import sync_playwright
+from PIL import Image,ImageStat
 import json,os
 os.makedirs("work",exist_ok=True)
 BASE=os.environ.get("KING_RICO_TEST_URL","http://127.0.0.1:4178")
@@ -19,6 +20,17 @@ with sync_playwright() as p:
   page.wait_for_function('''()=>{const node=document.querySelector('[data-drum-depth=ready]');if(!node)return false;const expected=[...document.querySelectorAll('.park-reels [data-sym]')].map(e=>e.dataset.parkTicket==='true'?10:Math.round(parseFloat(e.style.backgroundPositionX)*11/100));return expected.join(',')===node.dataset.drumDepthSymbols}''')
  assert page.evaluate("KingRicoCloud.uid")=="park-preview","Only the local preview wallet is allowed"
  matches();page.screenshot(path='work/reel-depth-3d-idle.png')
+ # Sample unprinted paper: the housing must visibly shade the upper turn,
+ # while the approved front lighting remains clear enough to read the symbol.
+ rect=page.locator('.park-drum-depth').bounding_box()
+ image=Image.open('work/reel-depth-3d-idle.png').convert('RGB')
+ def paper_luma(top,bottom):
+  box=(round(rect['x']+10/402*rect['width']),round(rect['y']+top/438*rect['height']),
+       round(rect['x']+16/402*rect['width']),round(rect['y']+bottom/438*rect['height']))
+  r,g,b=ImageStat.Stat(image.crop(box)).mean
+  return .2126*r+.7152*g+.0722*b
+ upper,front=paper_luma(13,24),paper_luma(70,80)
+ assert upper<front*.9,{'upper':upper,'front':front}
  before=page.evaluate('KingRicoCloud.park.spins')
  page.get_by_role('button',name='Girar',exact=True).click()
  page.wait_for_function('document.querySelectorAll(".park-physical-reel").length>0&&document.querySelector("[data-drum-depth=ready]")')
@@ -43,7 +55,7 @@ with sync_playwright() as p:
  page.wait_for_function('(n)=>KingRicoCloud.park.spins===n',arg=before+2)
  assert not errors,errors
  assert not bad,bad
- print(json.dumps({'WebGL':calls+' draws','sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
+ print(json.dumps({'WebGL':calls+' draws','upperShadow':{'upper':round(upper,1),'front':round(front,1)},'sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
  # A device without WebGL must start directly in the 2D renderer.
  second=b.new_page(viewport={'width':390,'height':844})
  second.add_init_script("""(()=>{const original=HTMLCanvasElement.prototype.getContext;

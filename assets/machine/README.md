@@ -39,6 +39,9 @@ apenas quando necessário, sem recalcular o mapa de sombras a cada quadro.
 Na v78, o interior recebe acabamento fosco em bronze neutro e uma camada
 de sombra com opacidade de 26%. O filtro PCF suaviza o contato entre peças;
 a geometria dos cilindros, a câmera e a impressão dos símbolos são preservadas.
+Na v79, a sombra da proteção superior e a oclusão da luz ambiente escurecem
+apenas a curva que entra no alojamento. Pesquisa, fontes e validação estão em
+[Iluminação dos rolos](../../docs/ROLOS-ILUMINACAO.md).
 Validação local da prévia: `python3 tests/circus_depth_browser.py` com a
 carteira fictícia e o servidor da prévia em `127.0.0.1:4178`.
 A iluminação 2D atende três colunas contínuas ou os nove rolos da prévia.

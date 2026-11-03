@@ -18,7 +18,7 @@ export async function installDrumDepth(stage,reels){
    dispose(){original.dispose();state.moving=false;state.items=null;paint(cell);}
   };
  };
- let renderer,observer,effectsObserver,raf,geometry,backing,recessShadow,atlas,ticket,shadow,materials=[];
+ let renderer,observer,effectsObserver,raf,geometry,backing,recessShadow,hoodGeometry,hoodMaterial,atlas,ticket,shadow,materials=[];
  const cleanup=()=>{
   if(disposed)return;
   disposed=true;active=false;delete stage.dataset.drumDepth;
@@ -27,6 +27,7 @@ export async function installDrumDepth(stage,reels){
   cancelAnimationFrame(raf);observer?.disconnect();effectsObserver?.disconnect();
   tape.create=originalCreate;renderer?.dispose();renderer?.domElement.remove();
   geometry?.dispose();backing?.geometry.dispose();backing?.material.dispose();recessShadow?.material.dispose();
+  hoodGeometry?.dispose();hoodMaterial?.dispose();
   for(const m of materials)m.dispose();atlas?.dispose();ticket?.dispose();shadow?.dispose();
  };
  window.addEventListener('pagehide',cleanup,{once:true});
@@ -55,7 +56,7 @@ export async function installDrumDepth(stage,reels){
   scene.add(new T.HemisphereLight(0xffffff,0x47404c,.9));
   const light=new T.DirectionalLight(0xfff5df,2.1);light.position.set(-145,250,400);light.castShadow=true;
   light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-320,right:320,top:350,bottom:-350,near:1,far:1000});
-  light.shadow.bias=-.0003;light.shadow.normalBias=.25;light.shadow.radius=5;shadow=light.shadow;scene.add(light);
+  light.shadow.bias=-.0003;light.shadow.normalBias=.25;light.shadow.radius=7;light.shadow.intensity=.45;shadow=light.shadow;scene.add(light);
   const fill=new T.DirectionalLight(0xdce9ff,.2);fill.position.set(180,-40,300);scene.add(fill);
   // Warm matte lining and a separate soft shadow keep the recess from becoming
   // a black grid. The approved drum geometry, printing and lighting stay fixed.
@@ -63,6 +64,15 @@ export async function installDrumDepth(stage,reels){
   backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);scene.add(backing);
   recessShadow=new T.Mesh(backing.geometry,new T.ShadowMaterial({color:0x29202a,opacity:.26,depthWrite:false}));
   recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;scene.add(recessShadow);
+  // The housing shields the upper turn of each row from the key light. These
+  // hidden crossbars cast into the existing shadow map without covering art.
+  hoodGeometry=new T.BoxGeometry(462,4,90);
+  hoodMaterial=new T.MeshBasicMaterial({colorWrite:false,depthWrite:false});
+  for(let row=0;row<3;row++){
+   const hood=new T.Mesh(hoodGeometry,hoodMaterial);
+   hood.position.copy(up).multiplyScalar(219-(73+row*146)).add(new T.Vector3(0,70,55));
+   hood.castShadow=true;scene.add(hood);
+  }
   geometry=new T.CylinderGeometry(66,66,126,96,1,false,-Math.PI,Math.PI*2);geometry.rotateZ(-Math.PI/2);
   const readSymbol=cell=>{
    const node=cells[cell];if(node.dataset.parkTicket==='true')return 10;
@@ -92,6 +102,12 @@ export async function installDrumDepth(stage,reels){
       vec4 ink=isTicket?texture2D(drumTicket,uv):texture2D(drumAtlas,vec2((symbol+clamp(uv.x,.001,.999))/12.0,uv.y));
       diffuseColor.rgb=mix(diffuseColor.rgb,ink.rgb,ink.a);
      }diffuseColor.rgb*=drumDim;`);
+    // Hemisphere light does not cast shadows. Occlude its indirect contribution
+    // where the paper turns under the housing, leaving the front print intact.
+    shader.fragmentShader=shader.fragmentShader.replace('#include <aomap_fragment>',`#include <aomap_fragment>
+     float housingOcclusion=1.0-.72*smoothstep(.25,.98,clamp(drumLocal.y/66.0,0.0,1.0));
+     reflectedLight.indirectDiffuse*=housingOcclusion;
+     reflectedLight.indirectSpecular*=housingOcclusion;`);
    };
    material.customProgramCacheKey=()=> 'king-rico-paper-cylinder-v1';
    const mesh=new T.Mesh(geometry,material);mesh.position.copy(right).multiplyScalar(67+cell%3*134-201).addScaledVector(up,219-(73+Math.floor(cell/3)*146));
