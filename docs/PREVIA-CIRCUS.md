@@ -67,8 +67,10 @@ publica ao atualizar `main`; não mesclar sem autorização para publicação.
 
 O workflow `.github/workflows/preview-channel.yml` atualiza o canal Firebase
 `previa` a cada push em `codex/**`. O endereço é estável enquanto o canal existir;
-cada publicação renova sua validade por 30 dias. URL: aguardando a primeira
-publicação confirmada (não confundir com o site oficial king-rico.web.app).
+cada publicação renova sua validade por 30 dias. URL: **ainda indisponível**. A primeira execução foi bloqueada na autenticação
+Google (condição de atributos), antes do deploy. Veja o diagnóstico e o próximo
+passo em [Autenticação da prévia](PREVIA-AUTENTICACAO.md). Não confundir com
+o site oficial king-rico.web.app.
 
 A URL real aparece no resumo e nos logs do workflow. O mesmo job verifica
 os tambores e um giro com moedas fictícias pelo navegador e guarda capturas.
