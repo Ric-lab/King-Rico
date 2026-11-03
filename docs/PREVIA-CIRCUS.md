@@ -62,3 +62,16 @@ nativas usam os emuladores; a prévia visual não comprova login real.
 
 Enviar commits para esta branch não publica o site. O workflow de Hosting
 publica ao atualizar `main`; não mesclar sem autorização para publicação.
+
+## Prévia online
+
+O workflow `.github/workflows/preview-channel.yml` atualiza o canal Firebase
+`previa` a cada push em `codex/**`. O endereço é estável enquanto o canal existir;
+cada publicação renova sua validade por 30 dias. URL: aguardando a primeira
+publicação confirmada (não confundir com o site oficial king-rico.web.app).
+
+A URL real aparece no resumo e nos logs do workflow. O mesmo job verifica
+os tambores e um giro com moedas fictícias pelo navegador e guarda capturas.
+Todos compartilham a mesma versão visual; o saldo de teste é local a cada
+navegador. Evite editar duas branches codex ao mesmo tempo: ambas atualizam
+o mesmo canal. Produção e regras do Firestore não são publicadas neste fluxo.

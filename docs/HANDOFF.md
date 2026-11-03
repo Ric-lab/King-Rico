@@ -1,5 +1,7 @@
 # Handoff: a mesma tarefa, contínua
 
+**Prévia online:** aguardando primeira execução do canal `previa`.
+
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
 

@@ -1,0 +1,53 @@
+name: Prévia compartilhada do Circus
+on:
+  push:
+    branches: ['codex/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: king-rico-preview-previa
+  cancel-in-progress: false
+jobs:
+  previa:
+    if: startsWith(github.ref, 'refs/heads/codex/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build:preview
+      - name: Autorizar GitHub no Google sem chave privada
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          project_id: king-rico
+          workload_identity_provider: projects/776388739192/locations/global/workloadIdentityPools/king-rico-github/providers/github
+          service_account: king-rico-hosting@king-rico.iam.gserviceaccount.com
+      - name: Publicar somente o canal previa
+        id: hosting
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --no-install firebase hosting:channel:deploy previa --project king-rico --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
+          node scripts/preview-result.mjs "$RUNNER_TEMP/preview-result.json"
+      - name: Preparar navegador da conferência
+        run: |
+          python3 -m pip install playwright Pillow
+          python3 -m playwright install --with-deps chromium
+      - name: Conferir nove tambores e carteira fictícia online
+        env:
+          KING_RICO_TEST_URL: ${{ steps.hosting.outputs.url }}
+          KING_RICO_CHROMIUM: bundled
+        run: python3 tests/circus_depth_browser.py
+      - name: Guardar capturas da conferência
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: previa-circus-${{ github.sha }}
+          path: work/reel-depth-3d-*.png
+          if-no-files-found: ignore

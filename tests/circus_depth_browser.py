@@ -7,7 +7,8 @@ import json,os
 os.makedirs("work",exist_ok=True)
 BASE=os.environ.get("KING_RICO_TEST_URL","http://127.0.0.1:4178")
 with sync_playwright() as p:
- b=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--use-angle=swiftshader','--enable-webgl'])
+ browser_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium')
+ b=p.chromium.launch(executable_path=None if browser_path=='bundled' else browser_path,headless=True,args=['--no-sandbox','--use-angle=swiftshader','--enable-webgl'])
  page=b.new_page(viewport={'width':390,'height':844},device_scale_factor=1)
  errors=[];bad=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
