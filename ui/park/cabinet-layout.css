@@ -13,3 +13,8 @@
 /* Tubos laterais um pouco para fora: rolos maiores respiram. */
 .park-circus-stage[data-cabinet-layout] .park-meter-left{left:-7px}
 .park-circus-stage[data-cabinet-layout] .park-meter-right{right:-7px}
+
+/* Rolos 5% menores (proporcional) p/ dar respiro aos tubos; linhas premiadas seguem a MESMA transformação dos rolos. */
+.park-circus-stage[data-cabinet-layout] :is(.park-reels,.park-win-lines){transform:translateY(calc(var(--park-machine-drop,0px) - var(--park-reel-rise,0px))) scale(.8892,.7958);transform-origin:50% 219.5px}
+.park-circus-stage[data-cabinet-layout] .park-win-lines{position:absolute;inset:0;pointer-events:none;z-index:12}
+.park-circus-stage[data-cabinet-layout] .park-reel-window-back{transform:scale(.95);transform-origin:50% 0}
