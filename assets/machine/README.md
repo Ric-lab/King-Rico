@@ -22,6 +22,13 @@ fica 8 px abaixo da moldura, preservando o relevo dos botões; o spin acompanha
 esse deslocamento para conservar o espaço entre os controles. O formato e o
 giro dos rolos não mudam. Este ajuste ainda não foi publicado no Firebase.
 
+Na revisão de sombras da prévia de 03/11/2026, `ui/park/reel-optics.*` aplica
+a luz à janela do rolo inteiro, incluindo o símbolo parado ou em movimento.
+O miolo é marfim claro; pontas e laterais perdem luz gradualmente. O alojamento
+fica escuro entre rolos, sem acrescentar divisórias ou mudar seus espaços.
+A mesma camada atende três colunas contínuas ou os nove rolos da prévia.
+Sequências, paradas, prêmios e os controles permanecem independentes da luz.
+
 Os WebP preservam as dimensões das gerações PNG. A conversão só comprime o formato;
 `ui/park/cabinet.css` normaliza as margens transparentes sem repintar as imagens.
 Arquivos de versões anteriores são preservados, mas não entram na pré-carga atual.

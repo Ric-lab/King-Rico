@@ -1,0 +1,16 @@
+/* Diffuse ivory paper, turning away from the light at both ends. */
+.park-reels[data-reel-optics]{
+ --park-roll-paper:linear-gradient(180deg,#d8d6cb 0%,#efede2 17%,#fffdf4 40%,#fffdf4 54%,#efebdf 80%,#cac3b4 100%);
+ --park-roll-light:
+  radial-gradient(ellipse 12px 72% at 0 50%,#1a171270,transparent 100%),
+  radial-gradient(ellipse 13px 72% at 100% 50%,#1a171280,transparent 100%),
+  linear-gradient(180deg,#15171470 0%,#1c1c1840 5%,#24251c1a 14%,transparent 29%,transparent 65%,#28241c0d 77%,#211c163b 91%,#19150f80 100%);
+}
+/* A quiet recessed housing replaces the flat grey grid; spacing stays unchanged. */
+.park-reels[data-reel-optics="nine"] .park-reel-paper{background:repeating-linear-gradient(90deg,#211e1933 0,transparent 4px,transparent 130px,#211e1933 134px),repeating-linear-gradient(180deg,#302d27 0,#484338 2px,#605b50 5px,#6c665c 7px,#6c665c 139px,#605b50 141px,#484338 144px,#302d27 146px)!important}
+.park-reels[data-reel-optics="nine"]:after{background:none!important}
+.park-reels[data-reel-optics="nine"] :is(.park-reel-cell[data-park-column],.park-physical-reel){background:var(--park-roll-paper)!important;border-radius:50% / 5px!important;filter:none!important;box-shadow:0 1px 2px #100e0b38}
+.park-reels[data-reel-optics="nine"] :is(.park-reel-cell,.park-physical-reel):after{background:var(--park-roll-light);border-radius:inherit}
+/* The published three-column machine receives one continuous light field per drum. */
+.park-reels[data-reel-optics="three"] :is(.park-reel-shell,.park-physical-reel){background:var(--park-roll-paper)!important}
+.park-roll-light{position:absolute;z-index:3;border-radius:50% / 5px;background:var(--park-roll-light);pointer-events:none}
