@@ -3,9 +3,10 @@
 Leia `README.md` e `docs/README.md` antes de alterar o projeto. São o ponto de
 entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovadas.
 
-Claude e Codex trabalham em fluxo contínuo: leia `docs/FLUXO-CLAUDE-CODEX.md`
-e a entrada mais recente de `docs/HANDOFF.md` antes de começar, e acrescente
-uma entrada ao terminar.
+Claude e Codex são um só desenvolvedor: quem for chamado continua exatamente de
+onde o outro parou. Antes de começar, puxe o último commit e leia
+`docs/FLUXO-CLAUDE-CODEX.md` e a entrada mais recente de `docs/HANDOFF.md`;
+ao parar, envie tudo e escreva o próximo passo exato no HANDOFF.
 
 ## Fontes e limites
 

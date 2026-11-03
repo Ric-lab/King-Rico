@@ -1,14 +1,20 @@
-# Handoff entre Claude e Codex
+# Handoff: a mesma tarefa, contínua
 
-Entrada mais recente no topo. Cada entrada: data, quem, commit, o que mudou,
-o que falta, o que o outro deve conferir. Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
+exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
 
-## 2026-11-03 · Claude · sobre 812e6b1
+## 2026-11-03 · Claude · commit 9113f45 (sobre 812e6b1)
 
-- Sincronizado com `812e6b1` (9 tambores, iluminação, palhaço goleiro, entrada do parque).
-- Prévia visual no projeto do Claude funcionando com os tambores 3D (carteira fictícia, sem giro).
-- Criado este fluxo (`docs/FLUXO-CLAUDE-CODEX.md`) e este HANDOFF.
-- **Para o Codex:** ao terminar qualquer tarefa, garantir que tudo que a prévia
-  usa está no commit (não só em `work/`). Na v79, a fita `HEIGHT=146` e o
-  `.park-reel-paper` só chegaram no `812e6b1`.
-- **Próximo:** aguardando o dono definir a próxima tarefa.
+- **Tarefa em andamento:** melhorar os rolos da slot machine do Circus
+  (9 tambores em Three.js, luz e sombras), branch `codex/penalty-clown-preview`.
+- **Feito:** tambores, iluminação e sombras laterais (commits até `955e081`);
+  fita `HEIGHT=146` + `.park-reel-paper` + `build:preview` (`812e6b1`).
+  Prévia visual aberta para o dono (sem giro, carteira fictícia). Fluxo único
+  Claude+Codex documentado.
+- **Próximo passo exato:** o dono avaliar os tambores na prévia
+  (`npm run build:preview` → http://localhost:4178/Fortune%20Circus.dc.html)
+  e dizer o que ajustar na aparência dos rolos. Sem pedido novo, não mexer.
+- **Pela metade / riscos:** nada publicado. `main` continua em `aae21d3`.
+  Merge só com autorização do dono.
+- **Como conferir:** `node --test tests/reel-tape.test.cjs tests/adapters.test.cjs`
+  e `python3 tests/circus_depth_browser.py` com a prévia aberta.

@@ -1,5 +1,5 @@
 Leia primeiro [AGENTS.md](AGENTS.md), instruções atuais de manutenção.
-Fluxo com o Codex: [docs/FLUXO-CLAUDE-CODEX.md](docs/FLUXO-CLAUDE-CODEX.md) — sempre puxar o último commit e ler [docs/HANDOFF.md](docs/HANDOFF.md) antes; ao terminar, commit + push + entrada no HANDOFF.
+Claude e Codex são um só desenvolvedor: [docs/FLUXO-CLAUDE-CODEX.md](docs/FLUXO-CLAUDE-CODEX.md). Antes de qualquer coisa, puxar o último commit da branch de trabalho e continuar exatamente pelo "Próximo passo" de [docs/HANDOFF.md](docs/HANDOFF.md); ao parar, commit + push de tudo + nova entrada no HANDOFF.
 
 # Fortune Circus — regras de trabalho (sempre ler antes de gerar assets)
 

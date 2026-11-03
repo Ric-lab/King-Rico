@@ -1,39 +1,48 @@
-# Fluxo contínuo: Claude (design) + Codex (código)
+# Fluxo contínuo: Claude + Codex trabalham como um só
 
-Atualizado em 03/11/2026. Vale para as duas IAs e para quem pedir trabalho a elas.
+Atualizado em 03/11/2026. Vale para as duas IAs.
 
 ## Regra de ouro
 
-**O GitHub é a única fonte.** Ninguém começa sem puxar o último commit e
-ninguém termina sem enviar. Nada importante pode ficar só em `work/`, no
-computador do Codex ou no projeto do Claude.
+Não existe "a parte do Claude" e "a parte do Codex". Existe **uma tarefa em
+andamento**, e quem for chamado continua exatamente de onde o outro parou,
+seja design, código, matemática, testes ou documentação.
 
-Branch de trabalho atual: `codex/penalty-clown-preview`. A `main` só recebe
-merge quando o dono autorizar a publicação.
+**O GitHub é a única fonte.** Branch de trabalho atual:
+`codex/penalty-clown-preview`. A `main` só recebe merge quando o dono autorizar
+a publicação.
 
-## Quem faz o quê
+## Ao começar (sempre)
 
-| | Claude (projeto de design) | Codex (clone local) |
-|---|---|---|
-| Faz bem | Visual, arte, layout, animação, assets (Meshy), cópia, prévias para o dono ver | Matemática, carteira/Firestore, testes, build, emuladores, publicação |
-| Não consegue | Rodar `npm`, testes, emuladores ou build | Ver/aprovar visual com o dono em tempo real |
-| Entrega | Commit com fontes `.dc.html`, `ui/`, `assets/` + nota no HANDOFF | Commit com código validado (testes passando) + nota no HANDOFF |
+1. Puxar o último commit da branch de trabalho.
+2. Ler a entrada mais recente de `docs/HANDOFF.md`: ela diz **o que está em
+   andamento, o próximo passo exato e o que ficou pela metade**.
+3. Continuar desse ponto. Não recomeçar, não refazer, não mudar de direção sem
+   o dono pedir.
 
-Mudança visual que toca economia, carteira ou regras: Claude faz o visual,
-anota no HANDOFF e o Codex valida/ajusta a lógica e roda os testes.
+## Ao parar (sempre, mesmo no meio)
 
-## Ciclo de cada tarefa
+1. Commit e push de **tudo** que a tarefa usa. Nada essencial só em `work/`,
+   no computador local ou no projeto de design.
+2. Nova entrada no topo de `docs/HANDOFF.md` com:
+   - **Tarefa em andamento** (o pedido do dono, com as palavras dele);
+   - **Feito** (com o commit);
+   - **Próximo passo exato** (arquivo e o que mexer);
+   - **Pela metade / riscos**;
+   - **Como conferir**.
 
-1. **Puxar**: ler `docs/HANDOFF.md` e o último commit da branch.
-2. **Fazer** só a parte do seu papel (tabela acima).
-3. **Enviar**: commit pequeno, mensagem clara, push na branch de trabalho.
-4. **Passar a vez**: acrescentar uma entrada no topo de `docs/HANDOFF.md`
-   (o que mudou, o que falta, o que o outro precisa conferir).
+## Limites de cada ambiente
 
-Se as duas IAs precisarem mexer no mesmo arquivo, uma termina e envia antes
-da outra começar. Sem edição simultânea do mesmo arquivo.
+Não é divisão de trabalho, só o que cada ambiente consegue executar. Se o
+próximo passo depende do que o seu ambiente não roda, faça todo o resto e
+anote no HANDOFF exatamente o que falta rodar.
+
+- Claude (projeto de design): edita qualquer arquivo, gera arte (Meshy), mostra
+  prévias ao dono; **não** roda `npm`, testes, emuladores nem build.
+- Codex (clone local): roda tudo isso; **não** mostra a prévia ao vivo no editor
+  de design.
 
 ## O que não vai para o Git
 
-- `dist/`, `runtime/`, bundles gerados, `work/`, credenciais.
-- Prévias locais do Claude: `*previa.dc.html`, `scraps/` (já no `.gitignore`).
+`dist/`, `runtime/`, bundles gerados, `work/`, credenciais e as prévias locais
+do Claude (`*previa.dc.html`, `scraps/`, já no `.gitignore`).
