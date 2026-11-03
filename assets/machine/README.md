@@ -15,6 +15,13 @@ A base é somente uma placa retangular de cantos arredondados. Os terminais da
 carga são discretos e terminam acima dos botões; a janela vazia permanece branca.
 O preenchimento usa 283 px e continua sincronizado com o pulso.
 
+Na prévia de 03/11/2026, `ui/park/cabinet-layout.js` mede a moldura real:
+roleta pequena e barra passam a ocupar juntas a altura da máquina. A altura
+útil do líquido acompanha a janela da barra. A faixa de aposta, auto e turbo
+fica 8 px abaixo da moldura, preservando o relevo dos botões; o spin acompanha
+esse deslocamento para conservar o espaço entre os controles. O formato e o
+giro dos rolos não mudam. Este ajuste ainda não foi publicado no Firebase.
+
 Os WebP preservam as dimensões das gerações PNG. A conversão só comprime o formato;
 `ui/park/cabinet.css` normaliza as margens transparentes sem repintar as imagens.
 Arquivos de versões anteriores são preservados, mas não entram na pré-carga atual.

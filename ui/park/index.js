@@ -1,5 +1,6 @@
 import {pocketColors} from './wheel-palette.js';
 import {installAdmission} from './admission.js';
+import {installCabinetLayout} from './cabinet-layout.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion,confetti} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
@@ -60,6 +61,7 @@ function bootCircus(){
   const originalVals=fc.renderVals.bind(fc);
   fc.renderVals=(...args)=>{const vals=originalVals(...args);if(fc._parkWheelVisible)vals.winAnim='none';rails.style.setProperty('--park-shade-opacity',vals.frameOff==='100%'?'0':'.28');rails.style.setProperty('--park-goal-brightness',vals.frameOff==='100%'?'1':'.82');rails.style.setProperty('--park-light-y',vals.frameOff);rails.style.setProperty('--park-light-transition',vals.frameOffT);rails.style.setProperty('--park-basket-top',(84-(fc.state.hudD||0))+'px');return vals;};
   fc.renderVals();
+  installCabinetLayout(stage.closest('.park-circus-stage')||stage,rails);
   installMotion(fc,rails,{refresh:renderRails,showWheel});
   installSpinTactility(fc);
   installParkNavigation(fc,stage.closest('.park-circus-stage')||stage,rails.querySelector('.park-pocket'));

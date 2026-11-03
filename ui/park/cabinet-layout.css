@@ -1,0 +1,11 @@
+/* One vertical anchor: miniature wheel + tube span the cabinet frame. */
+.park-circus-stage[data-cabinet-layout] .park-meter{top:calc(var(--park-cabinet-top) + 34px);height:calc(var(--park-cabinet-height) - 34px)}
+.park-circus-stage[data-cabinet-layout] .park-meter:before{height:calc(100% + 2.4904px)}
+.park-circus-stage[data-cabinet-layout] .park-meter:after{height:calc(100% + 2.4892px)}
+/* Move the entire betting/control row together; keep room for the raised caps. */
+.park-circus-stage[data-cabinet-layout] .park-part-base{top:calc(544px + var(--park-machine-drop,0px) + var(--park-controls-shift))}
+.park-circus-stage[data-cabinet-layout] .park-bet-well{top:calc(550.5px + var(--park-machine-drop,0px) + var(--park-controls-shift))}
+.park-circus-stage[data-cabinet-layout] .park-bet-value{top:calc(548.5px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
+.park-circus-stage[data-cabinet-layout] :is(.park-panel-control,[aria-label="Diminuir aposta"],[aria-label="Aumentar aposta"]){top:calc(548px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
+.park-circus-stage[data-cabinet-layout] .park-mode-label{top:calc(594px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
+.park-circus-stage[data-cabinet-layout] [data-spin-btn]{top:calc(613px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
