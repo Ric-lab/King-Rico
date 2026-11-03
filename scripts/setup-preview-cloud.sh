@@ -32,7 +32,21 @@ if ! api "https://firebasehosting.googleapis.com/v1beta1/projects/$preview_proje
 fi
 pool=king-rico-preview-github
 if ! gcloud iam workload-identity-pools describe "$pool" --project="$preview_project" --location=global >/dev/null 2>&1; then
-  gcloud iam workload-identity-pools create "$pool" --project="$preview_project" --location=global --display-name='King Rico Preview GitHub'
+  if ! gcloud iam workload-identity-pools create "$pool" --project="$preview_project" --location=global --display-name='King Rico Preview GitHub'; then
+    # A freshly created project can still be propagating its Owner binding.
+    # Grant the documented WIF admin role to the setup user in THIS project only.
+    [[ "$account" == *@* && "$account" != *.gserviceaccount.com ]] || { echo 'Run setup as the project owner user.' >&2; exit 1; }
+    gcloud projects add-iam-policy-binding "$preview_project" --member="user:$account" --role=roles/iam.workloadIdentityPoolAdmin --condition=None >/dev/null
+    pool_ready=false
+    for attempt in $(seq 1 6); do
+      echo "Waiting for preview-project IAM propagation ($attempt/6)..."
+      sleep 10
+      if gcloud iam workload-identity-pools describe "$pool" --project="$preview_project" --location=global >/dev/null 2>&1 || gcloud iam workload-identity-pools create "$pool" --project="$preview_project" --location=global --display-name='King Rico Preview GitHub'; then
+        pool_ready=true; break
+      fi
+    done
+    [[ "$pool_ready" == true ]] || { echo 'WIF pool creation is still denied. Send this error; do not change production IAM.' >&2; exit 1; }
+  fi
 fi
 condition="assertion.repository_id=='1408805633' && assertion.repository_owner_id=='195614404' && assertion.ref.startsWith('refs/heads/codex/') && assertion.workflow_ref.startsWith('Ric-lab/King-Rico/.github/workflows/preview-channel.yml@refs/heads/codex/') && (assertion.event_name=='push' || assertion.event_name=='workflow_dispatch')"
 if ! gcloud iam workload-identity-pools providers describe github --project="$preview_project" --location=global --workload-identity-pool="$pool" >/dev/null 2>&1; then

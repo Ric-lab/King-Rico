@@ -1,11 +1,31 @@
 # Handoff: a mesma tarefa, contínua
 
 **Prévia online:** aguardando provisionamento Google no Cloud Shell; projeto
-isolado autorizado, mas ainda não criado. Sem URL confirmada.
+isolado criado (`king-rico-previa-1408805633`); criação do pool WIF
+negada no Cloud Shell. Sem URL confirmada.
 Execução: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
 
 Entrada mais recente no topo. Quem for chamado (Claude ou Codex) continua
 exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
+
+## 2026-11-03 · Codex · retomar criação do pool WIF
+
+- **Tarefa em andamento:** concluir a prévia isolada autorizada pelo dono.
+- **Feito:** o dono executou o script no Cloud Shell; projeto
+  `king-rico-previa-1408805633` criado e APIs habilitadas. Parou em
+  `iam.workloadIdentityPools.create` com PERMISSION_DENIED.
+- **Correção:** script preserva o projeto existente; se a criação do pool
+  falhar, atribui `roles/iam.workloadIdentityPoolAdmin` ao usuário de setup
+  somente nesse projeto e tenta novamente por até seis intervalos de 10s.
+  Owner também inclui a permissão; propagação do projeto novo pode explicar
+  a falha. Se a concessão ou as tentativas falharem, investigar o erro real,
+  sem conceder papéis em produção. Sintaxe Bash conferida.
+- **Próximo passo exato:** dono roda `git pull --ff-only` e
+  `bash scripts/setup-preview-cloud.sh` no clone já aberto no Cloud Shell.
+  Com as duas variáveis públicas finais, configurar GitHub e disparar deploy;
+  conferir QA remoto e registrar URL aqui e em PREVIA-CIRCUS.md.
+- **Limite:** não há credenciais Google nesta VM; correção ainda não executada
+  no Cloud Shell. Nenhuma nova URL foi confirmada.
 
 ## 2026-11-03 · Codex · projeto de prévia isolado autorizado
 

@@ -41,6 +41,23 @@ Depois faça um push em `codex/penalty-clown-preview` (ou execute o workflow
 manualmente quando disponível no GitHub). A publicação e o teste online são
 automáticos. Só então registrar a URL real no HANDOFF e no guia da prévia.
 
+## Retomar após PERMISSION_DENIED no pool
+
+O projeto `king-rico-previa-1408805633` já foi criado pelo proprietário.
+No clone do Cloud Shell, basta atualizar e executar novamente:
+
+```sh
+git pull --ff-only origin codex/penalty-clown-preview
+bash scripts/setup-preview-cloud.sh
+```
+
+O script tenta criar o pool e, se houver falha, concede ao usuário de setup
+`roles/iam.workloadIdentityPoolAdmin` **apenas no projeto de prévia** e repete
+com espera para propagação. Owner já contém `iam.workloadIdentityPools.create`;
+a propagação de IAM do projeto recém-criado é uma causa possível, não confirmada.
+Se ainda falhar, conservar a saída do erro para diagnosticar negação/política.
+Referência: https://docs.cloud.google.com/iam/docs/manage-workload-identity-pools-providers
+
 ## Bloqueio original e diagnóstico
 
 Execução real: https://github.com/Ric-lab/King-Rico/actions/runs/41641476323
