@@ -142,9 +142,9 @@ export async function installDrumDepth(stage,reels){
     const effect=(win?'win':held?'held':'idle')+(dimmed?':dim':'');
     if(materials[i].userData.effect===effect)continue;
     materials[i].userData.effect=effect;
-    materials[i].emissive.setHex(win?0xc07a0d:held?0x187c42:0x000000);
+    materials[i].emissive.setHex(win?0xffb81c:held?0x187c42:0x000000);
     states[i].uniforms.drumDim.value=dimmed?.62:1;
-    materials[i].emissiveIntensity=win?.3:held?.2:0;changed=true;
+    materials[i].emissiveIntensity=win?.85:held?.2:0;changed=true;
    }
    if(changed)schedule();
   };

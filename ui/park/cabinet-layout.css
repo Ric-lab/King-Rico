@@ -9,3 +9,7 @@
 .park-circus-stage[data-cabinet-layout] :is(.park-panel-control,[aria-label="Diminuir aposta"],[aria-label="Aumentar aposta"]){top:calc(548px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
 .park-circus-stage[data-cabinet-layout] .park-mode-label{top:calc(594px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
 .park-circus-stage[data-cabinet-layout] [data-spin-btn]{top:calc(613px + var(--park-machine-drop,0px) + var(--park-controls-shift))!important}
+
+/* Tubos laterais um pouco para fora: rolos maiores respiram. */
+.park-circus-stage[data-cabinet-layout] .park-meter-left{left:-7px}
+.park-circus-stage[data-cabinet-layout] .park-meter-right{right:-7px}
