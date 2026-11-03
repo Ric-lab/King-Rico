@@ -1,4 +1,5 @@
 import {pocketColors} from './wheel-palette.js';
+import {installAdmission} from './admission.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion,confetti} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
@@ -15,7 +16,7 @@ const nativeSpin=Cloud.spin;
 Cloud.spin=async(...args)=>{const before=state.spins,actual=!!window.__fc?._cloudRequest;const r=await nativeSpin(...args);sync();if(args[0]==='circus'){r.ticket=r.outcome.ticketAward===3;window.__fc?._parkChargeConfirmed?.(before,r,actual);}return r;};
 const game=document.querySelector('meta[name="king-rico-game"]')?.content;
 Cloud.parkMode=['clown','penalty','flying','fingo'].includes(game);
-for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1]]){const native=Cloud[name];Cloud[name]=async(...args)=>{let round=Cloud.player?.[name+'Round'];if(!round&&!state.passes[name]){if(!await entry(name))throw Object.assign(Error('Escolha uma entrada.'),{code:'king-rico/round-conflict'});round=Cloud.player?.[name+'Round'];}args[betIndex]=round?round.betUnits/100:25;const r=await native(...args);sync();return r;};}
+for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1]]){const native=Cloud[name];Cloud[name]=async(...args)=>{const round=Cloud.player?.[name+'Round'];if(!round&&!state.passes[name]){void entry(name);throw Object.assign(Error('Escolha a entrada antes de jogar.'),{code:'king-rico/entry-required'});}args[betIndex]=round?round.betUnits/100:25;const r=await native(...args);sync();return r;};}
 function toast(text){let e=document.querySelector('.park-toast');if(!e){e=document.createElement('div');e.className='park-toast';e.setAttribute('role','status');document.body.append(e);}e.textContent=text;e.hidden=false;clearTimeout(e._timer);e._timer=setTimeout(()=>e.hidden=true,4000);}
 export const format=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
 const names={clown:'Fortune Clown',penalty:'Fortune Pênalti',flying:'Flying Clown',fingo:'Fingo rápido'};
@@ -37,19 +38,10 @@ function boot(){
 
  if(document.querySelector('meta[name="king-rico-game"]')?.content==='circus')bootCircus();
  const game=document.querySelector('meta[name="king-rico-game"]')?.content;
- if(['clown','penalty','flying','fingo'].includes(game))Cloud.ready.then(async()=>{
-  // The loading screen captures clicks while art is decoding. Show the entry
-  // only after that screen leaves, so the first choice always reaches its button.
-  if(document.getElementById('kr-boot-screen'))await new Promise(resolve=>{
-   const observer=new MutationObserver(()=>{if(!document.getElementById('kr-boot-screen')){observer.disconnect();resolve();}});
-   observer.observe(document.body,{childList:true});
-  });
-  if(!state.passes[game]&&!Cloud.player[game+'Round'])entry(game);
- });
+ if(['clown','penalty','flying','fingo'].includes(game))installAdmission({Cloud,
+  authorized:()=>!!(state.passes[game]||Cloud.player?.[game+'Round']),
+  requestEntry:()=>entry(game)});
  document.addEventListener('click',e=>{const a=e.target.closest('.kr-hud-home');if(a){e.preventDefault();e.stopImmediatePropagation();location.href='/circus';}},true);
- if(['clown','penalty','flying','fingo'].includes(game)){
-  const note=document.createElement('a');note.className='park-attraction-tag';note.href='/park';note.textContent='‹ PARQUE · ENTRADA INCLUÍDA';document.body.append(note);
- }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 let displayState,wheelOpen=false;

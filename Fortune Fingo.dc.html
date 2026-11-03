@@ -216,7 +216,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </sc-if>
 
     <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: fgFade .2s ease-out;">
+      <div onClick="{{ closeWin }}" role="button" data-park-result="true" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: fgFade .2s ease-out;">
         <div style="width: 320px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: fgPop .45s cubic-bezier(.2,1.4,.4,1);">
           <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 34px; color: #ffd257; text-shadow: 0 3px 0 #6b2e05; white-space: nowrap;">{{ winTitle }}</span>
           <span style="font-size: 58px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
