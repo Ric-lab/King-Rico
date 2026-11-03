@@ -18,7 +18,7 @@ export async function installDrumDepth(stage,reels){
    dispose(){original.dispose();state.moving=false;state.items=null;paint(cell);}
   };
  };
- let renderer,observer,effectsObserver,raf,geometry,backing,recessShadow,hoodGeometry,hoodMaterial,atlas,ticket,shadow,materials=[];
+ let renderer,observer,effectsObserver,raf,geometry,backing,recessShadow,hoodGeometry,sideGeometry,hoodMaterial,atlas,ticket,shadow,materials=[];
  const cleanup=()=>{
   if(disposed)return;
   disposed=true;active=false;delete stage.dataset.drumDepth;
@@ -27,7 +27,7 @@ export async function installDrumDepth(stage,reels){
   cancelAnimationFrame(raf);observer?.disconnect();effectsObserver?.disconnect();
   tape.create=originalCreate;renderer?.dispose();renderer?.domElement.remove();
   geometry?.dispose();backing?.geometry.dispose();backing?.material.dispose();recessShadow?.material.dispose();
-  hoodGeometry?.dispose();hoodMaterial?.dispose();
+  hoodGeometry?.dispose();sideGeometry?.dispose();hoodMaterial?.dispose();
   for(const m of materials)m.dispose();atlas?.dispose();ticket?.dispose();shadow?.dispose();
  };
  window.addEventListener('pagehide',cleanup,{once:true});
@@ -73,6 +73,14 @@ export async function installDrumDepth(stage,reels){
    hood.position.copy(up).multiplyScalar(219-(73+row*146)).add(new T.Vector3(0,70,55));
    hood.castShadow=true;scene.add(hood);
   }
+  // The axial ends sit against the housing. Sidewalls stay out of the image,
+  // while their shallow contact shadows anchor the paper without new dividers.
+  sideGeometry=new T.BoxGeometry(4,480,60);
+  for(let column=0;column<4;column++){
+   const wall=new T.Mesh(sideGeometry,hoodMaterial);
+   wall.position.copy(right).multiplyScalar(column*134-201).addScaledVector(front,35);
+   wall.quaternion.copy(camera.quaternion);wall.castShadow=true;scene.add(wall);
+  }
   geometry=new T.CylinderGeometry(66,66,126,96,1,false,-Math.PI,Math.PI*2);geometry.rotateZ(-Math.PI/2);
   const readSymbol=cell=>{
    const node=cells[cell];if(node.dataset.parkTicket==='true')return 10;
@@ -106,8 +114,10 @@ export async function installDrumDepth(stage,reels){
     // where the paper turns under the housing, leaving the front print intact.
     shader.fragmentShader=shader.fragmentShader.replace('#include <aomap_fragment>',`#include <aomap_fragment>
      float housingOcclusion=1.0-.72*smoothstep(.25,.98,clamp(drumLocal.y/66.0,0.0,1.0));
-     reflectedLight.indirectDiffuse*=housingOcclusion;
-     reflectedLight.indirectSpecular*=housingOcclusion;`);
+     float axialClearance=max(0.0,63.0-abs(drumLocal.x));
+     float sideOcclusion=mix(.35,1.0,smoothstep(0.0,17.0,axialClearance));
+     reflectedLight.indirectDiffuse*=housingOcclusion*sideOcclusion;
+     reflectedLight.indirectSpecular*=housingOcclusion*sideOcclusion;`);
    };
    material.customProgramCacheKey=()=> 'king-rico-paper-cylinder-v1';
    const mesh=new T.Mesh(geometry,material);mesh.position.copy(right).multiplyScalar(67+cell%3*134-201).addScaledVector(up,219-(73+Math.floor(cell/3)*146));

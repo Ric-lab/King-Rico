@@ -13,7 +13,7 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
  page.on('response',lambda r:bad.append(r.url) if r.status>=400 else None)
- page.goto(BASE+'/Fortune%20Circus.dc.html?v=78')
+ page.goto(BASE+'/Fortune%20Circus.dc.html?v=lateral-contact')
  page.wait_for_function('document.querySelector("[data-drum-depth=ready]")&&!document.querySelector("#kr-boot-screen")')
  calls=page.locator("[data-drum-depth]").get_attribute("data-drum-depth-calls")
  def matches():
@@ -24,13 +24,22 @@ with sync_playwright() as p:
  # while the approved front lighting remains clear enough to read the symbol.
  rect=page.locator('.park-drum-depth').bounding_box()
  image=Image.open('work/reel-depth-3d-idle.png').convert('RGB')
- def paper_luma(top,bottom):
-  box=(round(rect['x']+10/402*rect['width']),round(rect['y']+top/438*rect['height']),
-       round(rect['x']+16/402*rect['width']),round(rect['y']+bottom/438*rect['height']))
+ def paper_luma(top,bottom,left=10,right=16):
+  box=(round(rect['x']+left/402*rect['width']),round(rect['y']+top/438*rect['height']),
+       round(rect['x']+right/402*rect['width']),round(rect['y']+bottom/438*rect['height']))
   r,g,b=ImageStat.Stat(image.crop(box)).mean
   return .2126*r+.7152*g+.0722*b
  upper,front=paper_luma(13,24),paper_luma(70,80)
  assert upper<front*.9,{'upper':upper,'front':front}
+ # Unprinted axial margins must darken toward both housing contacts. Sample
+ # outside the symbol so changing the artwork cannot satisfy this assertion.
+ sides=[]
+ for column in range(3):
+  offset=column*134
+  left,inner_left=paper_luma(70,80,offset+7,offset+12),paper_luma(70,80,offset+16,offset+18)
+  right,inner_right=paper_luma(70,80,offset+122,offset+127),paper_luma(70,80,offset+116,offset+118)
+  assert left<inner_left*.985 and right<inner_right*.985,{'column':column,'left':[left,inner_left],'right':[right,inner_right]}
+  sides.append({'left':round(left/inner_left,3),'right':round(right/inner_right,3)})
  before=page.evaluate('KingRicoCloud.park.spins')
  page.get_by_role('button',name='Girar',exact=True).click()
  page.wait_for_function('document.querySelectorAll(".park-physical-reel").length>0&&document.querySelector("[data-drum-depth=ready]")')
@@ -55,12 +64,12 @@ with sync_playwright() as p:
  page.wait_for_function('(n)=>KingRicoCloud.park.spins===n',arg=before+2)
  assert not errors,errors
  assert not bad,bad
- print(json.dumps({'WebGL':calls+' draws','upperShadow':{'upper':round(upper,1),'front':round(front,1)},'sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
+ print(json.dumps({'WebGL':calls+' draws','upperShadow':{'upper':round(upper,1),'front':round(front,1)},'lateralContactRatios':sides,'sameIdleAndResultSymbols':True,'spinConfirmed':True,'fallbackPlayable':True,'viewports':[390,360,430],'errors':errors,'missing':bad}))
  # A device without WebGL must start directly in the 2D renderer.
  second=b.new_page(viewport={'width':390,'height':844})
  second.add_init_script("""(()=>{const original=HTMLCanvasElement.prototype.getContext;
  HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl2'?null:original.call(this,type,...args)};})()""")
- second.goto(BASE+'/Fortune%20Circus.dc.html?v=78')
+ second.goto(BASE+'/Fortune%20Circus.dc.html?v=lateral-contact')
  second.wait_for_function('document.querySelector("[data-drum-depth-init=fallback]")&&!document.querySelector("#kr-boot-screen")')
  assert second.evaluate('KingRicoCloud.uid')=='park-preview'
  assert second.locator('.park-drum-depth').count()==0

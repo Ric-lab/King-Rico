@@ -42,6 +42,10 @@ a geometria dos cilindros, a câmera e a impressão dos símbolos são preservad
 Na v79, a sombra da proteção superior e a oclusão da luz ambiente escurecem
 apenas a curva que entra no alojamento. Pesquisa, fontes e validação estão em
 [Iluminação dos rolos](../../docs/ROLOS-ILUMINACAO.md).
+No ajuste lateral local de 03/11/2026, paredes internas invisíveis projetam
+sombra de contato e a luz indireta cai suavemente nas extremidades do papel.
+A impressão central, a câmera e os espaços são preservados. Esse ajuste foi
+guardado em commit; não atualizou a prévia hospedada nem o Firebase oficial.
 Validação local da prévia: `python3 tests/circus_depth_browser.py` com a
 carteira fictícia e o servidor da prévia em `127.0.0.1:4178`.
 A iluminação 2D atende três colunas contínuas ou os nove rolos da prévia.

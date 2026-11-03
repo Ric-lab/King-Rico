@@ -18,7 +18,7 @@ O código, os testes e o histórico Git resolvem divergências com textos antigo
 - [Circus e parque: ingressos, roleta e Fingo rápido](PARQUE.md)
 
 - [Design System](../DESIGN-SYSTEM.md)
-- [Iluminação dos rolos: estudo e prévia v79](ROLOS-ILUMINACAO.md)
+- [Iluminação dos rolos: prévia e ajuste lateral local](ROLOS-ILUMINACAO.md)
 - [Controles compartilhados](../ui/CONTROLS.md)
 - [Pipeline de assets](../guidelines/asset-pipeline.md)
 - [Capas e abertura](DIRECAO-DAS-CAPAS.md)
