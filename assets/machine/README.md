@@ -1,3 +1,8 @@
+> Nesta branch, a prévia usa nove tambores independentes (`HEIGHT=146`) e
+> `.park-reel-paper`. A descrição de três colunas abaixo registra a base anterior,
+> ainda publicada no site oficial. Para reconstruir a versão desta branch,
+> siga [Prévia Circus](../../docs/PREVIA-CIRCUS.md).
+
 # Peças da máquina Circus
 
 Cinco imagens independentes geradas com GPT Image: base dos controles, moldura

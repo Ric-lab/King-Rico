@@ -1,5 +1,11 @@
 # Circus e parque
 
+> Estado desta branch (03/11/2026): Circus usa nove tambores independentes,
+> fita ordenada com `HEIGHT=146`, papel por casa e profundidade Three.js.
+> Os registros anteriores de três colunas descrevem a versão oficial anterior.
+> Fontes, execução e limites da carteira de teste: [Prévia completa](PREVIA-CIRCUS.md).
+> Esta revisão está apenas no GitHub; não foi publicada no Firebase.
+
 Na versão aprovada em 02/11/2026 (prévia v54), Circus é a tela inicial. O endereço principal e o atalho
 instalado apontam para `/circus`; `/home` mantém compatibilidade com a mesma
 tela. O parque passa a `/park`, mantendo `Home.dc.html` como fonte por

@@ -91,10 +91,7 @@ a:hover { color: #fff3c4; }
   <div class="park-part-prize" aria-hidden="true"></div>
   <div class="park-reel-window-back" aria-hidden="true"></div>
   <div class="park-reels" data-reel-moving="{{ reelMoving }}">
-    <div class="park-reel-shell park-reel-shell-0" aria-hidden="true"></div>
-    <div class="park-reel-shell park-reel-shell-1" aria-hidden="true"></div>
-    <div class="park-reel-shell park-reel-shell-2" aria-hidden="true"></div>
-    <div class="park-reel-separator park-reel-separator-0" aria-hidden="true"></div><div class="park-reel-separator park-reel-separator-1" aria-hidden="true"></div>
+    <div class="park-reel-paper" aria-hidden="true"></div>
   <div class="park-reel-cell park-part-reel-top" data-park-column="0" data-reel-spinning="{{ c0.spin }}" data-dimmed="{{ c0.dimmed }}" data-held="{{ c0.lock }}" style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="0" data-park-ticket="{{ c0.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
     <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c0.winFx }};"></div></sc-if>
@@ -439,6 +436,9 @@ const SYMBOLS = [
   { id: 'wild', pay: 33.3, w: 2.4 }
 ];
 const WILD = 9;
+// The menu and all nine drums share this exact sequence; special symbols bookend it.
+const PAY_ORDER = SYMBOLS.map((sy,i)=>({i,pay:sy.pay})).sort((a,b)=>b.pay-a.pay).map(o=>o.i);
+const REEL_ORDER = [11,...PAY_ORDER,10];
 // Haptics: one table for the whole game. Web can't set amplitude, so "intensity" = pulse length (ms).
 // Rule: touch confirms touch (short), outcomes scale with value, nothing buzzes continuously or on passive repeats.
 const HAPTIC = {
@@ -875,48 +875,42 @@ class Component extends DCLogic {
     this.reelsHalt();
     const turbo = !!this.state.turbo, spT = turbo ? 0.6 : 1;
     this._rs = { t0: this.now(), spT, v0: 1.24 * (turbo ? 1.35 : 1), A: 650 * spT, cells: {} };
-    this._rs.groups=this.reelColumns(cells);this._rs.tapes={};this._rs.from=this.state.grid.slice();this._rs.target=target.slice();
+    this._rs.sequence=cells.slice();this._rs.groups=this.reelGroups(cells);this._rs.tapes={};this._rs.from=this.state.grid.slice();this._rs.target=target.slice();
     this._rs.groups.forEach(group=>{this._rs.cells[group[0]]=null;});
     // rAF freezes in background tabs; fall back to a timer so a spin always resolves
     const tick = () => { this.reelsFrame(); if (this._rs) { if (document.hidden) this._raf = setTimeout(tick, 60); else this._raf = requestAnimationFrame(tick); } };
     this._raf = document.hidden ? setTimeout(tick, 60) : requestAnimationFrame(tick);
   }
-  // A physical reel owns the three symbol windows of its column.
-  reelColumns(cells) {
-    return [0, 1, 2].map(col => cells.filter(i => i % 3 === col).sort((a, b) => a - b)).filter(group => group.length);
-  }
-  reelColumnStop(cells, T, callbacks) {
+  // Every visible house owns its own physical tape, including special respins.
+  reelOrder() { return this.state.feature ? [...REEL_ORDER,-1] : REEL_ORDER.slice(); }
+  reelGroups(cells) { return cells.map(i=>[i]); }
+  reelCellStop(cells, T, callbacks) {
     let done=false;
     this.reelStop(cells[0],T,{...callbacks,onDone:()=>{if(done)return;done=true;callbacks.onDone?.();}});
   }
 
   reelStop(i, T, o) {
-    const R = this._rs, v0 = R.v0, A = R.A, K = 4.2, P0 = -v0 * A / 2, Dmin = 900 * R.spT;
-    const pAt = t => t < A ? v0 * t * t / (2 * A) : P0 + v0 * t;
-    let s0 = Math.max(A, T - Dmin), pe = Math.floor((pAt(s0) + v0 * (T - s0) / K) / 128) * 128;
-    let s = (pe - P0 - v0 * T / K) / (v0 * (1 - 1 / K)), D = T - s;
-    if (s < A) { s = A; pe = Math.max(128, Math.ceil(pAt(A) / 128) * 128 + 128); D = K * (pe - pAt(A)) / v0; }
-    if (o.suspense === 'soft') {
-      // long gentle approach: reaches the teaser still rolling slowly, then creeps one more symbol and settles
-      const r = 0.42, D1 = 1500 * R.spT;
-      pe = Math.floor((pAt(T - D1) + r * v0 * D1) / 128) * 128;
-      s = Math.max(A, (pe - P0 - r * v0 * T) / ((1 - r) * v0)); D = T - s;
-    }
-    R.cells[i] = Object.assign({ s, D, ps: pAt(s), pe, pf: pe + (o.suspense ? 128 : 0), H: 420 * R.spT, L: 700 * R.spT, S2: 950 * R.spT, vT: 0.25, pAt, tile: false, hit: false }, o);
+    const R=this._rs,A=R.A,K=4.2,order=this.reelOrder(),extra=o.suspense?128:0;
+    const soft=o.suspense==='soft',Dmin=(soft?1500:900)*R.spT;
+    const s=Math.max(A,T-Dmin),D=T-s,area=s-A/2+D*(soft?.42:1/K);
+    const pf=window.KingRicoReelTape.stopFor({from:R.from[i],target:R.target[i],order,near:R.v0*area+extra});
+    const pe=pf-extra,v0=pe/area;
+    const pAt=t=>t<A?v0*t*t/(2*A):v0*(t-A/2);
+    R.cells[i]=Object.assign({s,D,ps:pAt(s),pe,pf,v0,H:420*R.spT,L:700*R.spT,S2:950*R.spT,vT:.25,pAt,tile:false,hit:false},o);
     const container=typeof document!=='undefined'&&document.querySelector('.park-circus-stage .park-reels');
-    if(container&&window.KingRicoReelTape){
-      const col=i%3,group=R.groups.find(g=>g[0]===i),ticket=!this.state.feature&&this._cloudSpin?.outcome?.ticketAward===3;
-      R.tapes[col]=window.KingRicoReelTape.create(container,col,group,{from:R.from,target:R.target,seed:Math.floor(R.t0),ticket,wasTicket:!!this._lastReelTicket});
-      R.tapes[col].configure(R.cells[i].pf);
+    if(container){
+      R.tapes[i]=window.KingRicoReelTape.create(container,i,{from:R.from,target:R.target,order});
+      R.tapes[i].configure(pf);
     }
   }
+
   reelsFrame() {
     const R = this._rs; if (!R) return;
-    const t = this.now() - R.t0, v0 = R.v0, A = R.A;
+    const t = this.now() - R.t0, A = R.A;
     const eob = u => { const x = u - 1; return 1 + 2.2 * x * x * x + 1.2 * x * x; };
     const deob = u => { const x = u - 1; return 6.6 * x * x + 2.4 * x; };
-    Object.keys(R.cells).forEach(key => {
-      const i = +key, c = R.cells[key];
+    R.sequence.filter(key=>Object.prototype.hasOwnProperty.call(R.cells,key)).forEach(key => {
+      const i = +key, c = R.cells[key], v0 = c?.v0 ?? R.v0;
       let p, v, land = false;
       if (!c || t < c.s) { p = t < A ? v0 * t * t / (2 * A) : -v0 * A / 2 + v0 * t; v = t < A ? v0 * t / A : v0; }
       else {
@@ -936,7 +930,7 @@ class Component extends DCLogic {
         else if (c.suspense && t < e1 + c.H + c.L) { const u = (t - e1 - c.H) / c.L, w = u * u * (3 - 2 * u); p = c.pe + 10 + 118 * eob(w); v = Math.abs(118 * deob(w) * 6 * u * (1 - u) / c.L); if (!c.hit && eob(w) >= 1) { c.hit = true; c.onImpact && c.onImpact(); } }
         else { p = c.pf; v = 0; land = true; }
       }
-      const tape=R.tapes?.[i%3];tape?.draw(p,v);
+      const tape=R.tapes?.[i];tape?.draw(p,v);
       if(land){delete R.cells[key];c.onDone?.();tape?.dispose();}
 
     });
@@ -1063,23 +1057,7 @@ class Component extends DCLogic {
     car.connect(g); g.connect(out);
     car.start(t); mod.start(t); car.stop(t + dur + 0.05); mod.stop(t + dur + 0.05);
   }
-  spinClick(down) {
-    if (!this.gate()) return;
-    const ac = this.ac(), out = this.out(); if (!ac || !out) return;
-    const t = ac.currentTime + 0.001, r = 0.99 + Math.random() * 0.02;
-    const body = ac.createOscillator(), g = ac.createGain(); body.type = 'triangle';
-    body.frequency.setValueAtTime((down ? 185 : 310) * r, t);
-    body.frequency.exponentialRampToValueAtTime(down ? 155 : 270, t + (down ? .022 : .018));
-    g.gain.setValueAtTime(.0001, t);g.gain.exponentialRampToValueAtTime(down ? .13 : .045, t + .002);
-    g.gain.exponentialRampToValueAtTime(.0001, t + (down ? .042 : .028));
-    body.connect(g);g.connect(out);body.start(t);body.stop(t + .055);
-    const n = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain();n.buffer = this.noise(ac);
-    f.type = 'bandpass';f.frequency.value = down ? 1450 : 2150;f.Q.value = .8;
-    ng.gain.setValueAtTime(down ? .085 : .035, t);ng.gain.exponentialRampToValueAtTime(.0001, t + (down ? .018 : .012));
-    n.connect(f);f.connect(ng);ng.connect(out);n.start(t);n.stop(t + .03);
-  }
-  click(down, kind) {
-    if (kind === 'spin') return this.spinClick(down);
+  click(down) {
     const ac = this.ac(), out = this.out(); if (!ac) return;
     const t = ac.currentTime + 0.001;
     if (!this._white || this._white.sampleRate !== ac.sampleRate) {
@@ -1348,18 +1326,18 @@ class Component extends DCLogic {
 
     clearInterval(this.ticker);
     this.reelsStart(STOP_ORDER,target);
-    const spT = this.state.turbo ? 0.6 : 1, columns = this.reelColumns(STOP_ORDER); let left = columns.length;
-    columns.forEach((cells, k) => {
-      const suspense = k === columns.length - 1 && anticipate ? (this.state.auto ? 'big' : 'soft') : false;
-      const note = NOTES[k * 3 + 2];
-      this.reelColumnStop(cells, spT * (1800 + k * 620), {
+    const spT = this.state.turbo ? 0.6 : 1, reels = this.reelGroups(STOP_ORDER); let left = reels.length;
+    reels.forEach((cells, k) => {
+      const suspense = k === reels.length - 1 && anticipate ? (this.state.auto ? 'big' : 'soft') : false;
+      const note = NOTES[k];
+      this.reelCellStop(cells, spT * (1500 + k * 170), {
         suspense,
         onTile: () => this.setState(s => { const grid = s.grid.slice(); cells.forEach(cell => { grid[cell] = target[cell]; }); return { grid }; }),
         onTease: () => { try { if (suspense === 'big') { this.sfxAntic(); this.hap('tease'); } else this.pluck(note * 0.75, 0.03, 0.3); } catch (e) {} },
-        onImpact: () => { try { this.pluck(note, 0.085, 0.5); this.burst(900, 2.5, 0.016, 0.05); } catch (e) {} this.hap(k === columns.length - 1 ? 'lastStop' : 'reelStop'); },
+        onImpact: () => { try { this.pluck(note, 0.085, 0.5); this.burst(900, 2.5, 0.016, 0.05); } catch (e) {} this.hap(k === reels.length - 1 ? 'lastStop' : 'reelStop'); },
         onDone: () => {
-          this.setState(s => ({ spinCells: s.spinCells.filter(cell => !cells.includes(cell)), antic: k === 1 ? anticipate : (k === 2 ? false : s.antic) }));
-          if (k === 1 && anticipate) this.later(() => this.sfxAntic(), 40);
+          this.setState(s => ({ spinCells: s.spinCells.filter(cell => !cells.includes(cell)), antic: k === reels.length-2 ? anticipate : (k === reels.length-1 ? false : s.antic) }));
+          if (k === reels.length-2 && anticipate) this.later(() => this.sfxAntic(), 40);
           if (--left === 0) this.later(() => { this.stopWhirr(); this.payout(cloudResult ? cloudResult.outcome.res : this.evaluate(target, bet), bet, trigger); }, 240);
         }
       });
@@ -1741,13 +1719,13 @@ class Component extends DCLogic {
     clearInterval(this.ticker);
     const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
     const result = plan ? plan.rounds[this._cloudFeatureRound++].result : open.map(i => { const r = Math.random(); return { i, v: r < FEAT_P_SYM ? sym : (r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1) }; });
-    const spT = this.state.turbo ? 0.6 : 1, columns = this.reelColumns(open); let left = columns.length;
+    const spT = this.state.turbo ? 0.6 : 1, reels = this.reelGroups(open); let left = reels.length;
     const tapeTarget=this.state.grid.slice();result.forEach(o=>{tapeTarget[o.i]=o.v;});
     this.reelsStart(open,tapeTarget);
-    columns.forEach((cells, k) => {
+    reels.forEach((cells, k) => {
       const outcomes = cells.map(i => result.find(o => o.i === i));
-      const note = NOTES[(cells[0] % 3) * 3 + 2];
-      this.reelColumnStop(cells, spT * (1400 + k * 520), {
+      const note = NOTES[STOP_ORDER.indexOf(cells[0])];
+      this.reelCellStop(cells, spT * (1200 + k * 140), {
         onTile: () => this.setState(s => { const grid = s.grid.slice(); outcomes.forEach(o => { grid[o.i] = o.v; }); return { grid }; }),
         onImpact: () => { const good = outcomes.some(o => o.v >= 0); try { this.pluck(note, good ? 0.09 : 0.05, 0.45); if (good) this.bell(note * 4, 0.3, 0.05, 0.04); } catch (e) {} },
         onDone: () => {
@@ -1932,7 +1910,7 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: SYMBOLS.map((sy, i) => ({ i, sy })).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      payList: PAY_ORDER.map(i => ({ pos: i * 100 / 11 + '%', mult: 'x' + SYMBOLS[i].pay.toFixed(1).replace('.', ',') })),
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1, spinPulseActive: busy || s.queued ? '1' : '0',

@@ -1,23 +1,40 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
-const context={window:{}};vm.runInNewContext(fs.readFileSync(require.resolve('../ui/park/reel-tape.js'),'utf8'),context);const {plan,PITCH}=context.window.KingRicoReelTape;
-test('a reel tape lands three arbitrary committed symbols without changing identities between rows',()=>{
- const from=[0,1,2,3,4,5,6,7,8],target=[7,9,10,1,2,3,8,0,6],stop=128*14;
- for(let column=0;column<3;column++){
-  const tape=plan({column,from,target,stop,seed:17}),anchor=-stop/PITCH;
-  assert.deepEqual(Array.from(tape.filter(x=>x.index>=0&&x.index<3),x=>x.symbol),[from[column],from[column+3],from[column+6]]);
-  const final=tape.filter(x=>x.index>=anchor&&x.index<anchor+3);
-  assert.deepEqual(Array.from(final,x=>x.symbol),[target[column],target[column+3],target[column+6]]);
-  assert.deepEqual(Array.from(final,x=>x.index*PITCH+stop),[0,128,256]);
-  for(const symbol of tape){assert.ok(Object.isFrozen(symbol));const first=symbol.symbol;
-   for(const phase of [0,128,1024,stop]){const screen=symbol.index*PITCH+phase;assert.equal(symbol.symbol,first);assert.equal((screen-phase)/PITCH,symbol.index);}
-   if(symbol.symbol===10)assert.equal(symbol.ticket,true);
+const context={window:{}};vm.runInNewContext(fs.readFileSync(require.resolve('../ui/park/reel-tape.js'),'utf8'),context);const {plan,stopFor,PITCH,HEIGHT}=context.window.KingRicoReelTape;
+const order=[11,9,8,7,6,5,0,3,4,2,1,10];
+test('all nine tapes keep the paytable order and land every possible committed symbol without patches',()=>{
+ for(let cell=0;cell<9;cell++)for(const first of order)for(const last of order){
+  const from=Array(9).fill(first),target=Array(9).fill(last);
+  const stop=stopFor({from:first,target:last,order,near:1800+cell*170});
+  assert.ok(stop>=order.length*PITCH);assert.equal(stop%PITCH,0);
+  const tape=plan({cell,from,target,stop,order});
+  assert.equal(tape.find(x=>x.index===0).symbol,first);
+  assert.equal(tape.find(x=>x.index===-stop/PITCH).symbol,last);
+  const passing=Array.from(tape).reverse();
+  for(let i=0;i<passing.length;i++){
+   assert.ok(Object.isFrozen(passing[i]));
+   if(i)assert.equal(order[(order.indexOf(passing[i-1].symbol)+1)%order.length],passing[i].symbol);
+   if(passing[i].symbol===10)assert.equal(passing[i].ticket,true);
   }
  }
 });
-test('special-round tape preserves held positions and empty outcomes',()=>{
- const from=[2,-1,-1,2,-1,-1,2,-1,-1],target=[2,-1,2,2,-1,-1,2,2,-1],stop=128*6;
- for(let column=0;column<3;column++){
-  const tape=plan({column,from,target,stop}),anchor=-6;
-  assert.deepEqual(Array.from(tape.filter(x=>x.index>=anchor&&x.index<anchor+3),x=>x.symbol),[target[column],target[column+3],target[column+6]]);
+test('special tapes use the same sequence and a fixed empty position while held houses stay out of the animation',()=>{
+ const sequence=[...order,-1],from=[2,-1,-1,2,-1,-1,2,-1,-1],target=[2,-1,2,2,-1,-1,2,2,-1];
+ for(const cell of [1,2,4,5,7,8]){
+  const stop=stopFor({from:from[cell],target:target[cell],order:sequence,near:1800});
+  const tape=plan({cell,from,target,stop,order:sequence});
+  assert.equal(tape.find(x=>x.index===-stop/PITCH).symbol,target[cell]);
  }
+ assert.throws(()=>stopFor({from:12,target:1,order,near:2000}),/missing/);
+});
+
+test('cylinder projection compresses the print toward the lips and keeps neighboring bands joined',()=>{
+ const {projectBand,RADIUS}=context.window.KingRicoReelTape;
+ const center=projectBand(-8,8),lip=projectBand(90,106);
+ assert.ok(lip.bottom-lip.top<center.bottom-center.top);
+ assert.ok(lip.width<center.width);
+ const left=projectBand(-40,-30),right=projectBand(30,40);
+ assert.ok(Math.abs(left.top+right.bottom)<1e-8);
+ for(let y=-100;y<100;y+=5)assert.ok(Math.abs(projectBand(y,y+5).bottom-projectBand(y+5,y+10).top)<1e-8);
+ assert.equal(projectBand(Math.PI*RADIUS/2+1,Math.PI*RADIUS/2+5),null);
+ assert.equal(projectBand(-Math.PI*RADIUS/2-5,-Math.PI*RADIUS/2-1),null);
 });

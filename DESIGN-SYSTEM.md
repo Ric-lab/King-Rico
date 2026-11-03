@@ -1,5 +1,11 @@
 # King Rico — Design System
 
+> Estado desta branch (03/11/2026): Circus usa nove tambores independentes,
+> fita ordenada com `HEIGHT=146`, papel por casa e profundidade Three.js.
+> Os registros anteriores de três colunas descrevem a versão oficial anterior.
+> Fontes, execução e limites da carteira de teste: [Prévia completa](docs/PREVIA-CIRCUS.md).
+> Esta revisão está apenas no GitHub; não foi publicada no Firebase.
+
 Guia do produto atual, revisado em **01/11/2026** após a publicação do Circus
 aprovado. Prefira o comportamento implementado e testado a uma descrição antiga.
 Referências do editor em `components/`, `tokens/`, `ui_kits/` e

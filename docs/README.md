@@ -13,6 +13,10 @@ O código, os testes e o histórico Git resolvem divergências com textos antigo
 - [Estado do Android nativo](ANDROID.md)
 - [Analytics e consentimento](ANALYTICS.md)
 
+## Prévia para edição
+
+- [Circus completo: fontes da v79 e execução local](PREVIA-CIRCUS.md)
+
 ## Interface e regras
 
 - [Circus e parque: ingressos, roleta e Fingo rápido](PARQUE.md)

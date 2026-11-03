@@ -417,7 +417,7 @@ test('Fingo displays fixed 2x on new cards and preserves the saved legacy tables
  assert.match(g.renderVals().payExplanation,/2×/);assert.equal(g.renderVals().prizeCaption,'QUINA PAGA 2×');
 });
 
-test('Circus reveals and stops whole columns, then settles the committed result once',async()=>{
+test('Circus independently stops all nine houses and settles the committed result once',async()=>{
  const outcome={grid:[1,2,3,4,5,6,7,8,0],res:{win:0,cells:[],lines:[],full:false,peach:[]},feature:null};
  const {instance:g}=component('Fortune Circus.dc.html',{enabled:true,spin:async()=>({balanceBefore:500,outcome})},()=>{throw Error('Animation must not draw another grid');});
  const scheduled=[],settlements=[],notes=[];
@@ -426,39 +426,44 @@ test('Circus reveals and stops whole columns, then settles the committed result 
  g.reelStop=(cell,time,callbacks)=>scheduled.push({cell,time,callbacks});
  g.later=(fn,ms)=>{if(ms===240)settlements.push(fn);};
  let paid=0;g.payout=(res,bet)=>{assert.equal(res,outcome.res);assert.equal(bet,10);paid++;};
- await g.doSpin();assert.equal(scheduled.length,3);
- const groups=[0,1,2].map(c=>scheduled.filter(x=>x.cell%3===c));
- assert.deepEqual(groups.map(a=>new Set(a.map(x=>x.time)).size),[1,1,1]);
- assert.ok(groups[0][0].time<groups[1][0].time&&groups[1][0].time<groups[2][0].time);
- for(let col=0;col<3;col++){
-  const group=groups[col],members=[col,col+3,col+6];
-  group[0].callbacks.onTile();
-  for(const cell of members)assert.equal(g.state.grid[cell],outcome.grid[cell]);
-  for(const x of group)x.callbacks.onImpact();
-  group[0].callbacks.onDone();
-  assert.ok(members.every(i=>!g.state.spinCells.includes(i)));
-  for(const x of group)x.callbacks.onDone(); // Repeated completion cannot settle twice.
-  assert.equal(settlements.length,col===2?1:0);
+ await g.doSpin();assert.equal(scheduled.length,9);
+ assert.deepEqual(scheduled.map(x=>x.cell),[6,3,0,7,4,1,8,5,2]);
+ for(let k=0;k<scheduled.length;k++){
+  const x=scheduled[k];if(k)assert.ok(x.time>scheduled[k-1].time);
+  const before=Array.from(g.state.grid);x.callbacks.onTile();
+  assert.equal(g.state.grid[x.cell],outcome.grid[x.cell]);
+  for(let i=0;i<9;i++)if(i!==x.cell)assert.equal(g.state.grid[i],before[i]);
+  x.callbacks.onImpact();x.callbacks.onDone();x.callbacks.onDone();
+  assert.ok(!g.state.spinCells.includes(x.cell));assert.equal(settlements.length,k===8?1:0);
  }
- assert.equal(notes.length,3);assert.ok(notes[0]<notes[1]&&notes[1]<notes[2]);
+ assert.equal(notes.length,9);for(let i=1;i<notes.length;i++)assert.ok(notes[i]>notes[i-1]);
  assert.deepEqual(Array.from(g.state.grid),outcome.grid);assert.equal(g.state.balance,490);
  settlements[0]();assert.equal(paid,1);
 });
 
-test('Circus respins skip a fully locked column and keep the other column stops atomic',()=>{
+test('Circus respins only unlocked houses and each new match locks independently',()=>{
  const result=[1,4,7,2,5,8].map(i=>({i,v:i===7?2:-1}));
  const {instance:g}=component('Fortune Circus.dc.html',{enabled:true},()=>{throw Error('No local special-round draw');});
  g._cloudSpin={outcome:{feature:{sym:2,rounds:[{result}]}}};g._cloudFeatureRound=0;
  g.state.feature={sym:2,round:0};g.state.locked=[0,3,6];g.state.grid=[2,-1,-1,2,-1,-1,2,-1,-1];
  const scheduled=[],finish=[];g.startWhirr=()=>{};g.reelsStart=()=>{};g.hap=()=>{};
  g.reelStop=(cell,time,callbacks)=>scheduled.push({cell,time,callbacks});g.later=(fn,ms)=>{if(ms===260)finish.push(fn);};
- g.respin(2,10);assert.equal(scheduled.length,2);assert.ok(scheduled.every(x=>x.cell%3!==0));
- const first=scheduled.filter(x=>x.cell%3===1),last=scheduled.filter(x=>x.cell%3===2);
- assert.equal(new Set(first.map(x=>x.time)).size,1);assert.equal(new Set(last.map(x=>x.time)).size,1);assert.ok(first[0].time<last[0].time);
- first[0].callbacks.onTile();first.forEach(x=>x.callbacks.onDone());
- assert.deepEqual(Array.from(g.state.locked),[0,3,6,7]);assert.deepEqual(Array.from(g.state.spinCells).sort(),[2,5,8]);
- last[0].callbacks.onTile();last.forEach(x=>x.callbacks.onDone());
- assert.deepEqual(Array.from(g.state.grid),[2,-1,-1,2,-1,-1,2,2,-1]);assert.equal(finish.length,1);
+ g.respin(2,10);assert.equal(scheduled.length,6);assert.ok(scheduled.every(x=>![0,3,6].includes(x.cell)));
+ assert.deepEqual(scheduled.map(x=>x.cell),[7,4,1,8,5,2]);
+ for(let i=0;i<scheduled.length;i++){
+  const x=scheduled[i];x.callbacks.onTile();x.callbacks.onDone();x.callbacks.onDone();
+  assert.ok(!g.state.spinCells.includes(x.cell));
+  assert.equal(finish.length,i===scheduled.length-1?1:0);
+ }
+ assert.deepEqual(Array.from(g.state.locked),[0,3,6,7]);
+ assert.deepEqual(Array.from(g.state.grid),[2,-1,-1,2,-1,-1,2,2,-1]);
+});
+
+test('Circus physical order comes from the menu paytable and preserves special positions',()=>{
+ const {instance:g}=component('Fortune Circus.dc.html',{});
+ const paid=Array.from(g.renderVals().payList,row=>Math.round(parseFloat(row.pos)*11/100));
+ assert.deepEqual(Array.from(g.reelOrder()),[11,...paid,10]);
+ g.state.feature={sym:2,round:0};assert.deepEqual(Array.from(g.reelOrder()),[11,...paid,10,-1]);
 });
 
 test('Circus freezes the reel clock exactly while the menu is open',()=>{
@@ -475,4 +480,32 @@ test('Circus samples its physical reels immediately when the menu pauses the clo
  const samples=[];g._rs={};g.reelsFrame=()=>samples.push(g.now());g._pausedMs=10;
  g.pauseGame();assert.equal(samples.length,1);assert.equal(samples[0],g._pauseAt-10);
  g.pauseGame();assert.equal(samples.length,1);
+});
+
+test('Circus spin, auto and turbo use the same press and release audio graph',()=>{
+ const {instance:g}=component('Fortune Circus.dc.html',{},()=>.5);
+ function sound(down,kind){
+  const graph=[];
+  const param=()=>({value:0,setValueAtTime(v){this.value=v;},exponentialRampToValueAtTime(v){this.end=v;}});
+  const node=type=>{const n={node:type,frequency:param(),gain:param(),Q:param(),playbackRate:param(),connect(){},start(){},stop(){}};graph.push(n);return n;};
+  const ac={currentTime:1,sampleRate:44100,createBuffer:(_,len)=>({sampleRate:44100,getChannelData:()=>new Float32Array(len)}),createBufferSource:()=>node('noise'),createBiquadFilter:()=>node('filter'),createGain:()=>node('gain'),createOscillator:()=>node('oscillator')};
+  g.ac=()=>ac;g.out=()=>({});g.click(down,kind);
+  return JSON.stringify(graph,(key,value)=>typeof value==='function'||key==='buffer'?undefined:value);
+ }
+ for(const down of [true,false]){
+  const spin=sound(down,'spin');assert.notEqual(spin,'[]');
+  assert.equal(spin,sound(down,'auto'));assert.equal(spin,sound(down,'turbo'));
+ }
+ assert.notEqual(sound(true,'spin'),sound(false,'spin'),'Press and release retain their distinct sounds');
+});
+
+test('Circus preserves nine-house stop order when a delayed frame finishes multiple drums together',()=>{
+ const {instance:g,context}=component('Fortune Circus.dc.html',{});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ui/park/reel-tape.js'),'utf8'),context);
+ context.document={hidden:false,querySelector:()=>null};
+ const cells=[6,3,0,7,4,1,8,5,2],stops=[];
+ g.reelsStart(cells,[9,8,7,6,5,4,3,2,1]);
+ for(let k=0;k<cells.length;k++)g.reelCellStop([cells[k]],1500+k*170,{onDone:()=>stops.push(cells[k])});
+ context.performance.now=()=>100000;g.reelsFrame();
+ assert.deepEqual(stops,cells);assert.equal(g._rs,null);
 });

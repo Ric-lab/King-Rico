@@ -31,6 +31,11 @@ Bounce, Claw, Race e Bridge estão **guardados fora da Home**. Seus fontes e
 endereços diretos continuam preservados. `/21` mantém a compatibilidade com o
 Fortune 33. Não tratar esses protótipos como jogos oficiais novos.
 
+## Prévia completa do Circus nesta branch
+
+Os nove tambores e todos os fontes da prévia estão versionados. Para editar
+e testar sem conta real, veja [Prévia Circus](docs/PREVIA-CIRCUS.md).
+
 ## Rodar localmente
 
 Use Node indicado em [.nvmrc](.nvmrc) e Java 21 para o Firestore emulado:
