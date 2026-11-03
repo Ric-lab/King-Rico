@@ -26,6 +26,8 @@ Na revisão de sombras da prévia de 03/11/2026, `ui/park/reel-optics.*` aplica
 a luz à janela do rolo inteiro, incluindo o símbolo parado ou em movimento.
 O miolo é marfim claro; pontas e laterais perdem luz gradualmente. O alojamento
 fica escuro entre rolos, sem acrescentar divisórias ou mudar seus espaços.
+A revisão v75 usa luz superior: laterais leves e sombra mais forte na curva
+inferior, com contorno elíptico suave e o mesmo campo de luz durante o giro.
 A mesma camada atende três colunas contínuas ou os nove rolos da prévia.
 Sequências, paradas, prêmios e os controles permanecem independentes da luz.
 
