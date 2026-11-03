@@ -134,3 +134,5 @@ exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
 - Rolos premium (passos 1–2 do plano em docs/MEMORIA.md): nova camada `ui/park/reel-royal.css` + divs `royal-*` em Fortune Circus.dc.html. Janela embutida com chanfro dourado, 3 tambores contínuos de papel marfim com curvatura (topo/base escurecem), divisórias douradas, vidro e sombra nos símbolos; blur leve no giro. Lógica e posições intactas.
 - Memória do projeto: `docs/MEMORIA.md` (gosto do dono, rejeitados, linha de jogos) + bloco no CLAUDE.md.
 - Próximo passo: passos 3–5 dos rolos (respiro do símbolo ao parar, quique + parada em cascata com clack, vitória acendendo a linha) — avaliar na prévia antes.
+
+- REVERTIDO (Claude): a camada reel-royal.css cobria o tambor 3D (drum-depth) da prévia e quebrou a tela. Fortune Circus.dc.html voltou ao estado de e5288d1. Próximo passo dos rolos: fazer o acabamento premium DENTRO do drum-depth.js (material/iluminação do 3D), não por cima em CSS.

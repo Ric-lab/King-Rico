@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="./ui/controls.css">
 <link rel="stylesheet" href="./ui/park/cabinet-layout.css">
 <link rel="stylesheet" href="./ui/park/reel-optics.css">
-<link rel="stylesheet" href="./ui/park/reel-royal.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./cloud/firebase-config.js"></script>
@@ -91,12 +90,8 @@ a:hover { color: #fff3c4; }
 
   <div class="park-part-prize" aria-hidden="true"></div>
   <div class="park-reel-window-back" aria-hidden="true"></div>
-  <div class="royal-window" aria-hidden="true"></div>
   <div class="park-reels" data-reel-moving="{{ reelMoving }}">
     <div class="park-reel-paper" aria-hidden="true"></div>
-    <div class="royal-drum" aria-hidden="true" style="left: 32.5px; width: 129.5px;"></div>
-    <div class="royal-drum" aria-hidden="true" style="left: 162.5px; width: 126px;"></div>
-    <div class="royal-drum" aria-hidden="true" style="left: 288.5px; width: 133.5px;"></div>
   <div class="park-reel-cell park-part-reel-top" data-park-column="0" data-reel-spinning="{{ c0.spin }}" data-dimmed="{{ c0.dimmed }}" data-held="{{ c0.lock }}" style="position: absolute; left: 34.333px; top: 219.5px; width: 126.5px; height: 127.5px; overflow: hidden; border-radius: 6px;">
     <div data-sym="0" data-park-ticket="{{ c0.ticket }}" style="position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; transform-origin: 50% 86%; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ c0.pos }}; opacity: {{ c0.dim }}; animation: {{ c0.anim }};"></div>
     <sc-if value="{{ c0.win }}" hint-placeholder-val="{{ false }}"><div class="park-win-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: {{ c0.winFx }};"></div></sc-if>
@@ -151,17 +146,6 @@ a:hover { color: #fff3c4; }
     <sc-if value="{{ c8.lock }}" hint-placeholder-val="{{ false }}"><div class="park-lock-fx" style="position: absolute; inset: 0; border-radius: 6px; animation: parkReelLock 1s ease-in-out infinite;"></div></sc-if>
     <sc-if value="{{ c8.empty }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; border-radius: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,220,140,.38), rgba(255,200,100,0) 66%); animation: fcShimmer 1.8s ease-in-out infinite;"></div></sc-if>
   </div>
-
-  <div class="royal-shade" aria-hidden="true" style="left: 32.5px; width: 129.5px;"></div>
-  <div class="royal-shade" aria-hidden="true" style="left: 162.5px; width: 126px;"></div>
-  <div class="royal-shade" aria-hidden="true" style="left: 288.5px; width: 133.5px;"></div>
-  <div class="royal-sep" aria-hidden="true" style="left: 159.6px;"></div>
-  <div class="royal-sep" aria-hidden="true" style="left: 285.6px;"></div>
-  <div class="royal-glass" aria-hidden="true"></div>
-  <div class="royal-rivet" aria-hidden="true" style="left: 34px; top: 219px;"></div>
-  <div class="royal-rivet" aria-hidden="true" style="left: 410px; top: 219px;"></div>
-  <div class="royal-rivet" aria-hidden="true" style="left: 34px; top: 591px;"></div>
-  <div class="royal-rivet" aria-hidden="true" style="left: 410px; top: 591px;"></div>
 
   <sc-if value="{{ antic }}" hint-placeholder-val="{{ false }}">
     <div class="park-antic-fx" style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; border-radius: 6px; animation: parkReelAntic .45s ease-in-out infinite; pointer-events: none;"></div>
