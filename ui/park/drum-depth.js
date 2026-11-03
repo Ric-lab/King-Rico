@@ -53,11 +53,11 @@ export async function installDrumDepth(stage,reels){
   const right=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,0),up=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,1),front=new T.Vector3().setFromMatrixColumn(camera.matrixWorld,2);
   const yz=Math.hypot(front.y,front.z),surfaceFront=new T.Vector3(0,front.y/yz*66,front.z/yz*66);
   const printFront=new T.Vector2(-surfaceFront.dot(right)/right.x,Math.atan2(-front.y,front.z)*66);
-  scene.add(new T.HemisphereLight(0xfff6e6,0x5a3a6a,1.05));
-  const light=new T.DirectionalLight(0xfff0d4,2.35);light.position.set(-145,250,400);light.castShadow=true;
+  scene.add(new T.HemisphereLight(0xffffff,0x5a4a72,1.1));
+  const light=new T.DirectionalLight(0xffffff,2.4);light.position.set(-145,250,400);light.castShadow=true;
   light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-320,right:320,top:350,bottom:-350,near:1,far:1000});
   light.shadow.bias=-.0003;light.shadow.normalBias=.25;light.shadow.radius=7;light.shadow.intensity=.45;shadow=light.shadow;scene.add(light);
-  const fill=new T.DirectionalLight(0xdce9ff,.2);fill.position.set(180,-40,300);scene.add(fill);
+  const fill=new T.DirectionalLight(0xe8f0ff,.35);fill.position.set(180,-40,300);scene.add(fill);
   // Warm matte lining and a separate soft shadow keep the recess from becoming
   // a black grid. The approved drum geometry, printing and lighting stay fixed.
   backing=new T.Mesh(new T.PlaneGeometry(402,438),new T.MeshBasicMaterial({color:0x3b1652}));
@@ -92,7 +92,7 @@ export async function installDrumDepth(stage,reels){
   for(let cell=0;cell<9;cell++){
    const ticketScale=Math.min(97.17278/ticket.image.width,116/ticket.image.height);
    const uniforms=states[cell].uniforms={drumSymbols:{value:new T.Vector3(-1,readSymbol(cell),-1)},drumShift:{value:0},drumAtlas:{value:atlas},drumTicket:{value:ticket},drumTicketSize:{value:new T.Vector2(ticket.image.width*ticketScale,ticket.image.height*ticketScale)},drumPrintFront:{value:printFront},drumDim:{value:1}};
-   const material=new T.MeshPhysicalMaterial({color:0xfff4dc,roughness:.62,metalness:0,clearcoat:.55,clearcoatRoughness:.32});materials.push(material);
+   const material=new T.MeshPhysicalMaterial({color:0xffffff,roughness:.5,metalness:0,clearcoat:1,clearcoatRoughness:.18});materials.push(material);
    material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);
     shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 drumLocal;').replace('#include <begin_vertex>','#include <begin_vertex>\ndrumLocal=position;');
@@ -119,7 +119,7 @@ export async function installDrumDepth(stage,reels){
      reflectedLight.indirectDiffuse*=housingOcclusion*sideOcclusion;
      reflectedLight.indirectSpecular*=housingOcclusion*sideOcclusion;`);
    };
-   material.customProgramCacheKey=()=> 'king-rico-paper-cylinder-v2';
+   material.customProgramCacheKey=()=> 'king-rico-paper-cylinder-v3';
    const mesh=new T.Mesh(geometry,material);mesh.position.copy(right).multiplyScalar(67+cell%3*134-201).addScaledVector(up,219-(73+Math.floor(cell/3)*146));
    mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);
   }
