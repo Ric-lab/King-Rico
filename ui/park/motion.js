@@ -116,7 +116,7 @@ function flyTickets(fc,refresh,done=()=>{}){
  const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],cues=[],arrived=new Set();let ended=false,ticker;
  const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
  const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(ticker);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?600:900,stagger=calm?160:220,contact=.8;
+ const calm=reduced(),duration=calm?450:700,stagger=duration,contact=.8;
  const safety=setTimeout(finish,duration+stagger*2+600);
  try{fc.ac?.();}catch{} // Warm audio before the first impact, without playing a note.
  if(!end?.width){finish();return;}
@@ -126,8 +126,8 @@ function flyTickets(fc,refresh,done=()=>{}){
    const source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
    const node=document.createElement('img');node.src='/assets/machine/ticket-symbol-v1.webp';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
-   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?.3:1,offset:t*contact};});
-   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:0},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
+   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
+   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
    const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};
    const a=node.animate([...(calm?simple:frames),absorption],{duration,delay:i*stagger,easing:'linear',fill:'both'});anims.push(a);
    cues.push({animation:a,index:i,contactAt:i*stagger+duration*contact});

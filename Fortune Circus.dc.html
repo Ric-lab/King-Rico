@@ -1215,15 +1215,16 @@ class Component extends DCLogic {
   sfxRoll(i) { this.bell(1046 + (i % 6) * 55, 0.1, 0.035); }
   sfxTicket(index = 0) {
     const ac = this.ac(), out = this.out(); if (!ac || !this.gate()) return;
-    // One rounded voice per arrival: C–E–G rings together as a single chord.
+    // One accented voice per arrival: a clearly spaced C–E–G reward phrase.
     const i = Math.max(0, Math.min(2, index)), t = ac.currentTime;
     const duration = [0.9, 1.0, 1.15][i];
     const voice = ac.createOscillator(), filter = ac.createBiquadFilter(), gain = ac.createGain();
     voice.type = 'triangle'; voice.frequency.setValueAtTime([523.25, 659.25, 783.99][i], t);
     filter.type = 'lowpass'; filter.frequency.value = 2400; filter.Q.value = 0.4;
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.24, t + 0.006);
-    gain.gain.linearRampToValueAtTime(0.19, t + 0.18);
+    gain.gain.linearRampToValueAtTime(0.48, t + 0.006);
+    gain.gain.linearRampToValueAtTime(0.30, t + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.055, t + 0.24);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
     voice.connect(filter); filter.connect(gain); gain.connect(out);
     voice.start(t); voice.stop(t + duration + 0.04);

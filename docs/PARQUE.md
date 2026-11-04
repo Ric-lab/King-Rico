@@ -28,16 +28,17 @@ A chance de conceder ingressos e a quantidade de três permanecem iguais. A cont
 ingressos; nenhum saldo ou ingresso da prévia local é importado.
 
 Na prévia, cada ingresso toca uma única nota ao incrementar o contador:
-dó (523,25 Hz), mi (659,25 Hz) e sol (783,99 Hz), formando um acorde maior
-com as caudas sobrepostas. Uma voz triangular filtrada, ataque suave e ganho
-0,24; durações de 0,9, 1,0 e 1,15 segundo. Não usa a dupla camada metálica da
+dó (523,25 Hz), mi (659,25 Hz) e sol (783,99 Hz), formando uma frase de três notas distintas de um acorde maior. Uma voz
+triangular filtrada, ataque de ganho 0,48, corpo em 0,30 e cauda baixa após
+240 ms; durações de 0,9, 1,0 e 1,15 segundo. Não usa a dupla camada metálica da
 tentativa anterior. Moedas e outros efeitos permanecem iguais. Respeita
 volume/silêncio do menu; falha de áudio não interrompe a contagem.
 
 O incremento, a nota e o impacto usam o mesmo contato na linha de tempo do
 voo, com o ingresso ainda visível no centro do contador. A absorção/fade vem
-depois, nos 20% finais. As chegadas ficam separadas por 220 ms (160 ms no
-modo reduzido), permitindo ouvir as três notas. O contexto de áudio é
+depois, nos 20% finais. Cada ingresso voa sozinho, e o próximo só parte ao terminar a absorção do
+anterior. As chegadas ficam separadas por 700 ms (450 ms no modo reduzido),
+permitindo associar uma nota a cada item. O contexto de áudio é
 preparado antes do voo, e o ataque da nota leva 6 ms. Não disparar o som só
 no `animation.finished`, quando o ingresso já desapareceu.
 
@@ -109,7 +110,7 @@ continua carregando sua interface nativa normalmente.
 
 Os movimentos que explicam o resultado permanecem perceptíveis quando o aparelho
 pede redução de movimento: líquido sobe sem oscilar em 450 ms, ingresso viaja
-em linha reta sem giro em 600 ms e a roleta faz no máximo uma volta em 900 ms.
+em linha reta sem giro em 450 ms e a roleta faz no máximo uma volta em 900 ms.
 Confetes, saltos do líquido e a grande transição de entrada ficam suprimidos.
 No modo normal, a apresentação original é preservada. Falha de áudio/animação
 não desfaz recebimento confirmado.

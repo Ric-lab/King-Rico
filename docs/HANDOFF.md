@@ -8,6 +8,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · um ingresso e uma batida por vez)
+- Os ingressos agora viajam sequencialmente, sem cópias futuras visíveis: 700 ms por voo normal ou 450 ms reduzido. O próximo só parte quando o anterior termina de ser absorvido. O contato segue unindo nota, contador e impacto.
+- Mantidas dó/mi/sol, uma voz por chegada e caudas de 0,9/1,0/1,15 s. Ataque elevado a 0,48, corpo 0,30 e queda para 0,055 em 240 ms: cada nota tem uma batida presente, enquanto a cauda fica mais baixa para não misturar a próxima.
+- Teste de navegador exige exatamente um ingresso visível em cada som, contato alinhado e intervalos de 700/450 ms. Render de áudio verifica ataque destacado da cauda, silêncio, uma voz e ausência de clipping. Nenhuma mudança de regras, prêmios ou demais sons.
+- Entrega apenas na prévia; oficial inalterado.
+
 ## Feito (2026-11-04 · Codex · contato e ritmo dos ingressos)
 - O som era chamado em `animation.finished`, já após o fade. Agora o ingresso chega visível ao contador aos 80% do voo: uma marca no relógio da animação dispara incremento, nota e impacto; somente depois ele é absorvido. Fim da animação continua como fallback, sem disparo duplicado.
 - Chegadas espaçadas por 220 ms (160 ms reduzido), voo normal 900 ms/reduzido 600 ms. Áudio preparado antes de sair e ataque de 6 ms; mantidas as notas dó/mi/sol e suas caudas. Segurança de contagem independe de animação/áudio.
@@ -50,4 +56,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar a sincronização visual/sonora da chegada dos ingressos na prévia. Após aprovação, levar a mudança completa para `main`; não publicar no oficial sem autorização.
+- Dono avaliar a sequência de um ingresso por vez e suas três batidas na prévia. Depois da aprovação levar a mudança completa para `main`; não publicar no oficial sem autorização.

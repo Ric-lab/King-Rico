@@ -27,7 +27,7 @@ with sync_playwright() as p:
      fc.ac=()=>context;fc.out=()=>context.destination;fc.gate=()=>!muted;
      try{if(current)fc.sfxTicket(index);else fc.bell(1830,.18,.085);
       const buffer=await context.startRendering(),data=buffer.getChannelData(0);
-      return {voices:voices.length,frequencies:voices.map(v=>v.frequency.value),tailRms:Math.sqrt(data.slice(22050,26460).reduce((sum,v)=>sum+v*v,0)/4410),rms:Math.sqrt(data.reduce((sum,v)=>sum+v*v,0)/data.length),peak:data.reduce((max,v)=>Math.max(max,Math.abs(v)),0)};
+      return {attackRms:Math.sqrt(data.slice(441,2646).reduce((sum,v)=>sum+v*v,0)/2205),decayRms:Math.sqrt(data.slice(11025,13230).reduce((sum,v)=>sum+v*v,0)/2205),voices:voices.length,frequencies:voices.map(v=>v.frequency.value),tailRms:Math.sqrt(data.slice(22050,26460).reduce((sum,v)=>sum+v*v,0)/4410),rms:Math.sqrt(data.reduce((sum,v)=>sum+v*v,0)/data.length),peak:data.reduce((max,v)=>Math.max(max,Math.abs(v)),0)};
      }finally{fc.ac=ac;fc.out=out;fc.gate=gate;}
     }
     return {previous:await render(false),current:await render(true),second:await render(true,false,1),third:await render(true,false,2),muted:await render(true,true)};
@@ -38,11 +38,12 @@ with sync_playwright() as p:
    assert audio['current']['tailRms']>.0003,audio
    for note,frequency in zip([audio['current'],audio['second'],audio['third']],[523.25,659.25,783.99]):
     assert note['voices']==1 and abs(note['frequencies'][0]-frequency)<.1 and note['tailRms']>.0003 and note['peak']<1,audio
+    assert note['attackRms']>note['decayRms']*2,audio
   ticket_line=3 if mode=='no-preference' else 4
   ticket_cells=[0,4,8] if ticket_line==3 else [2,4,6]
   page.evaluate('''row=>{
    const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
-   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
+   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
    const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/5:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',ticket_line)
   before=page.evaluate('KingRicoCloud.park.tickets')
@@ -64,9 +65,9 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
-  assert all(x['opacity']>.5 and x['distance']<3 for x in first['sounds']),first
+  assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
   arrivals=[x['at'] for x in first['sounds']]
-  expected=220 if mode=='no-preference' else 160
+  expected=700 if mode=='no-preference' else 450
   assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
