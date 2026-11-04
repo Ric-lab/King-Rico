@@ -248,8 +248,8 @@
 .park-reel-frame:after{display:none!important}
 
 /* Barras laterais afastadas da borda da tela. */
-.park-meter-left{left:7px!important}
-.park-meter-right{right:7px!important}
+.park-meter-left{left:14px!important}
+.park-meter-right{right:15px!important}
 /* Sem fundo/nicho atrás dos rolos: só os tambores. */
 .park-reel-window-back{background:none!important;box-shadow:none!important}
 /* Sem nada atrás dos tambores. */
