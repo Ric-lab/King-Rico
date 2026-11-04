@@ -27,10 +27,11 @@ a concessão. O prêmio em moedas é recalculado pela grade efetivamente mostrad
 A chance de conceder ingressos e a quantidade de três permanecem iguais. A conta começa com zero
 ingressos; nenhum saldo ou ingresso da prévia local é importado.
 
-Na prévia, cada ingresso tem um toque próprio de recebimento, sincronizado
-ao incremento do contador. São três notas ascendentes com corpo mais grave
-(880, 1108,73 e 1318,51 Hz), ganho principal 0,24 e cauda de 300 ms, mais uma
-camada aguda curta em ganho 0,07. O som das moedas permanece igual. Respeita
+Na prévia, cada ingresso toca uma única nota ao incrementar o contador:
+dó (523,25 Hz), mi (659,25 Hz) e sol (783,99 Hz), formando um acorde maior
+com as caudas sobrepostas. Uma voz triangular filtrada, ataque suave e ganho
+0,24; durações de 0,9, 1,0 e 1,15 segundo. Não usa a dupla camada metálica da
+tentativa anterior. Moedas e outros efeitos permanecem iguais. Respeita
 volume/silêncio do menu; falha de áudio não interrompe a contagem.
 
 

@@ -21,18 +21,23 @@ with sync_playwright() as p:
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{
     const fc=__fc,ac=fc.ac,out=fc.out,gate=fc.gate;
-    async function render(current,muted=false){
-     const context=new OfflineAudioContext(1,22050,44100);
+    async function render(current,muted=false,index=0){
+     const context=new OfflineAudioContext(1,66150,44100),voices=[],create=context.createOscillator.bind(context);
+     context.createOscillator=()=>{const voice=create();voices.push(voice);return voice;};
      fc.ac=()=>context;fc.out=()=>context.destination;fc.gate=()=>!muted;
-     try{if(current)fc.sfxTicket(0);else fc.bell(1830,.18,.085);
+     try{if(current)fc.sfxTicket(index);else fc.bell(1830,.18,.085);
       const buffer=await context.startRendering(),data=buffer.getChannelData(0);
-      return {rms:Math.sqrt(data.reduce((sum,v)=>sum+v*v,0)/data.length),peak:data.reduce((max,v)=>Math.max(max,Math.abs(v)),0)};
+      return {voices:voices.length,frequencies:voices.map(v=>v.frequency.value),tailRms:Math.sqrt(data.slice(22050,26460).reduce((sum,v)=>sum+v*v,0)/4410),rms:Math.sqrt(data.reduce((sum,v)=>sum+v*v,0)/data.length),peak:data.reduce((max,v)=>Math.max(max,Math.abs(v)),0)};
      }finally{fc.ac=ac;fc.out=out;fc.gate=gate;}
     }
-    return {previous:await render(false),current:await render(true),muted:await render(true,true)};
+    return {previous:await render(false),current:await render(true),second:await render(true,false,1),third:await render(true,false,2),muted:await render(true,true)};
    }''')
    assert audio['current']['rms']>audio['previous']['rms']*2,audio
    assert audio['current']['peak']<1 and audio['muted']['peak']==0,audio
+   assert audio['current']['voices']==1 and audio['muted']['voices']==0,audio
+   assert audio['current']['tailRms']>.0003,audio
+   for note,frequency in zip([audio['current'],audio['second'],audio['third']],[523.25,659.25,783.99]):
+    assert note['voices']==1 and abs(note['frequencies'][0]-frequency)<.1 and note['tailRms']>.0003 and note['peak']<1,audio
   ticket_line=3 if mode=='no-preference' else 4
   ticket_cells=[0,4,8] if ticket_line==3 else [2,4,6]
   page.evaluate('''row=>{
