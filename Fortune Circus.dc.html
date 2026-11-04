@@ -1213,6 +1213,12 @@ class Component extends DCLogic {
     }
   }
   sfxRoll(i) { this.bell(1046 + (i % 6) * 55, 0.1, 0.035); }
+  sfxTicket(index = 0) {
+    // Only three arrivals: give each one a fuller, clearly audible reward chime.
+    const note = [880, 1108.73, 1318.51][Math.max(0, Math.min(2, index))];
+    this.bell(note, 0.30, 0.24);
+    this.bell(note * 2, 0.14, 0.07);
+  }
   sfxCoins() {
     for (let i = 0; i < 11; i++) {
       const d = 0.06 + i * 0.055 + Math.random() * 0.04;

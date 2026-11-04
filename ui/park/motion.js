@@ -114,8 +114,8 @@ function flyTickets(fc,refresh,done=()=>{}){
  if(!award||fc._parkTicketsPlaying){done();return;}
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
  const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],arrived=new Set();let ended=false;
- const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.bell?.(1760+arrived.size*70,.18,.085);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
- const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();if(!arrived.size&&award.after>award.before)try{fc.bell?.(1830,.18,.085);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
+ const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
+ const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
  const safety=setTimeout(finish,1650);
  if(!end?.width){finish();return;}
  const calm=reduced();

@@ -771,11 +771,13 @@ service cloud.firestore {
         && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,passes'.split(','));
     }
     function oldPlayerRound(uid,game) { return get(/databases/$(database)/documents/players/$(uid)).data.get(game+'Round',null); }
-    function ticketRow(g,r) {
-      let a=r*3; let b=((r+1)%3)*3; let c=((r+2)%3)*3;
-      return g[a] == 10 && g[a+1] == 10 && g[a+2] == 10
-        && g[b] != 10 && g[b+1] != 10 && g[b+2] != 10
-        && g[c] != 10 && g[c+1] != 10 && g[c+2] != 10;
+    function validTicketLine(g) {
+      let t=[g[0] == 10,g[1] == 10,g[2] == 10,g[3] == 10,g[4] == 10,g[5] == 10,g[6] == 10,g[7] == 10,g[8] == 10];
+      return t == [true,true,true,false,false,false,false,false,false]
+        || t == [false,false,false,true,true,true,false,false,false]
+        || t == [false,false,false,false,false,false,true,true,true]
+        || t == [true,false,false,false,true,false,false,false,true]
+        || t == [false,false,true,false,true,false,true,false,false];
     }
     function parkSpinState(s,b,o) {
       let x=o.result.outcome; let award=x.ticketAward;
@@ -783,7 +785,7 @@ service cloud.firestore {
       return o.action == 'spin' && o.game == 'circus' && x.parkVersion == 1 && b.wheel == null
         && s.spins == b.spins+1 && s.spins <= 10 && award in [0,3]
         && (award == 3 ? s.spins < 10 && x.res.peach.size() == 0 && x.feature == null
-          && (ticketRow(x.grid,0) || ticketRow(x.grid,1) || ticketRow(x.grid,2)) : !x.grid.hasAny([10]))
+          && validTicketLine(x.grid) : !x.grid.hasAny([10]))
         && s.tickets == b.tickets+award && s.passes == b.passes
         && (s.spins == 10 ? w.keys().hasOnly('id,roundId,prizeVersion,baseUnits,pockets,result'.split(','))
           && w.id == s.lastOperationId && w.roundId == w.id && w.prizeVersion == 3

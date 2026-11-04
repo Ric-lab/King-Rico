@@ -18,12 +18,28 @@ with sync_playwright() as p:
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
   page.goto(BASE+'/circus');ready()
-  ticket_row=2 if mode=='no-preference' else 1
+  if mode=='no-preference':
+   audio=page.evaluate('''async()=>{
+    const fc=__fc,ac=fc.ac,out=fc.out,gate=fc.gate;
+    async function render(current,muted=false){
+     const context=new OfflineAudioContext(1,22050,44100);
+     fc.ac=()=>context;fc.out=()=>context.destination;fc.gate=()=>!muted;
+     try{if(current)fc.sfxTicket(0);else fc.bell(1830,.18,.085);
+      const buffer=await context.startRendering(),data=buffer.getChannelData(0);
+      return {rms:Math.sqrt(data.reduce((sum,v)=>sum+v*v,0)/data.length),peak:data.reduce((max,v)=>Math.max(max,Math.abs(v)),0)};
+     }finally{fc.ac=ac;fc.out=out;fc.gate=gate;}
+    }
+    return {previous:await render(false),current:await render(true),muted:await render(true,true)};
+   }''')
+   assert audio['current']['rms']>audio['previous']['rms']*2,audio
+   assert audio['current']['peak']<1 and audio['muted']['peak']==0,audio
+  ticket_line=3 if mode=='no-preference' else 4
+  ticket_cells=[0,4,8] if ticket_line==3 else [2,4,6]
   page.evaluate('''row=>{
-   const fc=__fc,bell=fc.bell.bind(fc);window.ticketSounds=[];
-   fc.bell=(f,d,v,...args)=>{if(fc._parkTicketsPlaying&&d===.18&&v===.085)ticketSounds.push({count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent});return bell(f,d,v,...args);};
-   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/3:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
-  }''',ticket_row)
+   const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
+   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying)ticketSounds.push({count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent});return chime(i);};
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/5:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
+  }''',ticket_line)
   before=page.evaluate('KingRicoCloud.park.tickets')
   page.get_by_role('button',name='Girar',exact=True).click()
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="charge:arrived")')
@@ -38,8 +54,8 @@ with sync_playwright() as p:
   assert sum(x['type']=='charge:done' for x in first['log'])==1,first
   assert sum(x['type']=='tickets:done' for x in first['log'])==1,first
   assert first['spins']==1 and first['tickets']==before+3,first
-  assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==[ticket_row*3,ticket_row*3+1,ticket_row*3+2]
-  assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==[ticket_row*3,ticket_row*3+1,ticket_row*3+2]
+  assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==ticket_cells
+  assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==ticket_cells
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
@@ -58,6 +74,6 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
   assert not errors,errors
   assert not missing,missing
-  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketRow':ticket_row+1,'arrivalSounds':len(first['sounds']),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
+  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketCells':ticket_cells,'arrivalSounds':len(first['sounds']),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
   context.close()
  b.close()

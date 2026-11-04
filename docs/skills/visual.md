@@ -11,3 +11,4 @@ Rejeitado:
 - Molduras douradas grossas; fundos roxos/pretos atrás dos rolos.
 - Feedback essencial de ingresso, líquido e roleta ausente na prévia; conferir o fluxo real também com movimento reduzido.
 - Som de chegada dos ingressos baixo demais para perceber a contagem.
+- Toque fino de moeda, mesmo ampliado a 0,085, não dá presença suficiente a apenas três ingressos; usar toque próprio mais encorpado.

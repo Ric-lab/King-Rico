@@ -12,3 +12,4 @@ Rejeitado:
 - Chão que quebra / placa que foge depois de um bom pulo (parece roubo).
 - Zero no prêmio diário.
 - Trinca de ingressos fixada sempre na primeira linha.
+- Ingressos limitados a horizontais: o dono pediu também as duas diagonais de pagamento.

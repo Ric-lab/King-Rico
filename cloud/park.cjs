@@ -6,10 +6,10 @@ const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
 const fresh=()=>({version:1,revision:0,lastOperationId:null,tickets:0,spins:0,wheel:null,passes:{}});
 const publicState=s=>({...structuredClone(s||fresh()),price:PRICE,meterSpins:METER_SPINS});
 const fail=(code,message)=>{throw Object.assign(new Error(message),{code:'king-rico/'+code});};
-// A ticket trinca may occupy any horizontal payline. Re-evaluate the displayed
+// A ticket trinca may occupy any of the five paylines. Re-evaluate the displayed
 // grid so coin prizes and highlighted cells always agree with the ticket row.
 function placeTickets(x,bet,rng){
- const start=Math.min(2,Math.floor(rng()*3))*3,cells=[start,start+1,start+2];
+ const cells=engine.LINES[Math.min(engine.LINES.length-1,Math.floor(rng()*engine.LINES.length))].slice();
  for(const i of cells)x.grid[i]=TICKET;
  x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet);
  x.res.cells=[...new Set([...x.res.cells,...cells])];x.winUnits=engine.units(x.res.win);

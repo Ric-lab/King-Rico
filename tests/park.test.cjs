@@ -31,10 +31,10 @@ test('Every multiplier adds only its extra and repeating a saved result adds zer
   assert.equal(park.bonus(s,'wheel',()=>0),0);assert.throws(()=>park.bonus(s,'wrong',()=>0),/encerrada/);
  }
 });
-test('Ticket trincas cover all three rows and match the displayed coin prize',()=>{
- for(let row=0;row<3;row++){
-  const p=player(),s=park.fresh(),draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0,(row+.5)/3];
-  const x=park.spin(p,s,10,'ticket',()=>draws.shift()??.99),cells=[row*3,row*3+1,row*3+2];
+test('Ticket trincas cover all horizontal and diagonal paylines and match the displayed coin prize',()=>{
+ for(let row=0;row<engine.LINES.length;row++){
+  const p=player(),s=park.fresh(),draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0,(row+.5)/engine.LINES.length];
+  const x=park.spin(p,s,10,'ticket',()=>draws.shift()??.99),cells=engine.LINES[row];
   assert.equal(x.ticketAward,3);assert.equal(s.tickets,3);assert.equal(x.feature,null);
   assert.deepEqual(x.grid.flatMap((v,i)=>v===10?[i]:[]),cells);
   const evaluated=engine.evaluate(x.grid.map(v=>v===10?-1:v),10);
