@@ -518,3 +518,7 @@ Prévia de 04/11/2026: a base do spin acompanha a carga confirmada também ao
 voltar ao roxo após aplicar a roleta, sem conservar a faixa vermelha anterior.
 Relevo traseiro de 4 px separado da face; recolhe ao pressionar. Frente de
 8 px, aro fixo, cores radiais e sons preservados.
+
+A cavidade do spin é neutra e escura até o fundo. A traseira elevada começa
+abaixo do limite interno do aro dourado (7/78 da altura), para a moldura não
+ocultar sua espessura. Face acomodada na abertura, profundidades 4/8 px mantidas.

@@ -89,6 +89,9 @@ with sync_playwright() as p:
   assert paint['level']==0 and paint['colors']==['rgb(142, 36, 255)']*3,paint
   def geometry():
    return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
+  # The gold rim's inner top is 7/78 of the SVG height; rear must stay below it.
+  clearance=page.locator('[data-spin-btn]').evaluate("e=>{const b=e.getBoundingClientRect(),r=e.querySelector('.park-spin-rear').getBoundingClientRect();return (r.top-b.top)/b.height-7/78}")
+  assert clearance>0,clearance
   rest=geometry()
   assert rest['front']>5 and 1.8<rest['front']/rest['rear']<2.2,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')

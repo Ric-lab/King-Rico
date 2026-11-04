@@ -16,3 +16,4 @@ Rejeitado:
 - Som dos ingressos disparado após o desaparecimento e chegadas muito juntas: contato visível, contagem, nota e impacto devem compartilhar a mesma marca de tempo.
 - Caudas longas com chegadas próximas soam como um acorde único; dar ataque definido e viajar/contar um ingresso por vez para ouvir três notas distintas.
 - Faixa da cor anterior na altura do spin após a roleta: sincronizar face e todas as laterais também no reinício da carga.
+- Relevo traseiro do spin escondido pelo aro: conferir a área realmente visível, não só a diferença de coordenadas entre camadas.
