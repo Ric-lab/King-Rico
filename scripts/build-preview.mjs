@@ -1,5 +1,5 @@
 // Rebuild the visual preview entirely from this checkout; no Firebase connection.
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {build} from 'esbuild';
@@ -15,6 +15,14 @@ await writeFile('work/preview-entry.mjs',`import '../prototypes/circus-preview/b
 await build({entryPoints:['work/preview-entry.mjs'],outfile:'dist/cloud/client.js',bundle:true,format:'iife',minify:true,alias:{'node:crypto':path.join(root,'prototypes/circus-preview/crypto-browser.mjs')}});
 await writeFile('dist/cloud/firebase-config.js','window.KING_RICO_FIREBASE={enabled:false};\n');
 await writeFile('dist/ui/app-shell.js','/* Local preview: no service worker or installation. */\n');
+// The preview client above already includes the native park UI. Loading the
+// production bundle too creates competing controllers, duplicate charge animations and
+// bonus handlers that call unavailable production wallet methods.
+for(const name of await readdir('dist'))if(name.endsWith('.html')){
+ const file=path.join('dist',name),html=await readFile(file,'utf8');
+ await writeFile(file,html.replace(/<script\b[^>]*\bsrc=["'][^"']*ui\/park\/client\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/g,''));
+}
+
 const routes=JSON.parse(await readFile('site/routes.json','utf8'));
 // Resolve clean routes in a plain static server, including navigation between games.
 for(const route of [...routes,{path:'/home',file:'Fortune Circus.dc.html'}]){

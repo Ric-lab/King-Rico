@@ -1061,23 +1061,7 @@ class Component extends DCLogic {
     car.connect(g); g.connect(out);
     car.start(t); mod.start(t); car.stop(t + dur + 0.05); mod.stop(t + dur + 0.05);
   }
-  spinClick(down) {
-    if (!this.gate()) return;
-    const ac = this.ac(), out = this.out(); if (!ac || !out) return;
-    const t = ac.currentTime + 0.001, r = 0.99 + Math.random() * 0.02;
-    const body = ac.createOscillator(), g = ac.createGain(); body.type = 'triangle';
-    body.frequency.setValueAtTime((down ? 185 : 310) * r, t);
-    body.frequency.exponentialRampToValueAtTime(down ? 155 : 270, t + (down ? .022 : .018));
-    g.gain.setValueAtTime(.0001, t);g.gain.exponentialRampToValueAtTime(down ? .13 : .045, t + .002);
-    g.gain.exponentialRampToValueAtTime(.0001, t + (down ? .042 : .028));
-    body.connect(g);g.connect(out);body.start(t);body.stop(t + .055);
-    const n = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain();n.buffer = this.noise(ac);
-    f.type = 'bandpass';f.frequency.value = down ? 1450 : 2150;f.Q.value = .8;
-    ng.gain.setValueAtTime(down ? .085 : .035, t);ng.gain.exponentialRampToValueAtTime(.0001, t + (down ? .018 : .012));
-    n.connect(f);f.connect(ng);ng.connect(out);n.start(t);n.stop(t + .03);
-  }
-  click(down, kind) {
-    if (kind === 'spin') return this.spinClick(down);
+  click(down) {
     const ac = this.ac(), out = this.out(); if (!ac) return;
     const t = ac.currentTime + 0.001;
     if (!this._white || this._white.sampleRate !== ac.sampleRate) {

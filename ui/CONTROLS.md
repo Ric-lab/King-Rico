@@ -92,3 +92,6 @@ são links, com ação JOGAR/CONTINUAR; a condição vem da rodada salva. O pre�
 O swipe do parque aceita movimentos lentos; não impor prazo de velocidade ao
 público piloto. Em toque, preservar a captura implícita do elemento de origem;
 em mouse, perda de captura cancela apenas o gesto que pertence ao palco.
+
+Na prévia de 04/11/2026, spin, auto e turbo do Circus usam o mesmo método
+`click(down)` para os sons de pressão e soltura, respeitando volume e silêncio.

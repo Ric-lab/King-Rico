@@ -83,3 +83,21 @@ Na v54, o parque foi simplificado: título e ingressos identificados, custo da
 partida numa linha, quatro cards com assets dos jogos e JOGAR/CONTINUAR, recarga
 separada abaixo. Sem cenários repetidos ou frases promocionais. A aparência fica
 em `ui/park/park-home.css`; economia e confirmação da entrada continuam iguais.
+
+## Prévia: animações e modo de movimento reduzido (04/11/2026)
+
+`build:preview` inclui uma única interface do parque no cliente de teste; remove
+o script nativo duplicado das páginas geradas. Isso evita duas sequências de
+enchimento e controladores concorrentes para a roleta. O build de produção
+continua carregando sua interface nativa normalmente.
+
+Os movimentos que explicam o resultado permanecem perceptíveis quando o aparelho
+pede redução de movimento: líquido sobe sem oscilar em 450 ms, ingresso viaja
+em linha reta sem giro em 450 ms e a roleta faz no máximo uma volta em 900 ms.
+Confetes, saltos do líquido e a grande transição de entrada ficam suprimidos.
+No modo normal, a apresentação original é preservada. Falha de áudio/animação
+não desfaz recebimento confirmado.
+
+Regressão focada: após `npm run build:preview` e servidor estático local,
+`KING_RICO_TEST_URL=http://127.0.0.1:4178 python3 tests/preview_motion_browser.py`.
+O teste recusa carteira real, executa giros pelo botão e cobre os dois modos.

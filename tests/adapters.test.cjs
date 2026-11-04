@@ -476,3 +476,20 @@ test('Circus samples its physical reels immediately when the menu pauses the clo
  g.pauseGame();assert.equal(samples.length,1);assert.equal(samples[0],g._pauseAt-10);
  g.pauseGame();assert.equal(samples.length,1);
 });
+
+test('Circus spin, auto and turbo use the same press and release audio graph',()=>{
+ const {instance:g}=component('Fortune Circus.dc.html',{},()=>.5);
+ function sound(down,kind){
+  const graph=[];
+  const param=()=>({value:0,setValueAtTime(v){this.value=v;},exponentialRampToValueAtTime(v){this.end=v;}});
+  const node=type=>{const n={node:type,frequency:param(),gain:param(),Q:param(),playbackRate:param(),connect(){},start(){},stop(){}};graph.push(n);return n;};
+  const ac={currentTime:1,sampleRate:44100,createBuffer:(_,len)=>({sampleRate:44100,getChannelData:()=>new Float32Array(len)}),createBufferSource:()=>node('noise'),createBiquadFilter:()=>node('filter'),createGain:()=>node('gain'),createOscillator:()=>node('oscillator')};
+  g.ac=()=>ac;g.out=()=>({});g.click(down,kind);
+  return JSON.stringify(graph,(key,value)=>typeof value==='function'||key==='buffer'?undefined:value);
+ }
+ for(const down of [true,false]){
+  const spin=sound(down,'spin');assert.notEqual(spin,'[]');
+  assert.equal(spin,sound(down,'auto'));assert.equal(spin,sound(down,'turbo'));
+ }
+ assert.notEqual(sound(true,'spin'),sound(false,'spin'),'Press and release retain their distinct sounds');
+});

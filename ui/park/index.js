@@ -109,8 +109,12 @@ function showWheel(){
  async function finish(w){
   el.querySelector('.park-wheel-machine').classList.add('is-spinning');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reduced){const stop=-w.result.index*seg,end=stop+360*(direction>0?Math.ceil((wheelAngle-stop)/360)+6:Math.floor((wheelAngle-stop)/360)-6);const anim=rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${end}deg)`}],{duration:4200,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,4600))]);anim.cancel();rotor.style.transform=`rotate(${end}deg)`;}
-  else rotor.style.transform=`rotate(${-w.result.index*seg}deg)`;
+  const stop=-w.result.index*seg;
+  // Reduced motion keeps the meaningful result turn, without repeated laps.
+  const end=reduced?wheelAngle+direction*((direction*(stop-wheelAngle)%360+360)%360||360):stop+360*(direction>0?Math.ceil((wheelAngle-stop)/360)+6:Math.floor((wheelAngle-stop)/360)-6);
+  const duration=reduced?900:4200;
+  const anim=rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${end}deg)`}],{duration,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});
+  await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,duration+400))]);anim.cancel();rotor.style.transform=`rotate(${end}deg)`;
   el.querySelector('.park-wheel-machine').classList.remove('is-spinning');
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);

@@ -51,18 +51,21 @@ export function installMotion(fc,rails,{refresh,showWheel}){
    const color=colorAt(Math.min(1,charge.target/10));tube.style.setProperty('--park-pour-color',color);
    tube.classList.remove('is-empty');
    stream.style.height=Math.max(4,h-from)+'px';drops.forEach(d=>d.style.top=(h-from-2)+'px');
-   if(!reduced())try{
+   const calm=reduced();
+   try{
     // A short impact, sustained incoming volume, then a damped surface.
     // The old rainbow stays fixed in the glass; only the new top layer is stirred.
-    const a=fill.animate([{height:from+'px'},{height:(from+2)+'px',offset:.08},{height:Math.min(h,to+2.5)+'px',offset:.68},{height:Math.max(from,to-1.5)+'px',offset:.83},{height:to+'px'}],{delay,duration:1050,easing:'linear',fill:'both'});animations.push(a);
+    const a=fill.animate(calm?[{height:from+'px'},{height:to+'px'}]:[{height:from+'px'},{height:(from+2)+'px',offset:.08},{height:Math.min(h,to+2.5)+'px',offset:.68},{height:Math.max(from,to-1.5)+'px',offset:.83},{height:to+'px'}],{delay,duration:calm?450:1050,easing:'linear',fill:'both'});animations.push(a);
     a.finished.then(()=>{if(++finished===2)finish();}).catch(()=>{});
-    const streamDuration=pourLead+850,impactOffset=Math.max(.025,pourLead/streamDuration);
+    const streamDuration=pourLead+(calm?350:850),impactOffset=Math.max(.025,pourLead/streamDuration);
     animations.push(stream.animate([{clipPath:'inset(0 0 100% 0 round 3px)',opacity:0},{clipPath:'inset(0 0 0% 0 round 3px)',opacity:1,offset:impactOffset},{clipPath:'inset(0 0 0% 0 round 3px)',opacity:.95,offset:.72},{clipPath:'inset(100% 0 0 0 round 3px)',opacity:0}],{delay:startDelay,duration:streamDuration,fill:'both'}));
+    if(!calm){
     const cap=fill.querySelector('.park-liquid-cap');if(cap)animations.push(cap.animate([{height:'0px',opacity:0},{height:'14px',opacity:.85,offset:.22},{height:'20px',opacity:.7,offset:.62},{height:'8px',opacity:0}],{delay,duration:1050,fill:'both'}));
     const surface=fill.querySelector('.park-liquid-surface');if(surface)animations.push(surface.animate([{transform:'translateY(0) scaleY(.6)'},{transform:'translateY(-1px) scaleY(1.6)',offset:.15},{transform:'translateY(.5px) scaleY(.7)',offset:.35},{transform:'translateY(-.5px) scaleY(1.2)',offset:.6},{transform:'translateY(0) scaleY(1)'}],{delay,duration:1050,fill:'both'}));
     drops.forEach((d,i)=>animations.push(d.animate([{transform:'translate(0,0) scale(.3)',opacity:0},{opacity:1,offset:.12},{transform:`translate(${(i-1)*3}px,${-12-i*3}px) scale(1)`,opacity:1,offset:.45},{transform:`translate(${(i-1)*4}px,4px) scale(.2)`,opacity:0}],{delay:delay+i*25,duration:390,fill:'both',easing:'ease-out'})));
+    }
    }catch{/* A failed decorative animation still reaches the timed final state. */}
-   timers.push(setTimeout(()=>{if(done)return;tube.classList.add('is-pouring');fc._parkMeterLevel=charge.target;record(fc,'charge:arrived',{side,level:charge.target});if(reduced()){rails.style.setProperty('--park-fill',charge.target*10+'%');if(++finished===2)finish();}},delay));
+   timers.push(setTimeout(()=>{if(done)return;tube.classList.add('is-pouring');fc._parkMeterLevel=charge.target;record(fc,'charge:arrived',{side,level:charge.target});},delay));
   }
   // Final state never depends on Web Animations, image loading or a visible tab.
   timers.push(setTimeout(finish,Math.max(0,cue.at+Number(cue.delay||0)+450-performance.now())+1500));
@@ -112,9 +115,10 @@ function flyTickets(fc,refresh,done=()=>{}){
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
  const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],arrived=new Set();let ended=false;
  const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.bell?.(1760+arrived.size*70,.12,.035);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
- const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
+ const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();if(!arrived.size&&award.after>award.before)try{fc.bell?.(1830,.12,.035);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
  const safety=setTimeout(finish,1650);
- if(reduced()||!end?.width){finish();return;}
+ if(!end?.width){finish();return;}
+ const calm=reduced();
  try{
   const tx=end.x+end.width/2,ty=end.y+end.height/2;
   const flights=award.cells.slice(0,3).map((cell,i)=>{
@@ -122,7 +126,8 @@ function flyTickets(fc,refresh,done=()=>{}){
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
    const node=document.createElement('img');node.src='/assets/machine/ticket-symbol-v1.webp';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
    const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===1?0:t===0?.3:1,offset:t};});
-   const a=node.animate(frames,{duration:820,delay:i*125,easing:'cubic-bezier(.25,.1,.35,1)',fill:'both'});anims.push(a);
+   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:0}];
+   const a=node.animate(calm?simple:frames,{duration:calm?450:820,delay:i*(calm?80:125),easing:'cubic-bezier(.25,.1,.35,1)',fill:'both'});anims.push(a);
    return a.finished.then(()=>land(i)).catch(()=>{});
   });
   Promise.allSettled(flights).then(finish);

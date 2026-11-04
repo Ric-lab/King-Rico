@@ -9,3 +9,4 @@
 Rejeitado:
 - Linha premiada "fita de ouro com brilho correndo" (a limpa da publicada é a aprovada).
 - Molduras douradas grossas; fundos roxos/pretos atrás dos rolos.
+- Feedback essencial de ingresso, líquido e roleta ausente na prévia; conferir o fluxo real também com movimento reduzido.
