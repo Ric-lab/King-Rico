@@ -254,3 +254,6 @@
 .park-reel-window-back{background:none!important;box-shadow:none!important}
 /* Sem nada atrás dos tambores. */
 .park-reels[data-reel-optics] .park-reel-paper{display:none!important}
+
+/* Borda superior dourada da máquina (acima dos rolos). */
+.park-reel-frame:before{content:'';position:absolute;left:-12px;right:-12px;top:-5px;height:6px;border-radius:3px;pointer-events:none;z-index:8;background:linear-gradient(180deg,#fff6cf 0%,#ffd257 45%,#c8871a 100%);box-shadow:0 0 0 1px #6b2e05,0 2px 4px #0006}
