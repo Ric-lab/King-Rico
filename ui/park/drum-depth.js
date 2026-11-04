@@ -67,11 +67,12 @@ export async function installDrumDepth(stage,reels){
   // Fendas escuras só nos vãos: 2 horizontais (linhas 1–2, 2–3) e 2 verticais (colunas). Do tamanho exato dos tambores (394×424).
   const slit=(vert)=>{const c=document.createElement('canvas');c.width=vert?64:4;c.height=vert?4:64;const x=c.getContext('2d'),g=vert?x.createLinearGradient(0,0,64,0):x.createLinearGradient(0,0,0,64);
    g.addColorStop(0,'#4a3826');g.addColorStop(.3,'#1c120a');g.addColorStop(.5,'#0a0604');g.addColorStop(.7,'#1c120a');g.addColorStop(1,'#4a3826');x.fillStyle=g;x.fillRect(0,0,c.width,c.height);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;};
-  const tH=slit(false),tV=slit(true);
-  const addSlit=(w,h,ox,oy,tex)=>{
-   const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tex}));m.position.copy(right).multiplyScalar(ox).addScaledVector(up,oy).addScaledVector(front,-72.9);m.quaternion.copy(camera.quaternion);scene.add(m);
+  const tV=slit(true),tH=(()=>{const c=document.createElement('canvas');c.width=4;c.height=64;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,64);
+   g.addColorStop(0,'#d6cfc2');g.addColorStop(.25,'#ece6db');g.addColorStop(.5,'#f3eee5');g.addColorStop(.75,'#ece6db');g.addColorStop(1,'#d6cfc2');x.fillStyle=g;x.fillRect(0,0,4,64);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;})();
+  const addSlit=(w,h,ox,oy,tex,z=-72.9)=>{
+   const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tex}));m.position.copy(right).multiplyScalar(ox).addScaledVector(up,oy).addScaledVector(front,z);m.quaternion.copy(camera.quaternion);scene.add(m);
    const sh=new T.Mesh(m.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));sh.position.copy(m.position).addScaledVector(front,.2);sh.quaternion.copy(camera.quaternion);sh.receiveShadow=true;scene.add(sh);};
-  for(const gy of [73,-73])addSlit(440,30,0,gy,tH);
+  for(const gy of [73,-73])addSlit(394,30,0,gy,tH,-73.2);
   for(const gx of [67,-67])addSlit(24,424,gx,0,tV);
 
   // The housing shields the upper turn of each row from the key light. These
