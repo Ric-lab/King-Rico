@@ -15,3 +15,4 @@ Rejeitado:
 - Dupla camada de campainha curta nos ingressos: o dono pediu uma nota por chegada, três notas complementares e caudas mais longas.
 - Som dos ingressos disparado após o desaparecimento e chegadas muito juntas: contato visível, contagem, nota e impacto devem compartilhar a mesma marca de tempo.
 - Caudas longas com chegadas próximas soam como um acorde único; dar ataque definido e viajar/contar um ingresso por vez para ouvir três notas distintas.
+- Faixa da cor anterior na altura do spin após a roleta: sincronizar face e todas as laterais também no reinício da carga.

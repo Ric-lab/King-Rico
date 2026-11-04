@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · spin sem faixa residual)
+- Corrigida a base que permanecia vermelha após aplicar a roleta: o estado ocioso sincroniza a cor confirmada em todas as peças, incluindo o retorno ao roxo inicial. Pulso radial e desligamento preservados.
+- Pequena borda traseira colorida (2 px na geometria nativa), recolhida ao pressionar; frente mantém os 8 px e aro fixo. Sem mudanças de som, prêmios ou ingressos.
+- Navegador cobre ciclo real de enchimento/roleta/aplicação, retorno ao roxo e geometria solta/pressionada nos modos normal e reduzido. Entrega somente na prévia.
+
 ## Feito (2026-11-04 · Codex · um ingresso e uma batida por vez)
 - Os ingressos agora viajam sequencialmente, sem cópias futuras visíveis: 700 ms por voo normal ou 450 ms reduzido. O próximo só parte quando o anterior termina de ser absorvido. O contato segue unindo nota, contador e impacto.
 - Mantidas dó/mi/sol, uma voz por chegada e caudas de 0,9/1,0/1,15 s. Ataque elevado a 0,48, corpo 0,30 e queda para 0,055 em 240 ms: cada nota tem uma batida presente, enquanto a cauda fica mais baixa para não misturar a próxima.
@@ -56,4 +61,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar a sequência de um ingresso por vez e suas três batidas na prévia. Depois da aprovação levar a mudança completa para `main`; não publicar no oficial sem autorização.
+- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e seu pequeno relevo traseiro. Não levar a `main` nem publicar no oficial sem autorização.

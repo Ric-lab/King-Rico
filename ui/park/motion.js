@@ -18,6 +18,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkSyncIdlePulseColor=()=>{
   if(spinButton?.dataset.spinActive!=='0'||spinButton.hasAttribute('data-tactile-held')||fc._parkMeterBusy||fc.cloudBusy())return;
   if(spinSurface.querySelector('.park-spin-wash')?.getAnimations().some(a=>a.playState==='running'||a.playState==='paused'))return;
+  commitSpinColor(fc._parkMeterLevel);
   fc._parkPreparePulseColor();
  };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0);});};syncColor(fc._parkMeterLevel);

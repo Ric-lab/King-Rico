@@ -208,25 +208,27 @@
    Geometry stays rigid: only translation changes; the fixed target and gold rim do not. */
 .park-spin-aperture{clip-path:none;mask-image:none;z-index:2}
 .park-spin-well{inset:8px 9px;border-radius:23px;clip-path:none;mask-image:none;background:#48226e}
-.park-spin-contact,.park-spin-edge,.park-spin-face{position:absolute;inset:11px 12px 9px;border-radius:22px;pointer-events:none}
+.park-spin-contact,.park-spin-edge,.park-spin-rear,.park-spin-face{position:absolute;inset:11px 12px 9px;border-radius:22px;pointer-events:none}
 .park-spin-contact{background:#14232b55;filter:blur(3px);transform:translateY(3px);transition:transform 180ms cubic-bezier(.2,.8,.3,1),opacity 180ms ease-out;opacity:.8}
 .park-spin-edge{background:var(--park-spin-base-color,#8e24ff);filter:brightness(.7);border:1px solid #47355277;box-sizing:border-box;z-index:1;overflow:hidden}
-.park-spin-face{z-index:2;transform:translateY(-8px);transform-origin:50% 50%;transition:transform 180ms cubic-bezier(.2,.8,.3,1);will-change:transform;filter:none;mask-image:none;background:var(--park-spin-base-color,#8e24ff);border:1px solid #6d4d9155;box-sizing:border-box;overflow:hidden;isolation:isolate}
+.park-spin-rear{inset:9px 12px 11px;z-index:2;transform:translateY(-8px);transition:transform 180ms cubic-bezier(.2,.8,.3,1);background:var(--park-spin-base-color,#8e24ff);filter:brightness(.8);overflow:hidden}
+.park-spin-face{z-index:3;transform:translateY(-8px);transform-origin:50% 50%;transition:transform 180ms cubic-bezier(.2,.8,.3,1);will-change:transform;filter:none;mask-image:none;background:var(--park-spin-base-color,#8e24ff);border:1px solid #6d4d9155;box-sizing:border-box;overflow:hidden;isolation:isolate}
 /* Shade only the resting paint; the radial wash lights it without dimming the LEDs. */
-.park-spin-face:before,.park-spin-edge:before{content:'';position:absolute;inset:0;background:#08060e;opacity:.34;border-radius:inherit;pointer-events:none}
-.park-spin-wash,.park-spin-side-wash{position:absolute;inset:0;background:var(--park-spin-pulse-color,#8e24ff);pointer-events:none}
+.park-spin-face:before,.park-spin-edge:before,.park-spin-rear:before{content:'';position:absolute;inset:0;background:#08060e;opacity:.34;border-radius:inherit;pointer-events:none}
+.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash{position:absolute;inset:0;background:var(--park-spin-pulse-color,#8e24ff);pointer-events:none}
 .park-spin-side-wash{filter:none}
 .park-spin-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font:800 30px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.42em;padding-left:.42em;color:#b8c3ce;-webkit-text-stroke:2px #24324a;paint-order:stroke fill;text-shadow:0 -1px 0 #16283c66,0 1px 0 #eef5ff33,0 2px 0 #24324a}
 .park-spin-label-lit{color:#fff;text-shadow:0 0 1px #fff,0 0 4px #fffc,0 0 8px #b9edff80,0 2px 0 #24324a}
-.park-spin-wash,.park-spin-side-wash,.park-spin-label-lit{clip-path:circle(0px at 50% 50%);transition:clip-path 40ms ease-out}
-.park-circus-stage [data-spin-btn][data-spin-active="1"] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-label-lit),[data-spin-btn][data-tactile-held] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-label-lit),[data-spin-btn][data-color-pending] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-label-lit){clip-path:circle(190px at 50% 50%);transition:clip-path 420ms cubic-bezier(.25,.4,.3,1)}
-.park-spin-wash,.park-spin-side-wash{transition:none}
+.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit{clip-path:circle(0px at 50% 50%);transition:clip-path 40ms ease-out}
+.park-circus-stage [data-spin-btn][data-spin-active="1"] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit),[data-spin-btn][data-tactile-held] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit),[data-spin-btn][data-color-pending] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit){clip-path:circle(190px at 50% 50%);transition:clip-path 420ms cubic-bezier(.25,.4,.3,1)}
+.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash{transition:none}
 .park-spin-rim{filter:none!important}
 .park-circus-stage[data-pressed="spin"] .park-spin-face,[data-spin-btn][data-tactile-held] .park-spin-face,[data-spin-btn]:active .park-spin-face{transform:translateY(0);transition-duration:55ms}
+.park-circus-stage[data-pressed="spin"] .park-spin-rear,[data-spin-btn][data-tactile-held] .park-spin-rear,[data-spin-btn]:active .park-spin-rear{transform:translateY(2px);transition-duration:55ms}
 .park-circus-stage[data-pressed="spin"] .park-spin-contact,[data-spin-btn][data-tactile-held] .park-spin-contact,[data-spin-btn]:active .park-spin-contact{transform:translateY(0);opacity:.4;transition-duration:34ms}
 [data-spin-btn]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 [data-spin-btn]:focus-visible{outline:2px solid #fff0bd;outline-offset:4px;border-radius:30px}
-@media(prefers-reduced-motion:reduce){.park-spin-face,.park-spin-contact,.park-control-face,.park-spin-wash,.park-spin-side-wash,.park-spin-label-lit{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.park-spin-rear,.park-spin-face,.park-spin-contact,.park-control-face,.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit{transition:none!important}}
 
 /* Vertical movement is handled by the park gesture, not browser pull-to-refresh. */
 .park-circus-stage{touch-action:pan-x pinch-zoom;overscroll-behavior-y:contain}

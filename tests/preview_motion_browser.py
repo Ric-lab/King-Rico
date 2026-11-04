@@ -82,6 +82,22 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-wheel-'+mode+'.png')
   page.get_by_role('button',name='APLICAR',exact=False).wait_for(timeout=12000)
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
+  page.get_by_role('button',name='APLICAR',exact=False).click()
+  page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
+  page.wait_for_timeout(650)
+  paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
+  assert paint['level']==0 and paint['colors']==['rgb(142, 36, 255)']*3,paint
+  def geometry():
+   return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
+  rest=geometry()
+  assert rest['rear']>1 and rest['front']>5,rest
+  page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
+  page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
+  down=geometry()
+  assert abs(down['rear'])<.5 and abs(down['front'])<.5,down
+  page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-down-'+mode+'.png')
+  page.evaluate('__fc._spinTouchUp()');page.wait_for_timeout(250)
+  assert abs(geometry()['front']-rest['front'])<.5
   assert not errors,errors
   assert not missing,missing
   print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketCells':ticket_cells,'arrivalSounds':len(first['sounds']),'spacingMs':[round(b-a) for a,b in zip(arrivals,arrivals[1:])],'contactDistance':round(max(x['distance'] for x in first['sounds']),2),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)

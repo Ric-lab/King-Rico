@@ -95,3 +95,8 @@ em mouse, perda de captura cancela apenas o gesto que pertence ao palco.
 
 Na prévia de 04/11/2026, spin, auto e turbo do Circus usam o mesmo método
 `click(down)` para os sons de pressão e soltura, respeitando volume e silêncio.
+
+Prévia de 04/11/2026: a base do spin acompanha a carga confirmada também ao
+voltar ao roxo após aplicar a roleta, sem conservar a faixa vermelha anterior.
+Relevo traseiro de 2 px separado da face; recolhe ao pressionar. Frente de
+8 px, aro fixo, cores radiais e sons preservados.
