@@ -71,7 +71,7 @@ export async function installDrumDepth(stage,reels){
   const addSlit=(w,h,ox,oy,tex)=>{
    const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tex}));m.position.copy(right).multiplyScalar(ox).addScaledVector(up,oy).addScaledVector(front,-72.9);m.quaternion.copy(camera.quaternion);scene.add(m);
    const sh=new T.Mesh(m.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));sh.position.copy(m.position).addScaledVector(front,.2);sh.quaternion.copy(camera.quaternion);sh.receiveShadow=true;scene.add(sh);};
-  for(const gy of [73,-73])addSlit(394,30,0,gy,tH);
+  for(const gy of [73,-73])addSlit(440,30,0,gy,tH);
   for(const gx of [67,-67])addSlit(24,424,gx,0,tV);
 
   // The housing shields the upper turn of each row from the key light. These
