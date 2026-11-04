@@ -20,10 +20,10 @@
 .park-circus-stage[data-cabinet-layout] .park-reel-window-back{transform:scale(.95);transform-origin:50% 0}
 
 /* Bloco de aposta/botões encosta na base da máquina (fim do gabinete), sem vão. */
-.park-circus-stage[data-cabinet-layout] .park-part-base{top:calc(544px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))}
-.park-circus-stage[data-cabinet-layout] .park-bet-well{top:calc(550.5px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))}
-.park-circus-stage[data-cabinet-layout] .park-bet-value{top:calc(548.5px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))!important}
-.park-circus-stage[data-cabinet-layout] :is(.park-panel-control,[aria-label="Diminuir aposta"],[aria-label="Aumentar aposta"]){top:calc(548px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))!important}
-.park-circus-stage[data-cabinet-layout] .park-mode-label{top:calc(594px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))!important}
-.park-circus-stage[data-cabinet-layout] [data-spin-btn]{top:calc(613px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 50px))!important}
+.park-circus-stage[data-cabinet-layout] .park-part-base{top:calc(544px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))}
+.park-circus-stage[data-cabinet-layout] .park-bet-well{top:calc(550.5px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))}
+.park-circus-stage[data-cabinet-layout] .park-bet-value{top:calc(548.5px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
+.park-circus-stage[data-cabinet-layout] :is(.park-panel-control,[aria-label="Diminuir aposta"],[aria-label="Aumentar aposta"]){top:calc(548px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
+.park-circus-stage[data-cabinet-layout] .park-mode-label{top:calc(594px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
+.park-circus-stage[data-cabinet-layout] [data-spin-btn]{top:calc(613px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
 .park-circus-stage[data-cabinet-layout] .park-meter{height:calc(var(--park-cabinet-height) - 68px)}
