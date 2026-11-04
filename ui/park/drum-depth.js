@@ -64,16 +64,16 @@ export async function installDrumDepth(stage,reels){
   backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);backing.visible=false;scene.add(backing);
   recessShadow=new T.Mesh(backing.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.4,depthWrite:false}));
   recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;recessShadow.visible=false;scene.add(recessShadow);
-  // Só nos 2 vãos entre as linhas (1–2 e 2–3): faixas que recebem a sombra real dos tambores + leve escurecido.
-  for(const gy of [73,-73]){
-   const band=new T.Mesh(new T.PlaneGeometry(402,30),new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));
-   band.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.7);band.quaternion.copy(camera.quaternion);band.receiveShadow=true;scene.add(band);
-   const gc=document.createElement('canvas');gc.width=4;gc.height=64;const gx=gc.getContext('2d'),gg=gx.createLinearGradient(0,0,0,64);
-   gg.addColorStop(0,'#4a3826');gg.addColorStop(.3,'#1c120a');gg.addColorStop(.5,'#0a0604');gg.addColorStop(.7,'#1c120a');gg.addColorStop(1,'#4a3826');gx.fillStyle=gg;gx.fillRect(0,0,4,64);
-   const gt=new T.CanvasTexture(gc);gt.colorSpace=T.SRGBColorSpace;
-   const tint=new T.Mesh(new T.PlaneGeometry(402,30),new T.MeshBasicMaterial({map:gt,depthWrite:true}));
-   tint.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.9);tint.quaternion.copy(camera.quaternion);scene.add(tint);
-  }
+  // Fendas escuras só nos vãos: 2 horizontais (linhas 1–2, 2–3) e 2 verticais (colunas). Do tamanho exato dos tambores (394×424).
+  const slit=(vert)=>{const c=document.createElement('canvas');c.width=vert?64:4;c.height=vert?4:64;const x=c.getContext('2d'),g=vert?x.createLinearGradient(0,0,64,0):x.createLinearGradient(0,0,0,64);
+   g.addColorStop(0,'#4a3826');g.addColorStop(.3,'#1c120a');g.addColorStop(.5,'#0a0604');g.addColorStop(.7,'#1c120a');g.addColorStop(1,'#4a3826');x.fillStyle=g;x.fillRect(0,0,c.width,c.height);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;};
+  const tH=slit(false),tV=slit(true);
+  const addSlit=(w,h,ox,oy,tex)=>{
+   const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tex}));m.position.copy(right).multiplyScalar(ox).addScaledVector(up,oy).addScaledVector(front,-72.9);m.quaternion.copy(camera.quaternion);scene.add(m);
+   const sh=new T.Mesh(m.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));sh.position.copy(m.position).addScaledVector(front,.2);sh.quaternion.copy(camera.quaternion);sh.receiveShadow=true;scene.add(sh);};
+  for(const gy of [73,-73])addSlit(394,30,0,gy,tH);
+  for(const gx of [67,-67])addSlit(24,424,gx,0,tV);
+
   // The housing shields the upper turn of each row from the key light. These
   // hidden crossbars cast into the existing shadow map without covering art.
   hoodGeometry=new T.BoxGeometry(462,4,90);
