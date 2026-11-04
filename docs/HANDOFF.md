@@ -4,13 +4,18 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Estado (2026-11-04)
-- `main` = site oficial. Prévia (`codex/penalty-clown-preview`) usa as mesmas 3 fitas da `main`, com o workflow isolado, som de chegada dos ingressos e correções de animação/áudio abaixo.
+- `main` = site oficial. Dono aprovou o spin elevado e autorizou publicar a prévia em 04/11. Integração preserva 3 fitas, carteira real e workflow REST de regras; prévia mantém seu projeto isolado.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
 ## Feito (2026-11-04 · Codex · face elevada do spin)
 - A faixa traseira anterior parecia fundo porque a face começava abaixo dela. Corrigido o sentido: face sobe 4 px acima do encaixe e sobrepõe o topo do aro; frente mantém 8 px. Ao pressionar desce ao encaixe. Sombra de contato fica atrás da peça, sem faixa escura acima da face.
 - Capturas de repouso/clique inspecionadas nos modos normal/reduzido; teste exige elevação traseira negativa em relação ao encaixe, não recesso. Sons, cores, folgas laterais e jogo preservados. Build de produção depois do navegador; só prévia.
+
+## Entrega (2026-11-04 · Codex · prévia aprovada para produção)
+- Dono aprovou o botão após `8620bb8` e autorizou publicar. Inclui som compartilhado de spin/auto/turbo, três ingressos sequenciais com dó/mi/sol no contato, trincas nas cinco linhas, líquido/roleta e correção da cor residual no spin.
+- Validação da entrega: 191 testes de código e suíte completa de regras/transações no Firestore emulado passaram; navegador da prévia aprovado nos modos normal/reduzido. Build final de produção gerado após essas verificações.
+- Histórico recente da `main` integrado antes da entrega; nenhum experimento de nove tambores restaurado. Produção usa Auth Google/Firestore reais; carteira fictícia permanece exclusiva de build:preview. Workflow de produção e publicador REST preservados.
 
 ## Feito (2026-11-04 · Codex · encaixe lateral do spin)
 - Fechadas as folgas laterais: corpo a 8 px do alvo, sob o limite interno do aro; face a 10 px, deixando só 2 px de lateral colorida. Cantos da face ajustados ao contorno da moldura. Profundidades traseira/frontal e clique preservados.
@@ -81,4 +86,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e a face elevada do spin sobre o aro, sem faixa parecendo fundo. Não levar a `main` nem publicar no oficial sem autorização.
+- Publicação autorizada. Conferir o workflow de produção e o botão/recursos em https://king-rico.web.app; em seguida, aguardar novo feedback do dono. Não reintroduzir as versões intermediárias rejeitadas do relevo.

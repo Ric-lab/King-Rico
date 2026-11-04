@@ -117,3 +117,7 @@ Correção atual da prévia: a face fica ACIMA do encaixe traseiro, não abaixo.
 Face em repouso: inset 8/10/13 px, deslocamento vertical -4 px; pressionada:
 inset 8/8/9 px e deslocamento zero. Aro atrás da peça elevada; sombra de
 contato externa acompanha o clique. A faixa superior rebaixada foi rejeitada.
+
+Estado aprovado em 04/11/2026: face elevada e encaixe lateral acima descritos
+autorizados pelo dono para publicação oficial, junto aos sons dos ingressos.
+As tentativas anteriores permanecem apenas como histórico, não como padrão.
