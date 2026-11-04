@@ -119,3 +119,24 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-machine{touch-action:none;user-select:none;cursor:grab}
 .park-wheel-machine.is-dragging{cursor:grabbing}
 .park-wheel-machine.is-spinning,.park-wheel-machine.is-won{cursor:default}
+
+/* Bonus is a scene on the native 453 × 802 stage, never a screen-sized dialog. */
+.park-hoist-deck{isolation:isolate}
+.park-hoist-deck>.kr-hud-row{z-index:50!important}
+.park-hoisted-item{pointer-events:none!important}
+.park-hoist-deck[data-hoist="wheel"]>.park-hoisted-item{translate:0 -920px!important;visibility:hidden}
+.park-hoist-rig{position:absolute;left:25px;top:-720px;width:403px;height:990px;z-index:18;pointer-events:none}
+.park-hoist-rig>i{position:absolute;top:0;bottom:7px;width:5px;border-radius:3px;background:repeating-linear-gradient(145deg,#bd8c48 0 3px,#f6d899 3px 5px,#805323 5px 7px);box-shadow:1px 0 2px #38200966}
+.park-hoist-rig>i:first-child{left:11px}.park-hoist-rig>i:nth-child(2){right:11px}
+.park-hoist-rig>b{position:absolute;bottom:0;left:6px;right:6px;height:13px;border:2px solid #a56c2b;border-radius:7px;background:linear-gradient(#ffdf8d,#c89138);box-shadow:0 3px 3px #38200944}
+.park-hoist-deck[data-hoist="wheel"]>.park-hoist-rig{translate:0 -920px;visibility:hidden}
+.park-wheel-scene{position:absolute;left:0;top:155px;width:453px;z-index:30;color:#fff3c4;font-family:Baloo,system-ui,sans-serif;text-align:center}
+.park-wheel-scene .park-wheel-panel{width:100%;max-width:none;padding:0;background:none;border:0;box-shadow:none}
+.park-wheel-scene .park-wheel-heading{width:340px;height:68px}
+.park-wheel-scene .park-wheel-heading h2{font-size:25px;top:18px}
+.park-wheel-scene .park-wheel-wrap{width:350px;margin:45px auto 22px}
+.park-wheel-scene .park-wheel-machine{transform:translate(-50%,-50%) scale(var(--park-wheel-scale,.9))}
+.park-wheel-scene .park-wheel-rays{opacity:.65}
+.park-wheel-scene .park-wheel-panel>.park-action{width:310px;margin-top:32px;min-height:60px;font-size:23px}
+.park-hoist-deck[data-hoist="lifting"]>.park-wheel-scene{pointer-events:none}
+.park-hoist-deck[data-hoist="returning"]>.park-wheel-scene{pointer-events:none}

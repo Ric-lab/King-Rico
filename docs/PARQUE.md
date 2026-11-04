@@ -63,16 +63,21 @@ O sorteio, a aplicação visual e o fechamento são etapas recuperáveis. A mesm
 operação não credita duas vezes, inclusive em outro aparelho. Reabrir uma roleta
 já sorteada apresenta o mesmo multiplicador. Falha de animação não desfaz crédito.
 
-A apresentação conserva o líquido sincronizado com o pulso, a união das roletas,
-o multiplicador viajando ao prêmio e as moedas viajando ao saldo. O fundo normal
+Na versão oficial, a apresentação conserva o líquido sincronizado com o pulso,
+a união das roletas, o multiplicador viajando ao prêmio e as moedas ao saldo.
+Na prévia de 04/11, a roleta substitui a máquina no próprio palco: cabos e travessa
+suspendem o conjunto, mantendo HUD e cenário. Não há modal, véu ou desfoque.
+Ao aplicar, o conjunto retorna antes do multiplicador atingir o mostrador.
+`ui/park/wheel-transition.js` controla apenas apresentação, sem alterar crédito.
+A cena é recuperada ao recarregar; movimento reduzido troca as peças sem içamento. O fundo normal
 do Circus e da Home usa o parque diurno em `assets/scenes/circus-daylight-v1.webp`.
 A máquina usa peças separadas para visor, barras, base e rolos, com montagem em
 `ui/park/cabinet.css`. Os três rolos usam fitas contínuas; os nove resultados
 numéricos não são nove animações independentes. A janela conserva as nove posições
 visíveis e uma curva suave nas linhas externas.
 
-Spin, auto e turbo compartilham azul-turquesa, aro fixo e face rígida que afunda
-por translação. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
+Spin, auto e turbo compartilham aro fixo e face rígida. O spin acompanha a cor
+das barras com luz radial; auto e turbo mantêm seu azul. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
 A roleta aceita botão e gesto e compartilha sua paleta arco-íris com as roletas
 pequenas das barras. O multiplicador viaja em dourado até o prêmio antes das
 moedas irem ao saldo. Detalhes de geometria e estados no

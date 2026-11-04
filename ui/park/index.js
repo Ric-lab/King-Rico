@@ -3,7 +3,7 @@ import layout from '../../games/fingo/layout.cjs';
 import {installMotion,confetti} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
 import {installParkNavigation} from './navigation.js';
-import {enterWheel} from './wheel-transition.js';
+import {createWheelScene,enterWheel} from './wheel-transition.js';
 import {applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
 const Cloud=window.KingRicoCloud,id=()=>crypto.randomUUID();
 const empty=()=>({version:1,revision:0,tickets:0,spins:0,wheel:null,passes:{},price:25,meterSpins:10});
@@ -101,8 +101,7 @@ function showWheel(){
  const values=state.wheel.pockets||[1,2,3,5,10],n=values.length,seg=360/n;
  const colors=pocketColors(n);
  const gradient=colors.map((c,i)=>`${c} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
- const el=modal(`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Roleta bônus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:#fff3c4"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`, 'Roleta multiplicadora');
- el.classList.add('park-wheel-modal');el.querySelector('.park-panel').classList.add('park-wheel-panel');
+ const el=createWheelScene(fc.lightsRef.current.parentElement,`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Roleta bônus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:#fff3c4"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`);
  const entrance=enterWheel(el);
  const btn=el.querySelector('[data-wheel-spin]'),rotor=el.querySelector('.park-wheel');let busy=false,ready=false,spun=false,wheelAngle=0,direction=1,drag=null;
  const machine=el.querySelector('.park-wheel-machine');
@@ -125,7 +124,7 @@ function showWheel(){
    const fc=window.__fc,flight=fc?._parkPrizeFlight;
    if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:w.result.winUnits/100,showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
    await call({action:'wheel-close',wheelId,requestId:id()});
-   const source=el.querySelector('.park-wheel-hub strong').getBoundingClientRect();el.close();
+   const source=el.querySelector('.park-wheel-hub strong').getBoundingClientRect();await el.close();
    if(fc){fc._parkPrizeFlight=null;fc._spinAfterFly=false;
     await applyMultiplier(fc,w,source);
     flyMultipliedPrize(fc,w,flight,()=>Cloud.player);

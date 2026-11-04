@@ -72,9 +72,24 @@ with sync_playwright() as p:
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
   page.reload();ready();page.get_by_role('button',name='Girar',exact=True).click()
-  dialog=page.get_by_role('dialog',name='Roleta multiplicadora',exact=True);dialog.wait_for(timeout=30000)
+  dialog=page.get_by_role('region',name='Roleta multiplicadora',exact=True);dialog.wait_for(timeout=30000)
+  if mode=='no-preference':
+   page.wait_for_timeout(300)
+   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='lifting'
+   page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_timeout(1600);assert dialog.count()==1
-  page.get_by_role('button',name='GIRAR ROLETA',exact=True).click()
+  assert page.locator('.park-modal').count()==0,'Bonus must use the real stage, not a modal'
+  assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel'
+  assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
+  assert page.locator('.kr-hud-row').evaluate('e=>e.getBoundingClientRect().top')>=0
+  if mode=='no-preference':
+   # A pending bonus must rebuild the same scene after refresh.
+   page.reload();ready();page.get_by_role('region',name='Roleta multiplicadora',exact=True).wait_for()
+   page.wait_for_timeout(1600)
+  if mode=='no-preference':
+   box=page.locator('.park-wheel-machine').bounding_box();cx=box['x']+box['width']/2;cy=box['y']+box['height']/2;r=box['width']*.32
+   page.mouse.move(cx+r,cy);page.mouse.down();page.mouse.move(cx+r*.7,cy-r*.7,steps=5);page.mouse.move(cx,cy-r,steps=5);page.mouse.up()
+  else:page.get_by_role('button',name='GIRAR ROLETA',exact=True).click()
   page.wait_for_timeout(150)
   a=page.locator('.park-wheel').evaluate('e=>getComputedStyle(e).transform')
   page.wait_for_timeout(150)
@@ -85,6 +100,8 @@ with sync_playwright() as p:
   page.get_by_role('button',name='APLICAR',exact=False).click()
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
+  assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
+  assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
   assert paint['level']==0 and paint['colors']==['rgb(142, 36, 255)']*3,paint
   def geometry():

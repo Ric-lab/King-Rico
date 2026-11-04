@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-04 · Codex · roleta como troca de cena)
+- Novo pedido: substituir modal por içamento da máquina/barras/controles com cabos. `wheel-transition.js` mantém os elementos reais montados, suspende-os juntos, preserva HUD/cenário e apresenta roleta no palco nativo. Botão e gesto preservados.
+- Aplicar devolve o conjunto antes do multiplicador viajar ao prêmio. Saída/erro de animação restaura peças e controles; movimento reduzido troca sem içamento. Sem mudança em pagamentos, carteira, Firestore ou rolos.
+- Verificados giro, retorno, retomada após atualizar e ausência de modal; capturas de içamento/roleta/retorno inspecionadas, modos normal/reduzido. Build final de produção após navegador. Somente prévia; oficial permanece em `7efe7b7`.
+
 ## Feito (2026-11-04 · Codex · face elevada do spin)
 - A faixa traseira anterior parecia fundo porque a face começava abaixo dela. Corrigido o sentido: face sobe 4 px acima do encaixe e sobrepõe o topo do aro; frente mantém 8 px. Ao pressionar desce ao encaixe. Sombra de contato fica atrás da peça, sem faixa escura acima da face.
 - Capturas de repouso/clique inspecionadas nos modos normal/reduzido; teste exige elevação traseira negativa em relação ao encaixe, não recesso. Sons, cores, folgas laterais e jogo preservados. Build de produção depois do navegador; só prévia.
@@ -87,4 +92,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Publicação concluída e conferida em https://king-rico.web.app. Aguardar novo feedback do dono; não reintroduzir as versões intermediárias rejeitadas do relevo.
+- Dono avaliar a troca de cena com cabos em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Não publicar essa nova transição no oficial sem aprovação.

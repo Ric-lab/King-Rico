@@ -107,7 +107,7 @@ def run():
     for n in range(9):
       page.wait_for_timeout(750)
       page.evaluate("async()=>{await KingRicoCloud.spin('circus',1)}")
-    page.get_by_role('dialog',name='Roleta multiplicadora',exact=True).wait_for(timeout=30000)
+    page.get_by_role('region',name='Roleta multiplicadora',exact=True).wait_for(timeout=30000)
     assert page.evaluate('KingRicoCloud.park.wheel.baseUnits')>0
     # Reload before drawing and after drawing: same prize/result, one credit.
     wheelid=page.evaluate('KingRicoCloud.park.wheel.id');page.reload();ready(page)

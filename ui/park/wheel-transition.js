@@ -1,33 +1,41 @@
-// Keep the two reservoir wheels visually connected to the single bonus wheel.
+// The real cabinet stays mounted: lifting never touches reels, stake or wallet state.
+const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+async function settle(animations,deadline){
+ let timer;try{await Promise.race([Promise.allSettled(animations.map(a=>a.finished)),new Promise(r=>timer=setTimeout(r,deadline))]);}finally{clearTimeout(timer);}
+}
+export function createWheelScene(stage,html){
+ const el=document.createElement('section');el.className='park-wheel-scene';el.setAttribute('role','region');el.setAttribute('aria-label','Roleta multiplicadora');el.innerHTML=`<div class="park-panel park-wheel-panel">${html}</div>`;
+ const rig=document.createElement('div');rig.className='park-hoist-rig';rig.setAttribute('aria-hidden','true');rig.innerHTML='<i></i><i></i><b></b>';
+ const items=[...stage.children].filter(n=>!n.classList.contains('kr-hud-row'));
+ const inert=items.map(n=>n.inert);items.forEach(n=>{n.classList.add('park-hoisted-item');n.inert=true;});
+ stage.classList.add('park-hoist-deck');stage.append(rig,el);
+ const state={stage,rig,items,inert,animations:[],observer:null,closed:false};el._hoist=state;
+ const cleanup=()=>{if(state.cleaned)return;state.cleaned=true;state.animations.forEach(a=>a.cancel());state.observer?.disconnect();delete stage.dataset.hoist;stage.classList.remove('park-hoist-deck');items.forEach((n,i)=>{n.classList.remove('park-hoisted-item');n.inert=inert[i];});rig.remove();el.remove();window.removeEventListener('pagehide',cleanup);};
+ window.addEventListener('pagehide',cleanup,{once:true});
+ el.close=async()=>{if(state.closed)return;state.closed=true;try{await leaveWheel(el);}finally{cleanup();}};
+ return el;
+}
 export async function enterWheel(el){
- const machine=el.querySelector('.park-wheel-machine'),wrap=el.querySelector('.park-wheel-wrap'),panel=el.querySelector('.park-panel');
- const fit=()=>machine.style.setProperty('--park-wheel-scale',String(wrap.clientWidth/386));fit();
- const observer=new ResizeObserver(fit);observer.observe(wrap);
- const close=el.close;el.close=()=>{observer.disconnect();close();};
- if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- const animations=[],copies=[];let safety;
- el.classList.add('is-entering');
+ const s=el._hoist,{stage,rig,items}=s,wrap=el.querySelector('.park-wheel-wrap'),wheel=el.querySelector('.park-wheel-machine');
+ const fit=()=>wheel.style.setProperty('--park-wheel-scale',String(wrap.clientWidth/386));fit();s.observer=new ResizeObserver(fit);s.observer.observe(wrap);
+ stage.dataset.hoist='lifting';
  try{
-  const bounds=machine.getBoundingClientRect(),tx=bounds.x+bounds.width/2,ty=bounds.y+bounds.height/2;
-  const goals=[...document.querySelectorAll('.park-circus-rails .park-meter-goal')];
-  for(const [i,goal]of goals.entries()){
-   const r=goal.getBoundingClientRect(),copy=goal.cloneNode(true),sx=r.x+r.width/2,sy=r.y+r.height/2,scale=r.width/34;
-   copy.className='park-meter-goal park-wheel-traveller';copy.setAttribute('aria-hidden','true');document.body.append(copy);copies.push(copy);
-   const at=(x,y,s)=>`translate(${x-17}px,${y-17}px) scale(${s})`;
-   animations.push(copy.animate([
-    {transform:at(sx,sy,scale),opacity:1},
-    {transform:at(sx+(tx-sx)*.45,sy+(ty-sy)*.45-12,scale*1.15),opacity:1,offset:.45},
-    {transform:at(tx+(i?5:-5),ty,1.35),opacity:1,offset:.8},
-    {transform:at(tx,ty,1.35),opacity:0}
-   ],{duration:480,easing:'cubic-bezier(.3,.05,.2,1)',fill:'both'}));
-   animations.at(-1).finished.then(()=>copy.remove()).catch(()=>{});
+  if(!calm()){
+   const motion=[{translate:'0 0'},{translate:'0 8px',offset:.12},{translate:'0 -920px'}];
+   for(const n of [...items,rig])s.animations.push(n.animate(motion,{duration:1150,easing:'cubic-bezier(.65,0,.35,1)',fill:'both'}));
+   s.animations.push(el.animate([{opacity:0,transform:'translateY(65px) scale(.9)'},{opacity:1,transform:'translateY(0) scale(1)'}],{delay:820,duration:600,easing:'cubic-bezier(.2,.8,.25,1)',fill:'both'}));
+   await settle(s.animations,1750);
   }
-  const scale=Number(machine.style.getPropertyValue('--park-wheel-scale'));
-  const tr=s=>`translate(-50%,-50%) scale(${scale*s})`;
-  animations.push(machine.animate([{transform:tr(.12),opacity:0},{transform:tr(.12),opacity:0,offset:.33},{transform:tr(.14),opacity:1,offset:.42,easing:'cubic-bezier(.2,.75,.2,1)'},{transform:tr(1.02),opacity:1,offset:.88},{transform:tr(1),opacity:1}],{duration:1150,easing:'linear',fill:'both'}));
-  for(const node of panel.children)if(node!==wrap)animations.push(node.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{delay:800,duration:350,fill:'both',easing:'ease-out'}));
-  animations.push(el.animate([{backgroundColor:'rgba(16,3,25,0)'},{backgroundColor:'rgba(16,3,25,.78)'}],{duration:500,fill:'both'}));
-  await Promise.race([Promise.allSettled(animations.map(a=>a.finished)),new Promise(r=>safety=setTimeout(r,1500))]);
- }catch{/* A missing animation API must not hide a paid wheel. */}
- finally{clearTimeout(safety);animations.forEach(a=>a.cancel());copies.forEach(c=>c.remove());el.classList.remove('is-entering');}
+ }catch{/* The confirmed bonus still opens when animation is unavailable. */}
+ finally{if(s.cleaned)return;stage.dataset.hoist='wheel';s.animations.forEach(a=>a.cancel());s.animations=[];el.querySelector('button')?.focus({preventScroll:true});}
+}
+async function leaveWheel(el){
+ const s=el._hoist;s.stage.dataset.hoist='returning';
+ try{
+  if(!calm()){
+   for(const n of [...s.items,s.rig])s.animations.push(n.animate([{translate:'0 -920px'},{translate:'0 5px',offset:.87},{translate:'0 0'}],{duration:900,easing:'cubic-bezier(.2,.65,.25,1)',fill:'both'}));
+   s.animations.push(el.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(50px)'}],{duration:280,fill:'both',easing:'ease-in'}));
+   await settle(s.animations,1200);
+  }
+ }catch{/* Cleanup always restores the cabinet before the prize flies. */}
 }
