@@ -61,9 +61,9 @@ export async function installDrumDepth(stage,reels){
   // Warm matte lining and a separate soft shadow keep the recess from becoming
   // a black grid. The approved drum geometry, printing and lighting stay fixed.
   backing=new T.Mesh(new T.PlaneGeometry(402,438),new T.MeshBasicMaterial({color:0x3b1652}));
-  backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);scene.add(backing);
+  backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);backing.visible=false;scene.add(backing);
   recessShadow=new T.Mesh(backing.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.4,depthWrite:false}));
-  recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;scene.add(recessShadow);
+  recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;recessShadow.visible=false;scene.add(recessShadow);
   // The housing shields the upper turn of each row from the key light. These
   // hidden crossbars cast into the existing shadow map without covering art.
   hoodGeometry=new T.BoxGeometry(462,4,90);
