@@ -67,8 +67,11 @@ export async function installDrumDepth(stage,reels){
   // Só nos 2 vãos entre as linhas (1–2 e 2–3): faixas que recebem a sombra real dos tambores + leve escurecido.
   for(const gy of [73,-73]){
    const band=new T.Mesh(new T.PlaneGeometry(402,30),new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));
-   band.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.8);band.quaternion.copy(camera.quaternion);band.receiveShadow=true;scene.add(band);
-   const tint=new T.Mesh(new T.PlaneGeometry(402,18),new T.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.18,depthWrite:false}));
+   band.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.7);band.quaternion.copy(camera.quaternion);band.receiveShadow=true;scene.add(band);
+   const gc=document.createElement('canvas');gc.width=4;gc.height=64;const gx=gc.getContext('2d'),gg=gx.createLinearGradient(0,0,0,64);
+   gg.addColorStop(0,'#4a3826');gg.addColorStop(.3,'#1c120a');gg.addColorStop(.5,'#0a0604');gg.addColorStop(.7,'#1c120a');gg.addColorStop(1,'#4a3826');gx.fillStyle=gg;gx.fillRect(0,0,4,64);
+   const gt=new T.CanvasTexture(gc);gt.colorSpace=T.SRGBColorSpace;
+   const tint=new T.Mesh(new T.PlaneGeometry(402,30),new T.MeshBasicMaterial({map:gt,depthWrite:true}));
    tint.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.9);tint.quaternion.copy(camera.quaternion);scene.add(tint);
   }
   // The housing shields the upper turn of each row from the key light. These
