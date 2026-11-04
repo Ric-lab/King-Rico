@@ -64,6 +64,13 @@ export async function installDrumDepth(stage,reels){
   backing.position.copy(front).multiplyScalar(-73);backing.quaternion.copy(camera.quaternion);backing.visible=false;scene.add(backing);
   recessShadow=new T.Mesh(backing.geometry,new T.ShadowMaterial({color:0x14051f,opacity:.4,depthWrite:false}));
   recessShadow.position.copy(front).multiplyScalar(-72.8);recessShadow.quaternion.copy(camera.quaternion);recessShadow.receiveShadow=true;recessShadow.visible=false;scene.add(recessShadow);
+  // Só nos 2 vãos entre as linhas (1–2 e 2–3): faixas que recebem a sombra real dos tambores + leve escurecido.
+  for(const gy of [73,-73]){
+   const band=new T.Mesh(new T.PlaneGeometry(402,30),new T.ShadowMaterial({color:0x14051f,opacity:.55,depthWrite:false}));
+   band.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.8);band.quaternion.copy(camera.quaternion);band.receiveShadow=true;scene.add(band);
+   const tint=new T.Mesh(new T.PlaneGeometry(402,18),new T.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.18,depthWrite:false}));
+   tint.position.copy(up).multiplyScalar(gy).addScaledVector(front,-72.9);tint.quaternion.copy(camera.quaternion);scene.add(tint);
+  }
   // The housing shields the upper turn of each row from the key light. These
   // hidden crossbars cast into the existing shadow map without covering art.
   hoodGeometry=new T.BoxGeometry(462,4,90);
