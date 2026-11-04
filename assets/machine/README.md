@@ -516,5 +516,5 @@ o gesto atual. Ainda não há publicação da v54 no Firebase oficial.
 
 Prévia de 04/11/2026: a base do spin acompanha a carga confirmada também ao
 voltar ao roxo após aplicar a roleta, sem conservar a faixa vermelha anterior.
-Relevo traseiro de 2 px separado da face; recolhe ao pressionar. Frente de
+Relevo traseiro de 4 px separado da face; recolhe ao pressionar. Frente de
 8 px, aro fixo, cores radiais e sons preservados.

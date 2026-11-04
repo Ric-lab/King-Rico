@@ -90,7 +90,7 @@ with sync_playwright() as p:
   def geometry():
    return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
   rest=geometry()
-  assert rest['rear']>1 and rest['front']>5,rest
+  assert rest['front']>5 and 1.8<rest['front']/rest['rear']<2.2,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
   page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
   down=geometry()

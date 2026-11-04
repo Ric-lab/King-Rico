@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · altura proporcional do spin)
+- Traseira aumentada de 2 para 4 px, metade dos 8 px da frente. Face acomodada dentro do aro para tornar o relevo traseiro visível; ambos recolhem ao clicar, sem inclinação. Cores, pulso e som preservados.
+- Conferidos botão solto/pressionado/retorno e proporção 1:2 em navegador normal e com movimento reduzido; capturas inspecionadas. Build de produção após a conferência. Só prévia.
+
 ## Feito (2026-11-04 · Codex · spin sem faixa residual)
 - Corrigida a base que permanecia vermelha após aplicar a roleta: o estado ocioso sincroniza a cor confirmada em todas as peças, incluindo o retorno ao roxo inicial. Pulso radial e desligamento preservados.
 - Pequena borda traseira colorida (2 px na geometria nativa), recolhida ao pressionar; frente mantém os 8 px e aro fixo. Sem mudanças de som, prêmios ou ingressos.
@@ -61,4 +65,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e seu pequeno relevo traseiro. Não levar a `main` nem publicar no oficial sem autorização.
+- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e o relevo traseiro com metade da altura frontal. Não levar a `main` nem publicar no oficial sem autorização.
