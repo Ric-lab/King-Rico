@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · face elevada do spin)
+- A faixa traseira anterior parecia fundo porque a face começava abaixo dela. Corrigido o sentido: face sobe 4 px acima do encaixe e sobrepõe o topo do aro; frente mantém 8 px. Ao pressionar desce ao encaixe. Sombra de contato fica atrás da peça, sem faixa escura acima da face.
+- Capturas de repouso/clique inspecionadas nos modos normal/reduzido; teste exige elevação traseira negativa em relação ao encaixe, não recesso. Sons, cores, folgas laterais e jogo preservados. Build de produção depois do navegador; só prévia.
+
 ## Feito (2026-11-04 · Codex · encaixe lateral do spin)
 - Fechadas as folgas laterais: corpo a 8 px do alvo, sob o limite interno do aro; face a 10 px, deixando só 2 px de lateral colorida. Cantos da face ajustados ao contorno da moldura. Profundidades traseira/frontal e clique preservados.
 - Capturas em repouso e pressionado inspecionadas; retorno normal/reduzido conferidos. Regressão de navegador verifica folga lateral; build de produção depois da conferência. Apenas prévia.
@@ -77,4 +81,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e o encaixe lateral do spin na moldura. Não levar a `main` nem publicar no oficial sem autorização.
+- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e a face elevada do spin sobre o aro, sem faixa parecendo fundo. Não levar a `main` nem publicar no oficial sem autorização.

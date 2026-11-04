@@ -19,3 +19,4 @@ Rejeitado:
 - Relevo traseiro do spin escondido pelo aro: conferir a área realmente visível, não só a diferença de coordenadas entre camadas.
 - Cavidade traseira com faixa separada deixou o spin estranho; volume deve continuar pelas laterais, como uma peça única.
 - Folgas laterais largas no spin: encaixar corpo sob o limite interno do aro e manter só uma lateral fina da face.
+- Faixa escura acima da face parece fundo: elevar a face sobre o encaixe e o aro, não posicioná-la abaixo de uma suposta parede traseira.

@@ -95,7 +95,7 @@ with sync_playwright() as p:
   sides=page.locator('[data-spin-btn]').evaluate("""e=>{const b=e.getBoundingClientRect(),body=e.querySelector('.park-spin-edge').getBoundingClientRect(),face=e.querySelector('.park-spin-face').getBoundingClientRect(),scale=b.width/373;return {body:(body.left-b.left)/scale,lip:(face.left-body.left)/scale}}""")
   assert sides['body']<=8.1 and 1.8<sides['lip']<2.2,sides
   rest=geometry()
-  assert rest['front']>5 and 1.8<rest['front']/rest['rear']<2.2,rest
+  assert rest['rear']<-2 and rest['front']>5 and 1.8<rest['front']/-rest['rear']<2.2,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
   page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
   down=geometry()
