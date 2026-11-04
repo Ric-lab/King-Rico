@@ -106,5 +106,9 @@ abaixo do limite interno do aro dourado (7/78 da altura), para a moldura não
 ocultar sua espessura. Face acomodada na abertura, profundidades 4/8 px mantidas.
 
 Revisão da prévia após rejeição do encaixe: corpo contínuo sob a face,
-4 px atrás e nos lados/8 px à frente. Sem faixa traseira móvel separada.
+4 px atrás, 2 px nos lados e 8 px à frente. Sem faixa traseira móvel separada.
 Pressão acomoda a face ao contorno do corpo; aro e alvo não se movem.
+
+Encaixe lateral atual da prévia: corpo a 8 px das laterais do alvo, face a
+10 px em repouso e 8 px pressionada. Corpo alcança o aro sem vão lateral
+aberto; raio da face 20 px (22 px ao pressionar), acompanhando a moldura.

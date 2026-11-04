@@ -18,3 +18,4 @@ Rejeitado:
 - Faixa da cor anterior na altura do spin após a roleta: sincronizar face e todas as laterais também no reinício da carga.
 - Relevo traseiro do spin escondido pelo aro: conferir a área realmente visível, não só a diferença de coordenadas entre camadas.
 - Cavidade traseira com faixa separada deixou o spin estranho; volume deve continuar pelas laterais, como uma peça única.
+- Folgas laterais largas no spin: encaixar corpo sob o limite interno do aro e manter só uma lateral fina da face.

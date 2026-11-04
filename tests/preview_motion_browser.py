@@ -92,6 +92,8 @@ with sync_playwright() as p:
   # The gold rim's inner top is 7/78 of the SVG height; rear must stay below it.
   clearance=page.locator('[data-spin-btn]').evaluate("e=>{const b=e.getBoundingClientRect(),r=e.querySelector('.park-spin-rear').getBoundingClientRect();return (r.top-b.top)/b.height-7/78}")
   assert clearance>0,clearance
+  sides=page.locator('[data-spin-btn]').evaluate("""e=>{const b=e.getBoundingClientRect(),body=e.querySelector('.park-spin-edge').getBoundingClientRect(),face=e.querySelector('.park-spin-face').getBoundingClientRect(),scale=b.width/373;return {body:(body.left-b.left)/scale,lip:(face.left-body.left)/scale}}""")
+  assert sides['body']<=8.1 and 1.8<sides['lip']<2.2,sides
   rest=geometry()
   assert rest['front']>5 and 1.8<rest['front']/rest['rear']<2.2,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
