@@ -908,6 +908,19 @@ test('Park tickets are awarded once and pay an attraction without a second coin 
  assert.equal((await other.call(request({action:'bootstrap'}))).park.tickets,2);
  await assertFails(updateDoc(doc(c.db,'players',c.uid,'park','state'),{tickets:999}));
 });
+test('Park rules accept each ticket row and replay without awarding twice',async()=>{
+ for(let row=0;row<3;row++){
+  const name='park-ticket-row-'+row+'-'+randomUUID();let draws=[];
+  const c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+  draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0,(row+.5)/3];
+  const spin=request({action:'spin',game:'circus',bet:1,park:true});
+  const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);
+  assert.ok(a.replayed||b.replayed);assert.equal(a.park.tickets,3);
+  assert.deepEqual(a.outcome.grid.flatMap((v,i)=>v===10?[i]:[]),[row*3,row*3+1,row*3+2]);
+  assert.equal(a.outcome.winUnits,engine.units(engine.evaluate(a.outcome.grid.map(v=>v===10?-1:v),1).win));
+  const replay=await c.call(spin);assert.equal(replay.park.tickets,3);assert.equal(replay.player.balance,a.player.balance);
+ }
+});
 test('Park charges ten real spins and credits only the wheel extra, once across reloads',async()=>{
  const name='park-wheel-'+randomUUID(),c=await client(name,name,{rng:()=>.99});await c.call(request({action:'bootstrap'}));let s;
  for(let n=0;n<10;n++){if(n)await new Promise(r=>setTimeout(r,730));s=await c.call(request({action:'spin',game:'circus',bet:1,park:true}));assert.equal(s.park.spins,n+1);}

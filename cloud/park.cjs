@@ -6,6 +6,15 @@ const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
 const fresh=()=>({version:1,revision:0,lastOperationId:null,tickets:0,spins:0,wheel:null,passes:{}});
 const publicState=s=>({...structuredClone(s||fresh()),price:PRICE,meterSpins:METER_SPINS});
 const fail=(code,message)=>{throw Object.assign(new Error(message),{code:'king-rico/'+code});};
+// A ticket trinca may occupy any horizontal payline. Re-evaluate the displayed
+// grid so coin prizes and highlighted cells always agree with the ticket row.
+function placeTickets(x,bet,rng){
+ const start=Math.min(2,Math.floor(rng()*3))*3,cells=[start,start+1,start+2];
+ for(const i of cells)x.grid[i]=TICKET;
+ x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet);
+ x.res.cells=[...new Set([...x.res.cells,...cells])];x.winUnits=engine.units(x.res.win);
+ return cells;
+}
 function spin(p,s,bet,id,rng){
  if(s.wheel)fail('round-conflict','Conclua a roleta bônus antes de girar novamente.');
  const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32),filling=s.spins===9;
@@ -13,7 +22,7 @@ function spin(p,s,bet,id,rng){
  if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank);
   if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
  const award=!filling&&!x.res.peach.length&&!x.feature&&random()<.14?3:0;
- if(award){x.grid.splice(0,3,TICKET,TICKET,TICKET);x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet);x.res.cells=[...new Set([...x.res.cells,0,1,2])];x.winUnits=engine.units(x.res.win);s.tickets+=3;}
+ if(award){placeTickets(x,bet,random);s.tickets+=3;}
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:3,baseUnits:engine.units(x.res.win),pockets:[...POCKETS],result:null};
  return {...x,parkVersion:1,ticketAward:award};
 }
@@ -46,4 +55,4 @@ function bonus(s,wheelId,rng){
  if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:winUnits-w.baseUnits};return w.result.extraUnits;}
  return 0;
 }
-module.exports={PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,spin,entry,payment,settle,bonus};
+module.exports={PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,spin,entry,payment,settle,bonus};

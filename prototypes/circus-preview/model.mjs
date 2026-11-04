@@ -2,6 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {Timestamp} from 'firebase/firestore';
 import {createGameStore,publicPlayer} from '../../cloud/store.mjs';
 import engine from '../../cloud/engine.cjs';
+import parkRules from '../../cloud/park.cjs';
 import paths from '../../games/fingo/paths.json' with {type:'json'};
 
 export const PRICE=25, METER_SPINS=10;
@@ -54,10 +55,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    }
    let ticket=false;
    if(!filling&&!outcome.res.peach.length&&!outcome.feature&&rng()<.14){
-    ticket=true;outcome.grid.splice(0,3,10,10,10);
-    outcome.res=engine.evaluate(outcome.grid.map(n=>n===10?-1:n),data.bet);
-    outcome.res.cells=[...new Set([...outcome.res.cells,0,1,2])];
-    outcome.winUnits=engine.units(outcome.res.win);park.tickets+=3;
+    ticket=true;parkRules.placeTickets(outcome,data.bet,rng);park.tickets+=3;
    }
    p.balanceUnits=before-cost+outcome.winUnits;p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;

@@ -18,11 +18,12 @@ with sync_playwright() as p:
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
   page.goto(BASE+'/circus');ready()
-  page.evaluate('''()=>{
+  ticket_row=2 if mode=='no-preference' else 1
+  page.evaluate('''row=>{
    const fc=__fc,bell=fc.bell.bind(fc);window.ticketSounds=[];
-   fc.bell=(f,d,v,...args)=>{if(fc._parkTicketsPlaying&&d===.12&&v===.035)ticketSounds.push({count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent});return bell(f,d,v,...args);};
-   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>.1;try{return await fetch(u,o);}finally{Math.random=random;}};
-  }''')
+   fc.bell=(f,d,v,...args)=>{if(fc._parkTicketsPlaying&&d===.18&&v===.085)ticketSounds.push({count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent});return bell(f,d,v,...args);};
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/3:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
+  }''',ticket_row)
   before=page.evaluate('KingRicoCloud.park.tickets')
   page.get_by_role('button',name='Girar',exact=True).click()
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="charge:arrived")')
@@ -37,6 +38,9 @@ with sync_playwright() as p:
   assert sum(x['type']=='charge:done' for x in first['log'])==1,first
   assert sum(x['type']=='tickets:done' for x in first['log'])==1,first
   assert first['spins']==1 and first['tickets']==before+3,first
+  assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==[ticket_row*3,ticket_row*3+1,ticket_row*3+2]
+  assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==[ticket_row*3,ticket_row*3+1,ticket_row*3+2]
+  page.screenshot(path='work/preview-tickets-'+mode+'.png')
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
@@ -54,6 +58,6 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
   assert not errors,errors
   assert not missing,missing
-  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'arrivalSounds':len(first['sounds']),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
+  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketRow':ticket_row+1,'arrivalSounds':len(first['sounds']),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
   context.close()
  b.close()
