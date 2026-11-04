@@ -6,13 +6,13 @@
 .park-part-idle{filter:brightness(.82)}
 .park-part-prize{left:117.833px;top:var(--park-prize-top,165px);width:220px;height:56px;z-index:3}
 [data-park-prize]>span{color:#73371c!important;text-shadow:0 1px #fff6d7!important;font-size:30px!important}
-.park-reels{position:absolute;inset:0;transform:translateY(calc(var(--park-machine-drop,0px) - var(--park-reel-rise,0px))) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
+.park-reels{position:absolute;inset:0;transform:translateY(var(--park-machine-drop,0px)) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
 .park-reel-cell{border-radius:0!important;backface-visibility:hidden;background-image:none}
 .park-reels>.park-part-reel-top{transform:perspective(520px) rotateX(15deg) scaleY(.96);transform-origin:50% 50%}
 .park-reels>.park-part-reel-bottom{transform:perspective(520px) rotateX(-15deg) scaleY(.96);transform-origin:50% 50%}
 /* Wider live glass; liquid and pulse use the current track height. */
 .park-meter{width:36px;height:295px}
-.park-meter-left{left:0}.park-meter-right{right:0}
+.park-meter-left{left:4px}.park-meter-right{right:4px}
 .park-meter-track{z-index:1;background:#fff;box-shadow:inset 1px 0 3px #bda46333}
 .park-meter-dimmer{background:rgba(12,28,60,.35);clip-path:path(evenodd,'M0 248H44V549H0Z M10 254H34V537H10Z M409 248H453V549H409Z M419 254H443V537H419Z M5 231A17 17 0 1 0 39 231A17 17 0 1 0 5 231Z M414 231A17 17 0 1 0 448 231A17 17 0 1 0 414 231Z')}
 /* Keep legacy animation lamps on the spin button, away from the new glass. */
@@ -30,12 +30,12 @@
 @media(max-width:360px){.park-cabinet-mini{transform:scale(.45);top:-66px}}
 
 /* One continuous paper surface per drum; no horizontal card frames. */
-.park-reel-window-back{position:absolute;left:33px;top:calc(211.5px + var(--park-machine-drop,0px) - var(--park-reel-rise,0px));width:387px;height:calc(337.5px + var(--park-reel-rise,0px));border-radius:9px;background:linear-gradient(90deg,#817766,#a69c8a 8%,#aea492 50%,#a69c8a 92%,#817766);box-shadow:inset 0 3px 6px #2e1b0d66;pointer-events:none}
-.park-reel-frame{position:absolute;left:30px;top:calc(207.5px + var(--park-machine-drop,0px) - var(--park-reel-rise,0px));width:393px;height:calc(345.5px + var(--park-reel-rise,0px));border:10px solid transparent;border-image-source:url('/assets/machine/reel-frame-v1.webp');border-image-slice:200;border-image-width:10px;border-image-repeat:stretch;pointer-events:none}
+.park-reel-window-back{position:absolute;left:44px;top:calc(217.5px + var(--park-machine-drop,0px));width:365px;height:326px;border-radius:9px;background:#634320;box-shadow:inset 0 3px 6px #2e1b0d66;pointer-events:none}
+.park-reel-frame{position:absolute;left:40px;top:calc(213.5px + var(--park-machine-drop,0px));width:373px;height:333.5px;border:10px solid transparent;border-image-source:url('/assets/machine/reel-frame-v1.webp');border-image-slice:200;border-image-width:10px;border-image-repeat:stretch;pointer-events:none}
 .park-reel-shell{position:absolute;top:219.5px;height:382px;overflow:hidden;border-radius:4px;pointer-events:none;background-image:url('/assets/machine/reel-paper-v2.webp');background-size:120.11331% 106.60920%;background-position:50.00000% 47.82609%;background-repeat:no-repeat;}
-.park-reel-shell-0{left:25.5px;width:134px}
-.park-reel-shell-1{left:159.5px;width:134px}
-.park-reel-shell-2{left:293.5px;width:134px}
+.park-reel-shell-0{left:34.333px;width:126px}
+.park-reel-shell-1{left:164.333px;width:126px}
+.park-reel-shell-2{left:294.333px;width:126px}
 .park-reel-cell[data-park-column="0"]{left:34.333px!important;width:126px!important}
 .park-reel-cell[data-park-column="1"]{left:164.333px!important;width:126px!important}
 .park-reel-cell[data-park-column="2"]{left:294.333px!important;width:126px!important}
@@ -90,13 +90,12 @@
 @keyframes parkReelLock{0%,100%{box-shadow:inset 0 0 14px 3px #60ee9a66;opacity:.75}50%{box-shadow:inset 0 0 22px 5px #8cffb399;opacity:1}}
 @keyframes parkReelAntic{0%,100%{box-shadow:inset 0 0 15px 3px #ffb85055;opacity:.7}50%{box-shadow:inset 0 0 23px 6px #ffc55c99;opacity:1}}
 /* Global dimming and the golden celebration follow each drum's alpha silhouette. */
-.park-reel-effects{position:absolute;inset:0;transform:translateY(calc(var(--park-machine-drop,0px) - var(--park-reel-rise,0px))) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
+.park-reel-effects{position:absolute;inset:0;transform:translateY(var(--park-machine-drop,0px)) scale(.936,.8376963351);transform-origin:50% 219.5px;pointer-events:none}
 .park-reel-fx-column{position:absolute;top:219.5px;height:382px;pointer-events:none;-webkit-mask-image:url('/assets/machine/reel-paper-v2.webp');mask-image:url('/assets/machine/reel-paper-v2.webp');-webkit-mask-size:120.11331% 106.60920%;mask-size:120.11331% 106.60920%;-webkit-mask-position:50% 47.82609%;mask-position:50% 47.82609%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.park-grid-shade{background:rgba(38,31,23,.18)!important}
 .park-grid-shade,.park-grid-gold{left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0!important}
 
 /* Intermediate height with all nine symbols visible. Tape coordinates stay native. */
-.park-circus-stage{--park-block-drop:42px;--park-prize-top:156.75px;--park-reel-rise:45.235602px;--park-machine-drop:58px;--park-machine-cut:8px;--park-reel-scale:.8376963351}
+.park-circus-stage{--park-block-drop:42px;--park-prize-top:192.75px;--park-machine-drop:54px;--park-machine-cut:8px;--park-reel-scale:.8376963351}
 .park-circus-rails{--park-track-height:283px}
 .park-circus-stage [data-spin-btn]{top:calc(613px + var(--park-machine-drop,0px))!important}
 .park-circus-stage [aria-label="Girar mais rápido"]{top:calc(551.2px + var(--park-machine-drop,0px))!important}
@@ -124,26 +123,16 @@
 /* Side rewards share the mascot/plaque anchor instead of following the header. */
 .park-circus-stage .park-basket[data-park-side="true"]{top:calc(var(--park-prize-top) - 105px)!important;translate:none}
 
-/* Refined drum surfaces: continuous ivory light, soft contact folds, quiet side
-   joints. Ambient dimming covers the recess too, avoiding bright grid lines. */
-.park-reel-fx-column{width:134px!important;height:438px;clip-path:none;mask-image:none!important;-webkit-mask-image:none!important}
-.park-reel-paper{position:absolute;left:25.5px;top:219.5px;width:402px;height:438px;background:repeating-linear-gradient(90deg,#4d42311f 0,transparent 4px,transparent 130px,#4d42311f 134px),repeating-linear-gradient(to bottom,#9d9485 0,#ada594 7px,#b7ad9a 12px,#b7ad9a 133px,#948a79 138px,#6b6051 143px,#9d9485 146px)}
-.park-reels>.park-part-reel-top{top:226.5px!important;height:132px!important;transform:none}
-.park-reels>.park-part-reel-middle{top:372.5px!important;height:132px!important;transform:none}
-.park-reels>.park-part-reel-bottom{top:518.5px!important;height:132px!important;transform:none}
-.park-reel-cell[data-park-column],.park-physical-reel{width:126px!important;background:linear-gradient(180deg,#bdbbb1 0%,#e0ddd2 6%,#f6f3e9 20%,#fffdf4 42%,#fffdf4 61%,#ebe5d6 85%,#beb39e 100%)!important;border-radius:50% / 3px!important;filter:drop-shadow(0 1px 1.5px #34241426)}
-.park-reel-cell[data-park-column="0"]{left:29.5px!important}.park-reel-cell[data-park-column="1"]{left:163.5px!important}.park-reel-cell[data-park-column="2"]{left:297.5px!important}
-.park-reels>.park-reel-cell>[data-sym]{top:50%!important;width:97.17278px!important;height:116px!important;margin:-58px 0 0 -48.58639px!important;transform-origin:50% 50%!important}
+/* Three drums: one uninterrupted tape per column, including through row boundaries. */
+.park-reels>.park-part-reel-top{top:219.5px!important;height:128px!important;transform-origin:50% 50%}
+.park-reels>.park-part-reel-middle{top:347.5px!important;height:128px!important}
+.park-reels>.park-part-reel-bottom{top:475.5px!important;height:128px!important;transform-origin:50% 50%}
+.park-reels>.park-reel-cell>[data-sym]{top:50%!important}
 .park-reel-cell[data-physical-moving="true"]{visibility:hidden}
 .park-reel-cell:not([data-physical-moving="true"]){z-index:2}
-.park-physical-reel{position:absolute;height:132px;overflow:hidden;z-index:1;pointer-events:none;contain:paint}
-.park-reel-cell:after,.park-physical-reel:after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse 8px 60% at 0 50%,#50402d26,transparent 100%),radial-gradient(ellipse 9px 60% at 100% 50%,#40312036,transparent 100%)}
-/* The two internal joins borrow the warm inset shadow at the machine frame. */
-.park-reels:after{content:'';position:absolute;left:25.5px;top:219.5px;width:402px;height:438px;z-index:4;pointer-events:none;background:linear-gradient(90deg,transparent,#2e1b0d0a 18%,#2e1b0d29 35%,#2e1b0d66 50%,#2e1b0d29 65%,#2e1b0d0a 82%,transparent) 123px 0/22px 100% no-repeat,linear-gradient(90deg,transparent,#2e1b0d0a 18%,#2e1b0d29 35%,#2e1b0d66 50%,#2e1b0d29 65%,#2e1b0d0a 82%,transparent) 257px 0/22px 100% no-repeat}
-.park-cylinder-idle,.park-cylinder-motion{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-[data-sym][data-cylinder-ready="1"]{background-image:none!important}
+.park-physical-reel{position:absolute;top:219.5px;width:126px;height:382px;overflow:hidden;z-index:1;pointer-events:none;contain:paint}
 .park-physical-film{position:absolute;inset:0;will-change:transform;pointer-events:none}
-.park-tape-symbol{position:absolute;left:14.41361px;width:97.17278px;height:116px;background:url('/assets/symbols-v7.webp') 0 50%/1200% 100% no-repeat;backface-visibility:hidden;transform-origin:50% 50%}
+.park-tape-symbol{position:absolute;left:11.062825px;width:103.87435px;height:124px;background:url('/assets/symbols-v7.webp') 0 50%/1200% 100% no-repeat;backface-visibility:hidden;transform-origin:50% 50%}
 .park-tape-symbol.is-ticket,[data-park-ticket="true"]{background-image:url('/assets/machine/ticket-symbol-v1.webp')!important;background-size:contain!important;background-position:50% 50%!important;background-repeat:no-repeat}
 /* Each darkener follows the source alpha; empty sky and the white glass stay clear. */
 .park-meter-dimmer{display:none}
@@ -168,9 +157,11 @@
 
 .park-reel-cell>[data-sym]{transition:filter .18s ease-out}
 .park-reel-cell[data-dimmed="true"]>[data-sym]{filter:brightness(.58) saturate(.85)}
-/* Held houses remain stationary while each unlocked neighbor spins on its own. */
-.park-reel-cell[data-held="true"]{transform:none!important}
-.park-antic-fx{top:226.5px!important;left:297.5px!important;height:132px!important;width:126px!important;mask-image:none!important;border-radius:0!important}
+/* A held feature symbol is an opaque stationary window above the shared tape. */
+.park-reel-cell[data-held="true"]{transform:none!important;background-image:url('/assets/machine/reel-paper-v2.webp')!important;background-size:151.343px 407.247px!important;background-position:50% calc(-12.075px - var(--park-held-row,0px))!important;background-repeat:no-repeat}
+.park-part-reel-middle{--park-held-row:128px}.park-part-reel-bottom{--park-held-row:256px}
+.park-part-reel-top[data-held="true"]>[data-sym]{transform:perspective(520px) rotateX(15deg) scaleY(.96)}
+.park-part-reel-bottom[data-held="true"]>[data-sym]{transform:perspective(520px) rotateX(-15deg) scaleY(.96)}
 
 /* The approved art is exported into fixed gold frames and independently moving centers. */
 .park-button-rim{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:3;transform:none!important;filter:brightness(.8)}
@@ -242,18 +233,3 @@
 .park-home-back{width:38px;height:38px;flex:0 0 38px;display:block}
 .park-home-back img{display:block;width:100%;height:100%}
 .park-home-header{gap:10px}
-
-/* Sem moldura dourada grossa em volta dos rolos. */
-.park-reel-frame{border:0!important;border-image:none!important;box-shadow:none!important;background:none!important}
-.park-reel-frame:after{display:none!important}
-
-/* Barras laterais afastadas da borda da tela. */
-.park-meter-left{left:14px!important}
-.park-meter-right{right:15px!important}
-/* Sem fundo/nicho atrás dos rolos: só os tambores. */
-.park-reel-window-back{background:none!important;box-shadow:none!important}
-/* Sem nada atrás dos tambores. */
-.park-reels[data-reel-optics] .park-reel-paper{display:none!important}
-
-/* Borda superior dourada da máquina (acima dos rolos). */
-.park-reel-frame:before{content:'';position:absolute;left:-10px;right:-10px;top:15px;height:3px;border-radius:2px;pointer-events:none;z-index:8;background:linear-gradient(180deg,#fff6cf 0%,#ffd257 45%,#c8871a 100%);box-shadow:0 0 0 1px #6b2e05,0 2px 4px #0006}

@@ -21,7 +21,8 @@
 @media(prefers-reduced-motion:reduce){.park-meter-fill{transition:none}.park-meter-fill:after{animation:none}}
 [data-park-ticket="true"]{background-image:url('/ui/park/ticket.svg')!important;background-size:100% 100%!important;background-position:50% 50%!important}
 @media(prefers-reduced-motion:reduce){.park-meter-fill{transition:none}.park-meter-fill:after{animation:none}}
-html[data-park-admission] [aria-label="Diminuir aposta"],html[data-park-admission] [aria-label="Aumentar aposta"]{visibility:hidden;pointer-events:none}html[data-park-admission] .kr-round-bet{display:none}
+.park-attraction-tag{position:fixed;bottom:19px;left:50%;transform:translateX(-50%);z-index:20;white-space:nowrap;border-radius:12px 12px 0 0;background:#260c38ed;color:#e6cda7;font:800 11px/25px Baloo,sans-serif;letter-spacing:.7px;padding:0 14px}
+body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-attraction-tag) [aria-label="Aumentar aposta"]{visibility:hidden;pointer-events:none}body:has(.park-attraction-tag) .kr-round-bet{display:none}
 .park-wheel-wrap{position:relative;width:min(290px,100%);aspect-ratio:1;margin:24px auto 20px;isolation:isolate}
 .park-wheel-machine{position:absolute;left:50%;top:50%;width:340px;height:340px;transform:translate(-50%,-50%) scale(.8);transform-origin:50% 50%;isolation:isolate}
 .park-wheel{position:absolute;left:10px;top:10px;width:320px;height:320px;border-radius:50%;overflow:hidden;z-index:1;border:0}

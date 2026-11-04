@@ -41,7 +41,6 @@ Com emuladores já disponíveis e build emulado pronto:
 ```sh
 node --test tests/integration.mjs
 python3 tests/park_browser.py
-python3 tests/park_admission_browser.py
 ```
 
 A suíte atual do navegador é `tests/park_browser.py`; `KING_RICO_TEST_URL`
@@ -49,10 +48,6 @@ permite escolher outra porta local. Os módulos anteriores de navegador preserva
 as verificações detalhadas de versões anteriores e não definem o catálogo atual.
 Veja também o guia do jogo afetado, como [Fingo](FINGO-CARTELA.md). O fluxo local não comprova login
 Google real ou publicação: confira esses pontos no ambiente oficial quando cabível.
-
-A regressão de entrada verifica as quatro atrações: escolha antes do primeiro
-gesto, nenhum movimento executado após confirmar, fechamento do prêmio e retomada
-da rodada salva. Também roda em `npm run test:integration`.
 
 ## Fontes e saídas
 

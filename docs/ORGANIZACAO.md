@@ -19,9 +19,8 @@ para manter imports do editor, URLs e jogos compatíveis.
 | `docs/historico/` | Planos, sincronizações e roteiros superados |
 | `app/scripts/bulbs.json` | Dados auxiliares; não é um aplicativo Android completo |
 
-`3D Library.html`, `Crown 3D Pilot.html` e `King Rico Animado.html` são estudos de
-arte. Bounce, Claw, Race e Bridge permanecem guardados com suas fontes e rotas;
-`/21` mantém compatibilidade com o 33. Arquivo parecido ou fora da Home não é,
+Estudos de arte (`3D Library.html`, `Crown 3D Pilot.html`, `King Rico Animado.html`) estão em `archive/estudos/`.
+Jogos fora do ar: `docs/ARQUIVADOS.md` (fontes ficam no repositório). Arquivo parecido ou fora da Home não é,
 por si só, lixo.
 
 ## Limpeza realizada

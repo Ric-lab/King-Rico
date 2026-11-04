@@ -1,11 +1,5 @@
 # Circus e parque
 
-> Estado desta branch (03/11/2026): Circus usa nove tambores independentes,
-> fita ordenada com `HEIGHT=146`, papel por casa e profundidade Three.js.
-> Os registros anteriores de três colunas descrevem a versão oficial anterior.
-> Fontes, execução e limites da carteira de teste: [Prévia completa](PREVIA-CIRCUS.md).
-> Esta revisão está apenas no GitHub; não foi publicada no Firebase.
-
 Na versão aprovada em 02/11/2026 (prévia v54), Circus é a tela inicial. O endereço principal e o atalho
 instalado apontam para `/circus`; `/home` mantém compatibilidade com a mesma
 tela. O parque passa a `/park`, mantendo `Home.dc.html` como fonte por
@@ -16,8 +10,8 @@ Firebase existente, com Google e carteira Firestore reais.
 Tocar no contador de ingressos ou deslizar para baixo sobre o cenário do Circus
 abre o parque. `ui/park/navigation.js` exige gesto vertical deliberado e ignora
 controles, cancelamentos, gestos horizontais, rodadas e modais ativos. A Home dos
-jogos volta ao Circus; o fechamento da escolha de entrada volta a `/park`.
-A tela do parque tem volta explícita para o Circus, presente diário,
+jogos volta ao Circus; o link PARQUE e o fechamento da escolha de entrada voltam
+a `/park`. A tela do parque tem volta explícita para o Circus, presente diário,
 recarga e os quatro jogos; não repete a capa de entrada da slot.
 
 A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
@@ -33,13 +27,6 @@ Cada partida do parque custa **1 ingresso ou 25 moedas**. Escolher a forma de
 entrada apenas autoriza: a cobrança acontece na primeira jogada confirmada.
 Recarregar a página conserva a partida e não cobra uma segunda entrada.
 Rodadas antigas já pagas mantêm aposta e versão originais.
-
-Na prévia de 03/11/2026, a escolha de entrada abre depois do carregamento e
-antes de liberar os controles de qualquer atração. Gestos feitos sem entrada
-são descartados: confirmar ingresso/moedas nunca executa uma jogada anterior.
-Uma entrada já autorizada ou rodada salva é retomada sem nova escolha.
-O rodapé “PARQUE · ENTRADA INCLUÍDA” foi removido; a aposta fixa continua sem
-controles de ajuste. Esta revisão ainda não foi publicada no Firebase oficial.
 
 O Fingo rápido mantém tabuleiro, cartela 5×5, coringa central e física do Fingo.
 A nova partida oferece **10 bolas**, com prêmio total de **2×** por quina.

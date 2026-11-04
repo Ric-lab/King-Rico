@@ -1,8 +1,3 @@
-> Nesta branch, a prévia usa nove tambores independentes (`HEIGHT=146`) e
-> `.park-reel-paper`. A descrição de três colunas abaixo registra a base anterior,
-> ainda publicada no site oficial. Para reconstruir a versão desta branch,
-> siga [Prévia Circus](../../docs/PREVIA-CIRCUS.md).
-
 # Peças da máquina Circus
 
 Cinco imagens independentes geradas com GPT Image: base dos controles, moldura
@@ -19,42 +14,6 @@ a sombra por célula foi substituída pela profundidade contínua da superfície
 A base é somente uma placa retangular de cantos arredondados. Os terminais da
 carga são discretos e terminam acima dos botões; a janela vazia permanece branca.
 O preenchimento usa 283 px e continua sincronizado com o pulso.
-
-Na prévia de 03/11/2026, `ui/park/cabinet-layout.js` mede a moldura real:
-roleta pequena e barra passam a ocupar juntas a altura da máquina. A altura
-útil do líquido acompanha a janela da barra. A faixa de aposta, auto e turbo
-fica 8 px abaixo da moldura, preservando o relevo dos botões; o spin acompanha
-esse deslocamento para conservar o espaço entre os controles. O formato e o
-giro dos rolos não mudam. Este ajuste ainda não foi publicado no Firebase.
-
-Na revisão de sombras da prévia de 03/11/2026, `ui/park/reel-optics.*` aplica
-a luz à janela do rolo inteiro, incluindo o símbolo parado ou em movimento.
-O miolo é marfim claro; pontas e laterais perdem luz gradualmente. O alojamento
-fica escuro entre rolos, sem acrescentar divisórias ou mudar seus espaços.
-A revisão v75 usa luz superior: laterais leves e sombra mais forte na curva
-inferior, com contorno elíptico suave e o mesmo campo de luz durante o giro.
-Na prévia v76 com nove rolos, `ui/park/drum-depth.js` desenha cilindros em
-Three.js local, com os símbolos impressos na superfície, sombra de contato
-e visão centralizada, sem inclinação lateral. A fita existente continua decidindo os símbolos,
-o deslocamento e a parada; a cena apenas acompanha esses dados. Os destaques
-de acerto e trava usam o material do cilindro, respeitando sua curvatura.
-O 2D continua disponível enquanto a cena carrega e assume se WebGL faltar ou
-o contexto gráfico for perdido. Uma cena atende os nove rolos, redesenhada
-apenas quando necessário, sem recalcular o mapa de sombras a cada quadro.
-Na v78, o interior recebe acabamento fosco em bronze neutro e uma camada
-de sombra com opacidade de 26%. O filtro PCF suaviza o contato entre peças;
-a geometria dos cilindros, a câmera e a impressão dos símbolos são preservadas.
-Na v79, a sombra da proteção superior e a oclusão da luz ambiente escurecem
-apenas a curva que entra no alojamento. Pesquisa, fontes e validação estão em
-[Iluminação dos rolos](../../docs/ROLOS-ILUMINACAO.md).
-No ajuste lateral local de 03/11/2026, paredes internas invisíveis projetam
-sombra de contato e a luz indireta cai suavemente nas extremidades do papel.
-A impressão central, a câmera e os espaços são preservados. Esse ajuste foi
-guardado em commit; não atualizou a prévia hospedada nem o Firebase oficial.
-Validação local da prévia: `python3 tests/circus_depth_browser.py` com a
-carteira fictícia e o servidor da prévia em `127.0.0.1:4178`.
-A iluminação 2D atende três colunas contínuas ou os nove rolos da prévia.
-Sequências, paradas, prêmios e os controles permanecem independentes da luz.
 
 Os WebP preservam as dimensões das gerações PNG. A conversão só comprime o formato;
 `ui/park/cabinet.css` normaliza as margens transparentes sem repintar as imagens.

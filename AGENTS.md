@@ -1,18 +1,14 @@
 # Manutenção do King Rico
 
+**OBRIGATÓRIO antes de qualquer tarefa (qualquer modelo):** puxar o último commit e ler `docs/skills/README.md`, `docs/skills/00-sempre.md`, a skill da área e `docs/HANDOFF.md`. Na resposta final, citar as skills lidas. Ao parar: commit + HANDOFF.
+
 Leia `README.md` e `docs/README.md` antes de alterar o projeto. São o ponto de
 entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovadas.
-
-Claude e Codex são um só desenvolvedor: quem for chamado continua exatamente de
-onde o outro parou. Antes de começar, puxe o último commit e leia
-`docs/FLUXO-CLAUDE-CODEX.md` e a entrada mais recente de `docs/HANDOFF.md`;
-ao parar, envie tudo e escreva o próximo passo exato no HANDOFF.
 
 ## Fontes e limites
 
 - Páginas `.dc.html` e `site/routes.json` definem as telas publicadas. A Home
-  abre no Circus; `/park` reúne as atrações. Preserve também os demais jogos, as rotas dos
-  protótipos guardados e `/21`.
+  abre no Circus; `/park` reúne as atrações. Jogos fora do ar: `docs/ARQUIVADOS.md`.
 - `ui/` é a interface compartilhada em execução. `components/`, `tokens/`,
   `ui_kits/` e os cards HTML de `guidelines/` são referências de design.
 - Nunca editar `dist/`, `runtime/` ou `cloud/client.js` como fonte. O build gera

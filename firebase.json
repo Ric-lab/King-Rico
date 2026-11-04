@@ -98,24 +98,6 @@
         ]
       },
       {
-        "source": "/wheel",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/neck",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
         "source": "/fingo",
         "headers": [
           {
@@ -152,61 +134,7 @@
         ]
       },
       {
-        "source": "/33",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/21",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/bounce",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/claw",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/race",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
         "source": "/",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
-        "source": "/bridge",
         "headers": [
           {
             "key": "Cache-Control",
@@ -234,14 +162,6 @@
         "destination": "/Fortune Circus.dc.html"
       },
       {
-        "source": "/wheel",
-        "destination": "/Fortune Wheel.dc.html"
-      },
-      {
-        "source": "/neck",
-        "destination": "/Fortune Neck.dc.html"
-      },
-      {
         "source": "/fingo",
         "destination": "/Fortune Fingo.dc.html"
       },
@@ -256,30 +176,6 @@
       {
         "source": "/flying-clown",
         "destination": "/Fortune Flying Clown.dc.html"
-      },
-      {
-        "source": "/33",
-        "destination": "/Fortune 33.dc.html"
-      },
-      {
-        "source": "/21",
-        "destination": "/Fortune 21.dc.html"
-      },
-      {
-        "source": "/bounce",
-        "destination": "/Fortune Bounce.dc.html"
-      },
-      {
-        "source": "/claw",
-        "destination": "/Fortune Claw.dc.html"
-      },
-      {
-        "source": "/race",
-        "destination": "/Fortune Race.dc.html"
-      },
-      {
-        "source": "/bridge",
-        "destination": "/Fortune Bridge.dc.html"
       },
       {
         "source": "/park",

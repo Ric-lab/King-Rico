@@ -18,9 +18,7 @@ gha-creds-*.json
 /work/
 /game.html
 
-# Prévias locais do Claude (projeto de design)
+# Prévias locais e config gerada da prévia isolada
 *previa.dc.html
 scraps/
-
-# Generated isolated Hosting preview configuration
 /firebase.preview.generated.json
