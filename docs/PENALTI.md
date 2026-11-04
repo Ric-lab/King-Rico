@@ -28,3 +28,16 @@ calculados no navegador: as regras validam posse, transições e valores, sem
 servidor de sorteio confiável. São moedas virtuais sem dinheiro real.
 
 Validação: `npm test`, `npm run test:integration` (regras reais emuladas e Chromium, incluindo os cinco jogos) e, por último, `npm run build:production`. O workflow `.github/workflows/firebase-hosting.yml` permanece responsável por testar, publicar regras pela API REST existente e publicar Hosting. Não há Cloud Functions, alteração de plano ou faturamento.
+
+## Prévia do goleiro — 02/11/2026
+
+Palhaço em pose de goleiro equivalente à girafa: de frente, pernas retas,
+pés na mesma base e braços elevados e separados, com luvas brancas e punhos azuis.
+Os braços se conectam visivelmente aos ombros, com separação entre mangas e cabelo.
+Arte dedicada: `assets/penalty/clown-keeper-v3.webp`, gerada a partir do palhaço
+do Flying Clown e da pose de `assets/penalty/jump.webp`. O rosto de
+`assets/clown/clown.webp` define a identidade: topo central careca e cachos
+somente nas laterais, sem mangas antigas atrás do cabelo. Usa a proporção nativa
+da textura e pré-carregamento na entrada do Pênalti.
+Mantém altura, pivô, movimentos, colisões e regras da rodada. Ainda não publicado
+no Firebase oficial; revisão disponível apenas na prévia privada.

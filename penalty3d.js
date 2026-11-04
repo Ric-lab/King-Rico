@@ -1,4 +1,4 @@
-// <penalty-3d> — cena 3D do Fortune Penalty (three.js). Física real: swipe → velocidade; traves, rede, chão e goleira-robô colidem de verdade.
+// <penalty-3d> — cena 3D do Fortune Penalty (three.js). Física real: swipe → velocidade; traves, rede, chão e goleiro-robô colidem de verdade.
 // O "roubo" só escolhe a pose da goleira (e, em erro de sorte perto do aro, empurra a bola alguns cm para a trave). Mira do jogador manda.
 // Ganchos: onSwipe(qualidade) confirma {goal} antes de animar; onResult(goal), sfx(tipo).
 (function () {
@@ -88,10 +88,10 @@
       // bola
       this.ball = new T.Mesh(new T.SphereGeometry(R, 48, 32), new T.MeshStandardMaterial({ name: 'bola', map: ballTexture(T), roughness: 0.45 })); this.ball.castShadow = true; sc.add(this.ball);
       this.pos = V(0, R, BZ); this.vel = V(0, 0, 0); this.ball.position.copy(this.pos);
-      // goleira-robô: placa da girafa num trilho na linha do gol; desliza (x) e gira (θ) como ponteiro
+      // goleiro-robô: placa do palhaço num trilho na linha do gol; desliza (x) e gira (θ) como ponteiro
       this.kg = new T.Group(); this.kg.position.set(0, 0, KZ); sc.add(this.kg); this.kx = 0; this.kth = 0;
-      new T.TextureLoader().load('assets/penalty/jump.webp', tex => { tex.colorSpace = T.SRGBColorSpace; const kw = KH * 180 / 367;
-        const m = this.kMat = new T.MeshBasicMaterial({ name: 'girafa', map: tex, transparent: true, alphaTest: 0.5, side: T.DoubleSide }), me = new T.Mesh(new T.PlaneGeometry(kw, KH), m);
+      new T.TextureLoader().load('assets/penalty/clown-keeper-v3.webp', tex => { tex.colorSpace = T.SRGBColorSpace; const kw = KH * tex.image.width / tex.image.height;
+        const m = this.kMat = new T.MeshBasicMaterial({ name: 'palhaço', map: tex, transparent: true, alphaTest: 0.5, side: T.DoubleSide }), me = new T.Mesh(new T.PlaneGeometry(kw, KH), m);
         me.position.y = KH / 2; me.castShadow = true; me.customDepthMaterial = new T.MeshDepthMaterial({ depthPacking: T.RGBADepthPacking, map: tex, alphaTest: 0.5 }); this.kg.add(me); });
       this.fxTex = radialTex(T, false); this.ringTex = radialTex(T, true); this.fx = [];
       this.ray = new T.Raycaster(); this.plane = new T.Plane(V(0, 0, 1), 0);
@@ -144,8 +144,8 @@
       this.ray.setFromCamera(new T.Vector2(sx / this.W * 2 - 1, -(sy / this.H * 2 - 1)), this.cam); const Tg = new T.Vector3(); this.ray.ray.intersectPlane(this.plane, Tg);
       Tg.x = clamp(Tg.x, -12, 12); Tg.y = clamp(Tg.y, R * 0.9, 7);
       const ax = Math.abs(Tg.x), inside = ax < GW - PR - R * 0.6 && Tg.y < GH - PR - R * 0.6, nearSide = Math.abs(ax - GW) < PR + R + 0.02 && Tg.y < GH + PR + R, nearBar = Math.abs(Tg.y - GH) < PR + R + 0.02 && ax < GW + PR + R;
-      // HABILIDADE = regras que se veem: (1) não chutar no meio (lá está a girafa), (2) não arrastar devagar. Acertou as duas → só a sorte decide (RTP cheio).
-      // Progressão: a "zona da girafa" alarga e o mínimo de força sobe a cada pênalti. Nada escondido (sem penalidade por repetir canto etc.).
+      // HABILIDADE = regras que se veem: (1) não chutar no meio (lá está o palhaço), (2) não arrastar devagar. Acertou as duas → só a sorte decide (RTP cheio).
+      // Progressão: a "zona do palhaço" alarga e o mínimo de força sobe a cada pênalti. Nada escondido (sem penalidade por repetir canto etc.).
       const dk = clamp((hook('getProgress') ?? (hook('getStep') || 0) / 4), 0, 1), lerp = (a, b) => a + (b - a) * dk;
       const zone = lerp(0.3, 0.45), qPos = Math.abs(Tg.x - this.kx) / GW > zone || Tg.y > GH * lerp(0.86, 0.92) ? 1 : 0, qs = clamp((sp - lerp(0.25, 0.42)) / 0.15, 0, 1), q = qPos * qs;
       // Persist the skill-adjusted outcome before any animation. Only the
@@ -215,7 +215,7 @@
     update(dt, t) {
       const T = this.T; this.drawTrail(dt);
       if (this.kAnim) { const a = this.kAnim, k = clamp((performance.now() / 1000 - a.t0) / a.dur, 0, 1), e = a.ease === 'smooth' ? 0.5 - 0.5 * Math.cos(Math.PI * k) : back(k); this.kx = a.fx + (a.tx - a.fx) * e; this.kth = a.fth + (a.tth - a.fth) * e; if (k >= 1) this.kAnim = null; }
-      else if (this.state === 'ready') { // girafa balança na linha; amplitude cresce a cada pênalti (primeiro chute → último chute ±1,1 m). Chutar LONGE dela é a habilidade.
+      else if (this.state === 'ready') { // palhaço balança na linha; amplitude cresce a cada pênalti (primeiro chute → último chute ±1,1 m). Chutar LONGE dela é a habilidade.
         if (this.swayT0 == null) { this.swayT0 = t; this.swayS = Math.random() < 0.5 ? -1 : 1; } const st = clamp((hook('getProgress') ?? (hook('getStep') || 0) / 4), 0, 1), amp = 0.25 + 0.85 * st, ph = (t - this.swayT0) * (1.1 + 0.5 * st);
         this.kx = this.swayS * amp * Math.sin(ph); this.kth = -0.06 * Math.cos(ph) * Math.sign(amp); }
       this.kg.position.x = this.kx; this.kg.rotation.z = -this.kth;
