@@ -40,12 +40,19 @@ jobs:
           set -euo pipefail
           npx --no-install firebase hosting:channel:deploy previa --config firebase.preview.generated.json --project "$KING_RICO_PREVIEW_PROJECT_ID" --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
           node scripts/preview-result.mjs "$RUNNER_TEMP/preview-result.json"
+      - name: Validar animações da prévia (3 fitas)
+        env:
+          KING_RICO_TEST_URL: ${{ steps.hosting.outputs.url }}
+          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+        run: |
+          python3 -m pip install playwright
+          python3 tests/preview_motion_browser.py
       - name: Guardar capturas da conferência
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: previa-circus-${{ github.sha }}
-          path: work/reel-depth-3d-*.png
+          path: work/preview-*.png
           if-no-files-found: ignore
       - name: Registrar bloqueio se a publicação não devolver URL
         if: failure() && steps.hosting.outputs.url == ''

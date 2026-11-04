@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178')
 os.makedirs('work',exist_ok=True)
 with sync_playwright() as p:
- b=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--autoplay-policy=no-user-gesture-required'])
+ b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox','--autoplay-policy=no-user-gesture-required'])
  for mode in ['no-preference','reduce']:
   context=b.new_context(viewport={'width':390,'height':844},reduced_motion=mode)
   page=context.new_page();errors=[];missing=[]
