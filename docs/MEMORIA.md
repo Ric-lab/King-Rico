@@ -34,3 +34,7 @@ https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus — atualiza
 
 ## Pendências
 - Flying Clown: testar no celular queda/subida com ênfase e pouso de pé com poeira.
+
+
+## Rolos da slot — decisão final (2026-11-04)
+- Fica a versão PUBLICADA (3 fitas). 9 tambores independentes: rejeitado como visual. Híbrido com faixa clara: rejeitado. Fita de ouro com brilho na linha premiada: rejeitada; linha limpa da publicada é a aprovada. Detalhes no HANDOFF.

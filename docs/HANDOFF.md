@@ -141,3 +141,19 @@ exatamente pelo "Próximo passo". Regras em [Fluxo](FLUXO-CLAUDE-CODEX.md).
 - Próximo passo: passos 3–5 dos rolos (respiro do símbolo ao parar, quique + parada em cascata com clack, vitória acendendo a linha) — avaliar na prévia antes.
 
 - REVERTIDO (Claude): a camada reel-royal.css cobria o tambor 3D (drum-depth) da prévia e quebrou a tela. Fortune Circus.dc.html voltou ao estado de e5288d1. Próximo passo dos rolos: fazer o acabamento premium DENTRO do drum-depth.js (material/iluminação do 3D), não por cima em CSS.
+
+
+## 2026-11-04 03:19 · Claude — DECISÃO: rolos da slot ficam como a versão PUBLICADA (3 fitas)
+O dono decidiu: o Fortune Machine/Circus fica com os rolos da versão publicada (3 fitas contínuas). A experiência de 9 tambores independentes da prévia NÃO segue. Não mexer nos rolos sem pedido explícito.
+
+### O que foi testado (prévia, branch codex/penalty-clown-preview) e o resultado
+- 9 tambores 3D independentes (ui/park/drum-depth.js): mais vício (9 paradas, 9 hápticos), mas visual de "grade de estudante" — cada casa é um cilindro com curva própria e escurece em cima/embaixo.
+- Papel mais branco (menos amarelo), símbolos premiados dourados, fendas escuras só nos vãos: melhorou, mas não chegou ao nível premium.
+- Rolos 5% menores proporcionais + tubos laterais para fora: ok.
+- Linha dourada superior do gabinete (encostada no topo dos rolos, 3px): ok.
+- Linhas premiadas: estavam deslocadas (posições antigas). Centros reais do 3D: colunas x 92.5/226.5/360.5, fileiras y 292.5/438.5/584.5; diagonais 47.45°. Estilo "fita de ouro com brilho correndo" foi REJEITADO; o estilo limpo da publicada é o aprovado.
+- Híbrido "3 fitas + 9 paradas" trocando as fendas por faixa clara de 30px: REJEITADO ("ficou uma merda"); revertido em 4c90657.
+- Ideia não testada (só se o dono pedir): casas sem curva vertical própria + luz/sombra por coluna + emenda de 1–2px.
+
+### Lição
+- Nunca mandar mudança visual dos rolos sem ver o resultado (usar as fotos do teste automático do workflow antes de avisar).
