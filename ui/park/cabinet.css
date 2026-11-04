@@ -242,3 +242,7 @@
 .park-home-back{width:38px;height:38px;flex:0 0 38px;display:block}
 .park-home-back img{display:block;width:100%;height:100%}
 .park-home-header{gap:10px}
+
+/* Sem moldura dourada grossa em volta dos rolos. */
+.park-reel-frame{border-color:transparent!important;box-shadow:none!important;background:none!important}
+.park-reel-frame:after{display:none!important}
