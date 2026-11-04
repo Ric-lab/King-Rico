@@ -250,9 +250,5 @@
 /* Barras laterais afastadas da borda da tela. */
 .park-meter-left{left:7px!important}
 .park-meter-right{right:7px!important}
-/* Fundo da máquina: sólido e escuro atrás dos tambores (sem transparência).
-   Profundidade = sombra do gabinete projetada para dentro, mais forte no topo. Sem borda dourada. */
-.park-reel-window-back{background:linear-gradient(180deg,#07030c 0%,#140a1c 18%,#1a0f22 50%,#140a1c 82%,#07030c 100%)!important;border-radius:14px;
- box-shadow:inset 0 22px 20px -8px #000,inset 0 -16px 16px -8px #000d,inset 12px 0 14px -6px #000c,inset -12px 0 14px -6px #000c!important}
-.park-reels::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;
- background:linear-gradient(180deg,#000b 0px,#0006 14px,#0000 46px),linear-gradient(0deg,#0008 0px,#0000 30px)}
+/* Sem fundo/nicho atrás dos rolos: só os tambores. */
+.park-reel-window-back{background:none!important;box-shadow:none!important}
