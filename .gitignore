@@ -17,3 +17,8 @@ gha-creds-*.json
 # Evidências locais e export do editor; game.html é gerado pelo build.
 /work/
 /game.html
+
+# Prévias locais e config gerada da prévia isolada
+*previa.dc.html
+scraps/
+/firebase.preview.generated.json

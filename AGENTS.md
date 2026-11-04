@@ -1,6 +1,6 @@
 # Manutenção do King Rico
 
-**OBRIGATÓRIO antes de qualquer tarefa:** ler `docs/skills/README.md`, `docs/skills/00-sempre.md` e a skill da área. Na resposta final, citar as skills lidas.
+**OBRIGATÓRIO antes de qualquer tarefa (qualquer modelo):** puxar o último commit e ler `docs/skills/README.md`, `docs/skills/00-sempre.md`, a skill da área e `docs/HANDOFF.md`. Na resposta final, citar as skills lidas. Ao parar: commit + HANDOFF.
 
 Leia `README.md` e `docs/README.md` antes de alterar o projeto. São o ponto de
 entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovadas.
