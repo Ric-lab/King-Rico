@@ -8,6 +8,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · contato e ritmo dos ingressos)
+- O som era chamado em `animation.finished`, já após o fade. Agora o ingresso chega visível ao contador aos 80% do voo: uma marca no relógio da animação dispara incremento, nota e impacto; somente depois ele é absorvido. Fim da animação continua como fallback, sem disparo duplicado.
+- Chegadas espaçadas por 220 ms (160 ms reduzido), voo normal 900 ms/reduzido 600 ms. Áudio preparado antes de sair e ataque de 6 ms; mantidas as notas dó/mi/sol e suas caudas. Segurança de contagem independe de animação/áudio.
+- Teste de navegador verifica no instante de cada som: ingresso ainda visível, centro a menos de 3 px do contador, incremento correspondente e espaçamento das três chegadas. Passou nos modos normal/reduzido, incluindo diagonais, líquido e roleta. Build de produção após o navegador.
+- Só prévia; nenhuma alteração na matemática, regras ou projeto oficial.
+
 ## Feito (2026-11-04 · Codex · acorde dos três ingressos)
 - `sfxTicket` agora cria uma única voz por ingresso: dó/mi/sol, timbre triangular filtrado, ganho 0,24 e caudas de 0,9/1,0/1,15 s. A última sustenta mais; as três notas formam um acorde ao se sobrepor. Removida a dupla camada curta anterior.
 - Mantida a sincronização da chamada na chegada/contagem, assim como silêncio, volume, diagonais e demais sons. Nenhuma mudança de matemática ou regras.
@@ -44,4 +50,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono ouvir as três notas dos ingressos na prévia e avaliar duração/timbre. Após aprovação, levar a mudança completa para `main`; não publicar no oficial sem autorização.
+- Dono avaliar a sincronização visual/sonora da chegada dos ingressos na prévia. Após aprovação, levar a mudança completa para `main`; não publicar no oficial sem autorização.

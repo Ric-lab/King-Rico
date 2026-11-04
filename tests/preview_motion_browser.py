@@ -42,7 +42,7 @@ with sync_playwright() as p:
   ticket_cells=[0,4,8] if ticket_line==3 else [2,4,6]
   page.evaluate('''row=>{
    const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
-   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying)ticketSounds.push({count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent});return chime(i);};
+   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
    const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/5:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',ticket_line)
   before=page.evaluate('KingRicoCloud.park.tickets')
@@ -64,6 +64,10 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
+  assert all(x['opacity']>.5 and x['distance']<3 for x in first['sounds']),first
+  arrivals=[x['at'] for x in first['sounds']]
+  expected=220 if mode=='no-preference' else 160
+  assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
   page.reload();ready();page.get_by_role('button',name='Girar',exact=True).click()
@@ -79,6 +83,6 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
   assert not errors,errors
   assert not missing,missing
-  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketCells':ticket_cells,'arrivalSounds':len(first['sounds']),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
+  print(json.dumps({'motion':mode,'singleCharge':True,'tickets':3,'ticketCells':ticket_cells,'arrivalSounds':len(first['sounds']),'spacingMs':[round(b-a) for a,b in zip(arrivals,arrivals[1:])],'contactDistance':round(max(x['distance'] for x in first['sounds']),2),'wheelRotates':True,'errors':errors,'missing':missing}),flush=True)
   context.close()
  b.close()

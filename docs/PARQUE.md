@@ -34,6 +34,14 @@ com as caudas sobrepostas. Uma voz triangular filtrada, ataque suave e ganho
 tentativa anterior. Moedas e outros efeitos permanecem iguais. Respeita
 volume/silêncio do menu; falha de áudio não interrompe a contagem.
 
+O incremento, a nota e o impacto usam o mesmo contato na linha de tempo do
+voo, com o ingresso ainda visível no centro do contador. A absorção/fade vem
+depois, nos 20% finais. As chegadas ficam separadas por 220 ms (160 ms no
+modo reduzido), permitindo ouvir as três notas. O contexto de áudio é
+preparado antes do voo, e o ataque da nota leva 6 ms. Não disparar o som só
+no `animation.finished`, quando o ingresso já desapareceu.
+
+
 
 Cada partida do parque custa **1 ingresso ou 25 moedas**. Escolher a forma de
 entrada apenas autoriza: a cobrança acontece na primeira jogada confirmada.
@@ -101,7 +109,7 @@ continua carregando sua interface nativa normalmente.
 
 Os movimentos que explicam o resultado permanecem perceptíveis quando o aparelho
 pede redução de movimento: líquido sobe sem oscilar em 450 ms, ingresso viaja
-em linha reta sem giro em 450 ms e a roleta faz no máximo uma volta em 900 ms.
+em linha reta sem giro em 600 ms e a roleta faz no máximo uma volta em 900 ms.
 Confetes, saltos do líquido e a grande transição de entrada ficam suprimidos.
 No modo normal, a apresentação original é preservada. Falha de áudio/animação
 não desfaz recebimento confirmado.

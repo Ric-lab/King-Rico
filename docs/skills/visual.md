@@ -13,3 +13,4 @@ Rejeitado:
 - Som de chegada dos ingressos baixo demais para perceber a contagem.
 - Toque fino de moeda, mesmo ampliado a 0,085, não dá presença suficiente a apenas três ingressos; usar toque próprio mais encorpado.
 - Dupla camada de campainha curta nos ingressos: o dono pediu uma nota por chegada, três notas complementares e caudas mais longas.
+- Som dos ingressos disparado após o desaparecimento e chegadas muito juntas: contato visível, contagem, nota e impacto devem compartilhar a mesma marca de tempo.
