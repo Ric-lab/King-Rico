@@ -27,3 +27,7 @@
 .park-circus-stage[data-cabinet-layout] .park-mode-label{top:calc(594px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
 .park-circus-stage[data-cabinet-layout] [data-spin-btn]{top:calc(613px + (var(--park-cabinet-top) + var(--park-cabinet-height) - 544px - 36px))!important}
 .park-circus-stage[data-cabinet-layout] .park-meter{height:calc(var(--park-cabinet-height) - 68px)}
+
+/* Linha premiada: fita de ouro com brilho correndo (centros = 3D dos tambores). */
+.park-win-line::after{content:'';position:absolute;top:0;bottom:0;left:-25%;width:22%;background:linear-gradient(90deg,#fff0,#fffffff0,#fff0);animation:parkLineShine 1.2s .35s ease-in-out infinite}
+@keyframes parkLineShine{to{left:105%}}
