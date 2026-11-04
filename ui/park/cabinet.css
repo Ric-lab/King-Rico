@@ -252,3 +252,5 @@
 .park-meter-right{right:7px!important}
 /* Sem fundo/nicho atrás dos rolos: só os tambores. */
 .park-reel-window-back{background:none!important;box-shadow:none!important}
+/* Atrás dos tambores: papel marfim contínuo (cobre o roxo da arte do gabinete e o cinza entre rolos). */
+.park-reels[data-reel-optics] .park-reel-paper{background:linear-gradient(90deg,#f1ede4 0%,#fffdf8 10%,#ffffff 50%,#fffdf8 90%,#f1ede4 100%)!important;border-radius:10px}
