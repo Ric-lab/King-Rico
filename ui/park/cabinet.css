@@ -250,6 +250,11 @@
 /* Barras laterais afastadas da borda da tela. */
 .park-meter-left{left:7px!important}
 .park-meter-right{right:7px!important}
-/* Fundo da máquina com profundidade: os tambores ficam num nicho escuro, mais fundo no topo/base e nas juntas. */
-.park-reel-window-back{background:radial-gradient(120% 70% at 50% 50%,#3a1450 0%,#1c0730 62%,#0c0218 100%)!important;
- box-shadow:inset 0 14px 18px -6px #000d,inset 0 -14px 18px -6px #000d,inset 12px 0 14px -8px #000b,inset -12px 0 14px -8px #000b,0 0 0 2px #f0b41f,0 6px 14px #0008!important}
+/* Nicho fundo: a borda do gabinete fica POR CIMA dos tambores e projeta sombra neles
+   (luz de cima: sombra forte no topo, leve na base, cantos laterais escuros). Sem roxo. */
+.park-reel-window-back{z-index:8!important;pointer-events:none;background:transparent!important;border-radius:14px;
+ box-shadow:
+  0 0 0 3px #2a1606,0 0 0 5px #f0b41f,0 0 0 6px #fff1b8,0 0 0 8px #8a520a,
+  inset 0 3px 0 #000,inset 0 26px 22px -10px #000e,inset 0 46px 40px -24px #0008,
+  inset 0 -3px 0 #0009,inset 0 -18px 18px -10px #000a,
+  inset 10px 0 14px -6px #000c,inset -10px 0 14px -6px #000c!important}
