@@ -17,3 +17,4 @@ Rejeitado:
 - Caudas longas com chegadas próximas soam como um acorde único; dar ataque definido e viajar/contar um ingresso por vez para ouvir três notas distintas.
 - Faixa da cor anterior na altura do spin após a roleta: sincronizar face e todas as laterais também no reinício da carga.
 - Relevo traseiro do spin escondido pelo aro: conferir a área realmente visível, não só a diferença de coordenadas entre camadas.
+- Cavidade traseira com faixa separada deixou o spin estranho; volume deve continuar pelas laterais, como uma peça única.

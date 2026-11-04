@@ -522,3 +522,7 @@ Relevo traseiro de 4 px separado da face; recolhe ao pressionar. Frente de
 A cavidade do spin é neutra e escura até o fundo. A traseira elevada começa
 abaixo do limite interno do aro dourado (7/78 da altura), para a moldura não
 ocultar sua espessura. Face acomodada na abertura, profundidades 4/8 px mantidas.
+
+Revisão da prévia após rejeição do encaixe: corpo contínuo sob a face,
+4 px atrás e nos lados/8 px à frente. Sem faixa traseira móvel separada.
+Pressão acomoda a face ao contorno do corpo; aro e alvo não se movem.

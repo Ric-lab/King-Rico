@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Feito (2026-11-04 · Codex · volume contínuo do spin)
+- Dono rejeitou o encaixe anterior. Removida a faixa traseira móvel isolada: corpo único contorna a face com 4 px atrás/lados e 8 px na frente. Ao clicar, face ocupa o encaixe do corpo; aro permanece fixo. Cores e sons preservados.
+- Capturas de repouso/clique inspecionadas, retorno e proporção conferidos em movimento normal/reduzido. Build de produção após navegador. Apenas prévia; avaliação estética ainda cabe ao dono.
+
 ## Feito (2026-11-04 · Codex · cavidade visível atrás do spin)
 - O relevo traseiro anterior ficava sob o aro dourado. Face e traseira acomodadas mais abaixo dentro da abertura, mantendo os 4/8 px de profundidade e o formato externo. Vão agora neutro e escuro, com sombra interna contínua até o fundo.
 - Conferidos repouso/clique/retorno normal e reduzido, capturas inspecionadas. Teste do workflow passa a exigir traseira fora da área encoberta pelo aro. Som, pulso e carteira preservados. Só prévia.
@@ -69,4 +73,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e a cavidade contínua com o relevo traseiro visível abaixo do aro. Não levar a `main` nem publicar no oficial sem autorização.
+- Sequência e som dos ingressos aprovados pelo dono. Avaliar na prévia o spin sem faixa vermelha ao reiniciar e o volume contínuo do spin, sem faixa traseira isolada. Não levar a `main` nem publicar no oficial sem autorização.
