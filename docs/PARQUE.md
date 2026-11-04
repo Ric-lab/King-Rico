@@ -23,6 +23,10 @@ A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 Uma trinca de ingressos no Circus dá **3 ingressos**. A conta começa com zero
 ingressos; nenhum saldo ou ingresso da prévia local é importado.
 
+Na prévia, cada ingresso toca a mesma campainha curta da chegada das moedas
+quando atinge o contador e acrescenta uma unidade, com notas levemente crescentes.
+Respeita o volume/modo sem som; falha de áudio não interrompe a contagem.
+
 Cada partida do parque custa **1 ingresso ou 25 moedas**. Escolher a forma de
 entrada apenas autoriza: a cobrança acontece na primeira jogada confirmada.
 Recarregar a página conserva a partida e não cobra uma segunda entrada.
