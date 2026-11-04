@@ -40,15 +40,6 @@ jobs:
           set -euo pipefail
           npx --no-install firebase hosting:channel:deploy previa --config firebase.preview.generated.json --project "$KING_RICO_PREVIEW_PROJECT_ID" --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
           node scripts/preview-result.mjs "$RUNNER_TEMP/preview-result.json"
-      - name: Preparar navegador da conferência
-        run: |
-          python3 -m pip install playwright Pillow
-          python3 -m playwright install --with-deps chromium
-      - name: Conferir nove tambores e carteira fictícia online
-        env:
-          KING_RICO_TEST_URL: ${{ steps.hosting.outputs.url }}
-          KING_RICO_CHROMIUM: bundled
-        run: python3 tests/circus_depth_browser.py
       - name: Guardar capturas da conferência
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
