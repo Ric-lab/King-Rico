@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('assets/fonts/baloo2-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Rammetto One'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/rammettoone-latin.woff2') format('woff2'); }
+html, body { margin: 0; padding: 0; height: 100%; background: #12051f; font-family: 'Baloo 2', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
+@keyframes rrPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes rrHand { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 70% { transform: translate(0, -150px); opacity: 1; } 100% { transform: translate(0, -170px); opacity: 0; } }
+@keyframes rrFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rrPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+@keyframes rrGold { 0%, 100% { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.18) drop-shadow(0 0 8px rgba(255,214,90,.9)); } 50% { filter: sepia(1) saturate(3.6) hue-rotate(-12deg) brightness(1.35) drop-shadow(0 0 20px rgba(255,230,140,1)); } }
+@keyframes rrNo { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+@keyframes rrConf { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(540deg); opacity: 0; } }
+@keyframes rrShine { 0% { transform: translateX(-160%) skewX(-18deg); } 60%, 100% { transform: translateX(420%) skewX(-18deg); } }
+</style>
+</helmet>
+<div style="position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; touch-action: manipulation; background: #2a0a4a;">
+  <div style="position: absolute; inset: 0; background-image: url('assets/bleed/stage-bleed.webp'); background-size: cover; background-position: 50% 100%;"></div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(40,8,64,.8) 0%, rgba(40,8,64,.5) 45%, rgba(30,6,50,.85) 100%);"></div>
+
+  <div ref="{{ stageRef }}" data-screen-label="Fortune Hoop" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
+
+    <div ref="{{ plaqueRef }}" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
+      <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);">{{ balanceText }}</span>
+      </div>
+    </div>
+    <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" style="position: absolute; left: 341.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -341.833px -29.5px; background-repeat: no-repeat; transform: translateX(-6px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></a>
+    <div onClick="{{ openMenu }}" role="button" aria-label="Abrir menu" style="position: absolute; left: 391.833px; top: 29.5px; width: 41px; height: 41px; cursor: pointer; border-radius: 50%; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -391.833px -29.5px; background-repeat: no-repeat; transform: translateX(2px) scale(1.25);" style-active="filter: brightness(.6) saturate(1.2);"></div>
+
+    <!-- cena -->
+    <div onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" style="position: absolute; left: 0; top: 86px; width: 453px; height: 600px; overflow: hidden; touch-action: none; cursor: grab; border-top: 3px solid #f0b41f; border-bottom: 3px solid #f0b41f; box-shadow: 0 0 0 2px #5a1f05;">
+      <div style="position: absolute; left: 0; top: -86px; width: 453px; height: 802px;">
+        <!-- câmera: o palco encolhe conforme a cesta se afasta -->
+        <div style="position: absolute; inset: 0; background: #2a0a4a url('assets/hoop/arena.webp') 50% 100% / cover no-repeat; transform-origin: 226px 640px; transform: scale({{ camScale }}); transition: transform .7s cubic-bezier(.3,.7,.3,1);"></div>
+
+        <div ref="{{ hoopRef }}" style="position: absolute; z-index: 1; left: {{ hpL }}; top: {{ hpT }}; width: {{ hpW }}; height: {{ hpH }}; transition: left .7s cubic-bezier(.3,.7,.3,1), top .7s cubic-bezier(.3,.7,.3,1), width .7s cubic-bezier(.3,.7,.3,1), height .7s cubic-bezier(.3,.7,.3,1);">
+          <div style="position: absolute; left: 10%; right: 10%; bottom: -2%; height: 5%; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,8,0,.55), rgba(30,8,0,0));"></div>
+          <img src="assets/hoop/stand.webp" alt="Cesta" draggable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; filter: {{ hoopGlow }};">
+        </div>
+        <div ref="{{ rimBackRef }}" style="position: absolute; z-index: 2; left: {{ hpL }}; top: {{ hpT }}; width: {{ hpW }}; height: {{ hpH }}; pointer-events: none; transform-origin: 50% 35%; transition: left .7s cubic-bezier(.3,.7,.3,1), top .7s cubic-bezier(.3,.7,.3,1), width .7s cubic-bezier(.3,.7,.3,1), height .7s cubic-bezier(.3,.7,.3,1);">
+          <svg viewBox="0 0 1000 2225" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;">
+            <defs><linearGradient id="rimB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8460c"></stop><stop offset="1" stop-color="#7a2204"></stop></linearGradient></defs>
+            <path d="M248,784 A252,52 0 0 1 752,784" fill="none" stroke="#4a1402" stroke-width="40" stroke-linecap="round"></path>
+            <path d="M248,784 A252,52 0 0 1 752,784" fill="none" stroke="url(#rimB)" stroke-width="28" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div ref="{{ shadowRef }}" style="position: absolute; z-index: 2; left: 0; top: 0; width: 76px; height: 18px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(30,8,0,.6), rgba(30,8,0,0)); will-change: transform, opacity;"></div>
+
+        <div ref="{{ ballRef }}" style="position: absolute; left: 0; top: 0; width: 84px; height: 84px; z-index: 6; pointer-events: none; transform: translate(148px, 570px); will-change: transform;">
+          <canvas ref="{{ spinRef }}" width="168" height="168" aria-label="Bola" style="position: absolute; inset: 0; width: 100%; height: 100%; animation: {{ ballAnim }}; filter: {{ ballFilter }};"></canvas>
+        </div>
+
+        <img ref="{{ frontRef }}" src="assets/hoop/stand-front.webp" alt="" draggable="false" style="position: absolute; z-index: 4; left: {{ hpL }}; top: {{ hpT }}; width: {{ hpW }}; height: {{ hpH }}; pointer-events: none; transform-origin: 50% 35%; transition: left .7s cubic-bezier(.3,.7,.3,1), top .7s cubic-bezier(.3,.7,.3,1), width .7s cubic-bezier(.3,.7,.3,1), height .7s cubic-bezier(.3,.7,.3,1);">
+
+        <div ref="{{ rimFrontRef }}" style="position: absolute; z-index: 5; left: {{ hpL }}; top: {{ hpT }}; width: {{ hpW }}; height: {{ hpH }}; pointer-events: none; transform-origin: 50% 35%; transition: left .7s cubic-bezier(.3,.7,.3,1), top .7s cubic-bezier(.3,.7,.3,1), width .7s cubic-bezier(.3,.7,.3,1), height .7s cubic-bezier(.3,.7,.3,1);">
+          <svg viewBox="0 0 1000 2225" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;">
+            <defs><linearGradient id="rimF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb15a"></stop><stop offset=".5" stop-color="#f06418"></stop><stop offset="1" stop-color="#7a2204"></stop></linearGradient></defs>
+            <path d="M248,784 A252,52 0 0 0 752,784" fill="none" stroke="#4a1402" stroke-width="40" stroke-linecap="round"></path>
+            <path d="M248,784 A252,52 0 0 0 752,784" fill="none" stroke="url(#rimF)" stroke-width="28" stroke-linecap="round"></path>
+            <path d="M268,792 A234,42 0 0 0 732,792" fill="none" stroke="rgba(255,230,180,.7)" stroke-width="6" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div style="position: absolute; inset: 0; z-index: 5; pointer-events: none; background: #0a0214; opacity: {{ dimOp }};"></div>
+        <div style="position: absolute; inset: 0; z-index: 5; pointer-events: none; background: radial-gradient(110px 150px at {{ spotX }} {{ spotY }}, rgba(255,236,170,.34) 0%, rgba(255,236,170,0) 100%); opacity: {{ spotOp }}; transition: opacity .2s;"></div>
+
+        <sc-for list="{{ dots }}" as="d" hint-placeholder-count="0">
+          <div style="position: absolute; z-index: 6; left: {{ d.x }}; top: {{ d.y }}; width: 12px; height: 12px; border-radius: 50%; background: #fff3c4; box-shadow: 0 0 0 2px rgba(106,46,5,.6), 0 0 10px rgba(255,210,87,.9); opacity: {{ d.op }}; pointer-events: none;"></div>
+        </sc-for>
+        <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
+          <div style="position: absolute; z-index: 7; left: {{ c.x }}; top: {{ c.y }}; width: 10px; height: 14px; border-radius: 2px; background: {{ c.bg }}; --dx: {{ c.dx }}; --dy: {{ c.dy }}; animation: rrConf .9s ease-out forwards; pointer-events: none;"></div>
+        </sc-for>
+
+        <!-- escada: coluna de placas, como no Fortune Neck -->
+        <div style="position: absolute; z-index: 8; left: 0; right: 0; top: 100px; height: 44px; display: flex; align-items: center; justify-content: center; gap: 10px; pointer-events: none;">
+          <sc-for list="{{ ladder }}" as="p" hint-placeholder-count="11">
+            <div style="position: relative; width: {{ p.w }}; flex: 0 0 auto; height: {{ p.h }}; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: {{ p.bg }}; box-shadow: {{ p.sh }}; animation: {{ p.anim }}; transition: background .25s, box-shadow .25s;">
+              <span style="font-size: {{ p.fs }}; font-weight: 800; line-height: 1; color: {{ p.c }}; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.label }}</span>
+              <div style="position: absolute; left: 50%; top: -10px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; box-shadow: 0 0 0 2px #ffd257, 0 0 10px rgba(255,210,87,.9); opacity: {{ p.lockOp }};"></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ showHand }}" hint-placeholder-val="{{ true }}">
+          <div style="position: absolute; z-index: 9; left: 196px; top: 600px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: 0 0 0 8px rgba(255,255,255,.3), 0 4px 10px rgba(0,0,0,.4); pointer-events: none; animation: rrHand 1.6s ease-in-out infinite;"></div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- rodapé: aposta antes da rodada; PEGAR durante -->
+    <sc-if value="{{ showBet }}" hint-placeholder-val="{{ true }}">
+      <div style="position: absolute; left: 0; right: 0; top: 702px; height: 86px; display: flex; align-items: center; justify-content: center; gap: 18px; animation: rrFade .25s ease-out;">
+        <div onClick="{{ betDown }}" role="button" aria-label="Diminuir aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00, inset 0 2px 0 rgba(255,255,255,.6); opacity: {{ downOp }};" style-active="transform: translateY(4px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">−</div>
+        <div aria-label="Aposta {{ betText }}" style="width: 200px; height: 78px; border-radius: 39px; display: flex; align-items: center; justify-content: center; background: {{ betBg }}; box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 0 0 3px #c8871a; animation: {{ betAnim }};">
+          <span style="font-size: 40px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
+        </div>
+        <div onClick="{{ betUp }}" role="button" aria-label="Aumentar aposta" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 44px; font-weight: 800; line-height: 1; color: #6b2e05; background: linear-gradient(180deg, #fff3c4, #f0b41f 55%, #c27a0a); box-shadow: 0 0 0 3px #6b2e05, 0 6px 0 #4a1a00, inset 0 2px 0 rgba(255,255,255,.6); opacity: {{ upOp }};" style-active="transform: translateY(4px); box-shadow: 0 0 0 3px #6b2e05, 0 2px 0 #4a1a00;">+</div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showCollect }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: 0; right: 0; top: 702px; height: 86px; display: flex; justify-content: center; animation: rrPop .3s ease-out;">
+        <div onClick="{{ collectBtn }}" role="button" aria-label="Pegar {{ collectText }} moedas" style="position: relative; overflow: hidden; width: 320px; height: 86px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; background: linear-gradient(180deg, #fff1a8 0%, #ffc93a 50%, #e8900f 100%); box-shadow: 0 6px 0 #8a4a05, inset 0 2px 0 rgba(255,255,255,.6), 0 0 0 3px #6b2e05; opacity: {{ collectOp }};" style-active="transform: translateY(4px); box-shadow: 0 2px 0 #8a4a05, 0 0 0 3px #6b2e05;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background-image: url('assets/stage-hd-c.webp'); background-size: 654px 1158px; background-position: -27.9px -43.3px; box-shadow: 0 2px 0 #8a4a05;"></div>
+          <span style="font-size: 44px; font-weight: 800; line-height: 1; color: #4a1a00; font-variant-numeric: tabular-nums;">{{ collectText }}</span>
+          <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0)); animation: rrShine 2.4s ease-in-out infinite; pointer-events: none;"></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 40; background: rgba(10,2,20,.8); animation: rrFade .2s ease-out;">
+        <div onClick="{{ closeMenu }}" role="button" style="position: absolute; inset: 0; cursor: pointer;"></div>
+        <div style="position: absolute; left: 416px; top: 470px; width: 421px; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #3d0a63 0%, #26043f 100%); border: 2px solid #f0b41f; box-shadow: 0 16px 40px rgba(0,0,0,.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,210,87,.22);">
+            <span style="font-size: 26px; font-weight: 800; color: #fff3c4;">Menu</span>
+            <div onClick="{{ closeMenu }}" role="button" aria-label="Fechar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 22px; font-weight: 800; color: #ffd257; background: rgba(0,0,0,.3);">✕</div>
+          </div>
+          <div style="display: flex; flex-direction: column; padding: 4px 18px 4px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">♫</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Efeitos sonoros</span>
+              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ sfx0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC0 }}; background: {{ sfxB0 }};">OFF</div><div onClick="{{ sfx1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC1 }}; background: {{ sfxB1 }};">50%</div><div onClick="{{ sfx2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ sfxC2 }}; background: {{ sfxB2 }};">100%</div></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08);">
+              <span style="width: 28px; text-align: center; font-size: 22px; color: #ffd257;">≈</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Vibração</span>
+              <div style="display: flex; gap: 3px; padding: 3px; border-radius: 18px; background: rgba(255,255,255,.12);"><div onClick="{{ vib0 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC0 }}; background: {{ vibB0 }};">OFF</div><div onClick="{{ vib1 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC1 }}; background: {{ vibB1 }};">50%</div><div onClick="{{ vib2 }}" role="button" style="min-width: 52px; height: 38px; padding: 0 8px; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: 800; color: {{ vibC2 }}; background: {{ vibB2 }};">100%</div></div>
+            </div>
+            <div onClick="{{ openPays }}" role="button" style="display: flex; align-items: center; gap: 12px; padding: 16px 0; cursor: pointer;">
+              <span style="width: 28px; text-align: center; font-size: 20px; color: #ffd257;">◇</span>
+              <span style="flex: 1; font-size: 20px; font-weight: 700; color: #f6e8ff;">Tabela de pagamentos</span>
+              <span style="font-size: 28px; font-weight: 800; color: #ffd257;">›</span>
+            </div>
+          </div>
+          <div style="padding: 14px 18px 16px; background: rgba(0,0,0,.24); border-top: 1px solid rgba(255,210,87,.22); font-size: 16px; font-weight: 600; line-height: 1.45; color: #dcc2f0;">Saldo e ajustes são os mesmos dos outros jogos e ficam salvos neste aparelho.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pays }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closePays }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 41; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.95); cursor: pointer; animation: rrFade .2s ease-out;">
+        <div style="width: 420px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <div style="font-size: 24px; font-weight: 800; letter-spacing: 1.5px; color: #ffd257;">TABELA DE PAGAMENTOS</div>
+          <div style="font-size: 18px; font-weight: 700; line-height: 1.3; color: #fff3c4; text-align: center; text-wrap: pretty;">Arraste a bola até a cesta. Cada cesta sobe um degrau e a cesta vai mais para longe. Errou, perde a aposta. Pegue o prêmio quando quiser.</div>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; width: 100%;">
+            <sc-for list="{{ payList }}" as="pl" hint-placeholder-count="11">
+              <div style="height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ pl.bg }};">
+                <span style="font-size: 21px; font-weight: 800; color: {{ pl.c }}; font-variant-numeric: tabular-nums;">{{ pl.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 17px; font-weight: 700; line-height: 1.35; color: #ffd257; text-align: center; text-wrap: pretty;">Chegou no x20? Ganha um arremesso de meio de quadra valendo x50.</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 14px; background: rgba(255,210,87,.12);">
+            <img src="assets/hoop/ball.webp" alt="" style="width: 44px; height: 44px; filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.2);">
+            <span style="font-size: 17px; font-weight: 700; line-height: 1.3; color: #fff3c4; text-wrap: pretty;">Do 3º degrau em diante pode aparecer a bola de ouro. Se ela entrar, aquele prêmio fica garantido, mesmo se errar depois.</span>
+          </div>
+          <div style="padding: 10px 28px; border-radius: 999px; background: linear-gradient(180deg, #ffe27a, #f0a018); box-shadow: 0 4px 0 #8a4a05; font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #4a1a00;">FECHAR</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ win }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeWin }}" role="button" style="position: absolute; left: -400px; right: -400px; top: -400px; bottom: -400px; z-index: 30; display: flex; align-items: center; justify-content: center; background: rgba(12,2,24,.72); animation: rrFade .2s ease-out;">
+        <div style="width: 320px; padding: 26px 22px 22px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: linear-gradient(180deg, #7a2bb8, #3a0d62); box-shadow: 0 0 0 4px #f0b41f, 0 0 0 8px #6b2e05, 0 20px 40px rgba(0,0,0,.6); animation: rrPop .45s cubic-bezier(.2,1.4,.4,1);">
+          <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 28px; color: #ffd257; text-shadow: 0 3px 0 #6b2e05; white-space: nowrap;">{{ winTitle }}</span>
+          <span style="font-size: 64px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 #6b2e05;">{{ winText }}</span>
+          <div style="margin-top: 8px; padding: 12px 60px; border-radius: 999px; background: linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650); box-shadow: 0 5px 0 #147a36, inset 0 2px 0 rgba(255,255,255,.6); font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #147a36;">OK</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+// Fortune Hoop — escada de 10 degraus + meio de quadra x50. A cesta se afasta a cada acerto; errou perde tudo; PEGAR quando quiser.
+// Chance de chegar ao degrau k = T / M[k] → parar em qualquer degrau devolve T = 90%.
+// Bola de ouro (1 em 20 por arremesso, do 3º degrau em diante, 1 por rodada): se entrar, garante aquele degrau; depois disso cada subida tem chance × G.
+// T = 0,90, G = 0,5, Q = 1/20 → melhor estratégia possível = 94,7%; parar num degrau fixo = 90–92%. (simulado por DP)
+const M = [1.2, 1.5, 2, 2.5, 3, 4, 5, 8, 12, 20], BONUS = 50;
+const T = 0.90, G = 0.5, Q = 1 / 20, SUSPENSE = 0.5;
+const AR = 2.2247, RIM_Y = 0.3525, RIM_R = 0.2515, BS = 84, BALL = { x: 226, y: 612 }, FLOOR = 652, O = { x: 226, y: 640 }, HZ = 492;
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const SKEY = 'fortuneCircus.slot.v3', HKEY = 'fortuneCircus.hoop.v3';
+const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+// perspectiva: a base da cesta anda no chão em direção ao horizonte (HZ); tamanho ∝ distância ao horizonte; câmera recua (S)
+const geo = j0 => { const j = Math.min(j0, 3), S = 1.2 - 0.012 * j, base = 600 - 58 * (1 - Math.pow(1 - j / 10, 1.4)), d = base - HZ, h = 3.9 * d, w = h / AR, cx = 226, top = base - h;
+  // cesta grande e perto no início (fácil de entender); câmera (S) só no fundo
+  const fx = v => v, fy = v => v, W = w;
+  return { S, l: fx(cx - w / 2), t: fy(top), w: W, h: h, x: fx(cx), y: fy(top + RIM_Y * h), r: RIM_R * W, base: fy(base) }; }; // h já em px de tela
+const bez = (a, b, c, t) => ({ x: (1 - t) * (1 - t) * a.x + 2 * (1 - t) * t * b.x + t * t * c.x, y: (1 - t) * (1 - t) * a.y + 2 * (1 - t) * t * b.y + t * t * c.y });
+// arco alto (como arremesso real): sobe bem acima da tabela e desce quase na vertical dentro do aro
+const ctrl = Tp => ({ x: BALL.x + (Tp.x - BALL.x) * 0.62, y: Tp.y - 430 });
+// 5º–8º degrau: vai e volta em ritmo constante, cada vez mais rápido. 9º–11º: ritmo irregular (acelera/freia), mais largo; x50 com duas ondas somadas.
+const per = j => j < 8 ? 2600 - (j - 4) * 250 : [1900, 1650, 1500][j - 8];
+const mot = (j, ph) => j < 4 ? 0 : j < 8 ? Math.sin(ph) * (110 + (j - 4) * 12) : j < 10 ? Math.sin(ph + 0.7 * Math.sin(2 * ph)) * 152 : (0.65 * Math.sin(ph) + 0.35 * Math.sin(2.7 * ph + 1)) * 152;
+// ponto onde a bola cairia: a DIREÇÃO do arraste aponta para onde a bola vai (reta da bola, sem ganho extra; zona morta pequena p/ arraste "reto");
+// força só pune se for muito fraca/forte (faixa folgada)
+const natural = (v, R) => { const up = Math.max(30, -v.dy), L = Math.hypot(v.dx, v.dy), dist = BALL.y - R.y; let sl = v.dx / up; if (Math.abs(sl) < 0.05) sl = 0;
+  const pr = Math.min(2, Math.max(0.3, L / 170)), pe = pr < 0.6 ? pr - 0.6 : pr > 1.7 ? pr - 1.7 : 0;
+  return { x: Math.min(440, Math.max(13, BALL.x + sl * dist)), y: R.y - R.r * 0.36 - pe * dist * 0.6 }; };
+const CONF = ['#ffd257', '#e8352b', '#2ec962', '#7fcfff', '#fff3c4', '#c86bff'];
+class Component extends DCLogic {
+  state = { balance: 1000, betIdx: 3, step: 0, guard: 0, goldBall: false, roundBet: 0, flying: false, lit: false, aiming: false, touched: false, idle: false, win: null, conf: [], noMoney: false, vw: 453, vh: 802 };
+  stageRef = React.createRef(); ballRef = React.createRef(); spinRef = React.createRef(); frontRef = React.createRef(); hoopRef = React.createRef(); plaqueRef = React.createRef(); shadowRef = React.createRef(); rimBackRef = React.createRef(); rimFrontRef = React.createRef();
+  componentDidMount() {
+    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); this._rs(); window.addEventListener('resize', this._rs);
+    try { const sv = JSON.parse(localStorage.getItem(SKEY)); if (sv && typeof sv.balance === 'number') this.setState({ balance: sv.balance, sfxLvl: sv.sfxLvl ?? 2, vibLvl: sv.vibLvl ?? 2 }); } catch (e) {}
+    try { const h = JSON.parse(localStorage.getItem(HKEY)); if (h) this.setState({ betIdx: h.betIdx ?? 3, touched: !!h.touched, step: h.step ?? 0, guard: h.guard ?? 0, roundBet: h.roundBet ?? 0, goldBall: !!h.goldBall }); } catch (e) {}
+    this.restBall(1); this.armIdle(); this.slide(); window.__hoop = this; window.__geo = geo;
+  }
+  slide() { const tick = now => { const j = this.state.step, el = [this.hoopRef.current, this.frontRef.current, this.rimBackRef.current, this.rimFrontRef.current];
+    if (j >= 4 && !this.freeze) { this.ph = (this.ph || 0) + (now - (this._lt || now)) / per(j) * Math.PI * 2; this.hx = mot(j, this.ph); }
+    else if (j < 4) { this.hx = 0; this.ph = 0; }
+    this._lt = now; el.forEach(e => e && (e.style.translate = this.hx + 'px 0')); this._sl = requestAnimationFrame(tick); }; this._sl = requestAnimationFrame(tick); }
+  componentWillUnmount() { cancelAnimationFrame(this._sl); window.removeEventListener('resize', this._rs); cancelAnimationFrame(this._raf); [this._to, this._it, this._ct].forEach(clearTimeout); }
+  save(balance) {
+    const s = this.state;
+    try { const sv = JSON.parse(localStorage.getItem(SKEY)) || {}; sv.balance = balance; sv.sfxLvl = s.sfxLvl ?? 2; sv.vibLvl = s.vibLvl ?? 2; localStorage.setItem(SKEY, JSON.stringify(sv));
+      localStorage.setItem(HKEY, JSON.stringify({ betIdx: s.betIdx, touched: s.touched, step: s.step, guard: s.guard, roundBet: s.roundBet, goldBall: s.goldBall })); } catch (e) {}
+  }
+  armIdle() { clearTimeout(this._it); this._it = setTimeout(() => this.setState({ idle: true }), 6000); }
+  ac() { if (!this._ac) { try { this._ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (this._ac.state === 'suspended') this._ac.resume(); return this._ac; }
+  tone(f, d, type = 'square', g = 0.06, f2) { const L = [0, 0.35, 1][this.state.sfxLvl ?? 2]; if (!L) return; g *= L; const a = this.ac(); if (!a) return; const o = a.createOscillator(), v = a.createGain(), t = a.currentTime; o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(v).connect(a.destination); o.start(t); o.stop(t + d + 0.02); }
+  buzz(p) { const L = this.state.vibLvl ?? 2; if (!L) return; const q = L === 1 ? [].concat(p).map((x, i) => i % 2 ? x : Math.max(15, Math.round(x / 2))) : p; try { navigator.vibrate && navigator.vibrate(q); } catch (e) {} }
+  setBall(x, y, k, r, op, z) { const b = this.ballRef.current; if (!b) return; b.style.transform = 'translate(' + (x - BS / 2) + 'px,' + (y - BS / 2) + 'px) scale(' + k + ')'; b.style.opacity = op; if (z != null) b.style.zIndex = z; this.drawBall(r); }
+  // bola desenhada em código (geométrico = código): esfera com luz fixa de cima-esquerda; só as costuras giram em 3D
+  drawBall(deg) { const cv = this.spinRef.current; if (!cv) return; if (this._bd === deg) return; this._bd = deg;
+    const x = cv.getContext('2d'), S = 168, c = S / 2, r = S / 2 - 3; x.clearRect(0, 0, S, S);
+    const g = x.createRadialGradient(c - r * 0.38, c - r * 0.42, r * 0.05, c, c, r);
+    g.addColorStop(0, '#ffb06a'); g.addColorStop(0.35, '#f2741f'); g.addColorStop(0.8, '#c4490c'); g.addColorStop(1, '#6e2304');
+    x.save(); x.beginPath(); x.arc(c, c, r, 0, Math.PI * 2); x.fillStyle = g; x.fill(); x.clip();
+    if (!this._peb) { const p = document.createElement('canvas'); p.width = p.height = S; const q = p.getContext('2d'); for (let n = 0; n < 1400; n++) { q.fillStyle = n % 2 ? 'rgba(0,0,0,.16)' : 'rgba(255,220,180,.12)'; q.beginPath(); q.arc(Math.random() * S, Math.random() * S, 0.9 + Math.random() * 0.9, 0, 7); q.fill(); } this._peb = p; }
+    x.drawImage(this._peb, 0, 0);
+    if (!this._img) { this._img = new Image(); this._img.onload = () => { this._bd = null; this.drawBall(deg); }; this._img.src = 'assets/hoop/ball.webp'; }
+    const a = deg * Math.PI / 180, ax = [0.94, 0.3, 0.16], n0 = Math.hypot(...ax), u = ax.map(v => v / n0), ca = Math.cos(a), sa = Math.sin(a);
+    const rot = p => { const d = u[0] * p[0] + u[1] * p[1] + u[2] * p[2], cr = [u[1] * p[2] - u[2] * p[1], u[2] * p[0] - u[0] * p[2], u[0] * p[1] - u[1] * p[0]]; return [0, 1, 2].map(k => p[k] * ca + cr[k] * sa + u[k] * d * (1 - ca)); };
+    const tilt = p => { const b = 0.5, cb = Math.cos(b), sb = Math.sin(b); return [p[0] * cb - p[1] * sb, p[0] * sb + p[1] * cb, p[2]]; };
+    const seams = [t => [Math.cos(t), Math.sin(t), 0], t => [0, Math.cos(t), Math.sin(t)],
+      t => { const k = 0.62, s = Math.sqrt(1 - k * k); return [k, s * Math.cos(t), s * Math.sin(t)]; }, t => { const k = 0.62, s = Math.sqrt(1 - k * k); return [-k, s * Math.cos(t), s * Math.sin(t)]; }];
+    x.lineCap = 'round'; x.strokeStyle = '#2b1005'; x.lineWidth = S * 0.026;
+    if (this._img.complete && this._img.naturalWidth) { x.save(); x.translate(c, c); x.rotate(a); x.drawImage(this._img, -r - 3, -r - 3, 2 * r + 6, 2 * r + 6); x.restore(); }
+    else seams.forEach(f => { let prev = null; x.beginPath(); for (let k = 0; k <= 96; k++) { const p = rot(tilt(f(k / 96 * Math.PI * 2))); if (p[2] > -0.02) { const X = c + p[0] * r, Y = c + p[1] * r; prev ? x.lineTo(X, Y) : x.moveTo(X, Y); prev = 1; } else prev = null; } x.stroke(); });
+    const sh = x.createRadialGradient(c - r * 0.25, c - r * 0.3, r * 0.6, c, c, r * 1.02); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(40,8,0,.4)'); x.fillStyle = sh; x.fillRect(0, 0, S, S);
+    const hl = x.createRadialGradient(c - r * 0.4, c - r * 0.45, 0, c - r * 0.4, c - r * 0.45, r * 0.45); hl.addColorStop(0, 'rgba(255,240,220,.45)'); hl.addColorStop(1, 'rgba(255,240,220,0)'); x.fillStyle = hl; x.fillRect(0, 0, S, S);
+    x.restore(); }
+  wobble(dir) { const d = dir || 0.5, k = [{ transform: 'rotate(0deg)' }, { transform: 'rotate(' + d * 2.2 + 'deg) translateY(2px)' }, { transform: 'rotate(' + -d * 1.2 + 'deg)' }, { transform: 'rotate(0deg)' }];
+    [this.rimBackRef.current, this.rimFrontRef.current].forEach(e => e && e.animate && e.animate(k, { duration: 420, easing: 'ease-out' }));
+    const b = this.spinRef.current; if (b && b.animate) b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.12,.86)' }, { transform: 'scale(.95,1.05)' }, { transform: 'scale(1)' }], { duration: 260, easing: 'ease-out' }); }
+  restBall(op) { this.setBall(BALL.x, BALL.y, 1, 0, op, 6); this.shadow(BALL.x, FLOOR, 1, 0.9 * op); }
+  shadow(x, y, k, op) { const s = this.shadowRef.current; if (!s) return; s.style.transform = 'translate(' + (x - 38) + 'px,' + (y - 9) + 'px) scale(' + k + ')'; s.style.opacity = op; }
+  anim(Tm, f, done) { const t0 = performance.now(); const st = () => { const k = Math.min(1, (performance.now() - t0) / Tm); f(k); if (k < 1) this._raf = requestAnimationFrame(st); else if (done) done(); }; this._raf = requestAnimationFrame(st); }
+  pt(e) { const r = this.stageRef.current.getBoundingClientRect(), sc = r.width / 453; return { x: (e.clientX - r.left) / sc, y: (e.clientY - r.top) / sc }; }
+  busy() { const s = this.state; return s.flying || s.win || s.menu || s.pays || s.paying; }
+  onHoop(p) { const g = geo(this.state.step), l = g.x - g.w / 2 - 16, t = g.y - g.h * RIM_Y - 16; return p.x > l && p.x < l + g.w + 32 && p.y > t && p.y < t + g.h + 32; }
+  down = e => {
+    if (this.busy()) return; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
+    this.ac(); const p = this.pt(e); this.drag = { x0: p.x, y0: p.y, len: 0, up: false, tap: this.onHoop(p) };
+    clearTimeout(this._it); this.setState({ lit: true, idle: false });
+  };
+  move = e => {
+    const d = this.drag; if (!d) return; const p = this.pt(e), dy = p.y - d.y0; d.len = Math.hypot(p.x - d.x0, dy); d.dx = p.x - d.x0; d.dy = dy;
+    if (!d.up && d.len > 20 && dy < -8) { d.up = true; this.tone(1000, 0.035, 'square', 0.035); this.buzz(12); }
+    if (d.up) this.setState({ aiming: true, aimV: { dx: d.dx, dy: d.dy } });
+  };
+  up = () => {
+    const d = this.drag; this.drag = null; if (!d) return;
+    if (d.up && d.len > 50) return this.shoot({ dx: d.dx, dy: d.dy });
+    this.setState({ lit: false, aiming: false }); this.armIdle();
+  };
+  shoot(v) {
+    const s = this.state, j = s.step, gold = s.goldBall;
+    let bet = s.roundBet, bal = s.balance;
+    if (j === 0) { bet = BETS[s.betIdx]; if (bal < bet) { this.buzz([40, 80, 40]); this.tone(200, 0.25, 'sine', 0.1, 140); this.setState({ lit: false, aiming: false, noMoney: true }); setTimeout(() => this.setState({ noMoney: false }), 700); this.armIdle(); return; } bal = Math.round((bal - bet) * 100) / 100; }
+    const base = j === 0 ? T / M[0] : j < 10 ? M[j - 1] / M[j] : M[9] / BONUS, p = base * (s.guard ? G : 1);
+    this.setState({ flying: true, lit: true, aiming: false, balance: bal, roundBet: bet, touched: true, idle: false }, () => this.save(bal));
+    this.tone(160, 0.16, 'sine', 0.14, 80); this.buzz(30);
+    const R0 = geo(j), dur0 = (j === 10 ? 1500 : 980) + (1 - R0.w / 172) * 400, hxA = j >= 4 ? mot(j, (this.ph || 0) + dur0 / per(j) * Math.PI * 2) : 0, R = { ...R0, x: R0.x + hxA }, N = natural(v, R),
+      // habilidade: arremesso ruim erra sempre e segue o gesto. Arremesso bom: o sorteio decide (o "roubo" vira bola no aro que sai)
+      good = Math.abs(N.x - R.x) < R.r * 1.05 && Math.abs(N.y - (R.y - R.r * 0.35)) < R.r * 1.3, hit = good && Math.random() < p,
+      mode = !good ? 'wild' : Math.random() < SUSPENSE ? (Math.random() < 0.5 ? 'roll' : 'board') : 'plain';
+    this.fly(R, hit, mode, j === 10, () => this.result(hit, gold), N);
+  }
+  fly(R, hit, mode, far, done, N) {
+    // o sorteio já decidiu; a bola sai na trajetória do gesto e é puxada aos poucos para o resultado (erro cai do lado para onde a pessoa errou)
+    const side = Math.abs(N.x - R.x) > R.r * 0.15 ? Math.sign(N.x - R.x) : Math.random() < 0.5 ? -1 : 1, kEnd = R.r * 1.2 / BS, br = R.r * 0.6, ry = R.r * 0.207, C = { x: R.x, y: R.y - br * 0.9 },
+      onRim = a => ({ x: R.x + Math.cos(a) * R.r * 0.92, y: R.y + Math.sin(a) * ry - br * 0.8 }), front = Math.abs(N.x - R.x) < R.r * 0.45;
+    const T1 = mode === 'wild' ? N : mode === 'board' ? { x: R.x + side * R.r * 0.3, y: R.y - R.r * 1.7 } : mode === 'roll' ? onRim(side > 0 ? 0 : Math.PI) : hit ? C : front ? onRim(Math.PI / 2 - side * 0.35) : onRim(side > 0 ? -0.15 : Math.PI + 0.15);
+    const dur = (far ? 1500 : 980) + (1 - R.w / 172) * 400, P1 = ctrl(T1), N0 = N || T1, ease = k => k * k * (3 - 2 * k);
+    const drop = () => { this.wobble(0); const n = this.frontRef.current; if (n && n.animate) n.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(1.18) scaleX(.94)' }, { transform: 'scaleY(1)' }], { duration: 450, easing: 'ease-out' });
+      this.tone(1500, 0.22, 'triangle', 0.07, 500); this.buzz(40);
+      this.anim(420, k => this.setBall(C.x, C.y + k * R.r * 2.6, kEnd * (1 - k * 0.08), 720, k > 0.7 ? 1 - (k - 0.65) / 0.35 : 1, 3), done); };
+    const out = (from, dir) => { this.wobble(dir); this.tone(620, 0.12, 'square', 0.06, 420); setTimeout(() => this.tone(880, 0.08, 'square', 0.04), 70); this.buzz([20, 30, 20]);
+      // bateu na lateral do aro: espirra para fora e para cima, cai no chão ao lado da cesta, quica uma vez
+      const B = { x: from.x + dir * R.r * 1.4, y: from.y - R.r * 1.1 }, F = { x: B.x + dir * R.r * 0.8, y: R.base - br };
+      this.anim(280, k => { const e = 1 - (1 - k) * (1 - k); this.setBall(from.x + (B.x - from.x) * e, from.y + (B.y - from.y) * e, kEnd, 720 + dir * k * 160, 1, 6); }, () =>
+        this.anim(480, k => this.setBall(B.x + (F.x - B.x) * k, B.y + (F.y - B.y) * k * k, kEnd, 880 + dir * k * 200, 1, 6), () =>
+          this.anim(380, k => this.setBall(F.x + dir * k * R.r * 0.6, F.y - Math.sin(k * Math.PI) * R.r * 0.5, kEnd, 1080 + dir * k * 120, k > 0.6 ? 1 - (k - 0.6) / 0.4 : 1, 6), done))); };
+    // bateu na frente do aro: volta em direção a quem jogou (sobe um pouco, cresce, cai no chão na frente)
+    const outFront = from => { this.wobble(side * 0.6); this.tone(560, 0.12, 'square', 0.06, 380); this.buzz([20, 30, 20]);
+      const F = { x: from.x + side * R.r * 0.5, y: Math.min(FLOOR - 20, R.base + 70) };
+      this.anim(640, k => { const x = from.x + (F.x - from.x) * k, y = from.y + (F.y - from.y) * k * k - Math.sin(k * Math.PI) * R.r * 0.9; this.setBall(x, y, kEnd * (1 + 0.6 * k), 720 - side * k * 200, k > 0.75 ? 1 - (k - 0.75) / 0.25 : 1, 6); }, done); };
+    this.anim(dur, k => { const e = ease(k), Tk = { x: N0.x + (T1.x - N0.x) * e, y: N0.y + (T1.y - N0.y) * e }, p = bez(BALL, ctrl(Tk), Tk, k), kk = 1 + (kEnd - 1) * k; this.setBall(p.x, p.y, kk, k * 720, 1); this.shadow(p.x, FLOOR + (R.base - FLOOR) * k, kk, 0.9 - 0.5 * k); }, () => {
+      this.shadow(T1.x, R.base, kEnd, 0); this.freeze = true;
+      if (mode === 'wild') { const dx = N.x - R.x, dy = N.y - R.y;
+        if (Math.abs(dx) < R.r * 2 && Math.abs(dy) < R.r * 2.2) return out(N, side);
+        const F = { x: N.x + (N.x - BALL.x) * 0.25, y: 720 };
+        return this.anim(560, k => this.setBall(N.x + (F.x - N.x) * k, N.y + (F.y - N.y) * k * k, kEnd, 720 + k * 220, k > 0.7 ? 1 - (k - 0.7) / 0.3 : 1), done); }
+      if (mode === 'plain') return hit ? drop() : front ? outFront(T1) : out(T1, side);
+      if (mode === 'board') {
+        this.tone(300, 0.08, 'square', 0.07, 200); this.buzz(25);
+        const tgt = hit ? C : { x: R.x - side * R.r * 0.9, y: C.y };
+        return this.anim(380, k => { const x = T1.x + (tgt.x - T1.x) * k, y = T1.y + (tgt.y - T1.y) * k - Math.sin(k * Math.PI) * R.r * 0.6; this.setBall(x, y, kEnd, 720 + k * 90, 1); }, () => hit ? drop() : out(tgt, -side));
+      }
+      // roll: gira no aro 1–3 voltas, desacelerando (o resultado já está decidido)
+      // a bola anda EM CIMA do tubo do aro (elipse do aro), passa por trás (z 3) e pela frente (z 6), um pouco maior quando está na frente
+      const turns = 1 + Math.floor(Math.random() * 2), a0 = side > 0 ? 0 : Math.PI, Tr = 650 * turns + 300;
+      this.anim(Tr, k => { const e = 1 - Math.pow(1 - k, 1.6), a = a0 + side * e * turns * Math.PI * 2, p = onRim(a); this.setBall(p.x, p.y, kEnd * (1 + 0.07 * Math.sin(a)), 720 + e * turns * 540 * side, 1, Math.sin(a) < 0 ? 3 : 6);
+        if (Math.floor(e * turns * 4) !== this._rq) { this._rq = Math.floor(e * turns * 4); this.tone(700 + this._rq * 30, 0.03, 'square', 0.03); this.buzz(8); } }, () => {
+        this._rq = null; const end = onRim(a0);
+        if (hit) this.anim(160, k => this.setBall(end.x + (C.x - end.x) * k, end.y + (C.y - end.y) * k, kEnd, 720, 1, 3), drop); else out(end, side);
+      });
+    });
+  }
+  result(hit, gold) {
+    const s = this.state, j = s.step;
+    if (hit && j === 10) { this.confetti(geo(10)); this.reset(420); return this.collect(BONUS, 'MEIO DE QUADRA!', 500); }
+    if (hit) {
+      const nj = j + 1, guard = gold ? M[j] : s.guard, R = geo(j);
+      this.confetti(R); [659, 784, 988].forEach((f, i) => setTimeout(() => this.tone(f + j * 30, 0.18, 'triangle', 0.08), i * 80)); this.buzz(gold ? [60, 50, 60, 50, 120] : 45);
+      const goldBall = !guard && nj >= 2 && nj <= 9 && Math.random() < Q;
+      this.setState({ step: nj, guard, goldBall }, () => this.save(this.state.balance));
+      if (goldBall) setTimeout(() => { [880, 1175, 1568].forEach((f, i) => setTimeout(() => this.tone(f, 0.16, 'triangle', 0.08), i * 70)); this.buzz([30, 40, 30]); }, 700);
+      return this.reset(nj === 10 ? 700 : 450);
+    }
+    if (s.guard) { this.reset(250); return this.collect(s.guard, 'GARANTIDO!', 350); }
+    this.tone(220, 0.3, 'sine', 0.08, 150); setTimeout(() => this.tone(150, 0.4, 'sine', 0.08, 110), 260);
+    this.setState({ step: 0, guard: 0, goldBall: false, roundBet: 0 }, () => this.save(this.state.balance)); this.reset(300);
+  }
+  reset(ms) { this._to = setTimeout(() => { this.freeze = false; this.setState({ flying: false, lit: false }); this.anim(260, k => this.restBall(k)); this.armIdle(); }, ms); }
+  confetti(R) { const conf = Array.from({ length: 18 }, (_, j) => { const a = -Math.PI / 2 + (j / 17 - 0.5) * 2.6, v = 70 + (j * 37 % 60); return { x: (R.x - 5) + 'px', y: (R.y - 7) + 'px', dx: Math.round(Math.cos(a) * v * 1.6) + 'px', dy: Math.round(Math.sin(a) * v * 1.6 + 60) + 'px', bg: CONF[j % CONF.length] }; });
+    clearTimeout(this._ct); this.setState({ conf }); this._ct = setTimeout(() => this.setState({ conf: [] }), 1000); }
+  collect(mult, title, delay = 0) {
+    const w = Math.round(this.state.roundBet * mult * 100) / 100;
+    [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.22, 'triangle', 0.09), delay + i * 90));
+    setTimeout(() => { this.buzz(mult >= 5 ? [70, 70, 70, 70, 130] : 45); this.setState({ win: { w, title }, paying: true }); }, delay);
+  }
+  collectBtn = () => { const s = this.state; if (s.flying || s.win || s.step < 1) return; this.ac(); this.collect(M[s.step - 1], 'VOCÊ GANHOU!'); };
+  closeWin = () => {
+    const s = this.state; if (!s.win) return; const w = s.win.w;
+    this.setState({ win: null, step: 0, guard: 0, goldBall: false, roundBet: 0 });
+    this.flyCoins(() => { const bal = Math.round((this.state.balance + w) * 100) / 100; this.setState({ balance: bal, paying: false }, () => this.save(bal)); this.tone(1320, 0.12, 'triangle', 0.08); this.buzz(30); });
+  };
+  flyCoins(done) {
+    const st = this.stageRef.current; if (!st || !st.animate) return done();
+    const from = { x: 226, y: 745 }, to = { x: 40, y: 42 }, n = 10;
+    for (let i = 0; i < n; i++) {
+      const c = document.createElement('div');
+      c.style.cssText = 'position:absolute;z-index:35;left:0;top:0;width:34px;height:34px;border-radius:50%;pointer-events:none;background-image:url(assets/stage-hd-c.webp);background-size:453px 802px;background-position:-19.333px -30px;box-shadow:0 0 10px rgba(255,210,87,.8)';
+      st.appendChild(c); const dx = (i - n / 2) * 14, mid = { x: (from.x + to.x) / 2 + dx * 3, y: from.y - 260 - (i % 3) * 30 };
+      const a = c.animate([{ transform: `translate(${from.x - 17 + dx}px,${from.y - 17}px) scale(.6)`, opacity: 0 }, { transform: `translate(${mid.x - 17}px,${mid.y - 17}px) scale(1.15)`, opacity: 1, offset: .45 }, { transform: `translate(${to.x - 17}px,${to.y - 17}px) scale(.7)`, opacity: 1 }], { duration: 760, delay: i * 55, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
+      a.onfinish = () => { c.remove(); this.tone(1800 + i * 40, 0.03, 'square', 0.03); if (i === n - 1) done(); };
+    }
+  }
+  openMenu = () => { if (this.state.flying) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
+  closeMenu = () => this.setState({ menu: false });
+  openPays = () => this.setState({ menu: false, pays: true });
+  closePays = () => this.setState({ pays: false, menu: true });
+  setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(this.state.balance); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
+  betDown = () => { if (this.busy() || this.state.step) return; this.tone(900, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save(this.state.balance)); };
+  betUp = () => { if (this.busy() || this.state.step) return; this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save(this.state.balance)); };
+  goHome = e => { if ((this.state.flying || this.state.step) && e) e.preventDefault(); };
+  renderVals() {
+    const s = this.state, j = s.step, txt = fmt(s.balance), lit = s.lit || s.flying, R = geo(j);
+    const ladder = M.concat([BONUS]).map((m, k) => {
+      const done = k < j, next = k === j, bonus = k === 10, locked = s.guard && m === s.guard && !bonus;
+      return { label: 'x' + fmt(m), w: next ? '104px' : '68px', h: next ? '44px' : '32px', fs: next ? '26px' : '18px',
+        bg: next ? (s.goldBall ? 'linear-gradient(180deg, #fff8d6, #ffd257 55%, #e89a10)' : 'linear-gradient(180deg, #fff3c4, #ffd257 55%, #f0a018)') : done ? 'linear-gradient(180deg, #6cf096, #2ec962 60%, #22a650)' : bonus ? 'linear-gradient(180deg, #7a2bb8, #3a0d62)' : 'rgba(20,4,36,.82)',
+        c: next ? '#4a1a00' : done ? '#fff' : bonus ? '#ffd257' : '#fff3c4',
+        sh: next ? '0 0 0 3px #6b2e05, 0 0 18px rgba(255,210,87,.9)' : done ? '0 0 0 2px #147a36' : bonus ? '0 0 0 2px #ffd257, 0 0 12px rgba(255,210,87,.5)' : '0 0 0 2px rgba(255,210,87,.5)',
+        anim: next && !s.flying ? 'rrPulse 1.1s ease-in-out infinite' : 'none', lockOp: locked ? 1 : 0, k }; }).filter(p => Math.abs(p.k - j) <= 1);
+    let dots = [];
+    if (false && s.aiming && !s.flying && s.aimV) { const Tp = natural(s.aimV, R), P1 = ctrl(Tp); dots = Array.from({ length: 8 }, (_, i) => { const p = bez(BALL, P1, Tp, (i + 1) / 9); return { x: (p.x - 6) + 'px', y: (p.y - 6) + 'px', op: 1 - i * 0.08 }; }); }
+    const pay = (m, k) => ({ label: 'x' + fmt(m), bg: k === 10 ? 'rgba(255,210,87,.22)' : 'rgba(255,255,255,.08)', c: k === 10 ? '#ffd257' : '#fff3c4' });
+    const cur = j ? M[j - 1] : 0, cv = fmt(s.roundBet * cur);
+    return {
+      scale: Math.min(s.vw / 453, s.vh / 802), stageRef: this.stageRef, ballRef: this.ballRef, spinRef: this.spinRef, frontRef: this.frontRef, hoopRef: this.hoopRef, plaqueRef: this.plaqueRef,
+      hpL: R.l + 'px', hpT: R.t + 'px', hpW: R.w + 'px', hpH: R.h + 'px', camScale: R.S.toFixed(3), shadowRef: this.shadowRef, rimBackRef: this.rimBackRef, rimFrontRef: this.rimFrontRef,
+      hoopGlow: lit ? 'drop-shadow(0 0 14px rgba(255,220,120,.8))' : 'none',
+      ballAnim: s.goldBall ? 'rrGold 1s ease-in-out infinite' : 'none', ballFilter: s.goldBall ? 'sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.18)' : 'drop-shadow(0 6px 5px rgba(0,0,0,.45))',
+      ladder, dots, confetti: s.conf,
+      balanceText: txt, balanceSize: (txt.length <= 6 ? 19 : txt.length <= 8 ? 16.5 : 14) + 'px',
+      dimOp: lit ? 0 : 0.36, spotOp: lit ? 1 : 0, spotX: R.x + 'px', spotY: R.y + 'px',
+      showHand: j === 0 && (!s.touched || s.idle) && !s.flying && !s.win && !this.drag, down: this.down, move: this.move, up: this.up,
+      showBet: j === 0 && !s.paying, showCollect: j > 0, collectText: cv, collectOp: s.flying ? 0.55 : 1, collectBtn: this.collectBtn,
+      betText: fmt(BETS[s.betIdx]), betBg: s.noMoney ? '#8a1010' : '#2a0a4a', betAnim: s.noMoney ? 'rrNo .6s ease-in-out' : 'none', downOp: s.betIdx === 0 ? 0.45 : 1, upOp: s.betIdx === BETS.length - 1 ? 0.45 : 1, betDown: this.betDown, betUp: this.betUp, goHome: this.goHome,
+      menu: !!s.menu, pays: !!s.pays, openMenu: this.openMenu, closeMenu: this.closeMenu, openPays: this.openPays, closePays: this.closePays,
+      payList: M.map((m, k) => pay(m, k)).concat([pay(BONUS, 10)]),
+      ...[0, 1, 2].reduce((o, i) => { const on = k => (s[k] ?? 2) === i; o['sfx' + i] = () => this.setLvl('sfxLvl', i); o['vib' + i] = () => this.setLvl('vibLvl', i); o['sfxB' + i] = on('sfxLvl') ? '#ffd257' : 'transparent'; o['sfxC' + i] = on('sfxLvl') ? '#4a1a00' : '#e8d4ff'; o['vibB' + i] = on('vibLvl') ? '#ffd257' : 'transparent'; o['vibC' + i] = on('vibLvl') ? '#4a1a00' : '#e8d4ff'; return o; }, {}),
+      win: !!s.win, winTitle: s.win ? s.win.title : '', winText: s.win ? '+' + fmt(s.win.w) : '', closeWin: this.closeWin
+    };
+  }
+}
+</script>
+</body>
+</html>
