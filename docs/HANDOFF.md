@@ -4,11 +4,13 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Estado (2026-11-05)
-- `main` = site oficial. Publicado `1d730fb` em 05/11 após autorização do dono: versão atual com háptico do spin em 40 ms, paradas reforçadas e apresentação aprovada em desenvolvimento. Mantidas 3 fitas, carteira real e publicador REST de regras; prévia segue em projeto isolado.
-- No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
+- `main` = site oficial. Publicado `87244fe` em 05/11 após autorização do dono: Clown guardado, Bounce reativado, três cards Em breve e revisões aprovadas de parque/HUD/contador. Mantidas 3 fitas, carteira real, háptico e publicador REST de regras; prévia segue em projeto isolado.
+- No ar: Circus, Penalty (goleiro palhaço), Flying Clown e Bounce; Fingo só pela rota direta. Basquete/Bubble Plinko/Race Horse são cards Em breve, sem cobrança. Clown e demais arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
-## Publicação autorizada (2026-11-05 · catálogo e Bounce)
+## Entrega concluída (2026-11-05 · catálogo e Bounce)
+- Produção `87244fe`: https://github.com/Ric-lab/King-Rico/actions/runs/42062162492 com verificar/publicar concluídos com sucesso, regras REST e Hosting. Prévia https://github.com/Ric-lab/King-Rico/actions/runs/42062162645 também aprovada.
+- Navegador no site oficial confirmou projeto king-rico habilitado, sem emuladores/carteira de teste, três cards sem interação, 3D do Bounce pronto, Clown HTTP 404 e assets HTTP 200; sem erros de página. Nenhuma aposta em conta real foi feita.
 - Dono autorizou publicar a revisão completa e pediu guardar Clown, criar cards Basquete/Bubble Plinko/Race Horse e reviver Bounce. Confirmou explicitamente três cards Em breve, sem jogos novos/cobrança, e Bounce jogável.
 - Clown preservado nos fontes/Firestore, fora do catálogo e das rotas. Bounce reativado com Three.js local, HUD/carteira/entrada do parque e retomada; matemática e física originais preservadas.
 - Cards vetoriais em ui/park/covers (0 créditos externos). Catálogo atualizado em README, ARQUIVADOS, PARQUE e site/routes.json. Publicação pela main, workflow existente e publicador REST de regras preservados.
@@ -201,4 +203,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Concluir testes do novo catálogo/Bounce e publicar a versão autorizada na main. Confirmar workflow, regras e site oficial; atualizar este HANDOFF com o resultado real.
+- Aguardar feedback do dono sobre a versão publicada. Clown permanece guardado; Basquete/Bubble Plinko/Race Horse são apenas cards Em breve. Não implementar os três jogos sem novo pedido. Preservar Bounce, Pênalti, Flying e carteira compartilhada.

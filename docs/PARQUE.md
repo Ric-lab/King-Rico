@@ -1,6 +1,6 @@
 # Circus e parque
 
-Na versão de 05/11/2026 autorizada para publicação, Circus é a tela inicial.
+Na versão publicada em 05/11/2026 (`87244fe`), Circus é a tela inicial.
 `/home` mantém compatibilidade com `/circus`. O parque usa `/park`, com
 `Home.dc.html` como fonte, e reúne **Pênalti, Flying Clown e Bounce**.
 **Basquete, Bubble Plinko e Race Horse** têm cards **Em breve**, sem ação nem cobrança.
@@ -229,3 +229,7 @@ Recebe o cabeçalho compartilhado, contador e entrada do parque: 1 ingresso ou
 land/collect/fall não cobram nova entrada. Repetir o pedido ou recarregar não
 paga/cobra duas vezes; rodadas antigas mantêm aposta original. A confirmação
 se repete apenas ao abrir uma nova visita, como nas outras atrações.
+
+Publicação confirmada: workflow 42062162492 (verificar/publicar aprovados),
+regras REST e Hosting. Conferência no site oficial: projeto king-rico sem
+emuladores, catálogo correto, Bounce 3D carregado, Clown 404 e assets 200.
