@@ -561,3 +561,7 @@ e vermelhos antes pouco representados; mantém ciclo de 40 s e recorte v3.
 Prévia 05/11: o pulso elétrico revela brevemente no aro a mesma cor da face
 (520 ms, 320 ms reduzido), usando a máscara v3. Camada sólida desaparece
 sobre a iridescência que continua girando, sem reiniciar seu ciclo de 40 s.
+
+Revisão da prévia 05/11: a batida sólida começa junto à pressão da face,
+sem atraso extra. O pulso elétrico posterior não a reinicia; auto continua
+com resposta própria. Movimento do aro por baixo permanece contínuo.

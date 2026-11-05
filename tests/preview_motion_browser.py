@@ -25,10 +25,13 @@ with sync_playwright() as p:
    page.wait_for_timeout(180)
    assert rim.evaluate('e=>getComputedStyle(e).backgroundImage')!=before_color,'Iridescent colors must circulate'
   else:assert rim.evaluate('e=>getComputedStyle(e).animationName')=='none'
-  page.evaluate('''()=>{__fc.lightsPulse();const a=document.querySelector('.park-spin-rim-pulse').getAnimations()[0],t=a.effect.getTiming();a.pause();a.currentTime=t.delay+t.duration*.3;}''')
+  spin_box=page.locator('[data-spin-btn]').bounding_box()
+  page.mouse.move(spin_box['x']+spin_box['width']/2,spin_box['y']+spin_box['height']/2);page.mouse.down()
   pulse=page.locator('.park-spin-rim-pulse').evaluate('e=>({opacity:Number(getComputedStyle(e).opacity),color:getComputedStyle(e).backgroundColor})')
   assert pulse['opacity']>.95 and pulse['color']==page.locator('.park-spin-wash').evaluate('e=>getComputedStyle(e).backgroundColor'),pulse
-  page.evaluate("document.querySelector('.park-spin-rim-pulse').getAnimations()[0].finish();__fc._parkPulse=null")
+  assert page.evaluate("(()=>{const e=document.querySelector('.park-spin-rim-pulse'),a=e.getAnimations()[0];__fc.lightsPulse();return e.getAnimations()[0]===a})()"),'Do not restart the rim on the later electric pulse'
+  page.mouse.move(1,120);page.mouse.up()
+  page.evaluate("document.querySelector('.park-spin-rim-pulse').getAnimations()[0]?.finish();__fc._parkPulse=null")
   assert page.locator('.park-spin-rim-pulse').evaluate('e=>Number(getComputedStyle(e).opacity)')==0
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{

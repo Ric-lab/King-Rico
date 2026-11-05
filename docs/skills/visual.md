@@ -27,3 +27,4 @@ Rejeitado:
 - Aro iridescente v1 suave demais: dono pediu mais brilho e cor. Título deve ser exatamente Bonus, sem acento.
 - A volta da máquina precisa descer visivelmente também com movimento reduzido; retorno instantâneo parece que os itens só reapareceram.
 - Iridescência deve distribuir todo o círculo cromático, evitando excesso de rosa/violeta/azul e falta de verde/vermelho.
+- A batida colorida do aro precisa começar ao apertar, junto da face, sem esperar o pulso elétrico posterior ou reiniciar nessa chegada.

@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · aro no instante de apertar)
+- Batida do aro começa no mesmo pointerdown que prepara/pinta a face, sem os 120 ms e sem esperar o disparo posterior. Esse disparo não reinicia a batida manual; auto mantém fallback no pulso elétrico. Cancelamento/saída limpa a associação do toque.
+- Teste usa pressão real, exige cor imediata igual à face e ausência de segunda batida. Órbita e mecanismos financeiros preservados. Só prévia.
+
 ## Prévia (2026-11-05 · Codex · pulso colorido no aro)
 - Mesmo disparo elétrico do spin pinta o aro por um instante na cor preparada para a face. Camada sólida recortada pela máscara v3: 520 ms (320 ms reduzido), pequeno atraso de propagação 120 ms e retorno à iridescência. Nova batida substitui a anterior.
 - Órbita cromática continua por baixo sem reiniciar. Nenhuma mudança em clique, som, prêmio ou carteira. Conferência visual/temporal no navegador; build de produção depois. Só prévia.
@@ -137,4 +141,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar a batida de cor sólida no aro sincronizada ao pulso do spin na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar sincronização imediata entre apertar e a batida de cor no aro na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

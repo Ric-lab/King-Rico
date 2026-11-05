@@ -24,9 +24,13 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   fc._parkPreparePulseColor();
  };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0);});};syncColor(fc._parkMeterLevel);
+ fc._parkFlashRim=(delay=0)=>{
+  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only. */}
+ };
  const nativePulse=fc.lightsPulse.bind(fc);let pulseNo=0,lastPulse=0,queuedCharge;
  fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);
-  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0)+120,duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only; the original pulse and prize continue. */}
+  if(!fc._parkRimTouch)fc._parkFlashRim(delay);
+  fc._parkRimTouch=false;
   schedule();};
  const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
