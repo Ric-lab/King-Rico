@@ -137,3 +137,8 @@ normal mantém 2,4 s. Não restaurar a máquina instantaneamente nesse modo.
 Prévia 05/11: roleta de 374 px no palco nativo. Ao sortear, multiplicador pulsa
 no centro. O valor fica destacado no mesmo ponto durante a descida da máquina
 e viaja dali ao prêmio; reduzido usa trajeto reto de 650 ms, sem saltos.
+
+Revisão mais recente da prévia (05/11): centro verde cresce para cobrir o
+disco; topo com elefante/nuvem e prêmio volta primeiro. O disco com o número
+viaja até o prêmio e só após o impacto/contagem voltam as demais peças.
+Esse retorno em etapas substitui a descida do conjunto inteiro antes do voo.

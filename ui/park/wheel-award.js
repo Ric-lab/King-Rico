@@ -2,8 +2,9 @@ import {record} from './motion.js';
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function holdMultiplier(source,multiplier){
  const bounds=source.getBoundingClientRect(),node=document.createElement('b');
- node.className='park-flying-multiplier';node.textContent='×'+multiplier;node.setAttribute('aria-hidden','true');
- const scale=Math.max(.3,bounds.height/64);
+ node.className='park-flying-multiplier park-flying-bonus-disc';node.textContent='×'+multiplier;node.setAttribute('aria-hidden','true');
+ const scale=Math.max(.3,bounds.height/64),hub=source.parentElement.getBoundingClientRect();
+ node.style.setProperty('--park-multiplier-disc-size',hub.width*3.1/scale+'px');
  node.style.transform=`translate(${bounds.x+bounds.width/2-70}px,${bounds.y+bounds.height/2-45}px) scale(${scale})`;
  document.body.append(node);source.style.visibility='hidden';
  return {bounds,node};
@@ -17,7 +18,7 @@ export async function applyMultiplier(fc,w,source){
   if(source?.width&&end?.width){
    if(!node){node=document.createElement('b');node.className='park-flying-multiplier';node.textContent='×'+w.result.multiplier;node.setAttribute('aria-hidden','true');document.body.append(node);}
    const sx=source.x+source.width/2,sy=source.y+source.height/2,tx=end.x+end.width/2,ty=end.y+end.height/2;
-   const startScale=Math.max(.3,source.height/64),endScale=Math.max(.25,Math.min(.6,end.height/80));
+   const startScale=Math.max(.3,source.height/64),endScale=node.classList.contains('park-flying-bonus-disc')?Math.max(.045,end.height/parseFloat(node.style.getPropertyValue('--park-multiplier-disc-size'))):Math.max(.25,Math.min(.6,end.height/80));
    // A brief lift, a smooth arc, then a precise arrival on the prize.
    const frames=Array.from({length:31},(_,i)=>{const t=i/30,u=Math.max(0,(t-.1)/.9),v=u*u*(3-2*u),q=1-v,arc=reduced()?0:Math.sin(v*Math.PI),x=q*sx+v*tx+arc*32,y=q*sy+v*ty-arc*60,scale=startScale+(endScale-startScale)*v+arc*.16+(t<.1&&!reduced()?Math.sin(t/.1*Math.PI)*.08:0);return {transform:`translate(${x-70}px,${y-45}px) rotate(${-arc*8}deg) scale(${scale})`,opacity:1,offset:t};});
    const duration=reduced()?650:1550;animation=node.animate(frames,{duration,easing:'linear',fill:'both'});

@@ -155,3 +155,18 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-scene .is-won .park-wheel-hub strong{animation:parkMultiplierBeat 1.1s ease-in-out 3;color:#ffe9a3;text-shadow:0 2px #14632b,0 0 6px #fff6a466}
 @keyframes parkMultiplierBeat{0%,100%{transform:scale(1)}45%{transform:scale(1.16)}}
 @media(prefers-reduced-motion:reduce){.park-wheel-scene .is-won .park-wheel-hub strong{animation:none}}
+
+/* The green result takes over the wheel, while its number remains readable. */
+.park-wheel-scene .park-wheel-hub{isolation:isolate}
+.park-wheel-scene .park-wheel-hub:before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 25%,#71c65a,#22853a 65%,#135525);z-index:-1;pointer-events:none}
+.park-wheel-scene .is-won .park-wheel-hub:before{animation:parkGreenTakeover 1.1s cubic-bezier(.2,.65,.25,1) forwards}
+.park-wheel-scene .is-won .park-wheel-hub-ring{opacity:0;transition:opacity .5s}
+.park-wheel-scene .is-won .park-wheel-hub strong{font-size:60px}
+@keyframes parkGreenTakeover{to{transform:scale(3.1)}}
+.park-flying-bonus-disc{isolation:isolate}
+.park-flying-bonus-disc:before{content:'';position:absolute;left:50%;top:50%;width:var(--park-multiplier-disc-size);height:var(--park-multiplier-disc-size);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 25%,#71c65a,#22853a 65%,#135525);box-shadow:0 4px 15px #194c2944;z-index:-1}
+.park-hoist-deck:is([data-hoist="revealing-prize"],[data-hoist="prize"])>.park-hoisted-item:not(.park-prize-early){translate:0 -920px!important;visibility:hidden}
+.park-hoist-deck:is([data-hoist="revealing-prize"],[data-hoist="prize"])>.park-hoist-rig{translate:0 -920px;visibility:hidden}
+.park-hoist-deck[data-hoist="prize"]>.park-prize-early{translate:0 0!important;visibility:visible}
+@media(prefers-reduced-motion:reduce){.park-wheel-scene .is-won .park-wheel-hub:before{animation:none;transform:scale(3.1)}}
+.park-wheel-scene .park-wheel-machine.is-won .park-wheel-hub{background:transparent;box-shadow:none}

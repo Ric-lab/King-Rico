@@ -12,7 +12,7 @@ with sync_playwright() as p:
   page=context.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
-  page.add_init_script('''window.wheelTiming={};new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-wheel-machine')&&e.classList.contains('is-won')&&!wheelTiming.resultAt)wheelTiming.resultAt=performance.now();if(e.dataset?.hoist==='returning'&&!wheelTiming.returnAt)wheelTiming.returnAt=performance.now();}}).observe(document,{subtree:true,attributes:true,attributeFilter:['class','data-hoist']});''')
+  page.add_init_script('''window.wheelTiming={};new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-wheel-machine')&&e.classList.contains('is-won')&&!wheelTiming.resultAt)wheelTiming.resultAt=performance.now();if(e.dataset?.hoist==='revealing-prize'&&!wheelTiming.headerAt)wheelTiming.headerAt=performance.now();if(e.dataset?.hoist==='returning'&&!wheelTiming.returnAt)wheelTiming.returnAt=performance.now();}}).observe(document,{subtree:true,attributes:true,attributeFilter:['class','data-hoist']});''')
   page.add_init_script('''window.motionQA=[];const animate=Element.prototype.animate;Element.prototype.animate=function(k,o){motionQA.push({cls:this.className,duration:o.duration});return animate.call(this,k,o)};''')
   def ready():
    page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
@@ -127,11 +127,14 @@ with sync_playwright() as p:
   assert page.locator('[data-wheel-spin]').is_hidden()
   assert page.locator('.park-confetti').count()==0,'Removed bonus confetti must not return'
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
-  page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
+  page.wait_for_function('window.wheelTiming.headerAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
-  assert timing['returnAt']-timing['resultAt']>=3500,timing
+  assert timing['headerAt']-timing['resultAt']>=3500,timing
   held=page.locator('.park-flying-multiplier').bounding_box()
   assert held and abs(held['x']+held['width']/2-hub_center[0])<3 and abs(held['y']+held['height']/2-hub_center[1])<3,(held,hub_center)
+  assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
+  page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
+  assert page.evaluate('__fc._parkMotionLog.some(x=>x.type==="prize:multiplied"&&x.at<wheelTiming.returnAt)')
   cabinet=page.locator('[data-spin-btn]')
   y1=cabinet.evaluate('e=>e.getBoundingClientRect().top')
   page.wait_for_timeout(350)
