@@ -9,6 +9,7 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
 ## Prévia (2026-11-05 · Codex · anúncio, ingressos e navegação)
+- Código `618598c` publicado somente na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42030311399 concluído com sucesso: animações do Circus, navegação, três larguras/saldo longo e contador após cobranças nas três atrações conferidos no endereço público.
 - Anúncio de +1.000 moedas movido para logo abaixo do cabeçalho, antes do título/capas. Nenhum comportamento financeiro alterado.
 - Header compartilhado passa a Home · Parque · menu, com 44 px de toque. Nas atrações, contador de ingressos abaixo das moedas acompanha a cobrança confirmada. Circus conserva seu contador/voo original.
 - Saldo longo conserva fonte; botões descem uma linha apenas se necessário. Parque continua rolando normalmente. Ícone de tenda SVG, zero créditos externos; assets carregados pelo manifesto comum.
