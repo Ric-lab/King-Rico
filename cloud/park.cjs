@@ -1,7 +1,7 @@
 'use strict';
 const engine=require('./engine.cjs');
 const PRICE=25,METER_SPINS=10,TICKET=10;
-const ATTRACTIONS=['clown','penalty','flying','fingo'];
+const ATTRACTIONS=['clown','penalty','flying','fingo','bounce'];
 const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
 const fresh=()=>({version:1,revision:0,lastOperationId:null,tickets:0,spins:0,wheel:null,passes:{}});
 const publicState=s=>({...structuredClone(s||fresh()),price:PRICE,meterSpins:METER_SPINS});

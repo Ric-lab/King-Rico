@@ -1,18 +1,17 @@
 # Circus e parque
 
-Na versão aprovada em 02/11/2026 (prévia v54), Circus é a tela inicial. O endereço principal e o atalho
-instalado apontam para `/circus`; `/home` mantém compatibilidade com a mesma
-tela. O parque passa a `/park`, mantendo `Home.dc.html` como fonte por
-compatibilidade. Reúne Clown, Pênalti, Flying Clown e Fingo rápido. Wheel, Neck,
-33 e protótipos preservam seus endereços. A entrega oficial usa o workflow
-Firebase existente, com Google e carteira Firestore reais.
+Na versão de 05/11/2026 autorizada para publicação, Circus é a tela inicial.
+`/home` mantém compatibilidade com `/circus`. O parque usa `/park`, com
+`Home.dc.html` como fonte, e reúne **Pênalti, Flying Clown e Bounce**.
+**Basquete, Bubble Plinko e Race Horse** têm cards **Em breve**, sem ação nem cobrança.
+Clown foi guardado: fontes e rodadas permanecem, mas não há rota pública.
+Fingo conserva a rota direta fora do catálogo. Demais arquivados em ARQUIVADOS.md.
 
-Tocar no contador de ingressos ou deslizar para baixo sobre o cenário do Circus
-abre o parque. `ui/park/navigation.js` exige gesto vertical deliberado e ignora
-controles, cancelamentos, gestos horizontais, rodadas e modais ativos. A Home dos
-jogos volta ao Circus; o link PARQUE e o fechamento da escolha de entrada voltam
-a `/park`. A tela do parque tem volta explícita para o Circus, presente diário,
-recarga e os quatro jogos; não repete a capa de entrada da slot.
+Tocar no contador do Circus, usar o controle de videogame no cabeçalho ou
+arrastar o cenário para baixo abre o parque. O gesto ignora controles, gestos
+horizontais e rodadas/modais ativos. Home volta ao Circus; Parque volta ao catálogo.
+O anúncio de moedas fica no alto, antes das atrações. Google e carteira Firestore
+reais são usados no build de produção; a prévia mantém moedas de teste isoladas.
 
 A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
 acendimento circular continua em 420 ms.
@@ -216,3 +215,17 @@ com margens internas e intervalo entre ícone/valor ampliados. Parque passa a
 usar controle de videogame sobre a moldura original de Home, com tamanho,
 escala e pressionamento iguais. Casinha de Home preservada. A tenda anterior
 é uma tentativa substituída. Não muda cobranças nem navegação.
+
+
+## Catálogo e Bounce reativado (05/11/2026)
+
+Autorizado pelo dono: guardar Clown, criar três cards Em breve e reativar o Bounce
+preservado. Não foram criados jogos de basquete, bolhas ou cavalos nesta entrega.
+As quatro novas ilustrações são vetores geométricos leves em `ui/park/covers/`.
+
+Bounce conserva Three.js local, física, sons, plataformas e multiplicadores.
+Recebe o cabeçalho compartilhado, contador e entrada do parque: 1 ingresso ou
+25 moedas. O passe é autorizado primeiro e consumido atomicamente no início;
+land/collect/fall não cobram nova entrada. Repetir o pedido ou recarregar não
+paga/cobra duas vezes; rodadas antigas mantêm aposta original. A confirmação
+se repete apenas ao abrir uma nova visita, como nas outras atrações.

@@ -7,7 +7,6 @@
   ],
   "home": [
     "assets/machine/ticket-symbol-v1.webp",
-    "assets/clown/clown.webp",
     "assets/penalty/clown-keeper-v3.webp",
     "assets/flying/clown.webp",
     "assets/flying/b0.webp",
@@ -15,7 +14,11 @@
     "assets/flying/b2.webp",
     "assets/icons/reward-video.svg",
     "assets/penalty/field.webp",
-    "ui/park/football.svg"
+    "ui/park/football.svg",
+    "ui/park/covers/bounce.svg",
+    "ui/park/covers/basketball.svg",
+    "ui/park/covers/bubble-plinko.svg",
+    "ui/park/covers/race-horse.svg"
   ],
   "circus": [
     "assets/machine/base-controls-v4.svg",
@@ -91,5 +94,13 @@
     "assets/symbols-v7.webp",
     "assets/clown/clown.webp",
     "assets/girafa/head.webp"
+  ],
+  "bounce": [
+    "assets/bounce/bg.webp",
+    "assets/bounce/stone.webp",
+    "assets/bounce/bank.webp",
+    "assets/bounce/ground.webp",
+    "assets/bounce/lava.webp",
+    "assets/fingo/coin.webp"
   ]
 }

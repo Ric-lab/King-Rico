@@ -12,24 +12,22 @@ As páginas `.dc.html` são fontes editáveis. O catálogo de publicação é
 | Jogo / rota preservada | Fonte | Endereço |
 |---|---|---|
 | Fortune Machine / Circus | [Fortune Circus.dc.html](<Fortune Circus.dc.html>) | `/circus` |
-| Fortune Wheel | [Fortune Wheel.dc.html](<Fortune Wheel.dc.html>) | `/wheel` |
-| Fortune Neck | [Fortune Neck.dc.html](<Fortune Neck.dc.html>) | `/neck` |
-| Fortune Fingo | [Fortune Fingo.dc.html](<Fortune Fingo.dc.html>) | `/fingo` |
+| Parque | [Home.dc.html](Home.dc.html) | `/park` |
 | Fortune Pênalti | [Fortune Penalty.dc.html](<Fortune Penalty.dc.html>) | `/penalty` |
-| Fortune Clown | [Fortune Clown.dc.html](<Fortune Clown.dc.html>) | `/clown` |
-| Fortune Flying Clown | [Fortune Flying Clown.dc.html](<Fortune Flying Clown.dc.html>) | `/flying-clown` |
-| Fortune 33 | [Fortune 33.dc.html](<Fortune 33.dc.html>) | `/33` |
+| Flying Clown | [Fortune Flying Clown.dc.html](<Fortune Flying Clown.dc.html>) | `/flying-clown` |
+| Fortune Bounce | [Fortune Bounce.dc.html](<Fortune Bounce.dc.html>) | `/bounce` |
+| Fingo (somente rota direta) | [Fortune Fingo.dc.html](<Fortune Fingo.dc.html>) | `/fingo` |
 
-Circus é a tela inicial (`/circus`, com `/home`
-compatível). O **parque** em `/park` reúne Clown, Pênalti, Flying Clown e Fingo
-rápido. Toque nos ingressos ou deslize para baixo a partir do cenário do Circus
-para abri-lo; os controles e rodadas ativas não acionam o gesto. A entrada custa
-um ingresso ou 25 moedas; veja [as regras do parque](docs/PARQUE.md).
-Wheel, Neck e 33 continuam disponíveis pelos endereços acima.
+Circus é a tela inicial (`/circus`, com `/home` compatível). O **parque** em
+`/park` reúne Pênalti, Flying Clown e Bounce. Basquete, Bubble Plinko e Race Horse
+têm cards **Em breve**, sem interação nem cobrança. Toque nos ingressos, use o
+botão Parque ou deslize para baixo a partir do cenário do Circus para abri-lo.
+A entrada custa um ingresso ou 25 moedas; veja [as regras do parque](docs/PARQUE.md).
 
-Bounce, Claw, Race e Bridge estão **guardados fora da Home**. Seus fontes e
-endereços diretos continuam preservados. `/21` mantém a compatibilidade com o
-Fortune 33. Não tratar esses protótipos como jogos oficiais novos.
+Clown foi guardado a pedido do dono em 05/11; fontes e rodadas não foram apagados.
+Wheel, Neck, 33, 21, Claw, Race e Bridge continuam arquivados, sem rota pública.
+O catálogo do build está em `site/routes.json`; a lista completa em
+[Arquivados](docs/ARQUIVADOS.md). Fingo fica acessível diretamente, fora do parque.
 
 ## Rodar localmente
 

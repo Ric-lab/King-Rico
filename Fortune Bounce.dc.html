@@ -29,6 +29,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
   <div ref="{{ stageRef }}" data-screen-label="Fortune Bounce" style="position: relative; flex: 0 0 auto; width: 453px; height: 802px; transform: scale({{ scale }}); transform-origin: 50% 0; user-select: none; -webkit-user-select: none;">
     <x-import component-from-global-scope="bounce-3d" from="./bounce3d.js" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px;" hint-size="453px,802px"></x-import>
 
+    <div class="kr-hud-row">
     <div class="kr-hud-balance" role="status" aria-label="Seu saldo: {{ balanceText }} moedas" style="position: absolute; z-index: 20; left: 18px; top: 24px; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-hd-c.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 0 50%;">
       <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
         <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
@@ -36,6 +37,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
     </div>
     <a href="Home.dc.html" onClick="{{ goHome }}" aria-label="Voltar para o início" class="kr-hud-home" style="z-index: 20; cursor: pointer; border-radius: 50%; overflow: hidden; " style-active="filter: brightness(.6) saturate(1.2);"></a>
     <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+    </div>
 
     <!-- multiplicador atual + garantido -->
     <sc-if value="{{ perfShow }}" hint-placeholder-val="{{ false }}">
@@ -43,7 +45,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 26px; line-height: 1; color: #ffffff; text-shadow: 0 0 14px rgba(255,230,140,.95), 0 2px 0 #6b2e05; white-space: nowrap;">{{ perfText }}</span>
       </div>
     </sc-if>
-    <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 96px; display: flex; justify-content: center; align-items: center; gap: 10px; pointer-events: none; opacity: {{ multOp }};">
+    <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 126px; display: flex; justify-content: center; align-items: center; gap: 10px; pointer-events: none; opacity: {{ multOp }};">
       <div key="{{ multKey }}" style="height: 56px; padding: 0 22px; border-radius: 28px; display: flex; align-items: center; background: rgba(12,3,24,.72); box-shadow: 0 0 0 2px rgba(255,210,87,.8), 0 0 18px rgba(255,190,60,.35); animation: bnBeat .35s ease-out;">
         <span style="font-family: 'Rammetto One', 'Baloo 2', sans-serif; font-size: 32px; line-height: 1; color: #ffe27a; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(255,200,80,.7);">{{ multText }}</span>
       </div>
@@ -80,7 +82,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         <div style="width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: 0 0 0 8px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.4); animation: bnHand 1.8s ease-in-out infinite;"></div>
       </div>
       <div style="position: absolute; z-index: 10; left: 0; right: 0; top: 724px; display: flex; justify-content: center; pointer-events: none;">
-        <div onClick="{{ openBet }}" role="button" aria-label="Aposta {{ betText }}" style="pointer-events: auto; height: 56px; padding: 0 20px 0 8px; border-radius: 28px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(12,3,24,.85); box-shadow: inset 0 0 0 2px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.95);">
+        <div onClick="{{ openBet }}" class="kr-round-bet" role="button" aria-label="Aposta {{ betText }}" style="pointer-events: auto; height: 56px; padding: 0 20px 0 8px; border-radius: 28px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(12,3,24,.85); box-shadow: inset 0 0 0 2px #f0b41f; animation: {{ betAnim }};" style-active="transform: scale(.95);">
           <img src="assets/fingo/coin.webp" alt="" style="width: 40px; height: 40px;">
           <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ betText }}</span>
           <span style="font-size: 20px; line-height: 1; color: #ffd257;">✎</span>
@@ -218,7 +220,7 @@ class Component extends DCLogic {
   openMenu = () => { if (this.state.active) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ menu: true }); };
   closeMenu = () => this.setState({ menu: false });
   setLvl(k, v) { this.setState({ [k]: v }, () => { this.save(); if (k === 'sfxLvl') this.tone(1000, 0.05, 'square', 0.05); else this.buzz(35); }); }
-  openBet = () => { if (this.state.active) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
+  openBet = () => { if(window.KingRicoCloud?.parkMode)return; if (this.state.active) return; this.tone(900, 0.04, 'square', 0.04); this.setState({ betOpen: true }); };
   closeBet = () => this.setState({ betOpen: false });
   betDown = () => { this.tone(900, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.max(0, s.betIdx - 1) }), () => this.save()); };
   betUp = () => { this.tone(1100, 0.04, 'square', 0.04); this.buzz(15); this.setState(s => ({ betIdx: Math.min(BETS.length - 1, s.betIdx + 1) }), () => this.save()); };

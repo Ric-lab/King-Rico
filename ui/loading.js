@@ -44,6 +44,7 @@
     if(game==='fingo' && mounted && !mounted.state?.artReady && !mounted.state?.artError)return;
     if(game==='penalty'&&(!window.Pen3D?.kMat||window.Pen3D?.state!=='ready'))return;
     if(game==='clown'&&!window.ClownBall?.texs)return;
+    if(game==='bounce'&&!window.Bounce3D?.scene)return;
     if(game==='circus'&&!mounted?.state?.ready)return;
     if(mounted && !paint)paint=requestAnimationFrame(()=>requestAnimationFrame(dismiss));
   }

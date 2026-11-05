@@ -1010,3 +1010,26 @@ test('Park Flying uses a ticket with zero coin debit and repeats completed round
   await new Promise(r=>setTimeout(r,350));
  }
 });
+
+test('Park Bounce resumes a ticket round, pays once, then starts another for coins',async()=>{
+ const name='park-bounce-'+randomUUID();let draws=[];
+ const c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+ draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0];
+ const slot=await c.call(request({action:'spin',game:'circus',bet:1,park:true}));let balance=slot.player.balance;
+ await new Promise(r=>setTimeout(r,350));
+ for(const method of ['ticket','coins']){
+  const auth=await c.call(request({action:'parkEntry',game:'bounce',method}));assert.equal(auth.player.balance,balance);
+  const roundId=randomUUID(),base={action:'bounce',game:'bounce',bet:25,roundId,gold:false,park:true};
+  const start={...base,move:'start',n:0,requestId:roundId};
+  const [a,b]=await Promise.all([c.call(start),c.call(start)]);assert.ok(a.replayed||b.replayed);
+  balance-=method==='coins'?25:0;assert.equal(a.player.balance,balance);assert.equal(a.park.tickets,2);
+  assert.equal(a.player.bounceRound.betUnits,2500);
+  const other=await client(name+'-other-'+method,name);assert.deepEqual((await other.call(request({action:'bootstrap'}))).player.bounceRound,a.player.bounceRound);
+  await new Promise(r=>setTimeout(r,350));await c.call(request({...base,move:'land',n:0}));
+  await new Promise(r=>setTimeout(r,350));const collect=request({...base,move:'collect',n:1});
+  const [paid,replay]=await Promise.all([c.call(collect),other.call(collect)]);assert.ok(paid.replayed||replay.replayed);
+  assert.equal(paid.player.bounceRound,null);assert.equal(paid.park.passes.bounce,undefined);
+  balance+=26.25;assert.equal(paid.player.balance,balance);assert.equal((await c.call(collect)).player.balance,balance);
+  await new Promise(r=>setTimeout(r,350));
+ }
+});

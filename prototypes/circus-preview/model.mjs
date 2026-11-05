@@ -7,7 +7,7 @@ import paths from '../../games/fingo/paths.json' with {type:'json'};
 
 export const PRICE=25, METER_SPINS=10;
 export const WHEEL_POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
-export const ATTRACTIONS=['clown','penalty','flying','fingo'];
+export const ATTRACTIONS=['clown','penalty','flying','fingo','bounce'];
 const fail=message=>{throw new Error(message);};
 const fresh=()=>({tickets:3,spins:0,bankUnits:0,wheel:null,passes:{},fingo:null});
 export function createPreview(saved={},rng=Math.random,clock=Date.now){
@@ -23,7 +23,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
  function exportState(){return {records:[...records],park};}
  const once=new Map(saved.once||[]);
  async function run(data){
-  if(!records.has(ref)){await call({action:'bootstrap',requestId:randomUUID()});const p=records.get(ref);p.balanceUnits=500000;p.settings={...p.settings,clownBetIdx:4,penaltyBetIdx:4,flyingBetIdx:4,fingoBetIdx:4};}
+  if(!records.has(ref)){await call({action:'bootstrap',requestId:randomUUID()});const p=records.get(ref);p.balanceUnits=500000;p.settings={...p.settings,clownBetIdx:4,penaltyBetIdx:4,flyingBetIdx:4,fingoBetIdx:4,bounceBetIdx:4};}
   const current=records.get(ref);current.settings.fingoBetIdx=4;
   // A paid round from the first prototype becomes one prepaid original-style round.
   if(['state','fingo'].includes(data.action)&&park.fingo&&!park.fingo.done&&!current.fingoRound&&park.passes.fingo?.started){park.passes.fingo.prepaid=true;park.fingo=null;}
@@ -96,7 +96,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    result={outcome:{...structuredClone(round),bin,number,winUnits,trace}};
   }else if(data.action==='fingo-close'){
    if(!park.fingo?.done)fail('A partida ainda está em andamento.');park.fingo=null;result={};
-  }else if(['clown','penalty','flying','fingo'].includes(data.action)){
+  }else if(['clown','penalty','flying','fingo','bounce'].includes(data.action)){
    const game=data.action,round=p[game+'Round'],first=!round;
    const pass=park.passes[game];if(first&&!pass)fail('Escolha como entrar na atração.');
    if(data.bet!==PRICE)fail('Esta atração usa a entrada fixa do parque.');
@@ -110,7 +110,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
     if(result.outcome.ended)delete park.passes[game];
    }catch(e){Object.assign(park,oldPark);records.clear();for(const [k,v]of oldRecords)records.set(k,v);throw e;}
   }else if(data.action==='settings'){
-   const settings={...data.settings};for(const k of ['clownBetIdx','penaltyBetIdx','flyingBetIdx','fingoBetIdx'])if(k in settings)settings[k]=4;
+   const settings={...data.settings};for(const k of ['clownBetIdx','penaltyBetIdx','flyingBetIdx','fingoBetIdx','bounceBetIdx'])if(k in settings)settings[k]=4;
    result=await call({...data,settings});
   }else if(['recharge','bonus'].includes(data.action))result=await call(data);
   else fail('Ação indisponível nesta prévia.');

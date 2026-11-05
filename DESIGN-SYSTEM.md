@@ -12,8 +12,9 @@ Rico, o elefante violeta coroado. Público piloto: terceira idade. Priorize núm
 legíveis, alvos fáceis de tocar, poucas decisões por tela e resposta imediata.
 Não há dinheiro real. Não prometer vitória ou retorno garantido.
 
-A Home é o Circus e o parque é uma tela separada com Clown, Pênalti,
-Flying Clown e Fingo rápido. Os demais jogos mantêm suas rotas; protótipos
+A Home é o Circus; o parque reúne Pênalti, Flying Clown e Bounce.
+Basquete, Bubble Plinko e Race Horse aparecem como cards Em breve, sem ação.
+Clown foi guardado; Fingo conserva apenas rota direta. Os demais jogos mantêm suas rotas; protótipos
 preservados fora da Home não são novas atrações oficiais. Catálogo e fontes no
 [README](README.md); ingressos e pagamentos em [Parque](docs/PARQUE.md).
 

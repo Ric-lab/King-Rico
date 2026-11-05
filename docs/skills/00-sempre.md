@@ -8,4 +8,4 @@
 - Fonte oficial = GitHub `main`. Cópias de trabalho (projeto do Claude, VM do Codex) não valem até o commit.
 - Nunca mexer no que não foi pedido. Mudança pequena = só aquilo.
 - Antes de dizer "pronto": ver o resultado (print/teste). Sem ver, dizer "não conferi".
-- Jogos no ar: Circus (/circus = abertura), Clown, Penalty, Flying Clown, Fingo. Arquivados: ver docs/ARQUIVADOS.md.
+- Catálogo desta versão: Circus (/circus = abertura), Penalty, Flying Clown, Bounce; Fingo só na rota direta. Clown guardado. Basquete/Bubble Plinko/Race Horse são cards Em breve. Arquivados: ver docs/ARQUIVADOS.md.

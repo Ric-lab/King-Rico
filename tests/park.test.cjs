@@ -49,3 +49,11 @@ test('The guaranteed-prize fallback preserves a legacy Happeach bank',()=>{
  const x=park.spin(p,s,10,'legacy-bank',rng);assert.ok(n>18*128);assert.equal(x.feature,null);assert.ok(x.res.win>0);
  assert.deepEqual(x.peachBank,{count:3,units:3000});assert.equal(x.peaches,3);
 });
+test('Bounce consumes a ticket at start and preserves the paid pass through land/collect',()=>{
+ const p=player(),s=park.fresh();s.tickets=1;
+ park.entry(p,s,'bounce','ticket');const start={action:'bounce',bet:25,roundId:'bounce',park:true};
+ const payment=park.payment(p,s,start);assert.equal(payment.debit,0);
+ park.settle(s,start,{ended:false},payment);assert.equal(s.tickets,0);p.bounceRound={id:'bounce'};
+ const next=park.payment(p,s,start);assert.equal(next.first,false);assert.equal(next.debit,0);
+ park.settle(s,start,{ended:true},next);assert.equal(s.passes.bounce,undefined);
+});

@@ -11,7 +11,7 @@
       let park=row.querySelector('.kr-hud-park');
       if(!park){park=document.createElement('a');park.className='kr-hud-park';park.href='/park';park.setAttribute('aria-label','Abrir parque');park.title='Parque';row.append(park);}
       const game=document.querySelector('meta[name="king-rico-game"]')?.content;
-      if(['clown','penalty','flying','fingo'].includes(game)){
+      if(['clown','penalty','flying','fingo','bounce'].includes(game)){
         let counter=row.querySelector('.kr-hud-tickets');
         if(!counter){counter=document.createElement('div');counter.className='kr-hud-tickets';counter.setAttribute('role','status');counter.setAttribute('aria-live','polite');counter.innerHTML='<img src="/assets/machine/ticket-symbol-v1.webp" alt=""><strong data-hud-tickets></strong>';row.append(counter);}
         const count=window.KingRicoPark?.state?.tickets??window.KingRicoCloud?.park?.tickets;

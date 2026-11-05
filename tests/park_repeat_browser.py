@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178')
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox'])
- for game,path,hook in [('clown','/clown','__clown'),('penalty','/penalty','__pen'),('flying','/flying-clown','__flying')]:
+ for game,path,hook in [('bounce','/bounce','__bounce'),('penalty','/penalty','__pen'),('flying','/flying-clown','__flying')]:
   page=b.new_page(viewport={'width':390,'height':844});errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+path);page.wait_for_function('hook=>window.KingRicoCloud?.player&&window[hook]&&!document.querySelector("#kr-boot-screen")',arg=hook)
@@ -23,7 +23,7 @@ with sync_playwright() as p:
    const sleep=()=>new Promise(r=>setTimeout(r,350)),out=[];
    for(let visit=0;visit<4;visit++){
     const before=KingRicoCloud.player.balance,tickets=KingRicoCloud.park.tickets,roundId=crypto.randomUUID();
-    const first=()=>game==='clown'?KingRicoCloud.clown(25,roundId,0,0):game==='penalty'?KingRicoCloud.penalty('shoot',25,roundId,0,0):KingRicoCloud.flying('pop',25,roundId,0,0);
+    const first=()=>game==='bounce'?KingRicoCloud.bounce('start',25,roundId,0,false):game==='penalty'?KingRicoCloud.penalty('shoot',25,roundId,0,0):KingRicoCloud.flying('pop',25,roundId,0,0);
     let r=await first();
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     if(document.querySelector('[data-hud-tickets]').textContent!==String(Math.max(0,tickets-1)))throw Error('Ticket HUD did not follow confirmed debit');
@@ -32,7 +32,7 @@ with sync_playwright() as p:
     if(KingRicoCloud.player.balance!==paid)throw Error('Replay charged twice');
     while(KingRicoCloud.player[game+'Round']){
      await sleep();const active=KingRicoCloud.player[game+'Round'];
-     r=game==='clown'?await KingRicoCloud.clown(25,roundId,active.used,0):game==='penalty'?await KingRicoCloud.penalty('collect',25,roundId,active.step,0):await KingRicoCloud.flying('collect',25,roundId,active.step,-1);
+     r=game==='bounce'?await KingRicoCloud.bounce(active.n===0?'land':'collect',25,roundId,active.n,false):game==='penalty'?await KingRicoCloud.penalty('collect',25,roundId,active.step,0):await KingRicoCloud.flying('collect',25,roundId,active.step,-1);
     }
     if(!r.outcome.ended)throw Error('Round did not end');
     const fee=tickets>0?0:25,expected=before-fee+r.outcome.winUnits/100;

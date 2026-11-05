@@ -116,15 +116,6 @@
         ]
       },
       {
-        "source": "/clown",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          }
-        ]
-      },
-      {
         "source": "/flying-clown",
         "headers": [
           {
@@ -144,6 +135,15 @@
       },
       {
         "source": "/park",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/bounce",
         "headers": [
           {
             "key": "Cache-Control",
@@ -170,16 +170,16 @@
         "destination": "/Fortune Penalty.dc.html"
       },
       {
-        "source": "/clown",
-        "destination": "/Fortune Clown.dc.html"
-      },
-      {
         "source": "/flying-clown",
         "destination": "/Fortune Flying Clown.dc.html"
       },
       {
         "source": "/park",
         "destination": "/Home.dc.html"
+      },
+      {
+        "source": "/bounce",
+        "destination": "/Fortune Bounce.dc.html"
       }
     ]
   },

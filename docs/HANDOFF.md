@@ -8,6 +8,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Publicação autorizada (2026-11-05 · catálogo e Bounce)
+- Dono autorizou publicar a revisão completa e pediu guardar Clown, criar cards Basquete/Bubble Plinko/Race Horse e reviver Bounce. Confirmou explicitamente três cards Em breve, sem jogos novos/cobrança, e Bounce jogável.
+- Clown preservado nos fontes/Firestore, fora do catálogo e das rotas. Bounce reativado com Three.js local, HUD/carteira/entrada do parque e retomada; matemática e física originais preservadas.
+- Cards vetoriais em ui/park/covers (0 créditos externos). Catálogo atualizado em README, ARQUIVADOS, PARQUE e site/routes.json. Publicação pela main, workflow existente e publicador REST de regras preservados.
+- Validação: 201 testes de código e 57 de regras/transações aprovados. Prévia nas três larguras e quatro partidas por atração; navegador nativo com conta emulada validou toque, recuperação, pagamento e navegação do Bounce, sem erros/assets ausentes. Carregamento espera o 3D real antes de liberar a tela. Produção gerada após a integração.
+
 ## Prévia (2026-11-05 · Codex · respiro no contador e controle do parque)
 - Código `45b813c` na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42032243609 concluído com sucesso: layout nas três larguras, escala igual dos ícones e contagem nas partidas seguidas verificados no endereço público. Oficial preservado.
 - Dono rejeitou contador pequeno/apertado e diferença visual no botão Parque. Placa dos ingressos ampliada para 142 × 44, com padding horizontal 16, intervalo 12 e número 24; arte original preservada.
@@ -195,4 +201,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar na prévia o contador ampliado e o ícone de controle com moldura original de Home. Manter anúncio no alto, três atrações e continuidade sem modal. Não publicar no oficial sem aprovação.
+- Concluir testes do novo catálogo/Bounce e publicar a versão autorizada na main. Confirmar workflow, regras e site oficial; atualizar este HANDOFF com o resultado real.

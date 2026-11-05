@@ -116,7 +116,7 @@ service cloud.firestore {
       let x = o.result.outcome;
       let previous = old.get('bounceRound',null);
       let first = previous == null;
-      let r = first ? {'id':p.lastOperationId,'betUnits':o.betUnits,'n':0,'guardUnits':0} : previous;
+      let r = first ? {'id':p.lastOperationId,'betUnits':x.betUnits,'n':0,'guardUnits':0} : previous;
       let preferences = p.settings;
       let prize = int((x.betUnits * (100+5*x.n) + 50) / 100);
       let guard = x.move == 'land' && x.n%10 == 0 ? prize : r.guardUnits;
@@ -126,9 +126,9 @@ service cloud.firestore {
         && preferences.diff(old.settings).affectedKeys().hasOnly(['bounceBetIdx'])
         && preferences.bounceBetIdx is int && preferences.bounceBetIdx >= 0 && preferences.bounceBetIdx <= 9
         && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.bounceBetIdx]
-        && x.keys().hasOnly('roundId,betUnits,move,n,guardUnits,gold,ended,winUnits'.split(','))
+        && x.keys().hasOnly('roundId,betUnits,move,n,guardUnits,gold,ended,winUnits,parkVersion'.split(','))
         && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
-        && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
+        && x.betUnits == r.betUnits && o.betUnits == attractionDebit(old,o,first)
         && x.move in 'start,land,fall,collect'.split(',') && (first ? x.move == 'start' : x.move != 'start')
         && x.n is int && x.n == r.n + (x.move == 'land' ? 1 : 0) && x.n >= 0 && x.n <= 10000
         && (x.move != 'collect' || x.n >= 1) && x.gold is bool && (!x.gold || x.move == 'land')
@@ -747,7 +747,7 @@ service cloud.firestore {
         && s.playerRevision is int && s.lastOperationId is string
         && s.tickets is int && s.tickets >= 0 && s.tickets <= 1000000000
         && s.spins is int && s.spins >= 0 && s.spins <= 10
-        && s.passes is map && s.passes.keys().hasOnly('clown,penalty,flying,fingo'.split(','))
+        && s.passes is map && s.passes.keys().hasOnly('clown,penalty,flying,fingo,bounce'.split(','))
         && (s.wheel == null || s.wheel is map);
     }
     function parkMoney(uid,p,old,o) {
@@ -757,13 +757,13 @@ service cloud.firestore {
       return o.betUnits == 0 && o.winUnits == extra
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits == old.balanceUnits+extra && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
-        && (o.action == 'parkEntry' ? o.game in 'clown,penalty,flying,fingo'.split(',')
+        && (o.action == 'parkEntry' ? o.game in 'clown,penalty,flying,fingo,bounce'.split(',')
           && old.get(o.game+'Round',null) == null && p.settings.diff(old.settings).affectedKeys().hasOnly([key]) && p.settings[key] == 4
           : p.settings == old.settings);
     }
     function parkEntryState(s,b,p,o) {
       let method=o.result.method; let pass=s.passes[o.game];
-      return o.game in 'clown,penalty,flying,fingo'.split(',') && method in ['ticket','coins']
+      return o.game in 'clown,penalty,flying,fingo,bounce'.split(',') && method in ['ticket','coins']
         && oldPlayerRound(request.auth.uid,o.game) == null
         && (method == 'ticket' ? b.tickets >= 1 : p.balanceUnits >= 2500)
         && pass == {'method':method,'started':false}
@@ -810,7 +810,7 @@ service cloud.firestore {
     function parkGameState(s,b,o) {
       let x=o.result.outcome; let previous=oldPlayerRound(request.auth.uid,o.game); let first=previous == null;
       let pass=b.passes[o.game];
-      return o.game in 'clown,penalty,flying,fingo'.split(',') && x.parkVersion == 1 && x.betUnits == 2500
+      return o.game in 'clown,penalty,flying,fingo,bounce'.split(',') && x.parkVersion == 1 && x.betUnits == 2500
         && pass.method in ['ticket','coins']
         && (first ? pass.started == false : pass.started == true && pass.roundId == x.roundId)
         && s.passes.diff(b.passes).affectedKeys().hasOnly([o.game])

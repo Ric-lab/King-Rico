@@ -22,7 +22,9 @@ with sync_playwright() as p:
   assert page.locator('[data-recharge]').bounding_box()['y']<page.locator('[data-game]').first.bounding_box()['y']
   assert page.locator('.kr-hud-park').get_attribute('href')=='/park'
   assert page.locator('[data-game]').count()==3
-  assert page.locator('[data-game="fingo"]').count()==0
+  assert page.locator('[data-game="fingo"],[data-game="clown"]').count()==0
+  assert page.locator('.park-card-coming').count()==3
+  assert page.locator('.park-card-coming a,.park-card-coming button').count()==0
   assert page.locator('[data-game="penalty"] .park-game-character').get_attribute('src').endswith('clown-keeper-v3.webp')
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
   for selector in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']:
@@ -60,9 +62,10 @@ with sync_playwright() as p:
    page.get_by_role('dialog',name='Simulação de anúncio de 30 segundos',exact=True).wait_for()
    page.get_by_role('button',name='Fechar anúncio sem ganhar moedas',exact=True).click()
    assert page.evaluate('KingRicoCloud.player.balance')==balance
-   for game,path in [('clown','/clown'),('penalty','/penalty'),('flying','/flying-clown')]:
+   for game,path in [('bounce','/bounce'),('penalty','/penalty'),('flying','/flying-clown')]:
     page.locator('[data-game="'+game+'"]').click()
     page.wait_for_url(lambda url:unquote(urlparse(url).path).rstrip('/') in [path,'/'+ROUTES[path]])
+    page.locator('#kr-boot-screen').wait_for(state='detached',timeout=30000)
     page.locator('.park-entry-dialog,.park-modal').first.wait_for(timeout=15000)
     page.goto(BASE+'/park');ready()
     assert page.evaluate('KingRicoCloud.player.balance')==balance,'Opening a card must not debit coins'

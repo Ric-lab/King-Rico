@@ -15,12 +15,12 @@ async function call(data){let r;if(data.action==='entry')r=await Cloud.parkEntry
 const nativeSpin=Cloud.spin;
 Cloud.spin=async(...args)=>{const before=state.spins,actual=!!window.__fc?._cloudRequest;const r=await nativeSpin(...args);sync();if(args[0]==='circus'){r.ticket=r.outcome.ticketAward===3;window.__fc?._parkChargeConfirmed?.(before,r,actual);}return r;};
 const game=document.querySelector('meta[name="king-rico-game"]')?.content;
-Cloud.parkMode=['clown','penalty','flying','fingo'].includes(game);
-for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1]]){const native=Cloud[name];Cloud[name]=async(...args)=>{let round=Cloud.player?.[name+'Round'];if(!round&&!state.passes[name]){if(!await entry(name))throw Object.assign(Error('Escolha uma entrada.'),{code:'king-rico/round-conflict'});round=Cloud.player?.[name+'Round'];}args[betIndex]=round?round.betUnits/100:25;const r=await native(...args);sync();return r;};}
+Cloud.parkMode=['clown','penalty','flying','fingo','bounce'].includes(game);
+for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1],['bounce',1]]){const native=Cloud[name];Cloud[name]=async(...args)=>{let round=Cloud.player?.[name+'Round'];if(!round&&!state.passes[name]){if(!await entry(name))throw Object.assign(Error('Escolha uma entrada.'),{code:'king-rico/round-conflict'});round=Cloud.player?.[name+'Round'];}args[betIndex]=round?round.betUnits/100:25;const r=await native(...args);sync();return r;};}
 function toast(text){let e=document.querySelector('.park-toast');if(!e){e=document.createElement('div');e.className='park-toast';e.setAttribute('role','status');document.body.append(e);}e.textContent=text;e.hidden=false;clearTimeout(e._timer);e._timer=setTimeout(()=>e.hidden=true,4000);}
 export const format=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
-const names={clown:'Fortune Clown',penalty:'Fortune Pênalti',flying:'Flying Clown',fingo:'Fingo rápido'};
-const images={clown:'/assets/clown/clown.webp',penalty:'/assets/penalty/clown-keeper-v3.webp',flying:'/assets/brand/covers/flying.webp'};
+const names={clown:'Fortune Clown',penalty:'Fortune Pênalti',flying:'Flying Clown',fingo:'Fingo rápido',bounce:'Fortune Bounce'};
+const images={bounce:'/ui/park/covers/bounce.svg',clown:'/assets/clown/clown.webp',penalty:'/assets/penalty/clown-keeper-v3.webp',flying:'/assets/brand/covers/flying.webp'};
 const ticket='<span class="park-ticket" aria-hidden="true"><span>★</span></span>';
 function modal(html,label){const el=document.createElement('div');el.className='park-modal';el.innerHTML=`<section class="park-panel" role="dialog" aria-modal="true" aria-label="${label}">${html}</section>`;const prev=document.activeElement;document.body.append(el);el.addEventListener('keydown',ev=>{if(ev.key==='Tab'){const all=[...el.querySelectorAll('button:not(:disabled),a[href]')];const a=all[0],z=all.at(-1);if(ev.shiftKey&&document.activeElement===a){ev.preventDefault();z.focus();}else if(!ev.shiftKey&&document.activeElement===z){ev.preventDefault();a.focus();}}});el.close=()=>{el.remove();prev?.focus();};el.querySelector('button:not(:disabled)')?.focus();return el;}
 const entryFlow=createEntryFlow({snapshot:()=>({player:Cloud.player,park:state}),authorize:(game,method)=>call({action:'entry',game,method,requestId:id()}),prompt:showEntry});
@@ -39,7 +39,7 @@ function boot(){
 
  if(document.querySelector('meta[name="king-rico-game"]')?.content==='circus')bootCircus();
  const game=document.querySelector('meta[name="king-rico-game"]')?.content;
- if(['clown','penalty','flying','fingo'].includes(game))Cloud.ready.then(async()=>{
+ if(['clown','penalty','flying','fingo','bounce'].includes(game))Cloud.ready.then(async()=>{
   // The loading screen captures clicks while art is decoding. Show the entry
   // only after that screen leaves, so the first choice always reaches its button.
   if(document.getElementById('kr-boot-screen'))await new Promise(resolve=>{
@@ -49,7 +49,7 @@ function boot(){
   entry(game).catch(e=>Cloud.error(e));
  });
  document.addEventListener('click',e=>{const a=e.target.closest('.kr-hud-home');if(a){e.preventDefault();e.stopImmediatePropagation();location.href='/circus';}},true);
- if(['clown','penalty','flying','fingo'].includes(game)){
+ if(['clown','penalty','flying','fingo','bounce'].includes(game)){
   const note=document.createElement('a');note.className='park-attraction-tag';note.href='/park';note.textContent='‹ PARQUE · ENTRADA INCLUÍDA';document.body.append(note);
  }
 }

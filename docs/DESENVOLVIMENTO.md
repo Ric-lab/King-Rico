@@ -64,3 +64,8 @@ O build gera `/game.html` como redirecionamento compatível para `/circus`.
 A integração publica React, Babel, Three.js e Matter.js locais com versões
 fixadas no lockfile. Novas páginas precisam de rota, build, carteira, menu e teste;
 um HTML isolado não é um jogo integrado.
+
+Reativação do Bounce no parque: com build emulado e servidores locais abertos,
+`python3 tests/bounce_park_browser.py` confere início por toque, carteira real
+emulada, recarga da página, recebimento e próxima entrada sem repetir modal.
+Usa contas fictícias; nunca apontar esse teste para produção.

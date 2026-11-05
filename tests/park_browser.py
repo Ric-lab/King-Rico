@@ -47,7 +47,8 @@ def run():
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('KingRicoCloud.player.balance===1050');healthy(page)
     assert page.locator('[data-game]').count()==3
-    assert page.locator('[data-game="fingo"]').count()==0
+    assert page.locator('[data-game="fingo"],[data-game="clown"]').count()==0
+    assert page.locator('.park-card-coming').count()==3
     page.wait_for_function('document.querySelector("[data-home-balance]").textContent==="1.050"',timeout=10000)
     page.screenshot(path='/tmp/park-home-production.png',full_page=True)
     if not os.environ.get('KING_RICO_QUICK_QA'):

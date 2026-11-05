@@ -1,4 +1,4 @@
-# Jogos arquivados (2026-11-04)
+# Jogos arquivados (atualizado em 05/11/2026)
 
 Decisão do dono: estes jogos saem do site. Os arquivos-fonte continuam no repositório (os testes de unidade os usam); só a rota pública foi removida de `site/routes.json` e `firebase.json`.
 
@@ -8,7 +8,7 @@ Decisão do dono: estes jogos saem do site. Os arquivos-fonte continuam no repos
 | Fortune Neck | /neck | Fortune Neck.dc.html |
 | Fortune 33 | /33 | Fortune 33.dc.html |
 | Fortune 21 | /21 | Fortune 21.dc.html |
-| Fortune Bounce | /bounce | Fortune Bounce.dc.html |
+| Fortune Clown | /clown | Fortune Clown.dc.html |
 | Claw Machine | /claw | Fortune Claw.dc.html |
 | Fortune Race | /race | Fortune Race.dc.html |
 | Fortune Bridge | /bridge | Fortune Bridge.dc.html |
@@ -24,3 +24,7 @@ Para reativar um jogo: devolver a linha em `site/routes.json` e o rewrite/header
 - `archive/codex-fortune-neck` ← codex/fortune-neck
 
 Recuperar: `git checkout -b <nome> archive/<tag>`.
+
+05/11: dono pediu guardar o Fortune Clown e reativar o Bounce. Clown sai
+do catálogo e da rota pública; fontes, assets e rodadas salvas são preservados.
+Bounce volta como atração do parque, com entrada por ingresso ou 25 moedas.

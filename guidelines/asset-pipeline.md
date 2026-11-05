@@ -266,3 +266,8 @@ coerente com Home/menu. Arte existente de ingresso no contador dos jogos.
 05/11 · Parque v2: controle geométrico SVG central sobre a moldura original
 de Home (`stage-lit.webp`), com a mesma escala. Substitui tenda/moldura própria
 rejeitada; sem geração externa, 0 créditos. Arte do ingresso preservada.
+
+05/11 · Cards de Basquete, Bubble Plinko, Race Horse e Bounce: quatro SVGs
+geométricos leves, paleta dourado/azul/circo. Basquete usa bola/aro; bolhas usa
+bolas/plinko; cavalos usa ferradura/bandeira. Bounce usa bola/plataformas.
+0 créditos externos, sem novos personagens ou promessa de gameplay nos Em breve.
