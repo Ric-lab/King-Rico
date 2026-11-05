@@ -234,3 +234,10 @@
 .park-home-back{width:38px;height:38px;flex:0 0 38px;display:block}
 .park-home-back img{display:block;width:100%;height:100%}
 .park-home-header{gap:10px}
+
+/* Rotate only the iridescent light field; the rim and hit target remain rigid. */
+@property --park-rim-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.park-spin-rim>img{display:block;width:100%;height:100%}
+.park-spin-iridescence{position:absolute;inset:0;pointer-events:none;opacity:.84;background:conic-gradient(from var(--park-rim-angle),#bd65ff,#ff70cf 50deg,#ffb76d 90deg,#ffe56b 125deg,#fff3ca 139deg,#59fff0 170deg,#659dff 225deg,#ea73ff 285deg,#6ae8ff 325deg,#bd65ff);mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;animation:parkRimOrbit 40s linear infinite}
+@keyframes parkRimOrbit{to{--park-rim-angle:360deg}}
+@media(prefers-reduced-motion:reduce){.park-spin-iridescence{animation:none}}

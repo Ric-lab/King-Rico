@@ -19,6 +19,12 @@ with sync_playwright() as p:
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
   page.goto(BASE+'/circus');ready()
+  rim=page.locator('.park-spin-iridescence')
+  if mode=='no-preference':
+   before_color=rim.evaluate('e=>getComputedStyle(e).backgroundImage')
+   page.wait_for_timeout(180)
+   assert rim.evaluate('e=>getComputedStyle(e).backgroundImage')!=before_color,'Iridescent colors must circulate'
+  else:assert rim.evaluate('e=>getComputedStyle(e).animationName')=='none'
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{
     const fc=__fc,ac=fc.ac,out=fc.out,gate=fc.gate;

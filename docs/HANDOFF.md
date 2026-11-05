@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · cores circulando no aro)
+- Luz iridescente percorre o contorno do spin em 40 s por volta, sem girar ou mover a moldura. Camada cônica recortada pelo SVG v3, preservando amarelo/laranja e demais cores; arte original como base. Movimento reduzido mantém o acabamento estático.
+- Conferidos movimento, contorno e clique no navegador; build de produção após conferência. Apenas prévia.
+
 ## Prévia (2026-11-05 · Codex · aro quente e descida visível)
 - Aro iridescente v3 acrescenta amarelo/laranja mantendo recorte e cores restantes.
 - Corrigida volta instantânea com movimento reduzido: máquina e cordas agora descem em 1,1 s retos nesse modo, ou 2,4 s no normal. Multiplicador só viaja depois.
@@ -125,4 +129,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar aro v3 com amarelo/laranja e descida visível nos dois modos na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar circulação lenta das cores no aro do spin na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

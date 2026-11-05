@@ -549,3 +549,7 @@ ciano e reflexos claros. Mesma geometria; v1 preservada como tentativa suave.
 
 Prévia 05/11: `spin-rim-iridescent-v3.svg` acrescenta amarelo/laranja à v2,
 sem mudar recorte, espessura ou funcionamento do spin. Versões anteriores guardadas.
+
+Prévia 05/11: luz iridescente circula em 40 s por volta, recortada pela
+transparência do aro v3. A geometria não gira: só a cor percorre o contorno.
+Arte v3 permanece como base/fallback; movimento reduzido mantém acabamento fixo.
