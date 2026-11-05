@@ -539,3 +539,7 @@ contato externa acompanha o clique. A faixa superior rebaixada foi rejeitada.
 Estado aprovado em 04/11/2026: face elevada e encaixe lateral acima descritos
 autorizados pelo dono para publicação oficial, junto aos sons dos ingressos.
 As tentativas anteriores permanecem apenas como histórico, não como padrão.
+
+Prévia 05/11: `spin-rim-iridescent-v1.svg` substitui só o acabamento dourado
+do spin por nacarado rosa/violeta/azul. Mesmo viewBox 357×78, abertura e
+contornos do aro anterior; geometria, profundidade e clique preservados.

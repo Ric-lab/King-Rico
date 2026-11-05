@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · aro iridescente e título Bônus)
+- Título visível reduzido a Bônus. Novo aro vetorial `spin-rim-iridescent-v1.svg` com acabamento nacarado rosa/violeta/azul; mesmo recorte do dourado, sem alterar a face, a altura ou o clique. Aro anterior preservado.
+- Conferência visual em repouso/clique e abertura do bônus; build final de produção depois do navegador. Só prévia.
+
 ## Prévia (2026-11-05 · Codex · pulsação contínua e leitura 3,6 s)
 - Roletinhas mantêm o mesmo pulso de escala da carga vermelha, repetindo até subir; antes do vermelho não ficam pulsando. Movimento reduzido conserva só a luz. Resultado da roleta agora exposto por 3,6 s, mantendo retorno automático e sem confetes.
 - Teste público verifica pulso infinito no vermelho e intervalo de leitura medido no navegador; nenhuma mudança em carteira, prêmios, rolos ou som. Apenas prévia.
@@ -112,4 +116,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar chegada gradual das cordas, luz presa apenas no vermelho e pulsação das roletinhas no vermelho e multiplicador por 3,6 s sem confetes, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.
+- Dono avaliar o aro iridescente do spin e o título Bônus na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

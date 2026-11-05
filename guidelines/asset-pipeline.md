@@ -240,3 +240,10 @@ maçã descer e resultado depois da queda. A opção de movimento reduzido usa 2
 Teste de navegador confere contato antes da queda, maçã ainda visível e câmera
 retida durante a queda lenta, primeira subida e retomada/prêmio protegido; conferida
 também a apresentação reduzida. Alterações visuais, sem novas imagens ou créditos.
+
+### 05/11/2026 · Prévia · aro iridescente do spin
+Fonte: `spin-rim-gold-v2.svg`, explicitamente escolhido pelo pedido de trocar o
+contorno do spin. Técnica: SVG geométrico com acabamento nacarado, mesma abertura
+e viewBox. Novo arquivo `spin-rim-iridescent-v1.svg`; dourado preservado.
+Custo de geração externa: 0 créditos. Conferência em repouso e pressionado;
+sem alteração do mecanismo do botão. Avaliação estética pendente do dono.
