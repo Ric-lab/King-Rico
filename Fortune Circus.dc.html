@@ -443,7 +443,7 @@ const WILD = 9;
 const HAPTIC = {
   // Motores de celular quase não giram abaixo de ~20 ms: nenhum pulso fica abaixo disso.
   tap: 22,                      // menu items, +/-, modal OK — light confirmation
-  spinPress: 20, spinRelease: 16,
+  spinPress: 40, spinRelease: 16,
   press: 35,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
   reelStop: [34, 18, 16], lastStop: [48, 22, 28], // one tactile event per column: impact + short settling echo; last is firmer (skipped in auto/free/feature)
   tease: [25, 70, 25, 70, 35],  // C1 suspense in auto (rising heartbeat)

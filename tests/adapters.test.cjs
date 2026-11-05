@@ -509,3 +509,13 @@ test('Circus column stops have a distinct settling echo and respect haptic prefe
  for(const mode of ['auto','free','feature']){g.state[mode]=true;g.hap('reelStop');g.hap('lastStop');g.state[mode]=false;}
  assert.equal(calls.length,n);
 });
+
+test('Circus spin press fires one firm haptic immediately and respects off and busy state',()=>{
+ const {instance:g,context}=component('Fortune Circus.dc.html',{}),calls=[];
+ context.navigator.vibrate=p=>calls.push(p);
+ g.state.vibrate=true;g.state.vibLvl=2;g.isCeleb=()=>false;g.click=()=>{};
+ g.pressSpin();assert.deepEqual(calls,[40]);assert.equal(g._spinTouchHeld,true);
+ g.pressUp();assert.equal(calls.length,1,'A quick release must not duplicate the press');
+ g.state.spinning=true;g.pressSpin();assert.equal(calls.length,1);
+ g.state.spinning=false;g.state.vibLvl=0;g.pressSpin();assert.equal(calls.length,1);
+});

@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Entrega autorizada (2026-11-05 · Codex · háptico do spin)
+- Usuário pediu háptico ao apertar spin e autorizou publicar a versão atual. Pulso de pressão reforçado de 20 para 40 ms no handler existente, junto ao afundar/aro; sem segunda chamada, sem alterar áudio ou apostas. Paradas mantêm os padrões reforçados da prévia.
+- Preferências/desligado e bloqueio durante giro preservados; testes focados e evento real de pressão conferidos antes do build final. Publicação pela main no workflow existente, incluindo regras REST compatíveis e Hosting.
+
 ## Prévia (2026-11-05 · Codex · paradas hápticas com mais presença)
 - Mantidos três eventos hápticos, um por coluna. Primeiros rolos: 34 ms, pausa 18 ms, retorno 16 ms. Último: 48 ms, pausa 22 ms, retorno 28 ms. Antes eram pulsos simples de 18/35 ms. Sem vibração contínua ou mudança de som.
 - Preferências 50%/100%/desligado e supressão em auto/free/feature preservadas. Teste de adaptador cobre padrões, silêncio e preferências; conferência no navegador valida chamadas nas paradas. A sensação física deve ser avaliada no celular do dono. Apenas prévia.
@@ -159,4 +163,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono testar no celular os impactos hápticos das três paradas, especialmente o último; som e matemática preservados na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Publicação autorizada pelo dono. Conferir conclusão do workflow na main e arquivos oficiais; depois aguardar feedback da sensação no celular.

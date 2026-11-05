@@ -126,3 +126,7 @@ Prévia 05/11 · Háptico de parada do Circus: um evento por coluna, com toque
 principal e curto retorno mecânico. Padrões em ms: [34,18,16] nos dois primeiros
 e [48,22,28] no último. Mesmas preferências e limitações de plataforma, sem
 acrescentar áudio, sem vibração contínua e sem ativar paradas em auto/free/feature.
+
+05/11 · Spin: pressão reforçada para 40 ms (antes 20), no mesmo handler
+que dispara o clique físico. Sem chamada adicional no giro; soltura, níveis
+e opção desligada preservados. Dono autorizou publicar a versão atual.
