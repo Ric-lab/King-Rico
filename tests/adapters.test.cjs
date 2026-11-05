@@ -493,3 +493,19 @@ test('Circus spin, auto and turbo use the same press and release audio graph',()
  }
  assert.notEqual(sound(true,'spin'),sound(false,'spin'),'Press and release retain their distinct sounds');
 });
+
+test('Circus column stops have a distinct settling echo and respect haptic preferences without audio',()=>{
+ const {instance:g,context}=component('Fortune Circus.dc.html',{}),calls=[];
+ context.navigator.vibrate=p=>calls.push(Array.from(p));
+ g.state.vibrate=true;g.state.vibLvl=2;
+ g.pluck=g.burst=()=>{throw Error('Haptics must not add audio');};
+ g.hap('reelStop');g.hap('reelStop');g.hap('lastStop');
+ assert.equal(calls.length,3);
+ assert.deepEqual(calls,[[34,18,16],[34,18,16],[48,22,28]]);
+ g.state.vibLvl=1;g.hap('reelStop');assert.deepEqual(calls.at(-1),[17,25,15]);
+ const n=calls.length;g.state.vibLvl=0;g.hap('lastStop');
+ g.state.vibLvl=2;g.state.vibrate=false;g.hap('reelStop');
+ g.state.vibrate=true;
+ for(const mode of ['auto','free','feature']){g.state[mode]=true;g.hap('reelStop');g.hap('lastStop');g.state[mode]=false;}
+ assert.equal(calls.length,n);
+});

@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · paradas hápticas com mais presença)
+- Mantidos três eventos hápticos, um por coluna. Primeiros rolos: 34 ms, pausa 18 ms, retorno 16 ms. Último: 48 ms, pausa 22 ms, retorno 28 ms. Antes eram pulsos simples de 18/35 ms. Sem vibração contínua ou mudança de som.
+- Preferências 50%/100%/desligado e supressão em auto/free/feature preservadas. Teste de adaptador cobre padrões, silêncio e preferências; conferência no navegador valida chamadas nas paradas. A sensação física deve ser avaliada no celular do dono. Apenas prévia.
+
 ## Prévia (2026-11-05 · Codex · encontro lateral e ingressos mais ágeis)
 - Após preencher de verde, disco viaja para a direita enquanto a máquina completa entra pronta por esse lado. Trajetória lateral encontra o prêmio no fim da troca; substitui a volta separada de topo/rolos. Modo normal 1,9 s; reduzido 0,9 s. Crédito e impacto continuam no mesmo fluxo.
 - Ingressos sequenciais em 620 ms (normal) / 400 ms (reduzido), antes 700/450; mesmas três notas e contato sincronizado, sem sobrepor partidas.
@@ -155,4 +159,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar encontro lateral do disco com a máquina pronta à direita e ritmo um pouco mais rápido dos ingressos na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono testar no celular os impactos hápticos das três paradas, especialmente o último; som e matemática preservados na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

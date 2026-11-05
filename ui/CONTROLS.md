@@ -121,3 +121,8 @@ contato externa acompanha o clique. A faixa superior rebaixada foi rejeitada.
 Estado aprovado em 04/11/2026: face elevada e encaixe lateral acima descritos
 autorizados pelo dono para publicação oficial, junto aos sons dos ingressos.
 As tentativas anteriores permanecem apenas como histórico, não como padrão.
+
+Prévia 05/11 · Háptico de parada do Circus: um evento por coluna, com toque
+principal e curto retorno mecânico. Padrões em ms: [34,18,16] nos dois primeiros
+e [48,22,28] no último. Mesmas preferências e limitações de plataforma, sem
+acrescentar áudio, sem vibração contínua e sem ativar paradas em auto/free/feature.

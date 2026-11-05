@@ -445,7 +445,7 @@ const HAPTIC = {
   tap: 22,                      // menu items, +/-, modal OK — light confirmation
   spinPress: 20, spinRelease: 16,
   press: 35,                    // physical art buttons on press-down: spin, turbo, auto, home, menu
-  reelStop: 18, lastStop: 35,   // mechanical "tec" per reel; last reel firmer (skipped in auto/free/feature)
+  reelStop: [34, 18, 16], lastStop: [48, 22, 28], // one tactile event per column: impact + short settling echo; last is firmer (skipped in auto/free/feature)
   tease: [25, 70, 25, 70, 35],  // C1 suspense in auto (rising heartbeat)
   win: 45, winMid: [45, 60, 45], winBig: [70, 70, 70, 70, 130], jackpot: [90, 50, 90, 50, 90, 50, 220],
   peachLand: 28, danceLand: 32, basketIn: 38, feature: [70, 70, 70, 70, 130], impact: [55, 40, 35], lock: 25,
