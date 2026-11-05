@@ -74,9 +74,9 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  }
  function celebrateFull(){
   if(fc._parkFillCelebrating)return;fc._parkFillCelebrating=true;rails.classList.add('is-overflowing');record(fc,'reservoir:full');
-  confetti(rails,[{x:22,y:231+fc.layoutMetric('--park-machine-drop')},{x:431,y:231+fc.layoutMetric('--park-machine-drop')}],{count:32,spread:135});
+  confetti(rails,[{x:22,y:231+fc.layoutMetric('--park-machine-drop')},{x:431,y:231+fc.layoutMetric('--park-machine-drop')}],{count:48,spread:145});
   const end=()=>{rails.classList.remove('is-overflowing');fc._parkFillCelebrating=false;record(fc,'reservoir:celebrated');if(fc._parkWheelWaiting){fc._parkWheelWaiting=false;showWheel();}};
-  setTimeout(end,reduced()?120:1250);
+  setTimeout(end,reduced()?250:2200);
  }
  fc._parkAfterCoinFlight=done=>{
   record(fc,'coins:done');

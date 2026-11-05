@@ -22,9 +22,9 @@ export async function enterWheel(el){
  try{
   if(!calm()){
    const motion=[{translate:'0 0'},{translate:'0 8px',offset:.12},{translate:'0 -920px'}];
-   for(const n of [...items,rig])s.animations.push(n.animate(motion,{duration:2200,easing:'cubic-bezier(.65,0,.35,1)',fill:'both'}));
-   s.animations.push(el.animate([{opacity:0,transform:'translateY(65px) scale(.9)'},{opacity:1,transform:'translateY(0) scale(1)'}],{delay:1800,duration:650,easing:'cubic-bezier(.2,.8,.25,1)',fill:'both'}));
-   await settle(s.animations,2800);
+   for(const n of [...items,rig])s.animations.push(n.animate(motion,{duration:3600,easing:'cubic-bezier(.45,.12,.35,1)',fill:'both'}));
+   s.animations.push(el.animate([{opacity:0,transform:'translateY(65px) scale(.9)'},{opacity:1,transform:'translateY(0) scale(1)'}],{delay:3050,duration:800,easing:'cubic-bezier(.2,.8,.25,1)',fill:'both'}));
+   await settle(s.animations,4300);
   }
  }catch{/* The confirmed bonus still opens when animation is unavailable. */}
  finally{if(s.cleaned)return;stage.dataset.hoist='wheel';s.animations.forEach(a=>a.cancel());s.animations=[];el.querySelector('button')?.focus({preventScroll:true});}
@@ -33,9 +33,9 @@ async function leaveWheel(el){
  const s=el._hoist;s.stage.dataset.hoist='returning';
  try{
   if(!calm()){
-   for(const n of [...s.items,s.rig])s.animations.push(n.animate([{translate:'0 -920px'},{translate:'0 5px',offset:.87},{translate:'0 0'}],{duration:1600,easing:'cubic-bezier(.2,.65,.25,1)',fill:'both'}));
+   for(const n of [...s.items,s.rig])s.animations.push(n.animate([{translate:'0 -920px'},{translate:'0 5px',offset:.87},{translate:'0 0'}],{duration:2400,easing:'cubic-bezier(.45,.08,.35,1)',fill:'both'}));
    s.animations.push(el.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(50px)'}],{duration:280,fill:'both',easing:'ease-in'}));
-   await settle(s.animations,1900);
+   await settle(s.animations,2800);
   }
  }catch{/* Cleanup always restores the cabinet before the prize flies. */}
 }

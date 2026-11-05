@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · celebração e leitura da roleta)
+- Pedido de mais calma/festa: subida 3,6 s com entrada da roleta ao final; descida 2,4 s; resultado permanece 5,5 s antes do retorno automático. Comemoração da barra cheia em 2,2 s, mais confetes e duas ondas no resultado, com pausa final para leitura.
+- Roletinhas das barras ficam iluminadas continuamente após carregar, inclusive entre pulsos e ao retomar; brilho só reinicia com o ciclo vazio. Movimento reduzido preserva leitura sem decoração intensa.
+- Navegador verifica luz persistente, gesto/botão, resultado por pelo menos 5,4 s, retomada e retorno sem Aplicar, modos normal/reduzido. Capturas inspecionadas; build de produção após navegador. Apenas prévia; matemática, regras, saldo e sons preservados.
+
 ## Prévia (2026-11-05 · Codex · retorno automático da roleta)
 - Dono pediu içamento mais lento e remover Aplicar. Subida agora 2,2 s; roleta entra ao final. Multiplicador permanece por 2,2 s, depois as cordas devolvem a máquina em 1,6 s e segue a viagem do multiplicador/prêmio.
 - Movimento reduzido mantém o tempo de leitura sem içamento. Fluxo recuperado também fecha sozinho; falha de rede oferece Tentar novamente, com o mesmo fechamento idempotente existente. Nenhuma regra, prêmio ou saldo alterado.
@@ -98,4 +103,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar o içamento mais lento e a volta automática, sem Aplicar, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.
+- Dono avaliar o ritmo mais calmo, festa, luz contínua e leitura ampliada, sem Aplicar, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.

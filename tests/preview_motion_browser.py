@@ -64,6 +64,12 @@ with sync_playwright() as p:
   assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==ticket_cells
   assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==ticket_cells
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
+  goal=page.locator('.park-meter-goal').first
+  light=goal.evaluate('e=>({filter:getComputedStyle(e).filter,glow:getComputedStyle(e).boxShadow})')
+  assert light['filter']=='brightness(1.22)' and light['glow']!='none',light
+  page.wait_for_timeout(800)
+  assert goal.evaluate('e=>getComputedStyle(e).filter')==light['filter'],'Goal must stay lit after the pulse'
+
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
@@ -78,7 +84,7 @@ with sync_playwright() as p:
    page.wait_for_timeout(300)
    assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='lifting'
    page.screenshot(path='work/preview-hoist-lifting.png')
-  page.wait_for_timeout(2700);assert dialog.count()==1
+  page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1
   assert page.locator('.park-modal').count()==0,'Bonus must use the real stage, not a modal'
   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel'
   assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
@@ -86,7 +92,7 @@ with sync_playwright() as p:
   if mode=='no-preference':
    # A pending bonus must rebuild the same scene after refresh.
    page.reload();ready();page.get_by_role('region',name='Roleta multiplicadora',exact=True).wait_for()
-   page.wait_for_timeout(2700)
+   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000)
   if mode=='no-preference':
    box=page.locator('.park-wheel-machine').bounding_box();cx=box['x']+box['width']/2;cy=box['y']+box['height']/2;r=box['width']*.32
    page.mouse.move(cx+r,cy);page.mouse.down();page.mouse.move(cx+r*.7,cy-r*.7,steps=5);page.mouse.move(cx,cy-r,steps=5);page.mouse.up()
@@ -103,7 +109,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
   page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
-  assert timing['returnAt']-timing['resultAt']>=2150,timing
+  assert timing['returnAt']-timing['resultAt']>=5400,timing
   if mode=='no-preference':
    page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)

@@ -21,3 +21,4 @@ Rejeitado:
 - Folgas laterais largas no spin: encaixar corpo sob o limite interno do aro e manter só uma lateral fina da face.
 - Faixa escura acima da face parece fundo: elevar a face sobre o encaixe e o aro, não posicioná-la abaixo de uma suposta parede traseira.
 - Içamento da máquina em 1,15 s ficou rápido demais; dar tempo para acompanhar as cordas e ler o multiplicador antes da volta automática, sem Aplicar.
+- Ritmo de 2,2 s na subida/leitura ainda apressado: ampliar pausa do multiplicador, dar festa com respiro e manter roletinhas carregadas acesas entre pulsos.
