@@ -73,7 +73,7 @@ with sync_playwright() as p:
   assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
-  page.reload();ready();page.get_by_role('button',name='Girar',exact=True).click()
+  page.reload();ready();rest_y=page.locator('[data-spin-btn]').bounding_box()['y'];page.get_by_role('button',name='Girar',exact=True).click()
   dialog=page.get_by_role('region',name='Roleta multiplicadora',exact=True);dialog.wait_for(timeout=30000)
   if mode=='no-preference':
    page.wait_for_timeout(300)
@@ -113,8 +113,17 @@ with sync_playwright() as p:
   page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
   assert timing['returnAt']-timing['resultAt']>=3500,timing
-  if mode=='no-preference':
-   page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
+  cabinet=page.locator('[data-spin-btn]')
+  y1=cabinet.evaluate('e=>e.getBoundingClientRect().top')
+  page.wait_for_timeout(350)
+  y2=cabinet.evaluate('e=>e.getBoundingClientRect().top')
+  assert y2>y1+10,(mode,y1,y2,'Cabinet must visibly descend, including reduced motion')
+  assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='returning'
+  assert page.locator('.park-hoist-rig').evaluate('e=>getComputedStyle(e).visibility')=='visible'
+  page.wait_for_timeout(850 if mode=='no-preference' else 150)
+  mid_y=cabinet.evaluate('e=>e.getBoundingClientRect().top')
+  assert 80<mid_y<rest_y-30,(mode,mid_y,rest_y,'Cabinet must be visible between the top and its resting position')
+  page.screenshot(path='work/preview-hoist-return-'+mode+'.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'

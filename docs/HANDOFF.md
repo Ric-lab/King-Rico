@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · aro quente e descida visível)
+- Aro iridescente v3 acrescenta amarelo/laranja mantendo recorte e cores restantes.
+- Corrigida volta instantânea com movimento reduzido: máquina e cordas agora descem em 1,1 s retos nesse modo, ou 2,4 s no normal. Multiplicador só viaja depois.
+- Regressão mede deslocamento vertical real dos itens nos dois modos e verifica cordas visíveis, não só a existência de uma animação. Só prévia; oficial e carteira preservados.
+
 ## Prévia (2026-11-05 · Codex · Bonus e aro mais vivo)
 - Correção solicitada: título exatamente Bonus, sem acento. Aro iridescente v2 mais brilhante e saturado, com rosa/violeta/ciano e reflexos claros. Recorte e comportamento preservados; v1 guardada.
 - Conferidos repouso/clique e título no navegador; build de produção depois da conferência. Só prévia.
@@ -120,4 +125,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar o aro iridescente v2 mais vivo e o título Bonus na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar aro v3 com amarelo/laranja e descida visível nos dois modos na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

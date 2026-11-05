@@ -250,3 +250,6 @@ sem alteração do mecanismo do botão. Avaliação estética pendente do dono.
 
 05/11 · Revisão do aro: `spin-rim-iridescent-v2.svg`, cores intensificadas e
 reflexos mais claros sobre o mesmo recorte. V1 preservada; 0 créditos externos.
+
+05/11 · Aro iridescente v3: amarelo e laranja adicionados a pedido, mesmo
+recorte e transparência. Vetorial, 0 créditos externos; v2 preservada.

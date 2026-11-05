@@ -37,10 +37,11 @@ export async function enterWheel(el){
 async function leaveWheel(el){
  const s=el._hoist;s.stage.dataset.hoist='returning';
  try{
-  if(!calm()){
-   for(const n of [...s.items,s.rig])s.animations.push(n.animate([{translate:'0 -920px'},{translate:'0 5px',offset:.87},{translate:'0 0'}],{duration:2400,easing:'cubic-bezier(.45,.08,.35,1)',fill:'both'}));
-   s.animations.push(el.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(50px)'}],{duration:280,fill:'both',easing:'ease-in'}));
-   await settle(s.animations,2800);
-  }
+  // Returning the cabinet explains where the prize goes, including reduced motion.
+  const reduced=calm(),duration=reduced?1100:2400;
+  const frames=reduced?[{translate:'0 -920px'},{translate:'0 0'}]:[{translate:'0 -920px'},{translate:'0 5px',offset:.87},{translate:'0 0'}];
+  for(const n of [...s.items,s.rig])s.animations.push(n.animate(frames,{duration,easing:reduced?'linear':'cubic-bezier(.45,.08,.35,1)',fill:'both'}));
+  s.animations.push(el.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(50px)'}],{duration:280,fill:'both',easing:'ease-in'}));
+  await settle(s.animations,duration+400);
  }catch{/* Cleanup always restores the cabinet before the prize flies. */}
 }

@@ -546,3 +546,6 @@ contornos do aro anterior; geometria, profundidade e clique preservados.
 
 Prévia 05/11: aro `spin-rim-iridescent-v2.svg` intensifica rosa, violeta,
 ciano e reflexos claros. Mesma geometria; v1 preservada como tentativa suave.
+
+Prévia 05/11: `spin-rim-iridescent-v3.svg` acrescenta amarelo/laranja à v2,
+sem mudar recorte, espessura ou funcionamento do spin. Versões anteriores guardadas.

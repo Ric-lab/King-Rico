@@ -129,3 +129,7 @@ não desfaz recebimento confirmado.
 Regressão focada: após `npm run build:preview` e servidor estático local,
 `KING_RICO_TEST_URL=http://127.0.0.1:4178 python3 tests/preview_motion_browser.py`.
 O teste recusa carteira real, executa giros pelo botão e cobre os dois modos.
+
+Prévia 05/11: a descida é feedback essencial também com movimento reduzido:
+1,1 s em linha reta, sem balanço, antes da viagem do multiplicador. No modo
+normal mantém 2,4 s. Não restaurar a máquina instantaneamente nesse modo.
