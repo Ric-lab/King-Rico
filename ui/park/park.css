@@ -134,7 +134,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-scene .park-wheel-panel{width:100%;max-width:none;padding:0;background:none;border:0;box-shadow:none}
 .park-wheel-scene .park-wheel-heading{width:340px;height:68px}
 .park-wheel-scene .park-wheel-heading h2{font-size:25px;top:18px}
-.park-wheel-scene .park-wheel-wrap{width:350px;margin:45px auto 22px}
+.park-wheel-scene .park-wheel-wrap{width:374px;margin:45px auto 22px}
 .park-wheel-scene .park-wheel-machine{transform:translate(-50%,-50%) scale(var(--park-wheel-scale,.9))}
 .park-wheel-scene .park-wheel-rays{opacity:.65}
 .park-wheel-scene .park-wheel-panel>.park-action{width:310px;margin-top:32px;min-height:60px;font-size:23px}
@@ -151,3 +151,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-hoist-deck[data-hoist="rigging"]>.park-wheel-scene{opacity:0;pointer-events:none}
 
 @media(prefers-reduced-motion:reduce){.park-circus-rails.has-lit-goals .park-meter-goal{animation:none!important}}
+
+.park-wheel-scene .is-won .park-wheel-hub strong{animation:parkMultiplierBeat 1.1s ease-in-out 3;color:#ffe9a3;text-shadow:0 2px #14632b,0 0 6px #fff6a466}
+@keyframes parkMultiplierBeat{0%,100%{transform:scale(1)}45%{transform:scale(1.16)}}
+@media(prefers-reduced-motion:reduce){.park-wheel-scene .is-won .park-wheel-hub strong{animation:none}}

@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · centro da roleta e viagem contínua)
+- Roleta 7% maior (374 px no palco nativo). Multiplicador sorteado pulsa três vezes no centro; reduzido conserva destaque sem escala. Leitura mantém 3,6 s.
+- O próprio valor é destacado do centro e fica visível enquanto a máquina desce; depois viaja desse ponto ao mostrador do prêmio. Eliminado intervalo em que sumia com a roleta. Reduzido usa viagem reta curta, preservando a explicação visual. Nenhuma mudança financeira. Apenas prévia.
+
 ## Prévia (2026-11-05 · Codex · aro no instante de apertar)
 - Batida do aro começa no mesmo pointerdown que prepara/pinta a face, sem os 120 ms e sem esperar o disparo posterior. Esse disparo não reinicia a batida manual; auto mantém fallback no pulso elétrico. Cancelamento/saída limpa a associação do toque.
 - Teste usa pressão real, exige cor imediata igual à face e ausência de segunda batida. Órbita e mecanismos financeiros preservados. Só prévia.
@@ -141,4 +145,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar sincronização imediata entre apertar e a batida de cor no aro na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar roleta maior, pulso do multiplicador central e continuidade da viagem até o prêmio na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

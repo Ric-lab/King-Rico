@@ -133,3 +133,7 @@ O teste recusa carteira real, executa giros pelo botão e cobre os dois modos.
 Prévia 05/11: a descida é feedback essencial também com movimento reduzido:
 1,1 s em linha reta, sem balanço, antes da viagem do multiplicador. No modo
 normal mantém 2,4 s. Não restaurar a máquina instantaneamente nesse modo.
+
+Prévia 05/11: roleta de 374 px no palco nativo. Ao sortear, multiplicador pulsa
+no centro. O valor fica destacado no mesmo ponto durante a descida da máquina
+e viaja dali ao prêmio; reduzido usa trajeto reto de 650 ms, sem saltos.

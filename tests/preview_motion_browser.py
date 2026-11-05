@@ -119,6 +119,9 @@ with sync_playwright() as p:
   z=page.locator('.park-wheel').evaluate('e=>getComputedStyle(e).transform');assert a!=z,(mode,a,z)
   page.screenshot(path='work/preview-wheel-'+mode+'.png')
   page.locator('.park-wheel-machine.is-won').wait_for(timeout=12000)
+  assert page.locator('.park-wheel-wrap').evaluate('e=>e.clientWidth')==374
+  hub=page.locator('.park-wheel-hub strong').bounding_box();hub_center=(hub['x']+hub['width']/2,hub['y']+hub['height']/2)
+  if mode=='no-preference':assert page.locator('.park-wheel-hub strong').evaluate('e=>getComputedStyle(e).animationName')=='parkMultiplierBeat'
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
   assert page.get_by_role('button',name='APLICAR',exact=False).count()==0
   assert page.locator('[data-wheel-spin]').is_hidden()
@@ -127,6 +130,8 @@ with sync_playwright() as p:
   page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
   assert timing['returnAt']-timing['resultAt']>=3500,timing
+  held=page.locator('.park-flying-multiplier').bounding_box()
+  assert held and abs(held['x']+held['width']/2-hub_center[0])<3 and abs(held['y']+held['height']/2-hub_center[1])<3,(held,hub_center)
   cabinet=page.locator('[data-spin-btn]')
   y1=cabinet.evaluate('e=>e.getBoundingClientRect().top')
   page.wait_for_timeout(350)
@@ -140,6 +145,9 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-hoist-return-'+mode+'.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
+  origin=page.evaluate('__fc._parkMotionLog.find(x=>x.type==="multiplier:start")')
+  assert abs(origin['originX']-hub_center[0])<3 and abs(origin['originY']-hub_center[1])<3,origin
+  assert page.locator('.park-flying-multiplier').count()==0
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")

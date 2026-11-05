@@ -4,7 +4,7 @@ import {installMotion} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
 import {installParkNavigation} from './navigation.js';
 import {createWheelScene,enterWheel} from './wheel-transition.js';
-import {applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
+import {holdMultiplier,applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
 const Cloud=window.KingRicoCloud,id=()=>crypto.randomUUID();
 const empty=()=>({version:1,revision:0,tickets:0,spins:0,wheel:null,passes:{},price:25,meterSpins:10});
 let state=Cloud.park||empty();
@@ -125,11 +125,10 @@ function showWheel(){
    const fc=window.__fc,flight=fc?._parkPrizeFlight;
    if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:w.result.winUnits/100,showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
    await call({action:'wheel-close',wheelId,requestId:id()});
-   const source=el.querySelector('.park-wheel-hub strong').getBoundingClientRect();await el.close();
-   if(fc){fc._parkPrizeFlight=null;fc._spinAfterFly=false;
-    await applyMultiplier(fc,w,source);
-    flyMultipliedPrize(fc,w,flight,()=>Cloud.player);
-   }
+   const source=holdMultiplier(el.querySelector('.park-wheel-hub strong'),w.result.multiplier);
+   try{await el.close();
+    if(fc){fc._parkPrizeFlight=null;fc._spinAfterFly=false;await applyMultiplier(fc,w,source);flyMultipliedPrize(fc,w,flight,()=>Cloud.player);}
+   }finally{source.node.remove();}
    wheelOpen=false;
   }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.hidden=false;btn.textContent='TENTAR NOVAMENTE';btn.disabled=false;busy=false;}};
   btn.onclick=collect;
