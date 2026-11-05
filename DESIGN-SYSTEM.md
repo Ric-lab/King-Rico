@@ -69,6 +69,11 @@ ao aparelho, sem deformar imagens ou diminuir números longos isoladamente.
 
 ## Cabeçalho, saldo e controles comuns
 
+Prévia de 05/11: o HUD passa a Home, Parque e configurações; nas atrações,
+ingressos aparecem abaixo das moedas. Saldo longo conserva a fonte e desloca
+os três botões para a segunda linha apenas quando necessário. Ver
+[controles](ui/CONTROLS.md) e [parque](docs/PARQUE.md). Oficial ainda preservado.
+
 [ui/CONTROLS.md](ui/CONTROLS.md) define os componentes de execução:
 
 - `ui/header.css` e `ui/interface.js`: saldo, Home e menu com o mesmo alinhamento,

@@ -38,7 +38,7 @@ body.park-home{background:#79d2f7 url('/assets/scenes/circus-daylight-v1.webp') 
 .park-home .park-card h3{margin:0;white-space:normal;font:800 23px/1.15 Baloo,'Baloo 2',sans-serif;color:#663f25;text-shadow:0 1px #fff8;letter-spacing:0}
 .park-game-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:42px;margin-top:15px;padding:0 7px;font-size:18px;line-height:1;letter-spacing:.35px;border-radius:16px}
 .park-game-action b{font-size:25px;line-height:1;font-weight:800}
-.park-home .park-recharge{display:flex;align-items:center;gap:12px;width:100%;margin-top:26px;padding:13px 16px;border:2px solid #f1c969;border-radius:21px;background:linear-gradient(#fff8e4,#ffe9b4);box-shadow:0 3px #a67028,0 6px 12px #30546822;text-align:left}
+.park-home .park-recharge{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 25px;padding:13px 16px;border:2px solid #f1c969;border-radius:21px;background:linear-gradient(#fff8e4,#ffe9b4);box-shadow:0 3px #a67028,0 6px 12px #30546822;text-align:left}
 .park-home .park-recharge>img{width:45px;height:45px;flex-shrink:0}
 .park-home .park-recharge strong{font:800 21px/1.1 Baloo,'Baloo 2',sans-serif;color:#6a3c22;display:block}
 .park-home .park-recharge small{font:700 15px/1.2 Baloo,'Baloo 2',sans-serif;color:#765d3e;display:block;margin-top:5px}

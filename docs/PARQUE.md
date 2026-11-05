@@ -188,3 +188,24 @@ validação das regras continuam iguais.
 
 Regressão: `tests/park-entry.test.mjs`, `tests/park_repeat_browser.py`, teste de
 Flying por ingresso em `tests/store.test.mjs` e `tests/integration.mjs`.
+
+
+## Prévia: anúncio no alto e navegação compartilhada (05/11/2026)
+
+O botão **+1.000 moedas / Ver anúncio de 30s** fica logo após o cabeçalho,
+antes do título e das atrações. Simulação, confirmação do crédito e viagem de
+moedas continuam no mesmo fluxo.
+
+O cabeçalho compartilhado inclui **Home · Parque · configurações**, nessa ordem.
+O novo atalho usa ícone de tenda e aponta para `/park` em todas as telas com HUD.
+É fixo como opção de navegação; na página do parque o cabeçalho continua rolando
+normalmente, deixando apenas o banner preso ao alto.
+
+Clown, Pênalti, Flying e a rota preservada do Fingo mostram um contador de
+ingressos logo abaixo do saldo de moedas. O contador acompanha o estado confirmado
+do parque e destaca a mudança sem atrasar ou simular a cobrança. No Circus,
+permanece o contador original, sincronizado com a viagem/som dos ingressos.
+
+Os três botões conservam alvos de 44 px. Se o saldo longo ocupar o espaço dos
+botões em uma tela estreita, eles passam juntos para a linha inferior; os
+números não encolhem. Navegação não cancela nem reembolsa rodadas salvas.

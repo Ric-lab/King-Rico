@@ -8,6 +8,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · anúncio, ingressos e navegação)
+- Anúncio de +1.000 moedas movido para logo abaixo do cabeçalho, antes do título/capas. Nenhum comportamento financeiro alterado.
+- Header compartilhado passa a Home · Parque · menu, com 44 px de toque. Nas atrações, contador de ingressos abaixo das moedas acompanha a cobrança confirmada. Circus conserva seu contador/voo original.
+- Saldo longo conserva fonte; botões descem uma linha apenas se necessário. Parque continua rolando normalmente. Ícone de tenda SVG, zero créditos externos; assets carregados pelo manifesto comum.
+- Conferidos 360/390/430 px, valor de 100.000.000,65, menu, recarga cancelada, Home → Circus → Parque e contador diminuindo nas três atrações. 52 testes de carteira/adaptadores aprovados. Só prévia.
+
 ## Prévia (2026-11-05 · Codex · três atrações e partidas contínuas)
 - Código `0daca8a`; canal /park atualizado. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42026616197 terminou com sucesso: movimentos do Circus, três larguras e quatro partidas por atração (ingressos → moedas, sem modal repetido) conferidos no endereço público. Site oficial não alterado.
 - Novo feedback: capas anteriores rejeitadas. Três placas horizontais com Clown, Pênalti e Flying; Fingo retirado só do catálogo, rota/partidas preservadas. Goleiro atual também na escolha inicial.
@@ -180,4 +186,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar três novas capas e continuidade sem modal na prévia /park. Plano em docs/PLANO-PARQUE.md. Não publicar essa revisão no oficial sem aprovação.
+- Dono avaliar na prévia /park: anúncio no alto, novo botão Parque e contador nas atrações; manter três capas e continuidade sem modal. Não publicar no oficial sem aprovação.

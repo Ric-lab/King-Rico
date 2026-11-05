@@ -140,3 +140,15 @@ O offset local é zero para preservar a rolagem natural. Jogar/Continuar usa
 Prévia do parque, segunda revisão (05/11): três placas horizontais com arte
 à esquerda e Jogar/Continuar à direita. Toda a placa é um link; o botão
 compartilhado mede ao menos 42 px de altura. Fingo preservado só na rota direta.
+
+
+Prévia 05/11 · Navegação compartilhada em `interface.js`: Home, Parque e menu
+mantêm 44 px de toque, com Parque entre os outros dois. Ícone vetorial em
+`ui/park/park-button.svg`, mesmo acabamento creme/dourado. Se o saldo longo
+colidir com o primeiro botão, `.has-wide-wallet` move os três para a linha de
+baixo; a fonte do saldo permanece em 19 px nas coordenadas da cena.
+
+`kr-hud-tickets` acompanha `park-update` nas atrações, abaixo das moedas, com
+arte existente de ingresso e breve destaque da contagem; movimento reduzido
+remove esse destaque. Não é uma segunda carteira. Circus mantém o contador
+original e a chegada animada dos ingressos. Anúncio no parque vem antes das capas.

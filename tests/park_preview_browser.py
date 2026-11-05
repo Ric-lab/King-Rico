@@ -18,12 +18,14 @@ with sync_playwright() as p:
    if daily.count():daily.click()
    page.wait_for_function('document.querySelector("[data-home-balance]").textContent===KingRicoCloud.player.balance.toLocaleString("pt-BR",{maximumFractionDigits:2})')
   page.goto(BASE+'/park');ready()
-  hud_boxes={s:page.locator(s).bounding_box() for s in ['.kr-hud-home','.kr-menu-button']}
+  hud_boxes={s:page.locator(s).bounding_box() for s in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']}
+  assert page.locator('[data-recharge]').bounding_box()['y']<page.locator('[data-game]').first.bounding_box()['y']
+  assert page.locator('.kr-hud-park').get_attribute('href')=='/park'
   assert page.locator('[data-game]').count()==3
   assert page.locator('[data-game="fingo"]').count()==0
   assert page.locator('[data-game="penalty"] .park-game-character').get_attribute('src').endswith('clown-keeper-v3.webp')
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
-  for selector in ['.kr-hud-home','.kr-menu-button']:
+  for selector in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']:
    r=page.locator(selector).bounding_box();assert r['width']>=43.5 and r['height']>=43.5,(width,selector,r)
   assert page.locator('.kr-menu-button').evaluate('e=>getComputedStyle(e,"::after").backgroundImage').find('stage-lit.webp')>=0
   page.wait_for_function('[...document.images].filter(n=>n.getBoundingClientRect().width).every(n=>n.complete&&n.naturalWidth>0)')
@@ -34,14 +36,19 @@ with sync_playwright() as p:
   assert page.locator('.kr-hud-row').bounding_box()['y']<y-min(60,travel*.7),'Only banner should stay fixed'
   assert abs(page.locator('#kr-ad-banner').bounding_box()['y'])<1
   page.evaluate('scrollTo(0,0)')
+  balance=page.evaluate('KingRicoCloud.player.balance')
+  page.evaluate('KingRicoWallet.set(document.querySelector("[data-home-balance]"),100000000.65,{external:true})')
+  page.wait_for_function('document.querySelector("[data-home-balance]").textContent==="100.000.000,65"')
+  page.wait_for_function("""()=>{
+   const w=document.querySelector('.kr-hud-balance').getBoundingClientRect();
+   return [...document.querySelectorAll('.kr-hud-home,.kr-hud-park,.kr-menu-button')].every(e=>{const r=e.getBoundingClientRect();return w.right+2<r.left||w.bottom+2<r.top;});
+  }""")
+  assert page.locator('[data-home-balance]').evaluate('e=>getComputedStyle(e).fontSize')=='19px'
+  assert page.evaluate('KingRicoCloud.player.balance')==balance
+  page.screenshot(path=f'work/preview-hud-long-{width}.png')
+  page.evaluate('KingRicoWallet.set(document.querySelector("[data-home-balance]"),KingRicoCloud.player.balance,{external:true})')
+  page.wait_for_function('!document.querySelector(".kr-hud-row").classList.contains("has-wide-wallet")')
   if width==390:
-   balance=page.evaluate('KingRicoCloud.player.balance')
-   page.evaluate('KingRicoWallet.set(document.querySelector("[data-home-balance]"),100000000.65,{external:true})')
-   page.wait_for_function('document.querySelector("[data-home-balance]").textContent==="100.000.000,65"')
-   wallet=page.locator('.kr-hud-balance').bounding_box();home=page.locator('.kr-hud-home').bounding_box();assert wallet['x']+wallet['width']<home['x']-2,(wallet,home)
-   assert page.locator('[data-home-balance]').evaluate('e=>getComputedStyle(e).fontSize')=='19px'
-   assert page.evaluate('KingRicoCloud.player.balance')==balance
-   page.evaluate('KingRicoWallet.set(document.querySelector("[data-home-balance]"),KingRicoCloud.player.balance,{external:true})')
    page.get_by_role('button',name='Abrir menu',exact=True).click()
    menu=page.get_by_role('dialog',name='Menu — Parque',exact=True);menu.wait_for()
    menu.get_by_role('group',name='Efeitos sonoros',exact=True).get_by_role('button',name='50%',exact=True).click()
@@ -61,6 +68,7 @@ with sync_playwright() as p:
    for selector,expected in hud_boxes.items():
     actual=page.locator(selector).bounding_box()
     assert all(abs(actual[k]-expected[k])<1.2 for k in ['x','y','width','height']),(selector,actual,expected)
+   page.get_by_role('link',name='Abrir parque',exact=True).click();ready()
   assert not errors and not missing,(errors,missing)
   print(json.dumps({'parkWidth':width,'assets':True,'hudTargets':True,'normalScroll':True,'errors':errors,'missing':missing}),flush=True)
   page.close()

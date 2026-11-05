@@ -258,3 +258,7 @@ recorte e transparência. Vetorial, 0 créditos externos; v2 preservada.
 de Clown, goleiro palhaço v3, Flying e Fingo. Bola de futebol geométrica em
 `ui/park/football.svg`. Sem edição de personagens, sem geração externa: 0 créditos.
 Critério: leitura em 360–430 px, mesmo HUD e reconhecimento da mecânica.
+
+05/11 · Atalho Parque: ícone geométrico de tenda em SVG, moldura creme/dourada
+coerente com Home/menu. Arte existente de ingresso no contador dos jogos.
+0 créditos externos, sem edição de personagens. Prévia, avaliação visual do dono pendente.

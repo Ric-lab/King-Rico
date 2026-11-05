@@ -11,6 +11,9 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
   page.locator('.park-panel [data-ticket]').click();page.locator('.park-modal').wait_for(state='detached')
   assert page.evaluate('KingRicoCloud.park.tickets')==3
+  page.locator('[data-hud-tickets]').wait_for()
+  page.wait_for_function('document.querySelector("[data-hud-tickets]").textContent==="3"')
+  assert page.locator('.kr-hud-park').get_attribute('href')=='/park'
   if game=='penalty':assert not page.locator('img[src="/assets/brand/covers/penalty.webp"]').count()
   results=page.evaluate('''async game=>{
    const sleep=()=>new Promise(r=>setTimeout(r,350)),out=[];
@@ -18,6 +21,8 @@ with sync_playwright() as p:
     const before=KingRicoCloud.player.balance,tickets=KingRicoCloud.park.tickets,roundId=crypto.randomUUID();
     const first=()=>game==='clown'?KingRicoCloud.clown(25,roundId,0,0):game==='penalty'?KingRicoCloud.penalty('shoot',25,roundId,0,0):KingRicoCloud.flying('pop',25,roundId,0,0);
     let r=await first();
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    if(document.querySelector('[data-hud-tickets]').textContent!==String(Math.max(0,tickets-1)))throw Error('Ticket HUD did not follow confirmed debit');
     const paid=KingRicoCloud.player.balance;
     const replay=await first();if(!replay.replayed)throw Error('First move must replay');
     if(KingRicoCloud.player.balance!==paid)throw Error('Replay charged twice');
@@ -34,6 +39,7 @@ with sync_playwright() as p:
    }
    return out;
   }''',game)
+  page.screenshot(path=f'work/preview-hud-{game}.png')
   assert not errors,errors
   print(json.dumps({'game':game,'firstConfirmationOnly':True,'replaySafe':True,'rounds':results,'errors':errors}),flush=True)
   # A replay after an immediate loss may have authorized the next unused pass.

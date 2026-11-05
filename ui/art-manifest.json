@@ -1,20 +1,21 @@
 {
   "common": [
     "assets/stage-lit.webp",
-    "assets/symbols/sym-coin.webp"
+    "assets/symbols/sym-coin.webp",
+    "ui/park/park-button.svg",
+    "assets/machine/ticket-symbol-v1.webp"
   ],
   "home": [
-    "assets/icons/btn-home.png",
     "assets/machine/ticket-symbol-v1.webp",
     "assets/clown/clown.webp",
-    "assets/penalty/jump.webp",
+    "assets/penalty/clown-keeper-v3.webp",
     "assets/flying/clown.webp",
     "assets/flying/b0.webp",
     "assets/flying/b1.webp",
     "assets/flying/b2.webp",
-    "assets/fingo/board-lit.webp",
-    "assets/fingo/target-balls.webp",
-    "assets/icons/reward-video.svg"
+    "assets/icons/reward-video.svg",
+    "assets/penalty/field.webp",
+    "ui/park/football.svg"
   ],
   "circus": [
     "assets/machine/base-controls-v4.svg",
