@@ -12,6 +12,7 @@ with sync_playwright() as p:
   page=context.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
+  page.add_init_script('''window.wheelTiming={};new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-wheel-machine')&&e.classList.contains('is-won')&&!wheelTiming.resultAt)wheelTiming.resultAt=performance.now();if(e.dataset?.hoist==='returning'&&!wheelTiming.returnAt)wheelTiming.returnAt=performance.now();}}).observe(document,{subtree:true,attributes:true,attributeFilter:['class','data-hoist']});''')
   page.add_init_script('''window.motionQA=[];const animate=Element.prototype.animate;Element.prototype.animate=function(k,o){motionQA.push({cls:this.className,duration:o.duration});return animate.call(this,k,o)};''')
   def ready():
    page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
@@ -100,10 +101,10 @@ with sync_playwright() as p:
   assert page.get_by_role('button',name='APLICAR',exact=False).count()==0
   assert page.locator('[data-wheel-spin]').is_hidden()
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
-  page.wait_for_timeout(1700)
-  assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel','Keep result visible before returning'
+  page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
+  timing=page.evaluate('wheelTiming')
+  assert timing['returnAt']-timing['resultAt']>=2150,timing
   if mode=='no-preference':
-   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="returning"')
    page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)

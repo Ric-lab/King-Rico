@@ -11,6 +11,7 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 ## Prévia (2026-11-05 · Codex · retorno automático da roleta)
 - Dono pediu içamento mais lento e remover Aplicar. Subida agora 2,2 s; roleta entra ao final. Multiplicador permanece por 2,2 s, depois as cordas devolvem a máquina em 1,6 s e segue a viagem do multiplicador/prêmio.
 - Movimento reduzido mantém o tempo de leitura sem içamento. Fluxo recuperado também fecha sozinho; falha de rede oferece Tentar novamente, com o mesmo fechamento idempotente existente. Nenhuma regra, prêmio ou saldo alterado.
+- Tempo de leitura medido no relógio do navegador entre resultado e início do retorno; independente da duração das capturas no CI.
 - Conferidos gesto/botão, tempo de leitura, volta automática e controles restaurados em navegador normal/reduzido, com capturas. Build final de produção depois do navegador. Apenas prévia.
 
 ## Prévia (2026-11-04 · Codex · roleta como troca de cena)
