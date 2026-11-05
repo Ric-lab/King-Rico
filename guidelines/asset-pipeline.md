@@ -247,3 +247,6 @@ contorno do spin. Técnica: SVG geométrico com acabamento nacarado, mesma abert
 e viewBox. Novo arquivo `spin-rim-iridescent-v1.svg`; dourado preservado.
 Custo de geração externa: 0 créditos. Conferência em repouso e pressionado;
 sem alteração do mecanismo do botão. Avaliação estética pendente do dono.
+
+05/11 · Revisão do aro: `spin-rim-iridescent-v2.svg`, cores intensificadas e
+reflexos mais claros sobre o mesmo recorte. V1 preservada; 0 créditos externos.

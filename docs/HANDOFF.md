@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · Bonus e aro mais vivo)
+- Correção solicitada: título exatamente Bonus, sem acento. Aro iridescente v2 mais brilhante e saturado, com rosa/violeta/ciano e reflexos claros. Recorte e comportamento preservados; v1 guardada.
+- Conferidos repouso/clique e título no navegador; build de produção depois da conferência. Só prévia.
+
 ## Prévia (2026-11-05 · Codex · aro iridescente e título Bônus)
 - Título visível reduzido a Bônus. Novo aro vetorial `spin-rim-iridescent-v1.svg` com acabamento nacarado rosa/violeta/azul; mesmo recorte do dourado, sem alterar a face, a altura ou o clique. Aro anterior preservado.
 - Conferência visual em repouso/clique e abertura do bônus; build final de produção depois do navegador. Só prévia.
@@ -116,4 +120,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar o aro iridescente do spin e o título Bônus na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar o aro iridescente v2 mais vivo e o título Bonus na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

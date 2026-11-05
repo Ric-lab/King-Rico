@@ -543,3 +543,6 @@ As tentativas anteriores permanecem apenas como histórico, não como padrão.
 Prévia 05/11: `spin-rim-iridescent-v1.svg` substitui só o acabamento dourado
 do spin por nacarado rosa/violeta/azul. Mesmo viewBox 357×78, abertura e
 contornos do aro anterior; geometria, profundidade e clique preservados.
+
+Prévia 05/11: aro `spin-rim-iridescent-v2.svg` intensifica rosa, violeta,
+ciano e reflexos claros. Mesma geometria; v1 preservada como tentativa suave.
