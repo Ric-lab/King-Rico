@@ -18,9 +18,14 @@ export function createWheelScene(stage,html){
 export async function enterWheel(el){
  const s=el._hoist,{stage,rig,items}=s,wrap=el.querySelector('.park-wheel-wrap'),wheel=el.querySelector('.park-wheel-machine');
  const fit=()=>wheel.style.setProperty('--park-wheel-scale',String(wrap.clientWidth/386));fit();s.observer=new ResizeObserver(fit);s.observer.observe(wrap);
- stage.dataset.hoist='lifting';
+ stage.dataset.hoist='rigging';
  try{
   if(!calm()){
+   const arrival=rig.animate([{translate:'0 -310px'},{translate:'0 0'}],{duration:2000,easing:'cubic-bezier(.4,0,.4,1)',fill:'both'});
+   s.animations.push(arrival);await settle([arrival],2300);arrival.cancel();
+   await new Promise(resolve=>setTimeout(resolve,500));
+   if(s.cleaned)return;
+   stage.dataset.hoist='lifting';
    const motion=[{translate:'0 0'},{translate:'0 8px',offset:.12},{translate:'0 -920px'}];
    for(const n of [...items,rig])s.animations.push(n.animate(motion,{duration:3600,easing:'cubic-bezier(.45,.12,.35,1)',fill:'both'}));
    s.animations.push(el.animate([{opacity:0,transform:'translateY(65px) scale(.9)'},{opacity:1,transform:'translateY(0) scale(1)'}],{delay:3050,duration:800,easing:'cubic-bezier(.2,.8,.25,1)',fill:'both'}));

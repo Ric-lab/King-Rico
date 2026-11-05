@@ -1,6 +1,6 @@
 import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
-import {installMotion,confetti} from './motion.js';
+import {installMotion} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
 import {installParkNavigation} from './navigation.js';
 import {createWheelScene,enterWheel} from './wheel-transition.js';
@@ -93,7 +93,7 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  el.querySelector('.park-pocket').setAttribute('aria-label',`Parque: ${tickets} ingressos`);
  el.classList.toggle('is-ready',!!displayState.wheel);
- el.classList.toggle('has-lit-goals',(fc?._parkMeterLevel??displayState.spins)>0||!!displayState.wheel);
+ el.classList.toggle('has-lit-goals',(fc?._parkMeterLevel??displayState.spins)>=10||(!!displayState.wheel&&!fc?._parkMeterBusy));
  fc?._parkSyncIdlePulseColor?.();
 }
 function showWheel(){
@@ -119,8 +119,6 @@ function showWheel(){
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
   el.querySelector('.park-wheel-machine').classList.add('is-won');
-  const cheer=()=>{if(el.isConnected)confetti(el.querySelector('.park-wheel-wrap'),[{x:55,y:170},{x:295,y:170}],{count:48,spread:155});};
-  cheer();setTimeout(cheer,950);
   el.querySelector('.park-wheel-hub strong').textContent='×'+w.result.multiplier;
   btn.hidden=true;
   const collect=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
@@ -136,7 +134,7 @@ function showWheel(){
   }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.hidden=false;btn.textContent='TENTAR NOVAMENTE';btn.disabled=false;busy=false;}};
   btn.onclick=collect;
   // Reading time belongs to the result, including reduced motion and restored bonuses.
-  await new Promise(resolve=>setTimeout(resolve,5500));
+  await new Promise(resolve=>setTimeout(resolve,4500));
   if(el.isConnected&&!el._hoist.cleaned)await collect();
  }
  async function startSpin(){

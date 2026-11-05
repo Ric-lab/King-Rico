@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · chegada das cordas e luz no vermelho)
+- Correção do pedido: cordas não aparecem prontas; descem por 2 s e assentam por 0,5 s antes do içamento de 3,6 s. Resultado fica 4,5 s; descida da máquina mantém 2,4 s.
+- Roletinhas só prendem a luz ao atingir vermelho/10 cargas, permanecendo acesas até subir. Não ficam permanentemente acesas nos níveis anteriores. Removidos os confetes de barra cheia e resultado, mantendo luzes e o retorno automático.
+- Navegador cobre fase das cordas, luz apagável antes do vermelho/contínua no vermelho, ausência de confetes, leitura, giro e retorno nos modos normal/reduzido. Capturas inspecionadas; build de produção após navegador. Apenas prévia.
+
 ## Prévia (2026-11-05 · Codex · celebração e leitura da roleta)
 - Pedido de mais calma/festa: subida 3,6 s com entrada da roleta ao final; descida 2,4 s; resultado permanece 5,5 s antes do retorno automático. Comemoração da barra cheia em 2,2 s, mais confetes e duas ondas no resultado, com pausa final para leitura.
 - Roletinhas das barras ficam iluminadas continuamente após carregar, inclusive entre pulsos e ao retomar; brilho só reinicia com o ciclo vazio. Movimento reduzido preserva leitura sem decoração intensa.
@@ -103,4 +108,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar o ritmo mais calmo, festa, luz contínua e leitura ampliada, sem Aplicar, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.
+- Dono avaliar chegada gradual das cordas, luz presa apenas no vermelho e multiplicador por 4,5 s sem confetes, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.

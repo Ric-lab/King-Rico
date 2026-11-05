@@ -64,12 +64,7 @@ with sync_playwright() as p:
   assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==ticket_cells
   assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==ticket_cells
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
-  goal=page.locator('.park-meter-goal').first
-  light=goal.evaluate('e=>({filter:getComputedStyle(e).filter,glow:getComputedStyle(e).boxShadow})')
-  assert light['filter']=='brightness(1.22)' and light['glow']!='none',light
-  page.wait_for_timeout(800)
-  assert goal.evaluate('e=>getComputedStyle(e).filter')==light['filter'],'Goal must stay lit after the pulse'
-
+  assert not page.locator('.park-circus-rails').evaluate('e=>e.classList.contains("has-lit-goals")'),'Goal must not latch before red'
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
@@ -82,8 +77,14 @@ with sync_playwright() as p:
   dialog=page.get_by_role('region',name='Roleta multiplicadora',exact=True);dialog.wait_for(timeout=30000)
   if mode=='no-preference':
    page.wait_for_timeout(300)
-   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='lifting'
-   page.screenshot(path='work/preview-hoist-lifting.png')
+   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='rigging'
+   page.screenshot(path='work/preview-ropes-arrival.png')
+   goal=page.locator('.park-meter-goal').first
+   assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
+   page.wait_for_timeout(600)
+   assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
+   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
+   page.wait_for_timeout(350);page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1
   assert page.locator('.park-modal').count()==0,'Bonus must use the real stage, not a modal'
   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel'
@@ -106,10 +107,11 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
   assert page.get_by_role('button',name='APLICAR',exact=False).count()==0
   assert page.locator('[data-wheel-spin]').is_hidden()
+  assert page.locator('.park-confetti').count()==0,'Removed bonus confetti must not return'
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
   page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
-  assert timing['returnAt']-timing['resultAt']>=5400,timing
+  assert timing['returnAt']-timing['resultAt']>=4400,timing
   if mode=='no-preference':
    page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)

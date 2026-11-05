@@ -67,10 +67,10 @@ Na versão oficial, a apresentação conserva o líquido sincronizado com o puls
 a união das roletas, o multiplicador viajando ao prêmio e as moedas ao saldo.
 Na prévia de 04/11, a roleta substitui a máquina no próprio palco: cabos e travessa
 suspendem o conjunto, mantendo HUD e cenário. Não há modal, véu ou desfoque.
-Atualização da prévia em 05/11: subida em 3,6 s, resultado exposto por 5,5 s
-e retorno automático em 2,4 s. Duas ondas de confetes celebram o resultado,
-com uma pausa limpa ao final para leitura. As roletinhas das barras mantêm
-brilho contínuo após a carga, até reiniciar o ciclo vazio. Não há botão Aplicar: a máquina desce antes
+Atualização da prévia em 05/11: cordas descem por 2 s, assentam por 0,5 s e
+só então suspendem o conjunto em 3,6 s. Resultado exposto por 4,5 s e retorno
+automático em 2,4 s. Sem confetes nessa sequência. Roletinhas só travam acesas
+ao atingir o vermelho, permanecendo assim até o içamento/fechamento do bônus. Não há botão Aplicar: a máquina desce antes
 do multiplicador atingir o mostrador. Erro de rede oferece Tentar novamente;
 reabrir o resultado salvo também segue automaticamente, sem novo sorteio.
 `ui/park/wheel-transition.js` controla apenas apresentação, sem alterar crédito.
