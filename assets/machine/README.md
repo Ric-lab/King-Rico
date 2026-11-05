@@ -557,3 +557,7 @@ Arte v3 permanece como base/fallback; movimento reduzido mantém acabamento fixo
 Prévia 05/11: paleta móvel equilibrada em 12 matizes, espaçados a cada 30°
 no círculo cromático, com saturação/luminosidade equivalentes. Inclui verdes
 e vermelhos antes pouco representados; mantém ciclo de 40 s e recorte v3.
+
+Prévia 05/11: o pulso elétrico revela brevemente no aro a mesma cor da face
+(520 ms, 320 ms reduzido), usando a máscara v3. Camada sólida desaparece
+sobre a iridescência que continua girando, sem reiniciar seu ciclo de 40 s.

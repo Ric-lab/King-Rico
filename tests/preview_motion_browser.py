@@ -25,6 +25,11 @@ with sync_playwright() as p:
    page.wait_for_timeout(180)
    assert rim.evaluate('e=>getComputedStyle(e).backgroundImage')!=before_color,'Iridescent colors must circulate'
   else:assert rim.evaluate('e=>getComputedStyle(e).animationName')=='none'
+  page.evaluate('__fc.lightsPulse()');page.wait_for_timeout(220)
+  pulse=page.locator('.park-spin-rim-pulse').evaluate('e=>({opacity:Number(getComputedStyle(e).opacity),color:getComputedStyle(e).backgroundColor})')
+  assert pulse['opacity']>.95 and pulse['color']==page.locator('.park-spin-wash').evaluate('e=>getComputedStyle(e).backgroundColor'),pulse
+  page.wait_for_timeout(650)
+  assert page.locator('.park-spin-rim-pulse').evaluate('e=>Number(getComputedStyle(e).opacity)')==0
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{
     const fc=__fc,ac=fc.ac,out=fc.out,gate=fc.gate;

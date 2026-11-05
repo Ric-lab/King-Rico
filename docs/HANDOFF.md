@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · pulso colorido no aro)
+- Mesmo disparo elétrico do spin pinta o aro por um instante na cor preparada para a face. Camada sólida recortada pela máscara v3: 520 ms (320 ms reduzido), pequeno atraso de propagação 120 ms e retorno à iridescência. Nova batida substitui a anterior.
+- Órbita cromática continua por baixo sem reiniciar. Nenhuma mudança em clique, som, prêmio ou carteira. Conferência visual/temporal no navegador; build de produção depois. Só prévia.
+
 ## Prévia (2026-11-05 · Codex · equilíbrio cromático do aro)
 - Paleta circulante agora distribui 12 matizes em intervalos iguais de 30°, com saturação/luminosidade equivalentes. Vermelhos e verdes ganham espaço proporcional aos azuis/violetas/rosas. Mantidos brilho, máscara, clique e volta em 40 s.
 - Conferidos quadros da animação e clique no navegador; build final de produção após conferência. Apenas prévia.
@@ -133,4 +137,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar distribuição equilibrada dos 12 matizes no aro do spin na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar a batida de cor sólida no aro sincronizada ao pulso do spin na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

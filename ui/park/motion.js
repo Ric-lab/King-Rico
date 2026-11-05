@@ -6,12 +6,14 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkMeterLevel=window.KingRicoPark.state.spins;fc._parkVisibleTickets=window.KingRicoPark.state.tickets;
  const spinButton=document.querySelector('[data-spin-btn]');
  const spinSurface=spinButton?.querySelector('.park-spin-aperture');
+ const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=rim?.querySelector('.park-spin-rim-pulse');let rimFlash;
  const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color',colorAt(Math.max(0,Math.min(1,level/10))));
  commitSpinColor(fc._parkMeterLevel);
  fc._parkPreparePulseColor=(level=Math.min(10,fc._parkMeterLevel+1))=>{
   const color=colorAt(Math.max(.05,Math.min(1,level/10)));
   // This static layer keeps its paint when the native button updates its inline style.
   spinSurface?.style.setProperty('--park-spin-pulse-color',color);
+  rim?.style.setProperty('--park-rim-pulse-color',color);
   spinSurface?.style.setProperty('--park-spin-pulse-glow',color.replace('rgb(','rgba(').replace(')',',.5)'));
  };
  fc._parkPreparePulseColor();
@@ -23,7 +25,9 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0);});};syncColor(fc._parkMeterLevel);
  const nativePulse=fc.lightsPulse.bind(fc);let pulseNo=0,lastPulse=0,queuedCharge;
- fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);schedule();};
+ fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);
+  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0)+120,duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only; the original pulse and prize continue. */}
+  schedule();};
  const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
  const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._parkTicketAward&&res.win<=0)flyTickets(fc,refresh);};

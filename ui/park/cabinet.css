@@ -241,3 +241,5 @@
 .park-spin-iridescence{position:absolute;inset:0;pointer-events:none;opacity:.84;background:conic-gradient(from var(--park-rim-angle),#ff7b7b 0deg,#ffbd7b 30deg,#ffff7b 60deg,#bdff7b 90deg,#7bff7b 120deg,#7bffbd 150deg,#7bffff 180deg,#7bbdff 210deg,#7b7bff 240deg,#bd7bff 270deg,#ff7bff 300deg,#ff7bbd 330deg,#ff7b7b 360deg);mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;animation:parkRimOrbit 40s linear infinite}
 @keyframes parkRimOrbit{to{--park-rim-angle:360deg}}
 @media(prefers-reduced-motion:reduce){.park-spin-iridescence{animation:none}}
+
+.park-spin-rim-pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:var(--park-rim-pulse-color,#8e24ff);mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat}
