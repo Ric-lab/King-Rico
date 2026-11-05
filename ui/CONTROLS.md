@@ -152,3 +152,14 @@ baixo; a fonte do saldo permanece em 19 px nas coordenadas da cena.
 arte existente de ingresso e breve destaque da contagem; movimento reduzido
 remove esse destaque. Não é uma segunda carteira. Circus mantém o contador
 original e a chegada animada dos ingressos. Anúncio no parque vem antes das capas.
+
+
+Prévia 05/11 · Refinamento do HUD: Parque usa agora **a mesma moldura recortada
+de `stage-lit.webp` de Home**, em 41 px com a mesma escala 1,07317, e um controle
+central em `park-gamepad-v2.svg`. Substitui a tenda/moldura independente. Mesmos
+44 px de toque e resposta de pressão de Home.
+
+Contador de ingressos: placa de no mínimo 142 × 44 px nas coordenadas da cena,
+16 px de padding horizontal, 12 px entre ícone/valor, número 24 px e ingresso
+40 × 26 px. Pequenos ajustes verticais na faixa das bolas do Clown, multiplicadores
+do Pênalti e proteção do Flying deixam espaço abaixo da placa, sem alterar jogos.

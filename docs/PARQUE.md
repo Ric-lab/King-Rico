@@ -209,3 +209,10 @@ permanece o contador original, sincronizado com a viagem/som dos ingressos.
 Os três botões conservam alvos de 44 px. Se o saldo longo ocupar o espaço dos
 botões em uma tela estreita, eles passam juntos para a linha inferior; os
 números não encolhem. Navegação não cancela nem reembolsa rodadas salvas.
+
+
+Prévia 05/11, refinamento após feedback: o contador das atrações ficou maior,
+com margens internas e intervalo entre ícone/valor ampliados. Parque passa a
+usar controle de videogame sobre a moldura original de Home, com tamanho,
+escala e pressionamento iguais. Casinha de Home preservada. A tenda anterior
+é uma tentativa substituída. Não muda cobranças nem navegação.

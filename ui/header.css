@@ -26,12 +26,12 @@
 /* Shared navigation: Home, Parque and settings, each with a 44px touch target. */
 .kr-hud-row .kr-hud-home{right:calc(40.667px + 2 * max(50px,48px / var(--kr-hud-px-scale,1)) - var(--kr-hit-side)/2)}
 .kr-hud-row .kr-hud-park{--kr-hit-side:calc(44px / var(--kr-hud-px-scale,1));position:absolute;right:calc(40.667px + max(50px,48px / var(--kr-hud-px-scale,1)) - var(--kr-hit-side)/2);top:calc(34.5px - var(--kr-hit-side)/2);width:var(--kr-hit-side);height:var(--kr-hit-side);padding:0;border:0;border-radius:50%;background:none;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.kr-hud-row .kr-hud-park:after{content:'';position:absolute;left:50%;top:50%;width:44px;height:44px;background:url('./park/park-button.svg') center/contain no-repeat;transform:translate(-50%,-50%);pointer-events:none}
-.kr-hud-park:active{filter:brightness(.7)}
+.kr-hud-row .kr-hud-park:after{content:'';position:absolute;left:50%;top:50%;width:41px;height:41px;border-radius:50%;background-image:url('./park/park-gamepad-v2.svg'),url('../assets/stage-lit.webp');background-position:center,-341.833px -29.5px;background-size:27px 27px,453px 802px;background-repeat:no-repeat;transform:translate(-50%,-50%) scale(1.0731707317);pointer-events:none}
+.kr-hud-park:active{filter:brightness(.6) saturate(1.2)}
 .kr-hud-park:focus-visible{outline:3px solid #fff3c4;outline-offset:3px}
-.kr-hud-tickets{position:absolute;left:18px;top:65px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:6px;min-width:82px;height:30px;padding:1px 12px 1px 5px;border:2px solid #e8ad41;border-radius:16px;background:linear-gradient(#fffbed,#ffe9ae);box-shadow:0 2px #ae712944;color:#6d3c1e;pointer-events:none}
-.kr-hud-tickets img{width:31px;height:24px;object-fit:contain}
-.kr-hud-tickets strong{font:800 21px/1 'Baloo 2',sans-serif;font-variant-numeric:tabular-nums}
+.kr-hud-tickets{position:absolute;left:18px;top:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:12px;min-width:142px;height:44px;padding:7px 16px;border:2px solid #e8ad41;border-radius:22px;background:linear-gradient(#fffbed,#ffe9ae);box-shadow:0 2px #ae712944;color:#6d3c1e;pointer-events:none}
+.kr-hud-tickets img{width:40px;height:26px;object-fit:contain;flex-shrink:0}
+.kr-hud-tickets strong{font:800 24px/1 'Baloo 2',sans-serif;font-variant-numeric:tabular-nums}
 .kr-hud-tickets.is-changing strong{animation:krTicketCount .35s ease-out}
 @keyframes krTicketCount{40%{transform:scale(1.18);color:#9d4d24}}
 /* Preserve the full-size long balance instead of squeezing its digits. */

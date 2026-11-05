@@ -2,7 +2,7 @@
   "common": [
     "assets/stage-lit.webp",
     "assets/symbols/sym-coin.webp",
-    "ui/park/park-button.svg",
+    "ui/park/park-gamepad-v2.svg",
     "assets/machine/ticket-symbol-v1.webp"
   ],
   "home": [

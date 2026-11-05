@@ -28,6 +28,9 @@ with sync_playwright() as p:
   for selector in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']:
    r=page.locator(selector).bounding_box();assert r['width']>=43.5 and r['height']>=43.5,(width,selector,r)
   assert page.locator('.kr-menu-button').evaluate('e=>getComputedStyle(e,"::after").backgroundImage').find('stage-lit.webp')>=0
+  assert page.locator('.kr-hud-park').evaluate('e=>getComputedStyle(e,"::after").backgroundImage').find('park-gamepad-v2.svg')>=0
+  for prop in ['width','height','transform']:
+   assert page.locator('.kr-hud-park').evaluate('(e,p)=>getComputedStyle(e,"::after")[p]',prop)==page.locator('.kr-hud-home').evaluate('(e,p)=>getComputedStyle(e,"::after")[p]',prop)
   page.wait_for_function('[...document.images].filter(n=>n.getBoundingClientRect().width).every(n=>n.complete&&n.naturalWidth>0)')
   page.wait_for_function('!document.querySelector(".kr-wallet-coin,.kr-reward-flying-coin")')
   page.screenshot(path=f'work/preview-park-{width}.png',full_page=True)

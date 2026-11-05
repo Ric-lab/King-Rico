@@ -70,7 +70,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
         </sc-if>
 
         <!-- Progressão em duas fileiras de cinco prêmios. -->
-        <div style="position: absolute; z-index: 9; left: 0; right: 0; top: 104px; display: grid; grid-template-columns: repeat(5, 74px); justify-content: center; justify-items: center; align-items: center; gap: 10px; pointer-events: none;">
+        <div style="position: absolute; z-index: 9; left: 0; right: 0; top: 120px; display: grid; grid-template-columns: repeat(5, 74px); justify-content: center; justify-items: center; align-items: center; gap: 10px; pointer-events: none;">
           <sc-for list="{{ ladder }}" as="p" hint-placeholder-count="10">
             <div data-penalty-multiplier="{{ p.label }}" style="width: {{ p.w }}; height: {{ p.h }}; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: {{ p.bg }}; box-shadow: {{ p.sh }}; animation: {{ p.anim }}; transition: background .25s, box-shadow .25s;">
               <span style="font-size: {{ p.fs }}; font-weight: 800; line-height: 1; color: {{ p.c }}; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.label }}</span>

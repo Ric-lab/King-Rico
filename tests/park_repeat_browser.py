@@ -14,6 +14,10 @@ with sync_playwright() as p:
   page.locator('[data-hud-tickets]').wait_for()
   page.wait_for_function('document.querySelector("[data-hud-tickets]").textContent==="3"')
   assert page.locator('.kr-hud-park').get_attribute('href')=='/park'
+  counter=page.locator('.kr-hud-tickets')
+  assert counter.bounding_box()['height']>37
+  assert counter.evaluate('e=>parseFloat(getComputedStyle(e).paddingLeft)')>=16
+  assert counter.evaluate('e=>parseFloat(getComputedStyle(e).gap)')>=12
   if game=='penalty':assert not page.locator('img[src="/assets/brand/covers/penalty.webp"]').count()
   results=page.evaluate('''async game=>{
    const sleep=()=>new Promise(r=>setTimeout(r,350)),out=[];

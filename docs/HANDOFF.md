@@ -8,6 +8,13 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · respiro no contador e controle do parque)
+- Dono rejeitou contador pequeno/apertado e diferença visual no botão Parque. Placa dos ingressos ampliada para 142 × 44, com padding horizontal 16, intervalo 12 e número 24; arte original preservada.
+- Parque agora usa exatamente a base original/escala de Home, com controle de videogame central em SVG. Casinha e menu preservados. Preload atualizado; tenda anterior substituída.
+- Faixa de bolas do Clown, multiplicadores do Pênalti e proteção do Flying recebem leve ajuste vertical para deixar respiro abaixo do contador. Nenhuma mudança financeira ou de dinâmica.
+- Conferidos 360/390/430 px, saldo longo, quatro partidas nas três atrações e contagem confirmada; screenshots revisados. Os 53 testes de build/carteira/adaptadores passaram, com produção gerada após o navegador.
+- Apenas prévia. Próxima avaliação estética é do dono; conferir contador e os três botões no celular.
+
 ## Prévia (2026-11-05 · Codex · anúncio, ingressos e navegação)
 - Código `618598c` publicado somente na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42030311399 concluído com sucesso: animações do Circus, navegação, três larguras/saldo longo e contador após cobranças nas três atrações conferidos no endereço público.
 - Anúncio de +1.000 moedas movido para logo abaixo do cabeçalho, antes do título/capas. Nenhum comportamento financeiro alterado.
@@ -187,4 +194,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar na prévia /park: anúncio no alto, novo botão Parque e contador nas atrações; manter três capas e continuidade sem modal. Não publicar no oficial sem aprovação.
+- Dono avaliar na prévia o contador ampliado e o ícone de controle com moldura original de Home. Manter anúncio no alto, três atrações e continuidade sem modal. Não publicar no oficial sem aprovação.
