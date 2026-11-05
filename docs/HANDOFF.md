@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · encontro lateral e ingressos mais ágeis)
+- Após preencher de verde, disco viaja para a direita enquanto a máquina completa entra pronta por esse lado. Trajetória lateral encontra o prêmio no fim da troca; substitui a volta separada de topo/rolos. Modo normal 1,9 s; reduzido 0,9 s. Crédito e impacto continuam no mesmo fluxo.
+- Ingressos sequenciais em 620 ms (normal) / 400 ms (reduzido), antes 700/450; mesmas três notas e contato sincronizado, sem sobrepor partidas.
+- Conferidos deslocamentos opostos, máquina pronta, impacto e limpeza em navegador normal/reduzido. Build final de produção depois da conferência. Apenas prévia; carteira/regras preservadas.
+
 ## Prévia (2026-11-05 · Codex · centro verde e retorno em etapas)
 - Ao revelar o multiplicador, centro verde cresce até cobrir o disco em 1,1 s (reduzido: estado final direto), mantendo número legível e leitura de 3,6 s.
 - Elefante/nuvem e mostrador voltam primeiro. Disco verde com número permanece no centro e voa/encolhe até o prêmio. Após impacto e contagem, outras peças e cordas descem. Topo não se move de novo.
@@ -150,4 +155,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar centro verde expandindo e sequência topo → multiplicador/prêmio → restante da máquina na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.
+- Dono avaliar encontro lateral do disco com a máquina pronta à direita e ritmo um pouco mais rápido dos ingressos na prévia compartilhada. Oficial permanece inalterado; aguardar aprovação para publicar.

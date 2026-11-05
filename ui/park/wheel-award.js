@@ -13,15 +13,15 @@ export async function applyMultiplier(fc,w,source){
  const base=w.baseUnits/100,total=w.result.winUnits/100,target=fc._parkPrizeTarget;
  const origin=source?.bounds||source;
  record(fc,'multiplier:start',{multiplier:w.result.multiplier,base,total,originX:origin?.x+origin?.width/2,originY:origin?.y+origin?.height/2});
- const end=target?.getBoundingClientRect();let node=source?.node,animation,timer;source=source?.bounds||source;
+ const end=source?.target||target?.getBoundingClientRect(),lateral=source?.lateral||0,flightDuration=source?.duration;let node=source?.node,animation,timer;source=source?.bounds||source;
  try{
   if(source?.width&&end?.width){
    if(!node){node=document.createElement('b');node.className='park-flying-multiplier';node.textContent='×'+w.result.multiplier;node.setAttribute('aria-hidden','true');document.body.append(node);}
    const sx=source.x+source.width/2,sy=source.y+source.height/2,tx=end.x+end.width/2,ty=end.y+end.height/2;
    const startScale=Math.max(.3,source.height/64),endScale=node.classList.contains('park-flying-bonus-disc')?Math.max(.045,end.height/parseFloat(node.style.getPropertyValue('--park-multiplier-disc-size'))):Math.max(.25,Math.min(.6,end.height/80));
    // A brief lift, a smooth arc, then a precise arrival on the prize.
-   const frames=Array.from({length:31},(_,i)=>{const t=i/30,u=Math.max(0,(t-.1)/.9),v=u*u*(3-2*u),q=1-v,arc=reduced()?0:Math.sin(v*Math.PI),x=q*sx+v*tx+arc*32,y=q*sy+v*ty-arc*60,scale=startScale+(endScale-startScale)*v+arc*.16+(t<.1&&!reduced()?Math.sin(t/.1*Math.PI)*.08:0);return {transform:`translate(${x-70}px,${y-45}px) rotate(${-arc*8}deg) scale(${scale})`,opacity:1,offset:t};});
-   const duration=reduced()?650:1550;animation=node.animate(frames,{duration,easing:'linear',fill:'both'});
+   const frames=Array.from({length:31},(_,i)=>{const t=i/30,u=Math.max(0,(t-.1)/.9),v=u*u*(3-2*u),q=1-v,arc=reduced()?0:Math.sin(v*Math.PI),x=q*sx+v*tx+(lateral?Math.sin(v*Math.PI)*lateral:arc*32),y=q*sy+v*ty-(lateral?0:arc*60),scale=startScale+(endScale-startScale)*v+arc*.16+(t<.1&&!reduced()?Math.sin(t/.1*Math.PI)*.08:0);return {transform:`translate(${x-70}px,${y-45}px) rotate(${-arc*8}deg) scale(${scale})`,opacity:1,offset:t};});
+   const duration=flightDuration||(reduced()?650:1550);animation=node.animate(frames,{duration,easing:'linear',fill:'both'});
    await Promise.race([animation.finished.catch(()=>{}),new Promise(r=>timer=setTimeout(r,duration+300))]);
   }
  }catch{/* The authoritative prize is already saved. */}

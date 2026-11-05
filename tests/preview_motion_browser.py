@@ -12,7 +12,7 @@ with sync_playwright() as p:
   page=context.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
-  page.add_init_script('''window.wheelTiming={};new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-wheel-machine')&&e.classList.contains('is-won')&&!wheelTiming.resultAt)wheelTiming.resultAt=performance.now();if(e.dataset?.hoist==='revealing-prize'&&!wheelTiming.headerAt)wheelTiming.headerAt=performance.now();if(e.dataset?.hoist==='returning'&&!wheelTiming.returnAt)wheelTiming.returnAt=performance.now();}}).observe(document,{subtree:true,attributes:true,attributeFilter:['class','data-hoist']});''')
+  page.add_init_script('''window.wheelTiming={};new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-wheel-machine')&&e.classList.contains('is-won')&&!wheelTiming.resultAt)wheelTiming.resultAt=performance.now();if(e.dataset?.hoist==='panning-game'&&!wheelTiming.headerAt)wheelTiming.headerAt=performance.now();if(e.dataset?.hoist==='returning'&&!wheelTiming.returnAt)wheelTiming.returnAt=performance.now();}}).observe(document,{subtree:true,attributes:true,attributeFilter:['class','data-hoist']});''')
   page.add_init_script('''window.motionQA=[];const animate=Element.prototype.animate;Element.prototype.animate=function(k,o){motionQA.push({cls:this.className,duration:o.duration});return animate.call(this,k,o)};''')
   def ready():
    page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
@@ -83,7 +83,7 @@ with sync_playwright() as p:
   assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
   arrivals=[x['at'] for x in first['sounds']]
-  expected=700 if mode=='no-preference' else 450
+  expected=620 if mode=='no-preference' else 400
   assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
@@ -130,22 +130,14 @@ with sync_playwright() as p:
   page.wait_for_function('window.wheelTiming.headerAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
   assert timing['headerAt']-timing['resultAt']>=3500,timing
-  held=page.locator('.park-flying-multiplier').bounding_box()
-  assert held and abs(held['x']+held['width']/2-hub_center[0])<3 and abs(held['y']+held['height']/2-hub_center[1])<3,(held,hub_center)
-  assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
-  page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
-  assert page.evaluate('__fc._parkMotionLog.some(x=>x.type==="prize:multiplied"&&x.at<wheelTiming.returnAt)')
-  cabinet=page.locator('[data-spin-btn]')
-  y1=cabinet.evaluate('e=>e.getBoundingClientRect().top')
-  page.wait_for_timeout(350)
-  y2=cabinet.evaluate('e=>e.getBoundingClientRect().top')
-  assert y2>y1+10,(mode,y1,y2,'Cabinet must visibly descend, including reduced motion')
-  assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='returning'
-  assert page.locator('.park-hoist-rig').evaluate('e=>getComputedStyle(e).visibility')=='visible'
-  page.wait_for_timeout(850 if mode=='no-preference' else 150)
-  mid_y=cabinet.evaluate('e=>e.getBoundingClientRect().top')
-  assert 80<mid_y<rest_y-30,(mode,mid_y,rest_y,'Cabinet must be visible between the top and its resting position')
-  page.screenshot(path='work/preview-hoist-return-'+mode+'.png')
+  cabinet=page.locator('[data-spin-btn]');x1=cabinet.evaluate('e=>e.getBoundingClientRect().left')
+  page.wait_for_timeout(550 if mode=='no-preference' else 260)
+  x2=cabinet.evaluate('e=>e.getBoundingClientRect().left')
+  assert x2<x1-10,(mode,x1,x2,'Ready game must enter from the right')
+  token=page.locator('.park-flying-multiplier').bounding_box()
+  assert token and token['x']+token['width']/2>hub_center[0]+8,(token,hub_center,'Multiplier must travel right')
+  assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='visible'
+  page.screenshot(path='work/preview-game-from-right-'+mode+'.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
   origin=page.evaluate('__fc._parkMotionLog.find(x=>x.type==="multiplier:start")')

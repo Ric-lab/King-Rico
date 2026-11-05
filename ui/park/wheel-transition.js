@@ -12,7 +12,7 @@ export function createWheelScene(stage,html){
  const state={stage,rig,items,inert,animations:[],observer:null,closed:false};el._hoist=state;
  const cleanup=()=>{if(state.cleaned)return;state.cleaned=true;state.animations.forEach(a=>a.cancel());state.observer?.disconnect();delete stage.dataset.hoist;stage.classList.remove('park-hoist-deck');items.forEach((n,i)=>{n.classList.remove('park-hoisted-item','park-prize-early');n.inert=inert[i];});rig.remove();el.remove();window.removeEventListener('pagehide',cleanup);};
  window.addEventListener('pagehide',cleanup,{once:true});
- el.close=async()=>{if(state.closed)return;state.closed=true;try{await leaveWheel(el);}finally{cleanup();}};
+ el.close=async()=>{if(state.closed)return;state.closed=true;try{if(stage.dataset.hoist!=='game-ready')await leaveWheel(el);}finally{cleanup();}};
  return el;
 }
 export async function enterWheel(el){
@@ -34,15 +34,16 @@ export async function enterWheel(el){
  }catch{/* The confirmed bonus still opens when animation is unavailable. */}
  finally{if(s.cleaned)return;stage.dataset.hoist='wheel';s.animations.forEach(a=>a.cancel());s.animations=[];el.querySelector('button')?.focus({preventScroll:true});}
 }
-export async function revealPrizeHeader(el){
- const s=el._hoist,header=s.items.filter(n=>n.matches('.park-mascot,.park-part-prize,.park-prize-value,[data-park-prize]'));
- header.forEach(n=>n.classList.add('park-prize-early'));s.stage.dataset.hoist='revealing-prize';
- const animations=[];
+export function enterGameRight(el){
+ const s=el._hoist;s.stage.dataset.hoist='panning-game';el.classList.add('is-disc-detached');
+ const target=s.stage.querySelector('[data-park-prize]')?.getBoundingClientRect();
+ const duration=calm()?900:1900,animations=[];
  try{
-  for(const n of header)animations.push(n.animate([{translate:'0 -920px'},{translate:'0 0'}],{duration:calm()?350:1000,easing:'cubic-bezier(.25,.7,.3,1)',fill:'both'}));
-  animations.push(el.animate([{opacity:1},{opacity:0}],{duration:300,fill:'both'}));
-  await settle(animations,1400);
- }finally{el.style.opacity='0';s.stage.dataset.hoist='prize';animations.forEach(a=>a.cancel());}
+  for(const n of s.items)animations.push(n.animate([{translate:'453px 0'},{translate:'0 0'}],{duration,easing:'linear',fill:'both'}));
+  animations.push(el.animate([{translate:'0 0',opacity:1},{translate:'-453px 0',opacity:0}],{duration,fill:'both'}));
+ }catch{/* The ready game remains available if decorative motion fails. */}
+ const finished=settle(animations,duration+350).finally(()=>{s.stage.dataset.hoist='game-ready';el.style.opacity='0';animations.forEach(a=>a.cancel());});
+ return {duration,target,offset:s.stage.getBoundingClientRect().width*.3,finished};
 }
 async function leaveWheel(el){
  const s=el._hoist;s.stage.dataset.hoist='returning';

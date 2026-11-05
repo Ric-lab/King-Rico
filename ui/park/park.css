@@ -170,3 +170,6 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-hoist-deck[data-hoist="prize"]>.park-prize-early{translate:0 0!important;visibility:visible}
 @media(prefers-reduced-motion:reduce){.park-wheel-scene .is-won .park-wheel-hub:before{animation:none;transform:scale(3.1)}}
 .park-wheel-scene .park-wheel-machine.is-won .park-wheel-hub{background:transparent;box-shadow:none}
+
+.park-wheel-scene.is-disc-detached .park-wheel-hub{visibility:hidden}
+.park-hoist-deck:is([data-hoist="panning-game"],[data-hoist="game-ready"])>.park-hoist-rig{visibility:hidden;translate:0 -920px}

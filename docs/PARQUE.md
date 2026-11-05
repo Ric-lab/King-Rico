@@ -142,3 +142,9 @@ Revisão mais recente da prévia (05/11): centro verde cresce para cobrir o
 disco; topo com elefante/nuvem e prêmio volta primeiro. O disco com o número
 viaja até o prêmio e só após o impacto/contagem voltam as demais peças.
 Esse retorno em etapas substitui a descida do conjunto inteiro antes do voo.
+
+Prévia mais recente (05/11): disco segue para a direita e a máquina completa
+entra pronta por esse lado, terminando no encontro do multiplicador com o prêmio.
+Essa troca lateral (1,9 s normal/0,9 s reduzido) substitui a volta separada
+de topo e rolos. Ingressos mantêm notas/contato e sequência um por vez, agora
+em 620/400 ms por voo para encurtar levemente o intervalo das chegadas.
