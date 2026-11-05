@@ -9,11 +9,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
 ## Prévia (2026-11-05 · Codex · três atrações e partidas contínuas)
+- Código `0daca8a`; canal /park atualizado. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42026616197 terminou com sucesso: movimentos do Circus, três larguras e quatro partidas por atração (ingressos → moedas, sem modal repetido) conferidos no endereço público. Site oficial não alterado.
 - Novo feedback: capas anteriores rejeitadas. Três placas horizontais com Clown, Pênalti e Flying; Fingo retirado só do catálogo, rota/partidas preservadas. Goleiro atual também na escolha inicial.
 - Confirma uma vez por visita. Nas próximas partidas, autoriza 1 ingresso prioritariamente ou 25 moedas sem repetir modal; transação da primeira jogada continua cobrando uma vez. Não inicia partidas nem desconta só por terminar/perder.
 - Fluxo compartilhado entre prévia e real; retomada de rodada/passe preservada. Corrigido Flying na carteira real para não debitar moedas ao usar ingresso, conforme as regras já exigiam.
 - Plano e comportamento: docs/PLANO-PARQUE.md e docs/PARQUE.md. Somente prévia; avaliação estética ainda do dono.
-- Conferidos navegador 360/390/430 px e quatro partidas reais da carteira de teste por atração (3 ingressos, depois moedas), replay sem nova cobrança e recarga. Regras/transações: 56 testes aprovados, incluindo Flying por ingresso; regras sem alterações. Testes de build atualizados para Fingo fora do catálogo.
+- Conferidos navegador 360/390/430 px e quatro partidas reais da carteira de teste por atração (3 ingressos, depois moedas), replay sem nova cobrança e recarga. Regras/transações: 56 testes aprovados, incluindo Flying por ingresso; regras sem alterações. Na execução geral de 200 testes, só falhou a expectativa antiga de Fingo na Home: corrigida e teste de build reexecutado com sucesso; demais 199 passaram. Artefato de produção gerado após integração.
 
 ## Prévia (2026-11-05 · Codex · revisão visual do parque)
 - Implementação `090775f` disponível em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/park . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42023037385 concluído com sucesso; testes de movimento e parque executados no endereço publicado, sem erros/assets ausentes. Capturas no artefato do workflow.
