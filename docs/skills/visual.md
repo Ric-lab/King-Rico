@@ -26,3 +26,4 @@ Rejeitado:
 - No vermelho, manter o pulso original das roletinhas repetindo até subir; brilho estático sozinho não atende. Leitura atual do multiplicador: 3,6 s.
 - Aro iridescente v1 suave demais: dono pediu mais brilho e cor. Título deve ser exatamente Bonus, sem acento.
 - A volta da máquina precisa descer visivelmente também com movimento reduzido; retorno instantâneo parece que os itens só reapareceram.
+- Iridescência deve distribuir todo o círculo cromático, evitando excesso de rosa/violeta/azul e falta de verde/vermelho.

@@ -553,3 +553,7 @@ sem mudar recorte, espessura ou funcionamento do spin. Versões anteriores guard
 Prévia 05/11: luz iridescente circula em 40 s por volta, recortada pela
 transparência do aro v3. A geometria não gira: só a cor percorre o contorno.
 Arte v3 permanece como base/fallback; movimento reduzido mantém acabamento fixo.
+
+Prévia 05/11: paleta móvel equilibrada em 12 matizes, espaçados a cada 30°
+no círculo cromático, com saturação/luminosidade equivalentes. Inclui verdes
+e vermelhos antes pouco representados; mantém ciclo de 40 s e recorte v3.
