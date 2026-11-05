@@ -8,6 +8,10 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · pulsação contínua e leitura 3,6 s)
+- Roletinhas mantêm o mesmo pulso de escala da carga vermelha, repetindo até subir; antes do vermelho não ficam pulsando. Movimento reduzido conserva só a luz. Resultado da roleta agora exposto por 3,6 s, mantendo retorno automático e sem confetes.
+- Teste público verifica pulso infinito no vermelho e intervalo de leitura medido no navegador; nenhuma mudança em carteira, prêmios, rolos ou som. Apenas prévia.
+
 ## Prévia (2026-11-05 · Codex · chegada das cordas e luz no vermelho)
 - Correção do pedido: cordas não aparecem prontas; descem por 2 s e assentam por 0,5 s antes do içamento de 3,6 s. Resultado fica 4,5 s; descida da máquina mantém 2,4 s.
 - Roletinhas só prendem a luz ao atingir vermelho/10 cargas, permanecendo acesas até subir. Não ficam permanentemente acesas nos níveis anteriores. Removidos os confetes de barra cheia e resultado, mantendo luzes e o retorno automático.
@@ -108,4 +112,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar chegada gradual das cordas, luz presa apenas no vermelho e multiplicador por 4,5 s sem confetes, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.
+- Dono avaliar chegada gradual das cordas, luz presa apenas no vermelho e pulsação das roletinhas no vermelho e multiplicador por 3,6 s sem confetes, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.

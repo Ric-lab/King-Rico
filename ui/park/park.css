@@ -144,8 +144,10 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-scene button[hidden]{display:none}
 
 /* Only the final red charge latches the goal lights until the bonus is lifted. */
-.park-circus-rails.has-lit-goals .park-meter-goal{filter:brightness(1.22);box-shadow:0 0 7px 2px #fff1a8,0 0 22px #ffc943cc}
+.park-circus-rails.has-lit-goals .park-meter-goal{animation:parkGoalWin .5s ease-in-out infinite;filter:brightness(1.22);box-shadow:0 0 7px 2px #fff1a8,0 0 22px #ffc943cc}
 .park-wheel-scene .park-wheel-machine.is-won .park-wheel-bulb{opacity:1;animation-duration:1.8s;animation-iteration-count:3;box-shadow:0 0 5px #fff3b0,0 0 12px #ffbd39}
 .park-wheel-scene .park-wheel-machine.is-won .park-wheel-hub{box-shadow:inset 0 2px 4px #efffc377,0 0 15px #fff1a899,0 6px 14px #0007}
 
 .park-hoist-deck[data-hoist="rigging"]>.park-wheel-scene{opacity:0;pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){.park-circus-rails.has-lit-goals .park-meter-goal{animation:none!important}}

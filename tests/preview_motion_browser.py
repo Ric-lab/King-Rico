@@ -81,6 +81,7 @@ with sync_playwright() as p:
    page.screenshot(path='work/preview-ropes-arrival.png')
    goal=page.locator('.park-meter-goal').first
    assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
+   assert goal.evaluate('e=>getComputedStyle(e).animationIterationCount')=='infinite'
    page.wait_for_timeout(600)
    assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
@@ -111,7 +112,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
   page.wait_for_function('window.wheelTiming.returnAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
-  assert timing['returnAt']-timing['resultAt']>=4400,timing
+  assert timing['returnAt']-timing['resultAt']>=3500,timing
   if mode=='no-preference':
    page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)

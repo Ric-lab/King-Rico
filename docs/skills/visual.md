@@ -23,3 +23,4 @@ Rejeitado:
 - Içamento da máquina em 1,15 s ficou rápido demais; dar tempo para acompanhar as cordas e ler o multiplicador antes da volta automática, sem Aplicar.
 - Ritmo de 2,2 s na subida/leitura ainda apressado: ampliar pausa do multiplicador, dar festa com respiro e manter roletinhas carregadas acesas entre pulsos.
 - Confetes do bônus rejeitados. Luz permanente das roletinhas é só no vermelho; cordas precisam de chegada gradual própria antes de puxar a máquina. Resultado solicitado por 4,5 s.
+- No vermelho, manter o pulso original das roletinhas repetindo até subir; brilho estático sozinho não atende. Leitura atual do multiplicador: 3,6 s.

@@ -134,7 +134,7 @@ function showWheel(){
   }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.hidden=false;btn.textContent='TENTAR NOVAMENTE';btn.disabled=false;busy=false;}};
   btn.onclick=collect;
   // Reading time belongs to the result, including reduced motion and restored bonuses.
-  await new Promise(resolve=>setTimeout(resolve,4500));
+  await new Promise(resolve=>setTimeout(resolve,3600));
   if(el.isConnected&&!el._hoist.cleaned)await collect();
  }
  async function startSpin(){
