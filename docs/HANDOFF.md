@@ -3,12 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Estado (2026-11-04)
-- `main` = site oficial. Publicado `7efe7b7` em 04/11 após aprovação do dono: spin elevado, sons e animações dos ingressos. Mantidas 3 fitas, carteira real e workflow REST de regras; prévia segue isolada.
+## Estado (2026-11-05)
+- `main` = site oficial. Publicado `1d730fb` em 05/11 após autorização do dono: versão atual com háptico do spin em 40 ms, paradas reforçadas e apresentação aprovada em desenvolvimento. Mantidas 3 fitas, carteira real e publicador REST de regras; prévia segue em projeto isolado.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
-## Entrega autorizada (2026-11-05 · Codex · háptico do spin)
+## Entrega concluída (2026-11-05 · Codex · háptico do spin)
+- Workflow https://github.com/Ric-lab/King-Rico/actions/runs/41959993457 concluído com sucesso: testes de código, regras/transações emuladas, build de produção, regras REST e Hosting.
+- Site oficial conferido no navegador: HTML contém spinPress 40 ms e padrões novos das paradas; configuração king-rico real, sem emuladores/carteira de teste, rotas e assets HTTP 200, sem erros de página/arquivos. Nenhuma aposta em conta real foi feita.
 - Usuário pediu háptico ao apertar spin e autorizou publicar a versão atual. Pulso de pressão reforçado de 20 para 40 ms no handler existente, junto ao afundar/aro; sem segunda chamada, sem alterar áudio ou apostas. Paradas mantêm os padrões reforçados da prévia.
 - Preferências/desligado e bloqueio durante giro preservados; testes focados e evento real de pressão conferidos antes do build final. Publicação pela main no workflow existente, incluindo regras REST compatíveis e Hosting.
 
@@ -163,4 +165,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Publicação autorizada pelo dono. Conferir conclusão do workflow na main e arquivos oficiais; depois aguardar feedback da sensação no celular.
+- Publicação concluída e conferida em https://king-rico.web.app/circus. Aguardar feedback do dono sobre a sensação física dos hápticos no celular; não é possível medir essa sensação no navegador automatizado da VM.
