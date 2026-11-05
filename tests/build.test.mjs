@@ -22,14 +22,15 @@ test('production artifact serves every Home game and the Penalty renderer with l
     const hash=createHash('sha256').update(await readFile(path.join('dist',asset))).digest('hex').slice(0,12);
     assert.equal(suffix,'?v='+hash,asset+' must bypass a previously cached old image');
   }
-  for(const game of ['Circus','Fingo','Penalty','Clown','Flying Clown']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
+  for(const game of ['Circus','Penalty','Clown','Flying Clown']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
   assert.match(await readFile('dist/ui/park/client.js','utf8'),/parkEntry/);
   assert.doesNotMatch(await readFile('dist/ui/park/client.js','utf8'),/mobile-preview|mock-wallet|test-wallet/);
   for(const file of ['clownball.js','bounce3d.js']) {const source=await readFile(path.join('dist',file),'utf8');assert.match(source,/const SRC = '\.\/runtime\/three\.module\.js'/);assert.doesNotMatch(source,/unpkg\.com/);}
   // Arquivados (docs/ARQUIVADOS.md): fora da Home e fora do site publicado.
   const archived=['Wheel','Neck','Bounce','21','33','Claw','Race','Bridge'].map(game=>`Fortune ${game}.dc.html`);
   for(const game of archived){assert.ok(!games.includes(game),`${game} stays archived outside Home`);await assert.rejects(access(path.join('dist',game)),`${game} must not be published`);}
-  for(const game of games) {
+  assert.ok(!games.includes('Fortune Fingo.dc.html'),'Fingo remains accessible directly, outside the park');
+  for(const game of [...games,'Fortune Fingo.dc.html']) {
     const html=await readFile(path.join('dist',game),'utf8');
     for(const script of ['firebase-config','client'])
       assert.equal([...html.matchAll(new RegExp(`src="\\./cloud/${script}\\.js"`,'g'))].length,1,game);
@@ -66,7 +67,7 @@ test('production artifact serves every Home game and the Penalty renderer with l
   }
   await access('dist/ui/app-shell.js');await access('dist/sw.js');
   for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const asset of ['assets/clown/clown.webp','assets/penalty/jump.webp','assets/flying/clown.webp','assets/flying/b0.webp','assets/fingo/board-lit.webp','assets/fingo/target-balls.webp']) {
+  for(const asset of ['assets/clown/clown.webp','assets/penalty/clown-keeper-v3.webp','assets/flying/clown.webp','assets/flying/b0.webp']) {
     assert.ok(home.includes(asset),asset);
     await access(path.join('dist',asset));
   }

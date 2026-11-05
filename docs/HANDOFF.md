@@ -8,6 +8,13 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · três atrações e partidas contínuas)
+- Novo feedback: capas anteriores rejeitadas. Três placas horizontais com Clown, Pênalti e Flying; Fingo retirado só do catálogo, rota/partidas preservadas. Goleiro atual também na escolha inicial.
+- Confirma uma vez por visita. Nas próximas partidas, autoriza 1 ingresso prioritariamente ou 25 moedas sem repetir modal; transação da primeira jogada continua cobrando uma vez. Não inicia partidas nem desconta só por terminar/perder.
+- Fluxo compartilhado entre prévia e real; retomada de rodada/passe preservada. Corrigido Flying na carteira real para não debitar moedas ao usar ingresso, conforme as regras já exigiam.
+- Plano e comportamento: docs/PLANO-PARQUE.md e docs/PARQUE.md. Somente prévia; avaliação estética ainda do dono.
+- Conferidos navegador 360/390/430 px e quatro partidas reais da carteira de teste por atração (3 ingressos, depois moedas), replay sem nova cobrança e recarga. Regras/transações: 56 testes aprovados, incluindo Flying por ingresso; regras sem alterações. Testes de build atualizados para Fingo fora do catálogo.
+
 ## Prévia (2026-11-05 · Codex · revisão visual do parque)
 - Implementação `090775f` disponível em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/park . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42023037385 concluído com sucesso; testes de movimento e parque executados no endereço publicado, sem erros/assets ausentes. Capturas no artefato do workflow.
 - Plano em `docs/PLANO-PARQUE.md`: HUD compartilhado, quatro capas maiores/coerentes, goleiro palhaço no Pênalti e botões Jogar/Continuar da família existente. Contexto do menu corrigido para Parque.
@@ -172,4 +179,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar a revisão visual do parque na prévia compartilhada (/park), principalmente capas e cabeçalho no celular. Plano em docs/PLANO-PARQUE.md. Não publicar essa revisão no site oficial sem aprovação.
+- Dono avaliar três novas capas e continuidade sem modal na prévia /park. Plano em docs/PLANO-PARQUE.md. Não publicar essa revisão no oficial sem aprovação.

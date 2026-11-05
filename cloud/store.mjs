@@ -213,7 +213,7 @@ export function createGameStore(db, uid, dependencies={}) {
           || data.move==='pop' && round.popped.includes(data.selected) : data.move!=='pop' || data.step!==0)
           fail('king-rico/round-conflict','A rodada mudou em outro aparelho.');
         if(p.lastSpinAt && time-p.lastSpinAt.toMillis()<300) fail('king-rico/resource-exhausted','Aguarde antes de estourar.');
-        betUnits=round?0:engine.units(data.bet);
+        betUnits=parkPayment?parkPayment.debit:(round?0:engine.units(data.bet));
         if(p.balanceUnits<betUnits)fail('king-rico/failed-precondition','Saldo insuficiente.');
         const outcome=engine.flying(data.bet,round,data.move,data.roundId,data.selected,rng),before=p.balanceUnits;
         winUnits=outcome.winUnits;p.balanceUnits=before-betUnits+winUnits;

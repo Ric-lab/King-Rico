@@ -15,32 +15,28 @@ body.park-home{background:#79d2f7 url('/assets/scenes/circus-daylight-v1.webp') 
 .park-home .park-ticket-wallet strong{font:800 28px/1 Baloo,'Baloo 2',sans-serif;color:#6d3c1e;font-variant-numeric:tabular-nums}
 .park-entry-price{display:flex;justify-content:center;align-items:baseline;flex-wrap:wrap;gap:5px;margin:0 0 20px;padding:10px 8px;border:1px solid #e5bb64;border-radius:14px;background:#fff5dce8;font:700 15px/1.2 Baloo,'Baloo 2',sans-serif;color:#71522b;box-shadow:0 2px #b47d2933}
 .park-entry-price b{font-weight:800;color:#63401e}.park-entry-price small{font-size:13px;margin-left:2px}
-.park-home .park-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
-.park-home .park-card{display:block;overflow:hidden;background:#fff4d8;border:2px solid #f6d47d;border-radius:23px;box-shadow:0 0 0 1px #b48135,0 4px #a46624,0 8px 14px #174b7133;transition:transform 90ms ease-out}
+/* Three wide attraction signs: art and action share one fitted plaque. */
+.park-home .park-grid{display:grid;grid-template-columns:1fr;gap:19px}
+.park-home .park-card{position:relative;display:grid;grid-template-columns:46% minmax(0,1fr);min-height:148px;overflow:hidden;background:#fff4d8;border:2px solid #f6d47d;border-radius:22px;box-shadow:0 0 0 1px #b48135,0 4px #a46624,0 8px 14px #174b7133;transition:transform 90ms ease-out}
 .park-home .park-card:active{transform:translateY(2px)}
 .park-home .park-card:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.park-game-art{height:164px;position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;isolation:isolate;background:#89dbff url('/assets/scenes/circus-daylight-v1.webp') 50% 68%/auto 260px no-repeat}
-.park-game-art:before{content:'';position:absolute;inset:0;background:linear-gradient(#76d9ff66,#d4f7ff33 65%,#f8ce7566)}
-.park-game-art:after{content:'';position:absolute;z-index:0;bottom:8px;left:14%;width:72%;height:13px;background:radial-gradient(ellipse,#524a3444,transparent 70%);pointer-events:none}
-.park-game-character{position:relative;z-index:2;display:block;object-fit:contain;filter:drop-shadow(0 4px 2px #28516b40)}
-.park-game-art-clown .park-game-character{width:142px;height:142px;margin-bottom:12px}
-.park-game-art-penalty .park-game-character{position:absolute;width:124px;height:248px;bottom:-92px;left:calc(50% - 62px)}
-.park-icon-goal{position:absolute;z-index:1;left:10%;right:10%;top:31px;bottom:11px;border:5px solid #fff6d8;border-bottom:2px solid #e6d9b1;border-radius:9px 9px 3px 3px;background:repeating-linear-gradient(90deg,transparent 0 10px,#ffffc87a 10px 11px),repeating-linear-gradient(0deg,#85be9c22 0 10px,#ffffc87a 10px 11px);box-shadow:0 0 0 1px #c8a261,3px 3px 3px #31576744}
-.park-penalty-ball{position:absolute;z-index:3;width:46px;height:46px;right:9px;bottom:7px;filter:drop-shadow(0 4px 2px #24472766)}
-.park-game-art-flying .park-game-character{width:68px;height:116px;margin-bottom:-5px}
-.park-icon-balloons{position:absolute;z-index:3;left:calc(50% - 63px);top:0;width:126px;display:flex;align-items:flex-start;justify-content:center}
-.park-icon-balloons img{width:42px;height:56px;object-fit:contain}.park-icon-balloons img:first-child{transform:rotate(-15deg);margin-top:5px}.park-icon-balloons img:last-child{transform:rotate(15deg);margin-top:5px}
-.park-balloon-strings{position:absolute;left:calc(50% - 63px);top:0;width:126px;height:75px;z-index:1;fill:none;stroke:#765c47;stroke-width:1.4}
-.park-plinko-icon{position:relative;z-index:2;width:118px;height:142px;margin-bottom:5px}
-.park-plinko-icon>img{position:absolute;inset:0;width:100%;height:100%}
-.park-plinko-icon .kr-cover-fingo-peg{width:4.18%;box-shadow:0 1px 1px #0006}
-.park-plinko-balls{position:absolute;top:-7px;left:0;right:0;display:flex;justify-content:center;gap:0}
-.park-plinko-balls i{width:23px;height:23px;background-image:url('/assets/fingo/target-balls.webp');background-size:500% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 1px #55402e66)}
-.park-icon-buckets{position:absolute;left:0;right:0;bottom:0;height:12%;display:grid;grid-template-columns:repeat(5,1fr)}
-.park-icon-buckets i{border-inline:1px solid #e9ad42;background:linear-gradient(#ffd36533,#ffc43888)}
-.park-home .park-card-copy{padding:10px 10px 14px;background:linear-gradient(#fff9e8,#ffe7af);border-top:1px solid #e4b64e;text-align:center}
-.park-home .park-card h3{margin:0;font:800 19px/1.25 Baloo,'Baloo 2',sans-serif;color:#663f25;text-shadow:0 1px #fff8}
-.park-game-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:36px;margin-top:10px;padding:0 7px;font-size:17px;line-height:1;letter-spacing:.35px;border-radius:16px}
+.park-game-art{height:148px;position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;isolation:isolate;background:#89dbff url('/assets/scenes/circus-daylight-v1.webp') 50% 67%/auto 260px no-repeat}
+.park-game-art:before{content:'';position:absolute;inset:0;background:linear-gradient(#8be3ff44,#e4faff22 60%,#edcf7b55)}
+.park-game-art:after{content:'';position:absolute;z-index:0;bottom:6px;left:15%;width:70%;height:12px;background:radial-gradient(ellipse,#524a3444,transparent 70%);pointer-events:none}
+.park-game-character{position:relative;z-index:2;display:block;object-fit:contain;filter:drop-shadow(0 3px 2px #28516b40)}
+.park-game-art-clown .park-game-character{width:132px;height:132px;margin-bottom:8px}
+.park-game-art-penalty{background:#6ab9e4 url('/assets/penalty/field.webp') center 63%/cover no-repeat}
+.park-game-art-penalty .park-game-character{position:absolute;width:88px;height:176px;bottom:-31px;left:calc(50% - 44px)}
+.park-icon-goal{position:absolute;z-index:1;left:7%;right:7%;top:28px;bottom:15px;border:4px solid #fff6d8;border-bottom:2px solid #e6d9b1;border-radius:6px 6px 2px 2px;background:repeating-linear-gradient(90deg,transparent 0 10px,#ffffc86a 10px 11px),repeating-linear-gradient(0deg,#85be9c22 0 10px,#ffffc86a 10px 11px);box-shadow:0 0 0 1px #c8a261,2px 2px 3px #31576744}
+.park-penalty-ball{position:absolute;z-index:3;width:39px;height:39px;right:7px;bottom:5px;filter:drop-shadow(0 3px 2px #24472766)}
+.park-game-art-flying .park-game-character{width:65px;height:111px;margin-bottom:-4px;transform:rotate(-9deg);transform-origin:50% 0}
+.park-icon-balloons{position:absolute;z-index:3;left:calc(50% - 59px);top:-2px;width:118px;display:flex;align-items:flex-start;justify-content:center}
+.park-icon-balloons img{width:39px;height:52px;object-fit:contain}.park-icon-balloons img:first-child{transform:rotate(-15deg);margin-top:4px}.park-icon-balloons img:last-child{transform:rotate(15deg);margin-top:4px}
+.park-balloon-strings{position:absolute;left:calc(50% - 59px);top:-8px;width:118px;height:70px;z-index:1;fill:none;stroke:#765c47;stroke-width:1.4}
+.park-home .park-card-copy{display:flex;flex-direction:column;justify-content:center;align-items:stretch;position:relative;padding:14px 12px 17px;background:linear-gradient(110deg,#fff9e8,#ffe9bb);border:0;text-align:center}
+.park-home .park-card-copy:before{content:'';position:absolute;left:-10px;top:0;bottom:0;width:11px;background:linear-gradient(90deg,transparent,#fff9e8);pointer-events:none}
+.park-home .park-card h3{margin:0;white-space:normal;font:800 23px/1.15 Baloo,'Baloo 2',sans-serif;color:#663f25;text-shadow:0 1px #fff8;letter-spacing:0}
+.park-game-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:42px;margin-top:15px;padding:0 7px;font-size:18px;line-height:1;letter-spacing:.35px;border-radius:16px}
 .park-game-action b{font-size:25px;line-height:1;font-weight:800}
 .park-home .park-recharge{display:flex;align-items:center;gap:12px;width:100%;margin-top:26px;padding:13px 16px;border:2px solid #f1c969;border-radius:21px;background:linear-gradient(#fff8e4,#ffe9b4);box-shadow:0 3px #a67028,0 6px 12px #30546822;text-align:left}
 .park-home .park-recharge>img{width:45px;height:45px;flex-shrink:0}
@@ -48,7 +44,7 @@ body.park-home{background:#79d2f7 url('/assets/scenes/circus-daylight-v1.webp') 
 .park-home .park-recharge small{font:700 15px/1.2 Baloo,'Baloo 2',sans-serif;color:#765d3e;display:block;margin-top:5px}
 .park-home .park-recharge-arrow{margin-left:auto;font:800 30px/1 Baloo,'Baloo 2',sans-serif;color:#956626}
 .park-home footer{font:700 12px/1.3 Baloo,'Baloo 2',sans-serif;text-align:center;margin-top:21px;color:#3b5b57}
-@media(max-width:360px){.park-home .park-home-content{padding-inline:14px}.park-home .park-home-header{margin-inline:-14px}.park-home .park-grid{gap:17px 12px}.park-home .park-card h3{font-size:17px}.park-game-art{height:154px}.park-game-art-clown .park-game-character{width:134px;height:134px}.park-home h1{font-size:28px}.park-home .park-ticket-wallet{padding-right:9px;gap:5px}}
+@media(max-width:360px){.park-home .park-home-content{padding-inline:14px}.park-home .park-home-header{margin-inline:-14px}.park-home .park-card h3{font-size:21px}.park-home .park-card-copy{padding-inline:10px}.park-game-art-clown .park-game-character{width:125px;height:125px}.park-home h1{font-size:28px}.park-home .park-ticket-wallet{padding-right:9px;gap:5px}}
 @media(prefers-reduced-motion:reduce){.park-home .park-card{transition:none}}
 /* Static HTML consumers use the shared HUD geometry without inline DC positions. */
 .park-home .kr-hud-row>.kr-hud-balance,.park-home .kr-hud-row>.kr-hud-home,.park-home .kr-hud-row>.kr-menu-button{position:absolute}

@@ -29,3 +29,4 @@ Rejeitado:
 - Iridescência deve distribuir todo o círculo cromático, evitando excesso de rosa/violeta/azul e falta de verde/vermelho.
 - A batida colorida do aro precisa começar ao apertar, junto da face, sem esperar o pulso elétrico posterior ou reiniciar nessa chegada.
 - Parque rejeitado com HUD próprio, personagens pequenos e girafa antiga na capa do Pênalti: reutilizar o topo compartilhado e arte atual dos jogos, com hierarquia consistente entre as quatro capas.
+- Primeira revisão do parque com quatro capas verticais sobre o mesmo cenário não agradou. Dono pediu só Clown/Pênalti/Flying; segunda proposta usa placas horizontais. Avaliação estética ainda pendente.

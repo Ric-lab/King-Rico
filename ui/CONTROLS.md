@@ -136,3 +136,7 @@ Prévia do parque (05/11): HTML estático também usa `.kr-hud-row`,
 o posicionamento do contêiner. Aparência, dimensões e escala vêm de `header.css`.
 O offset local é zero para preservar a rolagem natural. Jogar/Continuar usa
 `kr-button`; todo o card continua sendo um único link de toque.
+
+Prévia do parque, segunda revisão (05/11): três placas horizontais com arte
+à esquerda e Jogar/Continuar à direita. Toda a placa é um link; o botão
+compartilhado mede ao menos 42 px de altura. Fingo preservado só na rota direta.

@@ -987,3 +987,26 @@ test('Atomic operation envelope rejects missing, reused and malformed ledger rec
  await assertFails(updateDoc(ref,{revision:paid.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),balanceUnits:paid.balanceUnits+1000}));
  await assertFails(updateDoc(doc(c.db,'players',c.uid,'operations',id),{winUnits:1000}));
 });
+
+test('Park Flying uses a ticket with zero coin debit and repeats completed rounds for coins exactly once',async()=>{
+ const name='park-flying-repeat-'+randomUUID();let draws=[];
+ const c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+ draws=[...Array.from({length:9},()=>[.99,.4]).flat(),0];
+ const awarded=await c.call(request({action:'spin',game:'circus',bet:1,park:true}));assert.equal(awarded.park.tickets,3);
+ await new Promise(r=>setTimeout(r,350));
+ let balance=awarded.player.balance;
+ for(const method of ['ticket','coins']){
+  const authorized=await c.call(request({action:'parkEntry',game:'flying',method}));
+  assert.equal(authorized.player.balance,balance);
+  const roundId=randomUUID(),play={action:'flying',game:'flying',move:'pop',bet:25,roundId,requestId:roundId,step:0,selected:0,park:true};
+  const [a,b]=await Promise.all([c.call(play),c.call(play)]);assert.ok(a.replayed||b.replayed);
+  // RNG .99 makes the first balloon fail, closing the native round immediately.
+  assert.equal(a.outcome.ended,true);assert.equal(a.player.flyingRound,null);
+  assert.equal(a.park.passes.flying,undefined);assert.equal(a.park.tickets,2);
+  assert.equal(a.player.balance,balance-(method==='coins'?25:0));
+  assert.equal(a.balanceDebited,a.player.balance);
+  balance=a.player.balance;
+  const replay=await c.call(play);assert.equal(replay.player.balance,balance);assert.equal(replay.park.tickets,2);
+  await new Promise(r=>setTimeout(r,350));
+ }
+});

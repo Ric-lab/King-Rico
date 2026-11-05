@@ -24,3 +24,16 @@ Primeira proposta na prévia; a avaliação estética pertence ao dono. Oficial 
 - Bola de futebol vetorial em `ui/park/football.svg`; demais artes reutilizadas, 0 créditos externos.
 - Regressão: `tests/park_preview_browser.py`, integrada ao workflow de prévia.
 - Próxima decisão: avaliar composição e leitura das capas no celular. Não tratar teste funcional como aprovação estética.
+
+
+## Segunda rodada após feedback (05/11/2026)
+
+O dono rejeitou as capas da primeira proposta e pediu tirar o Fingo. A prévia
+passa a três placas horizontais: imagem maior à esquerda e nome/ação à direita.
+Pênalti usa goleiro atual também na primeira confirmação. Fingo preservado fora
+do catálogo, sem apagar jogo ou partidas.
+
+Confirmação de entrada somente no início da visita; repetições usam ingresso
+prioritariamente ou 25 moedas. Cobrança continua na primeira jogada confirmada,
+sem alterar o valor, o prêmio ou a aleatoriedade. Conferir quatro partidas
+seguidas em cada atração, incluindo a troca de ingressos para moedas e replays.

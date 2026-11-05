@@ -453,3 +453,18 @@ test('Fingo keeps the free center and credits a different golden number exactly 
  assert.equal(hit.player.balance,990);m.setRng(()=>{throw Error('No new draw on replay');});
  assert.equal((await m.client('other-gold')(move)).replayed,true);assert.equal((await call(request({action:'bootstrap'}))).player.balance,990);
 });
+
+test('Park Flying consumes one ticket without charging coins and a later coin round debits once',async()=>{
+ const m=memory(()=>.99),call=m.client('park-flying-repeat');await call(request({action:'bootstrap'}));
+ const park={version:1,revision:0,lastOperationId:null,tickets:1,spins:0,wheel:null,passes:{}};
+ m.records.set('players/park-flying-repeat/park/state',park);
+ for(const method of ['ticket','coins']){
+  const before=(await call(request({action:'bootstrap'}))).player.balance;
+  await call(request({action:'parkEntry',game:'flying',method}));
+  const roundId=randomUUID(),shot={action:'flying',game:'flying',move:'pop',bet:25,roundId,requestId:roundId,step:0,selected:0,park:true};
+  const result=await call(shot);assert.equal(result.outcome.ended,true);
+  assert.equal(result.player.balance,before-(method==='coins'?25:0));assert.equal(result.park.tickets,0);
+  assert.equal((await call(shot)).player.balance,result.player.balance);
+  m.advance(350);
+ }
+});

@@ -160,3 +160,31 @@ atuais e a família `kr-button` em Jogar/Continuar. Pênalti usa
 Carteira, preço, ingressos, presentes e recarga mantêm os mesmos fluxos.
 Plano e critérios em [PLANO-PARQUE.md](PLANO-PARQUE.md). Proposta ainda sem
 aprovação estética e sem publicação oficial.
+
+
+## Prévia: três atrações e continuidade das partidas (05/11/2026)
+
+O parque da prévia reúne somente **Clown, Pênalti e Flying Clown**, em placas
+horizontais maiores. O Fingo saiu do catálogo do parque; a rota e partidas salvas
+continuam preservadas. Saldo/Home/menu mantêm o cabeçalho compartilhado.
+
+A escolha de entrada aparece na primeira abertura de cada atração. Depois da
+confirmação, terminar as dez bolas do Clown, errar no Pênalti, cair no Flying ou
+receber um prêmio permite iniciar outra partida sem repetir o modal. Ao começar
+a próxima, usa **1 ingresso**, se houver; caso contrário, **25 moedas**. Não há
+nova cobrança entre jogadas da mesma partida. Sem ingresso e sem saldo suficiente,
+a ação falha com aviso; não começa partida grátis nem fica tentando automaticamente.
+A primeira tela informa a cobrança automática das partidas seguintes.
+
+`ui/park/entry-flow.js` compartilha essa autorização entre prévia e cliente real.
+A autorização não desconta: a transação original da primeira jogada é quem cobra,
+com os mesmos IDs de operação e recuperação. Um passe ainda não utilizado ou
+uma rodada já paga são retomados sem outra confirmação/cobrança. A autorização
+da visita fica apenas em memória, sem importar qualquer saldo local.
+
+Corrigido `cloud/store.mjs` no Flying para respeitar o débito zero da entrada
+por ingresso, como as regras Firestore já exigiam. Prêmios, probabilidades e
+validação das regras continuam iguais.
+
+Regressão: `tests/park-entry.test.mjs`, `tests/park_repeat_browser.py`, teste de
+Flying por ingresso em `tests/store.test.mjs` e `tests/integration.mjs`.

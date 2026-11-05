@@ -46,7 +46,8 @@ def run():
     page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for()
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('KingRicoCloud.player.balance===1050');healthy(page)
-    assert page.locator('[data-game]').count()==4
+    assert page.locator('[data-game]').count()==3
+    assert page.locator('[data-game="fingo"]').count()==0
     page.wait_for_function('document.querySelector("[data-home-balance]").textContent==="1.050"',timeout=10000)
     page.screenshot(path='/tmp/park-home-production.png',full_page=True)
     if not os.environ.get('KING_RICO_QUICK_QA'):
@@ -122,7 +123,7 @@ def run():
     assert page.evaluate('KingRicoCloud.player.balance')==balance
     page.goto(BASE+'/park');ready(page);healthy(page)
     # Entry authorizes; the first real play charges once. Refresh retains round.
-    page.locator('[data-game="fingo"]').click();ready(page)
+    page.goto(BASE+'/fingo');ready(page) # Preserved direct route, no longer in the park.
     page.get_by_role('dialog',name='Fingo rápido',exact=True).wait_for()
     page.get_by_role('button',name='JOGAR POR 25 MOEDAS',exact=True).click()
     page.wait_for_function('window.__fg?.engine&&__fg.state.artReady')

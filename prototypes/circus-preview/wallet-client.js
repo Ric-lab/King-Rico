@@ -29,4 +29,4 @@ Cloud.clown=(bet,roundId,used,selected)=>play({action:'clown',game:'clown',bet:2
 Cloud.penalty=(move,bet,roundId,step,quality=0)=>play({action:'penalty',game:'penalty',bet:25,move,roundId,step,quality,requestId:step===0&&move==='shoot'?roundId:id()});
 Cloud.fingo=(move,bet,roundId,used,selected)=>play({action:'fingo',game:'fingo',bet:25,move,roundId,used,...(move==='drop'?{selected}:{}),requestId:id()});
 Cloud.flying=(move,bet,roundId,step,selected=-1)=>play({action:'flying',game:'flying',bet:25,move,roundId,step,selected,requestId:step===0&&move==='pop'?roundId:id()});
-async function play(data){if(!state.passes[data.game]&&!Cloud.player[data.game+'Round']){void entry(data.game);throw Object.assign(Error('Escolha a entrada antes de jogar.'),{code:'king-rico/entry-required'});}return call(data);}
+async function play(data){if(!state.passes[data.game]&&!Cloud.player[data.game+'Round']){if(!await entry(data.game))throw Object.assign(Error('Escolha a entrada antes de jogar.'),{code:'king-rico/entry-required'});}return call(data);}

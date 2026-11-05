@@ -1,3 +1,4 @@
+import {createEntryFlow} from './entry-flow.js';
 import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion} from './motion.js';
@@ -19,17 +20,18 @@ for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1]]
 function toast(text){let e=document.querySelector('.park-toast');if(!e){e=document.createElement('div');e.className='park-toast';e.setAttribute('role','status');document.body.append(e);}e.textContent=text;e.hidden=false;clearTimeout(e._timer);e._timer=setTimeout(()=>e.hidden=true,4000);}
 export const format=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
 const names={clown:'Fortune Clown',penalty:'Fortune Pênalti',flying:'Flying Clown',fingo:'Fingo rápido'};
-const images={clown:'clown',penalty:'penalty',flying:'flying'};
+const images={clown:'/assets/clown/clown.webp',penalty:'/assets/penalty/clown-keeper-v3.webp',flying:'/assets/brand/covers/flying.webp'};
 const ticket='<span class="park-ticket" aria-hidden="true"><span>★</span></span>';
 function modal(html,label){const el=document.createElement('div');el.className='park-modal';el.innerHTML=`<section class="park-panel" role="dialog" aria-modal="true" aria-label="${label}">${html}</section>`;const prev=document.activeElement;document.body.append(el);el.addEventListener('keydown',ev=>{if(ev.key==='Tab'){const all=[...el.querySelectorAll('button:not(:disabled),a[href]')];const a=all[0],z=all.at(-1);if(ev.shiftKey&&document.activeElement===a){ev.preventDefault();z.focus();}else if(!ev.shiftKey&&document.activeElement===z){ev.preventDefault();a.focus();}}});el.close=()=>{el.remove();prev?.focus();};el.querySelector('button:not(:disabled)')?.focus();return el;}
-let entryPromise;
-function entry(game){if(entryPromise)return entryPromise;
- entryPromise=new Promise(resolve=>{
- const pic=game==='fingo'?'<img src="/assets/brand/cover-fingo-plinko.webp" alt="">':`<img src="/assets/brand/covers/${images[game]}.webp" alt="">`;
- const el=modal(`<a class="park-close" href="/park" aria-label="Voltar ao parque">×</a><div class="park-entry-art">${pic}</div><p class="park-eyebrow">UMA PARTIDA NO PARQUE</p><h2>${names[game]}</h2><p>Escolha como jogar</p><button class="park-action" data-ticket ${state.tickets<1?'disabled':''}>${ticket}<span>USAR 1 INGRESSO<small>Você tem ${state.tickets}</small></span></button><button class="park-action park-action-blue" data-coins ${Cloud.player.balance<state.price?'disabled':''}><img src="/assets/symbols/sym-coin.webp" alt=""><span>JOGAR POR ${state.price} MOEDAS</span></button><p class="park-footnote">A entrada já inclui a partida inteira.</p>`,names[game]);
- const choose=async method=>{el.querySelectorAll('button').forEach(b=>b.disabled=true);try{await call({action:'entry',game,method,requestId:id()});el.close();resolve(method);}catch(e){el.close();Cloud.error(e);resolve(null);}};
+const entryFlow=createEntryFlow({snapshot:()=>({player:Cloud.player,park:state}),authorize:(game,method)=>call({action:'entry',game,method,requestId:id()}),prompt:showEntry});
+function entry(game){return entryFlow.ensure(game);}
+function showEntry(game,confirm){
+ return new Promise(resolve=>{
+ const pic=game==='fingo'?'<img src="/assets/brand/cover-fingo-plinko.webp" alt="">':`<img src="${images[game]}" alt="">`;
+ const el=modal(`<a class="park-close" href="/park" aria-label="Voltar ao parque">×</a><div class="park-entry-art">${pic}</div><p class="park-eyebrow">UMA PARTIDA NO PARQUE</p><h2>${names[game]}</h2><p>Escolha como jogar</p><button class="park-action" data-ticket ${state.tickets<1?'disabled':''}>${ticket}<span>USAR 1 INGRESSO<small>Você tem ${state.tickets}</small></span></button><button class="park-action park-action-blue" data-coins ${Cloud.player.balance<state.price?'disabled':''}><img src="/assets/symbols/sym-coin.webp" alt=""><span>JOGAR POR ${state.price} MOEDAS</span></button><p class="park-footnote">Depois, cada nova partida usa 1 ingresso ou 25 moedas automaticamente.</p>`,names[game]);
+ const choose=async method=>{el.querySelectorAll('button').forEach(b=>b.disabled=true);try{await confirm(method);el.close();resolve(true);}catch(e){el.close();Cloud.error(e);resolve(null);}};
  el.querySelector('[data-ticket]').onclick=()=>choose('ticket');el.querySelector('[data-coins]').onclick=()=>choose('coins');
- }).finally(()=>entryPromise=null);return entryPromise;
+ });
 }
 window.KingRicoPark={Cloud,layout,get state(){return state;},set state(v){state=v;},call,entry,toast,format,ticket,modal};
 
@@ -44,7 +46,7 @@ function boot(){
    const observer=new MutationObserver(()=>{if(!document.getElementById('kr-boot-screen')){observer.disconnect();resolve();}});
    observer.observe(document.body,{childList:true});
   });
-  if(!state.passes[game]&&!Cloud.player[game+'Round'])entry(game);
+  entry(game).catch(e=>Cloud.error(e));
  });
  document.addEventListener('click',e=>{const a=e.target.closest('.kr-hud-home');if(a){e.preventDefault();e.stopImmediatePropagation();location.href='/circus';}},true);
  if(['clown','penalty','flying','fingo'].includes(game)){
