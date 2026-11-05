@@ -9,6 +9,7 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
 ## Prévia (2026-11-05 · Codex · respiro no contador e controle do parque)
+- Código `45b813c` na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42032243609 concluído com sucesso: layout nas três larguras, escala igual dos ícones e contagem nas partidas seguidas verificados no endereço público. Oficial preservado.
 - Dono rejeitou contador pequeno/apertado e diferença visual no botão Parque. Placa dos ingressos ampliada para 142 × 44, com padding horizontal 16, intervalo 12 e número 24; arte original preservada.
 - Parque agora usa exatamente a base original/escala de Home, com controle de videogame central em SVG. Casinha e menu preservados. Preload atualizado; tenda anterior substituída.
 - Faixa de bolas do Clown, multiplicadores do Pênalti e proteção do Flying recebem leve ajuste vertical para deixar respiro abaixo do contador. Nenhuma mudança financeira ou de dinâmica.
