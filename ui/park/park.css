@@ -140,3 +140,5 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-scene .park-wheel-panel>.park-action{width:310px;margin-top:32px;min-height:60px;font-size:23px}
 .park-hoist-deck[data-hoist="lifting"]>.park-wheel-scene{pointer-events:none}
 .park-hoist-deck[data-hoist="returning"]>.park-wheel-scene{pointer-events:none}
+
+.park-wheel-scene button[hidden]{display:none}

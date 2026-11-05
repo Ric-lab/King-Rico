@@ -112,12 +112,12 @@ def run():
     # Reload before drawing and after drawing: same prize/result, one credit.
     wheelid=page.evaluate('KingRicoCloud.park.wheel.id');page.reload();ready(page)
     spin=page.get_by_role('button',name='GIRAR ROLETA',exact=True);spin.wait_for(timeout=30000);spin.click()
-    page.get_by_role('button',name=re.compile('APLICAR ×')).wait_for(timeout=20000)
+    page.locator('.park-wheel-machine.is-won').wait_for(timeout=20000)
     balance=page.evaluate('KingRicoCloud.player.balance');result=page.evaluate('KingRicoCloud.park.wheel.result')
-    page.reload();ready(page);apply=page.get_by_role('button',name=re.compile('APLICAR ×'));apply.wait_for(timeout=30000)
+    page.reload();ready(page);page.locator('.park-wheel-machine.is-won').wait_for(timeout=30000)
     assert page.evaluate('KingRicoCloud.park.wheel.id')==wheelid
     assert page.evaluate('KingRicoCloud.player.balance')==balance
-    page.screenshot(path='/tmp/park-wheel-production.png');apply.click()
+    page.screenshot(path='/tmp/park-wheel-production.png')
     page.wait_for_function('KingRicoCloud.park.wheel===null&&!__fc._parkCollecting&&!__fc._parkWheelVisible',timeout=25000)
     assert page.evaluate('KingRicoCloud.player.balance')==balance
     page.goto(BASE+'/park');ready(page);healthy(page)

@@ -20,3 +20,4 @@ Rejeitado:
 - Cavidade traseira com faixa separada deixou o spin estranho; volume deve continuar pelas laterais, como uma peça única.
 - Folgas laterais largas no spin: encaixar corpo sob o limite interno do aro e manter só uma lateral fina da face.
 - Faixa escura acima da face parece fundo: elevar a face sobre o encaixe e o aro, não posicioná-la abaixo de uma suposta parede traseira.
+- Içamento da máquina em 1,15 s ficou rápido demais; dar tempo para acompanhar as cordas e ler o multiplicador antes da volta automática, sem Aplicar.

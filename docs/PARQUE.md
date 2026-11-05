@@ -67,7 +67,10 @@ Na versão oficial, a apresentação conserva o líquido sincronizado com o puls
 a união das roletas, o multiplicador viajando ao prêmio e as moedas ao saldo.
 Na prévia de 04/11, a roleta substitui a máquina no próprio palco: cabos e travessa
 suspendem o conjunto, mantendo HUD e cenário. Não há modal, véu ou desfoque.
-Ao aplicar, o conjunto retorna antes do multiplicador atingir o mostrador.
+Atualização da prévia em 05/11: subida em 2,2 s, resultado exposto por 2,2 s
+e retorno automático em 1,6 s. Não há botão Aplicar: a máquina desce antes
+do multiplicador atingir o mostrador. Erro de rede oferece Tentar novamente;
+reabrir o resultado salvo também segue automaticamente, sem novo sorteio.
 `ui/park/wheel-transition.js` controla apenas apresentação, sem alterar crédito.
 A cena é recuperada ao recarregar; movimento reduzido troca as peças sem içamento. O fundo normal
 do Circus e da Home usa o parque diurno em `assets/scenes/circus-daylight-v1.webp`.

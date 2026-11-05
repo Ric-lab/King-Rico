@@ -119,8 +119,8 @@ function showWheel(){
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
   el.querySelector('.park-wheel-machine').classList.add('is-won');confetti(el.querySelector('.park-wheel-wrap'),[{x:145,y:130}],{count:20,spread:130});
   el.querySelector('.park-wheel-hub strong').textContent='×'+w.result.multiplier;
-  btn.textContent='APLICAR ×'+w.result.multiplier;btn.disabled=false;
-  btn.onclick=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
+  btn.hidden=true;
+  const collect=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
    const fc=window.__fc,flight=fc?._parkPrizeFlight;
    if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:w.result.winUnits/100,showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
    await call({action:'wheel-close',wheelId,requestId:id()});
@@ -130,7 +130,11 @@ function showWheel(){
     flyMultipliedPrize(fc,w,flight,()=>Cloud.player);
    }
    wheelOpen=false;
-  }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.disabled=false;busy=false;}};
+  }catch(e){Cloud.error(e);if(window.__fc)window.__fc._parkCollecting=false;btn.hidden=false;btn.textContent='TENTAR NOVAMENTE';btn.disabled=false;busy=false;}};
+  btn.onclick=collect;
+  // Reading time belongs to the result, including reduced motion and restored bonuses.
+  await new Promise(resolve=>setTimeout(resolve,2200));
+  if(el.isConnected&&!el._hoist.cleaned)await collect();
  }
  async function startSpin(){
   if(busy||!ready||spun)return;spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');

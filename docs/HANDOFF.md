@@ -8,6 +8,11 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · retorno automático da roleta)
+- Dono pediu içamento mais lento e remover Aplicar. Subida agora 2,2 s; roleta entra ao final. Multiplicador permanece por 2,2 s, depois as cordas devolvem a máquina em 1,6 s e segue a viagem do multiplicador/prêmio.
+- Movimento reduzido mantém o tempo de leitura sem içamento. Fluxo recuperado também fecha sozinho; falha de rede oferece Tentar novamente, com o mesmo fechamento idempotente existente. Nenhuma regra, prêmio ou saldo alterado.
+- Conferidos gesto/botão, tempo de leitura, volta automática e controles restaurados em navegador normal/reduzido, com capturas. Build final de produção depois do navegador. Apenas prévia.
+
 ## Prévia (2026-11-04 · Codex · roleta como troca de cena)
 - Novo pedido: substituir modal por içamento da máquina/barras/controles com cabos. `wheel-transition.js` mantém os elementos reais montados, suspende-os juntos, preserva HUD/cenário e apresenta roleta no palco nativo. Botão e gesto preservados.
 - Aplicar devolve o conjunto antes do multiplicador viajar ao prêmio. Saída/erro de animação restaura peças e controles; movimento reduzido troca sem içamento. Sem mudança em pagamentos, carteira, Firestore ou rolos.
@@ -92,4 +97,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Dono avaliar a troca de cena com cabos em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Não publicar essa nova transição no oficial sem aprovação.
+- Dono avaliar o içamento mais lento e a volta automática, sem Aplicar, em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus. Oficial permanece sem essa troca de cena; aguardar aprovação para publicar.

@@ -77,7 +77,7 @@ with sync_playwright() as p:
    page.wait_for_timeout(300)
    assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='lifting'
    page.screenshot(path='work/preview-hoist-lifting.png')
-  page.wait_for_timeout(1600);assert dialog.count()==1
+  page.wait_for_timeout(2700);assert dialog.count()==1
   assert page.locator('.park-modal').count()==0,'Bonus must use the real stage, not a modal'
   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel'
   assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
@@ -85,7 +85,7 @@ with sync_playwright() as p:
   if mode=='no-preference':
    # A pending bonus must rebuild the same scene after refresh.
    page.reload();ready();page.get_by_role('region',name='Roleta multiplicadora',exact=True).wait_for()
-   page.wait_for_timeout(1600)
+   page.wait_for_timeout(2700)
   if mode=='no-preference':
    box=page.locator('.park-wheel-machine').bounding_box();cx=box['x']+box['width']/2;cy=box['y']+box['height']/2;r=box['width']*.32
    page.mouse.move(cx+r,cy);page.mouse.down();page.mouse.move(cx+r*.7,cy-r*.7,steps=5);page.mouse.move(cx,cy-r,steps=5);page.mouse.up()
@@ -95,9 +95,16 @@ with sync_playwright() as p:
   page.wait_for_timeout(150)
   z=page.locator('.park-wheel').evaluate('e=>getComputedStyle(e).transform');assert a!=z,(mode,a,z)
   page.screenshot(path='work/preview-wheel-'+mode+'.png')
-  page.get_by_role('button',name='APLICAR',exact=False).wait_for(timeout=12000)
+  page.locator('.park-wheel-machine.is-won').wait_for(timeout=12000)
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
-  page.get_by_role('button',name='APLICAR',exact=False).click()
+  assert page.get_by_role('button',name='APLICAR',exact=False).count()==0
+  assert page.locator('[data-wheel-spin]').is_hidden()
+  page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
+  page.wait_for_timeout(1700)
+  assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel','Keep result visible before returning'
+  if mode=='no-preference':
+   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="returning"')
+   page.wait_for_timeout(700);page.screenshot(path='work/preview-hoist-return.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
