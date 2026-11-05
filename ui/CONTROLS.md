@@ -130,3 +130,9 @@ acrescentar áudio, sem vibração contínua e sem ativar paradas em auto/free/f
 05/11 · Spin: pressão reforçada para 40 ms (antes 20), no mesmo handler
 que dispara o clique físico. Sem chamada adicional no giro; soltura, níveis
 e opção desligada preservados. Dono autorizou publicar a versão atual.
+
+Prévia do parque (05/11): HTML estático também usa `.kr-hud-row`,
+`.kr-hud-balance`, `.kr-hud-home` e `.kr-menu-button`; o CSS local define apenas
+o posicionamento do contêiner. Aparência, dimensões e escala vêm de `header.css`.
+O offset local é zero para preservar a rolagem natural. Jogar/Continuar usa
+`kr-button`; todo o card continua sendo um único link de toque.

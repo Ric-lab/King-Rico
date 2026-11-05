@@ -8,6 +8,12 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - No ar: Circus, Clown, Penalty (goleiro palhaço), Flying Clown, Fingo. Arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
+## Prévia (2026-11-05 · Codex · revisão visual do parque)
+- Plano em `docs/PLANO-PARQUE.md`: HUD compartilhado, quatro capas maiores/coerentes, goleiro palhaço no Pênalti e botões Jogar/Continuar da família existente. Contexto do menu corrigido para Parque.
+- Header passa a rolar normalmente, mantendo só banner fixo. Teste cobre três larguras, saldo longo sem reduzir fonte, menu/preferências, cancelamento da recarga e abertura das quatro atrações sem débito. Fluxos financeiros não alterados.
+- Bola geométrica SVG; demais artes atuais reutilizadas, sem créditos externos. Apenas prévia; aguardar avaliação estética antes do oficial.
+- Validação local: 48 testes de adaptadores aprovados; navegador em 360/390/430 px sem erros ou assets ausentes, cabeçalho comparado ao Circus, quatro entradas abertas sem débito e preferências preservadas. Build de produção gerado após integração.
+
 ## Entrega concluída (2026-11-05 · Codex · háptico do spin)
 - Workflow https://github.com/Ric-lab/King-Rico/actions/runs/41959993457 concluído com sucesso: testes de código, regras/transações emuladas, build de produção, regras REST e Hosting.
 - Site oficial conferido no navegador: HTML contém spinPress 40 ms e padrões novos das paradas; configuração king-rico real, sem emuladores/carteira de teste, rotas e assets HTTP 200, sem erros de página/arquivos. Nenhuma aposta em conta real foi feita.
@@ -165,4 +171,4 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Conferida a `main`: não contém `.github/workflows/preview-channel.yml`; somente este registro foi atualizado lá, sem disparar publicação oficial.
 
 ## Próximo passo
-- Publicação concluída e conferida em https://king-rico.web.app/circus. Aguardar feedback do dono sobre a sensação física dos hápticos no celular; não é possível medir essa sensação no navegador automatizado da VM.
+- Dono avaliar a revisão visual do parque na prévia compartilhada (/park), principalmente capas e cabeçalho no celular. Plano em docs/PLANO-PARQUE.md. Não publicar essa revisão no site oficial sem aprovação.

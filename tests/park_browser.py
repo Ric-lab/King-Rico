@@ -63,7 +63,7 @@ def run():
       page.wait_for_function('document.querySelector("[data-home-balance]").textContent==="2.050"',timeout=10000)
     uid=page.evaluate('KingRicoCloud.uid')
     page.get_by_role('button',name='Abrir menu',exact=True).click()
-    page.get_by_role('dialog',name='Menu — Fortune Circus',exact=True).wait_for()
+    page.get_by_role('dialog',name='Menu — Parque',exact=True).wait_for()
     assert page.get_by_role('button',name='Sair da conta',exact=True).count()==1
     page.keyboard.press('Escape')
     page.get_by_role('link',name='Voltar ao Circus',exact=True).click();ready(page)

@@ -148,3 +148,15 @@ entra pronta por esse lado, terminando no encontro do multiplicador com o prêmi
 Essa troca lateral (1,9 s normal/0,9 s reduzido) substitui a volta separada
 de topo e rolos. Ingressos mantêm notas/contato e sequência um por vez, agora
 em 620/400 ms por voo para encurtar levemente o intervalo das chegadas.
+
+## Proposta visual do parque · 05/11/2026
+
+Na prévia, o parque reutiliza a geometria/arte do HUD compartilhado dos jogos:
+saldo à esquerda, Home e menu à direita, com alvos de 44 px. O cabeçalho rola
+com a página; só o banner fica fixo. O menu se identifica como Parque.
+As quatro capas compartilham o cenário diurno e a moldura; usam os personagens
+atuais e a família `kr-button` em Jogar/Continuar. Pênalti usa
+`clown-keeper-v3.webp` e bola de futebol. Fingo conserva plinko e cinco bolas.
+Carteira, preço, ingressos, presentes e recarga mantêm os mesmos fluxos.
+Plano e critérios em [PLANO-PARQUE.md](PLANO-PARQUE.md). Proposta ainda sem
+aprovação estética e sem publicação oficial.

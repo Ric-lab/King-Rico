@@ -47,6 +47,7 @@ jobs:
         run: |
           python3 -m pip install playwright
           python3 tests/preview_motion_browser.py
+          python3 tests/park_preview_browser.py
       - name: Guardar capturas da conferência
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

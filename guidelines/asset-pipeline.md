@@ -253,3 +253,8 @@ reflexos mais claros sobre o mesmo recorte. V1 preservada; 0 créditos externos.
 
 05/11 · Aro iridescente v3: amarelo e laranja adicionados a pedido, mesmo
 recorte e transparência. Vetorial, 0 créditos externos; v2 preservada.
+
+05/11 · Prévia do parque: capas recompostas em HTML/CSS com os assets atuais
+de Clown, goleiro palhaço v3, Flying e Fingo. Bola de futebol geométrica em
+`ui/park/football.svg`. Sem edição de personagens, sem geração externa: 0 créditos.
+Critério: leitura em 360–430 px, mesmo HUD e reconhecimento da mecânica.

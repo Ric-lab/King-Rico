@@ -9,7 +9,7 @@ import {RewardReceipt} from '../reward-receipt.js';
  const view={menu:false,ad:false,complete:false,busy:false,error:false,receipt:false,base:0,target:0,daily:false};
  const wallet=(n,extra={})=>window.KingRicoWallet?.set(value,format(n),extra);
  const render=()=>root.render(h(React.Fragment,null,
-  h(MenuPanel,{open:view.menu,onClose:()=>{view.menu=false;render();},screen:'Fortune Circus',details:'Trincas de ingressos dão 3 entradas para o parque. A roleta multiplica o prêmio do décimo giro.',sfxLvl:Cloud.player?.settings.sfxLvl,vibLvl:Cloud.player?.settings.vibLvl,onSfx:n=>Cloud.settings({sfxLvl:n}),onVib:n=>Cloud.settings({vibLvl:n})}),
+  h(MenuPanel,{open:view.menu,onClose:()=>{view.menu=false;render();},screen:'Parque',details:`Cada partida custa 1 ingresso ou ${format(Cloud.park?.price||25)} moedas.`,sfxLvl:Cloud.player?.settings.sfxLvl,vibLvl:Cloud.player?.settings.vibLvl,onSfx:n=>Cloud.settings({sfxLvl:n}),onVib:n=>Cloud.settings({vibLvl:n})}),
   h(RewardAd,{open:view.ad,complete:view.complete,busy:view.busy,error:view.error,onComplete:finishAd,onCancel:cancelAd,coin:'/assets/symbols/sym-coin.webp'}),
   h(RewardReceipt,{open:view.receipt,coin:'/assets/symbols/sym-coin.webp',target:rewardTarget,onCollect:()=>{},onProgress:rewardProgress,onDone:rewardDone})));
  function rewardTarget(){return value.closest('[aria-label="Seu saldo"]');}
