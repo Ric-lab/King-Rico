@@ -9,6 +9,7 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.
 
 ## Prévia (2026-11-05 · Codex · revisão visual do parque)
+- Implementação `090775f` disponível em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/park . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42023037385 concluído com sucesso; testes de movimento e parque executados no endereço publicado, sem erros/assets ausentes. Capturas no artefato do workflow.
 - Plano em `docs/PLANO-PARQUE.md`: HUD compartilhado, quatro capas maiores/coerentes, goleiro palhaço no Pênalti e botões Jogar/Continuar da família existente. Contexto do menu corrigido para Parque.
 - Header passa a rolar normalmente, mantendo só banner fixo. Teste cobre três larguras, saldo longo sem reduzir fonte, menu/preferências, cancelamento da recarga e abertura das quatro atrações sem débito. Fluxos financeiros não alterados.
 - Bola geométrica SVG; demais artes atuais reutilizadas, sem créditos externos. Apenas prévia; aguardar avaliação estética antes do oficial.
