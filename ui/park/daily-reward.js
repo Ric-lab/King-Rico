@@ -57,7 +57,7 @@ export async function openDailyReward(Cloud) {
   document.addEventListener('keydown',trap);button.focus({preventScroll:true});
   async function reveal(){
    if(revealed)return;revealed=true;last=null;cells.forEach(revealCell);
-   overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';
+   overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';status.textContent='3 prêmios iguais!';
    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
    const space=overlay.querySelector('.park-daily-reveal-space'),summary=overlay.querySelector('.park-daily-summary'),r=grid.getBoundingClientRect();space.style.height=r.height+'px';
    await new Promise(resolve=>setTimeout(resolve,reduced?150:650));if(finished)return;
