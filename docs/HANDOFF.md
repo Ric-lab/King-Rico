@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-07 · repetir raspadinha para testar)
+- Dono pediu reaparecer em toda abertura para conseguir testar. Somente o modelo da carteira fictícia reinicia o bônus ao carregar uma página; permite raspar e receber 50 moedas de teste novamente. Receber duas vezes na mesma visita continua bloqueado.
+- Cliente, calendário, regras Firestore e bônus de produção intactos. Testes de navegação adaptados para fechar o cartão e distinguir créditos de teste das entradas dos jogos.
+- Próximo passo: dono testar livremente recarregando a prévia. Não promover esta exceção para o cliente financeiro real.
+
 ## Prévia (2026-11-07 · raspadinha 3×3)
 - Código `b2908dc` em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42333637286 concluído com sucesso; navegador no endereço público confirmou nove casas, seis X vermelhos, três valores iguais, raspagem e crédito único nas três larguras. Oficial preservado.
 - Dono confirmou seis X vermelhos e três casas com o valor do presente, total nove. Substituída a área única por nove coberturas raspáveis independentes, em posições embaralhadas.

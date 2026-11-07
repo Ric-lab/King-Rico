@@ -53,7 +53,8 @@ with sync_playwright() as p:
   has_pass=page.evaluate('game=>!!KingRicoCloud.park.passes[game]',game)
   balance=page.evaluate('KingRicoCloud.player.balance')
   page.reload();page.wait_for_function('window.KingRicoCloud?.player&&!document.querySelector("#kr-boot-screen")')
+  collect_daily(page)
   if not has_pass:page.locator('.park-panel [data-coins]').wait_for()
-  assert page.evaluate('KingRicoCloud.player.balance')==balance
+  assert page.evaluate('KingRicoCloud.player.balance')==balance+50
   page.close()
  b.close()

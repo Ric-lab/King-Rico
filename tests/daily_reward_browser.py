@@ -75,10 +75,15 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.__dailyCalls')==2
   assert page.evaluate('async()=>(await KingRicoCloud.bonus()).amount')==0
   page.reload();page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")');page.wait_for_timeout(300)
-  assert gift.count()==0 and page.evaluate('KingRicoCloud.player.balance')==before+50
+  gift.wait_for();assert gift.locator('canvas:visible').count()==9
+  assert page.evaluate('KingRicoCloud.player.balance')==before+50
+  gift.get_by_role('button',name='REVELAR',exact=True).click()
+  gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).click();gift.wait_for(state='detached')
+  assert page.evaluate('KingRicoCloud.player.balance')==before+100
   page.goto(BASE+'/park');page.wait_for_function('KingRicoCloud.player&&!document.querySelector("#kr-boot-screen")');page.wait_for_timeout(250)
-  assert gift.count()==0
+  gift.wait_for();assert gift.locator('canvas:visible').count()==9
+  assert page.evaluate('KingRicoCloud.player.balance')==before+100
   assert not errors and not missing,{'errors':errors,'missing':missing}
-  print(json.dumps({'width':width,'motion':mode,'nineCells':True,'sixRedXs':True,'threeEqualPrizes':True,'scratch':True,'savedDailyCredit':True,'retry':True,'walletHold':True,'noRepeatOnReloadOrPark':True,'errors':errors,'missing':missing}),flush=True)
+  print(json.dumps({'width':width,'motion':mode,'nineCells':True,'sixRedXs':True,'threeEqualPrizes':True,'scratch':True,'savedDailyCredit':True,'retry':True,'walletHold':True,'repeatOnEveryPreviewOpening':True,'noDoubleCreditWithinVisit':True,'errors':errors,'missing':missing}),flush=True)
   context.close()
  b.close()

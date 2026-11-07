@@ -27,7 +27,10 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
   const current=records.get(ref);current.settings.fingoBetIdx=4;
   // A paid round from the first prototype becomes one prepaid original-style round.
   if(['state','fingo'].includes(data.action)&&park.fingo&&!park.fingo.done&&!current.fingoRound&&park.passes.fingo?.started){park.passes.fingo.prepaid=true;park.fingo=null;}
-  if(data.action==='state')return envelope();
+  // Preview only: every page load offers a fresh scratch card and test credit.
+  // The production store/calendar remain unchanged; repeated claims within the
+  // same visit still use the normal saved daily guard and immutable receipt.
+  if(data.action==='state'){current.bonus={day:null,dayIndex:-1,streak:0};return envelope();}
   if(!/^[\da-f-]{36}$/i.test(data.requestId||''))fail('Pedido inválido.');
   const fingerprint=JSON.stringify({...data,requestId:undefined});
   if(once.has(data.requestId)){const old=once.get(data.requestId);if(old.fingerprint!==fingerprint)fail('Pedido já utilizado.');return envelope({...old.result,replayed:true});}

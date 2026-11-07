@@ -38,6 +38,12 @@ O saldo visual fica retido durante a confirmação; ao fechar, usa o voo e a
 contagem compartilhados, com fallback em caso de erro de animação. O anúncio
 de recarga continua separado. Não altera a matemática dos jogos.
 
+**Exceção de teste na prévia:** por pedido do dono, cada abertura/recarga de
+página reinicia apenas o presente da carteira fictícia. A raspadinha reaparece
+e concede 50 moedas de teste ao receber; dentro da mesma visita não paga duas
+vezes. Esse reinício vive somente em `prototypes/circus-preview/model.mjs`.
+O cliente e o bônus diário reais conservam o limite de uma vez por dia.
+
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026

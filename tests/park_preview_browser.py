@@ -66,11 +66,13 @@ with sync_playwright() as p:
     page.locator('[data-game="'+game+'"]').click()
     page.wait_for_url(lambda url:unquote(urlparse(url).path).rstrip('/') in [path,'/'+ROUTES[path]])
     page.locator('#kr-boot-screen').wait_for(state='detached',timeout=30000)
+    collect_daily(page)
     page.locator('.park-entry-dialog,.park-modal').first.wait_for(timeout=15000)
     page.goto(BASE+'/park');ready()
+    balance+=100 # Two page loads give 50 test coins each; entry is still uncharged.
     assert page.evaluate('KingRicoCloud.player.balance')==balance,'Opening a card must not debit coins'
    assert page.evaluate('KingRicoCloud.player.settings.sfxLvl')==1
-   page.get_by_role('link',name='Voltar ao Circus',exact=True).click();page.wait_for_function('window.__fc?._parkHook')
+   page.get_by_role('link',name='Voltar ao Circus',exact=True).click();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
    for selector,expected in hud_boxes.items():
     actual=page.locator(selector).bounding_box()
     assert all(abs(actual[k]-expected[k])<1.2 for k in ['x','y','width','height']),(selector,actual,expected)
