@@ -4,6 +4,8 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-07 · revelação da raspadinha e voo do big win)
+- Código `5b7cbba` na prévia, com cena principal de `fb61818`. Workflow final https://github.com/Ric-lab/King-Rico/actions/runs/42336663835 concluído com sucesso, assim como o anterior https://github.com/Ric-lab/King-Rico/actions/runs/42336415877. Navegador público confirmou os dois motions, falha do avião, crédito único e regressões de ingressos/roleta/parque. Produção gerada após integração; oficial preservado.
+- Revisão rápida: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin — receber raspadinha e tocar no spin; primeiro giro demonstra 20× com moedas fictícias.
 - Pedido: substituir as nove casas por um prêmio destacado após os acertos; implementada pausa de reconhecimento, recolhimento ao centro e moeda/valor grande com PEGAR MOEDAS. Repetição de teste preservada.
 - Pedido: usar a linguagem do Aviator na celebração, sem parar. Avião novo gerado pelo GPT Image, King Rico oficial salta da coordenada real para a cabine, sobe e revela multiplicador/valor; substitui o modal de prêmios monetários ≥5× a aposta.
 - Assunção comunicada ao dono: revelar o prêmio já confirmado, sem novo sorteio ou pagamento extra. Nenhuma mudança de matemática, carteira, Firestore ou rodadas. Cena termina no fluxo de moedas/continuação existente; falha do asset ou timeout não duplica crédito.
