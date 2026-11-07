@@ -3,6 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-07 · raspadinha de retorno diário)
+- Pedido: receber o presente de retorno pela raspadinha na primeira abertura do dia. Fluxo compartilhado em ui/park/daily-reward.js/css, aberto depois da conta/carregamento no Circus e nas rotas do parque. Escolha de entrada aguarda a raspadinha.
+- Raspar revela; botão REVELAR oferece alternativa acessível. PEGAR MOEDAS chama Cloud.bonus existente, segura a atualização visual e libera voo/contagem compartilhados após confirmar. Falha permite tentar de novo; recarga antes da confirmação reabre, depois não repete.
+- Valores, ciclo de sete dias, calendário de São Paulo e regras financeiras preservados; teste de regras passa a disputar dois pedidos diferentes de bônus simultâneos. Nenhuma importação de moedas locais; carteira fictícia só na prévia.
+- Corrigida recuperação de conflito do bônus: segundo pedido com ID diferente relê a transação, como já ocorria na recarga, e retorna zero após o primeiro crédito. O novo teste inicialmente mostrou permission-denied; passou após a correção. Demais 59 casos de regras passaram na execução completa; os quatro casos financeiros afetados foram reexecutados e passaram.
+- Validação: 78 testes de diário/adaptadores/carteira e cinco de build/contagem passaram. Navegador em 320/390/430 px conferiu raspagem, alternativa de teclado, erro/repetição, saldo retido, animação indisponível e recarga/Parque sem repetir presente. Testes do parque em três larguras e movimentos do Circus normal/reduzido também passaram. Build de produção gerado depois da integração; sem publicar em live.
+- Próximo passo: conferir a raspadinha no celular com o dono. Esta revisão continua somente na prévia; o balanceamento das oito combinações abaixo permanece pendente antes de promover à main.
+
 ## Próximo passo (2026-11-07 · ingressos avulsos e colunas, somente prévia)
 - Código `b41b60f` publicado somente em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42330832504 concluído com sucesso: testes no endereço público confirmaram ingressos avulsos, coluna premiada/destaque, carteira, sons/roleta e parque em três larguras. Oficial e regras de produção não publicados.
 - Implementado `slotVersion:2`: oito combinações pagam; ingressos avulsos aparecem sem crédito nem voo. Preservados pagamentos/células de prêmio, Happeach, versões antigas e repetição idempotente. Indicador vertical usa o mesmo contêiner transformado dos rolos.

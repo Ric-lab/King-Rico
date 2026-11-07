@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Preview-only regressions: one UI controller, liquid, tickets and bonus wheel.
 Run after npm run build:preview, against a static/Hosting server via KING_RICO_TEST_URL.
 """
@@ -18,7 +19,7 @@ with sync_playwright() as p:
    page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
-  page.goto(BASE+'/circus');ready()
+  page.goto(BASE+'/circus');ready();collect_daily(page)
   rim=page.locator('.park-spin-iridescence')
   if mode=='no-preference':
    before_color=rim.evaluate('e=>getComputedStyle(e).backgroundImage')

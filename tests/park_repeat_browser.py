@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Exercise real preview rounds: first confirmation, replay and automatic entry."""
 import os,json
 from playwright.sync_api import sync_playwright
@@ -9,6 +10,7 @@ with sync_playwright() as p:
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+path);page.wait_for_function('hook=>window.KingRicoCloud?.player&&window[hook]&&!document.querySelector("#kr-boot-screen")',arg=hook)
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
+  collect_daily(page)
   page.locator('.park-panel [data-ticket]').click();page.locator('.park-modal').wait_for(state='detached')
   assert page.evaluate('KingRicoCloud.park.tickets')==3
   page.locator('[data-hud-tickets]').wait_for()

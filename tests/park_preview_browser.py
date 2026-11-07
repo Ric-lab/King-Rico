@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Park presentation and entry navigation, only with the isolated preview wallet."""
 import os,json
 from urllib.parse import urlparse,unquote
@@ -14,8 +15,7 @@ with sync_playwright() as p:
   def ready():
    page.wait_for_function('window.KingRicoCloud?.player&&!document.querySelector("#kr-boot-screen")&&typeof document.querySelector(".park-home-menu")?.onclick==="function"')
    assert page.evaluate('KingRicoCloud.uid')=='park-preview'
-   daily=page.get_by_role('button',name='PEGAR MOEDAS',exact=True)
-   if daily.count():daily.click()
+   collect_daily(page)
    page.wait_for_function('document.querySelector("[data-home-balance]").textContent===KingRicoCloud.player.balance.toLocaleString("pt-BR",{maximumFractionDigits:2})')
   page.goto(BASE+'/park');ready()
   hud_boxes={s:page.locator(s).bounding_box() for s in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']}

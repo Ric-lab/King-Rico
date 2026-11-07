@@ -111,11 +111,6 @@ test('Wheel lands on the committed sector and uses the persisted debit',async()=
  await w.up();assert.deepEqual(request,['wheel',10,0]);assert.equal(w.state.balance,490);
  frame();assert.equal(w.state.landed,7);assert.equal(w.state.spinning,false);
 });
-test('Home uses the persisted cloud bonus',async()=>{
- let calls=0;const h=await parkHome({player:{bonus:{day:null,streak:0}},bonus:async()=>{calls++;h.cloud.player={...h.cloud.player,balance:1100.25,bonus:{day:'2026-10-21',streak:1}};}});
- assert.equal(h.dialogs.length,1);await h.dialogs[0].button.onclick();assert.equal(calls,1);assert.equal(h.wallet.at(-1)[1],'1.100,25');assert.equal(h.dialogs[0].closed,true);
-});
-
 test('Penalty waits for the committed shot and never adds its prize locally',async()=>{
   const requests=[],player={balance:1000.75,settings:{penaltyBetIdx:1},penaltyRound:null};
   const cloud={enabled:true,player,penalty:async(...args)=>{
@@ -197,11 +192,6 @@ test('Fingo shows an already committed prize without crediting it again on dismi
  f.flyCoins=done=>done();f.closeWin();assert.equal(f.state.balance,1240.25);assert.equal(f.state.win,null);
  f.closeWin();assert.equal(f.state.balance,1240.25);
 });
-test('the daily gift uses the saved weekly reward without a scratch lottery',async()=>{
- const first=await parkHome({player:{bonus:{day:null,streak:0}}});assert.match(first.dialogs[0].html,/\+50 moedas/);
- const third=await parkHome({player:{bonus:{day:'2026-10-20',streak:3}}});assert.match(third.dialogs[0].html,/\+200 moedas/);
-});
-
 test('Circus recharges the cloud wallet once without reusing the already claimed daily gift',async()=>{
  let finish,calls=0;
  const cloud={enabled:true,recharge:()=>{calls++;return new Promise(resolve=>{finish=resolve;});},

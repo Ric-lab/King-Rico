@@ -90,7 +90,11 @@ os três botões para a segunda linha apenas quando necessário. Ver
 
 O saldo confirmado no Firestore é independente da apresentação. Falha de animação
 não pode perder ou duplicar crédito. Ao retomar, mostrar o valor salvo. O presente
-da Home é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
+é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
+Na prévia de 07/11, `ui/park/daily-reward.js` apresenta esse presente como
+raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
+e botão azul. REVELAR permite jogar sem gesto; PEGAR MOEDAS confirma o crédito.
+Não adicionar um segundo modal diário próprio a cada página.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

@@ -17,6 +17,22 @@ A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
 acendimento circular continua em 420 ms.
 A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
+## Presente diário (prévia de 07/11/2026)
+
+Na primeira abertura do dia, depois da conta e da tela de carregamento, abre
+uma raspadinha. Funciona no Circus e nas rotas do parque, antes da escolha de
+entrada. Raspar cerca de 36% revela o valor; REVELAR oferece a mesma ação por
+botão/teclado. PEGAR MOEDAS confirma o bônus existente no Firestore. Falha mantém
+o cartão aberto para tentar de novo. Raspar sozinho não grava nem credita nada.
+
+Mantida a sequência de 50, 100, 150, 200, 250, 500 e 1.000 moedas e o calendário
+de São Paulo; faltar um dia reinicia a sequência. A transação existente limita
+o recebimento a uma vez ao dia, inclusive entre abas e dispositivos. Recarregar
+antes de receber reabre o cartão; após receber conserva o crédito e não reabre.
+O saldo visual fica retido durante a confirmação; ao fechar, usa o voo e a
+contagem compartilhados, com fallback em caso de erro de animação. O anúncio
+de recarga continua separado. Não altera a matemática dos jogos.
+
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026

@@ -71,6 +71,7 @@ def login(page, account):
 
 def claim_gift(page):
     page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for(state='visible')
+    page.get_by_role('button',name='REVELAR',exact=True).click()
     page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for(state='hidden')
 

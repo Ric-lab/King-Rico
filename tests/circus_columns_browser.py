@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Actual Circus animation for loose tickets and a committed vertical coin win."""
 import os,json
 from playwright.sync_api import sync_playwright
@@ -10,6 +11,7 @@ with sync_playwright() as p:
  page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
  page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
  assert page.evaluate('KingRicoCloud.uid')=='park-preview'
+ collect_daily(page)
  page.evaluate('''()=>{
   const fetch=window.fetch;
   window.fetch=async(u,o)=>{

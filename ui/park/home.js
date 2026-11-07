@@ -3,10 +3,10 @@ import {RewardAd} from '../reward-ad.js';
 import {RewardReceipt} from '../reward-receipt.js';
 (async()=>{
  while(!window.KingRicoPark)await new Promise(r=>setTimeout(r,20));
- const {Cloud,format,modal,layout}=window.KingRicoPark;await Cloud.ready;if(!Cloud.player)return;
+ const {Cloud,format,layout}=window.KingRicoPark;await Cloud.ready;if(!Cloud.player)return;
  const value=document.querySelector('[data-home-balance]'),recharge=document.querySelector('[data-recharge]'),host=document.createElement('div');document.body.append(host);
  const root=ReactDOM.createRoot(host),h=React.createElement;
- const view={menu:false,ad:false,complete:false,busy:false,error:false,receipt:false,base:0,target:0,daily:false};
+ const view={menu:false,ad:false,complete:false,busy:false,error:false,receipt:false,base:0,target:0};
  const wallet=(n,extra={})=>window.KingRicoWallet?.set(value,format(n),extra);
  const render=()=>root.render(h(React.Fragment,null,
   h(MenuPanel,{open:view.menu,onClose:()=>{view.menu=false;render();},screen:'Parque',details:`Cada partida custa 1 ingresso ou ${format(Cloud.park?.price||25)} moedas.`,sfxLvl:Cloud.player?.settings.sfxLvl,vibLvl:Cloud.player?.settings.vibLvl,onSfx:n=>Cloud.settings({sfxLvl:n}),onVib:n=>Cloud.settings({vibLvl:n})}),
@@ -20,15 +20,8 @@ import {RewardReceipt} from '../reward-receipt.js';
   view.base=Cloud.player.balance;const r=await Cloud.recharge('home');if(r.amount!==1000)throw Error('Recarga não confirmada.');
   view.target=Cloud.player.balance;view.ad=false;view.receipt=true;
  }catch(e){view.error=true;Cloud.error(e);}finally{view.busy=false;render();}}
- function daily(){
-  if(view.daily)return;const p=Cloud.player,key=String(Cloud.dayKey()),today=key.slice(0,4)+'-'+key.slice(4,6)+'-'+key.slice(6);
-  if(p.bonus.day===today)return;const gap=p.bonus.day?(Date.parse(today)-Date.parse(p.bonus.day))/86400000:99;
-  const n=gap===1?p.bonus.streak%7:0,amount=[50,100,150,200,250,500,1000][n];view.daily=true;
-  const e=modal(`<p class="park-eyebrow">DIA ${n+1} DE 7</p><h2>Presente do dia</h2><img src="/assets/symbols/sym-coin.webp" alt="" style="width:100px;height:100px"><p><strong>+${format(amount)} moedas</strong></p><button class="park-action">PEGAR MOEDAS</button>`,'Presente do dia');
-  e.querySelector('button').onclick=async()=>{const button=e.querySelector('button');button.disabled=true;try{await Cloud.bonus();const rect=e.querySelector('img').getBoundingClientRect();e.close();view.daily=false;wallet(Cloud.player.balance,{source:{getBoundingClientRect:()=>rect}});}catch(error){Cloud.error(error);button.disabled=false;}};
- }
  Cloud.watch(p=>{
-  wallet(p.balance,{hold:view.ad||view.receipt||view.daily});document.querySelector('[data-ticket-count]').textContent=Cloud.park?.tickets||0;
+  wallet(p.balance,{hold:view.ad||view.receipt||Cloud.dailyRewardActive});document.querySelector('[data-ticket-count]').textContent=Cloud.park?.tickets||0;
   for(const a of document.querySelectorAll('[data-game]'))a.querySelector('[data-park-action]').textContent=p[a.dataset.game+'Round']?'CONTINUAR':'JOGAR';
   document.querySelector('[data-park-price]').textContent=format(Cloud.park?.price||25);
   recharge.disabled=view.ad||view.receipt||view.busy;
@@ -36,5 +29,5 @@ import {RewardReceipt} from '../reward-receipt.js';
  });
  const pegs=document.querySelector('[data-park-plinko-pegs]');if(pegs&&layout)pegs.innerHTML=layout.PEGS.map(p=>`<i class="kr-cover-fingo-peg" style="left:${p.x/layout.W*100}%;top:${p.y/layout.H*100}%"></i>`).join('');
  recharge.onclick=()=>{if(view.ad||view.receipt||view.busy)return;view.ad=true;view.complete=false;view.error=false;render();};
- document.querySelector('.park-home-menu').onclick=()=>{view.menu=true;render();};daily();
+ document.querySelector('.park-home-menu').onclick=()=>{view.menu=true;render();};
 })();
