@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-07 · raspadinha 3×3)
+- Código `b2908dc` em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42333637286 concluído com sucesso; navegador no endereço público confirmou nove casas, seis X vermelhos, três valores iguais, raspagem e crédito único nas três larguras. Oficial preservado.
 - Dono confirmou seis X vermelhos e três casas com o valor do presente, total nove. Substituída a área única por nove coberturas raspáveis independentes, em posições embaralhadas.
 - Encontrar os três valores iguais revela as casas restantes e libera PEGAR MOEDAS; REVELAR continua como alternativa acessível. Três desenhos representam um único pagamento diário; valores, transação e regras não mudaram.
 - Navegador confirmou mouse, toque real via eventos de toque do Chromium, teclado, casas independentes, seis X/três valores, repetição e erro de confirmação/voo em 320/390/430 px. Sem erros ou assets ausentes. Dois testes de ciclo/layout passaram; tela de 320×568 também conferida, com botão e grade inteiros. Produção gerada após a integração.
