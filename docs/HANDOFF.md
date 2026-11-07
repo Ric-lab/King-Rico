@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-07 · raspadinha de retorno diário)
+- Código `75ea6c9` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42332248282 concluído com sucesso; raspadinha, movimentos, colunas e parque conferidos pelo navegador no endereço público. Produção preservada.
 - Pedido: receber o presente de retorno pela raspadinha na primeira abertura do dia. Fluxo compartilhado em ui/park/daily-reward.js/css, aberto depois da conta/carregamento no Circus e nas rotas do parque. Escolha de entrada aguarda a raspadinha.
 - Raspar revela; botão REVELAR oferece alternativa acessível. PEGAR MOEDAS chama Cloud.bonus existente, segura a atualização visual e libera voo/contagem compartilhados após confirmar. Falha permite tentar de novo; recarga antes da confirmação reabre, depois não repete.
 - Valores, ciclo de sete dias, calendário de São Paulo e regras financeiras preservados; teste de regras passa a disputar dois pedidos diferentes de bônus simultâneos. Nenhuma importação de moedas locais; carteira fictícia só na prévia.
