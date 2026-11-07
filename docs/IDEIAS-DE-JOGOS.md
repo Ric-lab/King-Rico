@@ -5,6 +5,12 @@ publicação. Atualizado em 07/11/2026.
 
 ## Dinâmica contínua inspirada no Aviator
 
+Atualização de 07/11: dono direcionou uma aplicação concreta para a celebração
+de big win do Circus, sem botão de parar: avião diagonal, King Rico salta da
+nuvem e vira piloto, multiplicador cresce com a subida. A prévia implementa
+essa apresentação sobre o prêmio já confirmado, sem novo sorteio/pagamento.
+A ideia de mecânica independente abaixo continua proposta, não implementada.
+
 O dono quer uma referência mais explícita à dinâmica do Aviator: uma rodada
 fluida, com movimento e multiplicador crescendo continuamente, e a decisão
 simples de pegar o prêmio antes de a rodada terminar em perda. O Flying Clown

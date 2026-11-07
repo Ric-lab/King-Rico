@@ -120,7 +120,7 @@ for(const {file,game,title} of routes) {
 </style>
 <script defer src="./ui/loading.js"></script>
 <script defer src="/ui/app-shell.js"></script>`;
-  const parkTags=['home','circus','clown','penalty','flying','fingo','bounce'].includes(game)?'<link rel="stylesheet" href="./ui/park/park.css"><link rel="stylesheet" href="./ui/park/daily-reward.css"><script defer src="./ui/park/client.js"></script>':'';
+  const parkTags=['home','circus','clown','penalty','flying','fingo','bounce'].includes(game)?'<link rel="stylesheet" href="./ui/park/park.css"><link rel="stylesheet" href="./ui/park/daily-reward.css"><link rel="stylesheet" href="./ui/park/bigwin-flight.css"><script defer src="./ui/park/client.js"></script>':'';
   const cabinetTag=['home','circus'].includes(game)?'<link rel="stylesheet" href="./ui/park/cabinet.css">':'';
   let html=source.replace(/<title>[^<]*<\/title>/g,'').replace('<head>','<head>\n'+appTags+'\n'+bannerTags+'\n'+tags.join('\n')+'\n'+cloudTags+'\n'+parkTags+'\n'+cabinetTag);
   if(['home','circus'].includes(game))html=html.replace('<head>','<head>\n<script defer src="./runtime/fingo-layout.js"></script>');

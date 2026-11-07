@@ -49,6 +49,10 @@ with sync_playwright() as p:
   else:
    # Same reward without requiring a gesture, including keyboard-only input.
    page.keyboard.press('Tab');page.keyboard.press('Enter')
+  gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).wait_for()
+  page.wait_for_function('document.querySelector(".park-daily")?.dataset.phase==="prize"')
+  assert not gift.locator('.park-daily-grid').is_visible()
+  assert gift.locator('.park-daily-summary').is_visible()
   assert gift.locator('canvas:visible').count()==0
   assert gift.locator('.park-daily-x').count()==6
   assert gift.locator('[data-prize=true] strong').all_text_contents()==['50']*3

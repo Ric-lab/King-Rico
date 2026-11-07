@@ -47,6 +47,7 @@ jobs:
         run: |
           python3 -m pip install playwright
           python3 tests/daily_reward_browser.py
+          python3 tests/bigwin_flight_browser.py
           python3 tests/preview_motion_browser.py
           python3 tests/circus_columns_browser.py
           python3 tests/park_preview_browser.py

@@ -5,6 +5,8 @@
 .park-daily h2{font-size:32px;line-height:1.15;margin:5px 0 9px;font-weight:800}
 .park-daily-instruction{font-size:21px;line-height:1.2;margin:0 0 18px}
 .park-daily-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;touch-action:none}
+.park-daily-reveal-space{position:relative}.park-daily-grid[hidden],.park-daily-summary[hidden]{display:none}
+.park-daily-summary{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.park-daily-summary img{width:112px;height:112px;object-fit:contain;filter:drop-shadow(0 6px 5px #b68d3540)}.park-daily-summary strong{font-size:62px;line-height:1.1;color:#2c7e2c}.park-daily-summary span{font-size:26px}
 .park-daily-cell{position:relative;aspect-ratio:1;border:2px solid #c28a29;border-radius:14px;overflow:hidden;background:#fffef0;box-shadow:inset 0 2px 5px #ab753622}
 .park-daily-result{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .park-daily-result img{width:32px;height:32px;object-fit:contain}.park-daily-result strong{font-size:clamp(23px,7vw,29px);line-height:1;font-weight:800;color:#2c7e2c}

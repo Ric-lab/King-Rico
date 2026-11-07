@@ -3,6 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-07 · revelação da raspadinha e voo do big win)
+- Pedido: substituir as nove casas por um prêmio destacado após os acertos; implementada pausa de reconhecimento, recolhimento ao centro e moeda/valor grande com PEGAR MOEDAS. Repetição de teste preservada.
+- Pedido: usar a linguagem do Aviator na celebração, sem parar. Avião novo gerado pelo GPT Image, King Rico oficial salta da coordenada real para a cabine, sobe e revela multiplicador/valor; substitui o modal de prêmios monetários ≥5× a aposta.
+- Assunção comunicada ao dono: revelar o prêmio já confirmado, sem novo sorteio ou pagamento extra. Nenhuma mudança de matemática, carteira, Firestore ou rodadas. Cena termina no fluxo de moedas/continuação existente; falha do asset ou timeout não duplica crédito.
+- Link de revisão: /circus?demo=bigwin na prévia força apenas o primeiro giro para diamantes 20×, com moedas fictícias; transporte de produção intacto. Dono ainda toca Girar. Teste do navegador usa esse link real, sem substituir respostas ou inventar saldo.
+- Validação local: 50 testes de apresentação/diário/adaptadores passaram. Navegador em 320/390/430 px confirmou a grade sumindo e prêmio único, salto/embarque, subida, ×20/200 moedas, apenas uma aposta e nenhuma transação de prêmio adicional. Falha do avião e movimento reduzido preservam saldo/continuação; sem erros ou assets ausentes. Capturas de embarque/subida/resultado revisadas.
+- Próximo passo: dono avaliar motion/encaixe da cabine e a nova revelação. Continuar somente na prévia; não promover à main antes do balanceamento pendente das oito combinações. A mecânica independente do Aviator continua apenas ideia.
+
 ## Prévia (2026-11-07 · repetir raspadinha para testar)
 - Código `3b809cb` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42334250457 concluído com sucesso: navegador público confirmou repetição a cada abertura em 320/390/430 px, crédito único por visita e navegação/movimentos preservados. Cinco testes de ciclo/modelo/isolamento passaram; produção gerada após a integração. Oficial preservado.
 - Dono pediu reaparecer em toda abertura para conseguir testar. Somente o modelo da carteira fictícia reinicia o bônus ao carregar uma página; permite raspar e receber 50 moedas de teste novamente. Receber duas vezes na mesma visita continua bloqueado.

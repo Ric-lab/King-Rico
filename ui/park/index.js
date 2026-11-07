@@ -1,5 +1,6 @@
 import {createEntryFlow} from './entry-flow.js';
 import {openDailyReward} from './daily-reward.js';
+import {installBigWinFlight} from './bigwin-flight.js';
 import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion} from './motion.js';
@@ -76,11 +77,12 @@ function bootCircus(){
   fc.renderVals();
   installMotion(fc,rails,{refresh:renderRails,showWheel});
   installSpinTactility(fc);
+  installBigWinFlight(fc);
   installParkNavigation(fc,stage.closest('.park-circus-stage')||stage,rails.querySelector('.park-pocket'));
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
- if(state.wheel?.prizeVersion===3&&fc.state.showWin&&!wheelOpen){
+ if(state.wheel?.prizeVersion===3&&fc.state.showWin&&!wheelOpen&&!fc._parkBigWinFlight){
   fc._parkDismissAt ||= performance.now()+1500;
   if(performance.now()>=fc._parkDismissAt){fc._spinAfterFly=false;fc.dismissWin();fc._parkDismissAt=0;}
  }

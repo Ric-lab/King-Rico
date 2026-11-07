@@ -51,7 +51,8 @@
     "assets/machine/turbo-socket-mask-v2.svg",
     "assets/machine/auto-socket-mask-v2.svg",
     "assets/machine/spin-rim-gold-v2.svg",
-    "assets/machine/spin-aperture-v2.svg"
+    "assets/machine/spin-aperture-v2.svg",
+    "assets/circus/bonus-plane.webp"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

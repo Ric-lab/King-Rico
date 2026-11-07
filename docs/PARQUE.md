@@ -27,6 +27,10 @@ remover cerca de 36% de sua cobertura a revela. Ao encontrar os três valores,
 as casas restantes são reveladas e PEGAR MOEDAS fica disponível. Os três valores
 representam **um único prêmio diário**, não três créditos. REVELAR oferece a
 alternativa de abrir todas as casas por botão/teclado.
+Após os três acertos, a grade permanece legível por 650 ms; as casas se recolhem
+ao centro e dão lugar a uma moeda grande, ao valor único e a PEGAR MOEDAS.
+Durante essa transição o botão aguarda, sem efetuar crédito. Movimento reduzido
+encurta a transição; falha de animação não impede revelar/receber.
 PEGAR MOEDAS confirma o bônus existente no Firestore. Falha mantém
 o cartão aberto para tentar de novo. Raspar sozinho não grava nem credita nada.
 
@@ -43,6 +47,26 @@ página reinicia apenas o presente da carteira fictícia. A raspadinha reaparece
 e concede 50 moedas de teste ao receber; dentro da mesma visita não paga duas
 vezes. Esse reinício vive somente em `prototypes/circus-preview/model.mjs`.
 O cliente e o bônus diário reais conservam o limite de uma vez por dia.
+
+## Voo do grande prêmio (prévia de 07/11/2026)
+
+Os prêmios monetários que já abriam a apresentação grande (a partir de 5× a
+aposta) passam a usar uma cena automática: avião chega da diagonal inferior
+esquerda, King Rico salta da posição real da nuvem para a cabine e sobe como
+piloto. O multiplicador e o valor crescem durante a subida; o resultado fica
+em destaque antes da saída e do voo de moedas existente. Sem botão de parar.
+
+Esta etapa **apresenta o resultado já confirmado**: ×20 significa prêmio total
+de vinte apostas, sem multiplicar novamente esse prêmio nem sortear um extra.
+`ui/park/bigwin-flight.js` não chama carteira/RNG. Mantém a continuação de auto,
+Happeach e roleta após o recebimento visual; bloqueia outra rodada durante a
+cena. Falha do asset ou timeout liberam a apresentação para o fluxo de crédito
+existente. Crédito persistido não depende da animação.
+
+Para revisar sem esperar um prêmio raro: na prévia, `/circus?demo=bigwin`
+direciona o primeiro giro de cada abertura para uma trinca de diamantes (20×).
+O dono ainda aperta Girar; são exclusivamente moedas de teste. A opção vive no
+transporte fictício, fora do build financeiro de produção.
 
 ## Ingressos e entrada
 

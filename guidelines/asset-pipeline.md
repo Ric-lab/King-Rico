@@ -48,6 +48,14 @@ Dizer claramente, antes de gastar, se o pedido:
 Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimado Z."
 
 ## 6. Log
+
+07/11/2026 — Avião do big win: novo asset 2D pelo GPT Image, cockpit vazio e
+cores azul/dourado/vermelho; sem personagem gerado. King Rico oficial reutilizado
+separadamente como piloto. Conversão PNG → WebP, 136 KB, em
+`assets/circus/bonus-plane.webp`. Ferramenta não informou créditos consumidos.
+Montagem/embarque e posição do piloto conferidos no navegador; sujeito à
+avaliação estética do dono na prévia.
+
 | Data | Asset | Técnica | Créditos | Resultado |
 |---|---|---|---|---|
 | set/2026 | 10 símbolos 2D remaster | Meshy image-to-image | ~90 | Aprovado |

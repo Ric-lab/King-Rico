@@ -30,7 +30,7 @@ export async function openDailyReward(Cloud) {
    <img class="park-daily-king" src="/assets/symbols/sym-wild-s.webp" alt="">
    <p class="park-daily-eyebrow">DIA ${gift.day} DE 7</p><h2 id="daily-title">Presente do dia</h2>
    <p class="park-daily-instruction">Raspe e encontre 3 iguais!</p>
-   <div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>
+   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div><div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
    <p class="park-daily-status" role="status" aria-live="polite"></p>
    <button type="button" class="park-daily-button">REVELAR</button>
   </section>`;
@@ -43,7 +43,7 @@ export async function openDailyReward(Cloud) {
   const cells=[...overlay.querySelectorAll('.park-daily-cell')];
   function close(){
    if(finished)return;finished=true;unwatch();document.removeEventListener('keydown',trap);
-   const rect=grid.getBoundingClientRect();overlay.remove();Cloud.dailyRewardActive=false;
+   const rect=overlay.querySelector('.park-daily-summary').getBoundingClientRect();overlay.remove();Cloud.dailyRewardActive=false;
    document.body.style.overflow=overflow;inert.forEach(([e,v])=>e.inert=v);
    // Release every wallet presentation from its hold. Credit has already been saved;
    // the shared flight starts the count on first contact and has its own fallback.
@@ -55,10 +55,20 @@ export async function openDailyReward(Cloud) {
   }
   function trap(e){if(e.key==='Tab'){e.preventDefault();button.focus();}if(e.key==='Escape')e.preventDefault();}
   document.addEventListener('keydown',trap);button.focus({preventScroll:true});
-  function reveal(){
+  async function reveal(){
    if(revealed)return;revealed=true;last=null;cells.forEach(revealCell);
-   overlay.classList.add('is-revealed');overlay.querySelector('.park-daily-instruction').textContent='Seu presente está aqui!';
-   status.textContent=`Você ganhou ${gift.amount.toLocaleString('pt-BR')} moedas`;button.textContent='PEGAR MOEDAS';
+   overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';
+   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const space=overlay.querySelector('.park-daily-reveal-space'),summary=overlay.querySelector('.park-daily-summary'),r=grid.getBoundingClientRect();space.style.height=r.height+'px';
+   await new Promise(resolve=>setTimeout(resolve,reduced?150:650));if(finished)return;
+   try{
+    const animations=cells.map((cell,i)=>{const c=cell.getBoundingClientRect();return cell.animate([{transform:'none',opacity:1},{transform:`translate(${r.x+r.width/2-c.x-c.width/2}px,${r.y+r.height/2-c.y-c.height/2}px) scale(.25)`,opacity:0}],{duration:reduced?120:480,delay:reduced?0:i*24,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished;});
+    await Promise.race([Promise.allSettled(animations),new Promise(resolve=>setTimeout(resolve,900))]);
+   }catch{/* A missing animation still reveals the saved gift. */}
+   if(finished)return;grid.hidden=true;summary.hidden=false;overlay.dataset.phase='prize';
+   overlay.querySelector('.park-daily-instruction').textContent='Seu presente está aqui!';
+   try{summary.animate([{transform:'translateY(18px) scale(.75)',opacity:0},{transform:'translateY(-4px) scale(1.04)',opacity:1,offset:.7},{transform:'none',opacity:1}],{duration:reduced?160:600,easing:'cubic-bezier(.2,.7,.25,1)'});}catch{}
+   status.textContent=`Você ganhou ${gift.amount.toLocaleString('pt-BR')} moedas`;button.textContent='PEGAR MOEDAS';button.disabled=false;
   }
   // A large reveal button offers the same result to keyboard users and anyone
   // who finds scratching difficult; no amount is drawn or decided by the canvas.

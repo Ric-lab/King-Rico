@@ -96,7 +96,15 @@ raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
 e botão azul. Grade 3×3: seis X vermelhos e três valores iguais, com destaque
 verde nas casas premiadas reveladas. REVELAR permite jogar sem gesto;
 PEGAR MOEDAS confirma um único crédito diário.
+Depois dos três acertos, recolher a grade ao centro e apresentar apenas moeda,
+valor grande e ação de receber, com tempo para reconhecer a combinação antes.
 Não adicionar um segundo modal diário próprio a cada página.
+
+Big win do Circus na prévia: `ui/park/bigwin-flight.js/css`, avião azul/dourado
+em `assets/circus/bonus-plane.webp` e King Rico oficial em camadas. A cabine
+oculta a parte inferior do piloto; salto parte da coordenada real do personagem.
+Multiplicador/prêmio acompanham a mesma linha de tempo de subida; não são outra
+transação. O modal monetário antigo fica oculto somente durante o voo.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos
