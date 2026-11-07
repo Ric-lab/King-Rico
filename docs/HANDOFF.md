@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Anotação (2026-11-07 · direção Aviator)
+- Dono pediu registrar uma dinâmica mais claramente inspirada no Aviator: movimento/multiplicador contínuos, sem andares como o Flying atual. Proposta em docs/IDEIAS-DE-JOGOS.md, vinculada no índice; encaixe na dinâmica geral ainda a definir, sem implementar um jogo extra.
+- Esclarecimento da raspadinha: a prévia tem uma área única de raspagem, não nove casas com seis X e três prêmios. O presente é único/diário, agora apresentado por esse fluxo compartilhado, inclusive se a primeira abertura ocorrer pelo Parque. Após receber não reaparece naquele dia; antes de receber pode reabrir após recarga. Oficial ainda preservado.
+- Próximo passo: aguardar a definição do dono sobre a grade da raspadinha e o encaixe da dinâmica contínua. Nenhuma mudança de código ou publicação nesta anotação; pendência de balanceamento da prévia continua abaixo.
+
 ## Prévia (2026-11-07 · raspadinha de retorno diário)
 - Código `75ea6c9` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42332248282 concluído com sucesso; raspadinha, movimentos, colunas e parque conferidos pelo navegador no endereço público. Produção preservada.
 - Pedido: receber o presente de retorno pela raspadinha na primeira abertura do dia. Fluxo compartilhado em ui/park/daily-reward.js/css, aberto depois da conta/carregamento no Circus e nas rotas do parque. Escolha de entrada aguarda a raspadinha.
