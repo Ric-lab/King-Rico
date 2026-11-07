@@ -93,7 +93,9 @@ não pode perder ou duplicar crédito. Ao retomar, mostrar o valor salvo. O pres
 é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
 Na prévia de 07/11, `ui/park/daily-reward.js` apresenta esse presente como
 raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
-e botão azul. REVELAR permite jogar sem gesto; PEGAR MOEDAS confirma o crédito.
+e botão azul. Grade 3×3: seis X vermelhos e três valores iguais, com destaque
+verde nas casas premiadas reveladas. REVELAR permite jogar sem gesto;
+PEGAR MOEDAS confirma um único crédito diário.
 Não adicionar um segundo modal diário próprio a cada página.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte

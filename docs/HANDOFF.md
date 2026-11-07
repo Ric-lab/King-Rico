@@ -3,10 +3,16 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-07 · raspadinha 3×3)
+- Dono confirmou seis X vermelhos e três casas com o valor do presente, total nove. Substituída a área única por nove coberturas raspáveis independentes, em posições embaralhadas.
+- Encontrar os três valores iguais revela as casas restantes e libera PEGAR MOEDAS; REVELAR continua como alternativa acessível. Três desenhos representam um único pagamento diário; valores, transação e regras não mudaram.
+- Navegador confirmou mouse, toque real via eventos de toque do Chromium, teclado, casas independentes, seis X/três valores, repetição e erro de confirmação/voo em 320/390/430 px. Sem erros ou assets ausentes. Dois testes de ciclo/layout passaram; tela de 320×568 também conferida, com botão e grade inteiros. Produção gerada após a integração.
+- Próximo passo: dono avaliar a grade no celular. Somente prévia; manter a pendência de balanceamento das oito combinações antes de qualquer promoção à main. Ideia de Aviator segue apenas documentada.
+
 ## Anotação (2026-11-07 · direção Aviator)
 - Dono pediu registrar uma dinâmica mais claramente inspirada no Aviator: movimento/multiplicador contínuos, sem andares como o Flying atual. Proposta em docs/IDEIAS-DE-JOGOS.md, vinculada no índice; encaixe na dinâmica geral ainda a definir, sem implementar um jogo extra.
-- Esclarecimento da raspadinha: a prévia tem uma área única de raspagem, não nove casas com seis X e três prêmios. O presente é único/diário, agora apresentado por esse fluxo compartilhado, inclusive se a primeira abertura ocorrer pelo Parque. Após receber não reaparece naquele dia; antes de receber pode reabrir após recarga. Oficial ainda preservado.
-- Próximo passo: aguardar a definição do dono sobre a grade da raspadinha e o encaixe da dinâmica contínua. Nenhuma mudança de código ou publicação nesta anotação; pendência de balanceamento da prévia continua abaixo.
+- Naquele momento, a raspadinha tinha uma área única; substituída pela grade 3×3 registrada acima após confirmação do dono. O presente continua único/diário, inclusive ao abrir pelo Parque. Após receber não reaparece naquele dia; antes de receber pode reabrir após recarga. Oficial ainda preservado.
+- Encaixe da dinâmica contínua ainda a definir. Esta anotação foi apenas documental; pendência de balanceamento da prévia continua abaixo.
 
 ## Prévia (2026-11-07 · raspadinha de retorno diário)
 - Código `75ea6c9` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42332248282 concluído com sucesso; raspadinha, movimentos, colunas e parque conferidos pelo navegador no endereço público. Produção preservada.

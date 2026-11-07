@@ -4,11 +4,14 @@
 .park-daily-eyebrow{font-size:15px;letter-spacing:2px;font-weight:800;color:#92551d;margin:0}
 .park-daily h2{font-size:32px;line-height:1.15;margin:5px 0 9px;font-weight:800}
 .park-daily-instruction{font-size:21px;line-height:1.2;margin:0 0 18px}
-.park-daily-card{position:relative;width:100%;aspect-ratio:600/320;border:3px solid #c28a29;border-radius:20px;overflow:hidden;background:#fffef0;box-shadow:inset 0 2px 7px #ab753633}
-.park-daily-prize{position:absolute;inset:0;display:grid;grid-template-columns:72px auto;align-content:center;align-items:center;justify-content:center;column-gap:12px}
-.park-daily-prize img{grid-row:1/3;width:72px;height:72px;object-fit:contain}.park-daily-prize strong{font-size:48px;line-height:1.1;font-weight:800;color:#368b36}.park-daily-prize span{font-size:22px;line-height:1.1}
+.park-daily-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;touch-action:none}
+.park-daily-cell{position:relative;aspect-ratio:1;border:2px solid #c28a29;border-radius:14px;overflow:hidden;background:#fffef0;box-shadow:inset 0 2px 5px #ab753622}
+.park-daily-result{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.park-daily-result img{width:32px;height:32px;object-fit:contain}.park-daily-result strong{font-size:clamp(23px,7vw,29px);line-height:1;font-weight:800;color:#2c7e2c}
+.park-daily-x{font:800 64px/1 Baloo,'Baloo 2',sans-serif;color:#cf3039}
+.park-daily-cell.is-revealed[data-prize=true]{border-color:#4b9f3c;background:#f0ffe5;box-shadow:inset 0 0 0 2px #d2ecb7}
 .park-daily canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}.park-daily canvas[hidden]{display:none}
 .park-daily-status{min-height:27px;font-size:17px;line-height:1.25;margin:15px 0 12px}
 .park-daily-button{width:100%;min-height:57px;border:2px solid #8cd5ff;border-radius:18px;background:#1274ed;box-shadow:0 5px 0 #104fa4;color:white;font:800 21px/1.2 Baloo,'Baloo 2',sans-serif;padding:12px;letter-spacing:.5px}
 .park-daily-button:active{transform:translateY(4px);box-shadow:0 1px 0 #104fa4}.park-daily-button:focus-visible{outline:3px solid #7939ba;outline-offset:4px}
-@media(max-height:650px){.park-daily{padding:12px}.park-daily-panel{padding:12px 20px 18px}.park-daily-king{width:65px;height:65px}.park-daily h2{font-size:28px}.park-daily-instruction{margin-bottom:12px}.park-daily-status{margin:10px 0}}
+@media(max-height:650px){.park-daily{padding:12px}.park-daily-panel{padding:12px 20px 18px}.park-daily-king{width:44px;height:44px}.park-daily h2{font-size:26px}.park-daily-instruction{font-size:18px;margin-bottom:10px}.park-daily-status{margin:10px 0}.park-daily-grid{gap:7px}.park-daily-eyebrow{font-size:12px}}

@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Raspadinha com uma área única: o dono confirmou nove casas independentes, seis X vermelhos e três valores iguais do prêmio diário.
 - Linha premiada "fita de ouro com brilho correndo" (a limpa da publicada é a aprovada).
 - Molduras douradas grossas; fundos roxos/pretos atrás dos rolos.
 - Feedback essencial de ingresso, líquido e roleta ausente na prévia; conferir o fluxo real também com movimento reduzido.

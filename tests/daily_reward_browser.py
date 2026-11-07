@@ -14,25 +14,45 @@ with sync_playwright() as p:
   gift=page.get_by_role('dialog',name='Presente do dia',exact=True);gift.wait_for()
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
   before=page.evaluate('KingRicoCloud.player.balance')
-  assert gift.locator('canvas').is_visible()
+  assert gift.locator('canvas:visible').count()==9
+  assert gift.locator('[data-prize=true]').count()==3 and gift.locator('[data-prize=false]').count()==6
   assert page.locator('[data-spin-btn]').evaluate('e=>!!e.closest("[inert]")')
   assert gift.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
   page.screenshot(path=f'work/preview-daily-covered-{width}.png')
-  if width==390:
-   canvas=gift.locator('canvas');r=canvas.bounding_box()
-   page.mouse.move(r['x']+15,r['y']+15);page.mouse.down();page.mouse.move(r['x']+35,r['y']+15,steps=3);page.mouse.up()
-   assert canvas.is_visible() and page.evaluate('KingRicoCloud.player.balance')==before
-   page.reload();gift.wait_for();assert gift.locator('canvas').is_visible()
-   r=gift.locator('canvas').bounding_box()
-   page.mouse.move(r['x']+8,r['y']+8);page.mouse.down()
-   for row in range(5):
-    y=r['y']+12+row*r['height']/5
-    page.mouse.move(r['x']+8,y,steps=2);page.mouse.move(r['x']+r['width']-8,y,steps=12)
-   page.mouse.up()
+  def scratch_cell(cell,touch=False):
+   r=cell.bounding_box()
+   points=[]
+   for row in [.22,.5,.78]:
+    points.extend([(r['x']+r['width']*.15,r['y']+r['height']*row),(r['x']+r['width']*.85,r['y']+r['height']*row)])
+   if touch:
+    session=context.new_cdp_session(page)
+    session.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':points[0][0],'y':points[0][1]}]})
+    for x,y in points:session.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y}]})
+    session.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});session.detach()
+   else:
+    page.mouse.move(*points[0]);page.mouse.down()
+    for x,y in points:page.mouse.move(x,y,steps=6)
+    page.mouse.up()
+  if width in [390,430]:
+   scratch_cell(gift.locator('[data-prize=false]').first,touch=width==430)
+   assert gift.locator('.park-daily-cell.is-revealed').count()==1
+   assert gift.locator('canvas:visible').count()==8
+   assert page.evaluate('KingRicoCloud.player.balance')==before
+   if width==390:
+    page.reload();gift.wait_for();assert gift.locator('canvas:visible').count()==9
+   for n in range(3):
+    scratch_cell(gift.locator('[data-prize=true]').nth(n),touch=width==430)
+    if n<2:
+     assert gift.get_by_role('status').inner_text()==f'{n+1} de 3 prêmios encontrados'
+     assert gift.get_by_role('button',name='REVELAR',exact=True).is_visible()
    gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).wait_for()
   else:
    # Same reward without requiring a gesture, including keyboard-only input.
    page.keyboard.press('Tab');page.keyboard.press('Enter')
+  assert gift.locator('canvas:visible').count()==0
+  assert gift.locator('.park-daily-x').count()==6
+  assert gift.locator('[data-prize=true] strong').all_text_contents()==['50']*3
+  assert gift.locator('.park-daily-x').first.evaluate('e=>getComputedStyle(e).color')=='rgb(207, 48, 57)'
   assert page.evaluate('KingRicoCloud.player.balance')==before
   assert gift.get_by_role('status').inner_text()=='Você ganhou 50 moedas'
   page.screenshot(path=f'work/preview-daily-revealed-{width}.png')
@@ -59,6 +79,6 @@ with sync_playwright() as p:
   page.goto(BASE+'/park');page.wait_for_function('KingRicoCloud.player&&!document.querySelector("#kr-boot-screen")');page.wait_for_timeout(250)
   assert gift.count()==0
   assert not errors and not missing,{'errors':errors,'missing':missing}
-  print(json.dumps({'width':width,'motion':mode,'scratch':True,'savedDailyCredit':True,'retry':True,'walletHold':True,'noRepeatOnReloadOrPark':True,'errors':errors,'missing':missing}),flush=True)
+  print(json.dumps({'width':width,'motion':mode,'nineCells':True,'sixRedXs':True,'threeEqualPrizes':True,'scratch':True,'savedDailyCredit':True,'retry':True,'walletHold':True,'noRepeatOnReloadOrPark':True,'errors':errors,'missing':missing}),flush=True)
   context.close()
  b.close()

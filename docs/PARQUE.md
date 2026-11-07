@@ -21,8 +21,13 @@ A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
 Na primeira abertura do dia, depois da conta e da tela de carregamento, abre
 uma raspadinha. Funciona no Circus e nas rotas do parque, antes da escolha de
-entrada. Raspar cerca de 36% revela o valor; REVELAR oferece a mesma ação por
-botão/teclado. PEGAR MOEDAS confirma o bônus existente no Firestore. Falha mantém
+entrada. A grade 3×3 contém seis X vermelhos e três casas com o mesmo valor do
+presente, em posições embaralhadas. Cada casa é raspável independentemente:
+remover cerca de 36% de sua cobertura a revela. Ao encontrar os três valores,
+as casas restantes são reveladas e PEGAR MOEDAS fica disponível. Os três valores
+representam **um único prêmio diário**, não três créditos. REVELAR oferece a
+alternativa de abrir todas as casas por botão/teclado.
+PEGAR MOEDAS confirma o bônus existente no Firestore. Falha mantém
 o cartão aberto para tentar de novo. Raspar sozinho não grava nem credita nada.
 
 Mantida a sequência de 50, 100, 150, 200, 250, 500 e 1.000 moedas e o calendário
