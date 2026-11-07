@@ -110,7 +110,9 @@ service cloud.firestore {
         && p.peaches == left && x.peaches == left
         && p.peachBank == {'count':left,'units':saved} && x.peachBank == p.peachBank
         && (trigger ? x.feature is map && x.feature.bet == bonusUnits / 100.0 : x.feature == null)
-        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*1665;
+        // Legacy: 5 * 33.3 * full-screen x10 = 1665. Version 2: 8 * 33.3 * 10 = 2664.
+        // Bet limits and symbol multipliers are unchanged; covered by circus-columns.test.cjs.
+        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)==2 ? 2664 : 1665);
     }
     function bounce(p, old, o) {
       let x = o.result.outcome;
@@ -771,21 +773,29 @@ service cloud.firestore {
         && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,passes'.split(','));
     }
     function oldPlayerRound(uid,game) { return get(/databases/$(database)/documents/players/$(uid)).data.get(game+'Round',null); }
-    function validTicketLine(g) {
+    function validTicketLine(g,modern) {
       let t=[g[0] == 10,g[1] == 10,g[2] == 10,g[3] == 10,g[4] == 10,g[5] == 10,g[6] == 10,g[7] == 10,g[8] == 10];
       return t == [true,true,true,false,false,false,false,false,false]
         || t == [false,false,false,true,true,true,false,false,false]
         || t == [false,false,false,false,false,false,true,true,true]
         || t == [true,false,false,false,true,false,false,false,true]
-        || t == [false,false,true,false,true,false,true,false,false];
+        || t == [false,false,true,false,true,false,true,false,false]
+        || modern && (t == [true,false,false,true,false,false,true,false,false]
+          || t == [false,true,false,false,true,false,false,true,false]
+          || t == [false,false,true,false,false,true,false,false,true]);
+    }
+    function ticketCount(g) {
+      return (g[0]==10?1:0)+(g[1]==10?1:0)+(g[2]==10?1:0)
+        +(g[3]==10?1:0)+(g[4]==10?1:0)+(g[5]==10?1:0)
+        +(g[6]==10?1:0)+(g[7]==10?1:0)+(g[8]==10?1:0);
     }
     function parkSpinState(s,b,o) {
-      let x=o.result.outcome; let award=x.ticketAward;
+      let x=o.result.outcome; let award=x.ticketAward; let modern=x.get('slotVersion',1)==2;
       let w=s.wheel;
       return o.action == 'spin' && o.game == 'circus' && x.parkVersion == 1 && b.wheel == null
-        && s.spins == b.spins+1 && s.spins <= 10 && award in [0,3]
+        && s.spins == b.spins+1 && s.spins <= 10 && award in [0,3] && x.get('slotVersion',1) in [1,2]
         && (award == 3 ? s.spins < 10 && x.res.peach.size() == 0 && x.feature == null
-          && validTicketLine(x.grid) : !x.grid.hasAny([10]))
+          && validTicketLine(x.grid,modern) : modern ? ticketCount(x.grid)<=2 : !x.grid.hasAny([10]))
         && s.tickets == b.tickets+award && s.passes == b.passes
         && (s.spins == 10 ? w.keys().hasOnly('id,roundId,prizeVersion,baseUnits,pockets,result'.split(','))
           && w.id == s.lastOperationId && w.roundId == w.id && w.prizeVersion == 3

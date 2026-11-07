@@ -3,7 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Estado (2026-11-05)
+## Próximo passo (2026-11-07 · ingressos avulsos e colunas, somente prévia)
+- Implementado `slotVersion:2`: oito combinações pagam; ingressos avulsos aparecem sem crédito nem voo. Preservados pagamentos/células de prêmio, Happeach, versões antigas e repetição idempotente. Indicador vertical usa o mesmo contêiner transformado dos rolos.
+- Validação local: 205 testes de código e 60 testes de regras/transações passaram. Navegador confirmou um/dois ingressos avulsos sem crédito, pagamento/destaque alinhado de coluna, carteira, três notas sequenciais, líquido e roleta nos modos normal/reduzido; sem erros ou assets ausentes.
+- Auditoria reproduzível: `scripts/circus-lines-audit.cjs`, resultados em `docs/circus-lines-audit.json`. Cem mil giros por versão, incluindo bônus: retorno em moedas de 141,22% nas cinco combinações existentes e 189,92% nas oito novas. Não houve ajuste de pesos/pagamentos. Usuário informado; oficial preservado.
+- Próximo passo exato: avaliar a prévia com o dono e recalibrar o Circus completo (base + Happeach + décimo giro + roleta), repetindo a auditoria e testes antes de qualquer promoção à main. Não anunciar RTP de 95/98% com esses resultados.
+
+## Estado oficial (2026-11-05)
 - `main` = site oficial. Publicado `87244fe` em 05/11 após autorização do dono: Clown guardado, Bounce reativado, três cards Em breve e revisões aprovadas de parque/HUD/contador. Mantidas 3 fitas, carteira real, háptico e publicador REST de regras; prévia segue em projeto isolado.
 - No ar: Circus, Penalty (goleiro palhaço), Flying Clown e Bounce; Fingo só pela rota direta. Basquete/Bubble Plinko/Race Horse são cards Em breve, sem cobrança. Clown e demais arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.

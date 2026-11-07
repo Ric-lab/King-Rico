@@ -6,25 +6,34 @@ const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
 const fresh=()=>({version:1,revision:0,lastOperationId:null,tickets:0,spins:0,wheel:null,passes:{}});
 const publicState=s=>({...structuredClone(s||fresh()),price:PRICE,meterSpins:METER_SPINS});
 const fail=(code,message)=>{throw Object.assign(new Error(message),{code:'king-rico/'+code});};
-// A ticket trinca may occupy any of the five paylines. Re-evaluate the displayed
+// A ticket trinca uses the versioned five/eight combinations. Re-evaluate the displayed
 // grid so coin prizes and highlighted cells always agree with the ticket row.
-function placeTickets(x,bet,rng){
- const cells=engine.LINES[Math.min(engine.LINES.length-1,Math.floor(rng()*engine.LINES.length))].slice();
+function placeTickets(x,bet,rng,version=1){
+ const lines=version===2?engine.ALL_LINES:engine.LINES;
+ const cells=lines[Math.min(lines.length-1,Math.floor(rng()*lines.length))].slice();
  for(const i of cells)x.grid[i]=TICKET;
- x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet);
+ x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet,version);
  x.res.cells=[...new Set([...x.res.cells,...cells])];x.winUnits=engine.units(x.res.win);
  return cells;
 }
-function spin(p,s,bet,id,rng){
+// Non-winning ticket appearances never replace a paying symbol or Happeach.
+// Up to two are shown, so only an actual straight/diagonal trinca earns tickets.
+function scatterTickets(x,rng){
+ const draw=rng();if(draw>=.5)return [];
+ const count=draw<.3?1:2,blocked=new Set([...x.res.cells,...x.res.peach]),available=x.grid.flatMap((_,i)=>blocked.has(i)?[]:[i]),cells=[];
+ for(let n=0;n<count&&available.length;n++){const at=Math.min(available.length-1,Math.floor(rng()*available.length));const [cell]=available.splice(at,1);x.grid[cell]=TICKET;cells.push(cell);}
+ return cells;
+}
+function spin(p,s,bet,id,rng,version=1){
  if(s.wheel)fail('round-conflict','Conclua a roleta bônus antes de girar novamente.');
  const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32),filling=s.spins===9;
- let x=engine.slot(bet,p.peaches,random,p.peachBank);
- if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank);
-  if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
+ let x=engine.slot(bet,p.peaches,random,p.peachBank,version);
+ if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank,version);
+  if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet,version),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
  const award=!filling&&!x.res.peach.length&&!x.feature&&random()<.14?3:0;
- if(award){placeTickets(x,bet,random);s.tickets+=3;}
+ if(award){placeTickets(x,bet,random,version);s.tickets+=3;}else if(version===2)scatterTickets(x,random);
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:3,baseUnits:engine.units(x.res.win),pockets:[...POCKETS],result:null};
- return {...x,parkVersion:1,ticketAward:award};
+ return {...x,...(version===2?{slotVersion:2}:{}),parkVersion:1,ticketAward:award};
 }
 function entry(p,s,game,method){
  if(!ATTRACTIONS.includes(game)||!['ticket','coins'].includes(method))fail('invalid-argument','Entrada inválida.');
@@ -55,4 +64,4 @@ function bonus(s,wheelId,rng){
  if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:winUnits-w.baseUnits};return w.result.extraUnits;}
  return 0;
 }
-module.exports={PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,spin,entry,payment,settle,bonus};
+module.exports={PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,scatterTickets,spin,entry,payment,settle,bonus};

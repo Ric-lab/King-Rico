@@ -4,9 +4,10 @@
  function plan({column,from,target,stop,seed=0,ticket=false,wasTicket=false}){
   const anchor=-Math.round(stop/PITCH),items=[];
   for(let index=anchor-4;index<=5;index++){
-   let symbol=((Math.imul(index+4096,1103515245)+Math.imul(column+1,12345)+(seed|0))>>>0)%10,isTicket=false;
+   let symbol=((Math.imul(index+4096,1103515245)+Math.imul(column+1,12345)+(seed|0))>>>0)%12,isTicket;
    if(index>=0&&index<3){symbol=from[column+index*3];isTicket=symbol===10;}
    if(index>=anchor&&index<anchor+3){symbol=target[column+(index-anchor)*3];isTicket=symbol===10;}
+   isTicket=symbol===10;
    items.push(Object.freeze({index,symbol,ticket:isTicket}));
   }
   return Object.freeze(items);

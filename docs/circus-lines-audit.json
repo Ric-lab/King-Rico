@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-07",
+  "scope": "Simulation, not a guaranteed RTP. Includes existing bonus wheel and Happeach. No payout/weight retuning.",
+  "legacy": {
+    "version": 1,
+    "spins": 100000,
+    "seed": 17843,
+    "coinRtp": 1.412236,
+    "baseCoinRtp": 0.864583,
+    "prizeRate": 0.33031,
+    "columnPrizeRate": 0,
+    "ticketAppearances": [
+      88312,
+      0,
+      0,
+      11688
+    ],
+    "ticketsAwarded": 35064
+  },
+  "eightLines": {
+    "version": 2,
+    "spins": 100000,
+    "seed": 17843,
+    "coinRtp": 1.899227,
+    "baseCoinRtp": 1.234679,
+    "prizeRate": 0.42289,
+    "columnPrizeRate": 0.20218,
+    "ticketAppearances": [
+      44001,
+      26645,
+      17547,
+      11807
+    ],
+    "ticketsAwarded": 35421
+  }
+}

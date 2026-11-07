@@ -1033,3 +1033,37 @@ test('Park Bounce resumes a ticket round, pays once, then starts another for coi
   await new Promise(r=>setTimeout(r,350));
  }
 });
+
+test('Circus v2 pays all three coin columns and replays their immutable result once',async()=>{
+ const total=engine.SYMBOLS.reduce((s,x)=>s+x.w,0),weight=i=>(engine.SYMBOLS.slice(0,i).reduce((s,x)=>s+x.w,0)+engine.SYMBOLS[i].w/2)/total;
+ for(let col=0;col<3;col++){
+  const grid=[0,2,3,4,5,6,7,8,0];for(const i of engine.ALL_LINES[5+col])grid[i]=1;
+  const draws=grid.flatMap(i=>[.99,weight(i)]).concat([.99,.99]);
+  const name='circus-column-'+col+'-'+randomUUID(),c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+  const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:2});
+  const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);assert.ok(a.replayed||b.replayed);
+  assert.deepEqual(a.outcome.res.lines,[5+col]);assert.equal(a.outcome.res.win,12);assert.equal(a.player.balance,1002);
+  assert.equal(a.park.tickets,0);assert.equal((await c.call(spin)).player.balance,1002);
+ }
+});
+
+test('Circus v2 persists one/two loose tickets without credit and accepts ticket columns only in v2',async()=>{
+ for(const count of [1,2,3]){
+  const draws=count===3?[...Array.from({length:9},()=>[.99,.4]).flat(),0,5.5/8]:[...Array.from({length:9},(_,i)=>[.99,(i+.5)/10]).flat(),.99,count===1?.1:.4,0,0];
+  const name='circus-loose-'+count+'-'+randomUUID(),c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+  const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:2});
+  const a=await c.call(spin);assert.equal(a.outcome.grid.filter(x=>x===10).length,count);
+  assert.equal(a.outcome.ticketAward,count===3?3:0);assert.equal(a.park.tickets,count===3?3:0);
+  assert.equal((await c.call(spin)).park.tickets,a.park.tickets);
+  if(count===3)assert.deepEqual(a.outcome.grid.flatMap((v,i)=>v===10?[i]:[]),[0,3,6]);
+ }
+});
+
+test('Circus full-screen ceiling is 1665x for five combinations and 2664x for eight',async()=>{
+ for(const version of [1,2]){
+  const name='circus-max-'+version+'-'+randomUUID(),c=await client(name,name,{rng:()=>.999});await c.call(request({action:'bootstrap'}));
+  const a=await c.call(request({action:'spin',game:'circus',bet:1,park:true,...(version===2?{slotVersion:2}:{})}));
+  assert.equal(a.outcome.res.full,true);assert.equal(a.outcome.res.lines.length,version===2?8:5);
+  assert.equal(a.outcome.res.win,version===2?2664:1665);assert.equal(a.player.balance,999+a.outcome.res.win);
+ }
+});

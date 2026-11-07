@@ -12,4 +12,5 @@ Rejeitado:
 - Chão que quebra / placa que foge depois de um bom pulo (parece roubo).
 - Zero no prêmio diário.
 - Trinca de ingressos fixada sempre na primeira linha.
-- Ingressos limitados a horizontais: o dono pediu também as duas diagonais de pagamento.
+- Ingressos aparecendo apenas em trincas premiadas: a prévia inclui um ou dois avulsos sem crédito.
+- Ignorar trincas verticais: o dono pediu pagamento nas três colunas, além das horizontais e diagonais; prévia `slotVersion:2`, aguardando balanceamento antes da produção.

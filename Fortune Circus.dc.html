@@ -158,6 +158,9 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
 
+  <sc-if value="{{ l5 }}" hint-placeholder-val="{{ false }}"><div data-payline="5" style="position: absolute; left: 94.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l6 }}" hint-placeholder-val="{{ false }}"><div data-payline="6" style="position: absolute; left: 224.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l7 }}" hint-placeholder-val="{{ false }}"><div data-payline="7" style="position: absolute; left: 354.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   </div>
   <div class="park-reel-frame" aria-hidden="true"></div>
   <div class="kr-hud-row">
@@ -338,7 +341,7 @@ a:hover { color: #fff3c4; }
           </div>
         </sc-for>
       </div>
-      <div style="max-width: 400px; padding: 0 12px; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-wrap: pretty;">5 linhas: 3 deitadas e 2 em diagonal. O elefante vale por qualquer símbolo, menos o Happeach. Tela cheia paga x10.</div>
+      <div style="max-width: 400px; padding: 0 12px; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-wrap: pretty;">8 combinações: 3 deitadas, 3 em pé e 2 diagonais. O elefante vale por qualquer símbolo, menos o Happeach e os ingressos. Três ingressos alinhados dão 3 entradas. Um ou dois não dão prêmio. Tela cheia paga x10.</div>
       <div class="kr-button kr-button--gold" style="padding: 10px 28px; font-size: 20px; font-weight: 800; letter-spacing: 1px;">FECHAR</div>
     </div>
   </sc-if>
@@ -459,7 +462,7 @@ const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
 // every Happeach frame as a literal path (dynamic 'f-'+name paths were missing from published builds)
 const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
 const PEACH = 11, PEACH_P = 0.008174081789857218, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
-const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
+const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];
 const NOTES = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33, 659.25, 784];
@@ -1271,7 +1274,7 @@ class Component extends DCLogic {
   }
   lineSymbol(g, line) {
     const v = line.map(i => g[i]);
-    if (v.some(s => s === undefined || s < 0)) return -1;
+    if (v.some(s => s === undefined || s < 0 || s === 10)) return -1;
     if (v.some(s => s === PEACH)) return -1; // Happeach não paga linha: só conta para a Rodada Especial
     const base = v.find(s => s !== WILD);
     if (base === undefined) return WILD;
@@ -1279,13 +1282,13 @@ class Component extends DCLogic {
   }
   evaluate(g, bet) {
     let win = 0; const cells = {}, lines = [];
-    LINES.forEach((line, li) => {
+    (this._cloudSpin?.outcome?.slotVersion===2?LINES:LINES.slice(0,5)).forEach((line, li) => {
       const s = this.lineSymbol(g, line);
       if (s >= 0) { win += bet * (s === PEACH ? PEACH_PAY : SYMBOLS[s].pay); lines.push(li); line.forEach(i => { cells[i] = true; }); }
     });
     const base = g.find(v => v !== WILD);
     const peach = g.map((v, i) => (v === PEACH ? i : -1)).filter(i => i >= 0);
-    const full = g.every(v => v >= 0 && v !== PEACH) && (base === undefined || g.every(v => v === base || v === WILD));
+    const full = g.every(v => v >= 0 && v !== 10 && v !== PEACH) && (base === undefined || g.every(v => v === base || v === WILD));
     if (full && win > 0) win *= 10;
     return { win: Math.round(win * 100) / 100, cells: Object.keys(cells).map(Number), lines, full: full && win > 0, peach };
   }
@@ -1331,7 +1334,7 @@ class Component extends DCLogic {
     { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
     const near = (a, b) => a === b || a === WILD || b === WILD;
-    const anticipate = LINES.some(line => { const a = line.find(i => i % 3 === 0), b = line.find(i => i % 3 === 1); return target[a] !== PEACH && target[b] !== PEACH && near(target[a], target[b]); });
+    const anticipate = LINES.slice(0,5).some(line => { const a = line.find(i => i % 3 === 0), b = line.find(i => i % 3 === 1); return target[a] !== PEACH && target[b] !== PEACH && near(target[a], target[b]); });
     const trigger = false; // Rodada Especial only opens via 3 Happeach
 
     this.danceClear();

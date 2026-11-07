@@ -19,11 +19,17 @@ A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
 ## Ingressos e entrada
 
-Uma trinca de ingressos no Circus dá **3 ingressos**. Na prévia de 04/11/2026,
-a trinca pode sair em qualquer uma das cinco linhas de pagamento (três horizontais
-e duas diagonais), sorteada após
-a concessão. O prêmio em moedas é recalculado pela grade efetivamente mostrada.
-A chance de conceder ingressos e a quantidade de três permanecem iguais. A conta começa com zero
+Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026
+usa `slotVersion:2`: oito combinações pagam moedas ou ingressos, sendo três
+horizontais, três verticais e duas diagonais. Um ou dois ingressos também podem
+aparecer sem conceder entradas; não substituem células de prêmio ou Happeach.
+As fitas incluem ingressos durante o giro, sem anunciar uma trinca antecipadamente.
+O prêmio em moedas é recalculado pela grade efetivamente mostrada.
+A chance de conceder ingressos e a quantidade de três permanecem iguais.
+Pedidos antigos sem essa versão conservam as cinco combinações originais.
+Esta revisão está somente na prévia: a auditoria em ECONOMIA.md encontrou
+retorno elevado e precisa orientar o balanceamento antes de levar à produção.
+A conta começa com zero
 ingressos; nenhum saldo ou ingresso da prévia local é importado.
 
 Na prévia, cada ingresso toca uma única nota ao incrementar o contador:

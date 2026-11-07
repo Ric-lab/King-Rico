@@ -44,6 +44,24 @@ guardados Bounce, Claw e Race conservam sua matemática anterior.
 
 ## Ritmo de prêmios
 
+### Auditoria do Circus com parque (07/11/2026, somente prévia)
+
+`node scripts/circus-lines-audit.cjs` simula 100 mil giros de aposta 10 por
+versão, com semente 17843. Inclui Happeach, prêmio garantido no décimo giro e
+extra da roleta; exclui o valor de uso dos ingressos. Resultado reproduzível
+em [circus-lines-audit.json](circus-lines-audit.json):
+
+| Versão | Retorno em moedas | Giros com prêmio-base |
+| --- | ---: | ---: |
+| Parque atual, cinco combinações | 141,22% | 33,03% |
+| Prévia `slotVersion:2`, oito combinações | 189,92% | 42,29% |
+
+São estimativas dessa amostra, não provas de RTP. Nenhum peso, multiplicador
+ou bônus foi recalibrado nesta revisão. A prévia acrescenta colunas e ingressos
+avulsos; a produção conserva a versão anterior. **Não promover esta mudança à
+main antes de revisar o retorno do conjunto.** Os percentuais históricos abaixo
+não descrevem o Circus com parque.
+
 A Wheel paga outro desenho da mesma cor em **×2**, com probabilidade de 36,5%;
 desenho exato continua **×10**, com 2,5%. Somam 39% de rodadas com prêmio.
 Escolher Fortune mantém **×25**, com 3,92%. Assim há uma opção de prêmios menores
