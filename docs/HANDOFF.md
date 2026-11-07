@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-07 · repetir raspadinha para testar)
+- Código `3b809cb` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42334250457 concluído com sucesso: navegador público confirmou repetição a cada abertura em 320/390/430 px, crédito único por visita e navegação/movimentos preservados. Cinco testes de ciclo/modelo/isolamento passaram; produção gerada após a integração. Oficial preservado.
 - Dono pediu reaparecer em toda abertura para conseguir testar. Somente o modelo da carteira fictícia reinicia o bônus ao carregar uma página; permite raspar e receber 50 moedas de teste novamente. Receber duas vezes na mesma visita continua bloqueado.
 - Cliente, calendário, regras Firestore e bônus de produção intactos. Testes de navegação adaptados para fechar o cartão e distinguir créditos de teste das entradas dos jogos.
 - Próximo passo: dono testar livremente recarregando a prévia. Não promover esta exceção para o cliente financeiro real.
