@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Próximo passo (2026-11-07 · ingressos avulsos e colunas, somente prévia)
+- Código `b41b60f` publicado somente em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42330832504 concluído com sucesso: testes no endereço público confirmaram ingressos avulsos, coluna premiada/destaque, carteira, sons/roleta e parque em três larguras. Oficial e regras de produção não publicados.
 - Implementado `slotVersion:2`: oito combinações pagam; ingressos avulsos aparecem sem crédito nem voo. Preservados pagamentos/células de prêmio, Happeach, versões antigas e repetição idempotente. Indicador vertical usa o mesmo contêiner transformado dos rolos.
 - Validação local: 205 testes de código e 60 testes de regras/transações passaram. Navegador confirmou um/dois ingressos avulsos sem crédito, pagamento/destaque alinhado de coluna, carteira, três notas sequenciais, líquido e roleta nos modos normal/reduzido; sem erros ou assets ausentes.
 - Auditoria reproduzível: `scripts/circus-lines-audit.cjs`, resultados em `docs/circus-lines-audit.json`. Cem mil giros por versão, incluindo bônus: retorno em moedas de 141,22% nas cinco combinações existentes e 189,92% nas oito novas. Não houve ajuste de pesos/pagamentos. Usuário informado; oficial preservado.
