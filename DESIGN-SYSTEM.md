@@ -111,6 +111,11 @@ Evitar representar o salto apenas movendo/encolhendo o desenho neutro.
 Na chegada à cabine, usar `assets/circus/king-pilot-side.webp`, olhando para o
 nariz do avião (direita), com mãos à frente e corpo sentado. A transição para
 esse perfil acontece ainda na queda, não somente após desaparecer na cabine.
+Proporção atual do piloto: 43% do avião, com cabine cobrindo as pernas. Manter
+o ciclo de comemoração ativo durante a aproximação; a pose de partida do salto
+deve ser a última posição animada, sem congelar esperando a aeronave. Subida usa
+camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplicador
+confirmado. Multiplicador maior e de alto contraste permanece no centro inferior.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

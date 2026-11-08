@@ -1,6 +1,13 @@
 // Adapted from KingRico.dc.html's cheer: drawn poses, 110ms opaque dissolve,
 // feet anchored at 97%, and the same exponential transform smoothing (22/s).
-export const BOARDING_FRAMES=['master','crouch2','cheerRise','cheer','cheerFall','land','pilotSide'];
+export const BOARDING_FRAMES=['master','crouch2','cheerRise','cheer','cheerFall','land','happy2','pilotSide'];
+export function celebrationPose(milliseconds){
+ const p=(milliseconds%1250)/1250;
+ if(p<.15)return {frame:'crouch2',lift:0,sx:1.015,sy:.98};
+ if(p<.64){const a=(p-.15)/.49;return {frame:a<.22?'cheerRise':a<.7?'cheer':'cheerFall',lift:.14*Math.sin(a*Math.PI),sx:1,sy:1};}
+ if(p<.78){const squash=Math.sin((p-.64)/.14*Math.PI);return {frame:'land',lift:0,sx:1+.02*squash,sy:1-.03*squash};}
+ return {frame:'happy2',lift:.025*Math.sin((p-.78)/.22*Math.PI),sx:1,sy:1};
+}
 export const boardingAsset=frame=>frame==='pilotSide'?'/assets/circus/king-pilot-side.webp':`/assets/king-rico/fw6/${frame}.webp`;
 export function boardingPose(progress){
  const p=Math.max(-1,Math.min(1,progress));

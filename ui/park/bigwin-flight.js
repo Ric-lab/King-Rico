@@ -1,10 +1,11 @@
 // Presentation of a committed result. No RNG, wallet mutations or extra reward.
-import {BOARDING_FRAMES,boardingAsset,boardingPose,createBoardingActor} from './king-boarding.js';
+import {BOARDING_FRAMES,boardingAsset,boardingPose,celebrationPose,createBoardingActor} from './king-boarding.js';
 const PLANE='/assets/circus/bonus-plane.webp',PILOT='/assets/king-rico/fw6/master.webp';
 export function flightValue(amount,bet,progress){
  const p=Math.max(0,Math.min(1,progress)),multiple=Math.max(1,amount/bet);
  return {multiple:p===1?multiple:Math.pow(multiple,p),amount:p===1?amount:Math.min(amount,bet*Math.pow(multiple,p))};
 }
+export function flightAltitude(multiple,progress){return Math.max(0,Math.min(1,Math.log2(Math.max(5,multiple)/5)/Math.log2(20)))*Math.max(0,Math.min(1,progress));}
 export function installBigWinFlight(fc){
  const nativePrize=fc.showPrize.bind(fc),nativeDismiss=fc.dismissWin.bind(fc),nativeSpin=fc.spin.bind(fc);
  for(const src of [PLANE,...BOARDING_FRAMES.map(boardingAsset)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
@@ -18,16 +19,17 @@ export function installBigWinFlight(fc){
   const body=source.closest('[data-k=body]'),sourceRect=source.getBoundingClientRect(),previous=document.activeElement;
   const scene=document.createElement('div');scene.className='park-bigwin-flight';scene.dataset.phase='approach';
   scene.setAttribute('role','region');scene.setAttribute('aria-label','Voo do grande prêmio');
-  scene.innerHTML=`<div class="park-bigwin-sky"><i></i><i></i><i></i></div><div class="park-bigwin-plane"><img src="${PLANE}" alt="Avião do King Rico"><div class="park-bigwin-pilot" role="img" aria-label="King Rico pilotando" hidden></div><img class="park-bigwin-front" src="${PLANE}" alt=""></div><div class="park-bigwin-jumper" role="img" aria-label="King Rico pulando para o avião"></div><div class="park-bigwin-score" role="status"><span>GRANDE PRÊMIO</span><strong data-flight-multiple>×1</strong><b data-flight-amount></b></div>`;
+  scene.innerHTML=`<div class="park-bigwin-sky"><div class="park-flight-highsky"></div><div class="park-flight-space"><div class="park-flight-stars"></div><div class="park-flight-moon"></div><div class="park-flight-horizon"></div></div><div class="park-flight-clouds"><i></i><i></i><i></i><i></i><i></i></div></div><div class="park-bigwin-plane"><img src="${PLANE}" alt="Avião do King Rico"><div class="park-bigwin-pilot" role="img" aria-label="King Rico pilotando" hidden></div><img class="park-bigwin-front" src="${PLANE}" alt=""></div><div class="park-bigwin-jumper" role="img" aria-label="King Rico pulando para o avião"></div><div class="park-bigwin-score" role="status"><span>GRANDE PRÊMIO</span><strong data-flight-multiple>×1</strong><b data-flight-amount></b></div>`;
   const inert=[...document.body.children].filter(e=>!e.matches('script,style')).map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);document.body.append(scene);
   const plane=scene.querySelector('.park-bigwin-plane'),pilot=scene.querySelector('.park-bigwin-pilot'),jumper=scene.querySelector('.park-bigwin-jumper'),score=scene.querySelector('.park-bigwin-score');
   const amountNode=scene.querySelector('[data-flight-amount]'),multipleNode=scene.querySelector('[data-flight-multiple]');
   const departure=[...body.querySelectorAll('[data-f]')].sort((a,b)=>Number(getComputedStyle(b).opacity)-Number(getComputedStyle(a).opacity))[0]?.src||PILOT;
   const jumpActor=createBoardingActor(jumper,departure),pilotActor=createBoardingActor(pilot);
   jumper.style.cssText=`width:${sourceRect.width}px;height:${sourceRect.height}px;transform:translate(${sourceRect.x}px,${sourceRect.y}px)`;
-  const width=innerWidth,height=innerHeight,size=Math.min(300,width*.78,height*.36),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.65,endY=Math.max(185,height*.24);
+  const width=innerWidth,height=innerHeight,size=Math.min(300,width*.78,height*.36),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.65,endY=Math.max(215,height*.30);
+  const maximum=amount/fc.bet(),climbDuration=4200+flightAltitude(maximum,1)*3200,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,speed=reduced ? .65 : 1;
-  let frame,elapsed=0,last=performance.now(),ended=false,rank=-1;
+  let frame,elapsed=0,last=performance.now(),ended=false,rank=-1,jumpStart;
   fc._parkBigWinFlight=true;fc._afterWin=then;fc._afterWinChains=!!chains;
   clearInterval(fc.counter);fc.setState({showWin:true,winTitle:title,winBigText:null,displayWin:0,winSub:'',coins:false,shake:'none'});
   plane.style.width=size+'px';plane.style.height=size+'px';
@@ -40,30 +42,40 @@ export function installBigWinFlight(fc){
    nativeDismiss();fc._parkPrizeOrigin=false;
   }
   // Independent of animation support, RAF throttling and image decoding.
-  const safety=setTimeout(finish,15000);
+  const safety=setTimeout(finish,20000);
   const lerp=(a,b,p)=>a+(b-a)*p,smooth=p=>p*p*(3-2*p),clamp=p=>Math.max(0,Math.min(1,p));
   const place=(x,y,angle)=>{plane.style.transform=`translate(${x-size*.515}px,${y-size*.42}px) rotate(${angle}deg)`;};
   function tick(now){
    if(ended)return;
    const dt=Math.min(100,now-last);last=now;if(!document.hidden)elapsed+=dt/speed;
    const t=elapsed;let x,y,angle=-12;
-   if(t<1500){const p=smooth(t/1500);x=lerp(-size*.6,catchX,p);y=lerp(height*.89,catchY,p);if(t>=1200){scene.dataset.phase='anticipating';const pose=boardingPose(-1);jumpActor.pose(pose.frame,pose.sx,pose.sy,dt/1000);}}
+   if(t<1500){const p=smooth(t/1500);x=lerp(-size*.6,catchX,p);y=lerp(height*.89,catchY,p);
+    const pose=celebrationPose(t),scale=lerp(1,1.12,smooth(clamp(t/450))),w=sourceRect.width*scale,h=sourceRect.height*scale;
+    jumpStart={x:sourceRect.x-(w-sourceRect.width)/2,y:sourceRect.bottom-h-pose.lift*h,width:w,height:h};
+    jumpActor.pose(pose.frame,pose.sx,pose.sy,dt/1000);scene.dataset.phase=t>=1250?'anticipating':'approach';
+    jumper.style.cssText=`width:${w}px;height:${h}px;transform:translate(${jumpStart.x}px,${jumpStart.y}px)`;
+   }
    else if(t<2600){x=catchX;y=catchY;angle=-8;
-    const p=clamp((t-1500)/1100),pw=size*.31,ph=pw,a=-8*Math.PI/180,dx=catchX+Math.cos(a)*size*.01-Math.sin(a)*size*(-.045)-pw/2,dy=catchY+Math.sin(a)*size*.01+Math.cos(a)*size*(-.045)-ph/2;
+    const p=clamp((t-1500)/1100),pw=size*.43,ph=pw,a=-8*Math.PI/180,dx=catchX+Math.cos(a)*size*.01-Math.sin(a)*size*(-.075)-pw/2,dy=catchY+Math.sin(a)*size*.01+Math.cos(a)*size*(-.075)-ph/2;
     scene.dataset.phase='boarding';jumper.hidden=false;
     const pose=boardingPose(p);jumpActor.pose(pose.frame,pose.sx,pose.sy,dt/1000);
-    jumper.style.cssText=`width:${lerp(sourceRect.width,pw,p)}px;height:${lerp(sourceRect.height,ph,p)}px;transform:translate(${lerp(sourceRect.x,dx,p)}px,${lerp(sourceRect.y,dy,p)-Math.sin(p*Math.PI)*(reduced?20:72)}px) rotate(${-8*p+Math.sin(p*Math.PI)*-14}deg)`;
+    const from=jumpStart||sourceRect;
+    jumper.style.cssText=`width:${lerp(from.width,pw,p)}px;height:${lerp(from.height,ph,p)}px;transform:translate(${lerp(from.x,dx,p)}px,${lerp(from.y,dy,p)-Math.sin(p*Math.PI)*(reduced?20:72)}px) rotate(${-8*p+Math.sin(p*Math.PI)*-14}deg)`;
    }else{
     if(pilot.hidden)try{fc.hap('winMid');}catch{}
     jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
-    const p=clamp((t-2600)/4200),e=smooth(p);x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-16,e);
+    const p=clamp((t-2600)/climbDuration),e=smooth(p),altitude=flightAltitude(maximum,p);x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-20,e);
+    scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
+    scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
+    scene.style.setProperty('--flight-cloud-y',(p*height*2.2)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');
+    scene.dataset.altitude=altitude>.72?'space':altitude>.3?'stratosphere':'sky';
     scene.dataset.phase=p<1?'climbing':'result';
     const value=flightValue(amount,fc.bet(),p);multipleNode.textContent='×'+value.multiple.toLocaleString('pt-BR',{maximumFractionDigits:2});amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
     const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}}
-    if(t>8700){scene.dataset.phase='returning';const p=smooth(clamp((t-8700)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);scene.style.opacity=String(1-p);}
-    if(t>=9500){finish();return;}
+    if(t>returnAt){scene.dataset.phase='returning';const p=smooth(clamp((t-returnAt)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);scene.style.opacity=String(1-p);}
+    if(t>=endAt){finish();return;}
    }
    place(x,y,angle);frame=requestAnimationFrame(tick);
   }

@@ -79,6 +79,19 @@ direciona o primeiro giro de cada abertura para uma trinca de diamantes (20×).
 O dono ainda aperta Girar; são exclusivamente moedas de teste. A opção vive no
 transporte fictício, fora do build financeiro de produção.
 
+Revisão de proporções/altura (08/11): piloto ocupa 43% da largura do asset do
+avião (antes 31%). O salto conserva essa proporção na chegada e começa levemente
+maior, ancorado nos pés. Durante a aproximação, o King continua o ciclo de
+comemoração desenhado, com impulso/ápice/queda/pouso, até o embarque.
+
+A câmera é sugerida pelo movimento para baixo das nuvens e paralaxe das estrelas.
+A altura final e a duração da subida dependem do multiplicador já confirmado:
+prêmios menores ficam no céu; intermediários passam à estratosfera; maiores
+alcançam espaço, estrelas, lua e curvatura azul do horizonte. Multiplicador
+central ampliado, com alto contraste. O cenário não altera probabilidades nem
+pagamentos. `/circus?demo=spacewin` demonstra 200× na prévia (primeiro giro),
+enquanto `?demo=bigwin` continua demonstrando 20×.
+
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026

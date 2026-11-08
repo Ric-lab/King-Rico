@@ -3,6 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · proporções, comemoração e altitude)
+- Pedido: King maior em salto/cabine, comemorando até embarcar; subida com mais cenário e céu/espaço conforme o big win, multiplicador evidente.
+- Piloto 31% → 43% da largura do avião; alvo do salto e encaixe recalculados juntos, salto começa até 12% maior. Aproximação continua o ciclo fw6 de comemoração e transfere a posição animada para o embarque.
+- Camadas de céu, estratosfera e espaço, com nuvens descendo e estrelas em paralaxe. Altitude e duração dependem do multiplicador já confirmado; multiplicador central ampliado/alto contraste. Sem alterar sorteio, aposta ou pagamento.
+- Prévia: ?demo=bigwin mostra 20×; ?demo=spacewin mostra 200× e espaço no primeiro giro, somente moedas de teste. Próximo passo: dono avaliar os dois percursos. Oficial e pendência de balanceamento preservados.
+- Validação local: três testes de apresentação passaram. Navegador confirmou piloto ampliado, sequência de poses/continuidade, trajetória e multiplicador nos modos normal/reduzido, céu 20×, espaço 200× e fallback na falha do avião; saldo e uma única aposta preservados, sem erros/assets ausentes. Capturas de subida e espaço revisadas. Produção gerada depois da integração.
+
 ## Prévia (2026-11-08 · piloto de perfil)
 - Código `4d47c5b` publicado no canal de prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42436195528 concluído com sucesso, incluindo navegador público do perfil, prêmio/erro e regressões de Circus/parque. Revisar em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin . Oficial preservado.
 - Dono pediu uma pose que cai na cabine virada para a frente do avião e indicou a arte de vistas. Usados turnaround da marca e fw6/master como referências para novo perfil direito sentado (GPT Image), com coroa/capa e mãos livres, sem cetro.
