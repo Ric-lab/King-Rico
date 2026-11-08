@@ -51,6 +51,21 @@ with sync_playwright() as p:
    halo=flight.locator('[data-flight-amount]').evaluate('''e=>{const s=getComputedStyle(e,'::before');return {width:parseFloat(s.width),height:parseFloat(s.height),animation:s.animationName};}''')
    assert abs(halo['width']-halo['height'])<1 and halo['width']>200
    assert halo['animation']==('none' if mode=='reduce' else 'parkFlightHalo')
+   rotor=flight.locator('.park-propeller-rotor:not(.park-propeller-ghost)')
+   assert rotor.count()==1
+   assert 'plane-body-mask.svg' in flight.locator('.park-bigwin-plane>img').first.evaluate('e=>getComputedStyle(e).maskImage')
+   if mode=='reduce':
+    assert rotor.evaluate('e=>getComputedStyle(e).animationName')=='none'
+   else:
+    spin=rotor.evaluate('e=>{const a=e.getAnimations()[0];a.pause();a.currentTime=0;return {state:a.playState,duration:a.effect.getTiming().duration,transform:getComputedStyle(e).transform};}')
+    assert spin['duration']==110
+    if width==390 and not space:
+     page.screenshot(path='work/preview-propeller-open.png')
+    turn=rotor.evaluate('e=>{const a=e.getAnimations()[0];a.currentTime=27.5;return getComputedStyle(e).transform;}')
+    assert turn!=spin['transform'],'Propeller blades must rotate independently of the airframe'
+    if width==390 and not space:
+     page.screenshot(path='work/preview-propeller-turn.png')
+    rotor.evaluate('e=>e.getAnimations()[0].play()')
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')
    assert page.evaluate('performance.now()')-climb_started>(4300 if mode=='reduce' else 6500),'The flight must have time to breathe'

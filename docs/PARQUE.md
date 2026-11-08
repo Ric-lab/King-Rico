@@ -343,3 +343,11 @@ radial subordinada ao número. Não foi localizada a gravação antiga do dono;
 imagens/resultados públicos consultados, sem afirmar que o vídeo foi assistido.
 Nenhum asset ou código dessas referências foi incorporado ao produto; avião e
 King continuam os nossos. A cena revela pagamento confirmado, sem crash/aposta extra.
+
+### Hélice em voo — prévia (08/11/2026)
+Pás originais de `bonus-plane.webp` renderizadas em camada independente,
+com `plane-propeller-mask.svg`; `plane-body-mask.svg` retira as pás das duas
+camadas fixas sem alterar o arquivo-fonte. Giro de 110 ms no eixo do motor,
+cópia defasada e disco translúcido sugerem desfoque; cubo dourado fixo à frente.
+Todo o conjunto acompanha posição/rotação/escala do avião. Movimento reduzido
+usa disco/pás difusas estáticos. Sem novo som, trajetória ou pagamento.

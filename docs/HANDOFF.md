@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · hélice em voo)
+- Pás originais separadas no render por duas máscaras SVG; removidas das camadas fixas, com cubo dourado preservado. Giro no eixo do motor de 110 ms, fantasma defasado e disco translúcido dão movimento sem regenerar/trocar o avião.
+- Máscaras versionadas em ui/park e incluídas no preload do Circus. Movimento reduzido usa pás/disco difusos estáticos. Trajetória, escala, círculo/prêmio, sons e pagamento não alterados.
+- Quatro fluxos de navegador passaram (céu, 320 px/reduzido, imagem falhando e espaço); teste verifica máscara, mudança real da transformação das pás, período e redução de movimento. Duas fases de giro capturadas e inspecionadas. Sem erros/assets ausentes; build de produção após integração.
+- Próximo passo: conferir Actions desta revisão e dono testar céu (?demo=bigwin) e espaço (?demo=spacewin). Somente prévia; oficial preservado. Um commit com documentação, sem registro extra após o workflow.
+
 ## Prévia (2026-11-08 · nariz, centro da curva e círculo do prêmio)
 - Posição, inclinação e rastro agora derivam de uma curva quadrática única (`flightCurve`): nariz segue a tangente com entrada suave após embarque, linha termina na âncora central do avião. Escala menor acomoda a rotação no celular.
 - Círculo dourado luminoso atrás do prêmio pulsa a cada 1,6 s; estático com movimento reduzido. Número permanece o único contador; nenhuma mudança no pagamento confirmado, carteira ou demais jogos.

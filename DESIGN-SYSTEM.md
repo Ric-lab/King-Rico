@@ -225,3 +225,8 @@ nuvens orgânicas em duas profundidades e estrelas irregulares substituem
 elipses e padrões repetidos. Terra e lua pertencem à pintura do espaço.
 Subida indicada pela paralaxe descendente; preservar contraste do multiplicador.
 Esta revisão está na prévia, ainda não no oficial.
+
+Hélice do voo (prévia): reutilizar as próprias pás da ilustração, separadas
+por máscaras SVG em tempo de renderização. Corpo/cubo fixos, pás em giro de
+110 ms com fantasma leve e disco de ar; evitar rodar o nariz ou duplicar pás
+paradas. Em movimento reduzido, efeito difuso estático.

@@ -296,3 +296,11 @@ Conversão WebP qualidade 89: atlas ~101 KB, nuvens ~99 KB. Estrelas em SVG
 geométrico com distribuição irregular. Sem Meshy; custo GPT Imagens não
 exposto pela ferramenta. Composição conferida no navegador, centro reservado
 para leitura. Assets finais em assets/circus, incluídos no preload.
+
+### 2026-11-08 — Hélice animada sem regenerar o avião
+Reutilizado `assets/circus/bonus-plane.webp` em camadas CSS. Máscaras geométricas
+`ui/park/plane-body-mask.svg` e `plane-propeller-mask.svg` separam corpo/pás no
+render, sem editar pixels do original. Giro no eixo do motor, fantasma e disco
+translúcido. Nenhuma geração GPT Imagens/Meshy; zero créditos de geração.
+Máscaras no preload do Circus. Verificação de duas fases e movimento reduzido
+no navegador; mesmas proporções, trajetória e pagamento.

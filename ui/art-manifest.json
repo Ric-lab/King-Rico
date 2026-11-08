@@ -62,7 +62,9 @@
     "assets/king-rico/fw6/happy2.webp",
     "assets/circus/flight-scenery-atlas.webp",
     "assets/circus/flight-cloud-bank.webp",
-    "ui/park/flight-stars.svg"
+    "ui/park/flight-stars.svg",
+    "ui/park/plane-body-mask.svg",
+    "ui/park/plane-propeller-mask.svg"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",
