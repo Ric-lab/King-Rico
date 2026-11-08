@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-08 · proporções, comemoração e altitude)
+- Código `1aafefc` publicado na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42437278106 concluído com sucesso: navegador público confirmou piloto maior, comemoração contínua, céu/estratosfera 20×, espaço 200×, carteira/aposta única e regressões do Circus/parque. Oficial preservado.
 - Pedido: King maior em salto/cabine, comemorando até embarcar; subida com mais cenário e céu/espaço conforme o big win, multiplicador evidente.
 - Piloto 31% → 43% da largura do avião; alvo do salto e encaixe recalculados juntos, salto começa até 12% maior. Aproximação continua o ciclo fw6 de comemoração e transfere a posição animada para o embarque.
 - Camadas de céu, estratosfera e espaço, com nuvens descendo e estrelas em paralaxe. Altitude e duração dependem do multiplicador já confirmado; multiplicador central ampliado/alto contraste. Sem alterar sorteio, aposta ou pagamento.
