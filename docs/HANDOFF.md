@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · piloto de perfil)
+- Dono pediu uma pose que cai na cabine virada para a frente do avião e indicou a arte de vistas. Usados turnaround da marca e fw6/master como referências para novo perfil direito sentado (GPT Image), com coroa/capa e mãos livres, sem cetro.
+- `pilotSide` entra na descida final e permanece como piloto; posição do encaixe ajustada junto da trajetória, pernas atrás da frente da fuselagem. Demais poses de impulso, avião e pagamentos preservados. Asset no preload e teste confere pose final real na cabine.
+- Validação: dois testes de apresentação passaram; navegador 320/390/430 px confirmou perfil final, sequência de embarque, prêmio 20×/aposta única, recebimento e fallback na falha do avião, sem erros ou assets ausentes. Captura na cabine revisada; produção gerada após integração.
+- Próximo passo: dono avaliar perfil/encaixe em /circus?demo=bigwin na prévia. Oficial preservado; não promover antes do balanceamento pendente.
+
 ## Prévia (2026-11-08 · poses do salto para o avião)
 - Código `689f6a3` no canal /circus?demo=bigwin. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42434696279 concluído com sucesso; conferência pública da sequência de poses, pagamento/erro, raspadinha e regressões de Circus/parque passou. Oficial preservado.
 - Dono aprovou o avião, rejeitou King Rico parado sendo movido e pediu replicar o método das animações anteriores. Consultado o cheer/frame de KingRico.dc.html; reaproveitados desenhos fw6 existentes, sem gerar arte nova.

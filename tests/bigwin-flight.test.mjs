@@ -11,8 +11,8 @@ test('Flight reveals the committed win monotonically without changing its final 
 });
 
 import {boardingPose} from '../ui/park/king-boarding.js';
-test('Boarding uses the original drawn crouch, rise, peak, fall and landing poses',()=>{
- assert.deepEqual([-.1,.05,.3,.7,.95].map(p=>boardingPose(p).frame),['crouch2','cheerRise','cheer','cheerFall','land']);
+test('Boarding keeps original takeoff poses and turns sideways before cockpit landing',()=>{
+ assert.deepEqual([-.1,.05,.3,.7,.95].map(p=>boardingPose(p).frame),['crouch2','cheerRise','cheer','cheerFall','pilotSide']);
  assert.ok(boardingPose(-.1).sy<1);assert.ok(boardingPose(.05).sy>1);
  assert.ok(boardingPose(.92).sy<1);assert.equal(boardingPose(1).sy,1);
 });

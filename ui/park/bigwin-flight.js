@@ -1,5 +1,5 @@
 // Presentation of a committed result. No RNG, wallet mutations or extra reward.
-import {BOARDING_FRAMES,boardingPose,createBoardingActor} from './king-boarding.js';
+import {BOARDING_FRAMES,boardingAsset,boardingPose,createBoardingActor} from './king-boarding.js';
 const PLANE='/assets/circus/bonus-plane.webp',PILOT='/assets/king-rico/fw6/master.webp';
 export function flightValue(amount,bet,progress){
  const p=Math.max(0,Math.min(1,progress)),multiple=Math.max(1,amount/bet);
@@ -7,7 +7,7 @@ export function flightValue(amount,bet,progress){
 }
 export function installBigWinFlight(fc){
  const nativePrize=fc.showPrize.bind(fc),nativeDismiss=fc.dismissWin.bind(fc),nativeSpin=fc.spin.bind(fc);
- for(const src of [PLANE,...BOARDING_FRAMES.map(f=>`/assets/king-rico/fw6/${f}.webp`)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
+ for(const src of [PLANE,...BOARDING_FRAMES.map(boardingAsset)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
  fc.spin=()=>{if(!fc._parkBigWinFlight)nativeSpin();};
  fc.dismissWin=()=>{if(!fc._parkBigWinFlight)nativeDismiss();};
  fc.showPrize=(amount,title,then,chains)=>{
@@ -49,7 +49,7 @@ export function installBigWinFlight(fc){
    const t=elapsed;let x,y,angle=-12;
    if(t<1500){const p=smooth(t/1500);x=lerp(-size*.6,catchX,p);y=lerp(height*.89,catchY,p);if(t>=1200){scene.dataset.phase='anticipating';const pose=boardingPose(-1);jumpActor.pose(pose.frame,pose.sx,pose.sy,dt/1000);}}
    else if(t<2600){x=catchX;y=catchY;angle=-8;
-    const p=clamp((t-1500)/1100),pw=size*.31,ph=pw,a=-8*Math.PI/180,dx=catchX+Math.cos(a)*size*.01-Math.sin(a)*size*(-.085)-pw/2,dy=catchY+Math.sin(a)*size*.01+Math.cos(a)*size*(-.085)-ph/2;
+    const p=clamp((t-1500)/1100),pw=size*.31,ph=pw,a=-8*Math.PI/180,dx=catchX+Math.cos(a)*size*.01-Math.sin(a)*size*(-.045)-pw/2,dy=catchY+Math.sin(a)*size*.01+Math.cos(a)*size*(-.045)-ph/2;
     scene.dataset.phase='boarding';jumper.hidden=false;
     const pose=boardingPose(p);jumpActor.pose(pose.frame,pose.sx,pose.sy,dt/1000);
     jumper.style.cssText=`width:${lerp(sourceRect.width,pw,p)}px;height:${lerp(sourceRect.height,ph,p)}px;transform:translate(${lerp(sourceRect.x,dx,p)}px,${lerp(sourceRect.y,dy,p)-Math.sin(p*Math.PI)*(reduced?20:72)}px) rotate(${-8*p+Math.sin(p*Math.PI)*-14}deg)`;
@@ -57,7 +57,7 @@ export function installBigWinFlight(fc){
     if(pilot.hidden)try{fc.hap('winMid');}catch{}
     jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
-    pilotActor.pose(settle<1?'land':'master',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
+    pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
     const p=clamp((t-2600)/4200),e=smooth(p);x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-16,e);
     scene.dataset.phase=p<1?'climbing':'result';
     const value=flightValue(amount,fc.bet(),p);multipleNode.textContent='×'+value.multiple.toLocaleString('pt-BR',{maximumFractionDigits:2});amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);

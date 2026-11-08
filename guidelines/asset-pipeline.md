@@ -49,6 +49,13 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 
 ## 6. Log
 
+08/11/2026 — Pose do piloto de perfil: GPT Image a partir da prancha
+`assets/brand/king-rico-turnaround.png` e do fw6/master. Perfil direito sentado,
+coroa/capa preservadas e mãos livres à frente, sem cetro. Arte transparente
+convertida para `assets/circus/king-pilot-side.webp`; ferramenta não informou
+créditos consumidos. Encaixe conferido no avião existente, sem refazer a aeronave.
+
+
 07/11/2026 — Avião do big win: novo asset 2D pelo GPT Image, cockpit vazio e
 cores azul/dourado/vermelho; sem personagem gerado. King Rico oficial reutilizado
 separadamente como piloto. Conversão PNG → WebP, 136 KB, em

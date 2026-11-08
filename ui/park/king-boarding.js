@@ -1,6 +1,7 @@
 // Adapted from KingRico.dc.html's cheer: drawn poses, 110ms opaque dissolve,
 // feet anchored at 97%, and the same exponential transform smoothing (22/s).
-export const BOARDING_FRAMES=['master','crouch2','cheerRise','cheer','cheerFall','land'];
+export const BOARDING_FRAMES=['master','crouch2','cheerRise','cheer','cheerFall','land','pilotSide'];
+export const boardingAsset=frame=>frame==='pilotSide'?'/assets/circus/king-pilot-side.webp':`/assets/king-rico/fw6/${frame}.webp`;
 export function boardingPose(progress){
  const p=Math.max(-1,Math.min(1,progress));
  if(p<0)return {frame:'crouch2',sx:1.015,sy:.98};
@@ -8,13 +9,13 @@ export function boardingPose(progress){
  if(p<.56)return {frame:'cheer',sx:1,sy:1};
  if(p<.84)return {frame:'cheerFall',sx:1,sy:1};
  const compression=Math.sin((p-.84)/.16*Math.PI);
- return {frame:'land',sx:1+.02*compression,sy:1-.03*compression};
+ return {frame:'pilotSide',sx:1+.02*compression,sy:1-.03*compression};
 }
 export function createBoardingActor(host,departure){
  const body=document.createElement('div');body.className='park-king-actor';host.append(body);
  const frames={};let current=null,sx=1,sy=1;
  for(const frame of [...BOARDING_FRAMES,...(departure?['departure']:[])]){
-  const image=new Image();image.src=frame==='departure'?departure:`/assets/king-rico/fw6/${frame}.webp`;image.alt='';image.dataset.boardingFrame=frame;
+  const image=new Image();image.src=frame==='departure'?departure:boardingAsset(frame);image.alt='';image.dataset.boardingFrame=frame;
   image.style.opacity='0';body.append(image);frames[frame]=image;image.decode?.().catch(()=>{});
  }
  function pose(frame,x=1,y=1,dt=.016){

@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Piloto frontal dentro do avião: a pose deve virar de perfil na queda e seguir olhando para o nariz da aeronave, com mãos livres à frente e pernas escondidas pela fuselagem.
 - Salto do King Rico no avião como imagem neutra transladada: reutilizar poses fw6 de agachar, subir, ápice, cair e aterrissar, com dissolução opaca de 110 ms e suavização como em KingRico.dc.html.
 - Raspadinha com uma área única: o dono confirmou nove casas independentes, seis X vermelhos e três valores iguais do prêmio diário.
 - Linha premiada "fita de ouro com brilho correndo" (a limpa da publicada é a aprovada).

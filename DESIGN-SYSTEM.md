@@ -108,6 +108,9 @@ transação. O modal monetário antigo fica oculto somente durante o voo.
 No embarque, usar as poses desenhadas fw6 e o método de dissolução opaca de
 110 ms do King Rico original, com pivô nos pés e suavização exponencial (22/s).
 Evitar representar o salto apenas movendo/encolhendo o desenho neutro.
+Na chegada à cabine, usar `assets/circus/king-pilot-side.webp`, olhando para o
+nariz do avião (direita), com mãos à frente e corpo sentado. A transição para
+esse perfil acontece ainda na queda, não somente após desaparecer na cabine.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

@@ -62,6 +62,10 @@ de 110 ms, transformações suaves a 22/s e pivô nos pés (97%). A pose visíve
 na nuvem é copiada antes da antecipação; não há desaparecimento na aproximação.
 O pouso é amortecido na cabine, seguido de respiração sutil. Avião e pagamentos
 preservados; implementação compartilhável em `ui/park/king-boarding.js`.
+Na descida final, a pose passa para `pilotSide`: King Rico de perfil olhando
+para a direita, com as mãos à frente e sem cetro. Essa mesma pose permanece
+durante o voo, com pernas ocultadas pela frente da fuselagem. Arte gerada a
+partir de `assets/brand/king-rico-turnaround.png` e do desenho oficial fw6.
 
 Esta etapa **apresenta o resultado já confirmado**: ×20 significa prêmio total
 de vinte apostas, sem multiplicar novamente esse prêmio nem sortear um extra.

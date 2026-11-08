@@ -30,7 +30,8 @@ with sync_playwright() as p:
    page.screenshot(path=f'work/preview-bigwin-boarding-{width}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="climbing"')
    assert flight.locator('.park-bigwin-pilot').is_visible()
-   assert page.evaluate('boardingPoses.filter(p=>p!=="departure")')==['crouch2','cheerRise','cheer','cheerFall','land'],page.evaluate('boardingPoses')
+   assert flight.locator('.park-bigwin-pilot').get_attribute('data-pose')=='pilotSide'
+   assert page.evaluate('boardingPoses.filter(p=>p!=="departure")')==['crouch2','cheerRise','cheer','cheerFall','pilotSide'],page.evaluate('boardingPoses')
    def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,multiple:document.querySelector('[data-flight-multiple]').textContent};}''')
    first=sample();page.wait_for_timeout(1200);second=sample();assert second['x']>first['x'] and second['y']<first['y'],[first,second]
    assert second['multiple']!=first['multiple']
