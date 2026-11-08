@@ -9,3 +9,10 @@ test('Flight reveals the committed win monotonically without changing its final 
   assert.equal(flightValue(total,bet,100).amount,total);
  }
 });
+
+import {boardingPose} from '../ui/park/king-boarding.js';
+test('Boarding uses the original drawn crouch, rise, peak, fall and landing poses',()=>{
+ assert.deepEqual([-.1,.05,.3,.7,.95].map(p=>boardingPose(p).frame),['crouch2','cheerRise','cheer','cheerFall','land']);
+ assert.ok(boardingPose(-.1).sy<1);assert.ok(boardingPose(.05).sy>1);
+ assert.ok(boardingPose(.92).sy<1);assert.equal(boardingPose(1).sy,1);
+});

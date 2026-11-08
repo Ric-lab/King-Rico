@@ -105,6 +105,9 @@ em `assets/circus/bonus-plane.webp` e King Rico oficial em camadas. A cabine
 oculta a parte inferior do piloto; salto parte da coordenada real do personagem.
 Multiplicador/prêmio acompanham a mesma linha de tempo de subida; não são outra
 transação. O modal monetário antigo fica oculto somente durante o voo.
+No embarque, usar as poses desenhadas fw6 e o método de dissolução opaca de
+110 ms do King Rico original, com pivô nos pés e suavização exponencial (22/s).
+Evitar representar o salto apenas movendo/encolhendo o desenho neutro.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

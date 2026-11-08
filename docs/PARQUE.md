@@ -56,6 +56,13 @@ esquerda, King Rico salta da posição real da nuvem para a cabine e sobe como
 piloto. O multiplicador e o valor crescem durante a subida; o resultado fica
 em destaque antes da saída e do voo de moedas existente. Sem botão de parar.
 
+Revisão de 08/11: embarque usa o método do `cheer` de KingRico.dc.html:
+poses fw6 `crouch2 → cheerRise → cheer → cheerFall → land`, dissolução opaca
+de 110 ms, transformações suaves a 22/s e pivô nos pés (97%). A pose visível
+na nuvem é copiada antes da antecipação; não há desaparecimento na aproximação.
+O pouso é amortecido na cabine, seguido de respiração sutil. Avião e pagamentos
+preservados; implementação compartilhável em `ui/park/king-boarding.js`.
+
 Esta etapa **apresenta o resultado já confirmado**: ×20 significa prêmio total
 de vinte apostas, sem multiplicar novamente esse prêmio nem sortear um extra.
 `ui/park/bigwin-flight.js` não chama carteira/RNG. Mantém a continuação de auto,

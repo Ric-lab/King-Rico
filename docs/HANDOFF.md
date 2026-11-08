@@ -3,6 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · poses do salto para o avião)
+- Dono aprovou o avião, rejeitou King Rico parado sendo movido e pediu replicar o método das animações anteriores. Consultado o cheer/frame de KingRico.dc.html; reaproveitados desenhos fw6 existentes, sem gerar arte nova.
+- ui/park/king-boarding.js alterna crouch2/cheerRise/cheer/cheerFall/land, com dissolução opaca de 110 ms e suavização 22/s/pivô 97% como o original. Copia a pose visível na partida, preserva o King durante a aproximação e amortece o pouso; piloto respira após entrar.
+- Avião, percurso, pagamentos, multiplicador e carteira preservados. Poses adicionadas ao preload e teste de navegador verifica a sequência real durante um giro 20×, além do recebimento e fallback existentes.
+- Dois testes de apresentação passaram. Navegador confirmou a ordem real crouch2/cheerRise/cheer/cheerFall/land nos modos normal/reduzido, carteira, aposta única e recuperação na falha do avião em 320/390/430 px; sem erros ou assets ausentes. Captura do ápice revisada; produção gerada após integração.
+- Próximo passo: dono avaliar o salto no link /circus?demo=bigwin da prévia. Produção permanece intacta; balanceamento das oito combinações continua pendente.
+
 ## Prévia (2026-11-07 · revelação da raspadinha e voo do big win)
 - Código `5b7cbba` na prévia, com cena principal de `fb61818`. Workflow final https://github.com/Ric-lab/King-Rico/actions/runs/42336663835 concluído com sucesso, assim como o anterior https://github.com/Ric-lab/King-Rico/actions/runs/42336415877. Navegador público confirmou os dois motions, falha do avião, crédito único e regressões de ingressos/roleta/parque. Produção gerada após integração; oficial preservado.
 - Revisão rápida: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin — receber raspadinha e tocar no spin; primeiro giro demonstra 20× com moedas fictícias.

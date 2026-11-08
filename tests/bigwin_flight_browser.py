@@ -11,6 +11,7 @@ with sync_playwright() as p:
   page=context.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
+  page.add_init_script('''window.boardingPoses=[];new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-bigwin-jumper')&&e.dataset.pose&&boardingPoses.at(-1)!==e.dataset.pose)boardingPoses.push(e.dataset.pose);}}).observe(document,{subtree:true,attributes:true,attributeFilter:['data-pose']});''')
   page.goto(BASE+'/circus?demo=bigwin');page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")');collect_daily(page)
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
   initial=page.evaluate('KingRicoCloud.player.balance')
@@ -29,6 +30,7 @@ with sync_playwright() as p:
    page.screenshot(path=f'work/preview-bigwin-boarding-{width}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="climbing"')
    assert flight.locator('.park-bigwin-pilot').is_visible()
+   assert page.evaluate('boardingPoses.filter(p=>p!=="departure")')==['crouch2','cheerRise','cheer','cheerFall','land'],page.evaluate('boardingPoses')
    def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,multiple:document.querySelector('[data-flight-multiple]').textContent};}''')
    first=sample();page.wait_for_timeout(1200);second=sample();assert second['x']>first['x'] and second['y']<first['y'],[first,second]
    assert second['multiple']!=first['multiple']
