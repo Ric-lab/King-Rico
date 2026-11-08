@@ -92,6 +92,14 @@ central ampliado, com alto contraste. O cenário não altera probabilidades nem
 pagamentos. `/circus?demo=spacewin` demonstra 200× na prévia (primeiro giro),
 enquanto `?demo=bigwin` continua demonstrando 20×.
 
+### Cenário ilustrado do voo — prévia (08/11)
+O atlas `flight-scenery-atlas.webp` substitui o fundo plano: céu luminoso e
+nuvens pintadas à esquerda; espaço com lua e Terra à direita. Duas camadas de
+`flight-cloud-bank.webp` descem em velocidades diferentes, com as próximas
+mais rápidas; estrelas irregulares têm paralaxe suave. Centro limpo para ler
+multiplicador e prêmio. Assets entram no preload do Circus. Apenas cenário;
+avião, piloto, tempos e pagamento confirmado permanecem iguais.
+
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026

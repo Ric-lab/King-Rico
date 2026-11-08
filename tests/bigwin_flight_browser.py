@@ -35,7 +35,10 @@ with sync_playwright() as p:
    assert len(page.evaluate('boardingPoses'))>=9,'Celebration must continue before boarding'
    assert page.evaluate('boardingPoses.filter(p=>p!=="departure").slice(-5)')==['crouch2','cheerRise','cheer','cheerFall','pilotSide'],page.evaluate('boardingPoses')
    def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,multiple:document.querySelector('[data-flight-multiple]').textContent};}''')
-   first=sample();page.wait_for_timeout(1200);second=sample();assert second['x']>first['x'] and second['y']<first['y'],[first,second]
+   first=sample();page.wait_for_timeout(1200)
+   scenery=flight.evaluate("""e=>{const s=getComputedStyle(e);return {far:parseFloat(s.getPropertyValue('--flight-cloud-y')),near:parseFloat(s.getPropertyValue('--flight-near-y')),atlas:getComputedStyle(e.querySelector('.park-bigwin-sky')).backgroundImage};}""")
+   assert scenery['near']>scenery['far']>0 and 'flight-scenery-atlas.webp' in scenery['atlas'],scenery
+   second=sample();assert second['x']>first['x'] and second['y']<first['y'],[first,second]
    assert second['multiple']!=first['multiple']
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')

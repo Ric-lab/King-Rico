@@ -59,7 +59,10 @@
     "assets/king-rico/fw6/cheerFall.webp",
     "assets/king-rico/fw6/land.webp",
     "assets/circus/king-pilot-side.webp",
-    "assets/king-rico/fw6/happy2.webp"
+    "assets/king-rico/fw6/happy2.webp",
+    "assets/circus/flight-scenery-atlas.webp",
+    "assets/circus/flight-cloud-bank.webp",
+    "ui/park/flight-stars.svg"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

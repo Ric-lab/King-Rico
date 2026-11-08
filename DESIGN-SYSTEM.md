@@ -212,3 +212,10 @@ O LED aceso tem núcleo branco e halo frio curto, com contorno escuro preservado
 no verde e amarelo. Só a pintura da face e lateral apaga instantaneamente:
 transição de saída zero. O LED mantém 40 ms para apagar e o pulso acende em
 420 ms; o retorno mecânico mantém 180 ms. As versões anteriores são histórico.
+
+### Prévia · cenário do grande prêmio (08/11/2026)
+Céu/estratosfera/espaço usam atlas ilustrado com centro livre para números;
+nuvens orgânicas em duas profundidades e estrelas irregulares substituem
+elipses e padrões repetidos. Terra e lua pertencem à pintura do espaço.
+Subida indicada pela paralaxe descendente; preservar contraste do multiplicador.
+Esta revisão está na prévia, ainda não no oficial.

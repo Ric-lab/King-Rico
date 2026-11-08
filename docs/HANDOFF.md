@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · cenário ilustrado do avião)
+- Novo atlas de céu/espaço com nuvens volumétricas, lua e Terra; nuvens próximas/distantes com velocidades diferentes e estrelas irregulares. Centro livre para o multiplicador. Assets finais versionados e no preload.
+- Sem mudança no avião, poses/proporções do King, duração, carteira ou pagamentos. Revisão exclusiva da prévia; oficial permanece em 6a7a775.
+- Validação local: quatro fluxos de navegador (20×, 320 px/reduzido, imagem com falha e 200×/espaço), paralaxe, prêmio único e zero assets ausentes/erros. Capturas inspecionadas; testes do voo e build de produção após integração passaram.
+- Próximo passo: conferir workflow da prévia após o push e avaliação visual do dono nos demos bigwin/spacewin. Não publicar em live sem autorização.
+
 ## Ideia registrada (2026-11-08 · três vilões)
 - Dono propôs Tiger Tony (moedas, assusta King/foge e morde placa três vezes), Tucker Toucan (leva Happeach voando pela cesta) e Ray Raccon (guaxinim de máscara/saco, sai de trás do prêmio e leva ingressos). Sequências completas em docs/IDEIAS-DE-JOGOS.md.
 - Apenas documentação: sem código, sorteios, perdas ou publicação. Frequência, quantidades e gatilhos ainda a definir. Recomendações do agente separadas das cenas pedidas; próximo passo é o dono avaliar a proposta e definir regras antes de implementação.

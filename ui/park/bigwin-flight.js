@@ -19,7 +19,7 @@ export function installBigWinFlight(fc){
   const body=source.closest('[data-k=body]'),sourceRect=source.getBoundingClientRect(),previous=document.activeElement;
   const scene=document.createElement('div');scene.className='park-bigwin-flight';scene.dataset.phase='approach';
   scene.setAttribute('role','region');scene.setAttribute('aria-label','Voo do grande prêmio');
-  scene.innerHTML=`<div class="park-bigwin-sky"><div class="park-flight-highsky"></div><div class="park-flight-space"><div class="park-flight-stars"></div><div class="park-flight-moon"></div><div class="park-flight-horizon"></div></div><div class="park-flight-clouds"><i></i><i></i><i></i><i></i><i></i></div></div><div class="park-bigwin-plane"><img src="${PLANE}" alt="Avião do King Rico"><div class="park-bigwin-pilot" role="img" aria-label="King Rico pilotando" hidden></div><img class="park-bigwin-front" src="${PLANE}" alt=""></div><div class="park-bigwin-jumper" role="img" aria-label="King Rico pulando para o avião"></div><div class="park-bigwin-score" role="status"><span>GRANDE PRÊMIO</span><strong data-flight-multiple>×1</strong><b data-flight-amount></b></div>`;
+  scene.innerHTML=`<div class="park-bigwin-sky"><div class="park-flight-highsky"></div><div class="park-flight-space"><div class="park-flight-stars"></div></div><div class="park-flight-clouds"><i></i><i></i><i></i><i></i><i></i></div><div class="park-flight-clouds-near"><i></i><i></i></div></div><div class="park-bigwin-plane"><img src="${PLANE}" alt="Avião do King Rico"><div class="park-bigwin-pilot" role="img" aria-label="King Rico pilotando" hidden></div><img class="park-bigwin-front" src="${PLANE}" alt=""></div><div class="park-bigwin-jumper" role="img" aria-label="King Rico pulando para o avião"></div><div class="park-bigwin-score" role="status"><span>GRANDE PRÊMIO</span><strong data-flight-multiple>×1</strong><b data-flight-amount></b></div>`;
   const inert=[...document.body.children].filter(e=>!e.matches('script,style')).map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);document.body.append(scene);
   const plane=scene.querySelector('.park-bigwin-plane'),pilot=scene.querySelector('.park-bigwin-pilot'),jumper=scene.querySelector('.park-bigwin-jumper'),score=scene.querySelector('.park-bigwin-score');
   const amountNode=scene.querySelector('[data-flight-amount]'),multipleNode=scene.querySelector('[data-flight-multiple]');
@@ -70,6 +70,7 @@ export function installBigWinFlight(fc){
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*2.2)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');
+    scene.style.setProperty('--flight-near-y',(p*height*3.2)+'px');
     scene.dataset.altitude=altitude>.72?'space':altitude>.3?'stratosphere':'sky';
     scene.dataset.phase=p<1?'climbing':'result';
     const value=flightValue(amount,fc.bet(),p);multipleNode.textContent='×'+value.multiple.toLocaleString('pt-BR',{maximumFractionDigits:2});amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
