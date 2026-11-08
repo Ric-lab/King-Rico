@@ -286,3 +286,27 @@ rejeitada; sem geração externa, 0 créditos. Arte do ingresso preservada.
 geométricos leves, paleta dourado/azul/circo. Basquete usa bola/aro; bolhas usa
 bolas/plinko; cavalos usa ferradura/bandeira. Bounce usa bola/plataformas.
 0 créditos externos, sem novos personagens ou promessa de gameplay nos Em breve.
+
+### 2026-11-08 — Cenário ilustrado do voo (prévia)
+Duas gerações GPT Imagens: atlas quadrado com dois painéis verticais
+(céu luminoso / espaço com lua e Terra) e banco de nuvens com alpha.
+Fontes: `exec-8dbbfddb-9be0-48e9-ac2d-2367223ceb66.png` e
+`exec-b01add0d-5c51-4455-bac7-dbacc70ff04f.png`, em generated_images.
+Conversão WebP qualidade 89: atlas ~101 KB, nuvens ~99 KB. Estrelas em SVG
+geométrico com distribuição irregular. Sem Meshy; custo GPT Imagens não
+exposto pela ferramenta. Composição conferida no navegador, centro reservado
+para leitura. Assets finais em assets/circus, incluídos no preload.
+
+### 2026-11-08 — Hélice animada sem regenerar o avião
+Reutilizado `assets/circus/bonus-plane.webp` em camadas CSS. Máscaras geométricas
+`ui/park/plane-body-mask.svg` e `plane-propeller-mask.svg` separam corpo/pás no
+render, sem editar pixels do original. Giro no eixo do motor, fantasma e disco
+translúcido. Nenhuma geração GPT Imagens/Meshy; zero créditos de geração.
+Máscaras no preload do Circus. Verificação de duas fases e movimento reduzido
+no navegador; mesmas proporções, trajetória e pagamento.
+
+### 2026-11-08 — Entrega oficial do cenário/voo
+Atlas de céu/espaço, nuvens e máscaras da hélice acima incluídos em 7e41b89.
+Nenhuma arte nova nesta correção: composição estabilizada com camadas opacas,
+recorte por overflow e giro 2D. Workflow oficial e inspeção pública confirmaram
+os arquivos; fonte/gastos das gerações anteriores continuam nos registros acima.
