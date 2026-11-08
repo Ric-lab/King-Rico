@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Oficial publicado (2026-11-08 · revisão visual aprovada)
+- Dono autorizou publicar. Main recebeu `6a7a775`: raspadinha diária 3×3/prêmio destacado e voo completo com King maior/de perfil, comemoração e céu/espaço; Google/Firestore reais. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128 concluído com sucesso nos dois jobs; regras REST e Hosting preservados.
+- Seleção financeira explícita e comunicada: oficial conserva cinco combinações, engine/park/regras anteriores. As oito combinações e ingressos avulsos desta branch continuam só na prévia, aguardando balanceamento. A repetição por abertura e giros demo também continuam exclusivos da carteira fictícia.
+- Validação: 204 testes de código, 57 de regras e integração com conta emulada, incluindo saldo diário único, giro/recebimento/reload e catálogo atual. Site oficial confirmou configuração king-rico sem emuladores/demo e assets novos HTTP 200/bytes corretos; nenhuma aposta real.
+- Próximo passo: feedback do dono no oficial. Matemática de oito combinações continua pendente nesta branch; não incorporar em main como parte de uma simples revisão visual.
+
 ## Prévia (2026-11-08 · proporções, comemoração e altitude)
 - Código `1aafefc` publicado na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42437278106 concluído com sucesso: navegador público confirmou piloto maior, comemoração contínua, céu/estratosfera 20×, espaço 200×, carteira/aposta única e regressões do Circus/parque. Oficial preservado.
 - Pedido: King maior em salto/cabine, comemorando até embarcar; subida com mais cenário e céu/espaço conforme o big win, multiplicador evidente.
