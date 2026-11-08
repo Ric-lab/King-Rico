@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-08 · piloto de perfil)
+- Código `4d47c5b` publicado no canal de prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42436195528 concluído com sucesso, incluindo navegador público do perfil, prêmio/erro e regressões de Circus/parque. Revisar em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin . Oficial preservado.
 - Dono pediu uma pose que cai na cabine virada para a frente do avião e indicou a arte de vistas. Usados turnaround da marca e fw6/master como referências para novo perfil direito sentado (GPT Image), com coroa/capa e mãos livres, sem cetro.
 - `pilotSide` entra na descida final e permanece como piloto; posição do encaixe ajustada junto da trajetória, pernas atrás da frente da fuselagem. Demais poses de impulso, avião e pagamentos preservados. Asset no preload e teste confere pose final real na cabine.
 - Validação: dois testes de apresentação passaram; navegador 320/390/430 px confirmou perfil final, sequência de embarque, prêmio 20×/aposta única, recebimento e fallback na falha do avião, sem erros ou assets ausentes. Captura na cabine revisada; produção gerada após integração.
