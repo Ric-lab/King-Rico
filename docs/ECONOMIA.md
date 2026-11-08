@@ -60,7 +60,7 @@ abaixo são sobre a **aposta total**, incluindo seu valor devolvido; não são l
 | Diamante | 20× |
 | King Rico / curinga | 50× |
 
-Apostas por linha são somadas e tela cheia preserva ×10. Máximo teórico v3:
+Os prêmios das linhas são somados e tela cheia preserva ×10. Máximo teórico v3:
 8 × 50 × 10 = 4.000 apostas; versões 1/2 mantêm 1.665/2.664 e tabelas antigas.
 Sorteio normal conserva os pesos dos dez ícones. Happeach tem chance 0,005 por
 posição antes do limite de duas; sua especial usa a média das apostas salvas e
