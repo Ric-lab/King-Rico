@@ -2,6 +2,12 @@
 
 ## Ambiente local
 
+Raspadinha e big win: com Auth/Firestore/Hosting emulados em execução,
+`python3 tests/prize_release_browser.py` confere recebimento diário único,
+giro real pela carteira/regras emuladas, piloto, saldo e recarga. Esse teste
+recusa configuração de produção; usa sorteio determinístico apenas na conta
+fictícia emulada. Depois da integração, gerar o build de produção.
+
 Use Node **22.23.3** (`.nvmrc`), npm e **Java 21** para o Firestore emulado.
 O navegador da suíte usa Python, Playwright e Chromium em `/usr/bin/chromium`;
 um ambiente com outra instalação precisa ajustar esse caminho antes de rodar.

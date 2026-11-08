@@ -299,9 +299,9 @@ export function createGameStore(db, uid, dependencies={}) {
           const current=await read(playerRef);
           const currentPark=await read(parkRef);return {...operation.result,player:publicPlayer(current.data()),park:parkEngine.publicState(currentPark.exists()?currentPark.data():undefined),replayed:true};
         }
-        // Another tab may have recharged with a different ID. Re-read in a fresh
-        // transaction once; the same operation ID never creates another credit.
-        if(data.action==='recharge') return execute();
+        // Another tab may have recharged or collected the daily gift with a
+        // different ID. Re-read once; the daily guard then returns zero.
+        if(data.action==='recharge'||data.action==='bonus') return execute();
       }
       throw error;
     }

@@ -3,7 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Estado (2026-11-05)
+## Publicação em preparação (08/11/2026 · raspadinha e voo do big win)
+- Autorizada pelo dono: publicar a revisão visual aprovada. Base conferida: main b698477. Inclui raspadinha diária 3×3, prêmio destacado, avião, King Rico de perfil/maior, comemoração e céu/espaço.
+- Seleção intencional: matemática oficial permanece com cinco combinações; proposta de oito (auditoria de retorno elevado) fica na prévia. engine/park/regras inalterados. Store só recebe a recuperação de conflito do bônus diário. Login Google, saldo Firestore, outras atrações e publicador REST preservados.
+- Produção não contém carteira fictícia, repetição por abertura nem giros de demonstração. Conferidos os bundles de produção; build final gerado após a integração. Próxima etapa: workflow da main e conferência no oficial.
+- Validação local: 204 testes de código e 57 de regras passaram. Navegador com conta emulada confirmou raspadinha diária única, giro financeiro real 20×, perfil maior, cinco combinações preservadas e saldo 1.240 após recarga, sem erros ou assets ausentes. Catálogo, sessão, entradas e menus de Penalty/Flying/Bounce/Fingo conferidos. Teste antigo do parque foi corrigido para não tentar montar jogos arquivados que retornam 404 intencionalmente.
+
+## Estado anterior (2026-11-05)
 - `main` = site oficial. Publicado `87244fe` em 05/11 após autorização do dono: Clown guardado, Bounce reativado, três cards Em breve e revisões aprovadas de parque/HUD/contador. Mantidas 3 fitas, carteira real, háptico e publicador REST de regras; prévia segue em projeto isolado.
 - No ar: Circus, Penalty (goleiro palhaço), Flying Clown e Bounce; Fingo só pela rota direta. Basquete/Bubble Plinko/Race Horse são cards Em breve, sem cobrança. Clown e demais arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.

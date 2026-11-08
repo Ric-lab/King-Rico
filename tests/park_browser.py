@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Approved park UI against the real Google Auth and Firestore emulators."""
 import os,json,uuid,time,re
 from playwright.sync_api import sync_playwright
@@ -40,11 +41,10 @@ def run():
     assert '/circus' in page.url
     page.wait_for_function('window.__fc?._parkNavigationInstalled')
     assert page.evaluate('KingRicoCloud.player.balance')==1000
+    collect_daily(page)
     assert page.evaluate('KingRicoCloud.park.tickets')==0
     page.locator('.park-pocket').click();ready(page)
     assert '/park' in page.url
-    page.get_by_role('dialog',name='Presente do dia',exact=True).wait_for()
-    page.get_by_role('button',name='PEGAR MOEDAS',exact=True).click()
     page.wait_for_function('KingRicoCloud.player.balance===1050');healthy(page)
     assert page.locator('[data-game]').count()==3
     assert page.locator('[data-game="fingo"],[data-game="clown"]').count()==0
@@ -142,10 +142,10 @@ def run():
     page.wait_for_function('window.__fg?.state.phase==="drop"');assert page.evaluate('KingRicoCloud.player.fingoRound.id')==roundid
     assert page.evaluate('KingRicoCloud.player.balance')==round(balance-25,2)
     # Every published game still mounts with its own assets and standard menu.
-    for route,hook in [('clown','__clown'),('penalty','__pen'),('flying-clown','__flying'),('wheel','__fw'),('neck','__fn'),('33','KingRico21')]:
+    for route,hook in [('penalty','__pen'),('flying-clown','__flying'),('bounce','__bounce'),('fingo','__fg')]:
       page.goto(BASE+'/'+route);ready(page)
       page.wait_for_function('hook=>!!window[hook]',arg=hook,timeout=30000)
-      if route in ['clown','penalty','flying-clown']:
+      if route in ['penalty','flying-clown','bounce']:
         page.get_by_role('button',name='JOGAR POR 25 MOEDAS',exact=True).click()
       page.wait_for_timeout(1200);healthy(page)
       page.get_by_role('button',name='Abrir menu',exact=True).click()

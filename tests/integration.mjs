@@ -168,7 +168,8 @@ test('Spark wallet survives relogin and rules forbid unauthorized reads and arbi
   await assertFails(updateDoc(ref,{balanceUnits:9999999,revision:1,updatedAt:serverTimestamp()}));
   await assertSucceeds(getDoc(ref));await assertFails(getDoc(doc(c.db,'players','someone-else')));
   await assertFails(deleteDoc(ref));
-  const bonus=await c.call(request({action:'bonus'}));assert.equal(bonus.amount,50);
+  const gifts=await Promise.all([c.call(request({action:'bonus'})),c.call(request({action:'bonus'}))]);
+  assert.deepEqual(gifts.map(r=>r.amount).sort((a,b)=>a-b),[0,50]);
   assert.equal((await c.call(request({action:'bonus'}))).amount,0);
   const operation=request({action:'spin',game:'wheel',bet:10,selected:0});
   const [a,b]=await Promise.all([c.call(operation),c.call(operation)]);

@@ -90,7 +90,32 @@ os três botões para a segunda linha apenas quando necessário. Ver
 
 O saldo confirmado no Firestore é independente da apresentação. Falha de animação
 não pode perder ou duplicar crédito. Ao retomar, mostrar o valor salvo. O presente
-da Home é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
+é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
+Na versão de 08/11, `ui/park/daily-reward.js` apresenta esse presente como
+raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
+e botão azul. Grade 3×3: seis X vermelhos e três valores iguais, com destaque
+verde nas casas premiadas reveladas. REVELAR permite jogar sem gesto;
+PEGAR MOEDAS confirma um único crédito diário.
+Depois dos três acertos, recolher a grade ao centro e apresentar apenas moeda,
+valor grande e ação de receber, com tempo para reconhecer a combinação antes.
+Não adicionar um segundo modal diário próprio a cada página.
+
+Big win do Circus: `ui/park/bigwin-flight.js/css`, avião azul/dourado
+em `assets/circus/bonus-plane.webp` e King Rico oficial em camadas. A cabine
+oculta a parte inferior do piloto; salto parte da coordenada real do personagem.
+Multiplicador/prêmio acompanham a mesma linha de tempo de subida; não são outra
+transação. O modal monetário antigo fica oculto somente durante o voo.
+No embarque, usar as poses desenhadas fw6 e o método de dissolução opaca de
+110 ms do King Rico original, com pivô nos pés e suavização exponencial (22/s).
+Evitar representar o salto apenas movendo/encolhendo o desenho neutro.
+Na chegada à cabine, usar `assets/circus/king-pilot-side.webp`, olhando para o
+nariz do avião (direita), com mãos à frente e corpo sentado. A transição para
+esse perfil acontece ainda na queda, não somente após desaparecer na cabine.
+Proporção atual do piloto: 43% do avião, com cabine cobrindo as pernas. Manter
+o ciclo de comemoração ativo durante a aproximação; a pose de partida do salto
+deve ser a última posição animada, sem congelar esperando a aeronave. Subida usa
+camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplicador
+confirmado. Multiplicador maior e de alto contraste permanece no centro inferior.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

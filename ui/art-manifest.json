@@ -51,7 +51,15 @@
     "assets/machine/turbo-socket-mask-v2.svg",
     "assets/machine/auto-socket-mask-v2.svg",
     "assets/machine/spin-rim-gold-v2.svg",
-    "assets/machine/spin-aperture-v2.svg"
+    "assets/machine/spin-aperture-v2.svg",
+    "assets/circus/bonus-plane.webp",
+    "assets/king-rico/fw6/crouch2.webp",
+    "assets/king-rico/fw6/cheerRise.webp",
+    "assets/king-rico/fw6/cheer.webp",
+    "assets/king-rico/fw6/cheerFall.webp",
+    "assets/king-rico/fw6/land.webp",
+    "assets/circus/king-pilot-side.webp",
+    "assets/king-rico/fw6/happy2.webp"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

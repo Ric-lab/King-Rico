@@ -1,6 +1,12 @@
 # Circus e parque
 
-Na versão publicada em 05/11/2026 (`87244fe`), Circus é a tela inicial.
+A publicação de 08/11 leva a raspadinha diária e a cena do avião, com King Rico
+maior/de perfil, comemoração contínua e subida até o espaço. A carteira real
+continua com **cinco combinações de pagamento**; a revisão de oito combinações
+permanece na branch de prévia, aguardando balanceamento. As opções de repetição
+da raspadinha e giros dirigidos são exclusivas daquela prévia.
+
+Na versão de 08/11/2026, Circus é a tela inicial.
 `/home` mantém compatibilidade com `/circus`. O parque usa `/park`, com
 `Home.dc.html` como fonte, e reúne **Pênalti, Flying Clown e Bounce**.
 **Basquete, Bubble Plinko e Race Horse** têm cards **Em breve**, sem ação nem cobrança.
@@ -17,13 +23,94 @@ A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
 acendimento circular continua em 420 ms.
 A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
+## Presente diário
+
+Na primeira abertura do dia, depois da conta e da tela de carregamento, abre
+uma raspadinha. Funciona no Circus e nas rotas do parque, antes da escolha de
+entrada. A grade 3×3 contém seis X vermelhos e três casas com o mesmo valor do
+presente, em posições embaralhadas. Cada casa é raspável independentemente:
+remover cerca de 36% de sua cobertura a revela. Ao encontrar os três valores,
+as casas restantes são reveladas e PEGAR MOEDAS fica disponível. Os três valores
+representam **um único prêmio diário**, não três créditos. REVELAR oferece a
+alternativa de abrir todas as casas por botão/teclado.
+Após os três acertos, a grade permanece legível por 650 ms; as casas se recolhem
+ao centro e dão lugar a uma moeda grande, ao valor único e a PEGAR MOEDAS.
+Durante essa transição o botão aguarda, sem efetuar crédito. Movimento reduzido
+encurta a transição; falha de animação não impede revelar/receber.
+PEGAR MOEDAS confirma o bônus existente no Firestore. Falha mantém
+o cartão aberto para tentar de novo. Raspar sozinho não grava nem credita nada.
+
+Mantida a sequência de 50, 100, 150, 200, 250, 500 e 1.000 moedas e o calendário
+de São Paulo; faltar um dia reinicia a sequência. A transação existente limita
+o recebimento a uma vez ao dia, inclusive entre abas e dispositivos. Recarregar
+antes de receber reabre o cartão; após receber conserva o crédito e não reabre.
+O saldo visual fica retido durante a confirmação; ao fechar, usa o voo e a
+contagem compartilhados, com fallback em caso de erro de animação. O anúncio
+de recarga continua separado. Não altera a matemática dos jogos.
+
+**Exceção de teste na branch de prévia:** por pedido do dono, cada abertura/recarga de
+página reinicia apenas o presente da carteira fictícia. A raspadinha reaparece
+e concede 50 moedas de teste ao receber; dentro da mesma visita não paga duas
+vezes. Esse reinício vive somente em `prototypes/circus-preview/model.mjs`.
+O cliente e o bônus diário reais conservam o limite de uma vez por dia.
+
+## Voo do grande prêmio
+
+Os prêmios monetários que já abriam a apresentação grande (a partir de 5× a
+aposta) passam a usar uma cena automática: avião chega da diagonal inferior
+esquerda, King Rico salta da posição real da nuvem para a cabine e sobe como
+piloto. O multiplicador e o valor crescem durante a subida; o resultado fica
+em destaque antes da saída e do voo de moedas existente. Sem botão de parar.
+
+Revisão de 08/11: embarque usa o método do `cheer` de KingRico.dc.html:
+poses fw6 `crouch2 → cheerRise → cheer → cheerFall → land`, dissolução opaca
+de 110 ms, transformações suaves a 22/s e pivô nos pés (97%). A pose visível
+na nuvem é copiada antes da antecipação; não há desaparecimento na aproximação.
+O pouso é amortecido na cabine, seguido de respiração sutil. Avião e pagamentos
+preservados; implementação compartilhável em `ui/park/king-boarding.js`.
+Na descida final, a pose passa para `pilotSide`: King Rico de perfil olhando
+para a direita, com as mãos à frente e sem cetro. Essa mesma pose permanece
+durante o voo, com pernas ocultadas pela frente da fuselagem. Arte gerada a
+partir de `assets/brand/king-rico-turnaround.png` e do desenho oficial fw6.
+
+Esta etapa **apresenta o resultado já confirmado**: ×20 significa prêmio total
+de vinte apostas, sem multiplicar novamente esse prêmio nem sortear um extra.
+`ui/park/bigwin-flight.js` não chama carteira/RNG. Mantém a continuação de auto,
+Happeach e roleta após o recebimento visual; bloqueia outra rodada durante a
+cena. Falha do asset ou timeout liberam a apresentação para o fluxo de crédito
+existente. Crédito persistido não depende da animação.
+
+Para revisar sem esperar um prêmio raro: na prévia, `/circus?demo=bigwin`
+direciona o primeiro giro de cada abertura para uma trinca de diamantes (20×).
+O dono ainda aperta Girar; são exclusivamente moedas de teste. A opção vive no
+transporte fictício, fora do build financeiro de produção.
+
+Revisão de proporções/altura (08/11): piloto ocupa 43% da largura do asset do
+avião (antes 31%). O salto conserva essa proporção na chegada e começa levemente
+maior, ancorado nos pés. Durante a aproximação, o King continua o ciclo de
+comemoração desenhado, com impulso/ápice/queda/pouso, até o embarque.
+
+A câmera é sugerida pelo movimento para baixo das nuvens e paralaxe das estrelas.
+A altura final e a duração da subida dependem do multiplicador já confirmado:
+prêmios menores ficam no céu; intermediários passam à estratosfera; maiores
+alcançam espaço, estrelas, lua e curvatura azul do horizonte. Multiplicador
+central ampliado, com alto contraste. O cenário não altera probabilidades nem
+pagamentos. `/circus?demo=spacewin` demonstra 200× na prévia (primeiro giro),
+enquanto `?demo=bigwin` continua demonstrando 20×.
+
 ## Ingressos e entrada
 
-Uma trinca de ingressos no Circus dá **3 ingressos**. Na prévia de 04/11/2026,
-a trinca pode sair em qualquer uma das cinco linhas de pagamento (três horizontais
-e duas diagonais), sorteada após
-a concessão. O prêmio em moedas é recalculado pela grade efetivamente mostrada.
-A chance de conceder ingressos e a quantidade de três permanecem iguais. A conta começa com zero
+Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026
+usa `slotVersion:2`: oito combinações pagam moedas ou ingressos, sendo três
+horizontais, três verticais e duas diagonais. Um ou dois ingressos também podem
+aparecer sem conceder entradas; não substituem células de prêmio ou Happeach.
+As fitas incluem ingressos durante o giro, sem anunciar uma trinca antecipadamente.
+O prêmio em moedas é recalculado pela grade efetivamente mostrada.
+A chance de conceder ingressos e a quantidade de três permanecem iguais.
+Pedidos antigos sem essa versão conservam as cinco combinações originais.
+Esta revisão está somente na prévia: a auditoria em ECONOMIA.md encontrou
+retorno elevado e precisa orientar o balanceamento antes de levar à produção.
+A conta começa com zero
 ingressos; nenhum saldo ou ingresso da prévia local é importado.
 
 Na prévia, cada ingresso toca uma única nota ao incrementar o contador:

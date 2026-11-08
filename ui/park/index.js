@@ -1,4 +1,6 @@
 import {createEntryFlow} from './entry-flow.js';
+import {openDailyReward} from './daily-reward.js';
+import {installBigWinFlight} from './bigwin-flight.js';
 import {pocketColors} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion} from './motion.js';
@@ -37,9 +39,12 @@ window.KingRicoPark={Cloud,layout,get state(){return state;},set state(v){state=
 
 function boot(){
 
+ const daily=openDailyReward(Cloud).catch(e=>Cloud.error(e));
+
  if(document.querySelector('meta[name="king-rico-game"]')?.content==='circus')bootCircus();
  const game=document.querySelector('meta[name="king-rico-game"]')?.content;
  if(['clown','penalty','flying','fingo','bounce'].includes(game))Cloud.ready.then(async()=>{
+  await daily;
   // The loading screen captures clicks while art is decoding. Show the entry
   // only after that screen leaves, so the first choice always reaches its button.
   if(document.getElementById('kr-boot-screen'))await new Promise(resolve=>{
@@ -72,16 +77,17 @@ function bootCircus(){
   fc.renderVals();
   installMotion(fc,rails,{refresh:renderRails,showWheel});
   installSpinTactility(fc);
+  installBigWinFlight(fc);
   installParkNavigation(fc,stage.closest('.park-circus-stage')||stage,rails.querySelector('.park-pocket'));
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
- if(state.wheel?.prizeVersion===3&&fc.state.showWin&&!wheelOpen){
+ if(state.wheel?.prizeVersion===3&&fc.state.showWin&&!wheelOpen&&!fc._parkBigWinFlight){
   fc._parkDismissAt ||= performance.now()+1500;
   if(performance.now()>=fc._parkDismissAt){fc._spinAfterFly=false;fc.dismissWin();fc._parkDismissAt=0;}
  }
  if(!fc.state.spinning&&!fc.state.queued){displayState=state;if(!fc._parkMeterBusy)fc._parkMeterLevel=state.spins;renderRails();}
- if(fc.cloudBusy()||fc.state.showWin||fc.state.homeOpen)return;
+ if(fc.cloudBusy()||fc.state.showWin||fc.state.homeOpen||Cloud.dailyRewardActive)return;
 
  if(state.wheel){fc.setState({auto:false});showWheel();}
  },160);
