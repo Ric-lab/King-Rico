@@ -1,48 +1,9 @@
-# Economia de moedas — referência revisada em 29/10/2026
+# Economia de moedas — Circus v3
 
-Versão `2026-10-28-fingo-free-v11`. A meta é devolver aproximadamente 98 moedas por
-100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
-Quando o retorno é 98%, isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo. O Fingo usa agora prêmio fixo de 2×: sua amostra por estratégia aparece abaixo e não deve ser anunciada como RTP de 98%.
-Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
-Bônus diários e recargas são entradas externas e ficam fora dessa conta.
+Publicação visual e financeira autorizada pelo dono em 08/11/2026. Esta entrega
+ativa slotVersion 3 para novos giros; recibos antigos mantêm os pagamentos salvos.
 
-As chances não consultam nome, saldo, lucro acumulado ou sequência de resultados.
-Não há ajuste para punir quem ganhou nem derrotas agendadas para corrigir uma sessão.
-O ajuste histórico que existia no Clown foi removido.
-
-A tabela abaixo descreve as versões anteriores à integração do [parque](PARQUE.md).
-O Circus com ingressos, prêmio no décimo giro e roleta multiplicadora altera o
-retorno total; **98% não descreve esse conjunto**. O Fingo rápido tem dez bolas;
-a amostra de trinta bolas abaixo não estima seu retorno. As rodadas já pagas
-continuam com suas versões originais.
-
-| Jogo | Retorno de referência | Condição |
-| --- | ---: | --- |
-| Circus / Machine | 98,000% teórico | Aposta constante; inclui linhas, telas cheias, mínimo e Rodada Especial |
-| Wheel | 98,000% | Qualquer um dos 13 desenhos escolhidos |
-| Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
-| Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
-| Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
-| Fingo 5×5 | 96,94% observado | 20 mil cartelas, política de cobertura física; amostra, sem prova de estratégia ótima |
-| Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
-| Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
-
-O Neck retorna cerca de 93,20% ao sacar sempre no primeiro andar com aposta de
-10. Não se deve confundir esse caso com a política ótima que considera a garantia.
-Flying e Neck compartilham `cloud/ladder.cjs`: Happeach aparece em 1/8 das rodadas;
-ao alcançá-lo, o prêmio inteiro daquele andar fica guardado e uma queda posterior
-paga esse valor, sem somar ao prêmio de pegar. Depois da garantia, a chance de
-avançar recebe fator 0,85. Não há influência do histórico. A localização sorteada
-é 6–20 no Neck e 2–7 no Flying, respeitando suas tabelas e durações próprias.
-O Flying mantém dez balões e pagamentos em centavos; o Neck mantém 33 andares e
-seu arredondamento de prêmio em décimos. As bases calibradas são respectivamente
-0,935419176 e 0,9320338677939342. Sacar sempre no primeiro balão do Flying retorna
-93,54%; a política ótima com a garantia chega a 98%. Rodadas Flying antigas sem
-`ladderVersion:2` continuam sem proteção e com as chances já contratadas.
-No Clown, errar a mira pode reduzir o retorno. O 21 antigo e os protótipos
-guardados Bounce, Claw e Race conservam sua matemática anterior.
-
-## Prévia v3 — Circus balanceado (08/11/2026, não publicado em live)
+## Perfil v3 — Circus (08/11/2026)
 
 Perfil em `cloud/circus-profile.cjs`, oito linhas preservadas. Multiplicadores
 abaixo são sobre a **aposta total**, incluindo seu valor devolvido; não são lucro.
@@ -101,8 +62,52 @@ Coeficientes por linha: laranja 3, fogos 5, envelope 8, bolsa 10, ornamento 25,
 lingote 100, curinga 250. Como há cinco linhas, isso equivale respectivamente a
 0,6×, 1×, 1,6×, 2×, 5×, 20× e 50× da aposta total. A ficha informa RTP de 96,81%
 na configuração de referência e prêmios por categoria 20/35/50×. Pesos e
-probabilidades proprietárias não foram inferidos da tabela. A prévia usa nosso
+probabilidades proprietárias não foram inferidos da tabela. O Circus usa nosso
 perfil e simulação, sem anunciar que reproduz a matemática do Tiger.
+
+## Referência histórica anterior (29/10/2026)
+
+Versão `2026-10-28-fingo-free-v11`. A meta é devolver aproximadamente 98 moedas por
+100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
+Quando o retorno é 98%, isso representa uma perda esperada de 2% do volume apostado, não de 2% do saldo. O Fingo usa agora prêmio fixo de 2×: sua amostra por estratégia aparece abaixo e não deve ser anunciada como RTP de 98%.
+Não significa ganhar 98% das partidas nem perder obrigatoriamente em cada sessão.
+Bônus diários e recargas são entradas externas e ficam fora dessa conta.
+
+As chances não consultam nome, saldo, lucro acumulado ou sequência de resultados.
+Não há ajuste para punir quem ganhou nem derrotas agendadas para corrigir uma sessão.
+O ajuste histórico que existia no Clown foi removido.
+
+A tabela abaixo descreve as versões anteriores à integração do [parque](PARQUE.md).
+O Circus com ingressos, prêmio no décimo giro e roleta multiplicadora altera o
+retorno total; **98% não descreve esse conjunto**. O Fingo rápido tem dez bolas;
+a amostra de trinta bolas abaixo não estima seu retorno. As rodadas já pagas
+continuam com suas versões originais.
+
+| Jogo | Retorno de referência | Condição |
+| --- | ---: | --- |
+| Circus / Machine | 98,000% teórico | Aposta constante; inclui linhas, telas cheias, mínimo e Rodada Especial |
+| Wheel | 98,000% | Qualquer um dos 13 desenhos escolhidos |
+| Clown | 98,000% | Dez arremessos válidos; alvo muda frequência e tamanho dos prêmios |
+| Flying Clown | Até 98,000% | Melhor política de pegar/subir, incluindo Happeach |
+| Pênalti | Até 98,000% | Chutes com qualidade máxima; precisão menor reduz o retorno |
+| Fingo 5×5 | 96,94% observado | 20 mil cartelas, política de cobertura física; amostra, sem prova de estratégia ótima |
+| Neck | Até 98,000% | Melhor política de sacar/subir, incluindo Happeach e arredondamentos, entre todas as apostas legais |
+| Fortune 33 | 98% na política de referência | Cartas dirigidas para pedir abaixo de 28 e parar a partir de 28; decisões diferentes alteram o resultado |
+
+O Neck retorna cerca de 93,20% ao sacar sempre no primeiro andar com aposta de
+10. Não se deve confundir esse caso com a política ótima que considera a garantia.
+Flying e Neck compartilham `cloud/ladder.cjs`: Happeach aparece em 1/8 das rodadas;
+ao alcançá-lo, o prêmio inteiro daquele andar fica guardado e uma queda posterior
+paga esse valor, sem somar ao prêmio de pegar. Depois da garantia, a chance de
+avançar recebe fator 0,85. Não há influência do histórico. A localização sorteada
+é 6–20 no Neck e 2–7 no Flying, respeitando suas tabelas e durações próprias.
+O Flying mantém dez balões e pagamentos em centavos; o Neck mantém 33 andares e
+seu arredondamento de prêmio em décimos. As bases calibradas são respectivamente
+0,935419176 e 0,9320338677939342. Sacar sempre no primeiro balão do Flying retorna
+93,54%; a política ótima com a garantia chega a 98%. Rodadas Flying antigas sem
+`ladderVersion:2` continuam sem proteção e com as chances já contratadas.
+No Clown, errar a mira pode reduzir o retorno. O 21 antigo e os protótipos
+guardados Bounce, Claw e Race conservam sua matemática anterior.
 
 ## Ritmo de prêmios
 

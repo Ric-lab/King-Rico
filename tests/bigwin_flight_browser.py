@@ -31,6 +31,9 @@ with sync_playwright() as p:
    page.screenshot(path=f'work/preview-bigwin-boarding-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="climbing"')
    climb_started=page.evaluate('performance.now()')
+   page.evaluate("""()=>{window.flightBackgroundFrames=[];const start=performance.now();function sample(){const e=document.querySelector('.park-bigwin-flight');if(!e||e.dataset.phase==='returning')return;const sky=e.querySelector('.park-bigwin-sky'),space=e.querySelector('.park-flight-space');flightBackgroundFrames.push({elapsed:performance.now()-start,sky:Number(getComputedStyle(sky).opacity),scene:Number(getComputedStyle(e).opacity),space:Number(getComputedStyle(space).opacity)});requestAnimationFrame(sample);}sample();}""")
+   assert flight.locator('.park-bigwin-sky').evaluate('e=>getComputedStyle(e).maskImage')=='none'
+
    assert page.locator('.park-mascot').evaluate('e=>getComputedStyle(e).visibility')=='hidden','The old colored cloud must leave with the mascot'
    assert flight.locator('.park-bigwin-pilot').is_visible()
    assert flight.locator('.park-bigwin-pilot').evaluate('e=>parseFloat(getComputedStyle(e).width)/parseFloat(getComputedStyle(e.parentElement).width)')>.4
@@ -76,6 +79,11 @@ with sync_playwright() as p:
    assert flight.locator('[data-flight-amount]').inner_text()==('+2.000,00' if space else '+200,00')
    assert flight.get_attribute('data-altitude')==('space' if space else 'stratosphere')
    assert float(flight.evaluate('e=>getComputedStyle(e).getPropertyValue("--flight-space")'))>(.99 if space else 0)
+
+   frames=page.evaluate('flightBackgroundFrames.filter(f=>f.elapsed>1400)')
+   assert len(frames)>10 and all(f['sky']>.999 and f['scene']>.999 for f in frames),'Background must remain opaque while counting'
+   assert all(b['space']>=a['space']-.001 for a,b in zip(frames,frames[1:])),'Space must fade in continuously without reverting to sky'
+   assert flight.locator('.park-propeller-rotor').first.evaluate('e=>!getComputedStyle(e).transform.startsWith("matrix3d")')
    page.screenshot(path=f'work/preview-bigwin-result-{suffix}.png')
   flight.wait_for(state='detached',timeout=18000)
   page.wait_for_function('!__fc._cfRun&&!__fc.cloudBusy()',timeout=15000)

@@ -1,4 +1,4 @@
-import economy from '../../cloud/circus-profile.cjs';
+import economy from '../../cloud/prize-tier.cjs';
 // Presentation of a committed result. No RNG, wallet mutations or extra reward.
 import {BOARDING_FRAMES,boardingAsset,boardingPose,celebrationPose,createBoardingActor} from './king-boarding.js';
 const PLANE='/assets/circus/bonus-plane.webp',PILOT='/assets/king-rico/fw6/master.webp';
@@ -17,7 +17,7 @@ export function flightCurve(width,height,startX,startY,progress){
 }
 export function installBigWinFlight(fc){
  const nativePrize=fc.showPrize.bind(fc),nativeDismiss=fc.dismissWin.bind(fc),nativeSpin=fc.spin.bind(fc);
- for(const src of [PLANE,...BOARDING_FRAMES.map(boardingAsset)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
+ for(const src of [PLANE,'/assets/circus/flight-scenery-atlas.webp','/assets/circus/flight-cloud-bank.webp',...BOARDING_FRAMES.map(boardingAsset)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
  fc.spin=()=>{if(!fc._parkBigWinFlight)nativeSpin();};
  fc.dismissWin=()=>{if(!fc._parkBigWinFlight)nativeDismiss();};
  fc.showPrize=(amount,title,then,chains,stake=fc.bet())=>{

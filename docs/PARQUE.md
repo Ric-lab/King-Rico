@@ -352,13 +352,20 @@ cópia defasada e disco translúcido sugerem desfoque; cubo dourado fixo à fren
 Todo o conjunto acompanha posição/rotação/escala do avião. Movimento reduzido
 usa disco/pás difusas estáticos. Sem novo som, trajetória ou pagamento.
 
-### Economia v3 em teste (08/11)
+### Economia v3 nesta entrega (08/11)
 Perfil compartilhado `cloud/circus-profile.cjs`: tabela em docs/ECONOMIA.md.
-Prévia usa slotVersion 3; produção ainda usa o perfil anterior. Store/regras
-preparados para recibos v3, preservando v1/v2. Happeach v3: chance 0,005 por
+Novos giros da produção e da prévia usam slotVersion 3. Store/regras
+aceitam recibos v3, preservando v1/v2. Happeach v3: chance 0,005 por
 posição e especial mínima 20× na aposta média guardada. Dez giros/roleta e
 quantidade de ingressos preservados; sem RTP global anunciado.
 Voo apenas a partir de 20×, Mega em 35× e Super em 50×. Aposta de referência
 é passada explicitamente à apresentação e à animação do número; não comparar
 especial com a aposta atual do jogador. Demos continuam 20× e 200×: o espaço
 agora usa tela cheia de nuvens (2,5 × 8 × 10), não tenda da tabela antiga.
+
+### Estabilidade do voo espacial (08/11)
+Fundo recortado por overflow, sem máscara de opacidade no contêiner inteiro;
+camadas de céu/espaço isoladas e opacas durante a contagem. Arte decodificada
+antes de usar. Hélice mantém o giro com transformação 2D; círculo luminoso
+oscila suavemente entre 78% e 100%, sem filtro variável sobre o prêmio inteiro.
+Destaque mantido sem pulsar grandes áreas de brilho sobre o fundo escuro.

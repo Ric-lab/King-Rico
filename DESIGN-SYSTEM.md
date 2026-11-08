@@ -224,7 +224,7 @@ Céu/estratosfera/espaço usam atlas ilustrado com centro livre para números;
 nuvens orgânicas em duas profundidades e estrelas irregulares substituem
 elipses e padrões repetidos. Terra e lua pertencem à pintura do espaço.
 Subida indicada pela paralaxe descendente; preservar contraste do multiplicador.
-Esta revisão está na prévia, ainda não no oficial.
+Revisão incluída na entrega visual/financeira autorizada em 08/11/2026.
 
 Hélice do voo (prévia): reutilizar as próprias pás da ilustração, separadas
 por máscaras SVG em tempo de renderização. Corpo/cubo fixos, pás em giro de
@@ -235,3 +235,8 @@ Prévia v3 (08/11/2026): celebração do voo usa prêmio/aposta confirmada, nunc
 valor absoluto: Grande ≥20×, Mega ≥35×, Super ≥50×. Especial usa a aposta média
 salva. Retornos comuns ficam no mostrador da máquina. Tabela visual e valores
 das linhas usam o perfil salvo no recibo; novas prévias usam slotVersion 3.
+
+Voo espacial: evitar máscara/filtros animados de tela inteira e rotação 3D de
+sprites recortados. Céu/espaço em camadas próprias, fundo opaco após entrada;
+rotação da hélice em 2D e brilho do círculo com variação suave. Não alterar a
+iluminação da tela inteira para destacar o prêmio.

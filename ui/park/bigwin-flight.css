@@ -1,7 +1,8 @@
 body:has(.park-bigwin-flight) [data-bigwin-modal]{visibility:hidden!important;pointer-events:none!important}
 .park-bigwin-flight{position:fixed;inset:0;overflow:hidden;z-index:2147483600;pointer-events:auto;font-family:Baloo,'Baloo 2',sans-serif;isolation:isolate}
-.park-bigwin-sky{position:absolute;inset:120px 0 0;background:#69d0f5 url("/assets/circus/flight-scenery-atlas.webp") left center/200% 100% no-repeat;opacity:0;transition:opacity 1.2s ease;mask-image:linear-gradient(transparent,#000 80px)}
-.park-bigwin-flight.is-climbing .park-bigwin-sky{opacity:1;mask-image:linear-gradient(transparent,#000 30px)}
+.park-bigwin-sky{position:absolute;inset:120px 0 0;background:#69d0f5 url("/assets/circus/flight-scenery-atlas.webp") left center/200% 100% no-repeat;opacity:0;transition:opacity 1.2s ease;overflow:hidden;contain:paint;will-change:opacity}
+.park-bigwin-flight.is-climbing .park-bigwin-sky{opacity:1}
+.park-bigwin-sky:after{content:"";position:absolute;inset:0 0 auto;height:30px;background:linear-gradient(#17366c,transparent);pointer-events:none}
 .park-bigwin-plane{position:absolute;left:0;top:0;transform-origin:51.5% 42%;will-change:transform;filter:drop-shadow(0 10px 7px #17618c22)}
 .park-bigwin-plane>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.park-bigwin-plane>.park-bigwin-pilot{position:absolute;left:31%;top:13%;width:43%;height:43%;z-index:1}.park-bigwin-front{z-index:2;clip-path:polygon(0 47%,100% 47%,100% 100%,0 100%)}
 .park-bigwin-jumper{position:absolute;left:0;top:0;object-fit:contain;transform-origin:50% 50%;will-change:transform}
@@ -11,15 +12,15 @@ body:has(.park-bigwin-flight) [data-bigwin-modal]{visibility:hidden!important;po
 .park-bigwin-score.is-visible{opacity:1;transform:none}
 .park-bigwin-score>span{font-size:clamp(27px,8vw,38px);letter-spacing:1px;font-weight:900;color:#fff3b4;-webkit-text-stroke:1px #94631e;paint-order:stroke fill;text-shadow:0 3px 0 #805022,0 5px 12px #17385e55}
 .park-bigwin-score>b{position:relative;isolation:isolate;font-size:clamp(32px,var(--flight-amount-size,72px),96px);line-height:1.3;white-space:nowrap;color:#fff2a2;-webkit-text-stroke:1.5px #97621d;paint-order:stroke fill;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-1px;text-shadow:0 4px 0 #9a601e,0 7px 12px #16395d66;transform:scale(var(--flight-value-pulse,1))}
-.park-bigwin-score>b:before{content:"";position:absolute;left:50%;top:50%;width:min(78vw,330px);aspect-ratio:1;border-radius:50%;z-index:-1;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff3a53d 0%,#ffd54d22 43%,#ffe99b88 44%,#ffd35933 45%,transparent 48%),radial-gradient(circle,#ffd77855,transparent 70%);filter:drop-shadow(0 0 16px #ffe17b55);pointer-events:none;animation:parkFlightHalo 1.6s ease-in-out infinite}
-@keyframes parkFlightHalo{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+.park-bigwin-score>b:before{content:"";position:absolute;left:50%;top:50%;width:min(78vw,330px);aspect-ratio:1;border-radius:50%;z-index:-1;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff3a53d 0%,#ffd54d22 43%,#ffe99b88 44%,#ffd35933 45%,transparent 48%),radial-gradient(circle,#ffd77855,transparent 70%);box-shadow:0 0 16px #ffe17b22;pointer-events:none;animation:parkFlightHalo 1.6s ease-in-out infinite}
+@keyframes parkFlightHalo{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(.98)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.02)}}
 @media(prefers-reduced-motion:reduce){.park-bigwin-score>b:before{animation:none;opacity:.8}}
 
 .park-bigwin-flight[data-phase=result] .park-bigwin-score>b{animation:parkFlightPrizePulse 1.2s ease-in-out infinite}
-@keyframes parkFlightPrizePulse{50%{transform:scale(1.055);filter:drop-shadow(0 0 12px #fff3b488)}}
+@keyframes parkFlightPrizePulse{50%{transform:scale(1.035)}}
 @media(prefers-reduced-motion:reduce){.park-bigwin-flight *{animation:none!important;transition-duration:.15s!important}}
 /* The camera climbs through layers; clouds travel down faster than distant stars. */
-.park-flight-highsky,.park-flight-space{position:absolute;inset:0;pointer-events:none}
+.park-flight-highsky,.park-flight-space{position:absolute;inset:0;pointer-events:none;will-change:opacity;isolation:isolate}
 .park-flight-highsky{background-image:linear-gradient(#164b9eaa,#3b8bd466 55%,#a6e7ff22),url('/assets/circus/flight-scenery-atlas.webp');background-size:100% 100%,200% 100%;background-position:center,left center;opacity:var(--flight-high,0)}
 .park-flight-space{background:#17315d url('/assets/circus/flight-scenery-atlas.webp') right center/200% 100% no-repeat;opacity:var(--flight-space,0);overflow:hidden}
 .park-flight-clouds,.park-flight-clouds-near{position:absolute;inset:0;pointer-events:none;will-change:transform}
@@ -50,5 +51,5 @@ body:has(.park-bigwin-flight) [data-bigwin-modal]{visibility:hidden!important;po
 .park-propeller-rotor{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;mask:url('/ui/park/plane-propeller-mask.svg') center/100% 100% no-repeat;transform-origin:92.5% 49.2%;animation:parkPropellerTurn .11s linear infinite;filter:blur(.35px);opacity:.9;will-change:transform}
 .park-propeller-rotor.park-propeller-ghost{animation-delay:-.0275s;opacity:.28;filter:blur(1px)}
 .park-propeller-disc{position:absolute;left:88%;top:22%;width:9%;height:54%;border-radius:50%;background:radial-gradient(ellipse,#fff0ba0a 20%,#fff9df33 65%,#fff6db09 72%,transparent 74%);filter:blur(.5px)}
-@keyframes parkPropellerTurn{from{transform:perspective(260px) rotateX(0deg)}to{transform:perspective(260px) rotateX(360deg)}}
+@keyframes parkPropellerTurn{0%,100%{transform:scaleY(1)}25%,75%{transform:scaleY(.06)}50%{transform:scaleY(-1)}}
 @media(prefers-reduced-motion:reduce){.park-propeller-rotor{opacity:.3;transform:scaleY(.65);filter:blur(1px)}.park-propeller-rotor.park-propeller-ghost{display:none}}

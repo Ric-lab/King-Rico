@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Entrega autorizada na main (2026-11-08 · 7e41b89)
+- Dono autorizou explicitamente visual E pagamentos v3. Commit 7e41b89 enviado à main pelo workflow oficial, com carteira Google/Firestore real, oito combinações, ingressos avulsos e tabela v3; prévia continua fictícia, demos/raspadinha por abertura exclusivos do build:preview.
+- Correção do espaço: sem máscara do viewport/filtros variáveis/rotação 3D da hélice; camadas isoladas/opacas e círculo mais suave. Arte decodificada antes de usar. Apresentação separada de pagamento em cloud/prize-tier.cjs.
+- Testado em navegador do build real emulado: giro v3 de 40.000, fundo espacial estável, saldo preservado após reload e nenhum crédito duplicado. Suite focada de integração: 66 testes passaram; regressão da prévia cobre céu/espaço/reduzido/erro de imagem e opacidade monotônica. Capturas inspecionadas; produção gerada após navegador.
+- Próximo passo: confirmar workflow oficial/Hosting e prévia, conferir arquivos/configuração públicos sem apostas reais. Depois, feedback do dono no celular. Limites econômicos (ingressos e aposta variável fora da estimativa) permanecem documentados; publicação autorizada pelo dono ciente dessa ressalva.
+
 ## Prévia (2026-11-08 · economia v3 e Big Win proporcional)
 - Pedido: revisar referências Fortune Tiger e pagamentos. `cloud/circus-profile.cjs` define trincas sobre aposta TOTAL: bumbo 0,6; tenda 1; trevo 1,6; nuvem 2,5; capa 4; cetro 5; moeda 8; coroa 15; diamante 20; King 50. Oito linhas/tela cheia ×10 preservadas. Perfil v3: Happeach 0,005 por posição, especial mínima 20× na média salva.
 - Voo só ≥20×; Mega ≥35×; Super ≥50×. `showPrize` recebe a aposta da rodada/especial explicitamente. Tabela, som/destaque e linhas usam o perfil correto; recibos v1/v2 continuam intactos. Produção/client-src continua pedindo v2; só carteira de prévia inicia v3. Store/regras preparados e testados, sem publicar regras.
