@@ -304,3 +304,9 @@ render, sem editar pixels do original. Giro no eixo do motor, fantasma e disco
 translúcido. Nenhuma geração GPT Imagens/Meshy; zero créditos de geração.
 Máscaras no preload do Circus. Verificação de duas fases e movimento reduzido
 no navegador; mesmas proporções, trajetória e pagamento.
+
+### 2026-11-08 — Entrega oficial do cenário/voo
+Atlas de céu/espaço, nuvens e máscaras da hélice acima incluídos em 7e41b89.
+Nenhuma arte nova nesta correção: composição estabilizada com camadas opacas,
+recorte por overflow e giro 2D. Workflow oficial e inspeção pública confirmaram
+os arquivos; fonte/gastos das gerações anteriores continuam nos registros acima.

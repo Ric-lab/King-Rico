@@ -14,4 +14,4 @@ Rejeitado:
 - Zero no prêmio diário.
 - Trinca de ingressos fixada sempre na primeira linha.
 - Ingressos aparecendo apenas em trincas premiadas: a prévia inclui um ou dois avulsos sem crédito.
-- Ignorar trincas verticais: o dono pediu pagamento nas três colunas, além das horizontais e diagonais; prévia `slotVersion:2`, aguardando balanceamento antes da produção.
+- Ignorar trincas verticais: o dono pediu pagamento nas três colunas, além das horizontais e diagonais; perfil v3 publicado com oito combinações; preservar v1/v2 nos recibos antigos.

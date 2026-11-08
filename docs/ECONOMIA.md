@@ -1,6 +1,7 @@
 # Economia de moedas — Circus v3
 
-Publicação visual e financeira autorizada pelo dono em 08/11/2026. Esta entrega
+Visual e pagamentos publicados em king-rico.web.app pelo commit 7e41b89 em
+08/11/2026, com autorização explícita do dono. Esta entrega
 ativa slotVersion 3 para novos giros; recibos antigos mantêm os pagamentos salvos.
 
 ## Perfil v3 — Circus (08/11/2026)
