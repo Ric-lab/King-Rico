@@ -116,8 +116,9 @@ o ciclo de comemoração ativo durante a aproximação; a pose de partida do sal
 deve ser a última posição animada, sem congelar esperando a aeronave. Subida usa
 camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplicador
 confirmado. Na prévia, prêmio em moedas é o maior número no centro inferior; multiplicador
-fica secundário acima dele. Avião permanece no centro superior, inteiro no
-enquadramento; cenário em paralaxe comunica o deslocamento. A nuvem colorida
+separado foi removido. Avião segue curva ascendente e reduz progressivamente
+para parecer mais distante; rastro discreto reforça a trajetória. Número dourado
+é o foco, com halo/radiação suaves e sem outro contador concorrente. A nuvem colorida
 da origem não deve continuar visível após embarcar.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte

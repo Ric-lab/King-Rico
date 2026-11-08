@@ -3,6 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · referência Aviator e foco único no prêmio)
+- Pedido: Aviator como referência da curva/movimento, não do ícone; Fortune Tiger como hierarquia do prêmio. Avião/King próprios preservados, escala reduz até 42% durante subida à direita e curva dourada parte da base esquerda. Removido contador × da cena; prêmio é único número, título dourado/halo/radiação suaves.
+- Pesquisa: página SPRIBE, imagem pública da interface Aviator, gameplay mobile listado no Vimeo; ficha PG Soft e imagem Big Win pública. Fontes e limites em docs/PARQUE.md. Gravação antiga do dono não localizada; vídeos listados não foram assistidos. Nenhum asset/código externo integrado.
+- Verificado localmente em quatro fluxos (390 px/20×, 320 px/reduzido, falha do avião e 390 px/200×): redução contínua, valor legível sem ×, avião inteiro, retomada e uma aposta/prêmio confirmados. Capturas inspecionadas; unitários e build de produção após integração passaram.
+- Publicação simplificada: as mesmas seis suítes de navegador agora executam em pares isolados, com logs separados e falha propagada. Um commit/HANDOFF por entrega; resultado real de Actions comunicado ao dono sem segundo commit apenas de registro.
+- Próximo passo: conferir Actions desta revisão e dono avaliar ?demo=bigwin / ?demo=spacewin na prévia. Não promover à produção; oficial preservado.
+
 ## Prévia (2026-11-08 · voo enquadrado e contagem em destaque)
 - Dono pediu remover resquício da nuvem colorida, prolongar voo e priorizar valor crescente. Mascote inteiro (incluindo nuvem) oculto após embarque/restaurado em toda saída; avião enquadrado no centro superior e subida de 6,8–9,8 s conforme altitude, sem alcançar o canto cedo.
 - Prêmio em moedas virou maior número, com dimensionamento pelo valor final, pulso suave e multiplicador secundário. Sem alterar prêmio confirmado, carteira ou matemática; movimento reduzido não balança/pulsa.

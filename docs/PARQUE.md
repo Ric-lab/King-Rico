@@ -101,8 +101,9 @@ multiplicador e prêmio. Assets entram no preload do Circus. Apenas cenário;
 avião, piloto e pagamento confirmado preservados. Revisão seguinte: nuvem
 colorida da origem é ocultada junto do mascote após embarcar e restaurada ao
 terminar/falhar. Voo de 6,8–9,8 s (conforme altitude), câmera mantém a aeronave
-no centro superior com leve balanço, sem cortar no canto. Contagem em moedas
-é o maior elemento, com multiplicador secundário e pulso suave; valor final
+numa curva para o alto à direita, reduzindo de 100% para 42% da escala
+de embarque; rastro parte da base esquerda, sem cortar a aeronave no canto. Contagem em moedas
+é o foco único, sem multiplicador separado, com pulso suave; valor final
 permanece por 2,1 s. Movimento reduzido mantém leitura sem balanço/pulso.
 
 ## Ingressos e entrada
@@ -327,3 +328,15 @@ se repete apenas ao abrir uma nova visita, como nas outras atrações.
 Publicação confirmada: workflow 42062162492 (verificar/publicar aprovados),
 regras REST e Hosting. Conferência no site oficial: projeto king-rico sem
 emuladores, catálogo correto, Bounce 3D carregado, Clown 404 e assets 200.
+
+### Referências da revisão do voo (08/11/2026 · prévia)
+Aviator: página da SPRIBE (https://www.spribe.co/games/aviator), referência de
+curva crescente; imagens públicas da interface e gameplay mobile listado em
+https://vimeo.com/672791246. Fortune Tiger: ficha oficial da PG Soft
+(https://www.pgsoft.com/uploads/Games/Pdf/Fortune_Tiger_Gameinformation_EN.pdf)
+e imagem https://gamblerid.com/storage/files/shares/slots/fortune-tiger/big-win.jpg.
+Aplicação: trajetória visual contínua e prêmio central único em ouro, iluminação
+radial subordinada ao número. Não foi localizada a gravação antiga do dono;
+imagens/resultados públicos consultados, sem afirmar que o vídeo foi assistido.
+Nenhum asset ou código dessas referências foi incorporado ao produto; avião e
+King continuam os nossos. A cena revela pagamento confirmado, sem crash/aposta extra.

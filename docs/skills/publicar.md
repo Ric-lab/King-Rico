@@ -7,3 +7,6 @@
 - Ao parar: atualizar docs/HANDOFF.md com "feito" e "próximo passo".
 - Nada é apagado: arquivo velho vai para `archive/`; branch velha vira tag `archive/<nome>`.
 - Segredos (tokens, contas de serviço) nunca entram no Git.
+
+- Prévias: testes locais focados na mudança, um build de prévia e um de produção após integração quando exigido; um commit com HANDOFF, sem segundo commit só para copiar status do Actions. Conferir Actions com resumo curto, sem despejar payloads nem repetir diagnóstico.
+- Workflow de prévia executa as seis regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`); logs separados e screenshots preservados. Não retirar testes para acelerar.

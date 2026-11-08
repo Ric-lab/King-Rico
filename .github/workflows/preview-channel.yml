@@ -46,18 +46,15 @@ jobs:
           KING_RICO_CHROMIUM: /usr/bin/google-chrome
         run: |
           python3 -m pip install playwright
-          python3 tests/daily_reward_browser.py
-          python3 tests/bigwin_flight_browser.py
-          python3 tests/preview_motion_browser.py
-          python3 tests/circus_columns_browser.py
-          python3 tests/park_preview_browser.py
-          python3 tests/park_repeat_browser.py
+          python3 scripts/test-preview-browsers.py
       - name: Guardar capturas da conferência
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: previa-circus-${{ github.sha }}
-          path: work/preview-*.png
+          path: |
+            work/preview-*.png
+            work/*_browser.py.log
           if-no-files-found: ignore
       - name: Registrar bloqueio se a publicação não devolver URL
         if: failure() && steps.hosting.outputs.url == ''

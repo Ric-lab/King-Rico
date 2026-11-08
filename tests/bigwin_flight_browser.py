@@ -20,6 +20,7 @@ with sync_playwright() as p:
   flight=page.get_by_role('region',name='Voo do grande prêmio',exact=True);flight.wait_for()
   assert page.locator('[data-bigwin-modal]').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   assert flight.get_by_role('button').count()==0
+  assert flight.locator('[data-flight-multiple]').count()==0
   assert page.evaluate('KingRicoCloud.player.balance')==initial-10+prize
   if fail:
    page.evaluate('document.querySelector(".park-bigwin-plane>img").dispatchEvent(new Event("error"))')
@@ -36,19 +37,20 @@ with sync_playwright() as p:
    assert flight.locator('.park-bigwin-pilot').get_attribute('data-pose')=='pilotSide'
    assert len(page.evaluate('boardingPoses'))>=9,'Celebration must continue before boarding'
    assert page.evaluate('boardingPoses.filter(p=>p!=="departure").slice(-5)')==['crouch2','cheerRise','cheer','cheerFall','pilotSide'],page.evaluate('boardingPoses')
-   def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,multiple:document.querySelector('[data-flight-multiple]').textContent};}''')
+   def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,amount:document.querySelector('[data-flight-amount]').textContent,width:r.width};}''')
    first=sample();page.wait_for_timeout(1200)
    scenery=flight.evaluate("""e=>{const s=getComputedStyle(e);return {far:parseFloat(s.getPropertyValue('--flight-cloud-y')),near:parseFloat(s.getPropertyValue('--flight-near-y')),atlas:getComputedStyle(e.querySelector('.park-bigwin-sky')).backgroundImage};}""")
    assert scenery['near']>scenery['far']>0 and 'flight-scenery-atlas.webp' in scenery['atlas'],scenery
    second=sample();assert second['y']<first['y'],[first,second]
-   assert second['multiple']!=first['multiple']
+   assert second['amount']!=first['amount']
+   assert second['width']<first['width'],'The plane must recede as it climbs'
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')
    assert page.evaluate('performance.now()')-climb_started>(4300 if mode=='reduce' else 6500),'The flight must have time to breathe'
-   composition=flight.evaluate('''e=>{const r=e.querySelector('.park-bigwin-plane').getBoundingClientRect(),a=e.querySelector('[data-flight-amount]'),m=e.querySelector('[data-flight-multiple]'),v=a.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth,amountSize:parseFloat(getComputedStyle(a).fontSize),multipleSize:parseFloat(getComputedStyle(m).fontSize),valueLeft:v.left,valueRight:v.right};}''')
+   composition=flight.evaluate('''e=>{const r=e.querySelector('.park-bigwin-plane').getBoundingClientRect(),a=e.querySelector('[data-flight-amount]'),m=e.querySelector('.park-bigwin-score>span'),v=a.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth,amountSize:parseFloat(getComputedStyle(a).fontSize),multipleSize:parseFloat(getComputedStyle(m).fontSize),valueLeft:v.left,valueRight:v.right};}''')
    assert composition['left']>=0 and composition['right']<=width,composition
    assert composition['amountSize']>composition['multipleSize'] and composition['valueLeft']>=0 and composition['valueRight']<=width,composition
-   assert flight.locator('[data-flight-multiple]').inner_text()==('×200' if space else '×20')
+   assert flight.locator('.park-bigwin-plane').bounding_box()['width']<first['width']*.6
    assert flight.locator('[data-flight-amount]').inner_text()==('+2.000,00' if space else '+200,00')
    assert flight.get_attribute('data-altitude')==('space' if space else 'stratosphere')
    assert float(flight.evaluate('e=>getComputedStyle(e).getPropertyValue("--flight-space")'))>(.99 if space else 0)
