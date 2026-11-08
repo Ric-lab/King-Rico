@@ -37,13 +37,20 @@ with sync_playwright() as p:
    assert flight.locator('.park-bigwin-pilot').get_attribute('data-pose')=='pilotSide'
    assert len(page.evaluate('boardingPoses'))>=9,'Celebration must continue before boarding'
    assert page.evaluate('boardingPoses.filter(p=>p!=="departure").slice(-5)')==['crouch2','cheerRise','cheer','cheerFall','pilotSide'],page.evaluate('boardingPoses')
-   def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect();return {x:r.x,y:r.y,amount:document.querySelector('[data-flight-amount]').textContent,width:r.width};}''')
+   def sample():return page.evaluate('''()=>{const e=document.querySelector('.park-bigwin-plane'),r=e.getBoundingClientRect(),m=new DOMMatrix(getComputedStyle(e).transform);return {x:r.x,y:r.y,amount:document.querySelector('[data-flight-amount]').textContent,width:r.width,scale:Math.hypot(m.a,m.b),angle:Math.atan2(m.b,m.a)*180/Math.PI};}''')
    first=sample();page.wait_for_timeout(1200)
    scenery=flight.evaluate("""e=>{const s=getComputedStyle(e);return {far:parseFloat(s.getPropertyValue('--flight-cloud-y')),near:parseFloat(s.getPropertyValue('--flight-near-y')),atlas:getComputedStyle(e.querySelector('.park-bigwin-sky')).backgroundImage};}""")
    assert scenery['near']>scenery['far']>0 and 'flight-scenery-atlas.webp' in scenery['atlas'],scenery
    second=sample();assert second['y']<first['y'],[first,second]
    assert second['amount']!=first['amount']
-   assert second['width']<first['width'],'The plane must recede as it climbs'
+   assert second['scale']<first['scale'],'The plane must recede as it climbs'
+   assert second['angle']<-30,'The nose must point upwards'
+   if mode!='reduce':
+    alignment=flight.evaluate('''e=>{const plane=e.querySelector('.park-bigwin-plane'),s=getComputedStyle(plane),m=new DOMMatrix(s.transform),o=s.transformOrigin.split(' ').map(parseFloat),path=e.querySelector('.park-flight-trail-line'),end=path.getPointAtLength(path.getTotalLength());return Math.hypot(end.x-(m.e+o[0]),end.y-(m.f+o[1]));}''')
+    assert alignment<1,'The curve must meet the middle of the airplane'
+   halo=flight.locator('[data-flight-amount]').evaluate('''e=>{const s=getComputedStyle(e,'::before');return {width:parseFloat(s.width),height:parseFloat(s.height),animation:s.animationName};}''')
+   assert abs(halo['width']-halo['height'])<1 and halo['width']>200
+   assert halo['animation']==('none' if mode=='reduce' else 'parkFlightHalo')
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')
    assert page.evaluate('performance.now()')-climb_started>(4300 if mode=='reduce' else 6500),'The flight must have time to breathe'

@@ -102,8 +102,11 @@ avião, piloto e pagamento confirmado preservados. Revisão seguinte: nuvem
 colorida da origem é ocultada junto do mascote após embarcar e restaurada ao
 terminar/falhar. Voo de 6,8–9,8 s (conforme altitude), câmera mantém a aeronave
 numa curva para o alto à direita, reduzindo de 100% para 42% da escala
-de embarque; rastro parte da base esquerda, sem cortar a aeronave no canto. Contagem em moedas
-é o foco único, sem multiplicador separado, com pulso suave; valor final
+de embarque; rastro parte da base esquerda e termina no centro da aeronave. A trajetória e
+a inclinação do nariz derivam da mesma curva quadrática; rotação entra
+suavemente após embarque, sem cortar a aeronave no canto. Contagem em moedas
+é o foco único, sem multiplicador separado, com pulso suave e círculo dourado
+luminoso (1,6 s, sem flash rápido; estático em movimento reduzido); valor final
 permanece por 2,1 s. Movimento reduzido mantém leitura sem balanço/pulso.
 
 ## Ingressos e entrada

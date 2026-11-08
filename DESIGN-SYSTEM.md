@@ -118,7 +118,9 @@ camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplica
 confirmado. Na prévia, prêmio em moedas é o maior número no centro inferior; multiplicador
 separado foi removido. Avião segue curva ascendente e reduz progressivamente
 para parecer mais distante; rastro discreto reforça a trajetória. Número dourado
-é o foco, com halo/radiação suaves e sem outro contador concorrente. A nuvem colorida
+é o foco, com círculo luminoso pulsante e sem outro contador concorrente.
+Nariz acompanha a tangente da curva de subida; rastro encontra o centro
+do avião. Em movimento reduzido, círculo fica estático. A nuvem colorida
 da origem não deve continuar visível após embarcar.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte

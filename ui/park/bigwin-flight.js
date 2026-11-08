@@ -6,6 +6,14 @@ export function flightValue(amount,bet,progress){
  return {multiple:p===1?multiple:Math.pow(multiple,p),amount:p===1?amount:Math.min(amount,bet*Math.pow(multiple,p))};
 }
 export function flightAltitude(multiple,progress){return Math.max(0,Math.min(1,Math.log2(Math.max(5,multiple)/5)/Math.log2(20)))*Math.max(0,Math.min(1,progress));}
+// One quadratic curve drives both the airplane heading and its visible trail.
+export function flightCurve(width,height,startX,startY,progress){
+ const p=Math.max(0,Math.min(1,progress)),ox=width*.04,oy=height*.84,ex=width*.76,ey=Math.max(210,height*.25),join=.6;
+ const cx=(startX-(1-join)**2*ox-join**2*ex)/(2*(1-join)*join),cy=(startY-(1-join)**2*oy-join**2*ey)/(2*(1-join)*join);
+ const t=join+(1-join)*(1-(1-p)**2),u=1-t,x=u*u*ox+2*u*t*cx+t*t*ex,y=u*u*oy+2*u*t*cy+t*t*ey;
+ const angle=Math.atan2(u*(cy-oy)+t*(ey-cy),u*(cx-ox)+t*(ex-cx))*180/Math.PI;
+ return {x,y,angle,path:`M ${ox} ${oy} Q ${ox+t*(cx-ox)} ${oy+t*(cy-oy)},${x} ${y}`,baseline:oy};
+}
 export function installBigWinFlight(fc){
  const nativePrize=fc.showPrize.bind(fc),nativeDismiss=fc.dismissWin.bind(fc),nativeSpin=fc.spin.bind(fc);
  for(const src of [PLANE,...BOARDING_FRAMES.map(boardingAsset)]){const image=new Image();image.src=src;image.decode?.().catch(()=>{});}
@@ -26,7 +34,7 @@ export function installBigWinFlight(fc){
   const departure=[...body.querySelectorAll('[data-f]')].sort((a,b)=>Number(getComputedStyle(b).opacity)-Number(getComputedStyle(a).opacity))[0]?.src||PILOT;
   const jumpActor=createBoardingActor(jumper,departure),pilotActor=createBoardingActor(pilot);
   jumper.style.cssText=`width:${sourceRect.width}px;height:${sourceRect.height}px;transform:translate(${sourceRect.x}px,${sourceRect.y}px)`;
-  const width=innerWidth,height=innerHeight,size=Math.min(280,width*.70,height*.33),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.76,endY=Math.max(185,height*.22);
+  const width=innerWidth,height=innerHeight,size=Math.min(260,width*.62,height*.33),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.76,endY=Math.max(210,height*.25);
   const maximum=amount/fc.bet(),climbDuration=6800+flightAltitude(maximum,1)*3000,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,speed=reduced ? .65 : 1;
   let frame,elapsed=0,last=performance.now(),ended=false,rank=-1,jumpStart;
@@ -68,10 +76,10 @@ export function installBigWinFlight(fc){
     mascot.style.visibility='hidden';jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
-    const p=clamp((t-2600)/climbDuration),e=1-Math.pow(1-p,2),altitude=flightAltitude(maximum,p);scale=lerp(1,.42,smooth(p));x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-12,e);
-    if(!reduced){x+=Math.sin(p*Math.PI*4)*4;y+=Math.sin(p*Math.PI*6)*2;}
+    const p=clamp((t-2600)/climbDuration),altitude=flightAltitude(maximum,p),pose=flightCurve(width,height,catchX,catchY,p);
+    scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=lerp(-8,pose.angle,smooth(clamp((t-2600)/650)));
     scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
-    if(!reduced){const a=angle*Math.PI/180,tx=x-Math.cos(a)*size*.42*scale,ty=y-Math.sin(a)*size*.42*scale,ox=width*.04,oy=height*.84,cx=ox+(tx-ox)*.72,cy=oy-(oy-ty)*.12,d=`M ${ox} ${oy} Q ${cx} ${cy},${tx} ${ty}`;trail.setAttribute('d',d);trailArea.setAttribute('d',`${d} L ${tx} ${oy} Z`);}
+    if(!reduced){trail.setAttribute('d',pose.path);trailArea.setAttribute('d',`${pose.path} L ${x} ${pose.baseline} Z`);}
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*2.2)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');

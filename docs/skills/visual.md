@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Nariz horizontal durante subida e curva ligada à cauda: usar a mesma curva para posição/inclinação e ligar a linha ao centro do avião. Prêmio ganha círculo luminoso pulsante; entregar links separados de céu/espaço.
 - Aviator é referência de trajetória/curva contínua, não de ícone. No grande prêmio remover o × secundário, priorizar o valor e deixar o avião se afastar/reduzir durante a subida.
 - Voo com resquício da nuvem colorida, avião cortado no canto cedo e valor secundário: ocultar também a nuvem da origem, manter avião enquadrado e priorizar a contagem em moedas.
 - King pequeno no salto/cabine e congelado aguardando o avião: ampliar proporcionalmente, manter comemoração ativa até embarcar e usar paralaxe de céu/espaço para evidenciar a subida conforme o prêmio.

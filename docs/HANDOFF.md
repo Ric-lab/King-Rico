@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · nariz, centro da curva e círculo do prêmio)
+- Posição, inclinação e rastro agora derivam de uma curva quadrática única (`flightCurve`): nariz segue a tangente com entrada suave após embarque, linha termina na âncora central do avião. Escala menor acomoda a rotação no celular.
+- Círculo dourado luminoso atrás do prêmio pulsa a cada 1,6 s; estático com movimento reduzido. Número permanece o único contador; nenhuma mudança no pagamento confirmado, carteira ou demais jogos.
+- Unitário verifica continuidade de embarque/tangente/âncora. Navegador cobre 20×, 320 px/reduzido, erro de imagem e espaço 200×; exige nariz apontado para cima, alinhamento da linha a menos de 1 px e círculo redondo com redução de movimento respeitada. Capturas revisadas; build de produção após integração.
+- Próximo passo: conferir Actions desta entrega e dono testar separadamente céu (?demo=bigwin) e espaço (?demo=spacewin). Prévia isolada; não publicar em live sem autorização. Um único commit com documentação.
+
 ## Prévia (2026-11-08 · referência Aviator e foco único no prêmio)
 - Pedido: Aviator como referência da curva/movimento, não do ícone; Fortune Tiger como hierarquia do prêmio. Avião/King próprios preservados, escala reduz até 42% durante subida à direita e curva dourada parte da base esquerda. Removido contador × da cena; prêmio é único número, título dourado/halo/radiação suaves.
 - Pesquisa: página SPRIBE, imagem pública da interface Aviator, gameplay mobile listado no Vimeo; ficha PG Soft e imagem Big Win pública. Fontes e limites em docs/PARQUE.md. Gravação antiga do dono não localizada; vídeos listados não foram assistidos. Nenhum asset/código externo integrado.
