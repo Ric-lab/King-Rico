@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · voo enquadrado e contagem em destaque)
+- Dono pediu remover resquício da nuvem colorida, prolongar voo e priorizar valor crescente. Mascote inteiro (incluindo nuvem) oculto após embarque/restaurado em toda saída; avião enquadrado no centro superior e subida de 6,8–9,8 s conforme altitude, sem alcançar o canto cedo.
+- Prêmio em moedas virou maior número, com dimensionamento pelo valor final, pulso suave e multiplicador secundário. Sem alterar prêmio confirmado, carteira ou matemática; movimento reduzido não balança/pulsa.
+- Quatro cenários locais passaram: 20×, 320 px/reduzido, falha de imagem e 200×/espaço; teste confere nuvem oculta/restaurada, duração, avião inteiro, valor maior/sem corte e prêmio único. Capturas inspecionadas. Respiro final do título conferido em novo giro; build de produção gerado após integração.
+- Próximo passo: confirmar workflow público após push; dono avalia o resultado na prévia. Oficial preservado.
+
 ## Prévia (2026-11-08 · cenário ilustrado do avião)
 - Novo atlas de céu/espaço com nuvens volumétricas, lua e Terra; nuvens próximas/distantes com velocidades diferentes e estrelas irregulares. Centro livre para o multiplicador. Assets finais versionados e no preload.
 - Sem mudança no avião, poses/proporções do King, duração, carteira ou pagamentos. Revisão exclusiva da prévia; oficial permanece em 6a7a775.

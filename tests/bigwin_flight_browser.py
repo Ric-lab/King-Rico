@@ -29,6 +29,8 @@ with sync_playwright() as p:
    assert flight.locator('.park-bigwin-jumper').is_visible()
    page.screenshot(path=f'work/preview-bigwin-boarding-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="climbing"')
+   climb_started=page.evaluate('performance.now()')
+   assert page.locator('.park-mascot').evaluate('e=>getComputedStyle(e).visibility')=='hidden','The old colored cloud must leave with the mascot'
    assert flight.locator('.park-bigwin-pilot').is_visible()
    assert flight.locator('.park-bigwin-pilot').evaluate('e=>parseFloat(getComputedStyle(e).width)/parseFloat(getComputedStyle(e.parentElement).width)')>.4
    assert flight.locator('.park-bigwin-pilot').get_attribute('data-pose')=='pilotSide'
@@ -38,10 +40,14 @@ with sync_playwright() as p:
    first=sample();page.wait_for_timeout(1200)
    scenery=flight.evaluate("""e=>{const s=getComputedStyle(e);return {far:parseFloat(s.getPropertyValue('--flight-cloud-y')),near:parseFloat(s.getPropertyValue('--flight-near-y')),atlas:getComputedStyle(e.querySelector('.park-bigwin-sky')).backgroundImage};}""")
    assert scenery['near']>scenery['far']>0 and 'flight-scenery-atlas.webp' in scenery['atlas'],scenery
-   second=sample();assert second['x']>first['x'] and second['y']<first['y'],[first,second]
+   second=sample();assert second['y']<first['y'],[first,second]
    assert second['multiple']!=first['multiple']
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')
+   assert page.evaluate('performance.now()')-climb_started>(4300 if mode=='reduce' else 6500),'The flight must have time to breathe'
+   composition=flight.evaluate('''e=>{const r=e.querySelector('.park-bigwin-plane').getBoundingClientRect(),a=e.querySelector('[data-flight-amount]'),m=e.querySelector('[data-flight-multiple]'),v=a.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth,amountSize:parseFloat(getComputedStyle(a).fontSize),multipleSize:parseFloat(getComputedStyle(m).fontSize),valueLeft:v.left,valueRight:v.right};}''')
+   assert composition['left']>=0 and composition['right']<=width,composition
+   assert composition['amountSize']>composition['multipleSize'] and composition['valueLeft']>=0 and composition['valueRight']<=width,composition
    assert flight.locator('[data-flight-multiple]').inner_text()==('×200' if space else '×20')
    assert flight.locator('[data-flight-amount]').inner_text()==('+2.000,00' if space else '+200,00')
    assert flight.get_attribute('data-altitude')==('space' if space else 'stratosphere')
@@ -54,6 +60,7 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.park.spins')==1
   assert page.evaluate('flightRequests.filter(a=>a!=="settings")')==['spin']
   assert not page.locator('.park-circus-stage').evaluate('e=>!!e.closest("[inert]")')
+  assert page.locator('.park-mascot').evaluate('e=>getComputedStyle(e).visibility')=='visible'
   assert page.locator('.park-mascot [data-k=body]').evaluate('e=>getComputedStyle(e).visibility')=='visible'
   assert not errors and not missing,{'errors':errors,'missing':missing}
   print(json.dumps({'width':width,'motion':mode,'imageFailure':fail,'pilotBoards':not fail,'multiple':200 if space else 20,'altitude':'space' if space else 'stratosphere','largerPilot':True,'oneSpinOnly':True,'wallet':True,'errors':errors,'missing':missing}),flush=True)

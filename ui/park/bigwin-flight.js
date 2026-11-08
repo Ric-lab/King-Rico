@@ -26,15 +26,17 @@ export function installBigWinFlight(fc){
   const departure=[...body.querySelectorAll('[data-f]')].sort((a,b)=>Number(getComputedStyle(b).opacity)-Number(getComputedStyle(a).opacity))[0]?.src||PILOT;
   const jumpActor=createBoardingActor(jumper,departure),pilotActor=createBoardingActor(pilot);
   jumper.style.cssText=`width:${sourceRect.width}px;height:${sourceRect.height}px;transform:translate(${sourceRect.x}px,${sourceRect.y}px)`;
-  const width=innerWidth,height=innerHeight,size=Math.min(300,width*.78,height*.36),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.65,endY=Math.max(215,height*.30);
-  const maximum=amount/fc.bet(),climbDuration=4200+flightAltitude(maximum,1)*3200,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
+  const width=innerWidth,height=innerHeight,size=Math.min(280,width*.70,height*.33),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.50,endY=Math.max(235,height*.32);
+  const maximum=amount/fc.bet(),climbDuration=6800+flightAltitude(maximum,1)*3000,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,speed=reduced ? .65 : 1;
   let frame,elapsed=0,last=performance.now(),ended=false,rank=-1,jumpStart;
   fc._parkBigWinFlight=true;fc._afterWin=then;fc._afterWinChains=!!chains;
   clearInterval(fc.counter);fc.setState({showWin:true,winTitle:title,winBigText:null,displayWin:0,winSub:'',coins:false,shake:'none'});
   plane.style.width=size+'px';plane.style.height=size+'px';
+  const mascot=source.closest('.park-mascot'),originalMascotVisibility=mascot.style.visibility;
   const originalVisibility=body.style.visibility;body.style.visibility='hidden';
-  function restore(){body.style.visibility=originalVisibility;inert.forEach(([e,v])=>e.inert=v);scene.remove();fc._parkBigWinFlight=false;if(previous?.isConnected)previous.focus({preventScroll:true});}
+  scene.style.setProperty('--flight-amount-size',Math.min(96,width*.88/(('+'+fc.money(amount)).length*.55))+'px');
+  function restore(){mascot.style.visibility=originalMascotVisibility;body.style.visibility=originalVisibility;inert.forEach(([e,v])=>e.inert=v);scene.remove();fc._parkBigWinFlight=false;if(previous?.isConnected)previous.focus({preventScroll:true});}
   function finish(){
    if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(frame);
    window.removeEventListener('pagehide',hide);
@@ -63,10 +65,12 @@ export function installBigWinFlight(fc){
     jumper.style.cssText=`width:${lerp(from.width,pw,p)}px;height:${lerp(from.height,ph,p)}px;transform:translate(${lerp(from.x,dx,p)}px,${lerp(from.y,dy,p)-Math.sin(p*Math.PI)*(reduced?20:72)}px) rotate(${-8*p+Math.sin(p*Math.PI)*-14}deg)`;
    }else{
     if(pilot.hidden)try{fc.hap('winMid');}catch{}
-    jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
+    mascot.style.visibility='hidden';jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
-    const p=clamp((t-2600)/climbDuration),e=smooth(p),altitude=flightAltitude(maximum,p);x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-20,e);
+    const p=clamp((t-2600)/climbDuration),e=smooth(p),altitude=flightAltitude(maximum,p);x=lerp(catchX,endX,e);y=lerp(catchY,endY,e);angle=lerp(-8,-12,e);
+    if(!reduced){x+=Math.sin(p*Math.PI*4)*4;y+=Math.sin(p*Math.PI*6)*2;}
+    scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*2.2)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');

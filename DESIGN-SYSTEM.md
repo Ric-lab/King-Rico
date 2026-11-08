@@ -115,7 +115,10 @@ Proporção atual do piloto: 43% do avião, com cabine cobrindo as pernas. Mante
 o ciclo de comemoração ativo durante a aproximação; a pose de partida do salto
 deve ser a última posição animada, sem congelar esperando a aeronave. Subida usa
 camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplicador
-confirmado. Multiplicador maior e de alto contraste permanece no centro inferior.
+confirmado. Na prévia, prêmio em moedas é o maior número no centro inferior; multiplicador
+fica secundário acima dele. Avião permanece no centro superior, inteiro no
+enquadramento; cenário em paralaxe comunica o deslocamento. A nuvem colorida
+da origem não deve continuar visível após embarcar.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos

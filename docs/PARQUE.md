@@ -98,7 +98,12 @@ nuvens pintadas à esquerda; espaço com lua e Terra à direita. Duas camadas de
 `flight-cloud-bank.webp` descem em velocidades diferentes, com as próximas
 mais rápidas; estrelas irregulares têm paralaxe suave. Centro limpo para ler
 multiplicador e prêmio. Assets entram no preload do Circus. Apenas cenário;
-avião, piloto, tempos e pagamento confirmado permanecem iguais.
+avião, piloto e pagamento confirmado preservados. Revisão seguinte: nuvem
+colorida da origem é ocultada junto do mascote após embarcar e restaurada ao
+terminar/falhar. Voo de 6,8–9,8 s (conforme altitude), câmera mantém a aeronave
+no centro superior com leve balanço, sem cortar no canto. Contagem em moedas
+é o maior elemento, com multiplicador secundário e pulso suave; valor final
+permanece por 2,1 s. Movimento reduzido mantém leitura sem balanço/pulso.
 
 ## Ingressos e entrada
 
