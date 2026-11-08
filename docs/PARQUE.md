@@ -50,7 +50,7 @@ O cliente e o bônus diário reais conservam o limite de uma vez por dia.
 
 ## Voo do grande prêmio (prévia de 07/11/2026)
 
-Os prêmios monetários que já abriam a apresentação grande (a partir de 5× a
+Na prévia v3, os prêmios monetários grandes (a partir de 20× a
 aposta) passam a usar uma cena automática: avião chega da diagonal inferior
 esquerda, King Rico salta da posição real da nuvem para a cabine e sobe como
 piloto. O multiplicador e o valor crescem durante a subida; o resultado fica
@@ -112,7 +112,7 @@ permanece por 2,1 s. Movimento reduzido mantém leitura sem balanço/pulso.
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026
-usa `slotVersion:2`: oito combinações pagam moedas ou ingressos, sendo três
+usa oito combinações (v2 histórica; v3 balanceada em teste): pagam moedas ou ingressos, sendo três
 horizontais, três verticais e duas diagonais. Um ou dois ingressos também podem
 aparecer sem conceder entradas; não substituem células de prêmio ou Happeach.
 As fitas incluem ingressos durante o giro, sem anunciar uma trinca antecipadamente.
@@ -351,3 +351,14 @@ camadas fixas sem alterar o arquivo-fonte. Giro de 110 ms no eixo do motor,
 cópia defasada e disco translúcido sugerem desfoque; cubo dourado fixo à frente.
 Todo o conjunto acompanha posição/rotação/escala do avião. Movimento reduzido
 usa disco/pás difusas estáticos. Sem novo som, trajetória ou pagamento.
+
+### Economia v3 em teste (08/11)
+Perfil compartilhado `cloud/circus-profile.cjs`: tabela em docs/ECONOMIA.md.
+Prévia usa slotVersion 3; produção ainda usa o perfil anterior. Store/regras
+preparados para recibos v3, preservando v1/v2. Happeach v3: chance 0,005 por
+posição e especial mínima 20× na aposta média guardada. Dez giros/roleta e
+quantidade de ingressos preservados; sem RTP global anunciado.
+Voo apenas a partir de 20×, Mega em 35× e Super em 50×. Aposta de referência
+é passada explicitamente à apresentação e à animação do número; não comparar
+especial com a aposta atual do jogador. Demos continuam 20× e 200×: o espaço
+agora usa tela cheia de nuvens (2,5 × 8 × 10), não tenda da tabela antiga.

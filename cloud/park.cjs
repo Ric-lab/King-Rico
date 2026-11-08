@@ -9,7 +9,7 @@ const fail=(code,message)=>{throw Object.assign(new Error(message),{code:'king-r
 // A ticket trinca uses the versioned five/eight combinations. Re-evaluate the displayed
 // grid so coin prizes and highlighted cells always agree with the ticket row.
 function placeTickets(x,bet,rng,version=1){
- const lines=version===2?engine.ALL_LINES:engine.LINES;
+ const lines=version>=2?engine.ALL_LINES:engine.LINES;
  const cells=lines[Math.min(lines.length-1,Math.floor(rng()*lines.length))].slice();
  for(const i of cells)x.grid[i]=TICKET;
  x.res=engine.evaluate(x.grid.map(n=>n===TICKET?-1:n),bet,version);
@@ -31,9 +31,9 @@ function spin(p,s,bet,id,rng,version=1){
  if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank,version);
   if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet,version),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
  const award=!filling&&!x.res.peach.length&&!x.feature&&random()<.14?3:0;
- if(award){placeTickets(x,bet,random,version);s.tickets+=3;}else if(version===2)scatterTickets(x,random);
+ if(award){placeTickets(x,bet,random,version);s.tickets+=3;}else if(version>=2)scatterTickets(x,random);
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:3,baseUnits:engine.units(x.res.win),pockets:[...POCKETS],result:null};
- return {...x,...(version===2?{slotVersion:2}:{}),parkVersion:1,ticketAward:award};
+ return {...x,...(version>=2?{slotVersion:version}:{}),parkVersion:1,ticketAward:award};
 }
 function entry(p,s,game,method){
  if(!ATTRACTIONS.includes(game)||!['ticket','coins'].includes(method))fail('invalid-argument','Entrada inválida.');

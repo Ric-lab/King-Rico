@@ -2,6 +2,9 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import subprocess
+import os
+import threading
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import sys
 
 TESTS = [
@@ -16,9 +19,22 @@ def run(name):
     Path('work/' + name + '.log').write_text(result.stdout + result.stderr)
     return name, result
 
+selected = sys.argv[1:] or TESTS
+if set(selected) - set(TESTS):
+    raise SystemExit('Unknown preview test')
+server = None
+if not os.environ.get('KING_RICO_TEST_URL'):
+    class QuietHandler(SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory='dist', **kwargs)
+        def log_message(self, *args):
+            pass
+    server = ThreadingHTTPServer(('127.0.0.1', 0), QuietHandler)
+    os.environ['KING_RICO_TEST_URL'] = f'http://127.0.0.1:{server.server_port}'
+    threading.Thread(target=server.serve_forever, daemon=True).start()
 failed = False
 with ThreadPoolExecutor(max_workers=2) as pool:
-    for future in as_completed([pool.submit(run, name) for name in TESTS]):
+    for future in as_completed([pool.submit(run, name) for name in selected]):
         try:
             name, result = future.result()
             print(f'{name}: ' + ('PASS' if result.returncode == 0 else 'FAIL'), flush=True)
@@ -28,4 +44,6 @@ with ThreadPoolExecutor(max_workers=2) as pool:
         except Exception as error:
             failed = True
             print(str(error), flush=True)
+if server:
+    server.shutdown()
 sys.exit(1 if failed else 0)

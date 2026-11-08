@@ -230,3 +230,8 @@ Hélice do voo (prévia): reutilizar as próprias pás da ilustração, separada
 por máscaras SVG em tempo de renderização. Corpo/cubo fixos, pás em giro de
 110 ms com fantasma leve e disco de ar; evitar rodar o nariz ou duplicar pás
 paradas. Em movimento reduzido, efeito difuso estático.
+
+Prévia v3 (08/11/2026): celebração do voo usa prêmio/aposta confirmada, nunca
+valor absoluto: Grande ≥20×, Mega ≥35×, Super ≥50×. Especial usa a aposta média
+salva. Retornos comuns ficam no mostrador da máquina. Tabela visual e valores
+das linhas usam o perfil salvo no recibo; novas prévias usam slotVersion 3.

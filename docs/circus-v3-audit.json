@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "spins": 5000000,
+  "seed": 17843,
+  "bet": 10,
+  "coinRtp": 0.95313144,
+  "sample95Interval": [
+    0.948427361634428,
+    0.9578355183655739
+  ],
+  "baseCoinRtp": 0.56077516,
+  "featureCoinRtp": 0.21761548,
+  "wheelExtraRtp": 0.1747408,
+  "prizeRate": 0.4259922,
+  "profitRate": 0.1601672,
+  "bigWinRate": 0.0089866,
+  "megaWinRate": 0.0002704,
+  "superWinRate": 0.0005322,
+  "columnPrizeRate": 0.2052276,
+  "ticketAppearances": [
+    2201738,
+    1320214,
+    876952,
+    601096
+  ],
+  "ticketsAwarded": 1803288,
+  "scope": "Coin payout estimate at fixed stake, including Happeach and wheel. Excludes ticket redemption, ads, gifts and variable-stake policies; not a theoretical proof or a universal player RTP."
+}

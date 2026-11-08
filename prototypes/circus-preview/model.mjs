@@ -47,21 +47,21 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    const filling=park.spins+1>=METER_SPINS;
-   let outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,2);
+   let outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
    if(filling){
     let attempts=0;
-    while((outcome.res.win<=0||outcome.feature)&&attempts++<128)outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,2);
+    while((outcome.res.win<=0||outcome.feature)&&attempts++<128)outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
     if(outcome.res.win<=0||outcome.feature){
-     const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,data.bet,2);
+     const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,data.bet,3);
      outcome={grid,res,feature:null,peaches:p.peaches,peachBank:p.peachBank||{count:p.peaches,units:0},winUnits:engine.units(res.win)};
     }
    }
    let ticket=false;
    if(!filling&&!outcome.res.peach.length&&!outcome.feature&&rng()<.14){
-    ticket=true;parkRules.placeTickets(outcome,data.bet,rng,2);park.tickets+=3;
+    ticket=true;parkRules.placeTickets(outcome,data.bet,rng,3);park.tickets+=3;
    }
    if(!ticket)parkRules.scatterTickets(outcome,rng);
-   outcome.slotVersion=2;outcome.parkVersion=1;outcome.ticketAward=ticket?3:0;
+   outcome.slotVersion=3;outcome.parkVersion=1;outcome.ticketAward=ticket?3:0;
    p.balanceUnits=before-cost+outcome.winUnits;p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    park.spins++;park.bankUnits=0;

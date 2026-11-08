@@ -35,7 +35,7 @@ export function createGameStore(db, uid, dependencies={}) {
       bonus:['action','requestId'],recharge:['action','requestId','source'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
-    if(data.slotVersion!==undefined&&(data.slotVersion!==2||data.action!=='spin'||data.game!=='circus'||data.park!==true))fail('king-rico/invalid-argument','Versão do giro inválida.');
+    if(data.slotVersion!==undefined&&(![2,3].includes(data.slotVersion)||data.action!=='spin'||data.game!=='circus'||data.park!==true))fail('king-rico/invalid-argument','Versão do giro inválida.');
     if(data.park!==undefined&&data.park!==true)fail('king-rico/invalid-argument','Entrada inválida.');
     if(['parkBonus','parkBonusClose'].includes(data.action)&&!requestIdPattern.test(data.wheelId||''))fail('king-rico/invalid-argument','Roleta inválida.');
     if(data.action==='recharge' && data.source!==undefined && data.source!=='home')fail('king-rico/invalid-argument','Origem de recarga inválida.');

@@ -1068,3 +1068,19 @@ test('Circus full-screen ceiling is 1665x for five combinations and 2664x for ei
   assert.equal(a.outcome.res.win,version===2?2664:1665);assert.equal(a.player.balance,999+a.outcome.res.win);
  }
 });
+
+
+test('Circus v3 keeps its reduced common pay and one immutable credit across retries',async()=>{
+ const total=engine.SYMBOLS.reduce((n,x)=>n+x.w,0),weight=i=>(engine.SYMBOLS.slice(0,i).reduce((n,x)=>n+x.w,0)+engine.SYMBOLS[i].w/2)/total;
+ const draws=[1,1,1,0,2,3,4,5,6].flatMap(i=>[.99,weight(i)]).concat([.99,.99]);
+ const name='circus-v3-'+randomUUID(),c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+ const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:3});
+ const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);assert.ok(a.replayed||b.replayed);
+ assert.equal(a.outcome.slotVersion,3);assert.equal(a.outcome.res.win,6);assert.equal(a.player.balance,996);
+ assert.equal((await c.call(spin)).player.balance,996);
+});
+test('Circus v3 accepts its 4000x ceiling without widening legacy receipts',async()=>{
+ const name='circus-v3-max-'+randomUUID(),c=await client(name,name,{rng:()=>.999});await c.call(request({action:'bootstrap'}));
+ const a=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:3}));
+ assert.equal(a.outcome.res.win,4000);assert.equal(a.player.balance,4999);
+});

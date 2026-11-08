@@ -8,6 +8,9 @@ const SYMBOLS = [
   { id: 'coin', pay: 15, w: 4 }, { id: 'crown', pay: 17.5, w: 3 },
   { id: 'gem', pay: 20, w: 2 }, { id: 'wild', pay: 33.3, w: 2.4 }
 ];
+const circusProfile=require('./circus-profile.cjs');
+const SYMBOLS_V3=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS[i]}));
+const slotSymbols=version=>version===3?SYMBOLS_V3:SYMBOLS;
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
@@ -112,7 +115,7 @@ function weighted(pool, rng) {
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
   return 0;
 }
-function pick(rng = random) { return rng() < PEACH_P ? PEACH : weighted(SYMBOLS, rng); }
+function pick(rng = random,version=1) { return rng() < (version===3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(SYMBOLS, rng); }
 function lineSymbol(grid, line) {
   const v = line.map(i => grid[i]);
   if (v.some(s => s === undefined || s < 0 || s === 10 || s === PEACH)) return -1;
@@ -122,9 +125,9 @@ function lineSymbol(grid, line) {
 }
 function evaluate(grid, bet, version=1) {
   let win = 0; const cells = new Set(), lines = [];
-  (version===2?ALL_LINES:LINES).forEach((line, li) => {
+  (version>=2?ALL_LINES:LINES).forEach((line, li) => {
     const s = lineSymbol(grid, line);
-    if (s >= 0) { win += bet * SYMBOLS[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
+    if (s >= 0) { win += bet * slotSymbols(version)[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
   });
   const base = grid.find(v => v !== WILD);
   const full = grid.every(v => v >= 0 && v !== 10 && v !== PEACH) &&
@@ -144,14 +147,14 @@ function feature(bet, rng = random, version=1) {
     // Firestore cannot store an array directly inside another array.
     rounds.push({ result });
   }
-  const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * FEAT_MIN)));
+  const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * (version===3?circusProfile.FEATURE_MIN:FEAT_MIN))));
   return { sym, rounds, grid, res };
 }
 function slot(bet, peaches = 0, rng = random, bank = null, version=1) {
-  const grid = Array.from({ length: 9 }, () => pick(rng));
+  const grid = Array.from({ length: 9 }, () => pick(rng,version));
   let pc = 0;
   for (let i = 0; i < 9; i++) if (grid[i] === PEACH && ++pc > 2) {
-    do { grid[i] = pick(rng); } while (grid[i] === PEACH);
+    do { grid[i] = pick(rng,version); } while (grid[i] === PEACH);
   }
   const res = evaluate(grid, bet, version), total = peaches + res.peach.length;
   const stake = units(bet), saved = bank?.count===peaches ? bank.units : peaches*stake;
@@ -160,7 +163,7 @@ function slot(bet, peaches = 0, rng = random, bank = null, version=1) {
   const remaining = bonus ? total-PEACH_GOAL : total;
   const peachBank = {count:remaining,units:bonus ? remaining*stake : saved+res.peach.length*stake};
   return { grid, res, feature: bonus, peaches: remaining, peachBank,
-    ...(version===2?{slotVersion:2}:{}),
+    ...(version>=2?{slotVersion:version}:{}),
     winUnits: units(res.win) + (bonus ? units(bonus.res.win) : 0) };
 }
 // Match the current 13-pocket Claude Design wheel, including same-color prizes.
@@ -213,7 +216,7 @@ function bonusFor(last, streak, now) {
   const index = gap === 1 ? (streak || 0) % 7 : 0;
   return { day: today, streak: index + 1, amount: [50,100,150,200,250,500,1000][index] };
 }
-module.exports = { fingoLegacy, fingoCard, bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, ALL_LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
+module.exports = { slotSymbols, circusProfile, fingoLegacy, fingoCard, bridge, BRIDGE_MULTIPLIERS, TARGET_RTP, WHEEL_COLOR_PAY, SYMBOLS, BETS, LINES, ALL_LINES, WILD, PEACH, PEACH_P, PEACH_GOAL, FEAT_P_SYM, FEAT_P_WILD,
   FEAT_MIN, FEAT_SPINS, WHEEL_HIT_P, WHEEL_PAY, RULES_VERSION, NECK_MULTIPLIERS, NECK_BASE, NECK_GUARANTEED_FACTOR,
   NECK_PEACH_PROBABILITY, neckPrize, neck, FINGO_BALLS, FINGO_HIT, FINGO_GOLD, FINGO_MULTIPLIERS, FINGO_BANDS, FINGO_LEGACY_HIT, FINGO_LEGACY_MULTIPLIERS, fingoMultiplier, fingo,
   FLYING_BASE, FLYING_PEACH_MIN, FLYING_PEACH_MAX, FLYING_MULTIPLIERS, flying, claw, race, twentyOne:twentyOneRound, PENALTY_MULTIPLIERS, PENALTY_LEGACY_MULTIPLIERS, PENALTY_BASE, penalty, CLOWN_BALLS, CLOWN_MULTIPLIERS, clown, bounce, WHEEL_EXACT_P, WHEEL_COLOR_P, WHEEL_FORTUNE_P, wheelPrize, units, coins, pick, evaluate, feature, slot, wheel, dayKey, bonusFor };

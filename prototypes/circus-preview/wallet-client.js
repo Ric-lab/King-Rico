@@ -1,5 +1,5 @@
 const watchers=new Set();let pending=Promise.resolve(),state,readyResolve;
-const Cloud=window.KingRicoCloud={enabled:true,uid:'park-preview',player:null,ready:new Promise(r=>readyResolve=r),
+const Cloud=window.KingRicoCloud={enabled:true,slotVersion:3,uid:'park-preview',player:null,ready:new Promise(r=>readyResolve=r),
  watch(fn){watchers.add(fn);if(this.player)fn(this.player);return()=>watchers.delete(fn);},
  track(){},dayKey(){return Number(new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'}).format(new Date()).replaceAll('-',''));},
  error(error){toast(error?.message||'Não foi possível confirmar. Tente novamente.');}};

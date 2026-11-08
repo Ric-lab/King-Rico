@@ -9,6 +9,7 @@
 7. Mínimo de texto; tutorial = mão animada.
 
 Rejeitado:
+- Classificar Big Win por valor absoluto ou por apenas 5×: usar prêmio/aposta confirmada (20/35/50×); bônus de aposta média usam essa referência. Auditar roleta e especiais junto das linhas, separando ingressos e políticas de mudar aposta.
 - Chão que quebra / placa que foge depois de um bom pulo (parece roubo).
 - Zero no prêmio diário.
 - Trinca de ingressos fixada sempre na primeira linha.

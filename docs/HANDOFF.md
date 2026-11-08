@@ -3,6 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-08 · economia v3 e Big Win proporcional)
+- Pedido: revisar referências Fortune Tiger e pagamentos. `cloud/circus-profile.cjs` define trincas sobre aposta TOTAL: bumbo 0,6; tenda 1; trevo 1,6; nuvem 2,5; capa 4; cetro 5; moeda 8; coroa 15; diamante 20; King 50. Oito linhas/tela cheia ×10 preservadas. Perfil v3: Happeach 0,005 por posição, especial mínima 20× na média salva.
+- Voo só ≥20×; Mega ≥35×; Super ≥50×. `showPrize` recebe a aposta da rodada/especial explicitamente. Tabela, som/destaque e linhas usam o perfil correto; recibos v1/v2 continuam intactos. Produção/client-src continua pedindo v2; só carteira de prévia inicia v3. Store/regras preparados e testados, sem publicar regras.
+- Cinco milhões de giros/seed17843/aposta10: 95,313% de retorno em moedas, incluindo Happeach e extra da roleta; IC por lotes aproximado 94,843–95,784%. Base paga em 42,599%; crédito maior que aposta em 16,017%; destaque de voo ~1/102. Dados em docs/circus-v3-audit.json; comparação Tiger/coeficientes por linha em docs/ECONOMIA.md.
+- Limite importante: simulação de aposta constante, sem resgate dos ingressos nem políticas de mudar aposta perto da roleta. Não é RTP global e não autoriza promover a economia para live; essas duas auditorias permanecem necessárias.
+- Validação: 213 testes da suíte de código passaram, além dos focados novos; 62 verificações Firestore/transações passaram, com v3, teto 4000× e reenvio idempotente. Modelo fictício comparado ao core auditado por 60 giros/roletas/reenvios. Navegador confirmou tabela/colunas, 15.000 em aposta1.000 SEM avião e demos 20×/200×; regressão de motion passou. Capturas inspecionadas; build de produção após integração.
+- Runner aceita lista de testes locais e cria servidor efêmero quando não há URL, evitando portas antigas; CI continua as seis suítes completas em pares. Próximo passo: conferir workflow desta revisão e dono avaliar prévia; oficial preservado.
+
 ## Prévia (2026-11-08 · hélice em voo)
 - Pás originais separadas no render por duas máscaras SVG; removidas das camadas fixas, com cubo dourado preservado. Giro no eixo do motor de 110 ms, fantasma defasado e disco translúcido dão movimento sem regenerar/trocar o avião.
 - Máscaras versionadas em ui/park e incluídas no preload do Circus. Movimento reduzido usa pás/disco difusos estáticos. Trajetória, escala, círculo/prêmio, sons e pagamento não alterados.
