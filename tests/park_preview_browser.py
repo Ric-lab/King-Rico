@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Park presentation and entry navigation, only with the isolated preview wallet."""
 import os,json
 from urllib.parse import urlparse,unquote
@@ -14,8 +15,7 @@ with sync_playwright() as p:
   def ready():
    page.wait_for_function('window.KingRicoCloud?.player&&!document.querySelector("#kr-boot-screen")&&typeof document.querySelector(".park-home-menu")?.onclick==="function"')
    assert page.evaluate('KingRicoCloud.uid')=='park-preview'
-   daily=page.get_by_role('button',name='PEGAR MOEDAS',exact=True)
-   if daily.count():daily.click()
+   collect_daily(page)
    page.wait_for_function('document.querySelector("[data-home-balance]").textContent===KingRicoCloud.player.balance.toLocaleString("pt-BR",{maximumFractionDigits:2})')
   page.goto(BASE+'/park');ready()
   hud_boxes={s:page.locator(s).bounding_box() for s in ['.kr-hud-home','.kr-hud-park','.kr-menu-button']}
@@ -66,11 +66,13 @@ with sync_playwright() as p:
     page.locator('[data-game="'+game+'"]').click()
     page.wait_for_url(lambda url:unquote(urlparse(url).path).rstrip('/') in [path,'/'+ROUTES[path]])
     page.locator('#kr-boot-screen').wait_for(state='detached',timeout=30000)
+    collect_daily(page)
     page.locator('.park-entry-dialog,.park-modal').first.wait_for(timeout=15000)
     page.goto(BASE+'/park');ready()
+    balance+=100 # Two page loads give 50 test coins each; entry is still uncharged.
     assert page.evaluate('KingRicoCloud.player.balance')==balance,'Opening a card must not debit coins'
    assert page.evaluate('KingRicoCloud.player.settings.sfxLvl')==1
-   page.get_by_role('link',name='Voltar ao Circus',exact=True).click();page.wait_for_function('window.__fc?._parkHook')
+   page.get_by_role('link',name='Voltar ao Circus',exact=True).click();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
    for selector,expected in hud_boxes.items():
     actual=page.locator(selector).bounding_box()
     assert all(abs(actual[k]-expected[k])<1.2 for k in ['x','y','width','height']),(selector,actual,expected)

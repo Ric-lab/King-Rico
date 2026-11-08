@@ -91,7 +91,7 @@ os três botões para a segunda linha apenas quando necessário. Ver
 O saldo confirmado no Firestore é independente da apresentação. Falha de animação
 não pode perder ou duplicar crédito. Ao retomar, mostrar o valor salvo. O presente
 é diário; a recarga atual simula 30 segundos, sem anúncio comercial real.
-Na versão de 08/11, `ui/park/daily-reward.js` apresenta esse presente como
+Na prévia de 07/11, `ui/park/daily-reward.js` apresenta esse presente como
 raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
 e botão azul. Grade 3×3: seis X vermelhos e três valores iguais, com destaque
 verde nas casas premiadas reveladas. REVELAR permite jogar sem gesto;
@@ -100,7 +100,7 @@ Depois dos três acertos, recolher a grade ao centro e apresentar apenas moeda,
 valor grande e ação de receber, com tempo para reconhecer a combinação antes.
 Não adicionar um segundo modal diário próprio a cada página.
 
-Big win do Circus: `ui/park/bigwin-flight.js/css`, avião azul/dourado
+Big win do Circus na prévia: `ui/park/bigwin-flight.js/css`, avião azul/dourado
 em `assets/circus/bonus-plane.webp` e King Rico oficial em camadas. A cabine
 oculta a parte inferior do piloto; salto parte da coordenada real do personagem.
 Multiplicador/prêmio acompanham a mesma linha de tempo de subida; não são outra
@@ -115,7 +115,13 @@ Proporção atual do piloto: 43% do avião, com cabine cobrindo as pernas. Mante
 o ciclo de comemoração ativo durante a aproximação; a pose de partida do salto
 deve ser a última posição animada, sem congelar esperando a aeronave. Subida usa
 camadas de nuvens/estratosfera/espaço com paralaxe; altura ligada ao multiplicador
-confirmado. Multiplicador maior e de alto contraste permanece no centro inferior.
+confirmado. Na prévia, prêmio em moedas é o maior número no centro inferior; multiplicador
+separado foi removido. Avião segue curva ascendente e reduz progressivamente
+para parecer mais distante; rastro discreto reforça a trajetória. Número dourado
+é o foco, com círculo luminoso pulsante e sem outro contador concorrente.
+Nariz acompanha a tangente da curva de subida; rastro encontra o centro
+do avião. Em movimento reduzido, círculo fica estático. A nuvem colorida
+da origem não deve continuar visível após embarcar.
 
 Reutilizar os componentes comuns antes de criar outro botão ou cabeçalho. A arte
 integrada do Circus tem montagem própria; não aplicar seu relevo a todos os jogos
@@ -212,3 +218,25 @@ O LED aceso tem núcleo branco e halo frio curto, com contorno escuro preservado
 no verde e amarelo. Só a pintura da face e lateral apaga instantaneamente:
 transição de saída zero. O LED mantém 40 ms para apagar e o pulso acende em
 420 ms; o retorno mecânico mantém 180 ms. As versões anteriores são histórico.
+
+### Prévia · cenário do grande prêmio (08/11/2026)
+Céu/estratosfera/espaço usam atlas ilustrado com centro livre para números;
+nuvens orgânicas em duas profundidades e estrelas irregulares substituem
+elipses e padrões repetidos. Terra e lua pertencem à pintura do espaço.
+Subida indicada pela paralaxe descendente; preservar contraste do multiplicador.
+Revisão incluída na entrega visual/financeira autorizada em 08/11/2026.
+
+Hélice do voo (prévia): reutilizar as próprias pás da ilustração, separadas
+por máscaras SVG em tempo de renderização. Corpo/cubo fixos, pás em giro de
+110 ms com fantasma leve e disco de ar; evitar rodar o nariz ou duplicar pás
+paradas. Em movimento reduzido, efeito difuso estático.
+
+Prévia v3 (08/11/2026): celebração do voo usa prêmio/aposta confirmada, nunca
+valor absoluto: Grande ≥20×, Mega ≥35×, Super ≥50×. Especial usa a aposta média
+salva. Retornos comuns ficam no mostrador da máquina. Tabela visual e valores
+das linhas usam o perfil salvo no recibo; novas prévias usam slotVersion 3.
+
+Voo espacial: evitar máscara/filtros animados de tela inteira e rotação 3D de
+sprites recortados. Céu/espaço em camadas próprias, fundo opaco após entrada;
+rotação da hélice em 2D e brilho do círculo com variação suave. Não alterar a
+iluminação da tela inteira para destacar o prêmio.

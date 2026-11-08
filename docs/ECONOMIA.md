@@ -1,4 +1,71 @@
-# Economia de moedas — referência revisada em 29/10/2026
+# Economia de moedas — Circus v3
+
+Publicação visual e financeira autorizada pelo dono em 08/11/2026. Esta entrega
+ativa slotVersion 3 para novos giros; recibos antigos mantêm os pagamentos salvos.
+
+## Perfil v3 — Circus (08/11/2026)
+
+Perfil em `cloud/circus-profile.cjs`, oito linhas preservadas. Multiplicadores
+abaixo são sobre a **aposta total**, incluindo seu valor devolvido; não são lucro.
+
+| Símbolo | Prêmio por trinca / aposta total |
+| --- | ---: |
+| Bumbo | 0,6× |
+| Tenda | 1× |
+| Trevo | 1,6× |
+| Nuvem | 2,5× |
+| Capa | 4× |
+| Cetro | 5× |
+| Moeda | 8× |
+| Coroa | 15× |
+| Diamante | 20× |
+| King Rico / curinga | 50× |
+
+Os prêmios das linhas são somados e tela cheia preserva ×10. Máximo teórico v3:
+8 × 50 × 10 = 4.000 apostas; versões 1/2 mantêm 1.665/2.664 e tabelas antigas.
+Sorteio normal conserva os pesos dos dez ícones. Happeach tem chance 0,005 por
+posição antes do limite de duas; sua especial usa a média das apostas salvas e
+mínimo de 20× nessa referência. Nenhum ajuste por lucro, saldo ou histórico.
+Ingressos avulsos/trincas e roleta atual foram preservados.
+
+### Quando aparece o voo
+
+Grande prêmio a partir de 20×; Mega a partir de 35×; Super a partir de 50×.
+Sempre dividir o prêmio pela aposta daquela rodada — na especial, a aposta
+média salva. Valor absoluto não classifica: 1.200 com aposta 1.000 é retorno
+normal; 20 com aposta 1 já é Grande Prêmio. Retornos menores contam na barra,
+sem avião; não apresentar prêmio abaixo da aposta como lucro.
+
+### Amostra reproduzível
+
+`node -e "console.log(require('./scripts/circus-lines-audit.cjs').audit(3,5000000,17843))"`
+Resultado em [circus-v3-audit.json](circus-v3-audit.json): cinco milhões de giros,
+aposta fixa de 10, semente 17843. Retorno em moedas **95,313%**: base 56,078%,
+especial Happeach 21,762%, extra da roleta 17,474%. Intervalo amostral aproximado
+por lotes de 10 mil: 94,843%–95,784%; não é prova teórica de RTP.
+42,599% dos giros pagaram algo na base; 16,017% tiveram crédito total maior que
+a aposta. Cerca de 0,979% das apresentações elegíveis foram Grande/Mega/Super
+(aproximadamente uma a cada 102 giros, contando especiais).
+
+**Limites:** aposta constante; não inclui resgate dos ingressos, anúncios,
+raspadinha/recargas nem estratégias de mudar a aposta perto da roleta. O valor
+fixo da entrada do parque e o progresso por número de giros precisam de auditoria
+própria antes de alegar um RTP global ou promover a economia para produção.
+
+### Referência Fortune Tiger
+
+Ficha PG Soft: https://www.pgsoft.com/uploads/Games/Pdf/Fortune_Tiger_Gameinformation_EN.pdf
+Tabela transcrita com aposta por linha e total:
+https://casinoreview.click/rules/fortune-tiger/ . Faixas de Big/Mega/Super na
+ficha também indexada em https://www.scribd.com/document/718306517/Fortune-Tiger-Gameinformation-EN .
+Coeficientes por linha: laranja 3, fogos 5, envelope 8, bolsa 10, ornamento 25,
+lingote 100, curinga 250. Como há cinco linhas, isso equivale respectivamente a
+0,6×, 1×, 1,6×, 2×, 5×, 20× e 50× da aposta total. A ficha informa RTP de 96,81%
+na configuração de referência e prêmios por categoria 20/35/50×. Pesos e
+probabilidades proprietárias não foram inferidos da tabela. O Circus usa nosso
+perfil e simulação, sem anunciar que reproduz a matemática do Tiger.
+
+## Referência histórica anterior (29/10/2026)
 
 Versão `2026-10-28-fingo-free-v11`. A meta é devolver aproximadamente 98 moedas por
 100 apostadas ao longo de muitas rodadas, contando o valor total dos prêmios.
@@ -43,6 +110,24 @@ No Clown, errar a mira pode reduzir o retorno. O 21 antigo e os protótipos
 guardados Bounce, Claw e Race conservam sua matemática anterior.
 
 ## Ritmo de prêmios
+
+### Auditoria do Circus com parque (07/11/2026, somente prévia)
+
+`node scripts/circus-lines-audit.cjs` simula 100 mil giros de aposta 10 por
+versão, com semente 17843. Inclui Happeach, prêmio garantido no décimo giro e
+extra da roleta; exclui o valor de uso dos ingressos. Resultado reproduzível
+em [circus-lines-audit.json](circus-lines-audit.json):
+
+| Versão | Retorno em moedas | Giros com prêmio-base |
+| --- | ---: | ---: |
+| Parque atual, cinco combinações | 141,22% | 33,03% |
+| Prévia `slotVersion:2`, oito combinações | 189,92% | 42,29% |
+
+São estimativas dessa amostra, não provas de RTP. Nenhum peso, multiplicador
+ou bônus foi recalibrado nesta revisão. A prévia acrescenta colunas e ingressos
+avulsos; a produção conserva a versão anterior. **Não promover esta mudança à
+main antes de revisar o retorno do conjunto.** Os percentuais históricos abaixo
+não descrevem o Circus com parque.
 
 A Wheel paga outro desenho da mesma cor em **×2**, com probabilidade de 36,5%;
 desenho exato continua **×10**, com 2,5%. Somam 39% de rodadas com prêmio.

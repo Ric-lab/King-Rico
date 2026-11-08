@@ -1,12 +1,6 @@
 # Circus e parque
 
-A publicação de 08/11 leva a raspadinha diária e a cena do avião, com King Rico
-maior/de perfil, comemoração contínua e subida até o espaço. A carteira real
-continua com **cinco combinações de pagamento**; a revisão de oito combinações
-permanece na branch de prévia, aguardando balanceamento. As opções de repetição
-da raspadinha e giros dirigidos são exclusivas daquela prévia.
-
-Na versão de 08/11/2026, Circus é a tela inicial.
+Na versão publicada em 05/11/2026 (`87244fe`), Circus é a tela inicial.
 `/home` mantém compatibilidade com `/circus`. O parque usa `/park`, com
 `Home.dc.html` como fonte, e reúne **Pênalti, Flying Clown e Bounce**.
 **Basquete, Bubble Plinko e Race Horse** têm cards **Em breve**, sem ação nem cobrança.
@@ -23,7 +17,7 @@ A pintura da face e lateral apaga **instantaneamente**; o LED leva 40 ms e o
 acendimento circular continua em 420 ms.
 A mudança é visual, sem alterar a confirmação das apostas ou o saldo.
 
-## Presente diário
+## Presente diário (prévia de 07/11/2026)
 
 Na primeira abertura do dia, depois da conta e da tela de carregamento, abre
 uma raspadinha. Funciona no Circus e nas rotas do parque, antes da escolha de
@@ -48,15 +42,15 @@ O saldo visual fica retido durante a confirmação; ao fechar, usa o voo e a
 contagem compartilhados, com fallback em caso de erro de animação. O anúncio
 de recarga continua separado. Não altera a matemática dos jogos.
 
-**Exceção de teste na branch de prévia:** por pedido do dono, cada abertura/recarga de
+**Exceção de teste na prévia:** por pedido do dono, cada abertura/recarga de
 página reinicia apenas o presente da carteira fictícia. A raspadinha reaparece
 e concede 50 moedas de teste ao receber; dentro da mesma visita não paga duas
 vezes. Esse reinício vive somente em `prototypes/circus-preview/model.mjs`.
 O cliente e o bônus diário reais conservam o limite de uma vez por dia.
 
-## Voo do grande prêmio
+## Voo do grande prêmio (prévia de 07/11/2026)
 
-Os prêmios monetários que já abriam a apresentação grande (a partir de 5× a
+Na prévia v3, os prêmios monetários grandes (a partir de 20× a
 aposta) passam a usar uma cena automática: avião chega da diagonal inferior
 esquerda, King Rico salta da posição real da nuvem para a cabine e sobe como
 piloto. O multiplicador e o valor crescem durante a subida; o resultado fica
@@ -98,10 +92,27 @@ central ampliado, com alto contraste. O cenário não altera probabilidades nem
 pagamentos. `/circus?demo=spacewin` demonstra 200× na prévia (primeiro giro),
 enquanto `?demo=bigwin` continua demonstrando 20×.
 
+### Cenário ilustrado do voo — prévia (08/11)
+O atlas `flight-scenery-atlas.webp` substitui o fundo plano: céu luminoso e
+nuvens pintadas à esquerda; espaço com lua e Terra à direita. Duas camadas de
+`flight-cloud-bank.webp` descem em velocidades diferentes, com as próximas
+mais rápidas; estrelas irregulares têm paralaxe suave. Centro limpo para ler
+multiplicador e prêmio. Assets entram no preload do Circus. Apenas cenário;
+avião, piloto e pagamento confirmado preservados. Revisão seguinte: nuvem
+colorida da origem é ocultada junto do mascote após embarcar e restaurada ao
+terminar/falhar. Voo de 6,8–9,8 s (conforme altitude), câmera mantém a aeronave
+numa curva para o alto à direita, reduzindo de 100% para 42% da escala
+de embarque; rastro parte da base esquerda e termina no centro da aeronave. A trajetória e
+a inclinação do nariz derivam da mesma curva quadrática; rotação entra
+suavemente após embarque, sem cortar a aeronave no canto. Contagem em moedas
+é o foco único, sem multiplicador separado, com pulso suave e círculo dourado
+luminoso (1,6 s, sem flash rápido; estático em movimento reduzido); valor final
+permanece por 2,1 s. Movimento reduzido mantém leitura sem balanço/pulso.
+
 ## Ingressos e entrada
 
 Uma trinca de ingressos no Circus dá **3 ingressos**. A prévia de 07/11/2026
-usa `slotVersion:2`: oito combinações pagam moedas ou ingressos, sendo três
+usa oito combinações (v2 histórica; v3 balanceada em teste): pagam moedas ou ingressos, sendo três
 horizontais, três verticais e duas diagonais. Um ou dois ingressos também podem
 aparecer sem conceder entradas; não substituem células de prêmio ou Happeach.
 As fitas incluem ingressos durante o giro, sem anunciar uma trinca antecipadamente.
@@ -320,3 +331,41 @@ se repete apenas ao abrir uma nova visita, como nas outras atrações.
 Publicação confirmada: workflow 42062162492 (verificar/publicar aprovados),
 regras REST e Hosting. Conferência no site oficial: projeto king-rico sem
 emuladores, catálogo correto, Bounce 3D carregado, Clown 404 e assets 200.
+
+### Referências da revisão do voo (08/11/2026 · prévia)
+Aviator: página da SPRIBE (https://www.spribe.co/games/aviator), referência de
+curva crescente; imagens públicas da interface e gameplay mobile listado em
+https://vimeo.com/672791246. Fortune Tiger: ficha oficial da PG Soft
+(https://www.pgsoft.com/uploads/Games/Pdf/Fortune_Tiger_Gameinformation_EN.pdf)
+e imagem https://gamblerid.com/storage/files/shares/slots/fortune-tiger/big-win.jpg.
+Aplicação: trajetória visual contínua e prêmio central único em ouro, iluminação
+radial subordinada ao número. Não foi localizada a gravação antiga do dono;
+imagens/resultados públicos consultados, sem afirmar que o vídeo foi assistido.
+Nenhum asset ou código dessas referências foi incorporado ao produto; avião e
+King continuam os nossos. A cena revela pagamento confirmado, sem crash/aposta extra.
+
+### Hélice em voo — prévia (08/11/2026)
+Pás originais de `bonus-plane.webp` renderizadas em camada independente,
+com `plane-propeller-mask.svg`; `plane-body-mask.svg` retira as pás das duas
+camadas fixas sem alterar o arquivo-fonte. Giro de 110 ms no eixo do motor,
+cópia defasada e disco translúcido sugerem desfoque; cubo dourado fixo à frente.
+Todo o conjunto acompanha posição/rotação/escala do avião. Movimento reduzido
+usa disco/pás difusas estáticos. Sem novo som, trajetória ou pagamento.
+
+### Economia v3 nesta entrega (08/11)
+Perfil compartilhado `cloud/circus-profile.cjs`: tabela em docs/ECONOMIA.md.
+Novos giros da produção e da prévia usam slotVersion 3. Store/regras
+aceitam recibos v3, preservando v1/v2. Happeach v3: chance 0,005 por
+posição e especial mínima 20× na aposta média guardada. Dez giros/roleta e
+quantidade de ingressos preservados; sem RTP global anunciado.
+Voo apenas a partir de 20×, Mega em 35× e Super em 50×. Aposta de referência
+é passada explicitamente à apresentação e à animação do número; não comparar
+especial com a aposta atual do jogador. Demos continuam 20× e 200×: o espaço
+agora usa tela cheia de nuvens (2,5 × 8 × 10), não tenda da tabela antiga.
+
+### Estabilidade do voo espacial (08/11)
+Fundo recortado por overflow, sem máscara de opacidade no contêiner inteiro;
+camadas de céu/espaço isoladas e opacas durante a contagem. Arte decodificada
+antes de usar. Hélice mantém o giro com transformação 2D; círculo luminoso
+oscila suavemente entre 78% e 100%, sem filtro variável sobre o prêmio inteiro.
+Destaque mantido sem pulsar grandes áreas de brilho sobre o fundo escuro.

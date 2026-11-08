@@ -27,7 +27,10 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
   const current=records.get(ref);current.settings.fingoBetIdx=4;
   // A paid round from the first prototype becomes one prepaid original-style round.
   if(['state','fingo'].includes(data.action)&&park.fingo&&!park.fingo.done&&!current.fingoRound&&park.passes.fingo?.started){park.passes.fingo.prepaid=true;park.fingo=null;}
-  if(data.action==='state')return envelope();
+  // Preview only: every page load offers a fresh scratch card and test credit.
+  // The production store/calendar remain unchanged; repeated claims within the
+  // same visit still use the normal saved daily guard and immutable receipt.
+  if(data.action==='state'){current.bonus={day:null,dayIndex:-1,streak:0};return envelope();}
   if(!/^[\da-f-]{36}$/i.test(data.requestId||''))fail('Pedido inválido.');
   const fingerprint=JSON.stringify({...data,requestId:undefined});
   if(once.has(data.requestId)){const old=once.get(data.requestId);if(old.fingerprint!==fingerprint)fail('Pedido já utilizado.');return envelope({...old.result,replayed:true});}
@@ -44,19 +47,21 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    const filling=park.spins+1>=METER_SPINS;
-   let outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank);
+   let outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
    if(filling){
     let attempts=0;
-    while((outcome.res.win<=0||outcome.feature)&&attempts++<128)outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank);
+    while((outcome.res.win<=0||outcome.feature)&&attempts++<128)outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
     if(outcome.res.win<=0||outcome.feature){
-     const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,data.bet);
+     const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,data.bet,3);
      outcome={grid,res,feature:null,peaches:p.peaches,peachBank:p.peachBank||{count:p.peaches,units:0},winUnits:engine.units(res.win)};
     }
    }
    let ticket=false;
    if(!filling&&!outcome.res.peach.length&&!outcome.feature&&rng()<.14){
-    ticket=true;parkRules.placeTickets(outcome,data.bet,rng);park.tickets+=3;
+    ticket=true;parkRules.placeTickets(outcome,data.bet,rng,3);park.tickets+=3;
    }
+   if(!ticket)parkRules.scatterTickets(outcome,rng);
+   outcome.slotVersion=3;outcome.parkVersion=1;outcome.ticketAward=ticket?3:0;
    p.balanceUnits=before-cost+outcome.winUnits;p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    park.spins++;park.bankUnits=0;

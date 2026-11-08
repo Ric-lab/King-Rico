@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Piscadas na celebração espacial: manter fundo opaco em camadas isoladas, evitar máscara/filtros animados no viewport e giro 3D de sprites; círculo deve pulsar suavemente.
 - King pequeno no salto/cabine e congelado aguardando o avião: ampliar proporcionalmente, manter comemoração ativa até embarcar e usar paralaxe de céu/espaço para evidenciar a subida conforme o prêmio.
 - Piloto frontal dentro do avião: a pose deve virar de perfil na queda e seguir olhando para o nariz da aeronave, com mãos livres à frente e pernas escondidas pela fuselagem.
 - Salto do King Rico no avião como imagem neutra transladada: reutilizar poses fw6 de agachar, subir, ápice, cair e aterrissar, com dissolução opaca de 110 ms e suavização como em KingRico.dc.html.

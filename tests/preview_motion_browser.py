@@ -1,3 +1,4 @@
+from helpers.daily_reward import collect_daily
 """Preview-only regressions: one UI controller, liquid, tickets and bonus wheel.
 Run after npm run build:preview, against a static/Hosting server via KING_RICO_TEST_URL.
 """
@@ -18,6 +19,7 @@ with sync_playwright() as p:
    page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
+   collect_daily(page)
   page.goto(BASE+'/circus');ready()
   rim=page.locator('.park-spin-iridescence')
   if mode=='no-preference':
@@ -54,12 +56,12 @@ with sync_playwright() as p:
    for note,frequency in zip([audio['current'],audio['second'],audio['third']],[523.25,659.25,783.99]):
     assert note['voices']==1 and abs(note['frequencies'][0]-frequency)<.1 and note['tailRms']>.0003 and note['peak']<1,audio
     assert note['attackRms']>note['decayRms']*2,audio
-  ticket_line=3 if mode=='no-preference' else 4
-  ticket_cells=[0,4,8] if ticket_line==3 else [2,4,6]
+  ticket_line=6 if mode=='no-preference' else 4
+  ticket_cells=[1,4,7] if ticket_line==6 else [2,4,6]
   page.evaluate('''row=>{
    const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
    fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
-   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/5:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===20?(row+.5)/8:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',ticket_line)
   before=page.evaluate('KingRicoCloud.park.tickets')
   page.get_by_role('button',name='Girar',exact=True).click()

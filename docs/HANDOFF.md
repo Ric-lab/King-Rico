@@ -3,6 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Entrega autorizada (2026-11-08 · voo estável e economia v3)
+- Dono confirmou explicitamente publicar visual E pagamentos. Integração preparada sobre main 6f382aa, preservando autenticação Google, carteira Firestore real, retorno diário uma vez por dia e publicador REST. Sem carteira de teste/demo no build de produção.
+- Visual atual da prévia incluído: céu/espaço ilustrados, curva/rotação do avião, hélice, prêmio único/círculo e faixas relativas de 20/35/50×. Fundo espacial sem máscara de viewport, camadas isoladas, sem filtros variáveis/rotação 3D; brilho do círculo suavizado. Captura inicial no desktop não reproduziu flash; mudanças reduzem fontes de recomposição no celular.
+- Novos giros usam slotVersion 3 no cliente real: oito combinações, ingressos avulsos e tabela balanceada. Recibos/rodadas v1/v2 continuam com perfil salvo. Fonte: cloud/circus-profile.cjs; apresentação isolada em cloud/prize-tier.cjs. Probabilidades/tabela e limites em docs/ECONOMIA.md; simulação fixa de 5 milhões: 95,313% de moedas, sem resgate de ingressos/políticas de variar aposta.
+- Validação: 62 testes de regras/transações já passaram com o mesmo core v3, incluindo reenvio e teto 4.000×; 213 unitários e testes focados de perfis/modelo. Nesta integração passaram 66 testes focados e navegador com Google Auth/Firestore emulados, giro real v3 de 40.000, espaço opaco e recarga sem novo crédito. Captura release-space-stable.png inspecionada. Build final de produção após integração.
+- Próximo passo: confirmar workflow oficial depois do push e conferir bytes/configuração/assets no site sem fazer apostas reais; em seguida feedback do dono no celular. Publicação autorizada com limitações da estimativa econômica conhecidas.
+
 ## Publicado (08/11/2026 · raspadinha e voo do big win)
 - Código oficial `6a7a775`, workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128: verificar e publicar concluídos com sucesso, preservando regras REST e Hosting existentes.
 - Site https://king-rico.web.app conferido no navegador: projeto king-rico ativo, sem emuladores/carteira fictícia/demo, cliente de cinco combinações. Avião, perfil e CSS novos HTTP 200 e bytes iguais aos locais; Three.js HTTP 200. Nenhuma aposta em conta real foi feita.
