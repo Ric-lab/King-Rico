@@ -3,6 +3,10 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Ideia registrada (2026-11-08 · três vilões)
+- Dono propôs Tiger Tony (moedas, assusta King/foge e morde placa três vezes), Tucker Toucan (leva Happeach voando pela cesta) e Ray Raccon (guaxinim de máscara/saco, sai de trás do prêmio e leva ingressos). Sequências completas em docs/IDEIAS-DE-JOGOS.md.
+- Apenas documentação: sem código, sorteios, perdas ou publicação. Frequência, quantidades e gatilhos ainda a definir. Recomendações do agente separadas das cenas pedidas; próximo passo é o dono avaliar a proposta e definir regras antes de implementação.
+
 ## Oficial publicado (2026-11-08 · revisão visual aprovada)
 - Dono autorizou publicar. Main recebeu `6a7a775`: raspadinha diária 3×3/prêmio destacado e voo completo com King maior/de perfil, comemoração e céu/espaço; Google/Firestore reais. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128 concluído com sucesso nos dois jobs; regras REST e Hosting preservados.
 - Seleção financeira explícita e comunicada: oficial conserva cinco combinações, engine/park/regras anteriores. As oito combinações e ingressos avulsos desta branch continuam só na prévia, aguardando balanceamento. A repetição por abertura e giros demo também continuam exclusivos da carteira fictícia.

@@ -1,7 +1,56 @@
 # Ideias de jogos — propostas do dono
 
 Registro de direção, não descrição do que está implementado ou autorização de
-publicação. Atualizado em 07/11/2026.
+publicação. Atualizado em 08/11/2026.
+
+## Os três vilões do King Rico — ideia do dono (08/11)
+
+Proposta ainda sem implementação. Surgem como símbolos/eventos da slot e
+roubam recursos distintos; frequência, gatilho exato e quantidades a definir.
+
+| Vilão | Recurso | Personalidade visual |
+| --- | --- | --- |
+| Tiger Tony | Parte das moedas | Tigre expansivo, assusta o King e morde a placa do saldo |
+| Tucker Toucan | Alguns Happeach | Tucano que pega o conteúdo da cesta durante o voo |
+| Ray Raccon | Alguns ingressos | Guaxinim sorrateiro, máscara estilo Zorro e saco de roubo nas costas |
+
+### Tiger Tony — sequência pedida
+
+1. Sai da slot machine e cresce na frente da tela, apresentando o personagem.
+2. Volta a ficar menor e chega pelo lado direito do King Rico, assustando-o.
+3. King Rico corre e sai pela esquerda.
+4. Tony vai para baixo do saldo, tira a placa do lugar e a morde três vezes,
+   até o valor exibido desaparecer na encenação.
+5. Tony sai andando pela esquerda.
+6. King Rico cai de cima para baixo, voltando ao seu lugar na nuvem.
+
+O dono descreveu o roubo como "um tanto do dinheiro". O valor financeiro e a
+reapresentação do saldo restante precisam ser definidos; sumir a placa durante
+a animação não define por si só que o saldo real deva zerar.
+
+### Tucker Toucan — sequência pedida
+
+Voa da esquerda para a direita, passa por cima da cesta de Happeach e leva
+alguns deles consigo. Tornar visível o trajeto dos itens saindo da cesta.
+
+### Ray Raccon — sequência pedida
+
+Aparece sorrateiramente por trás do mostrador do prêmio da rodada, com o saco
+nas costas. Passa pela frente do contador de ingressos, pega alguns e os leva.
+Manter máscara e silhueta de guaxinim reconhecíveis.
+
+### Recomendações do agente para avaliar, ainda não aprovadas como regras
+
+- Comédia de desenho animado e assinaturas próprias: mordidas, voo e furtividade.
+- Exibir a quantidade retirada e depois o total restante. Cada cena corresponde
+  a uma perda única confirmada; as três mordidas são etapas visuais dela.
+- Definir frequência e teto de perda para preservar a diversão. Evitar sobrepor
+  uma cena de roubo à revelação/recebimento de outro prêmio.
+- Considerar um meio simples de reagir ou recuperar depois, caso o dono queira;
+  esse recurso não faz parte do pedido atual e não deve virar implementação.
+- Antes de desenvolver: resolver o tratamento dos Happeach/apostas guardadas,
+  simular a economia com os roubos e preservar idempotência e retomada. Nenhum
+  roubo foi aplicado à carteira, ingressos ou progresso nesta anotação.
 
 ## Dinâmica contínua inspirada no Aviator
 
