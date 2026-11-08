@@ -4,6 +4,7 @@ Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Prévia (2026-11-08 · poses do salto para o avião)
+- Código `689f6a3` no canal /circus?demo=bigwin. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42434696279 concluído com sucesso; conferência pública da sequência de poses, pagamento/erro, raspadinha e regressões de Circus/parque passou. Oficial preservado.
 - Dono aprovou o avião, rejeitou King Rico parado sendo movido e pediu replicar o método das animações anteriores. Consultado o cheer/frame de KingRico.dc.html; reaproveitados desenhos fw6 existentes, sem gerar arte nova.
 - ui/park/king-boarding.js alterna crouch2/cheerRise/cheer/cheerFall/land, com dissolução opaca de 110 ms e suavização 22/s/pivô 97% como o original. Copia a pose visível na partida, preserva o King durante a aproximação e amortece o pouso; piloto respira após entrar.
 - Avião, percurso, pagamentos, multiplicador e carteira preservados. Poses adicionadas ao preload e teste de navegador verifica a sequência real durante um giro 20×, além do recebimento e fallback existentes.
