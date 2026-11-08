@@ -3,10 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Publicação em preparação (08/11/2026 · raspadinha e voo do big win)
+## Publicado (08/11/2026 · raspadinha e voo do big win)
+- Código oficial `6a7a775`, workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128: verificar e publicar concluídos com sucesso, preservando regras REST e Hosting existentes.
+- Site https://king-rico.web.app conferido no navegador: projeto king-rico ativo, sem emuladores/carteira fictícia/demo, cliente de cinco combinações. Avião, perfil e CSS novos HTTP 200 e bytes iguais aos locais; Three.js HTTP 200. Nenhuma aposta em conta real foi feita.
 - Autorizada pelo dono: publicar a revisão visual aprovada. Base conferida: main b698477. Inclui raspadinha diária 3×3, prêmio destacado, avião, King Rico de perfil/maior, comemoração e céu/espaço.
 - Seleção intencional: matemática oficial permanece com cinco combinações; proposta de oito (auditoria de retorno elevado) fica na prévia. engine/park/regras inalterados. Store só recebe a recuperação de conflito do bônus diário. Login Google, saldo Firestore, outras atrações e publicador REST preservados.
-- Produção não contém carteira fictícia, repetição por abertura nem giros de demonstração. Conferidos os bundles de produção; build final gerado após a integração. Próxima etapa: workflow da main e conferência no oficial.
+- Produção não contém carteira fictícia, repetição por abertura nem giros de demonstração. Conferidos os bundles de produção; build final gerado após a integração. Próximo passo: dono avaliar a versão oficial; continuar balanceamento das oito combinações só na prévia antes de eventual promoção financeira.
 - Validação local: 204 testes de código e 57 de regras passaram. Navegador com conta emulada confirmou raspadinha diária única, giro financeiro real 20×, perfil maior, cinco combinações preservadas e saldo 1.240 após recarga, sem erros ou assets ausentes. Catálogo, sessão, entradas e menus de Penalty/Flying/Bounce/Fingo conferidos. Teste antigo do parque foi corrigido para não tentar montar jogos arquivados que retornam 404 intencionalmente.
 
 ## Estado anterior (2026-11-05)

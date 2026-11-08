@@ -22,4 +22,3 @@ test('Scratch layout has exactly nine cells, six misses and three matching prize
  }
  assert.ok(layouts.size>1,'Prize positions must vary between cards');
 });
-
