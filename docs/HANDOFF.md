@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · Ray levando a placa inteira)
+- Dono rejeitou o andar e pediu surgimento direto atrás do contador, saída carregando seu asset e retorno após modal, como Tucker. Removidos passos, aproximação e bilhete avulso; contador real clonado na mesma escala/posição, original escondido. Ray e cópia saem juntos à esquerda.
+- Placa carregada mantém contagem anterior; após Continuar o original volta com a contagem confirmada. Zero ingressos também funciona. Sem nova arte ou alteração de economia/persistência.
+- Teste focado de navegador normal 390 px e reduzido 320 px: surgimento ancorado/rosto no enquadramento, clone igual ao original, fuga conjunta, espaço vazio, modal, retorno/contagem e reload. Capturas work/preview-ray-*.png. Conferir Actions desta revisão.
+- Próximo passo: dono avaliar /circus?demo=ray na prévia. Oficial inalterado.
+
 ## Prévia (2026-11-09 · Ray Raccoon)
 - Dono pediu guaxinim com máscara tipo Zorro, roubo simples de ingressos e saída pela esquerda. Gerados corpo/cabeça v1, transparentes e provisórios; guia docs/RAY-RACCOON.md. Assets em assets/ray e conceitos preservados.
 - Demo explícita /circus?demo=ray. Trinca diagonal vermelha, surge atrás do mostrador, aproxima a pata dos ingressos, bilhete vai para o saco com contador/som/háptico no contato e foge à esquerda; modal depois. Pega até 1, inclusive cena com zero/sem perda. Sem sorteio natural, promoção oficial ou mudanças no Firestore/cliente real.

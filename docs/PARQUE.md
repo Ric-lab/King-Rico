@@ -416,9 +416,10 @@ o personagem para a esquerda apenas para enquadrar a ponta da asa.
 ## Ray Raccoon — demonstração visual (09/11/2026)
 
 `/circus?demo=ray`, primeiro giro por toque. Trinca diagonal com sinalização
-vermelha; guaxinim de máscara sai de trás do mostrador, passa a pata no
-contador, leva até 1 ingresso para o saco e foge pela esquerda. Perda/contador
-no mesmo contato; modal após a saída. Zero ingressos não bloqueia a cena.
+vermelha; guaxinim de máscara aparece diretamente atrás do contador e foge
+à esquerda levando o asset completo da placa. Sem passos ou bilhete avulso.
+O lugar fica vazio até o modal/Continuar; a placa volta com até 1 ingresso a
+menos. A contagem anterior acompanha a placa durante a fuga. Zero ingressos não bloqueia a cena.
 Arte e quantidade em avaliação. Recibo salvo/deduplicado só na carteira
 fictícia; sem alteração de Firestore/cliente real ou sorteio natural. Ver
 [RAY-RACCOON.md](RAY-RACCOON.md). Não promover ao oficial por conta própria.

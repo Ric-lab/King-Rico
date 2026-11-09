@@ -265,6 +265,7 @@ vazia participa da mesma cena, com aviso de perda zero.
 ### Ray — apresentação de roubo de ingresso, prévia v1 (09/11/2026)
 Máscara preta tipo dominó, guaxinim cinza/creme e saco de estopa. Cabeça para
 trinca; corpo para cena. Reutilizar vermelho dos outros vilões e modal claro
-aprovado. Surgimento atrás do mostrador com recorte; contato da pata no
-contador dispara bilhete viajando para o saco, decremento e som/háptico.
-Saída sempre à esquerda. Movimento reduzido omite o balanço de passos.
+aprovado. Surgimento direto atrás da placa de ingressos, com recorte. Ray e uma cópia
+visual do contador inteiro saem juntos à esquerda, sem movimento de passos.
+Original escondido, espaço vazio, modal e retorno da placa com nova contagem.
+Preservar escala e posição do contador real; manter rosto dentro da tela.

@@ -11,9 +11,10 @@ um roubo simples de ingressos e saída pela esquerda. Não é modelo 3D rigado.
 ## Cena de avaliação
 
 `/circus?demo=ray`: primeiro giro por toque força três rostos em diagonal com
-círculos/linha vermelhos. Ray surge atrás do mostrador do prêmio, se aproxima
-do contador de ingressos, pega um bilhete, guarda no saco e sai pela esquerda.
-O contador muda no contato. Depois aparece o modal do total e Continuar.
+círculos/linha vermelhos. Ray surge diretamente atrás do contador de ingressos e sai pela esquerda
+levando a placa inteira, sem passos e sem bilhete separado. O lugar fica vazio.
+Depois do modal/Continuar, a placa original retorna com a contagem atualizada.
+A placa carregada conserva a contagem anterior até sair da tela.
 Com zero ingressos ele faz a cena, mas não remove nada e o modal informa zero.
 
 A perda de até 1 ingresso é parâmetro provisório de demonstração, não regra
