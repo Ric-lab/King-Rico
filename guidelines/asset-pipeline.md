@@ -367,3 +367,11 @@ arredondada e pouco comprimento livre. Dedões preservados. Original
 exec-6c2e379f-47c8-411b-8e27-9266432aa074.png em generated_images; conversão
 WebP q94 em docs/concepts/tony-tiger/body-v7.webp. Alpha e imagem conferidos.
 Cabeça v4 mantida, histórico preservado. Custo não exposto; sem Meshy/build/site.
+
+### 2026-11-09 — Tony Tiger, turnaround da versão escolhida 866e780
+Dono escolheu corpo/cabeça v4 e descartou unhas posteriores. Uma geração GPT
+Imagens referenciada em body-v4.webp: prancha frente/perfil/costas alinhadas,
+com figurino e proporções. Original exec-719fc3a4-f4a9-4e70-84d6-360d842fe30c.png
+em generated_images; WebP q94 em docs/concepts/tony-tiger/turnaround-v4.webp.
+Prancha inspecionada. Perfil/costas são interpretações em avaliação, não novas
+referências aprovadas. Custo não exposto; sem Meshy/build/publicação no site.

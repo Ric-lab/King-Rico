@@ -46,3 +46,5 @@ Rejeitado:
 - Tony Tiger: garras dos dedões v5 aprovadas; demais unhas precisam cobrir o topo dos dedos, não parecer pontinhas coladas na extremidade. Revisão v6 em avaliação.
 
 - Unhas Tony Tiger v6 rejeitadas: dono quer largura de unha humana cobrindo a ponta superior do dedo, levemente comprida, sem gancho fino. V7 em avaliação.
+
+- Tony Tiger: decisão posterior do dono prevalece — ficar com corpo/cabeça v4 do commit 866e780, sem unhas/garras v5–v7. Turnaround v4 em avaliação.

@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte (2026-11-09 · Tony Tiger, retorno à v4 e vistas)
+- Dono escolheu explicitamente os assets de 866e780: corpo/cabeça v4, sem unhas/garras. V5–v7 são tentativas descartadas, preservadas como histórico.
+- Gerada prancha frente/perfil/costas a partir do corpo v4, inspecionada e salva em docs/concepts/tony-tiger/turnaround-v4.webp. Guia docs/TONY-TIGER.md atualizado.
+- Próximo passo: feedback do dono na prancha; perfil e costas são interpretações novas em avaliação. Nenhuma integração/publicação no jogo; animação ainda indefinida.
+
 ## Arte (2026-11-09 · Tony Tiger, unhas largas v7)
 - V6 rejeitada por ainda parecer garra. V7 troca as seis unhas não-polegares por placas largas como unhas humanas, ocupando a ponta superior dos dedos, levemente compridas/arredondadas. Dedões e cabeça v4 preservados. Imagem e alpha conferidos; versões anteriores mantidas.
 - Próximo passo: feedback do dono nas unhas v7. Sem integração/publicação no jogo; animação ainda a definir pelo dono.
