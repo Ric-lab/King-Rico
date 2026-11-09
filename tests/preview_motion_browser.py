@@ -132,6 +132,9 @@ with sync_playwright() as p:
   hub=page.locator('.park-wheel-hub strong').bounding_box();hub_center=(hub['x']+hub['width']/2,hub['y']+hub['height']/2)
   if mode=='no-preference':assert page.locator('.park-wheel-hub strong').evaluate('e=>getComputedStyle(e).animationName')=='parkMultiplierBeat'
   assert page.evaluate('KingRicoCloud.park.wheel.result.multiplier')>=1
+  selected_color=page.locator('.park-wheel-machine').evaluate('e=>getComputedStyle(e).getPropertyValue("--park-result-color").trim()')
+  assert selected_color.startswith('#')
+  assert page.locator('.park-wheel-hub').evaluate('e=>getComputedStyle(e,"::before").backgroundColor')==page.evaluate('color=>{const e=document.createElement("i");e.style.color=color;document.body.append(e);const c=getComputedStyle(e).color;e.remove();return c}',selected_color)
   assert page.get_by_role('button',name='APLICAR',exact=False).count()==0
   assert page.locator('[data-wheel-spin]').is_hidden()
   assert page.locator('.park-confetti').count()==0,'Removed bonus confetti must not return'
@@ -143,6 +146,7 @@ with sync_playwright() as p:
   page.wait_for_timeout(550 if mode=='no-preference' else 260)
   x2=cabinet.evaluate('e=>e.getBoundingClientRect().left')
   assert x2<x1-10,(mode,x1,x2,'Ready game must enter from the right')
+  assert page.locator('.park-flying-bonus-disc').evaluate('e=>getComputedStyle(e).getPropertyValue("--park-result-color").trim()')==selected_color
   token=page.locator('.park-flying-multiplier').bounding_box()
   assert token and token['x']+token['width']/2>hub_center[0]+8,(token,hub_center,'Multiplier must travel right')
   assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='visible'

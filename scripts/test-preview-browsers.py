@@ -10,7 +10,7 @@ import sys
 TESTS = [
     'daily_reward_browser.py', 'bigwin_flight_browser.py',
     'preview_motion_browser.py', 'circus_columns_browser.py',
-    'park_preview_browser.py', 'park_repeat_browser.py', 'tony_browser.py', 'tucker_browser.py', 'ray_browser.py',
+    'park_preview_browser.py', 'park_repeat_browser.py', 'tony_browser.py', 'tucker_browser.py', 'ray_browser.py', 'wheel_color_browser.py',
 ]
 
 def run(name):

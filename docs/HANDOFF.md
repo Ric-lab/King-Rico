@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · cor do resultado da roleta)
+- Centro expansivo e disco viajante usam a cor da casa sorteada pelo índice na paleta, inclusive após recarga. Valores repetidos não determinam a cor. Sem alteração financeira, de geometria ou de duração.
+- Teste focado de navegador passou para roxo, amarelo e rosa, com movimento normal/reduzido, centro e voo. Capturas work/preview-wheel-color-*.png inspecionadas. Build de produção conferido após integração.
+- Próximo passo: dono avaliar na prévia online após Hosting desta revisão; oficial inalterado. Não afirmar suíte online concluída antes de conferir Actions.
+
 ## Prévia (2026-11-09 · fundo confirmado pela imagem 151169)
 - Dono enviou a imagem exata desejada: é docs/concepts/circus-background-options/01-jardim.webp, com tenda vermelha grande à esquerda, pavilhão azul à direita e gramado claro. A interpretação anterior por números estava ERRADA; não usar 03-parque como escolha do dono.
 - Copiada sem editar/recomprimir para assets/scenes/circus-garden-lawn-v1.webp; referências do fundo do Circus e preload corrigidas. Cenários dos demais jogos/parque e controles preservados.

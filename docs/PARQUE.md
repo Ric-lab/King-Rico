@@ -235,7 +235,7 @@ Prévia 05/11: roleta de 374 px no palco nativo. Ao sortear, multiplicador pulsa
 no centro. O valor fica destacado no mesmo ponto durante a descida da máquina
 e viaja dali ao prêmio; reduzido usa trajeto reto de 650 ms, sem saltos.
 
-Revisão mais recente da prévia (05/11): centro verde cresce para cobrir o
+Revisão mais recente da prévia (05/11): centro com a cor da casa sorteada cresce para cobrir o
 disco; topo com elefante/nuvem e prêmio volta primeiro. O disco com o número
 viaja até o prêmio e só após o impacto/contagem voltam as demais peças.
 Esse retorno em etapas substitui a descida do conjunto inteiro antes do voo.
@@ -431,3 +431,8 @@ vermelha maior à esquerda, pavilhão azul à direita e gramado aberto,
 sem caminhos. Integrada na prévia como circus-garden-lawn-v1.webp, com preload
 no manifesto do Circus. A imagem antiga permanece disponível para o parque;
 a revisão não troca os cenários dos demais jogos nem reposiciona controles.
+
+Prévia 09/11: preenchimento do centro e disco viajante usam a mesma cor da
+casa sorteada (índice na paleta), inclusive em resultados retomados após recarga.
+Casas com multiplicadores iguais podem ter cores diferentes; não derivar a cor
+do valor. Geometria, tempos e pagamento permanecem iguais.
