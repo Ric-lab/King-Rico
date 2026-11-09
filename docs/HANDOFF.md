@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Fundo — tentativa rejeitada (2026-11-09)
+- Dono pediu menos ruído/caminhos e cores mais sólidas, mas rejeitou a imagem circus-lawn-simple-v1 por parecer infantil. Tentativa interrompida antes da publicação; referências no CSS/manifest/teste restauradas ao estado anterior.
+- Fundo atual preservado. Arte rejeitada fora do runtime em work/rejected-backgrounds e original em generated_images; não usar. Nenhum teste ou novo build necessário para este registro.
+- Próximo passo: respeitar o acabamento existente ao simplificar; não continuar a direção visual rejeitada nem gerar outra versão sem nova orientação do dono.
+
 ## Prévia (2026-11-09 · contorno original do aro, só recolorido)
 - Dono confirmou que quer o contorno anterior do aro iridescente, apenas dourado. Criado spin-rim-gold-contour-v1.svg a partir do SVG aprovado: apenas 12 valores de cor mudaram. Paths, strokes, abertura, espessuras, dimensões e viewBox preservados; equivalência estrutural conferida ignorando somente cores.
 - Referência do botão e máscara do pulso usam esse SVG. Corpo vinho, letras douradas, posição, tamanho e clique preservados. O antigo spin-rim-v3.svg tem outro contorno e foi retirado desta montagem.
