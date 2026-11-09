@@ -332,3 +332,15 @@ exec-db0f58da-a357-4949-9749-ad9b08cc872e.png, em generated_images.
 WebP q94 em docs/concepts/tony-tiger/body-v2.webp e head-v2.webp; alpha conferido,
 conteúdo inspecionado. V1 preservada. Custo da ferramenta não exposto; sem
 Meshy, animação, build ou publicação no site. Aguardando feedback do dono.
+
+### 2026-11-09 — Tony Tiger v3/v4, queixo e T nas listras
+V3: duas edições GPT Imagens para reduzir dentes, áreas creme/bigode e integrar
+T às listras no tronco laranja; cabeça derivada do corpo. V4: após feedback,
+um pouco mais de dentes e haste do T alongada; cabeça atualizada. Origens PNG:
+v3 exec-db0e6a7b-85d6-4693-9808-989970febbda.png e
+exec-1a2af80f-fdd9-4c4f-bd41-c39445a66566.png; v4
+exec-d5e2b4ad-fbf1-41ab-a2aa-66d18fbacf42.png e
+exec-04b4a0f1-e5c8-446e-89b1-1cab7921e2e5.png, em generated_images.
+Conversão WebP q94, alpha conferido e artes inspecionadas. Histórico preservado
+em docs/concepts/tony-tiger. Custo GPT Imagens não exposto; sem Meshy.
+V4 ainda em avaliação; nenhum build, animação ou publicação no site.

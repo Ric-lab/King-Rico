@@ -3,6 +3,10 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte em avaliação (2026-11-09 · Tony Tiger v4)
+- Dono pediu menos creme em queixo/bigode/tronco e T feito pelas listras escuras, como detalhe escondido (referência Toblerone). V3 fez essa direção; feedback seguinte pediu um pouco mais de dentes e haste do T mais longa/evidente. Corpo e cabeça v4 entregues, com alpha; ver docs/TONY-TIGER.md.
+- V1–v3 preservadas. V4 aguarda feedback; não há animação, sorteio ou integração do personagem na slot. Próximo passo: ajustes visuais que o dono pedir e, depois, definição da animação pelo dono.
+
 ## Arte em avaliação (2026-11-09 · Tony Tiger v2)
 - Dono pediu restaurar bigode branco do Valentão inicial, mostrar um pouco mais de dentes e abrir levemente os olhos. Corpo/head v2 feitos com esses ajustes; casaco vermelho, T e corpo forte mantidos. Ver docs/TONY-TIGER.md; v1 preservada.
 - Alpha e imagens conferidos. Nenhuma animação, roubo ou alteração da slot; propostas não entram no build. Próximo passo: feedback do dono nas duas artes v2.
