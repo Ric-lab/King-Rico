@@ -21,7 +21,7 @@ preservados fora da Home não são novas atrações oficiais. Catálogo e fontes
 ## Direção visual atual
 
 Home e Circus usam o parque diurno `assets/scenes/circus-daylight-v1.webp`:
-céu azul, praça dourada, vegetação e espaço para respirar. O cenário normal não
+céu azul, gramado aberto verde, vegetação lateral e espaço para respirar. O cenário normal não
 recebe escurecimento ou desfoque global. Os outros jogos conservam seus cenários;
 não trocar todos os fundos como consequência de uma revisão do Circus.
 
@@ -265,3 +265,11 @@ aprovado. Surgimento direto atrás da placa de ingressos, com recorte. Ray e uma
 visual do contador inteiro saem juntos à esquerda, sem movimento de passos.
 Original escondido, espaço vazio, modal e retorno da placa com nova contagem.
 Preservar escala e posição do contador real; manter rosto dentro da tela.
+
+### Fundo do Circus — opção 3 escolhida (09/11/2026)
+Usar assets/scenes/circus-park-lawn-v1.webp: mesma arte de
+concepts/circus-background-options/03-parque.webp, aprovada pelo dono.
+Gramado sem caminhos, tendas laterais, vegetação e céu azul, acabamento
+ilustrado com profundidade. A tentativa de gramado chapado foi rejeitada.
+Aplicado só ao cenário normal do Circus; componentes/posição da máquina,
+roleta e cenário do parque não mudam nesta revisão.

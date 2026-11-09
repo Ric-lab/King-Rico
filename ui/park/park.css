@@ -96,9 +96,9 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-panel>.park-action{margin-top:28px}
 .park-flying-multiplier{position:fixed;left:0;top:0;width:140px;height:90px;display:flex;align-items:center;justify-content:center;color:#ffbd24;font:64px/1 Rammetto,sans-serif;-webkit-text-stroke:3px #713718;paint-order:stroke fill;text-shadow:0 3px #713718,0 5px 10px #71371866;z-index:2147483646;pointer-events:none;transform-origin:center;will-change:transform,opacity}
 
-/* Outdoor circus: the same scene sits behind the Home and the real machine. */
+/* Circus uses the selected open lawn; the park keeps its existing scene. */
 .park-circus-scene{background:#52c9ef!important}
-.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-daylight-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
+.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-park-lawn-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
 .park-circus-scene>.park-circus-ambient+div{background:none!important}
 .park-circus-backdrop,.park-circus-bleed-lights,.park-old-curtains{display:none!important}
 .park-circus-stage{background:transparent!important;box-shadow:none!important}

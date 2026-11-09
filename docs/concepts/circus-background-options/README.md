@@ -7,5 +7,7 @@ Todas partem do fundo atual, retirando os caminhos e preservando acabamento.
 2. [Campo ao entardecer](02-entardecer.webp): mais aberto, tenda distante, luz quente.
 3. [Parque verde e azul](03-parque.webp): vegetação mais presente, verdes profundos, tendas laterais.
 
-Somente propostas para escolher. Nenhuma aplicada ou publicada no jogo.
+O dono escolheu a opção 3. Ela foi integrada ao fundo do Circus na prévia
+como assets/scenes/circus-park-lawn-v1.webp. Opções 1 e 2 preservadas como
+alternativas; nenhuma mudança no site oficial nesta entrega.
 Originais PNG preservados em generated_images; log em guidelines/asset-pipeline.md.

@@ -432,3 +432,8 @@ exec-78d846a3-6d4d-4202-8c0f-0edf67a0542a.png, em generated_images.
 Artes inspecionadas, WebP q94 em docs/concepts/circus-background-options.
 Sem Meshy; custo da ferramenta não exposto. Checkpoint [skip ci], sem build,
 testes do app ou publicação; aguardar escolha do dono.
+
+### 2026-11-09 — aplicação da opção 3 aprovada
+Dono escolheu explicitamente 03-parque.webp. Copiada sem edição/recompressão
+para assets/scenes/circus-park-lawn-v1.webp; alterados somente fundo/preload do
+Circus. Sem nova geração de imagem/Meshy. Fonte e alternativas preservadas.

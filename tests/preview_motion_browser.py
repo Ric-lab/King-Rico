@@ -38,6 +38,8 @@ with sync_playwright() as p:
   page.evaluate("document.querySelector('.park-spin-rim-pulse').getAnimations()[0]?.finish();__fc._parkPulse=null")
   assert page.locator('.park-spin-rim-pulse').evaluate('e=>Number(getComputedStyle(e).opacity)')==0
   if os.environ.get('KING_RICO_PALETTE_ONLY'):
+   assert not errors and not missing,(errors,missing)
+   page.screenshot(path='work/preview-circus-screen-'+mode+'.png')
    context.close();continue
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{

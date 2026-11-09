@@ -3,10 +3,15 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Opções de fundo (2026-11-09 · aguardando escolha)
+## Prévia (2026-11-09 · fundo escolhido: opção 3)
+- Dono escolheu com certeza a opção 3. Aplicada sem editar/recomprimir em assets/scenes/circus-park-lawn-v1.webp, só no fundo normal do Circus; manifesto de preload atualizado. Tendas laterais, gramado aberto sem caminhos, vegetação e céu azul.
+- Botões/posições/rolos e fundos dos outros jogos/parque preservados. Sem alteração financeira ou nova geração de arte. Teste focado de abertura/paleta/toque normal e reduzido, com captura de tela completa work/preview-circus-screen-*.png; conferir Actions da revisão.
+- Próximo passo: dono avaliar a opção escolhida atrás da máquina na prévia. Não pedir novamente qual opção nem aplicar a versão chapada rejeitada. Oficial permanece sem mudança.
+
+## Opções de fundo apresentadas (2026-11-09 · depois escolhida a 3)
 - Pedido explícito: três imagens para escolher. Geradas a partir do fundo atual, sem caminhos: 1 jardim diurno, 2 campo ao entardecer, 3 parque verde/azul. Artes em docs/concepts/circus-background-options; PNGs preservados e origem registrada no asset-pipeline.
 - Nenhuma opção aplicada ao runtime. Fundo atual preservado; sem builds/testes/deploy. Checkpoint [skip ci] para compartilhar propostas.
-- Próximo passo: dono escolher 1, 2 ou 3 e orientar ajustes; só então integrar a escolhida à prévia.
+- Decisão posterior do dono: opção 3 aprovada; integração registrada acima.
 
 ## Fundo — tentativa rejeitada (2026-11-09)
 - Dono pediu menos ruído/caminhos e cores mais sólidas, mas rejeitou a imagem circus-lawn-simple-v1 por parecer infantil. Tentativa interrompida antes da publicação; referências no CSS/manifest/teste restauradas ao estado anterior.
