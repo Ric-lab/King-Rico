@@ -3,6 +3,10 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte (2026-11-09 · Tony Tiger, unhas v6)
+- Dedões da v5 aprovados; outras três unhas de cada mão refeitas para acompanhar a superfície superior dos dedos, em vez de pequenas pontas. Corpo v6 gerado e inspecionado, alpha conferido. Cabeça v4 preservada; versões anteriores mantidas.
+- Próximo passo: feedback do dono nas unhas v6 e definição da animação pelo dono. Arte só em docs/concepts; nenhuma integração ou publicação no jogo.
+
 ## Arte (2026-11-09 · Tony Tiger com garras)
 - Dono aprovou a direção v4 e pediu apenas garras discretas nas mãos. Corpo v5 gerado/inspecionado, alpha conferido; cabeça v4 permanece a mesma. Ver docs/TONY-TIGER.md. Versões anteriores preservadas.
 - Próximo passo: feedback nas garras e definição da animação pelo dono; personagem ainda não foi integrado à slot nem publicado no jogo.

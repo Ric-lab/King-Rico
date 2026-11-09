@@ -42,3 +42,5 @@ Rejeitado:
 - Parque rejeitado com HUD próprio, personagens pequenos e girafa antiga na capa do Pênalti: reutilizar o topo compartilhado e arte atual dos jogos, com hierarquia consistente entre as quatro capas.
 - Primeira revisão do parque com quatro capas verticais sobre o mesmo cenário não agradou. Dono pediu só Clown/Pênalti/Flying; segunda proposta usa placas horizontais. Avaliação estética ainda pendente.
 - Contador de ingressos de 30 px ficou pequeno e apertado; ampliar a placa e o espaço interno. Tenda do Parque com moldura própria destoou: dono pediu controle de videogame com a mesma base/escala de Home e menu.
+
+- Tony Tiger: garras dos dedões v5 aprovadas; demais unhas precisam cobrir o topo dos dedos, não parecer pontinhas coladas na extremidade. Revisão v6 em avaliação.

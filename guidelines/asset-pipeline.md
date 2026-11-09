@@ -351,3 +351,11 @@ mãos, sem mudar pés/figurino/cabeça. Original exec-ff6d09ce-7870-4288-8670-c4
 preservado em generated_images. WebP q94 em docs/concepts/tony-tiger/body-v5.webp;
 alpha e arte conferidos. Cabeça v4 reutilizada, sem geração desnecessária.
 Custo não exposto; sem Meshy ou publicação no site. V1–v4 preservadas.
+
+### 2026-11-09 — Tony Tiger v6, unhas sobre os dedos
+Uma edição GPT Imagens do corpo v5 para substituir as três garras não-polegares
+de cada mão por unhas curvas sobre os dedos; dedões preservados como referência
+aprovada. Original exec-bd500cde-2718-4a79-bda1-c82ecba23880.png preservado em
+generated_images. WebP q94 em docs/concepts/tony-tiger/body-v6.webp; alpha e
+imagem inspecionados. Cabeça v4 mantida. Custo da ferramenta não exposto;
+sem Meshy, build ou publicação no site. Revisão aguarda feedback.
