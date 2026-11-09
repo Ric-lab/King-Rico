@@ -240,3 +240,10 @@ Voo espacial: evitar máscara/filtros animados de tela inteira e rotação 3D de
 sprites recortados. Céu/espaço em camadas próprias, fundo opaco após entrada;
 rotação da hélice em 2D e brilho do círculo com variação suave. Não alterar a
 iluminação da tela inteira para destacar o prêmio.
+
+### Tony — evento de perda (prévia v4, 09/11/2026)
+Três rostos aprovados v4 usam círculos/linha vermelhos, sem dourado de vitória.
+Três contatos separados por 1,55 s: corte fino marfim com borda vermelha,
+balanço curto (omitido com movimento reduzido), saldo vermelho e números
+caindo. Modal claro com total vermelho e Continuar azul. Sem prêmio paralelo.
+Reutilizar sons/hápticos e contador compartilhados; não debitar pela animação.

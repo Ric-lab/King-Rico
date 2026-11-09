@@ -369,3 +369,23 @@ camadas de céu/espaço isoladas e opacas durante a contagem. Arte decodificada
 antes de usar. Hélice mantém o giro com transformação 2D; círculo luminoso
 oscila suavemente entre 78% e 100%, sem filtro variável sobre o prêmio inteiro.
 Destaque mantido sem pulsar grandes áreas de brilho sobre o fundo escuro.
+
+## Tony Tiger — prévia v4 (09/11/2026)
+
+Apenas a prévia pede slotVersion 4. Produção continua pedindo v3; não promover
+sem avaliação do dono. Tony é exclusivo: três rostos em uma das oito linhas,
+sem moedas, ingressos, Happeach ou especial junto. Não ocorre no décimo giro.
+Chance de 1% em giros elegíveis, independente de ganhos anteriores; exige
+saldo pós-aposta suficiente para três parcelas de pelo menos um centavo.
+Roubo adicional = mínimo entre uma aposta e 5% do saldo após apostar, em
+centavos inteiros. Total é salvo atomicamente no recibo do giro uma única vez.
+
+Apresentação: linha/círculos vermelhos, 700 ms de antecipação, três contatos
+separados por 1550 ms. Contato dispara marcas de garra, som, háptico, balanço
+curto e redução animada no saldo. Movimento reduzido elimina o balanço.
+Modal após o terceiro impacto mostra somente o total roubado e Continuar.
+Auto é interrompido. Erro de animação, recarga ou repetição de requisição não
+altera o desconto confirmado; recarga mostra o saldo real sem nova cobrança.
+
+Demo exclusiva da carteira fictícia: `/circus?demo=tony`, primeiro giro por toque.
+Core e regras já preparados para v4, mas regras NÃO publicadas nesta entrega.

@@ -173,3 +173,20 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 
 .park-wheel-scene.is-disc-detached .park-wheel-hub{visibility:hidden}
 .park-hoist-deck:is([data-hoist="panning-game"],[data-hoist="game-ready"])>.park-hoist-rig{visibility:hidden;translate:0 -920px}
+
+/* Tony v4: the approved head replaces only his three cells, never the symbol atlas. */
+[data-park-tony="true"],.park-tape-symbol.is-tony{background-image:url('/assets/tony/head.webp')!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
+.park-tony-scene{position:fixed;inset:0;z-index:2147483000;pointer-events:none;overflow:hidden}
+.park-tony-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.park-tony-lines polyline{fill:none;stroke:#ed3041;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #ffb3a5)}
+.park-tony-lines ellipse{fill:#ff354410;stroke:#e82839;stroke-width:3;filter:drop-shadow(0 0 3px #ffb3a5)}
+.park-tony-claws{position:absolute;left:21%;top:36%;width:59%;height:29%;transform:rotate(-26deg)}
+.park-tony-claws[data-strike="1"]{left:14%;top:43%;transform:rotate(22deg)}
+.park-tony-claws[data-strike="2"]{left:25%;top:39%;transform:rotate(-18deg)}
+.park-tony-claws svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 2px #82142555)}
+.park-tony-loss{position:absolute;left:50%;top:24%;transform:translateX(-50%);text-align:center;color:#a5142a;background:#fff7e8f5;border:2px solid #ed5360;border-radius:22px;padding:10px 22px;opacity:0;box-shadow:0 5px 16px #6b172130}
+.park-tony-loss small{display:block;font:800 14px 'Baloo 2',sans-serif;letter-spacing:1px}.park-tony-loss b{font:800 clamp(32px,10vw,55px)/1.1 'Baloo 2',sans-serif}
+.kr-hud-balance.is-tony-hit{outline:3px solid #ec3046;box-shadow:0 0 16px #e8283955!important;background:#ffcfcc!important}.kr-hud-balance.is-tony-hit [data-kr-wallet-value]{color:#ac1128!important}
+.park-tony-portrait{width:125px;height:125px;object-fit:contain;display:block;margin:0 auto 12px}.park-tony-result .park-panel{background:#fff6e8;color:#79342d;border-color:#edb26c}.park-tony-result h2{margin:0;font-size:28px}.park-tony-total{display:block;color:#c22036;font:800 clamp(36px,11vw,60px)/1.1 'Baloo 2',sans-serif;margin:12px 0 0}.park-tony-result p{margin:0 0 24px}.park-tony-result .park-action{min-height:56px}
+
+.park-tony-result h2{color:#79342d!important;text-shadow:none!important}.park-tony-result p{color:#79342d!important;opacity:1!important}

@@ -1,8 +1,10 @@
 # Circus: entrega completa da prévia
 
-Atualizado em 03/11/2026. Branch de trabalho: `codex/penalty-clown-preview`.
-Não publicada no Firebase. A base é a prévia v79, com as sombras laterais do
-commit `955e081` e agora com os fontes que ativam os nove tambores.
+Atualizado em 09/11/2026. Branch de trabalho: `codex/penalty-clown-preview`.
+Prévia compartilhada em canal Firebase isolado, com três fitas contínuas.
+O protótipo de nove tambores foi descartado. Tony v4 pode ser testado em
+`/circus?demo=tony`: o primeiro giro por toque demonstra as três patadas.
+Oficial e regras de produção permanecem sem publicação desta mudança.
 
 ## Rodar a prévia visual
 

@@ -14,7 +14,7 @@ roubam recursos distintos; frequência, gatilho exato e quantidades a definir.
 | Tucker Toucan | Alguns Happeach | Tucano que pega o conteúdo da cesta durante o voo |
 | Ray Raccon | Alguns ingressos | Guaxinim sorrateiro, máscara estilo Zorro e saco de roubo nas costas |
 
-### Tony Tiger — sequência pedida
+### Tony Tiger — proposta antiga substituída em 09/11
 
 1. Sai da slot machine e cresce na frente da tela, apresentando o personagem.
 2. Volta a ficar menor e chega pelo lado direito do King Rico, assustando-o.
@@ -79,4 +79,10 @@ atual, com andares e ações separadas, não transmite essa continuidade.
   simular o conjunto e garantir recebimento/retomada idempotentes. Nesta anotação
   não foram alterados RTP, regras, moedas ou jogos existentes.
 
-Arte do Tony Tiger em avaliação: [corpo e cabeça](TONY-TIGER.md). O dono ainda definirá a animação; não iniciar a sequência proposta automaticamente.
+Arte do Tony Tiger em avaliação: [corpo e cabeça](TONY-TIGER.md). A animação antiga acima foi substituída pela decisão de 09/11 descrita abaixo.
+
+### Tony Tiger — decisão atual (09/11)
+O dono substituiu a encenação de morder a placa por três patadas na tela,
+marcas de garra, balanço e três quedas visíveis no saldo. Trinca exclusiva,
+linha/círculos vermelhos e modal do total. Implementado apenas na prévia v4;
+ver PARQUE.md e ECONOMIA.md. Corpo/cabeça escolhidos são os de 866e780.

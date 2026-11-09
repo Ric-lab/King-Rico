@@ -375,3 +375,10 @@ com figurino e proporções. Original exec-719fc3a4-f4a9-4e70-84d6-360d842fe30c.
 em generated_images; WebP q94 em docs/concepts/tony-tiger/turnaround-v4.webp.
 Prancha inspecionada. Perfil/costas são interpretações em avaliação, não novas
 referências aprovadas. Custo não exposto; sem Meshy/build/publicação no site.
+
+### 2026-11-09 — Tony na prévia
+Cabeça aprovada v4 (866e780) copiada sem edição de docs/concepts/tony-tiger/
+head-v4.webp para assets/tony/head.webp. Sem geração/custo adicional. Marcas de
+garra em SVG vetorial no módulo ui/park/tony.js, três cortes estilizados.
+Corpo/turnaround não entram no runtime. Conferência de navegador documentada
+no HANDOFF; integração somente na prévia, não publicada no oficial.

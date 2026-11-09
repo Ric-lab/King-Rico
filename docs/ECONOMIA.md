@@ -239,3 +239,19 @@ Firestore emulado. O build de produção e a publicação usam o workflow existe
 O Firebase continua no Spark: o navegador calcula o sorteio; as regras verificam
 as transições e os pagamentos, mas não comprovam a honestidade de um cliente
 adulterado. A auditoria pressupõe o motor original e moedas virtuais.
+
+## Tony v4 — somente prévia (09/11/2026)
+
+Tabela de símbolos v3 preservada. V4 adiciona evento exclusivo do Tony em 1%
+dos giros elegíveis (fora do décimo; saldo suficiente para três parcelas).
+Desconto adicional de até uma aposta, limitado a 5% do saldo pós-aposta.
+Sem prêmio, Happeach ou ingresso simultâneo. A aposta normal continua sendo
+cobrada; as três patadas dividem apenas o roubo adicional, salvo no mesmo recibo.
+
+Simulação reproduzível: `require('./scripts/circus-lines-audit.cjs').audit(4,1000000,17843)`.
+Dados em circus-tony-preview-audit.json: 9.004 eventos em um milhão de giros,
+retorno líquido em moedas de 93,997%, intervalo por lotes ~92,919–95,076%.
+Inclui roleta/Happeach e subtrai roubo; aposta fixa 10, saldo alto fixo para testar
+o teto de uma aposta. Exclui utilidade/resgate de ingressos, presentes, recargas
+e estratégias de variar aposta. Não é RTP teórico/global nem garante uma sessão.
+Oficial continua v3; esta amostra não autoriza promoção à main.

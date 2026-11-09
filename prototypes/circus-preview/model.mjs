@@ -46,28 +46,11 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(!engine.BETS.includes(data.bet))fail('Aposta inválida.');
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
-   const filling=park.spins+1>=METER_SPINS;
-   let outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
-   if(filling){
-    let attempts=0;
-    while((outcome.res.win<=0||outcome.feature)&&attempts++<128)outcome=engine.slot(data.bet,p.peaches,rng,p.peachBank,3);
-    if(outcome.res.win<=0||outcome.feature){
-     const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,data.bet,3);
-     outcome={grid,res,feature:null,peaches:p.peaches,peachBank:p.peachBank||{count:p.peaches,units:0},winUnits:engine.units(res.win)};
-    }
-   }
-   let ticket=false;
-   if(!filling&&!outcome.res.peach.length&&!outcome.feature&&rng()<.14){
-    ticket=true;parkRules.placeTickets(outcome,data.bet,rng,3);park.tickets+=3;
-   }
-   if(!ticket)parkRules.scatterTickets(outcome,rng);
-   outcome.slotVersion=3;outcome.parkVersion=1;outcome.ticketAward=ticket?3:0;
-   p.balanceUnits=before-cost+outcome.winUnits;p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
+   const outcome=parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
+   p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
-   park.spins++;park.bankUnits=0;
-   if(filling){park.bankUnits=engine.units(outcome.res.win);park.wheel={id:randomUUID(),roundId:data.requestId,prizeVersion:3,baseUnits:park.bankUnits,pockets:[...WHEEL_POCKETS],result:null};}
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,
-    baseBalance:(before-cost+engine.units(outcome.res.win))/100,outcome,ticket};
+    baseBalance:p.balanceUnits/100,outcome,ticket:outcome.ticketAward===3};
   }else if(data.action==='wheel'){
    if(!park.wheel||data.wheelId!==park.wheel.id)fail('Essa roleta já foi encerrada.');
    if(!park.wheel.result){const multipliers=[1,2,3,5,10],weights=[.34,.34,.20,.10,.02];let v=rng(),i=0;while(i<4&&v>=weights[i])v-=weights[i++];

@@ -26,6 +26,7 @@
      const art=document.createElement('div');art.className='park-tape-symbol';art.dataset.tapeIndex=item.index;art.dataset.symbol=item.symbol;art.dataset.ticket=item.ticket;
      art.style.top=(item.index*PITCH+2)+'px';
      if(item.symbol<0)art.style.visibility='hidden';
+     else if(item.symbol===12)art.classList.add('is-tony');
      else if(item.ticket)art.classList.add('is-ticket');
      else art.style.backgroundPositionX=(item.symbol/11*100)+'%';
      film.append(art);

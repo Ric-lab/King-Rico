@@ -3,6 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · Tony Tiger, três patadas)
+- Dono aprovou três rostos/linha vermelha, três patadas com riscos, balanço, som/háptico, quedas separadas do saldo e modal do total. Esclareceu que Tony é exclusivo: sem outro prêmio na rodada. Cabeça v4 de 866e780 copiada sem alteração para assets/tony/head.webp.
+- Implementado slotVersion 4 só na carteira de prévia. Cliente de produção segue pedindo v3; oficial e regras publicadas não foram alterados. Core/store/regras locais preparados para o débito atômico no mesmo recibo; versão antiga preservada.
+- Chance 1% fora do décimo giro, roubo até uma aposta limitado a 5% do saldo pós-aposta. Três parcelas em centavos; nenhuma aleatoriedade/débito na animação. Auto interrompido. Demo: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=tony (primeiro giro por toque; só moedas fictícias).
+- Testes de código: npm test, 37 arquivos passaram. Firestore: 63 testes passaram, incluindo envio concorrente/replay, bootstrap e quatro fraudes de Tony rejeitadas. Navegador: três impactos/som/deltas, marca vermelha, modal, reload entre impactos, erro de animação e movimento reduzido passaram; regressões de três fitas/ingressos/líquido/roleta e Big Win passaram. Capturas locais em work/preview-tony-*.png inspecionadas. Build de produção gerado após navegador; conferir resultado do workflow da prévia no commit desta entrega.
+- Simulação 1 milhão/seed17843/aposta10/saldo alto: 9.004 eventos, retorno líquido em moedas 93,997% incluindo roleta/Happeach e descontando roubo. Não inclui resgate de ingressos, recargas ou variação de aposta; ver ECONOMIA.md e circus-tony-preview-audit.json.
+- Próximo passo: dono avaliar demo do Tony no celular; ajustar apenas feedback aprovado. Para levar ao oficial, ativar v4 no cliente real e publicar regras/Hosting pelo workflow existente após autorização; não publicar a carteira fictícia nem promover automaticamente esta branch.
+
 ## Arte (2026-11-09 · Tony Tiger, retorno à v4 e vistas)
 - Dono escolheu explicitamente os assets de 866e780: corpo/cabeça v4, sem unhas/garras. V5–v7 são tentativas descartadas, preservadas como histórico.
 - Gerada prancha frente/perfil/costas a partir do corpo v4, inspecionada e salva em docs/concepts/tony-tiger/turnaround-v4.webp. Guia docs/TONY-TIGER.md atualizado.

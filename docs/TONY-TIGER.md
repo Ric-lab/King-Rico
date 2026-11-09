@@ -17,7 +17,10 @@ Histórico preservado: v1 tinha grande área creme e T areia; v2 trouxe bigode,
 mais dentes e olhos abertos; v3 reduziu dentes/áreas claras e integrou o T às
 listras; v4 aumentou levemente os dentes e alongou a haste do T.
 
-São propostas em docs/concepts, não assets carregados pelo jogo. Nenhuma
-animação ou regra de roubo foi implementada: o dono ainda pensará na animação.
+Corpo/turnaround continuam referências em docs/concepts. A cabeça v4 foi copiada
+sem alteração para assets/tony/head.webp e integrada à prévia v4 do Circus.
+Animação atual aprovada para implementação: três patadas, riscos, linha vermelha,
+três quedas no saldo e modal com o total. A antiga ideia de morder a placa foi
+substituída; nenhuma outra personagem/roubo foi integrado. Oficial permanece v3.
 Referências: King Rico fw6/master + turnaround oficial. Origens PNG preservadas
 em generated_images; gerações/custo em guidelines/asset-pipeline.md.
