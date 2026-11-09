@@ -18,3 +18,11 @@ test('Ordinary preview state does not seed Happeach or introduce Tucker',async()
  const m=createPreview({},()=>.99),s=await m.run({action:'state'});assert.equal(s.player.peaches,0);
  const x=await m.run({action:'spin',game:'circus',bet:10,requestId:randomUUID(),slotVersion:4});assert.equal(x.outcome.tucker,undefined);
 });
+test('Tucker still appears with an empty basket, steals zero and cannot make the bank negative on replay',async()=>{
+ let m=createPreview({},()=>.99);await m.run({action:'state'});
+ const spin={action:'spin',game:'circus',bet:10,requestId:randomUUID(),slotVersion:4,previewTucker:true};
+ const x=await m.run(spin);assert.deepEqual(x.outcome.tucker,{version:1,before:0,stolen:0,remaining:0});
+ assert.equal(x.outcome.grid.filter(n=>n===13).length,3);assert.deepEqual(x.player.peachBank,{count:0,units:0});assert.equal(x.player.balance,4990);
+ m=createPreview(JSON.parse(JSON.stringify(m.exportState())),()=>.99);
+ assert.equal((await m.run(spin)).player.balance,4990);assert.equal((await m.run(spin)).player.peaches,0);
+});

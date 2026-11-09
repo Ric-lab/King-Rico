@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · Tucker com cesta vazia e duas garras)
+- Dono pediu a mesma sequência mesmo com zero Happeach. Demo agora gera trinca/cena com roubo zero, banca zero e aviso de nenhuma perda, sem bloquear ou produzir NaN. Aposta normal preservada; nenhuma regra/cliente financeiro real alterado.
+- Pose v2 gerada com os dois pés próximos/curvados; âncora entre garras alinhada ao topo da alça. Usa assets/tucker/body-grip-v2.webp; v1 preservada. Cabeça continua v1.
+- Verificação focada: teste da demo vazia/replay/reload e navegador em 390 px normal, 320 px reduzido e cesta vazia; conferir capturas work/preview-tucker-perched-*.png. Conferir resultado no workflow da revisão.
+- Próximo passo: dono avaliar /circus?demo=tucker; após consumir os frutos fictícios, a cena continua funcionando com zero. Arte segue provisória, sem ativação natural/oficial.
+
 ## Prévia (2026-11-09 · Tucker levando a cesta)
 - Dono não gostou ainda da arte v1, mas pediu testar o rosto nos rolos e a animação: trinca vermelha, Tucker pousado na alça, voo levando a cesta, espaço vazio, modal e devolução com contagem atualizada.
 - Implementação visual em ui/park/tucker.js, asas separadas por máscara vetorial/CSS. Cesta clonada do DOM para levar frutos/contador; original escondida até Continuar. Arte copiada para assets/tucker, ainda provisória. Cliente real/core/regras de Firestore não alterados.

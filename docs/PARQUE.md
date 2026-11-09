@@ -401,8 +401,14 @@ cesta com seus itens/contador. Original fica invisível, deixando o espaço vazi
 por 700 ms após a saída. Modal informa perda; Continuar restaura a cesta com
 contagem atualizada. O modal reaproveita a apresentação aprovada do Tony.
 
-Amostra: prepara 3 Happeach só uma vez, leva 1 e preserva a proporção da banca
+Amostra: prepara 3 Happeach só uma vez, leva até 1 e preserva a proporção da banca
 de apostas dos restantes. Cobra apenas a aposta normal, sem roubar moedas ou
 ingressos. Recibo idempotente e restauração da carteira fictícia testados.
 Persistência dessa demonstração existe só em prototypes/circus-preview;
 cliente real, regras, geração natural e economia oficial permanecem iguais.
+
+Ajuste Tucker (09/11): com zero Happeach, a trinca e a sequência completa
+continuam disponíveis; roubo/contagem/banca permanecem zero, sem divisão por
+zero. Modal informa que nenhum Happeach foi perdido. Pose de preensão v2 usa
+ambos os pés juntos e ancora o centro das garras no topo da alça, sem deslocar
+o personagem para a esquerda apenas para enquadrar a ponta da asa.

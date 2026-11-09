@@ -1,6 +1,6 @@
 # Tucker Toucan — proposta v1 (09/11/2026)
 
-- [Corpo inteiro transparente](concepts/tucker-toucan/body-v1.webp)
+- [Corpo com os dois pés em preensão](concepts/tucker-toucan/body-v2.webp)
 - [Cabeça para ícone, transparente](concepts/tucker-toucan/head-v1.webp)
 
 Primeira direção em avaliação: tucano ágil/malandro, bico amarelo-alaranjado
@@ -19,7 +19,8 @@ para assets/tucker para essa avaliação; não há aprovação da identidade fin
 `/circus?demo=tucker` prepara 3 Happeach fictícios uma única vez por navegador.
 O primeiro giro por toque mostra a trinca do rosto com círculos/linha vermelhos.
 Tucker pousa na alça, leva a cesta inteira para fora da tela batendo as asas;
-o espaço fica vazio antes do modal. Nesta amostra ele leva 1 Happeach.
+o espaço fica vazio antes do modal. Nesta amostra ele leva até 1 Happeach. Com a cesta vazia, aparece e leva a
+cesta do mesmo jeito, mas o roubo é zero e o aviso diz que não houve perda.
 Continuar devolve a cesta ao lugar com 2. A contagem é persistida no recibo da
 carteira fictícia e não muda de novo ao repetir a requisição ou recarregar.
 
@@ -28,3 +29,7 @@ avaliar a cena, não regras econômicas aprovadas. Não há sorteio natural do
 Tucker, integração do evento no Firestore real ou publicação no oficial.
 Cabeça derivada do corpo para manter identidade. Originais PNG preservados
 em generated_images; registro em guidelines/asset-pipeline.md.
+
+A pose v2 substitui os pés afastados por dois pés próximos e curvados na mesma
+altura. O ponto entre as duas garras se ancora no topo da alça e acompanha a
+cesta durante o voo. Corpo v1 e cabeça v1 preservados; a identidade segue provisória.

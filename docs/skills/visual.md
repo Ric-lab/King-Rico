@@ -52,3 +52,5 @@ Rejeitado:
 - Tony: riscos finos marfim/vermelhos tiveram pouca presença e foram rejeitados. Preferir três cortes pretos maiores sobre fundo dos rolos desfocado; desconto por patada no mostrador original do prêmio, não em cartão sobre o King. Modal final aprovado e preservado.
 
 - Tucker v1: dono não gostou ainda da arte, mas pediu colocá-la provisoriamente no jogo para avaliar o rosto e a cena de levar a cesta. Não confundir uso na demo com aprovação final do personagem.
+
+- Tucker pousado/deslocado à esquerda parecia levar a cesta por um pé só. Usar pose com duas garras próximas e alinhar o centro delas ao topo da alça; não deslocar o corpo para enquadrar a asa à custa desse contato.

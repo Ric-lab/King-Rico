@@ -256,3 +256,8 @@ escondendo a original. Asas animadas separadamente por máscaras do asset,
 sem movimento repetitivo em modo reduzido. Mostrar espaço vazio antes do aviso.
 Cesta retorna somente após Continuar, com contagem confirmada. Arte v1 ainda
 não aprovada: não tratar o tucano atual como personagem finalizado.
+
+Tucker, ajuste de preensão: usar body-grip-v2.webp, com pés juntos/curvados.
+Ancorar o ponto médio das duas garras (49% X, 94,5% Y do quadro da ave) no topo
+da alça (50% X, 12% Y da cesta); manter esse vínculo durante o voo. A cesta
+vazia participa da mesma cena, com aviso de perda zero.

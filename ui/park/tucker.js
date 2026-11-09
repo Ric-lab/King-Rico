@@ -1,5 +1,5 @@
 // Stages a preview receipt. No mutation, RNG or live-wallet transaction here.
-const BODY='/assets/tucker/body.webp',HEAD='/assets/tucker/head.webp';
+const BODY='/assets/tucker/body-grip-v2.webp',HEAD='/assets/tucker/head.webp';
 export function installTucker(fc){
  for(const src of [BODY,HEAD]){const img=new Image();img.src=src;img.decode?.().catch(()=>{});}
  const payout=fc.payout.bind(fc),busy=fc.cloudBusy.bind(fc);
@@ -17,7 +17,10 @@ export function installTucker(fc){
   const carrier=scene.querySelector('.park-tucker-carrier'),bird=scene.querySelector('.park-tucker-bird');
   const r=rect?.width?rect:{x:innerWidth-90,y:innerHeight*.3,width:80,height:80};
   carrier.style.cssText=`left:${r.x}px;top:${r.y}px;width:${r.width}px;height:${r.height}px;`;
-  const size=Math.min(140,Math.max(105,r.width*1.5));bird.style.cssText=`width:${size}px;height:${size*1200/1300}px;left:${Math.min(r.width*.5-size*.46,innerWidth-r.x-size-4)}px;bottom:${r.height*.82}px;`;
+  const size=Math.min(120,Math.max(98,r.width*1.35)),height=size*1200/1300;
+  // Both curled feet grip the crown of the same handle; do not shift the bird to fit a wing.
+  bird.style.cssText=`width:${size}px;height:${height}px;left:${r.width*.5-size*.49}px;top:${r.height*.12-height*.945}px;`;
+
   let clone,modal,ended=false;const timers=[],animations=[];
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!ended)fn();},ms));
   const animate=(el,keys,opts)=>{try{const a=el.animate(keys,opts);animations.push(a);return a;}catch{return null;}};
@@ -36,7 +39,7 @@ export function installTucker(fc){
   }
   function result(){
    scene.dataset.phase='result';carrier.style.visibility='hidden';
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>Tucker levou</h2><strong class="park-tony-total">${event.stolen}</strong><p>Happeach</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou Happeach');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>${event.stolen?'Tucker levou':'Cesta vazia!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?'Happeach':'Nenhum Happeach perdido'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou Happeach');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;
   }
   function settle(){fc.setState({peaches:window.KingRicoCloud.player.peaches,peachShownBase:null,peachShownAdd:0,balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}

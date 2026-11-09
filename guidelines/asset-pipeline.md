@@ -398,3 +398,11 @@ body-v1/head-v1 para assets/tucker/body.webp e head.webp. Nenhuma geração nova
 ou uso Meshy. Máscara vetorial ui/park/tucker-body-mask.svg e recortes CSS
 separam asas para movimento com a mesma imagem. Cesta copiada do DOM real,
 não regenerada. Uso só para avaliação no canal de prévia, sem aprovação final.
+
+### 2026-11-09 — Tucker v2, duas garras na alça
+Uma edição GPT Imagens do corpo v1: pernas próximas e dois pés curvados em
+preensão, mantendo enquadramento/roupa/cabeça/asas. Original preservado:
+exec-0d1721ae-1321-42d3-85da-916ffddd40b7.png em generated_images.
+WebP q94 em docs/concepts/tucker-toucan/body-v2.webp e
+assets/tucker/body-grip-v2.webp; alpha e pose conferidos. Corpo/cabeça v1
+preservados. Custo da ferramenta não exposto; sem Meshy. Uso só na prévia.
