@@ -322,3 +322,13 @@ exec-c9dabb16-a42d-41a1-96a4-2a14c0b06be1.png, em generated_images.
 Conversão WebP q94 sem alterar composição; arquivos em docs/concepts/tony-tiger.
 Sem Meshy; custo GPT Imagens não exposto. Alpha e conteúdo inspecionados;
 propostas aguardam feedback. Sem implementação, build ou publicação do jogo.
+
+### 2026-11-09 — Tony Tiger v2, expressão
+Duas edições GPT Imagens: corpo com bigode branco do primeiro B/Valentão,
+um pouco mais de dentes e olhos levemente mais abertos; cabeça derivada do
+corpo atualizado. Casaco, faixa ausente, T e pose preservados. PNGs originais:
+exec-be5e921a-e724-4d6a-b064-a56b18c9b4b0.png e
+exec-db0f58da-a357-4949-9749-ad9b08cc872e.png, em generated_images.
+WebP q94 em docs/concepts/tony-tiger/body-v2.webp e head-v2.webp; alpha conferido,
+conteúdo inspecionado. V1 preservada. Custo da ferramenta não exposto; sem
+Meshy, animação, build ou publicação no site. Aguardando feedback do dono.

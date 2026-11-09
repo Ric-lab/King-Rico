@@ -3,6 +3,10 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte em avaliação (2026-11-09 · Tony Tiger v2)
+- Dono pediu restaurar bigode branco do Valentão inicial, mostrar um pouco mais de dentes e abrir levemente os olhos. Corpo/head v2 feitos com esses ajustes; casaco vermelho, T e corpo forte mantidos. Ver docs/TONY-TIGER.md; v1 preservada.
+- Alpha e imagens conferidos. Nenhuma animação, roubo ou alteração da slot; propostas não entram no build. Próximo passo: feedback do dono nas duas artes v2.
+
 ## Arte em avaliação (2026-11-09 · Tony Tiger)
 - Dono pediu opções, escolheu B/Valentão e pediu casaco vermelho discreto, sem faixa vinho, rosto malandro e T sutil no peito. Foram produzidas exatamente uma arte de corpo inteiro e uma da cabeça, transparentes. Ver docs/TONY-TIGER.md e docs/concepts/tony-tiger/.
 - Direção escolhida, mas os dois assets finais ainda aguardam feedback. Conceitos não integram o build nem foram publicados no site. O dono disse que ainda pensará na animação: não implementar roubo, animação ou novos sorteios por conta própria.

@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Tony Tiger sem os tufos brancos curvados do primeiro Valentão perdeu identidade; dono prefere esse bigode, um pouco mais de dentes e olhos levemente mais abertos, mantendo expressão malandra.
 - Piscadas na celebração espacial: fundo opaco em camadas isoladas, sem máscara/filtros animados do viewport e sem giro 3D de sprites; círculo com brilho suave.
 - Avião ainda parece imagem estática durante voo: animar as próprias pás da hélice separadas do corpo/cubo, com giro e desfoque leves, acompanhando a transformação da aeronave.
 - Nariz horizontal durante subida e curva ligada à cauda: usar a mesma curva para posição/inclinação e ligar a linha ao centro do avião. Prêmio ganha círculo luminoso pulsante; entregar links separados de céu/espaço.
