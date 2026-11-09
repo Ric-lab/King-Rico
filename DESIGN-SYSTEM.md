@@ -261,3 +261,10 @@ Tucker, ajuste de preensão: usar body-grip-v2.webp, com pés juntos/curvados.
 Ancorar o ponto médio das duas garras (49% X, 94,5% Y do quadro da ave) no topo
 da alça (50% X, 12% Y da cesta); manter esse vínculo durante o voo. A cesta
 vazia participa da mesma cena, com aviso de perda zero.
+
+### Ray — apresentação de roubo de ingresso, prévia v1 (09/11/2026)
+Máscara preta tipo dominó, guaxinim cinza/creme e saco de estopa. Cabeça para
+trinca; corpo para cena. Reutilizar vermelho dos outros vilões e modal claro
+aprovado. Surgimento atrás do mostrador com recorte; contato da pata no
+contador dispara bilhete viajando para o saco, decremento e som/háptico.
+Saída sempre à esquerda. Movimento reduzido omite o balanço de passos.

@@ -86,3 +86,8 @@ O dono substituiu a encenação de morder a placa por três patadas na tela,
 marcas de garra, balanço e três quedas visíveis no saldo. Trinca exclusiva,
 linha/círculos vermelhos e modal do total. Implementado apenas na prévia v4;
 ver PARQUE.md e ECONOMIA.md. Corpo/cabeça escolhidos são os de 866e780.
+
+### Ray Raccoon — primeira demonstração (09/11)
+Arte com máscara tipo Zorro e cena curta de pegar ingresso/fugir à esquerda
+feitas somente para avaliar na prévia, sem sorteio natural ou economia real.
+Detalhes e próximos ajustes em [RAY-RACCOON.md](RAY-RACCOON.md).

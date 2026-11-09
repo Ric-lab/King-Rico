@@ -3,7 +3,7 @@ import engine from '../../cloud/engine.cjs';
 const KEY='kingRico.parque.mobile-preview.v1',networkFetch=globalThis.fetch.bind(globalThis);
 let tail=Promise.resolve();
 const demoMode=new URLSearchParams(location.search).get('demo');
-let demoSpin=['bigwin','spacewin','tony','tucker'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray'].includes(demoMode);
 async function execute(data){
  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
@@ -12,6 +12,7 @@ async function execute(data){
  if(demo&&demoMode!=='tony')draws.unshift(.99);
  if(demo&&demoMode==='tony')draws.splice(0,draws.length,0,.5);
  if(demo&&demoMode==='tucker')data.previewTucker=true;
+ if(demo&&demoMode==='ray')data.previewRay=true;
  const model=createPreview(saved||{},demo?()=>draws.shift()??.99:Math.random);
  try{const result=await model.run(data);if(demo)demoSpin=false;localStorage.setItem(KEY,JSON.stringify(model.exportState()));return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});}
  catch(e){return new Response(JSON.stringify({error:e.message}),{status:400,headers:{'Content-Type':'application/json'}});}

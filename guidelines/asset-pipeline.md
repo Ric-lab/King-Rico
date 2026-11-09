@@ -406,3 +406,12 @@ exec-0d1721ae-1321-42d3-85da-916ffddd40b7.png em generated_images.
 WebP q94 em docs/concepts/tucker-toucan/body-v2.webp e
 assets/tucker/body-grip-v2.webp; alpha e pose conferidos. Corpo/cabeça v1
 preservados. Custo da ferramenta não exposto; sem Meshy. Uso só na prévia.
+
+### 2026-11-09 — Ray Raccoon v1
+Duas gerações GPT Imagens: corpo original de guaxinim mascarado e cabeça
+derivada dele, estilo de King Rico/Tony/Tucker. Originais preservados em
+generated_images: exec-36fb5b36-ddc3-41cb-b821-1f08002dbac2.png (corpo),
+exec-1f2b4890-592e-465e-8bcd-4884e811c011.png (cabeça). WebP q94 em
+docs/concepts/ray-raccoon e assets/ray, body-v1/head-v1.webp. Alpha e imagens
+inspecionados; sem Meshy/modelo rigado. Custo da ferramenta não exposto.
+Artes provisórias usadas só na demonstração /circus?demo=ray da prévia.

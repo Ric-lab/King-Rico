@@ -3,6 +3,7 @@ import {Timestamp} from 'firebase/firestore';
 import {createGameStore,publicPlayer} from '../../cloud/store.mjs';
 import engine from '../../cloud/engine.cjs';
 import parkRules from '../../cloud/park.cjs';
+import {rayDemo} from './ray-demo.mjs';
 import {tuckerDemo} from './tucker-demo.mjs';
 import paths from '../../games/fingo/paths.json' with {type:'json'};
 
@@ -48,7 +49,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(!engine.BETS.includes(data.bet))fail('Aposta inválida.');
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
-   const outcome=data.previewTucker?tuckerDemo(p,park,data.bet):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
+   const outcome=data.previewRay?rayDemo(p,park,data.bet):data.previewTucker?tuckerDemo(p,park,data.bet):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,

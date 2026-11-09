@@ -412,3 +412,13 @@ continuam disponíveis; roubo/contagem/banca permanecem zero, sem divisão por
 zero. Modal informa que nenhum Happeach foi perdido. Pose de preensão v2 usa
 ambos os pés juntos e ancora o centro das garras no topo da alça, sem deslocar
 o personagem para a esquerda apenas para enquadrar a ponta da asa.
+
+## Ray Raccoon — demonstração visual (09/11/2026)
+
+`/circus?demo=ray`, primeiro giro por toque. Trinca diagonal com sinalização
+vermelha; guaxinim de máscara sai de trás do mostrador, passa a pata no
+contador, leva até 1 ingresso para o saco e foge pela esquerda. Perda/contador
+no mesmo contato; modal após a saída. Zero ingressos não bloqueia a cena.
+Arte e quantidade em avaliação. Recibo salvo/deduplicado só na carteira
+fictícia; sem alteração de Firestore/cliente real ou sorteio natural. Ver
+[RAY-RACCOON.md](RAY-RACCOON.md). Não promover ao oficial por conta própria.

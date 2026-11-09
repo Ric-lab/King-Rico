@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · Ray Raccoon)
+- Dono pediu guaxinim com máscara tipo Zorro, roubo simples de ingressos e saída pela esquerda. Gerados corpo/cabeça v1, transparentes e provisórios; guia docs/RAY-RACCOON.md. Assets em assets/ray e conceitos preservados.
+- Demo explícita /circus?demo=ray. Trinca diagonal vermelha, surge atrás do mostrador, aproxima a pata dos ingressos, bilhete vai para o saco com contador/som/háptico no contato e foge à esquerda; modal depois. Pega até 1, inclusive cena com zero/sem perda. Sem sorteio natural, promoção oficial ou mudanças no Firestore/cliente real.
+- Modelo da carteira fictícia salva recibo idempotente e mantém saldo menos a aposta normal e Happeach inalterados. Testes focados: normal/zero, replay e reload; regressão da economia de prévia e Tucker. Navegador normal 390 px e reduzido 320 px confere rostos/linha, surgimento, contato/contador, direção de fuga, modal e persistência. Capturas work/preview-ray-*.png inspecionadas. Conferir Actions no commit desta revisão.
+- Próximo passo: dono avaliar arte e cena no celular; ajustar só feedback aprovado. Quantidade/frequência para carteira real ainda não definidas.
+
 ## Prévia (2026-11-09 · Tucker com cesta vazia e duas garras)
 - Dono pediu a mesma sequência mesmo com zero Happeach. Demo agora gera trinca/cena com roubo zero, banca zero e aviso de nenhuma perda, sem bloquear ou produzir NaN. Aposta normal preservada; nenhuma regra/cliente financeiro real alterado.
 - Pose v2 gerada com os dois pés próximos/curvados; âncora entre garras alinhada ao topo da alça. Usa assets/tucker/body-grip-v2.webp; v1 preservada. Cabeça continua v1.

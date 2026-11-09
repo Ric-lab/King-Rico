@@ -209,3 +209,14 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @keyframes tuckerFlapLeft{from{transform:rotate(-18deg) scaleY(.58)}to{transform:rotate(22deg) scaleY(1)}}
 @keyframes tuckerFlapRight{from{transform:rotate(21deg) scaleY(.56)}to{transform:rotate(-18deg) scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.park-tucker-scene .tucker-wing{animation:none!important}}
+
+[data-park-ray="true"],.park-tape-symbol.is-ray{background:url('/assets/ray/head-v1.webp') center/contain no-repeat!important}
+.park-ray-scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2147483000}
+.park-ray-hideout{position:absolute;overflow:hidden}
+.park-ray-actor{position:absolute;transform-origin:50% 90%;will-change:translate}
+.park-ray-actor img{width:100%;height:100%;object-fit:contain;display:block}
+.park-ray-scene:is([data-phase="approaching"],[data-phase="leaving"]) .park-ray-actor img{animation:raySteps .24s ease-in-out infinite alternate}
+.park-ray-loot{position:absolute;width:36px;height:26px;object-fit:contain;opacity:0;filter:drop-shadow(0 2px 2px #62320c66)}
+.park-ray-loss{position:absolute;transform:translateX(-50%);opacity:0;white-space:nowrap;color:#a0142e;background:#fff3da;border:1px solid #df947a;border-radius:12px;padding:2px 9px;font:800 17px 'Baloo 2',sans-serif}
+@keyframes raySteps{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(-3px) rotate(1deg)}}
+@media(prefers-reduced-motion:reduce){.park-ray-actor img{animation:none!important}}
