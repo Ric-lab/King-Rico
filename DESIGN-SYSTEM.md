@@ -25,22 +25,18 @@ céu azul, praça dourada, vegetação e espaço para respirar. O cenário norma
 recebe escurecimento ou desfoque global. Os outros jogos conservam seus cenários;
 não trocar todos os fundos como consequência de uma revisão do Circus.
 
-Creme e dourado sustentam números, molduras e superfícies dos rolos. Spin, auto e
-turbo do Circus usam texto/ícones claros: auto/turbo são azul-turquesa e o spin
-acompanha as cores da carga. O ouro
-do aro é discreto, sem reflexos brancos artificiais ou brilho varrendo o texto.
-Na versão aprovada em 02/11/2026 (prévia v54), o spin começa roxo, com letras brancas. Cada nova cor
-se expande em círculo sobre a anterior, na face e na lateral do relevo; a cor
-confirmada permanece após o giro. Não há face branca ou retorno ao branco. As letras funcionam como LED: núcleo branco acinzentado fosco em repouso
-(`#b8c3ce`), branco luminoso durante o pulso. O contorno azul-escuro sólido de
-2 unidades permanece nos dois estados; o halo é curto para manter a leitura
-no verde e no amarelo. A face e a lateral também ficam em meia-luz no
-repouso: uma camada escura de 34% acompanha seu formato. A cor viva e os LEDs
-acesos são revelados juntos pelo círculo do pulso, sem filtrar o texto ou o aro.
+Creme e dourado sustentam números, molduras e superfícies dos rolos.
+Na revisão de 09/11/2026, o spin usa o mesmo vinho da barra de aposta:
+`#80142b` → `#640c24` → `#3f091c`. Aro dourado com o asset
+`spin-rim-v3.svg`, texto dourado `#f4c951` e destaque quente `#ffe29b`
+ao apertar. Auto/turbo conservam seu azul-turquesa.
 
-O amarelo da carga usa `#ffda24`, mais quente que o antigo verde-limão,
-compartilhado por botão, líquido e miniatura das barras. O aro conserva brilho dourado suave. As propostas v46/v47 com face branca
-foram superadas por este pedido do autor.
+O botão mantém face rígida, relevo, som, háptico e pulso radial, mas permanece
+vinho ao longo da carga e depois da roleta. O aro não é mais iridescente nem
+recebe a cor das barras: seu pulso é dourado. O líquido e as mini-roletas
+continuam com a paleta arco-íris; amarelo da carga `#ffda24`.
+Esta escolha substitui a paleta roxa/branca/colorida da prévia v54.
+
 Roxo continua na marca, nos personagens e em telas que ainda o usam; não é uma
 regra para escurecer os novos fundos. Os tokens antigos são referências, não uma
 ordem para restaurar a paleta anterior.

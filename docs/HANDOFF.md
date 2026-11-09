@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · spin vinho e dourado)
+- Dono pediu aro/letras dourados e corpo vinho como a barra de +/−. Reaproveitado spin-rim-v3.svg e gradiente vinho da base-controls-v4. Pulso permanece na paleta vinho/dourado; barras/roletas conservam arco-íris. Profundidade, geometria, som/háptico e clique preservados.
+- Teste focado do navegador (KING_RICO_PALETTE_ONLY=1) em normal/reduzido passou, com aro/texto/cor e toque/cancelamento; capturas work/preview-spin-wine-*.png inspecionadas. Regressão completa teve expectativas atualizadas para a paleta nova e será executada pelo workflow. Nenhuma mudança financeira.
+- Próximo passo: dono avaliar o botão na prévia; oficial continua inalterado. Conferir Actions desta revisão antes de afirmar sucesso da suíte online.
+
 ## Prévia (2026-11-09 · Ray levando a placa inteira)
 - Dono rejeitou o andar e pediu surgimento direto atrás do contador, saída carregando seu asset e retorno após modal, como Tucker. Removidos passos, aproximação e bilhete avulso; contador real clonado na mesma escala/posição, original escondido. Ray e cópia saem juntos à esquerda.
 - Placa carregada mantém contagem anterior; após Continuar o original volta com a contagem confirmada. Zero ingressos também funciona. Sem nova arte ou alteração de economia/persistência.

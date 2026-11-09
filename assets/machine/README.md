@@ -1,5 +1,14 @@
 # Peças da máquina Circus
 
+## Spin atual da prévia — 09/11/2026
+
+Face vinho da base-controls-v4: `#80142b`/`#640c24`/`#3f091c`, texto dourado
+e aro `spin-rim-v3.svg` reaproveitado. Pulso dourado no aro e vinho no corpo;
+profundidade/clique preservados. Iridescência e progressão das cores do botão
+foram substituídas nesta revisão. Cores do líquido/mini-roletas preservadas.
+Registros anteriores abaixo são históricos e não devem restabelecer a paleta.
+
+
 Cinco imagens independentes geradas com GPT Image: base dos controles, moldura
 da carga, visor do prêmio, superfície do rolo e moldura da janela. A máquina é
 montada em camadas; os símbolos e os controles continuam independentes.

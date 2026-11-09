@@ -22,19 +22,23 @@ with sync_playwright() as p:
    collect_daily(page)
   page.goto(BASE+'/circus');ready()
   rim=page.locator('.park-spin-iridescence')
-  if mode=='no-preference':
-   before_color=rim.evaluate('e=>getComputedStyle(e).backgroundImage')
-   page.wait_for_timeout(180)
-   assert rim.evaluate('e=>getComputedStyle(e).backgroundImage')!=before_color,'Iridescent colors must circulate'
-  else:assert rim.evaluate('e=>getComputedStyle(e).animationName')=='none'
+  assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
+  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-v3.svg')
+  assert page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(100, 12, 36)'
+  assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(244, 201, 81)'
+  page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')
   spin_box=page.locator('[data-spin-btn]').bounding_box()
   page.mouse.move(spin_box['x']+spin_box['width']/2,spin_box['y']+spin_box['height']/2);page.mouse.down()
   pulse=page.locator('.park-spin-rim-pulse').evaluate('e=>({opacity:Number(getComputedStyle(e).opacity),color:getComputedStyle(e).backgroundColor})')
-  assert pulse['opacity']>.95 and pulse['color']==page.locator('.park-spin-wash').evaluate('e=>getComputedStyle(e).backgroundColor'),pulse
+  assert pulse['opacity']>.95 and pulse['color']=='rgb(255, 223, 112)',pulse
   assert page.evaluate("(()=>{const e=document.querySelector('.park-spin-rim-pulse'),a=e.getAnimations()[0];__fc.lightsPulse();return e.getAnimations()[0]===a})()"),'Do not restart the rim on the later electric pulse'
+  page.wait_for_timeout(90)
+  page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-down-'+mode+'.png')
   page.mouse.move(1,120);page.mouse.up()
   page.evaluate("document.querySelector('.park-spin-rim-pulse').getAnimations()[0]?.finish();__fc._parkPulse=null")
   assert page.locator('.park-spin-rim-pulse').evaluate('e=>Number(getComputedStyle(e).opacity)')==0
+  if os.environ.get('KING_RICO_PALETTE_ONLY'):
+   context.close();continue
   if mode=='no-preference':
    audio=page.evaluate('''async()=>{
     const fc=__fc,ac=fc.ac,out=fc.out,gate=fc.gate;
@@ -149,7 +153,7 @@ with sync_playwright() as p:
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
-  assert paint['level']==0 and paint['colors']==['rgb(142, 36, 255)']*3,paint
+  assert paint['level']==0 and paint['colors']==['rgb(100, 12, 36)']*3,paint
   def geometry():
    return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
   # The gold rim's inner top is 7/78 of the SVG height; rear must stay below it.

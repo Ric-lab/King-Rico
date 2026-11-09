@@ -179,8 +179,8 @@ A máquina usa peças separadas para visor, barras, base e rolos, com montagem e
 numéricos não são nove animações independentes. A janela conserva as nove posições
 visíveis e uma curva suave nas linhas externas.
 
-Spin, auto e turbo compartilham aro fixo e face rígida. O spin acompanha a cor
-das barras com luz radial; auto e turbo mantêm seu azul. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
+Spin, auto e turbo compartilham aro fixo e face rígida. O spin é vinho como a barra de aposta, com aro/letras dourados e pulso radial
+na mesma paleta; as barras continuam arco-íris. Auto e turbo mantêm seu azul. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
 A roleta aceita botão e gesto e compartilha sua paleta arco-íris com as roletas
 pequenas das barras. O multiplicador viaja em dourado até o prêmio antes das
 moedas irem ao saldo. Detalhes de geometria e estados no
