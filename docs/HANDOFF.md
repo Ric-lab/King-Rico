@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte (2026-11-09 · Tucker Toucan v1)
+- Pedido: criar assets do Tucker. Produzidos corpo inteiro e cabeça transparente coerentes, em docs/concepts/tucker-toucan; guia docs/TUCKER-TOUCAN.md. Direção proposta: tucano azul-noite, bico amarelo/laranja/ameixa, olhos âmbar/turquesa, colete verde-petróleo/dourado e expressão malandra.
+- Artes e alpha conferidos. Duas gerações de imagem, sem Meshy, testes do app ou builds. Só checkpoint de fontes [skip ci], sem atualizar URL de prévia/oficial.
+- Próximo passo: dono avaliar arte v1 e pedir ajustes. Não integrar roubo/animação/sorteio antes de definir o comportamento com o dono.
+
 ## Estratégia permanente (2026-11-09)
 - Dono pediu adotar sempre o fluxo econômico: alterações pequenas com teste focado e prévia cedo; agrupar ajustes aprovados para publicar; validar finanças quando afetadas; evitar releituras, testes e mensagens repetidos.
 - Registrado em AGENTS.md, docs/skills/publicar.md e docs/FLUXO-CLAUDE-CODEX.md. Checkpoints `[skip ci]` preservam colaboração sem disparar deploy; URL remota só pode ser anunciada como atualizada quando realmente publicada.

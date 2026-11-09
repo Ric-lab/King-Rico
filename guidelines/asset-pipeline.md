@@ -382,3 +382,12 @@ head-v4.webp para assets/tony/head.webp. Sem geração/custo adicional. Marcas d
 garra em SVG vetorial no módulo ui/park/tony.js, três cortes estilizados.
 Corpo/turnaround não entram no runtime. Conferência de navegador documentada
 no HANDOFF; integração somente na prévia, não publicada no oficial.
+
+### 2026-11-09 — Tucker Toucan, proposta v1
+Duas gerações GPT Imagens: corpo inteiro original e cabeça derivada desse
+corpo. Estilo de King Rico/Tony estudado; sem Meshy/modelo 3D nesta etapa.
+PNGs preservados em generated_images: exec-2a78a1c5-8b4c-4e2a-96ff-eac2442ba4cf.png
+(corpo), exec-5179e748-db77-4b9f-961f-08cdcc9bbe54.png (cabeça).
+WebP q94 em docs/concepts/tucker-toucan/body-v1.webp e head-v1.webp;
+alpha e artes inspecionados. Custo da ferramenta não exposto. Aguardando
+feedback; sem integração no jogo, build ou publicação. Checkpoint [skip ci].
