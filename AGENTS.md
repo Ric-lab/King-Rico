@@ -56,3 +56,19 @@ e comportamentos antigos nos registros não devem voltar por engano ao produto.
 Reutilize os módulos de `ui/`; documentos e tokens do editor não substituem os
 componentes ativos. Uma mudança só de documentação exige conferir coerência,
 links e diff, sem repetir partidas nem publicar outro build do jogo.
+
+## Estratégia permanente de iteração econômica (decisão do dono, 09/11/2026)
+
+- Pequeno ajuste visual: editar só o necessário, conferir a tela e executar apenas
+  o teste específico. Não repetir suítes completas, leituras extensas ou builds
+  de produção em cada detalhe sem uma dependência concreta que os exija.
+- Entregar a prévia para avaliação cedo. Agrupar ajustes aprovados para uma única
+  publicação e conferência completa, evitando um deploy a cada refinamento.
+- Commit/push de fonte para colaboração é diferente de publicar: usar `[skip ci]`
+  em documentação e checkpoints que não devem disparar deploy. Não chamar uma
+  URL remota antiga de prévia atualizada; informar quando a amostra é só local.
+  Se o dono precisar testar no celular, publicar o lote no canal de prévia.
+- Saldo, pagamentos, matemática e regras exigem os testes financeiros e de
+  persistência pertinentes. Preservar as verificações obrigatórias da publicação.
+- Reaproveitar o contexto já lido, limitar chamadas e saídas ao necessário e
+  comunicar marcos úteis; evitar mensagens repetitivas só para dizer que aguarda.

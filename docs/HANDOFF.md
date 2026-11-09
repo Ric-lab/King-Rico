@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Estratégia permanente (2026-11-09)
+- Dono pediu adotar sempre o fluxo econômico: alterações pequenas com teste focado e prévia cedo; agrupar ajustes aprovados para publicar; validar finanças quando afetadas; evitar releituras, testes e mensagens repetidos.
+- Registrado em AGENTS.md, docs/skills/publicar.md e docs/FLUXO-CLAUDE-CODEX.md. Checkpoints `[skip ci]` preservam colaboração sem disparar deploy; URL remota só pode ser anunciada como atualizada quando realmente publicada.
+- Próximo passo: aplicar essa estratégia às próximas tarefas. Esta entrega é só documentação, sem build, partidas ou publicação.
+
 ## Prévia (2026-11-09 · destaque das garras do Tony)
 - Feedback: marcas anteriores feias/discretas; modal final aprovado. Cortes refeitos em preto, maiores, com desenho irregular e desfoque breve apenas na área dos rolos. Saldo e mostrador do prêmio ficam nítidos.
 - Cada desconto aparece agora no mostrador original do prêmio, aos pés do King Rico; cartão flutuante removido. Modal final, tempos/som/háptico e economia/Firestore não alterados.
