@@ -310,3 +310,15 @@ Atlas de céu/espaço, nuvens e máscaras da hélice acima incluídos em 7e41b89
 Nenhuma arte nova nesta correção: composição estabilizada com camadas opacas,
 recorte por overflow e giro 2D. Workflow oficial e inspeção pública confirmaram
 os arquivos; fonte/gastos das gerações anteriores continuam nos registros acima.
+
+### 2026-11-09 — Tony Tiger, conceitos e dois assets em avaliação
+GPT Imagens: uma prancha A/B/C e, após escolha de B pelo dono, uma arte de corpo
+inteiro e uma de cabeça, com alpha. Mudanças solicitadas: casaco vermelho discreto,
+sem faixa vinho, cabeça malandra com corpo forte e T sutil na pelagem do peito.
+Referências: King Rico fw6/master + turnaround; cabeça derivada da arte de corpo
+inteiro. Origens PNG: exec-32f98977-6cb0-4371-8db4-2b561df056b8.png,
+exec-e9a05124-d002-4737-a8b1-60052c29effc.png e
+exec-c9dabb16-a42d-41a1-96a4-2a14c0b06be1.png, em generated_images.
+Conversão WebP q94 sem alterar composição; arquivos em docs/concepts/tony-tiger.
+Sem Meshy; custo GPT Imagens não exposto. Alpha e conteúdo inspecionados;
+propostas aguardam feedback. Sem implementação, build ou publicação do jogo.

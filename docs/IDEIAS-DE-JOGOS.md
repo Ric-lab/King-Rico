@@ -10,11 +10,11 @@ roubam recursos distintos; frequência, gatilho exato e quantidades a definir.
 
 | Vilão | Recurso | Personalidade visual |
 | --- | --- | --- |
-| Tiger Tony | Parte das moedas | Tigre expansivo, assusta o King e morde a placa do saldo |
+| Tony Tiger | Parte das moedas | Tigre expansivo, assusta o King e morde a placa do saldo |
 | Tucker Toucan | Alguns Happeach | Tucano que pega o conteúdo da cesta durante o voo |
 | Ray Raccon | Alguns ingressos | Guaxinim sorrateiro, máscara estilo Zorro e saco de roubo nas costas |
 
-### Tiger Tony — sequência pedida
+### Tony Tiger — sequência pedida
 
 1. Sai da slot machine e cresce na frente da tela, apresentando o personagem.
 2. Volta a ficar menor e chega pelo lado direito do King Rico, assustando-o.
@@ -78,3 +78,5 @@ atual, com andares e ações separadas, não transmite essa continuidade.
 - Antes de implementar: definir entrada, crescimento, encerramento e pagamento;
   simular o conjunto e garantir recebimento/retomada idempotentes. Nesta anotação
   não foram alterados RTP, regras, moedas ou jogos existentes.
+
+Arte do Tony Tiger em avaliação: [corpo e cabeça](TONY-TIGER.md). O dono ainda definirá a animação; não iniciar a sequência proposta automaticamente.

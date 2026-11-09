@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte em avaliação (2026-11-09 · Tony Tiger)
+- Dono pediu opções, escolheu B/Valentão e pediu casaco vermelho discreto, sem faixa vinho, rosto malandro e T sutil no peito. Foram produzidas exatamente uma arte de corpo inteiro e uma da cabeça, transparentes. Ver docs/TONY-TIGER.md e docs/concepts/tony-tiger/.
+- Direção escolhida, mas os dois assets finais ainda aguardam feedback. Conceitos não integram o build nem foram publicados no site. O dono disse que ainda pensará na animação: não implementar roubo, animação ou novos sorteios por conta própria.
+- Próximo passo: receber feedback nas duas artes e ajustar só o que o dono pedir; personagem/números ainda não entram na slot. Originais e gerações documentados no asset-pipeline.
+
 ## Entrega autorizada na main (2026-11-08 · 7e41b89)
 - Dono autorizou explicitamente visual E pagamentos v3. Commit 7e41b89 enviado à main pelo workflow oficial, com carteira Google/Firestore real, oito combinações, ingressos avulsos e tabela v3; prévia continua fictícia, demos/raspadinha por abertura exclusivos do build:preview.
 - Correção do espaço: sem máscara do viewport/filtros variáveis/rotação 3D da hélice; camadas isoladas/opacas e círculo mais suave. Arte decodificada antes de usar. Apresentação separada de pagamento em cloud/prize-tier.cjs.
