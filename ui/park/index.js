@@ -128,14 +128,15 @@ function showWheel(){
   el.querySelector('.park-wheel-machine').classList.remove('is-spinning');
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
-  el.querySelector('.park-wheel-machine').classList.add('is-won');
+  machine.style.setProperty('--park-result-color',colors[w.result.index]);
+  machine.classList.add('is-won');
   el.querySelector('.park-wheel-hub strong').textContent='×'+w.result.multiplier;
   btn.hidden=true;
   const collect=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
    const fc=window.__fc,flight=fc?._parkPrizeFlight;
    if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:w.result.winUnits/100,showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
    await call({action:'wheel-close',wheelId,requestId:id()});
-   const source=holdMultiplier(el.querySelector('.park-wheel-hub strong'),w.result.multiplier);
+   const source=holdMultiplier(el.querySelector('.park-wheel-hub strong'),w.result.multiplier,colors[w.result.index]);
    try{const pan=enterGameRight(el);source.target=pan.target;source.duration=pan.duration;source.lateral=pan.offset;
     if(fc){fc._parkPrizeFlight=null;fc._spinAfterFly=false;await applyMultiplier(fc,w,source);}
     await pan.finished;await el.close();

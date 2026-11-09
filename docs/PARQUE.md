@@ -235,7 +235,7 @@ Prévia 05/11: roleta de 374 px no palco nativo. Ao sortear, multiplicador pulsa
 no centro. O valor fica destacado no mesmo ponto durante a descida da máquina
 e viaja dali ao prêmio; reduzido usa trajeto reto de 650 ms, sem saltos.
 
-Revisão mais recente da prévia (05/11): centro verde cresce para cobrir o
+Revisão mais recente da prévia (05/11): centro com a cor da casa sorteada cresce para cobrir o
 disco; topo com elefante/nuvem e prêmio volta primeiro. O disco com o número
 viaja até o prêmio e só após o impacto/contagem voltam as demais peças.
 Esse retorno em etapas substitui a descida do conjunto inteiro antes do voo.
@@ -369,3 +369,6 @@ camadas de céu/espaço isoladas e opacas durante a contagem. Arte decodificada
 antes de usar. Hélice mantém o giro com transformação 2D; círculo luminoso
 oscila suavemente entre 78% e 100%, sem filtro variável sobre o prêmio inteiro.
 Destaque mantido sem pulsar grandes áreas de brilho sobre o fundo escuro.
+
+Revisão 09/11: centro e disco viajante do bônus usam a cor da casa sorteada
+pelo índice na paleta, inclusive após recarga. Pagamentos e tempos preservados.

@@ -1,7 +1,8 @@
 import {record} from './motion.js';
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
-export function holdMultiplier(source,multiplier){
+export function holdMultiplier(source,multiplier,color){
  const bounds=source.getBoundingClientRect(),node=document.createElement('b');
+ node.style.setProperty('--park-result-color',color||getComputedStyle(source).getPropertyValue('--park-result-color').trim()||'#22853a');
  node.className='park-flying-multiplier park-flying-bonus-disc';node.textContent='×'+multiplier;node.setAttribute('aria-hidden','true');
  const scale=Math.max(.3,bounds.height/64),hub=source.parentElement.getBoundingClientRect();
  node.style.setProperty('--park-multiplier-disc-size',hub.width*3.1/scale+'px');

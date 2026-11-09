@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Publicação autorizada (2026-11-09 · cor do bônus)
+- Integração sobre main fc2cb40: somente centro e disco viajante da roleta com a cor da casa sorteada, inclusive retomada. Não promove demos, carteira fictícia ou economia v4 da prévia.
+- Teste focado de navegador para roxo/amarelo/rosa normal e reduzido; build final de produção após integração. Workflow oficial mantém testes, regras REST e Hosting.
+- Próximo passo: conferir o resultado do workflow deste commit e o CSS/JS no oficial; feedback do dono.
+
 ## Publicado (2026-11-08 · voo estável e economia v3)
 - Dono confirmou explicitamente publicar visual E pagamentos. Integração preparada sobre main 6f382aa, preservando autenticação Google, carteira Firestore real, retorno diário uma vez por dia e publicador REST. Sem carteira de teste/demo no build de produção.
 - Visual atual da prévia incluído: céu/espaço ilustrados, curva/rotação do avião, hélice, prêmio único/círculo e faixas relativas de 20/35/50×. Fundo espacial sem máscara de viewport, camadas isoladas, sem filtros variáveis/rotação 3D; brilho do círculo suavizado. Captura inicial no desktop não reproduziu flash; mudanças reduzem fontes de recomposição no celular.

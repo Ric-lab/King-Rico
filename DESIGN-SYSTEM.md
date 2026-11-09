@@ -169,7 +169,8 @@ substituído por esta revisão.
 
 A roleta bônus pequena e grande compartilham as cores de
 `ui/park/wheel-palette.js`. Números claros, centro sem “MULTIPLIQUE”, giro por
-botão ou gesto. O multiplicador dourado viaja até o prêmio; depois, as moedas
+botão ou gesto. O centro e o disco viajante usam a cor da casa sorteada, pelo índice na paleta.
+O multiplicador viaja até o prêmio; depois, as moedas
 viajam ao saldo. Retomar conserva o sorteio e o crédito confirmado.
 
 Assets ativos, exportadores e histórico das tentativas estão em
