@@ -1,6 +1,7 @@
 import circusProfile from '../../cloud/engine.cjs';
 import {createEntryFlow} from './entry-flow.js';
 import {openDailyReward} from './daily-reward.js';
+import {installTucker} from './tucker.js';
 import {installTony} from './tony.js';
 import {installBigWinFlight} from './bigwin-flight.js';
 import {pocketColors} from './wheel-palette.js';
@@ -82,6 +83,7 @@ function bootCircus(){
   installSpinTactility(fc);
   installBigWinFlight(fc);
   installTony(fc);
+  installTucker(fc);
   installParkNavigation(fc,stage.closest('.park-circus-stage')||stage,rails.querySelector('.park-pocket'));
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.

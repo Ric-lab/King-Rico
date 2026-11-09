@@ -50,3 +50,5 @@ Rejeitado:
 - Tony Tiger: decisão posterior do dono prevalece — ficar com corpo/cabeça v4 do commit 866e780, sem unhas/garras v5–v7. Turnaround v4 em avaliação.
 
 - Tony: riscos finos marfim/vermelhos tiveram pouca presença e foram rejeitados. Preferir três cortes pretos maiores sobre fundo dos rolos desfocado; desconto por patada no mostrador original do prêmio, não em cartão sobre o King. Modal final aprovado e preservado.
+
+- Tucker v1: dono não gostou ainda da arte, mas pediu colocá-la provisoriamente no jogo para avaliar o rosto e a cena de levar a cesta. Não confundir uso na demo com aprovação final do personagem.

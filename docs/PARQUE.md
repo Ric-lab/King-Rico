@@ -391,3 +391,18 @@ altera o desconto confirmado; recarga mostra o saldo real sem nova cobrança.
 
 Demo exclusiva da carteira fictícia: `/circus?demo=tony`, primeiro giro por toque.
 Core e regras já preparados para v4, mas regras NÃO publicadas nesta entrega.
+
+## Tucker Toucan — demonstração visual (09/11/2026)
+
+Prévia explícita `/circus?demo=tucker`, sem sorteio natural. Arte v1 provisória;
+dono pediu testar mesmo sem gostar ainda. Trinca na linha central, sinalização
+vermelha; ave pousa na alça, bate asas separadas do corpo e leva uma cópia da
+cesta com seus itens/contador. Original fica invisível, deixando o espaço vazio
+por 700 ms após a saída. Modal informa perda; Continuar restaura a cesta com
+contagem atualizada. O modal reaproveita a apresentação aprovada do Tony.
+
+Amostra: prepara 3 Happeach só uma vez, leva 1 e preserva a proporção da banca
+de apostas dos restantes. Cobra apenas a aposta normal, sem roubar moedas ou
+ingressos. Recibo idempotente e restauração da carteira fictícia testados.
+Persistência dessa demonstração existe só em prototypes/circus-preview;
+cliente real, regras, geração natural e economia oficial permanecem iguais.

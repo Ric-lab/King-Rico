@@ -3,6 +3,13 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · Tucker levando a cesta)
+- Dono não gostou ainda da arte v1, mas pediu testar o rosto nos rolos e a animação: trinca vermelha, Tucker pousado na alça, voo levando a cesta, espaço vazio, modal e devolução com contagem atualizada.
+- Implementação visual em ui/park/tucker.js, asas separadas por máscara vetorial/CSS. Cesta clonada do DOM para levar frutos/contador; original escondida até Continuar. Arte copiada para assets/tucker, ainda provisória. Cliente real/core/regras de Firestore não alterados.
+- DEMO explícita: /circus?demo=tucker. Prepara 3 Happeach fictícios uma vez por navegador, primeiro giro leva 1; sem sorteio natural do Tucker. Quantidade é amostra para avaliar cena, não regra econômica aprovada. Carteira fictícia salva um recibo, remove a fração correspondente da banca e mantém moedas menos a aposta normal.
+- Verificação focada: modelo de demo/replay/reload e ausência de Tucker em giros comuns; navegador em 390 px normal e 320 px reduzido confere três rostos/linha, alça, asas, cesta saindo, espaço vazio, modal, volta com 2 e reload. Regressão Tony também passou. Capturas work/preview-tucker-*.png inspecionadas. Conferir Actions no commit desta revisão.
+- Próximo passo: dono avaliar a demo no celular e orientar arte/ritmo. Não ativar sorteio natural nem promover ao oficial sem definir/aprovar economia e validar regras reais.
+
 ## Arte (2026-11-09 · Tucker Toucan v1)
 - Pedido: criar assets do Tucker. Produzidos corpo inteiro e cabeça transparente coerentes, em docs/concepts/tucker-toucan; guia docs/TUCKER-TOUCAN.md. Direção proposta: tucano azul-noite, bico amarelo/laranja/ameixa, olhos âmbar/turquesa, colete verde-petróleo/dourado e expressão malandra.
 - Artes e alpha conferidos. Duas gerações de imagem, sem Meshy, testes do app ou builds. Só checkpoint de fontes [skip ci], sem atualizar URL de prévia/oficial.

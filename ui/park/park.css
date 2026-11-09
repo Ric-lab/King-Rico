@@ -192,3 +192,20 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-tony-portrait{width:125px;height:125px;object-fit:contain;display:block;margin:0 auto 12px}.park-tony-result .park-panel{background:#fff6e8;color:#79342d;border-color:#edb26c}.park-tony-result h2{margin:0;font-size:28px}.park-tony-total{display:block;color:#c22036;font:800 clamp(36px,11vw,60px)/1.1 'Baloo 2',sans-serif;margin:12px 0 0}.park-tony-result p{margin:0 0 24px}.park-tony-result .park-action{min-height:56px}
 
 .park-tony-result h2{color:#79342d!important;text-shadow:none!important}.park-tony-result p{color:#79342d!important;opacity:1!important}
+
+/* Provisional Tucker artwork, enabled by the explicit preview demo only. */
+[data-park-tucker="true"],.park-tape-symbol.is-tucker{background:url('/assets/tucker/head.webp') center/contain no-repeat!important}
+.park-tucker-scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2147483000}
+.park-tucker-carrier{position:absolute;transform-origin:50% 0}
+.park-tucker-bird{position:absolute;opacity:0;z-index:2}
+.park-tucker-bird img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.park-tucker-bird .tucker-body{z-index:2;mask:url('/ui/park/tucker-body-mask.svg') 0 0/100% 100% no-repeat}
+.tucker-wing{z-index:1}
+.tucker-wing-left{clip-path:polygon(0 49%,27% 49%,41% 55%,43% 65%,36% 71%,8% 83%,0 83%);transform-origin:43% 58%}
+.tucker-wing-right{clip-path:polygon(63% 53%,81% 44%,100% 34%,100% 76%,63% 75%);transform-origin:63% 55%}
+.park-tucker-scene[data-phase="flying"] .tucker-wing-left{animation:tuckerFlapLeft .3s ease-in-out infinite alternate}
+.park-tucker-scene[data-phase="flying"] .tucker-wing-right{animation:tuckerFlapRight .3s ease-in-out infinite alternate}
+.park-tucker-carried-basket *{animation:none!important;transition:none!important}
+@keyframes tuckerFlapLeft{from{transform:rotate(-18deg) scaleY(.58)}to{transform:rotate(22deg) scaleY(1)}}
+@keyframes tuckerFlapRight{from{transform:rotate(21deg) scaleY(.56)}to{transform:rotate(-18deg) scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.park-tucker-scene .tucker-wing{animation:none!important}}

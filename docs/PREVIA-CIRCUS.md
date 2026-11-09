@@ -6,6 +6,13 @@ O protótipo de nove tambores foi descartado. Tony v4 pode ser testado em
 `/circus?demo=tony`: o primeiro giro por toque demonstra as três patadas.
 Oficial e regras de produção permanecem sem publicação desta mudança.
 
+## Tucker em avaliação
+
+Demo: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=tucker
+Primeiro giro por toque. Prepara 3 Happeach fictícios apenas uma vez neste
+navegador e demonstra perda de 1; recarregar preserva o restante. A arte v1
+é provisória e a quantidade/frequência oficial ainda não foi definida.
+
 ## Rodar a prévia visual
 
 Requer Node 22.23.3, npm e Python 3. A partir da raiz do clone:

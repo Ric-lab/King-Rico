@@ -3,6 +3,7 @@ import {Timestamp} from 'firebase/firestore';
 import {createGameStore,publicPlayer} from '../../cloud/store.mjs';
 import engine from '../../cloud/engine.cjs';
 import parkRules from '../../cloud/park.cjs';
+import {tuckerDemo} from './tucker-demo.mjs';
 import paths from '../../games/fingo/paths.json' with {type:'json'};
 
 export const PRICE=25, METER_SPINS=10;
@@ -12,6 +13,7 @@ const fail=message=>{throw new Error(message);};
 const fresh=()=>({tickets:3,spins:0,bankUnits:0,wheel:null,passes:{},fingo:null});
 export function createPreview(saved={},rng=Math.random,clock=Date.now){
  const records=new Map(saved.records||[]),park=saved.park||fresh();
+ let tuckerSeeded=!!saved.tuckerSeeded;
  const ref='players/preview';
  const deps={reference:p=>p.join('/'),stamp:()=>Timestamp.fromMillis(clock()),now:clock,rng,read:async p=>snap(p),
   transact:async fn=>{const writes=new Map();const result=await fn({get:async p=>snap(p),set:(p,v)=>writes.set(p,v)});for(const [p,v]of writes)records.set(p,v);return result;}};
@@ -20,7 +22,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
  function player(){return publicPlayer(records.get(ref));}
  function state(){return {...structuredClone(park),price:PRICE,meterSpins:METER_SPINS};}
  function envelope(extra={}){return {...extra,player:player(),park:state()};}
- function exportState(){return {records:[...records],park};}
+ function exportState(){return {records:[...records],park,tuckerSeeded};}
  const once=new Map(saved.once||[]);
  async function run(data){
   if(!records.has(ref)){await call({action:'bootstrap',requestId:randomUUID()});const p=records.get(ref);p.balanceUnits=500000;p.settings={...p.settings,clownBetIdx:4,penaltyBetIdx:4,flyingBetIdx:4,fingoBetIdx:4,bounceBetIdx:4};}
@@ -30,7 +32,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
   // Preview only: every page load offers a fresh scratch card and test credit.
   // The production store/calendar remain unchanged; repeated claims within the
   // same visit still use the normal saved daily guard and immutable receipt.
-  if(data.action==='state'){current.bonus={day:null,dayIndex:-1,streak:0};return envelope();}
+  if(data.action==='state'){if(data.previewTuckerSetup&&!tuckerSeeded){current.peaches=3;current.peachBank={count:3,units:3*engine.units(engine.BETS[current.settings.slotBetIdx]||10)};tuckerSeeded=true;}current.bonus={day:null,dayIndex:-1,streak:0};return envelope();}
   if(!/^[\da-f-]{36}$/i.test(data.requestId||''))fail('Pedido inválido.');
   const fingerprint=JSON.stringify({...data,requestId:undefined});
   if(once.has(data.requestId)){const old=once.get(data.requestId);if(old.fingerprint!==fingerprint)fail('Pedido já utilizado.');return envelope({...old.result,replayed:true});}
@@ -46,7 +48,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(!engine.BETS.includes(data.bet))fail('Aposta inválida.');
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
-   const outcome=parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
+   const outcome=data.previewTucker?tuckerDemo(p,park,data.bet):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,

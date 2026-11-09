@@ -391,3 +391,10 @@ PNGs preservados em generated_images: exec-2a78a1c5-8b4c-4e2a-96ff-eac2442ba4cf.
 WebP q94 em docs/concepts/tucker-toucan/body-v1.webp e head-v1.webp;
 alpha e artes inspecionados. Custo da ferramenta não exposto. Aguardando
 feedback; sem integração no jogo, build ou publicação. Checkpoint [skip ci].
+
+### 2026-11-09 — Tucker, assets provisórios na demonstração
+Dono pediu aplicar a arte v1 mesmo sem gostar dela ainda. Cópias sem edição
+body-v1/head-v1 para assets/tucker/body.webp e head.webp. Nenhuma geração nova
+ou uso Meshy. Máscara vetorial ui/park/tucker-body-mask.svg e recortes CSS
+separam asas para movimento com a mesma imagem. Cesta copiada do DOM real,
+não regenerada. Uso só para avaliação no canal de prévia, sem aprovação final.

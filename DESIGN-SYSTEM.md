@@ -248,3 +248,11 @@ balanço curto (omitido com movimento reduzido), saldo vermelho e números
 caindo. Saldo e mostrador do prêmio permanecem nítidos; o mostrador original
 exibe em vermelho o desconto de cada patada, sem cartão flutuante no King. Modal claro com total vermelho e Continuar azul. Sem prêmio paralelo.
 Reutilizar sons/hápticos e contador compartilhados; não debitar pela animação.
+
+### Tucker — prévia de animação, arte provisória (09/11/2026)
+Trinca com círculos/linha vermelhos como Tony. Usar a cesta real como referência
+de posição/tamanho; durante o voo uma cópia visual leva frutos e contador,
+escondendo a original. Asas animadas separadamente por máscaras do asset,
+sem movimento repetitivo em modo reduzido. Mostrar espaço vazio antes do aviso.
+Cesta retorna somente após Continuar, com contagem confirmada. Arte v1 ainda
+não aprovada: não tratar o tucano atual como personagem finalizado.
