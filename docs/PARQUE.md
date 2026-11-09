@@ -424,9 +424,10 @@ Arte e quantidade em avaliação. Recibo salvo/deduplicado só na carteira
 fictícia; sem alteração de Firestore/cliente real ou sorteio natural. Ver
 [RAY-RACCOON.md](RAY-RACCOON.md). Não promover ao oficial por conta própria.
 
-## Fundo do Circus — escolha 3 (09/11/2026)
+## Fundo do Circus — imagem enviada 151169 (09/11/2026)
 
-Dono escolheu a opção 3, parque verde/azul com tendas laterais e gramado aberto,
-sem caminhos. Integrada na prévia como circus-park-lawn-v1.webp, com preload
+Escolha confirmada pela imagem enviada 151169.jpg: jardim diurno com tenda
+vermelha maior à esquerda, pavilhão azul à direita e gramado aberto,
+sem caminhos. Integrada na prévia como circus-garden-lawn-v1.webp, com preload
 no manifesto do Circus. A imagem antiga permanece disponível para o parque;
 a revisão não troca os cenários dos demais jogos nem reposiciona controles.

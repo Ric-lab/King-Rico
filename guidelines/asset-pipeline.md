@@ -437,3 +437,9 @@ testes do app ou publicação; aguardar escolha do dono.
 Dono escolheu explicitamente 03-parque.webp. Copiada sem edição/recompressão
 para assets/scenes/circus-park-lawn-v1.webp; alterados somente fundo/preload do
 Circus. Sem nova geração de imagem/Meshy. Fonte e alternativas preservadas.
+
+### 2026-11-09 — correção da escolha pela imagem 151169
+Dono enviou referência inequívoca: corresponde a 01-jardim.webp, não a 03-parque.
+Copiada sem edição/recompressão para assets/scenes/circus-garden-lawn-v1.webp;
+CSS e preload corrigidos. Nenhuma geração de imagem/Meshy. Opções e arquivo
+anterior preservados como histórico; imagem enviada prevalece sobre numeração.

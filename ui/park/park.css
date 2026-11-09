@@ -98,7 +98,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 
 /* Circus uses the selected open lawn; the park keeps its existing scene. */
 .park-circus-scene{background:#52c9ef!important}
-.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-park-lawn-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
+.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-garden-lawn-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
 .park-circus-scene>.park-circus-ambient+div{background:none!important}
 .park-circus-backdrop,.park-circus-bleed-lights,.park-old-curtains{display:none!important}
 .park-circus-stage{background:transparent!important;box-shadow:none!important}

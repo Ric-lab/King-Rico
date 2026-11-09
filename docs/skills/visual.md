@@ -60,3 +60,5 @@ Rejeitado:
 - Spin: trocar o aro iridescente pelo antigo spin-rim-v3 mudou o contorno e foi rejeitado. Recolorir o próprio SVG aprovado, preservando exatamente paths, abertura e espessuras; atual spin-rim-gold-contour-v1.svg.
 
 - Fundo circus-lawn-simple-v1 rejeitado: gramado quase chapado, árvores de brinquedo e tenda pequena ficaram infantis/genéricos. Simplificar caminhos/textura preservando acabamento e profundidade do jogo; não usar esse asset.
+
+- Fundo: numeração no chat levou à opção errada. A imagem enviada 151169.jpg determina a escolha: 01-jardim.webp. Não insistir em números quando o dono aponta outra imagem; verificar a referência visual exata.

@@ -3,8 +3,14 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Prévia (2026-11-09 · fundo escolhido: opção 3)
-- Dono escolheu com certeza a opção 3. Aplicada sem editar/recomprimir em assets/scenes/circus-park-lawn-v1.webp, só no fundo normal do Circus; manifesto de preload atualizado. Tendas laterais, gramado aberto sem caminhos, vegetação e céu azul.
+## Prévia (2026-11-09 · fundo confirmado pela imagem 151169)
+- Dono enviou a imagem exata desejada: é docs/concepts/circus-background-options/01-jardim.webp, com tenda vermelha grande à esquerda, pavilhão azul à direita e gramado claro. A interpretação anterior por números estava ERRADA; não usar 03-parque como escolha do dono.
+- Copiada sem editar/recomprimir para assets/scenes/circus-garden-lawn-v1.webp; referências do fundo do Circus e preload corrigidas. Cenários dos demais jogos/parque e controles preservados.
+- Teste focado de abertura/toque normal e reduzido; capturas work/preview-circus-screen-*.png inspecionadas. Conferir Actions da revisão.
+- Próximo passo: dono avaliar a imagem 151169 atrás da máquina na prévia. Usar a imagem enviada como referência inequívoca, sem presumir ordem/número exibido no chat. Oficial inalterado.
+
+## Aplicação anterior por interpretação incorreta (2026-11-09)
+- Interpretação incorreta do agente pela numeração: aplicou a opção 3. Aplicada sem editar/recomprimir em assets/scenes/circus-park-lawn-v1.webp, só no fundo normal do Circus; manifesto de preload atualizado. Tendas laterais, gramado aberto sem caminhos, vegetação e céu azul.
 - Botões/posições/rolos e fundos dos outros jogos/parque preservados. Sem alteração financeira ou nova geração de arte. Teste focado de abertura/paleta/toque normal e reduzido, com captura de tela completa work/preview-circus-screen-*.png; conferir Actions da revisão.
 - Próximo passo: dono avaliar a opção escolhida atrás da máquina na prévia. Não pedir novamente qual opção nem aplicar a versão chapada rejeitada. Oficial permanece sem mudança.
 

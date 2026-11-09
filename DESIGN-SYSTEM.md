@@ -266,9 +266,9 @@ visual do contador inteiro saem juntos à esquerda, sem movimento de passos.
 Original escondido, espaço vazio, modal e retorno da placa com nova contagem.
 Preservar escala e posição do contador real; manter rosto dentro da tela.
 
-### Fundo do Circus — opção 3 escolhida (09/11/2026)
-Usar assets/scenes/circus-park-lawn-v1.webp: mesma arte de
-concepts/circus-background-options/03-parque.webp, aprovada pelo dono.
+### Fundo do Circus — imagem 151169 confirmada (09/11/2026)
+Usar assets/scenes/circus-garden-lawn-v1.webp: mesma arte de
+concepts/circus-background-options/01-jardim.webp, aprovada pelo dono.
 Gramado sem caminhos, tendas laterais, vegetação e céu azul, acabamento
 ilustrado com profundidade. A tentativa de gramado chapado foi rejeitada.
 Aplicado só ao cenário normal do Circus; componentes/posição da máquina,
