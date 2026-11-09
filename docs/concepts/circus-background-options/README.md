@@ -1,0 +1,11 @@
+# Opções de fundo — 09/11/2026
+
+O dono pediu três opções após rejeitar o gramado excessivamente infantil.
+Todas partem do fundo atual, retirando os caminhos e preservando acabamento.
+
+1. [Jardim do circo](01-jardim.webp): tendas próximas, dia claro, verde fresco.
+2. [Campo ao entardecer](02-entardecer.webp): mais aberto, tenda distante, luz quente.
+3. [Parque verde e azul](03-parque.webp): vegetação mais presente, verdes profundos, tendas laterais.
+
+Somente propostas para escolher. Nenhuma aplicada ou publicada no jogo.
+Originais PNG preservados em generated_images; log em guidelines/asset-pipeline.md.

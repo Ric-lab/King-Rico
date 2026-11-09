@@ -421,3 +421,14 @@ spin-rim-gold-contour-v1.svg deriva diretamente de spin-rim-iridescent-v3.svg,
 substituindo apenas 12 cores. Comparação textual ignorando hexadecimais confirmou
 geometria/espessura/abertura idênticas. Sem geração de imagem/Meshy; fonte SVG
 original preservada. Corrige a troca indevida pelo contorno de spin-rim-v3.svg.
+
+### 2026-11-09 — três opções de fundo para escolha
+Três edições GPT Imagens em paralelo, base circus-daylight-v1.webp. Pedido
+explícito de três alternativas, sem aplicar: jardim diurno, campo ao entardecer
+e parque verde/azul. Preservar acabamento após rejeição da versão infantil.
+PNGs: exec-fd804b4d-f1a3-4217-a11b-f646ae3cd7f5.png,
+exec-4dca235b-140b-45bc-9d38-2b2c26a11f40.png,
+exec-78d846a3-6d4d-4202-8c0f-0edf67a0542a.png, em generated_images.
+Artes inspecionadas, WebP q94 em docs/concepts/circus-background-options.
+Sem Meshy; custo da ferramenta não exposto. Checkpoint [skip ci], sem build,
+testes do app ou publicação; aguardar escolha do dono.
