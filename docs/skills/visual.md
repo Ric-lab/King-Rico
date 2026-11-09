@@ -48,3 +48,5 @@ Rejeitado:
 - Unhas Tony Tiger v6 rejeitadas: dono quer largura de unha humana cobrindo a ponta superior do dedo, levemente comprida, sem gancho fino. V7 em avaliação.
 
 - Tony Tiger: decisão posterior do dono prevalece — ficar com corpo/cabeça v4 do commit 866e780, sem unhas/garras v5–v7. Turnaround v4 em avaliação.
+
+- Tony: riscos finos marfim/vermelhos tiveram pouca presença e foram rejeitados. Preferir três cortes pretos maiores sobre fundo dos rolos desfocado; desconto por patada no mostrador original do prêmio, não em cartão sobre o King. Modal final aprovado e preservado.

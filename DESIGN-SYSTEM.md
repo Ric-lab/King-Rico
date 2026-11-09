@@ -243,7 +243,8 @@ iluminação da tela inteira para destacar o prêmio.
 
 ### Tony — evento de perda (prévia v4, 09/11/2026)
 Três rostos aprovados v4 usam círculos/linha vermelhos, sem dourado de vitória.
-Três contatos separados por 1,55 s: corte fino marfim com borda vermelha,
+Três contatos separados por 1,55 s: cortes pretos largos sobre os rolos brevemente desfocados,
 balanço curto (omitido com movimento reduzido), saldo vermelho e números
-caindo. Modal claro com total vermelho e Continuar azul. Sem prêmio paralelo.
+caindo. Saldo e mostrador do prêmio permanecem nítidos; o mostrador original
+exibe em vermelho o desconto de cada patada, sem cartão flutuante no King. Modal claro com total vermelho e Continuar azul. Sem prêmio paralelo.
 Reutilizar sons/hápticos e contador compartilhados; não debitar pela animação.

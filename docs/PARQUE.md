@@ -381,8 +381,10 @@ Roubo adicional = mínimo entre uma aposta e 5% do saldo após apostar, em
 centavos inteiros. Total é salvo atomicamente no recibo do giro uma única vez.
 
 Apresentação: linha/círculos vermelhos, 700 ms de antecipação, três contatos
-separados por 1550 ms. Contato dispara marcas de garra, som, háptico, balanço
-curto e redução animada no saldo. Movimento reduzido elimina o balanço.
+separados por 1550 ms. Contato dispara três cortes pretos maiores, som, háptico, balanço
+curto e redução animada no saldo. O fundo dos rolos recebe desfoque breve;
+saldo e mostrador do prêmio continuam nítidos. Cada parcela aparece em vermelho
+no mostrador original do prêmio aos pés do King, sem cartão extra. Movimento reduzido elimina o balanço.
 Modal após o terceiro impacto mostra somente o total roubado e Continuar.
 Auto é interrompido. Erro de animação, recarga ou repetição de requisição não
 altera o desconto confirmado; recarga mostra o saldo real sem nova cobrança.

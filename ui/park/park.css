@@ -180,12 +180,14 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-tony-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .park-tony-lines polyline{fill:none;stroke:#ed3041;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #ffb3a5)}
 .park-tony-lines ellipse{fill:#ff354410;stroke:#e82839;stroke-width:3;filter:drop-shadow(0 0 3px #ffb3a5)}
-.park-tony-claws{position:absolute;left:21%;top:36%;width:59%;height:29%;transform:rotate(-26deg)}
-.park-tony-claws[data-strike="1"]{left:14%;top:43%;transform:rotate(22deg)}
-.park-tony-claws[data-strike="2"]{left:25%;top:39%;transform:rotate(-18deg)}
-.park-tony-claws svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 2px #82142555)}
-.park-tony-loss{position:absolute;left:50%;top:24%;transform:translateX(-50%);text-align:center;color:#a5142a;background:#fff7e8f5;border:2px solid #ed5360;border-radius:22px;padding:10px 22px;opacity:0;box-shadow:0 5px 16px #6b172130}
-.park-tony-loss small{display:block;font:800 14px 'Baloo 2',sans-serif;letter-spacing:1px}.park-tony-loss b{font:800 clamp(32px,10vw,55px)/1.1 'Baloo 2',sans-serif}
+.park-tony-veil{position:absolute;left:0;right:0;bottom:0;top:36%;opacity:0;background:#eef5ff5c;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);mask-image:linear-gradient(transparent,#000 36px);-webkit-mask-image:linear-gradient(transparent,#000 36px);transition:opacity .16s ease-out}
+.park-tony-claws{position:absolute;left:10%;top:40%;width:80%;height:30%;transform:rotate(-24deg)}
+.park-tony-claws[data-strike="1"]{left:6%;top:44%;transform:rotate(20deg)}
+.park-tony-claws[data-strike="2"]{left:13%;top:41%;transform:rotate(-16deg)}
+.park-tony-claws svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px #ffffff88)}
+.park-prize-value.is-tony-loss>span{color:#b91831!important;text-shadow:0 1px #fff8ed!important;font-weight:900!important}
+.park-tony-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(prefers-reduced-motion:reduce){.park-tony-veil{transition:none}}
 .kr-hud-balance.is-tony-hit{outline:3px solid #ec3046;box-shadow:0 0 16px #e8283955!important;background:#ffcfcc!important}.kr-hud-balance.is-tony-hit [data-kr-wallet-value]{color:#ac1128!important}
 .park-tony-portrait{width:125px;height:125px;object-fit:contain;display:block;margin:0 auto 12px}.park-tony-result .park-panel{background:#fff6e8;color:#79342d;border-color:#edb26c}.park-tony-result h2{margin:0;font-size:28px}.park-tony-total{display:block;color:#c22036;font:800 clamp(36px,11vw,60px)/1.1 'Baloo 2',sans-serif;margin:12px 0 0}.park-tony-result p{margin:0 0 24px}.park-tony-result .park-action{min-height:56px}
 

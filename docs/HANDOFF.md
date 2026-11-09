@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · destaque das garras do Tony)
+- Feedback: marcas anteriores feias/discretas; modal final aprovado. Cortes refeitos em preto, maiores, com desenho irregular e desfoque breve apenas na área dos rolos. Saldo e mostrador do prêmio ficam nítidos.
+- Cada desconto aparece agora no mostrador original do prêmio, aos pés do King Rico; cartão flutuante removido. Modal final, tempos/som/háptico e economia/Firestore não alterados.
+- Verificação focada: navegador em 390 px/normal e 320 px/movimento reduzido confere cor/tamanho visual, blur sem cobrir prêmio, três parcelas, saldo, modal, replay, reload entre patadas e falha de animação. Capturas em work/preview-tony-*.png. Build de produção após integração. Workflow da prévia deve ser conferido no commit desta revisão.
+- Próximo passo: dono avaliar /circus?demo=tony no canal de prévia. Oficial permanece sem mudança; nenhuma promoção para main autorizada nesta revisão.
+
 ## Prévia (2026-11-09 · Tony Tiger, três patadas)
 - Dono aprovou três rostos/linha vermelha, três patadas com riscos, balanço, som/háptico, quedas separadas do saldo e modal do total. Esclareceu que Tony é exclusivo: sem outro prêmio na rodada. Cabeça v4 de 866e780 copiada sem alteração para assets/tony/head.webp.
 - Implementado slotVersion 4 só na carteira de prévia. Cliente de produção segue pedindo v3; oficial e regras publicadas não foram alterados. Core/store/regras locais preparados para o débito atômico no mesmo recibo; versão antiga preservada.
