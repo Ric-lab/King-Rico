@@ -344,3 +344,10 @@ exec-04b4a0f1-e5c8-446e-89b1-1cab7921e2e5.png, em generated_images.
 Conversão WebP q94, alpha conferido e artes inspecionadas. Histórico preservado
 em docs/concepts/tony-tiger. Custo GPT Imagens não exposto; sem Meshy.
 V4 ainda em avaliação; nenhum build, animação ou publicação no site.
+
+### 2026-11-09 — Tony Tiger v5, garras discretas nas mãos
+Uma edição GPT Imagens do corpo v4: pequenas pontas de garras em marfim nas
+mãos, sem mudar pés/figurino/cabeça. Original exec-ff6d09ce-7870-4288-8670-c479e190143f.png
+preservado em generated_images. WebP q94 em docs/concepts/tony-tiger/body-v5.webp;
+alpha e arte conferidos. Cabeça v4 reutilizada, sem geração desnecessária.
+Custo não exposto; sem Meshy ou publicação no site. V1–v4 preservadas.
