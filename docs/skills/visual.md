@@ -56,3 +56,5 @@ Rejeitado:
 - Tucker pousado/deslocado à esquerda parecia levar a cesta por um pé só. Usar pose com duas garras próximas e alinhar o centro delas ao topo da alça; não deslocar o corpo para enquadrar a asa à custa desse contato.
 
 - Ray: caminhada/balanço e bilhete isolado rejeitados. Aparecer direto atrás do contador, levar a placa inteira para a esquerda e deixá-la ausente até fechar o modal; então restaurar com a nova contagem, como a cesta do Tucker.
+
+- Spin: trocar o aro iridescente pelo antigo spin-rim-v3 mudou o contorno e foi rejeitado. Recolorir o próprio SVG aprovado, preservando exatamente paths, abertura e espessuras; atual spin-rim-gold-contour-v1.svg.

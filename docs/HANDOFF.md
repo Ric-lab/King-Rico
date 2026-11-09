@@ -3,6 +3,11 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Prévia (2026-11-09 · contorno original do aro, só recolorido)
+- Dono confirmou que quer o contorno anterior do aro iridescente, apenas dourado. Criado spin-rim-gold-contour-v1.svg a partir do SVG aprovado: apenas 12 valores de cor mudaram. Paths, strokes, abertura, espessuras, dimensões e viewBox preservados; equivalência estrutural conferida ignorando somente cores.
+- Referência do botão e máscara do pulso usam esse SVG. Corpo vinho, letras douradas, posição, tamanho e clique preservados. O antigo spin-rim-v3.svg tem outro contorno e foi retirado desta montagem.
+- Verificação focada de paleta/toque normal e reduzido, com captura work/preview-spin-wine-*.png; conferir Actions no commit da revisão. Próximo passo: dono avaliar aro na prévia, sem alteração do oficial.
+
 ## Prévia (2026-11-09 · spin vinho e dourado)
 - Dono pediu aro/letras dourados e corpo vinho como a barra de +/−. Reaproveitado spin-rim-v3.svg e gradiente vinho da base-controls-v4. Pulso permanece na paleta vinho/dourado; barras/roletas conservam arco-íris. Profundidade, geometria, som/háptico e clique preservados.
 - Teste focado do navegador (KING_RICO_PALETTE_ONLY=1) em normal/reduzido passou, com aro/texto/cor e toque/cancelamento; capturas work/preview-spin-wine-*.png inspecionadas. Regressão completa teve expectativas atualizadas para a paleta nova e será executada pelo workflow. Nenhuma mudança financeira.

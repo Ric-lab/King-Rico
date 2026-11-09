@@ -415,3 +415,9 @@ exec-1f2b4890-592e-465e-8bcd-4884e811c011.png (cabeça). WebP q94 em
 docs/concepts/ray-raccoon e assets/ray, body-v1/head-v1.webp. Alpha e imagens
 inspecionados; sem Meshy/modelo rigado. Custo da ferramenta não exposto.
 Artes provisórias usadas só na demonstração /circus?demo=ray da prévia.
+
+### 2026-11-09 — aro dourado com contorno preservado
+spin-rim-gold-contour-v1.svg deriva diretamente de spin-rim-iridescent-v3.svg,
+substituindo apenas 12 cores. Comparação textual ignorando hexadecimais confirmou
+geometria/espessura/abertura idênticas. Sem geração de imagem/Meshy; fonte SVG
+original preservada. Corrige a troca indevida pelo contorno de spin-rim-v3.svg.

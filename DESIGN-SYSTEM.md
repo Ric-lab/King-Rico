@@ -28,7 +28,7 @@ não trocar todos os fundos como consequência de uma revisão do Circus.
 Creme e dourado sustentam números, molduras e superfícies dos rolos.
 Na revisão de 09/11/2026, o spin usa o mesmo vinho da barra de aposta:
 `#80142b` → `#640c24` → `#3f091c`. Aro dourado com o asset
-`spin-rim-v3.svg`, texto dourado `#f4c951` e destaque quente `#ffe29b`
+`spin-rim-gold-contour-v1.svg`, texto dourado `#f4c951` e destaque quente `#ffe29b`
 ao apertar. Auto/turbo conservam seu azul-turquesa.
 
 O botão mantém face rígida, relevo, som, háptico e pulso radial, mas permanece

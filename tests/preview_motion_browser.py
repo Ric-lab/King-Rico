@@ -23,7 +23,7 @@ with sync_playwright() as p:
   page.goto(BASE+'/circus');ready()
   rim=page.locator('.park-spin-iridescence')
   assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
-  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-v3.svg')
+  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-gold-contour-v1.svg')
   assert page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(100, 12, 36)'
   assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(244, 201, 81)'
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')

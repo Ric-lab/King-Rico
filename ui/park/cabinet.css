@@ -240,4 +240,4 @@
 .park-spin-iridescence{display:none;animation:none}
 .park-spin-face{background-image:linear-gradient(#80142b,#640c24 60%,#3f091c)}
 .park-spin-wash{background-image:linear-gradient(#80142b,#640c24 60%,#3f091c)}
-.park-spin-rim-pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:var(--park-rim-pulse-color,#ffdf70);mask:url('/assets/machine/spin-rim-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-v3.svg') center/100% 100% no-repeat}
+.park-spin-rim-pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:var(--park-rim-pulse-color,#ffdf70);mask:url('/assets/machine/spin-rim-gold-contour-v1.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-gold-contour-v1.svg') center/100% 100% no-repeat}
