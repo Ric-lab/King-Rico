@@ -44,3 +44,5 @@ Rejeitado:
 - Contador de ingressos de 30 px ficou pequeno e apertado; ampliar a placa e o espaço interno. Tenda do Parque com moldura própria destoou: dono pediu controle de videogame com a mesma base/escala de Home e menu.
 
 - Tony Tiger: garras dos dedões v5 aprovadas; demais unhas precisam cobrir o topo dos dedos, não parecer pontinhas coladas na extremidade. Revisão v6 em avaliação.
+
+- Unhas Tony Tiger v6 rejeitadas: dono quer largura de unha humana cobrindo a ponta superior do dedo, levemente comprida, sem gancho fino. V7 em avaliação.

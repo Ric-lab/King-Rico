@@ -359,3 +359,11 @@ aprovada. Original exec-bd500cde-2718-4a79-bda1-c82ecba23880.png preservado em
 generated_images. WebP q94 em docs/concepts/tony-tiger/body-v6.webp; alpha e
 imagem inspecionados. Cabeça v4 mantida. Custo da ferramenta não exposto;
 sem Meshy, build ou publicação no site. Revisão aguarda feedback.
+
+### 2026-11-09 — Tony Tiger v7, unhas largas
+V6 rejeitada pelo dono por parecer garra fina. Uma edição GPT Imagens: unhas
+largas como humanas sobre a ponta superior dos três dedos de cada mão, borda
+arredondada e pouco comprimento livre. Dedões preservados. Original
+exec-6c2e379f-47c8-411b-8e27-9266432aa074.png em generated_images; conversão
+WebP q94 em docs/concepts/tony-tiger/body-v7.webp. Alpha e imagem conferidos.
+Cabeça v4 mantida, histórico preservado. Custo não exposto; sem Meshy/build/site.

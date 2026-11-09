@@ -3,6 +3,10 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Arte (2026-11-09 · Tony Tiger, unhas largas v7)
+- V6 rejeitada por ainda parecer garra. V7 troca as seis unhas não-polegares por placas largas como unhas humanas, ocupando a ponta superior dos dedos, levemente compridas/arredondadas. Dedões e cabeça v4 preservados. Imagem e alpha conferidos; versões anteriores mantidas.
+- Próximo passo: feedback do dono nas unhas v7. Sem integração/publicação no jogo; animação ainda a definir pelo dono.
+
 ## Arte (2026-11-09 · Tony Tiger, unhas v6)
 - Dedões da v5 aprovados; outras três unhas de cada mão refeitas para acompanhar a superfície superior dos dedos, em vez de pequenas pontas. Corpo v6 gerado e inspecionado, alpha conferido. Cabeça v4 preservada; versões anteriores mantidas.
 - Próximo passo: feedback do dono nas unhas v6 e definição da animação pelo dono. Arte só em docs/concepts; nenhuma integração ou publicação no jogo.
