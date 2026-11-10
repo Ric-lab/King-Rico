@@ -1,3 +1,46 @@
+# Economia — auditoria vigente do Circus (10/11/2026)
+
+Esta seção substitui, para o Circus v4, as metas e tabelas históricas abaixo.
+Meta autorizada: 90% ±1,5 considerando moedas base/especial + extra da roleta
+− roubo do Tony + ingressos emitidos a 25 moedas cada. Créditos diários,
+recargas e entradas/resgate de ingressos não entram no denominador.
+Perdas de ingressos do Ray são divulgadas separadamente, sem escondê-las no RTP.
+
+| Aposta | Giros | Retorno total | Após perdas de ingressos do Ray |
+|---:|---:|---:|---:|
+| 1 | 5,000,000 | 90.302045% | 90.147545% |
+| 10 | 5,000,000 | 90.317389% | 90.175939% |
+| 100 | 5,000,000 | 89.710473% | 89.562948% |
+| 1000 | 5,000,000 | 89.437801% | 89.381376% |
+
+Execução: `node scripts/economy-audit.mjs --circus-v4 --spins=5000000 --bets=1,10,100,1000`.
+Seed 472831, banca inicial fictícia de 5 bilhões de moedas, sem reposição. Estado
+de Happeach, banca de Happeach, ingressos e contador da roleta persistem entre
+giros. O décimo giro e o extra da roleta usam o motor real; nenhum usuário real
+ou Firestore de produção foi usado. Resultados, componentes e IC95% por lotes
+em [circus-economy-audit.json](circus-economy-audit.json), com SHA-256 das fontes.
+É estimativa de longo prazo na estratégia descrita, não promessa por sessão.
+
+PAYS finais: `[8.576, 0.4, 0.8, 4.992, 1.92, 11.52, 17.28, 32, 43.52, 115.2]`.
+Tambor 0,4 e tenda 0,8 preservados; os outros oito símbolos receberam a mesma
+escala 1,28 sobre a base 64c4142, com precisão de três casas. Divisor de
+ingressos: `bet / 40000`, teto 14% preservado. Isso torna as trincas que dão
+ingressos menos frequentes; os ingressos avulsos decorativos não mudaram.
+
+Vilões preservados: Tony 5%, Tucker 2,5%, Ray 2,5% nos giros elegíveis; décimo
+reservado à roleta. Tony continua com até 1,5 aposta e teto de 5% pós-aposta.
+As regras Firestore apenas acompanham esse limite já presente no motor e o
+máximo da tabela (8 × 115,2 × 10 = 9216×); tetos v1/v2 continuam intactos.
+`TARGET_COIN_RTP=.80` veio da base do Claude e é metadado, não controle do
+sorteio. O critério de aceitação desta revisão é o total auditado de 88,5–91,5%.
+
+A base 64c4142 foi auditada com os mesmos 5 milhões por aposta: 86,587764%,
+86,223674%, 82,052235% e 74,740784%. Dados em
+[circus-economy-before.json](circus-economy-before.json). Uma tentativa com divisor
+20000 ainda deu 88,355373% na aposta 1000 e foi rejeitada, sem publicação.
+
+## Registros anteriores — histórico
+
 # Economia de moedas — Circus v3
 
 Visual e pagamentos publicados em king-rico.web.app pelo commit 7e41b89 em

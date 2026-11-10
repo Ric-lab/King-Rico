@@ -1,6 +1,9 @@
 // Reproducible expectations and session samples from the production engine.
 // Gifts/refills are deliberately excluded from wager RTP.
 import engine from '../cloud/engine.cjs';
+import park from '../cloud/park.cjs';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {slotMath} from './economy-math.mjs';
 import {auditNeck} from './neck-audit.mjs';
 import {auditFlying} from './flying-audit.mjs';
@@ -103,4 +106,40 @@ export function auditEconomy() {
     thirtyThree:{strategies:[24,25,26,27,28,29,30].map(t=>cardSimulation(200000,t)),sessions:sessions('33')},
     excluded:'Legacy 21 and parked Bounce/Claw/Race retain their previous math.'};
 }
-if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href)console.log(JSON.stringify(auditEconomy(),null,2));
+// Complete Circus v4 audit: production engine, persistent Happeach/tickets,
+// tenth-spin bonus and actual post-stake theft. No grants/refills or real accounts.
+export function auditCircusV4({spins=5000000,bet=10,seed=472831}={}) {
+  if(!Number.isSafeInteger(spins)||spins<1||!engine.BETS.includes(bet))throw Error('Invalid audit parameters');
+  const rng=seeded(seed),stake=engine.units(bet),p={balanceUnits:500000000000,peaches:0,peachBank:{count:0,units:0}},state=park.fresh();
+  let paid=0,wheel=0,theft=0,tickets=0,stolenTickets=0,tony=0,tucker=0,ray=0,batch=0;const batches=[];
+  for(let i=0;i<spins;i++){
+    const x=park.spin(p,state,bet,'audit-'+i,rng,4),loss=x.tony?.stolenUnits||0,award=x.ticketAward||0;
+    p.balanceUnits+=x.winUnits-stake-loss;p.peaches=x.peaches;p.peachBank=x.peachBank;
+    paid+=x.winUnits;theft+=loss;tickets+=award;stolenTickets+=x.ray?.stolen||0;
+    tony+=!!x.tony;tucker+=!!x.tucker;ray+=!!x.ray;
+    let extra=0;if(state.wheel){extra=park.bonus(state,state.wheel.id,rng);wheel+=extra;p.balanceUnits+=extra;state.wheel=null;state.spins=0;}
+    batch+=x.winUnits+extra-loss+award*park.PRICE*100;
+    if((i+1)%100000===0){batches.push(batch/(100000*stake));batch=0;}
+    if(p.balanceUnits<stake)throw Error('Audit bankroll exhausted');
+  }
+  const wagered=spins*stake,ticketUnits=tickets*park.PRICE*100,total=paid+wheel-theft+ticketUnits;
+  const mean=batches.reduce((a,b)=>a+b,0)/batches.length;
+  const se=batches.length>1?Math.sqrt(batches.reduce((a,b)=>a+(b-mean)**2,0)/(batches.length-1)/batches.length):null;
+  return {version:4,spins,bet,seed,pays:[...engine.circusProfile.PAYS],target:[.885,.915],
+    components:{baseAndFeatureCoins:paid/100,wheelCoins:wheel/100,tigerStolen:theft/100,ticketsAwarded:tickets,ticketValue:park.PRICE,ticketCoins:ticketUnits/100,rayStolenTickets:stolenTickets},
+    coinReturn:(paid+wheel-theft)/wagered,totalReturn:total/wagered,
+    netOfRayReturn:(total-stolenTickets*park.PRICE*100)/wagered,
+    sample95Interval:se?[mean-1.96*se,mean+1.96*se]:null,
+    villains:{tony,tucker,ray},endingTickets:state.tickets,
+    inRange:total/wagered>=.885&&total/wagered<=.915,
+    scope:'Total = base/feature coins + tenth-spin wheel - Tiger theft + issued tickets at 25 coins. Ray losses and net ticket return reported separately. No grants/refills or ticket redemption.'};
+}
+if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
+  if(process.argv.includes('--circus-v4')){
+    const arg=(name,fallback)=>process.argv.find(a=>a.startsWith(name+'='))?.split('=')[1]??fallback;
+    const spins=Number(arg('--spins','5000000')),bets=arg('--bets','1,10,100,1000').split(',').map(Number),seed=Number(arg('--seed','472831'));
+    const results=[];for(const bet of bets){const result=auditCircusV4({spins,bet,seed});results.push(result);console.error(JSON.stringify({bet,spins,totalReturn:result.totalReturn,netOfRayReturn:result.netOfRayReturn,inRange:result.inRange}));}
+    const sourceHashes=Object.fromEntries(['cloud/circus-profile.cjs','cloud/park.cjs','cloud/engine.cjs','scripts/economy-audit.mjs'].map(file=>[file,createHash('sha256').update(readFileSync(new URL('../'+file,import.meta.url))).digest('hex')]));
+    console.log(JSON.stringify({date:new Date().toISOString(),command:process.argv.slice(2),sourceHashes,results,passed:results.every(r=>r.inRange&&r.totalReturn<=1)},null,2));
+  }else console.log(JSON.stringify(auditEconomy(),null,2));
+}

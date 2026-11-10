@@ -1,5 +1,6 @@
-"""A committed x20 spin boards the pilot and reveals its existing win, exactly once."""
-import os,json
+from helpers.circus import PAYS,br_money
+"""A committed tiered spin boards the pilot and reveals its existing win, exactly once."""
+import os,json,math
 from playwright.sync_api import sync_playwright
 from helpers.daily_reward import collect_daily
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178')
@@ -14,7 +15,7 @@ with sync_playwright() as p:
   page.add_init_script('''window.boardingPoses=[];new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-bigwin-jumper')&&e.dataset.pose&&boardingPoses.at(-1)!==e.dataset.pose)boardingPoses.push(e.dataset.pose);}}).observe(document,{subtree:true,attributes:true,attributeFilter:['data-pose']});''')
   page.goto(BASE+('/circus?demo=spacewin' if space else '/circus?demo=bigwin'));page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")');collect_daily(page)
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
-  initial=page.evaluate('KingRicoCloud.player.balance');prize=2000 if space else 200;suffix=str(width)+('-space' if space else '')
+  initial=page.evaluate('KingRicoCloud.player.balance');prize=round(10*80*PAYS[3] if space else 10*PAYS[8],2);suffix=str(width)+('-space' if space else '')
   page.evaluate('''()=>{const fetch=window.fetch;window.flightRequests=[];window.fetch=(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d)flightRequests.push(d.action);return fetch(u,o);};}''')
   page.get_by_role('button',name='Girar',exact=True).click()
   flight=page.get_by_role('region',name='Voo do grande prêmio',exact=True);flight.wait_for()
@@ -76,8 +77,9 @@ with sync_playwright() as p:
    assert composition['left']>=0 and composition['right']<=width,composition
    assert composition['amountSize']>composition['multipleSize'] and composition['valueLeft']>=0 and composition['valueRight']<=width,composition
    assert flight.locator('.park-bigwin-plane').bounding_box()['width']<first['width']*.6
-   assert flight.locator('[data-flight-amount]').inner_text()==('+2.000,00' if space else '+200,00')
-   assert flight.get_attribute('data-altitude')==('space' if space else 'stratosphere')
+   assert flight.locator('[data-flight-amount]').inner_text()==('+'+br_money(prize))
+   altitude=max(0,min(1,math.log(max(5,prize/10)/5,20)))
+   assert flight.get_attribute('data-altitude')==('space' if altitude>.72 else 'stratosphere' if altitude>.3 else 'sky')
    assert float(flight.evaluate('e=>getComputedStyle(e).getPropertyValue("--flight-space")'))>(.99 if space else 0)
 
    frames=page.evaluate('flightBackgroundFrames.filter(f=>f.elapsed>1400)')

@@ -111,8 +111,8 @@ service cloud.firestore {
         && p.peachBank == {'count':left,'units':saved} && x.peachBank == p.peachBank
         && (trigger ? x.feature is map && x.feature.bet == bonusUnits / 100.0 : x.feature == null)
         // Legacy: 5 * 33.3 * full-screen x10 = 1665. Version 2: 8 * 33.3 * 10 = 2664.
-        // V3: eight lines * 50x wild * full-screen x10 = 4000; older receipts keep their caps.
-        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)>=3 ? 4000 : x.get('slotVersion',1)==2 ? 2664 : 1665);
+        // Current table: eight lines * 115.2x wild * full-screen x10 = 9216; v1/v2 caps unchanged.
+        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)>=3 ? 9216 : x.get('slotVersion',1)==2 ? 2664 : 1665);
     }
     function bounce(p, old, o) {
       let x = o.result.outcome;
@@ -196,7 +196,8 @@ service cloud.firestore {
     function tonyResult(p,old,o) {
       let x=o.result.outcome; let t=x.tony;
       let cap=int((old.balanceUnits-o.betUnits) / 20);
-      let amount=cap < o.betUnits ? cap : o.betUnits;
+      let maximum=int(o.betUnits*15 / 10);
+      let amount=cap < maximum ? cap : maximum;
       let g=x.grid;
       return x.get('slotVersion',1)==4 && x.parkVersion==1 && o.winUnits==0
         && x.res.win==0 && x.res.peach==[] && x.feature==null && x.ticketAward==0

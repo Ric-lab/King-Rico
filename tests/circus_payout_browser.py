@@ -39,7 +39,7 @@ with sync_playwright() as p:
   assert page.evaluate('coinQA.invalid')==0,li
   if li==5:page.screenshot(path='work/preview-payout-column-coins.png')
   page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun',timeout=10000)
-  assert abs(page.evaluate('KingRicoCloud.player.balance')-(before-10+6))<.001
+  assert abs(page.evaluate('KingRicoCloud.player.balance')-(before-10+4))<.001
   print(f'Line {li}: topmost highlight, painted finite flight and confirmed balance',flush=True)
   if REEL_ONLY:break
  assert sorted(page.evaluate('villainsSeen'))==[12,13,14]

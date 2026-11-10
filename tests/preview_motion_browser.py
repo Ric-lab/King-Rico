@@ -68,7 +68,7 @@ with sync_playwright() as p:
    const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
    fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
    // V4 samples the exclusive Tony event before the 18 ordinary symbol draws.
-   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>++draw===21?(row+.5)/8:.1;try{return await fetch(u,o);}finally{Math.random=random;}};
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>{const n=++draw;return n===1?.99:n===20?0:n===21?(row+.5)/8:.1;};try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',ticket_line)
   before=page.evaluate('KingRicoCloud.park.tickets')
   page.get_by_role('button',name='Girar',exact=True).click()

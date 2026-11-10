@@ -1,3 +1,4 @@
+from helpers.circus import PAYS
 from helpers.daily_reward import collect_daily
 """Actual Circus animation for loose tickets and a committed vertical coin win."""
 import os,json
@@ -49,18 +50,19 @@ with sync_playwright() as p:
  marker=page.locator('[data-payline="5"]');marker.wait_for()
  m=marker.bounding_box();symbol=page.locator('[data-sym="3"]').bounding_box()
  assert abs(m['x']+m['width']/2-symbol['x']-symbol['width']/2)<3,(m,symbol)
- assert page.evaluate('__fc._cloudSpin.outcome.res.win')==6
+ assert page.evaluate('__fc._cloudSpin.outcome.res.win')==4
  page.screenshot(path='work/preview-column-prize.png')
- assert page.evaluate('KingRicoCloud.player.balance')==balance-30+6
+ assert page.evaluate('KingRicoCloud.player.balance')==balance-30+4
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun')
- assert page.evaluate('__fc.payoutSymbols().map(s=>s.pay)')==[4,.6,1,2.5,1.6,5,8,15,20,50]
+ assert page.evaluate('__fc.payoutSymbols().map(s=>s.pay)')==PAYS
  before_high=page.evaluate('KingRicoCloud.player.balance')
- page.evaluate("values=>{window.columnDraws=values;window.unexpectedFlight=false;new MutationObserver(records=>{for(const r of records)for(const e of r.addedNodes)if(e.classList?.contains('park-bigwin-flight'))window.unexpectedFlight=true;}).observe(document.body,{childList:true});__fc.setState({betIdx:9});}",draws([7,7,7,0,1,2,3,4,5],.99))
+ page.evaluate("values=>{window.columnDraws=values;window.unexpectedFlight=false;new MutationObserver(records=>{for(const r of records)for(const e of r.addedNodes)if(e.classList?.contains('park-bigwin-flight'))window.unexpectedFlight=true;}).observe(document.body,{childList:true});__fc.setState({betIdx:9});}",draws([6,6,6,0,1,2,3,4,5],.99))
  page.get_by_role('button',name='Girar',exact=True).click()
  page.wait_for_function('KingRicoCloud.park.spins===4&&!__fc.state.spinning')
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun',timeout=20000)
- assert page.evaluate('__fc._cloudSpin.outcome.res.win')==15000
- assert page.evaluate('KingRicoCloud.player.balance')==before_high-1000+15000
+ expected=round(1000*page.evaluate('__fc.payoutSymbols()[6].pay'),2)
+ assert page.evaluate('__fc._cloudSpin.outcome.res.win')==expected
+ assert page.evaluate('KingRicoCloud.player.balance')==before_high-1000+expected
  assert not page.evaluate('unexpectedFlight'),'A large absolute amount below 20x must not trigger the flight'
  page.screenshot(path='work/preview-high-stake-no-bigwin.png')
  assert not errors and not missing,(errors,missing)

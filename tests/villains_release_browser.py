@@ -28,14 +28,14 @@ with sync_playwright() as p:
  patch(root+'/park/state',{'tickets':{'integerValue':'3'},'version':{'integerValue':'1'},'revision':{'integerValue':'0'},'spins':{'integerValue':'0'},'wheel':{'nullValue':None},'lastOperationId':{'nullValue':None},'passes':{'mapValue':{'fields':{}}}})
  page.wait_for_function('KingRicoCloud.player.peaches===3&&KingRicoCloud.park.tickets===3');page.reload()
  page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")&&KingRicoCloud.player')
- for kind,draw,label in [('tony',0,'Tony roubou moedas'),('tucker',.005,'Tucker levou Happeach'),('ray',.008,'Ray e os ingressos')]:
+ for kind,draw,label in [('tony',0,'Tony roubou moedas'),('tucker',.0625,'Tucker levou Happeach'),('ray',.0875,'Ray e os ingressos')]:
   page.wait_for_function('!__fc.cloudBusy()');before=page.evaluate('KingRicoCloud.player.balance')
   page.evaluate('''draw=>{const draws=[draw,.1],original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>{if(a instanceof Uint32Array&&a.length===1&&draws.length){a[0]=Math.floor(draws.shift()*2**32);return a;}return original(a);};}''',draw)
   print('Testing '+kind,flush=True);page.locator('[data-spin-btn]').click();scene=page.locator('.park-'+kind+'-scene');scene.wait_for(timeout=30000)
   receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];assert receipt['outcome']['slotVersion']==4
   assert page.locator('[data-park-'+kind+'="true"]').count()==3
   if kind=='tony':
-   assert event['stolenUnits']==1000
+   assert event['stolenUnits']==1500
    page.wait_for_function('document.querySelector(".park-tony-scene")?.dataset.hit==="1"')
   else:
    assert event['stolen']==1

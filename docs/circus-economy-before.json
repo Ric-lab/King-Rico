@@ -1,0 +1,195 @@
+{
+  "date": "2026-11-10T22:02:30.908Z",
+  "command": [
+    "--circus-v4",
+    "--spins=5000000",
+    "--bets=1,10,100,1000"
+  ],
+  "results": [
+    {
+      "version": 4,
+      "spins": 5000000,
+      "bet": 1,
+      "seed": 472831,
+      "pays": [
+        6.7,
+        0.4,
+        0.8,
+        3.9,
+        1.5,
+        9,
+        13.5,
+        25,
+        34,
+        90
+      ],
+      "target": [
+        0.885,
+        0.915
+      ],
+      "components": {
+        "baseAndFeatureCoins": 3402084.9,
+        "wheelCoins": 837405.3,
+        "tigerStolen": 337152,
+        "ticketsAwarded": 17082,
+        "ticketValue": 25,
+        "ticketCoins": 427050,
+        "rayStolenTickets": 17082
+      },
+      "coinReturn": 0.78046764,
+      "totalReturn": 0.86587764,
+      "netOfRayReturn": 0.78046764,
+      "sample95Interval": [
+        0.8582567814063675,
+        0.8734984985936327
+      ],
+      "villains": {
+        "tony": 224768,
+        "tucker": 112674,
+        "ray": 112798
+      },
+      "endingTickets": 0,
+      "inRange": false,
+      "scope": "Total = base/feature coins + tenth-spin wheel - Tiger theft + issued tickets at 25 coins. Ray losses and net ticket return reported separately. No grants/refills or ticket redemption."
+    },
+    {
+      "version": 4,
+      "spins": 5000000,
+      "bet": 10,
+      "seed": 472831,
+      "pays": [
+        6.7,
+        0.4,
+        0.8,
+        3.9,
+        1.5,
+        9,
+        13.5,
+        25,
+        34,
+        90
+      ],
+      "target": [
+        0.885,
+        0.915
+      ],
+      "components": {
+        "baseAndFeatureCoins": 33764561,
+        "wheelCoins": 8482826,
+        "tigerStolen": 3367350,
+        "ticketsAwarded": 169272,
+        "ticketValue": 25,
+        "ticketCoins": 4231800,
+        "rayStolenTickets": 112755
+      },
+      "coinReturn": 0.77760074,
+      "totalReturn": 0.86223674,
+      "netOfRayReturn": 0.80585924,
+      "sample95Interval": [
+        0.8562612363334645,
+        0.8682122436665356
+      ],
+      "villains": {
+        "tony": 224490,
+        "tucker": 112739,
+        "ray": 112756
+      },
+      "endingTickets": 56517,
+      "inRange": false,
+      "scope": "Total = base/feature coins + tenth-spin wheel - Tiger theft + issued tickets at 25 coins. Ray losses and net ticket return reported separately. No grants/refills or ticket redemption."
+    },
+    {
+      "version": 4,
+      "spins": 5000000,
+      "bet": 100,
+      "seed": 472831,
+      "pays": [
+        6.7,
+        0.4,
+        0.8,
+        3.9,
+        1.5,
+        9,
+        13.5,
+        25,
+        34,
+        90
+      ],
+      "target": [
+        0.885,
+        0.915
+      ],
+      "components": {
+        "baseAndFeatureCoins": 318707630,
+        "wheelCoins": 84672370,
+        "tigerStolen": 33738000,
+        "ticketsAwarded": 1624767,
+        "ticketValue": 25,
+        "ticketCoins": 40619175,
+        "rayStolenTickets": 112924
+      },
+      "coinReturn": 0.739284,
+      "totalReturn": 0.82052235,
+      "netOfRayReturn": 0.81487615,
+      "sample95Interval": [
+        0.8135676609142022,
+        0.827477039085798
+      ],
+      "villains": {
+        "tony": 224920,
+        "tucker": 112770,
+        "ray": 112924
+      },
+      "endingTickets": 1511843,
+      "inRange": false,
+      "scope": "Total = base/feature coins + tenth-spin wheel - Tiger theft + issued tickets at 25 coins. Ray losses and net ticket return reported separately. No grants/refills or ticket redemption."
+    },
+    {
+      "version": 4,
+      "spins": 5000000,
+      "bet": 1000,
+      "seed": 472831,
+      "pays": [
+        6.7,
+        0.4,
+        0.8,
+        3.9,
+        1.5,
+        9,
+        13.5,
+        25,
+        34,
+        90
+      ],
+      "target": [
+        0.885,
+        0.915
+      ],
+      "components": {
+        "baseAndFeatureCoins": 3187076300,
+        "wheelCoins": 846723700,
+        "tigerStolen": 337380000,
+        "ticketsAwarded": 1624767,
+        "ticketValue": 25,
+        "ticketCoins": 40619175,
+        "rayStolenTickets": 112924
+      },
+      "coinReturn": 0.739284,
+      "totalReturn": 0.747407835,
+      "netOfRayReturn": 0.746843215,
+      "sample95Interval": [
+        0.7404767205068733,
+        0.7543389494931269
+      ],
+      "villains": {
+        "tony": 224920,
+        "tucker": 112770,
+        "ray": 112924
+      },
+      "endingTickets": 1511843,
+      "inRange": false,
+      "scope": "Total = base/feature coins + tenth-spin wheel - Tiger theft + issued tickets at 25 coins. Ray losses and net ticket return reported separately. No grants/refills or ticket redemption."
+    }
+  ],
+  "passed": false
+}

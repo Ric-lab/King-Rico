@@ -24,7 +24,7 @@ function scatterTickets(x,rng){
  for(let n=0;n<count&&available.length;n++){const at=Math.min(available.length-1,Math.floor(rng()*available.length));const [cell]=available.splice(at,1);x.grid[cell]=TICKET;cells.push(cell);}
  return cells;
 }
-// V4: 1% total villain chance, split equally. Fixed rates, never based on past wins.
+// V4: fixed 5% Tony, 2.5% Tucker and 2.5% Ray; never based on past wins.
 // 2026-11-10: vilões em 10% dos giros (Tony 5%, Tucker e Ray 2,5% cada). Total moedas+ingressos (25 moedas) ≈ 90%.
 const TONY=12,TONY_CHANCE=.05,RES_CHANCE=.025;
 function theftUnits(balanceUnits,betUnits){return Math.max(0,Math.min(Math.round(1.5*betUnits),Math.floor(Math.max(0,balanceUnits-betUnits)/20)));}
@@ -64,7 +64,7 @@ function spin(p,s,bet,id,rng,version=1){
  let x=engine.slot(bet,p.peaches,random,p.peachBank,version);
  if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank,version);
   if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet,version),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
- const award=!filling&&!x.res.peach.length&&!x.feature&&random()<Math.min(.14,bet/690)?3:0; // ingresso = 25 moedas: ~8% do retorno em qualquer aposta
+ const award=!filling&&!x.res.peach.length&&!x.feature&&random()<Math.min(.14,bet/40000)?3:0; // Ingressos valem 25 moedas na auditoria total.
  if(award){placeTickets(x,bet,random,version);s.tickets+=3;}else if(version>=2)scatterTickets(x,random);
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:3,baseUnits:engine.units(x.res.win),pockets:[...POCKETS],result:null};
  return {...x,...(version>=2?{slotVersion:version}:{}),parkVersion:1,ticketAward:award};

@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const park=require('../cloud/park.cjs'),engine=require('../cloud/engine.cjs');
-for(const [kind,draw,symbol]of[['tucker',.005,13],['ray',.008,14]]){
+for(const [kind,draw,symbol]of[['tucker',.0625,13],['ray',.0875,14]]){
  test(kind+' uses every line, takes at most one and preserves the other resources',()=>{
   for(let before=0;before<=4;before++)for(let line=0;line<8;line++){
    const p={balanceUnits:100000,peaches:before,peachBank:{count:before,units:before?751:0}},s=park.fresh();s.tickets=before;

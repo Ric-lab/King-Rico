@@ -1,5 +1,25 @@
 # HANDOFF
 
+## Auditoria da economia do Circus v4 (2026-11-10 · Codex)
+- Autorização atual do dono substitui a entrega anterior apenas ao Claude: auditar/calibrar, aprovar prévia e só depois publicar a MESMA revisão na main via fast-forward. Nunca publicar fora da faixa de 88,5–91,5% ou com retorno acima de 100%.
+- Base puxada: 64c4142. Auditoria final real: 5.000.000 giros POR aposta, seed 472831. Fórmula = moedas base/especial + extra da roleta − Tony + ingressos emitidos ×25. Ray líquido informado separadamente.
+
+| Aposta | Giros | Retorno total | Após perdas de ingressos do Ray |
+|---:|---:|---:|---:|
+| 1 | 5,000,000 | 90.302045% | 90.147545% |
+| 10 | 5,000,000 | 90.317389% | 90.175939% |
+| 100 | 5,000,000 | 89.710473% | 89.562948% |
+| 1000 | 5,000,000 | 89.437801% | 89.381376% |
+
+- PAYS finais [8.576,.4,.8,4.992,1.92,11.52,17.28,32,43.52,115.2]; escala 1,28 somente nos oito permitidos. Tambor/tenda preservados. Divisor ingresso 690→40000; probabilidades Tony 5%/Tucker 2,5%/Ray 2,5% e roleta a cada 10 inalteradas. Os quatro IC95% do retorno total também ficaram inteiros na faixa.
+- Fonte/reprodução e limitações: docs/ECONOMIA.md; relatório completo e hashes em docs/circus-economy-audit.json, base reprovada em circus-economy-before.json. Não reexecutar o script antigo sem --circus-v4 para validar esta tabela: ele mantém o relatório dos outros jogos por compatibilidade.
+- Firestore: validação do Tony ajustada ao 1,5× que JÁ estava no motor 64c4142; teto do prêmio acompanha PAYS (9216×), sem mudar pagamentos para satisfazer teste. UI só recebeu explicação correta do limite do Tony.
+- Testes atualizados: circus-economy/tony/resource-villains e integration (PAYS, metadado .80, fronteiras e limite 1,5×); circus-audit novo (5 milhões, faixa, fórmula e hashes); navegadores bigwin_flight/circus_columns/circus_payout/preview_motion/prize_release/villains_release e helper circus (valores da tabela atual e sorteios determinísticos). Não alterado o jogo para passar testes.
+- Verificação local concluída: npm test passou; teste do relatório e contratos financeiros (15 casos) passou; 65 testes Firestore passaram; os 12 navegadores da prévia passaram (casos atualizados reconferidos); villains_release_browser e prize_release_browser passaram com login/carteira reais emulados, sem assets ausentes ou erros JS. Build final de produção gerado após todos os navegadores.
+- Commits da prévia e main: o MESMO objeto Git identificado pela referência imutável `refs/tags/circus-economia-v4-90-20261110` (resolver SHA com `git rev-parse circus-economia-v4-90-20261110^{commit}`). A tag só será publicada após o workflow da prévia aprovar este commit. A referência identifica exatamente a revisão aprovada nas duas branches. Base de partida 64c4142; main anterior b0ffe91.
+- Sequência de entrega: prévia sem [skip ci] → aguardar sucesso completo → main via fast-forward do mesmo objeto, sem [skip ci] → conferir sucesso oficial e refs/tag iguais. Nunca trocar conteúdo após aprovação da prévia nem pular testes.
+- Próximo passo após essa sequência: dono avaliar o balanceamento no oficial. Se algum gate falhar, corrigir primeiro na prévia, repetir seu workflow e não publicar main.
+
 ## Prévia (2026-11-10 · Claude · economia do Circus)
 - Pedido do dono: pagava demais, vilões raros, "saldo nunca cai". Meta: moedas + ingressos (25 moedas cada) = 90%.
 - `cloud/circus-profile.cjs` PAYS → [6.7,.4,.8,3.9,1.5,9,13.5,25,34,90] (tambor 0,6→0,4; tenda 1→0,8; topo maior). TARGET_COIN_RTP .80.

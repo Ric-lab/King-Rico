@@ -1076,24 +1076,24 @@ test('Circus v3 keeps its reduced common pay and one immutable credit across ret
  const name='circus-v3-'+randomUUID(),c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
  const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:3});
  const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);assert.ok(a.replayed||b.replayed);
- assert.equal(a.outcome.slotVersion,3);assert.equal(a.outcome.res.win,6);assert.equal(a.player.balance,996);
- assert.equal((await c.call(spin)).player.balance,996);
+ assert.equal(a.outcome.slotVersion,3);assert.equal(a.outcome.res.win,4);assert.equal(a.player.balance,994);
+ assert.equal((await c.call(spin)).player.balance,994);
 });
-test('Circus v3 accepts its 4000x ceiling without widening legacy receipts',async()=>{
+test('Circus v3 accepts its current paytable ceiling without widening legacy receipts',async()=>{
  const name='circus-v3-max-'+randomUUID(),c=await client(name,name,{rng:()=>.999});await c.call(request({action:'bootstrap'}));
  const a=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:3}));
- assert.equal(a.outcome.res.win,4000);assert.equal(a.player.balance,4999);
+ assert.equal(a.outcome.res.win,engine.circusProfile.PAYS[9]*80);assert.equal(a.player.balance,999+engine.circusProfile.PAYS[9]*80);
 });
 
 test('Tony debit is atomic, bounded and immutable across duplicate requests and bootstrap',async()=>{
  const name='tony-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
  const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:4});
  const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);
- assert.ok(a.replayed||b.replayed);assert.equal(a.outcome.tony.stolenUnits,1000);
- assert.equal(a.player.balance,980);assert.equal(b.player.balance,980);assert.equal(a.outcome.winUnits,0);
- assert.equal(a.outcome.ticketAward,0);assert.equal(a.park.spins,1);assert.equal(a.baseBalance,980);
- assert.equal((await c.call(spin)).player.balance,980);
- assert.equal((await c.call(request({action:'bootstrap'}))).player.balance,980);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.outcome.tony.stolenUnits,1500);
+ assert.equal(a.player.balance,975);assert.equal(b.player.balance,975);assert.equal(a.outcome.winUnits,0);
+ assert.equal(a.outcome.ticketAward,0);assert.equal(a.park.spins,1);assert.equal(a.baseBalance,975);
+ assert.equal((await c.call(spin)).player.balance,975);
+ assert.equal((await c.call(request({action:'bootstrap'}))).player.balance,975);
  const ref=doc(c.db,'players',c.uid),p=(await getDoc(ref)).data();
  // A forged replay cannot debit again: receipt is immutable and revision alone cannot charge.
  await assertFails(updateDoc(ref,{balanceUnits:p.balanceUnits-1000,revision:p.revision+1,updatedAt:serverTimestamp()}));
@@ -1112,14 +1112,14 @@ test('Tony debit is atomic, bounded and immutable across duplicate requests and 
    fingerprint:'forged',betUnits:1000,winUnits:0,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
   await assertFails(batch.commit());
  }
- await forged(x=>{x.tony.stolenUnits=1001;x.tony.hits=[333,333,335];});
+ await forged(x=>{x.tony.stolenUnits=1501;x.tony.hits=[500,500,501];});
  await forged(x=>{x.slotVersion=3;});
  await forged(x=>{x.res.win=1;});
  await forged(x=>{x.tony.hits=[1,1,1];});
- assert.equal((await getDoc(ref)).data().balanceUnits,98000);
+ assert.equal((await getDoc(ref)).data().balanceUnits,97500);
 });
 
-for(const [kind,draw]of[['tucker',.005],['ray',.008]]){
+for(const [kind,draw]of[['tucker',.0625],['ray',.0875]]){
  test(kind+' commits once across devices, rejects forged losses and animates at zero',async()=>{
   const {default:park}=await import('../cloud/park.cjs');
   for(const empty of[false,true]){

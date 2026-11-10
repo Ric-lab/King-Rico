@@ -11,9 +11,9 @@ test('V3 pays total-stake multiples on all eight lines and leaves old receipts u
   const grid=[1,1,1,2,3,4,5,6,7];
   assert.equal(engine.evaluate(grid,bet,1).win,engine.coins(engine.units(bet*1.2)));
   assert.equal(engine.evaluate(grid,bet,2).win,engine.coins(engine.units(bet*1.2)));
-  assert.equal(engine.evaluate(grid,bet,3).win,engine.coins(engine.units(bet*.6)));
-  assert.equal(engine.evaluate(Array(9).fill(9),bet,3).win,bet*4000);
-  assert.equal(engine.evaluate([1,2,3,1,4,5,1,6,7],bet,3).win,engine.coins(engine.units(bet*.6)));
+  assert.equal(engine.evaluate(grid,bet,3).win,engine.coins(engine.units(bet*.4)));
+  assert.equal(engine.evaluate(Array(9).fill(9),bet,3).win,bet*engine.circusProfile.PAYS[9]*80);
+  assert.equal(engine.evaluate([1,2,3,1,4,5,1,6,7],bet,3).win,engine.coins(engine.units(bet*.4)));
  }
 });
 test('V3 ticket insertion re-evaluates coins with its own paytable',()=>{
@@ -29,9 +29,8 @@ test('V3 special round uses its saved stake and reaches the 20x presentation tie
  assert.equal(engine.feature(2.5,()=>.99,2).res.win,25);
 });
 
-test('Complete v3 park stays near its coin budget and reserves rare presentation tiers',()=>{
- const {audit}=require('../scripts/circus-lines-audit.cjs'),x=audit(3,300000,17843);
- assert.ok(x.coinRtp>.92&&x.coinRtp<.99,JSON.stringify(x));
- const rare=x.bigWinRate+x.megaWinRate+x.superWinRate;
- assert.ok(rare>.006&&rare<.014,JSON.stringify(x));
+test('Circus preserves fixed small pays, one proportional scale and its declared coin target',()=>{
+ const pays=engine.circusProfile.PAYS,base=[6.7,.4,.8,3.9,1.5,9,13.5,25,34,90],scale=pays[9]/base[9];
+ assert.equal(pays[1],.4);assert.equal(pays[2],.8);assert.equal(engine.circusProfile.TARGET_COIN_RTP,.80);
+ for(const i of[0,3,4,5,6,7,8,9])assert.ok(Math.abs(pays[i]-base[i]*scale)<=.00051);
 });
