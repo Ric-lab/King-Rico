@@ -5,7 +5,7 @@ import os
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178');os.makedirs('work',exist_ok=True)
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox'])
- for index,color,mode in [(0,'#8e24ff','no-preference'),(8,'#ffdf22','reduce'),(12,'#f52364','reduce')]:
+ for index,color,mode in [(0,'#f52364','no-preference'),(8,'#00c65a','reduce'),(12,'#008dff','reduce')]:
   ctx=b.new_context(viewport={'width':390,'height':844},reduced_motion=mode);page=ctx.new_page();errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
@@ -24,4 +24,4 @@ with sync_playwright() as p:
   assert not errors,errors
   ctx.close()
  b.close()
-print('Winner color stays identical in takeover and flight: violet, yellow, pink; normal and reduced motion')
+print('Winner color stays identical in takeover and flight: x10 pink, x2 green, x1 blue (cor fixa por valor); normal and reduced motion')

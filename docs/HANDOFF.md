@@ -1,5 +1,17 @@
 # HANDOFF
 
+## Entrega de fontes ao Claude (2026-11-10 · sem deploy)
+- Dono determinou: o Claude fará a publicação. Codex entrega o som 6c25bad à branch codex/penalty-clown-preview em checkpoint [skip ci], sem push à main e sem disparar publicação.
+- Integrado o último commit do Claude d2a9918, preservando sua paleta fixa por valor e teste atualizado. Merge automático sem conflito; som da roleta em ui/park/wheel-sound.js, demais sons intactos.
+- Testes do áudio já passaram (unitários, botão/swipe/silêncio); unitários reconferidos após juntar as fontes. Não houve novo build/deploy para este checkpoint.
+- Próximo passo EXATO para Claude: git pull --ff-only origin codex/penalty-clown-preview; conferir o som da roleta e promover/publicar pelo workflow conforme sua autorização com o dono. O som já está integrado: não reaplicar 6c25bad nem restaurar o efeito provisório 5deec35.
+
+## Prévia (2026-11-10 · Claude · cor fixa por número na roleta do bônus)
+- Antes a cor era por POSIÇÃO (arco-íris de 13 casas), então x1 aparecia em 5 cores. Agora cor por VALOR em `ui/park/wheel-palette.js`: x1 azul, x2 verde, x3 amarelo, x5 laranja, x10 rosa. Roleta, disco-meta dos tubos, centro e ficha que voa usam a mesma cor. Sem mudança financeira.
+- Som da roleta: o Claude tinha posto um som provisório (5deec35) e DESFEZ; o som original é o do Codex em `ui/park/wheel-sound.js` (commit local 6c25bad), já integrado na entrega de fontes registrada acima.
+- Atenção: tests/wheel_color_browser.py pode esperar as cores antigas por índice; ajustar o teste se falhar.
+- Próximo passo: dono avaliar na prévia; não publicar main sem aprovação.
+
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
@@ -8,7 +20,7 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 - Ligado o mesmo timbre ao ângulo real do rotor por ui/park/wheel-sound.js. Máximo um par de notas por 35 ms; desacelera com as casas, segue botão/swipe, respeita volume/silêncio, para no resultado/erro/remoção da roda. Falha de áudio não altera animação, sorteio ou recebimento.
 - Som do spin, moedas, ingressos, tempo/arte da roleta e matemática intactos. Três unitários e navegador focado (botão/swipe/silêncio, contexto Web Audio ativo e parada) passaram. Build de produção após integração.
 - Publicação ainda NÃO efetuada: revisão automática rejeitou o push à main/prévia por não considerar a autorização histórica suficiente para esta alteração específica de áudio. Correção pronta em commit local; solicitar confirmação do dono antes do push/deploy.
-- Próximo passo: após autorização explícita, enviar o commit às duas branches e conferir workflow oficial/arquivos servidos; dono ouvir no celular. Preservar feedback sonoro aprovado em ajustes visuais posteriores.
+- Decisão posterior do dono: Claude fará a publicação. Entrega de fontes no topo substitui o plano anterior; Codex não envia à main nem executa deploy. Preservar feedback sonoro aprovado em ajustes visuais posteriores.
 
 ## Correção de linhas, moedas e passagem dos vilões (2026-11-10)
 - Linhas nativas ficavam sob células z-index 2; todos os oito marcadores recebem data-payline e camada 6. Voo normal ainda usava origem de apenas cinco linhas, produzindo NaN nas verticais: agora deriva origem/destino dos elementos visíveis, com fallback finito. Renderer 2D é criado sob demanda se o carregamento ocioso ainda não terminou, sem duplicar na inicialização atrasada.
