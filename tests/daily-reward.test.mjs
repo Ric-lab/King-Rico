@@ -22,3 +22,16 @@ test('Scratch layout has exactly nine cells, six misses and three matching prize
  }
  assert.ok(layouts.size>1,'Prize positions must vary between cards');
 });
+
+test('Preview offers a new scratch credit on each opening, but not twice within one visit',async()=>{
+ const {createPreview}=await import('../prototypes/circus-preview/model.mjs');
+ const {randomUUID}=await import('node:crypto');
+ let preview=createPreview();const first=await preview.run({action:'state'}),balance=first.player.balance;
+ assert.equal((await preview.run({action:'bonus',requestId:randomUUID()})).amount,50);
+ assert.equal((await preview.run({action:'bonus',requestId:randomUUID()})).amount,0);
+ preview=createPreview(preview.exportState());const opened=await preview.run({action:'state'});
+ assert.equal(opened.player.balance,balance+50);assert.equal(opened.player.bonus.day,null);
+ const second=await preview.run({action:'bonus',requestId:randomUUID()});
+ assert.equal(second.amount,50);assert.equal(second.player.balance,balance+100);
+ assert.equal(second.player.peaches,first.player.peaches);assert.equal(second.park.tickets,first.park.tickets);
+});

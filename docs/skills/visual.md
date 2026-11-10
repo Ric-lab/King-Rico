@@ -7,7 +7,13 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
-- Piscadas na celebração espacial: manter fundo opaco em camadas isoladas, evitar máscara/filtros animados no viewport e giro 3D de sprites; círculo deve pulsar suavemente.
+- Tony com grande área creme no queixo/tronco e T desenhado como letra: dono prefere queixo/peito alaranjados e T integrado às listras escuras, com haste suficientemente longa para ser reconhecido. Dentes discretos, mas visíveis.
+- Tony Tiger sem os tufos brancos curvados do primeiro Valentão perdeu identidade; dono prefere esse bigode, um pouco mais de dentes e olhos levemente mais abertos, mantendo expressão malandra.
+- Piscadas na celebração espacial: fundo opaco em camadas isoladas, sem máscara/filtros animados do viewport e sem giro 3D de sprites; círculo com brilho suave.
+- Avião ainda parece imagem estática durante voo: animar as próprias pás da hélice separadas do corpo/cubo, com giro e desfoque leves, acompanhando a transformação da aeronave.
+- Nariz horizontal durante subida e curva ligada à cauda: usar a mesma curva para posição/inclinação e ligar a linha ao centro do avião. Prêmio ganha círculo luminoso pulsante; entregar links separados de céu/espaço.
+- Aviator é referência de trajetória/curva contínua, não de ícone. No grande prêmio remover o × secundário, priorizar o valor e deixar o avião se afastar/reduzir durante a subida.
+- Voo com resquício da nuvem colorida, avião cortado no canto cedo e valor secundário: ocultar também a nuvem da origem, manter avião enquadrado e priorizar a contagem em moedas.
 - King pequeno no salto/cabine e congelado aguardando o avião: ampliar proporcionalmente, manter comemoração ativa até embarcar e usar paralaxe de céu/espaço para evidenciar a subida conforme o prêmio.
 - Piloto frontal dentro do avião: a pose deve virar de perfil na queda e seguir olhando para o nariz da aeronave, com mãos livres à frente e pernas escondidas pela fuselagem.
 - Salto do King Rico no avião como imagem neutra transladada: reutilizar poses fw6 de agachar, subir, ápice, cair e aterrissar, com dissolução opaca de 110 ms e suavização como em KingRico.dc.html.
@@ -36,3 +42,23 @@ Rejeitado:
 - Parque rejeitado com HUD próprio, personagens pequenos e girafa antiga na capa do Pênalti: reutilizar o topo compartilhado e arte atual dos jogos, com hierarquia consistente entre as quatro capas.
 - Primeira revisão do parque com quatro capas verticais sobre o mesmo cenário não agradou. Dono pediu só Clown/Pênalti/Flying; segunda proposta usa placas horizontais. Avaliação estética ainda pendente.
 - Contador de ingressos de 30 px ficou pequeno e apertado; ampliar a placa e o espaço interno. Tenda do Parque com moldura própria destoou: dono pediu controle de videogame com a mesma base/escala de Home e menu.
+
+- Tony Tiger: garras dos dedões v5 aprovadas; demais unhas precisam cobrir o topo dos dedos, não parecer pontinhas coladas na extremidade. Revisão v6 em avaliação.
+
+- Unhas Tony Tiger v6 rejeitadas: dono quer largura de unha humana cobrindo a ponta superior do dedo, levemente comprida, sem gancho fino. V7 em avaliação.
+
+- Tony Tiger: decisão posterior do dono prevalece — ficar com corpo/cabeça v4 do commit 866e780, sem unhas/garras v5–v7. Turnaround v4 em avaliação.
+
+- Tony: riscos finos marfim/vermelhos tiveram pouca presença e foram rejeitados. Preferir três cortes pretos maiores sobre fundo dos rolos desfocado; desconto por patada no mostrador original do prêmio, não em cartão sobre o King. Modal final aprovado e preservado.
+
+- Tucker v1: dono não gostou ainda da arte, mas pediu colocá-la provisoriamente no jogo para avaliar o rosto e a cena de levar a cesta. Não confundir uso na demo com aprovação final do personagem.
+
+- Tucker pousado/deslocado à esquerda parecia levar a cesta por um pé só. Usar pose com duas garras próximas e alinhar o centro delas ao topo da alça; não deslocar o corpo para enquadrar a asa à custa desse contato.
+
+- Ray: caminhada/balanço e bilhete isolado rejeitados. Aparecer direto atrás do contador, levar a placa inteira para a esquerda e deixá-la ausente até fechar o modal; então restaurar com a nova contagem, como a cesta do Tucker.
+
+- Spin: trocar o aro iridescente pelo antigo spin-rim-v3 mudou o contorno e foi rejeitado. Recolorir o próprio SVG aprovado, preservando exatamente paths, abertura e espessuras; atual spin-rim-gold-contour-v1.svg.
+
+- Fundo circus-lawn-simple-v1 rejeitado: gramado quase chapado, árvores de brinquedo e tenda pequena ficaram infantis/genéricos. Simplificar caminhos/textura preservando acabamento e profundidade do jogo; não usar esse asset.
+
+- Fundo: numeração no chat levou à opção errada. A imagem enviada 151169.jpg determina a escolha: 01-jardim.webp. Não insistir em números quando o dono aponta outra imagem; verificar a referência visual exata.

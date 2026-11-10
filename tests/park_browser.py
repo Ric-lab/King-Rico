@@ -71,7 +71,7 @@ def run():
     page.get_by_role('link',name='Voltar ao Circus',exact=True).click();ready(page)
     page.wait_for_function('window.__fc?._parkHook');assert page.evaluate('KingRicoCloud.uid')==uid
     backdrop=page.locator('.park-circus-ambient').evaluate('n=>({image:getComputedStyle(n).backgroundImage,position:getComputedStyle(n).backgroundPosition,filter:getComputedStyle(n).filter})')
-    assert 'circus-daylight-v1.webp' in backdrop['image'] and backdrop['position']=='50% 50%' and backdrop['filter']=='none',backdrop
+    assert 'circus-garden-lawn-v1.webp' in backdrop['image'] and backdrop['position']=='50% 50%' and backdrop['filter']=='none',backdrop
     page.screenshot(path='/tmp/park-circus-production.png')
     # Home is Circus; horizontal swipes and controls never open the park.
     page.wait_for_function('window.__fc._parkNavigationInstalled&&__fc.state.vw===innerWidth')

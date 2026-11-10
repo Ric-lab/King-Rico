@@ -24,7 +24,7 @@ with sync_playwright() as p:
  balance=page.evaluate('KingRicoCloud.player.balance');tickets=page.evaluate('KingRicoCloud.park.tickets')
  weights=[3,30,20,8,12,5,4,3,2,2.4];total=sum(weights)
  def draws(grid,loose):
-  values=[]
+  values=[.99] # V4 exclusive Tony draw: skip it in ordinary/ticket scenarios.
   for symbol in grid:values.extend([.99,(sum(weights[:symbol])+weights[symbol]/2)/total])
   return values+[.99,loose,0,0]
  for count,loose in [(1,.1),(2,.4)]:

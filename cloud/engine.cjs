@@ -10,7 +10,7 @@ const SYMBOLS = [
 ];
 const circusProfile=require('./circus-profile.cjs');
 const SYMBOLS_V3=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS[i]}));
-const slotSymbols=version=>version===3?SYMBOLS_V3:SYMBOLS;
+const slotSymbols=version=>version>=3?SYMBOLS_V3:SYMBOLS;
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
@@ -115,10 +115,10 @@ function weighted(pool, rng) {
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
   return 0;
 }
-function pick(rng = random,version=1) { return rng() < (version===3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(SYMBOLS, rng); }
+function pick(rng = random,version=1) { return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(SYMBOLS, rng); }
 function lineSymbol(grid, line) {
   const v = line.map(i => grid[i]);
-  if (v.some(s => s === undefined || s < 0 || s === 10 || s === PEACH)) return -1;
+  if (v.some(s => s === undefined || s < 0 || s === 10 || s === 12 || s === 13 || s === 14 || s === PEACH)) return -1;
   const base = v.find(s => s !== WILD);
   if (base === undefined) return WILD;
   return v.every(s => s === base || s === WILD) ? base : -1;
@@ -130,7 +130,7 @@ function evaluate(grid, bet, version=1) {
     if (s >= 0) { win += bet * slotSymbols(version)[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
   });
   const base = grid.find(v => v !== WILD);
-  const full = grid.every(v => v >= 0 && v !== 10 && v !== PEACH) &&
+  const full = grid.every(v => v >= 0 && v !== 10 && v !== 12 && v !== 13 && v !== 14 && v !== PEACH) &&
     (base === undefined || grid.every(v => v === base || v === WILD));
   if (full && win > 0) win *= 10;
   return { win: coins(units(win)), cells: [...cells].sort((a,b) => a-b), lines,
@@ -147,7 +147,7 @@ function feature(bet, rng = random, version=1) {
     // Firestore cannot store an array directly inside another array.
     rounds.push({ result });
   }
-  const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * (version===3?circusProfile.FEATURE_MIN:FEAT_MIN))));
+  const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * (version>=3?circusProfile.FEATURE_MIN:FEAT_MIN))));
   return { sym, rounds, grid, res };
 }
 function slot(bet, peaches = 0, rng = random, bank = null, version=1) {

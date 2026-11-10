@@ -1084,3 +1084,78 @@ test('Circus v3 accepts its 4000x ceiling without widening legacy receipts',asyn
  const a=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:3}));
  assert.equal(a.outcome.res.win,4000);assert.equal(a.player.balance,4999);
 });
+
+test('Tony debit is atomic, bounded and immutable across duplicate requests and bootstrap',async()=>{
+ const name='tony-'+randomUUID(),c=await client(name,name,{rng:()=>0});await c.call(request({action:'bootstrap'}));
+ const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:4});
+ const [a,b]=await Promise.all([c.call(spin),c.call(spin)]);
+ assert.ok(a.replayed||b.replayed);assert.equal(a.outcome.tony.stolenUnits,1000);
+ assert.equal(a.player.balance,980);assert.equal(b.player.balance,980);assert.equal(a.outcome.winUnits,0);
+ assert.equal(a.outcome.ticketAward,0);assert.equal(a.park.spins,1);assert.equal(a.baseBalance,980);
+ assert.equal((await c.call(spin)).player.balance,980);
+ assert.equal((await c.call(request({action:'bootstrap'}))).player.balance,980);
+ const ref=doc(c.db,'players',c.uid),p=(await getDoc(ref)).data();
+ // A forged replay cannot debit again: receipt is immutable and revision alone cannot charge.
+ await assertFails(updateDoc(ref,{balanceUnits:p.balanceUnits-1000,revision:p.revision+1,updatedAt:serverTimestamp()}));
+ await new Promise(resolve=>setTimeout(resolve,750));
+ const parkRef=doc(c.db,'players',c.uid,'park','state'),oldPark=(await getDoc(parkRef)).data();
+ async function forged(change){
+  const id=randomUUID(),x=structuredClone(a.outcome);change(x);
+  const next={...p,balanceUnits:p.balanceUnits-1000-x.tony.stolenUnits,
+   revision:p.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+  const result={game:'circus',bet:10,balanceBefore:p.balanceUnits/100,balanceDebited:(p.balanceUnits-1000)/100,
+   baseBalance:next.balanceUnits/100,outcome:x};
+  const batch=writeBatch(c.db);
+  batch.set(ref,next);batch.set(parkRef,{...oldPark,spins:oldPark.spins+1,
+   revision:oldPark.revision+1,playerRevision:next.revision,lastOperationId:id});
+  batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,
+   fingerprint:'forged',betUnits:1000,winUnits:0,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+  await assertFails(batch.commit());
+ }
+ await forged(x=>{x.tony.stolenUnits=1001;x.tony.hits=[333,333,335];});
+ await forged(x=>{x.slotVersion=3;});
+ await forged(x=>{x.res.win=1;});
+ await forged(x=>{x.tony.hits=[1,1,1];});
+ assert.equal((await getDoc(ref)).data().balanceUnits,98000);
+});
+
+for(const [kind,draw]of[['tucker',.005],['ray',.008]]){
+ test(kind+' commits once across devices, rejects forged losses and animates at zero',async()=>{
+  const {default:park}=await import('../cloud/park.cjs');
+  for(const empty of[false,true]){
+   const name=kind+'-'+randomUUID(),c=await client(name,name,{rng:()=>draw});await c.call(request({action:'bootstrap'}));
+   const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
+   await environment.withSecurityRulesDisabled(async context=>{
+    await updateDoc(doc(context.firestore(),'players',c.uid),{peaches:empty?0:3,peachBank:{count:empty?0:3,units:empty?0:751}});
+    await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:empty?0:3});
+   });
+   const spin=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:4});
+   const[a,b]=await Promise.all([c.call(spin),c.call(spin)]);assert.ok(a.replayed||b.replayed);
+   assert.deepEqual(a.outcome[kind],{version:1,before:empty?0:3,stolen:empty?0:1,remaining:empty?0:2});
+   assert.equal(a.player.balance,990);assert.equal(a.park.spins,1);
+   assert.equal(a.player.peaches,empty?0:kind==='tucker'?2:3);assert.equal(a.player.peachBank.units,empty?0:kind==='tucker'?501:751);
+   assert.equal(a.park.tickets,empty?0:kind==='ray'?2:3);
+   const other=await client(name+'-other',name,{rng:()=>{throw Error('Replay must not draw');}});
+   assert.equal((await other.call(spin)).player.balance,990);
+   const recovered=await other.call(request({action:'bootstrap'}));assert.deepEqual(recovered.player.peachBank,a.player.peachBank);assert.equal(recovered.park.tickets,a.park.tickets);
+   const p=(await getDoc(ref)).data(),oldPark=(await getDoc(parkRef)).data();
+   await new Promise(resolve=>setTimeout(resolve,750));
+   async function forged(change){
+    const id=randomUUID(),s=structuredClone(oldPark),x=park.resourceSpin(p,s,10,kind,()=>draw);
+    const next={...p,balanceUnits:p.balanceUnits-1000,peaches:x.peaches,peachBank:x.peachBank,
+     revision:p.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+    change(x,next,s);
+    const result={game:'circus',bet:10,balanceBefore:p.balanceUnits/100,balanceDebited:next.balanceUnits/100,baseBalance:next.balanceUnits/100,outcome:x};
+    const batch=writeBatch(c.db);batch.set(ref,next);batch.set(parkRef,{...s,revision:oldPark.revision+1,playerRevision:next.revision,lastOperationId:id});
+    batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged',betUnits:1000,winUnits:0,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+    await assertFails(batch.commit());
+   }
+   await forged(x=>{x[kind].stolen=2;});
+   await forged(x=>{x.slotVersion=3;});
+   await forged(x=>{x.grid[8]=11;});
+   await forged(x=>{x[kind==='ray'?'tucker':'ray']={version:1,before:0,stolen:0,remaining:0};});
+   await forged((x,p,s)=>{if(kind==='ray')s.tickets++;else p.peachBank={...p.peachBank,units:p.peachBank.units+1};});
+   assert.equal((await getDoc(ref)).data().balanceUnits,99000);
+  }
+ });
+}

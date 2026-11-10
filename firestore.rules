@@ -112,7 +112,7 @@ service cloud.firestore {
         && (trigger ? x.feature is map && x.feature.bet == bonusUnits / 100.0 : x.feature == null)
         // Legacy: 5 * 33.3 * full-screen x10 = 1665. Version 2: 8 * 33.3 * 10 = 2664.
         // V3: eight lines * 50x wild * full-screen x10 = 4000; older receipts keep their caps.
-        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)==3 ? 4000 : x.get('slotVersion',1)==2 ? 2664 : 1665);
+        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)>=3 ? 4000 : x.get('slotVersion',1)==2 ? 2664 : 1665);
     }
     function bounce(p, old, o) {
       let x = o.result.outcome;
@@ -186,7 +186,50 @@ service cloud.firestore {
         && index is int && index >= 0 && index <= 9
         && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][index];
     }
+    function villainGrid(x,symbol) {
+      let cells=x.res.cells;
+      return x.res.lines.size()==1 && x.res.lines[0] in [0,1,2,3,4,5,6,7]
+        && cells==[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][x.res.lines[0]]
+        && x.grid.size()==9 && x.grid[cells[0]]==symbol && x.grid[cells[1]]==symbol && x.grid[cells[2]]==symbol
+        && x.grid.removeAll([symbol])==[0,1,2,3,4,5,6,7,8].removeAll(cells);
+    }
+    function tonyResult(p,old,o) {
+      let x=o.result.outcome; let t=x.tony;
+      let cap=int((old.balanceUnits-o.betUnits) / 20);
+      let amount=cap < o.betUnits ? cap : o.betUnits;
+      let g=x.grid;
+      return x.get('slotVersion',1)==4 && x.parkVersion==1 && o.winUnits==0
+        && x.res.win==0 && x.res.peach==[] && x.feature==null && x.ticketAward==0
+        && x.res.full==false && p.peaches==old.peaches && x.peaches==old.peaches
+        && p.peachBank==old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits})
+        && x.peachBank==p.peachBank
+        && villainGrid(x,12)
+        && t.keys().hasOnly(['version','stolenUnits','hits']) && t.version==1
+        && t.stolenUnits is int && t.stolenUnits==amount && amount>=3
+        && t.hits==[int(amount / 3),int(amount / 3),amount-2*int(amount / 3)]
+        && parkBefore(request.auth.uid).spins<9;
+    }
+    function resourceVillain(p,old,o) {
+      let x=o.result.outcome; let bird=x.get('tucker',null)!=null;
+      let e=bird?x.tucker:x.ray; let symbol=bird?13:14; let g=x.grid;
+      let before=bird?old.peaches:parkBefore(request.auth.uid).tickets;
+      let stolen=before>0?1:0;
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      let remainingUnits=before>0?bank.units-int(bank.units / before+0.5):0;
+      return x.get('slotVersion',1)==4 && x.parkVersion==1 && o.winUnits==0
+        && x.res.win==0 && x.res.peach==[] && x.feature==null && x.ticketAward==0 && x.res.full==false
+        && e.keys().hasOnly(['version','before','stolen','remaining']) && e.version==1
+        && e.before==before && e.stolen==stolen && e.remaining==before-stolen
+        && (bird ? p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}
+          : p.peaches==old.peaches && p.peachBank==bank)
+        && x.peaches==p.peaches && x.peachBank==p.peachBank
+        && villainGrid(x,symbol)
+        && parkBefore(request.auth.uid).spins<9;
+    }
     function spin(p, old, o) {
+      let x=o.result.outcome; let t=x.get('tony',null);
+      let resource=x.get('tucker',null)!=null || x.get('ray',null)!=null;
+      let debit=t==null ? 0 : t.stolenUnits;
       return (o.game != 'circus' || o.result.outcome.get('parkVersion',0) == 1 || !exists(parkPath(request.auth.uid)) || parkBefore(request.auth.uid).wheel == null)
         && o.action == 'spin' && o.game in ['circus','wheel']
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,peaches,peachBank,settings,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
@@ -194,18 +237,21 @@ service cloud.firestore {
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4
         && spinSettings(p.settings,old.settings,o)
         && o.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000]
-        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits
+        && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits - debit
         // affectedKeys above already preserves bonuses, consent and every other saved game.
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
         && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion.matches('^(2026-10-19-spark-v3|2026-10-20-spark-v4|2026-10-22-balance-v5|2026-10-23-guided-v6|2026-10-23-ladder-v7|2026-10-26-session-v8|2026-10-27-fingo-card-v9|2026-10-27-fingo-double-v10|2026-10-28-fingo-free-v11)$') ? 12 : 11)
             && (o.rulesVersion.matches('^(2026-10-19-spark-v3|2026-10-20-spark-v4|2026-10-22-balance-v5|2026-10-23-guided-v6|2026-10-23-ladder-v7|2026-10-26-session-v8|2026-10-27-fingo-card-v9|2026-10-27-fingo-double-v10|2026-10-28-fingo-free-v11)$') ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
-          : o.selected == -1 && (o.rulesVersion in '2026-10-22-balance-v5,2026-10-23-guided-v6,2026-10-23-ladder-v7,2026-10-26-session-v8,2026-10-27-fingo-card-v9,2026-10-27-fingo-double-v10,2026-10-28-fingo-free-v11'.split(',') ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))
+          : o.selected == -1 && (t!=null ? tonyResult(p,old,o) : resource ? resourceVillain(p,old,o) : (o.rulesVersion in '2026-10-22-balance-v5,2026-10-23-guided-v6,2026-10-23-ladder-v7,2026-10-26-session-v8,2026-10-27-fingo-card-v9,2026-10-27-fingo-double-v10,2026-10-28-fingo-free-v11'.split(',') ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null))))
         && o.result.keys().hasOnly('player,game,bet,balanceBefore,balanceDebited,outcome,baseBalance'.split(','))
         && o.result.game == o.game && o.result.bet == o.betUnits / 100.0
         && o.result.balanceBefore == old.balanceUnits / 100.0
         && o.result.balanceDebited == (old.balanceUnits - o.betUnits) / 100.0
-        && o.result.outcome.winUnits == o.winUnits;
+        && o.result.outcome.winUnits == o.winUnits
+        && (t==null && !resource ? !x.get('grid',[]).hasAny([12,13,14]) : o.game=='circus')
+        && (t!=null ? !resource : !x.keys().hasAll(['tucker','ray']))
+        && (debit==0 || o.result.baseBalance==p.balanceUnits / 100.0);
     }
     function neck(p, old, o) {
       let previous = old.get('neckRound',null);
@@ -793,10 +839,10 @@ service cloud.firestore {
       let x=o.result.outcome; let award=x.ticketAward; let modern=x.get('slotVersion',1)>=2;
       let w=s.wheel;
       return o.action == 'spin' && o.game == 'circus' && x.parkVersion == 1 && b.wheel == null
-        && s.spins == b.spins+1 && s.spins <= 10 && award in [0,3] && x.get('slotVersion',1) in [1,2,3]
+        && s.spins == b.spins+1 && s.spins <= 10 && award in [0,3] && x.get('slotVersion',1) in [1,2,3,4]
         && (award == 3 ? s.spins < 10 && x.res.peach.size() == 0 && x.feature == null
           && validTicketLine(x.grid,modern) : modern ? ticketCount(x.grid)<=2 : !x.grid.hasAny([10]))
-        && s.tickets == b.tickets+award && s.passes == b.passes
+        && s.tickets == b.tickets+award-(x.get('ray',null)==null?0:x.ray.stolen) && s.passes == b.passes
         && (s.spins == 10 ? w.keys().hasOnly('id,roundId,prizeVersion,baseUnits,pockets,result'.split(','))
           && w.id == s.lastOperationId && w.roundId == w.id && w.prizeVersion == 3
           && w.baseUnits is int && w.baseUnits > 0 && w.baseUnits == o.winUnits && w.baseUnits / 100.0 == x.res.win

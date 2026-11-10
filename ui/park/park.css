@@ -96,9 +96,9 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-panel>.park-action{margin-top:28px}
 .park-flying-multiplier{position:fixed;left:0;top:0;width:140px;height:90px;display:flex;align-items:center;justify-content:center;color:#ffbd24;font:64px/1 Rammetto,sans-serif;-webkit-text-stroke:3px #713718;paint-order:stroke fill;text-shadow:0 3px #713718,0 5px 10px #71371866;z-index:2147483646;pointer-events:none;transform-origin:center;will-change:transform,opacity}
 
-/* Outdoor circus: the same scene sits behind the Home and the real machine. */
+/* Circus uses the selected open lawn; the park keeps its existing scene. */
 .park-circus-scene{background:#52c9ef!important}
-.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-daylight-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
+.park-circus-ambient{inset:0!important;background-image:url('/assets/scenes/circus-garden-lawn-v1.webp')!important;background-size:cover!important;background-position:50% 50%!important;filter:none!important;transform:none!important;-webkit-mask-image:none;mask-image:none}
 .park-circus-scene>.park-circus-ambient+div{background:none!important}
 .park-circus-backdrop,.park-circus-bleed-lights,.park-old-curtains{display:none!important}
 .park-circus-stage{background:transparent!important;box-shadow:none!important}
@@ -173,3 +173,47 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 
 .park-wheel-scene.is-disc-detached .park-wheel-hub{visibility:hidden}
 .park-hoist-deck:is([data-hoist="panning-game"],[data-hoist="game-ready"])>.park-hoist-rig{visibility:hidden;translate:0 -920px}
+
+/* Tony v4: the approved head replaces only his three cells, never the symbol atlas. */
+[data-park-tony="true"],.park-tape-symbol.is-tony{background-image:url('/assets/tony/head.webp')!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
+.park-tony-scene{position:fixed;inset:0;z-index:2147483000;pointer-events:none;overflow:hidden}
+.park-tony-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.park-tony-lines polyline{fill:none;stroke:#ed3041;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #ffb3a5)}
+.park-tony-lines ellipse{fill:#ff354410;stroke:#e82839;stroke-width:3;filter:drop-shadow(0 0 3px #ffb3a5)}
+.park-tony-veil{position:absolute;left:0;right:0;bottom:0;top:36%;opacity:0;background:#eef5ff5c;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);mask-image:linear-gradient(transparent,#000 36px);-webkit-mask-image:linear-gradient(transparent,#000 36px);transition:opacity .16s ease-out}
+.park-tony-claws{position:absolute;left:10%;top:40%;width:80%;height:30%;transform:rotate(-24deg)}
+.park-tony-claws[data-strike="1"]{left:6%;top:44%;transform:rotate(20deg)}
+.park-tony-claws[data-strike="2"]{left:13%;top:41%;transform:rotate(-16deg)}
+.park-tony-claws svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px #ffffff88)}
+.park-prize-value.is-tony-loss>span{color:#b91831!important;text-shadow:0 1px #fff8ed!important;font-weight:900!important}
+.park-tony-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(prefers-reduced-motion:reduce){.park-tony-veil{transition:none}}
+.kr-hud-balance.is-tony-hit{outline:3px solid #ec3046;box-shadow:0 0 16px #e8283955!important;background:#ffcfcc!important}.kr-hud-balance.is-tony-hit [data-kr-wallet-value]{color:#ac1128!important}
+.park-tony-portrait{width:125px;height:125px;object-fit:contain;display:block;margin:0 auto 12px}.park-tony-result .park-panel{background:#fff6e8;color:#79342d;border-color:#edb26c}.park-tony-result h2{margin:0;font-size:28px}.park-tony-total{display:block;color:#c22036;font:800 clamp(36px,11vw,60px)/1.1 'Baloo 2',sans-serif;margin:12px 0 0}.park-tony-result p{margin:0 0 24px}.park-tony-result .park-action{min-height:56px}
+
+.park-tony-result h2{color:#79342d!important;text-shadow:none!important}.park-tony-result p{color:#79342d!important;opacity:1!important}
+
+/* Provisional Tucker artwork, enabled by the explicit preview demo only. */
+[data-park-tucker="true"],.park-tape-symbol.is-tucker{background:url('/assets/tucker/head.webp') center/contain no-repeat!important}
+.park-tucker-scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2147483000}
+.park-tucker-carrier{position:absolute;transform-origin:50% 0}
+.park-tucker-bird{position:absolute;opacity:0;z-index:2}
+.park-tucker-bird img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.park-tucker-bird .tucker-body{z-index:2;mask:url('/ui/park/tucker-body-mask.svg') 0 0/100% 100% no-repeat}
+.tucker-wing{z-index:1}
+.tucker-wing-left{clip-path:polygon(0 49%,27% 49%,41% 55%,43% 65%,36% 71%,8% 83%,0 83%);transform-origin:43% 58%}
+.tucker-wing-right{clip-path:polygon(63% 53%,81% 44%,100% 34%,100% 76%,63% 75%);transform-origin:63% 55%}
+.park-tucker-scene[data-phase="flying"] .tucker-wing-left{animation:tuckerFlapLeft .3s ease-in-out infinite alternate}
+.park-tucker-scene[data-phase="flying"] .tucker-wing-right{animation:tuckerFlapRight .3s ease-in-out infinite alternate}
+.park-tucker-carried-basket *{animation:none!important;transition:none!important}
+@keyframes tuckerFlapLeft{from{transform:rotate(-18deg) scaleY(.58)}to{transform:rotate(22deg) scaleY(1)}}
+@keyframes tuckerFlapRight{from{transform:rotate(21deg) scaleY(.56)}to{transform:rotate(-18deg) scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.park-tucker-scene .tucker-wing{animation:none!important}}
+
+[data-park-ray="true"],.park-tape-symbol.is-ray{background:url('/assets/ray/head-v1.webp') center/contain no-repeat!important}
+.park-ray-scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2147483000}
+.park-ray-carrier{position:absolute;will-change:translate}
+.park-ray-hideout{position:absolute;overflow:hidden}
+.park-ray-carried-pocket *{animation:none!important;transition:none!important}
+.park-ray-actor{position:absolute;transform-origin:50% 90%;will-change:translate}
+.park-ray-actor img{width:100%;height:100%;object-fit:contain;display:block}

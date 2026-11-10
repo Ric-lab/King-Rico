@@ -239,3 +239,41 @@ Firestore emulado. O build de produção e a publicação usam o workflow existe
 O Firebase continua no Spark: o navegador calcula o sorteio; as regras verificam
 as transições e os pagamentos, mas não comprovam a honestidade de um cliente
 adulterado. A auditoria pressupõe o motor original e moedas virtuais.
+
+## Tony v4 — somente prévia (09/11/2026)
+
+Tabela de símbolos v3 preservada. V4 adiciona evento exclusivo do Tony em 1%
+dos giros elegíveis (fora do décimo; saldo suficiente para três parcelas).
+Desconto adicional de até uma aposta, limitado a 5% do saldo pós-aposta.
+Sem prêmio, Happeach ou ingresso simultâneo. A aposta normal continua sendo
+cobrada; as três patadas dividem apenas o roubo adicional, salvo no mesmo recibo.
+
+Simulação reproduzível: `require('./scripts/circus-lines-audit.cjs').audit(4,1000000,17843)`.
+Dados em circus-tony-preview-audit.json: 9.004 eventos em um milhão de giros,
+retorno líquido em moedas de 93,997%, intervalo por lotes ~92,919–95,076%.
+Inclui roleta/Happeach e subtrai roubo; aposta fixa 10, saldo alto fixo para testar
+o teto de uma aposta. Exclui utilidade/resgate de ingressos, presentes, recargas
+e estratégias de variar aposta. Não é RTP teórico/global nem garante uma sessão.
+Oficial continua v3; esta amostra não autoriza promoção à main.
+
+## Integração oficial dos três vilões — 09/11/2026
+
+Autorizada a publicação do conjunto da prévia. Cliente Circus v4: faixa fixa
+de 1% total dividida igualmente entre Tony, Tucker e Ray (aprox. 0,333% cada)
+fora do décimo giro. Sem ajuste por histórico, perdas ou comportamento.
+Tony só dispara com saldo para três parcelas; mantém teto de uma aposta e 5%
+do saldo pós-aposta. Tucker leva até 1 Happeach e remove a fração correspondente
+da banca de Happeach, arredondada em centavos. Ray leva até 1 ingresso.
+Com zero recurso, Tucker/Ray fazem a cena com perda zero. Todos são exclusivos:
+só a trinca vermelha, aposta normal, sem prêmio ou bônus simultâneo. Não
+interrompem o décimo giro/roleta. As versões antigas conservam seus resultados.
+
+Recibo, saldo, Happeach e ingressos são gravados atomicamente nas mesmas
+transações/IDs existentes; regras verificam valores, grade e recurso afetado.
+Apresentação nunca realiza o débito. Demos forçadas permanecem só na prévia.
+
+Simulação fixa de 1.000.000 de giros (seed 17843, aposta 10, saldo alto para o teto do Tony): retorno líquido em moedas de 92.741%; intervalo por lotes [91.770%, 93.712%].
+Inclui roleta e Happeach, subtrai Tony, exclui resgate/utilidade de ingressos,
+presentes/recargas e estratégias de mudar aposta. Não é retorno garantido nem
+RTP global. Dados: docs/circus-villains-audit.json. Antigos relatórios v3 e
+Tony isolado continuam históricos; tabela de multiplicadores v3 preservada.

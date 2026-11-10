@@ -210,15 +210,15 @@
 .park-spin-well{inset:8px 9px;border-radius:23px;clip-path:none;mask-image:none;background:#21162e;box-shadow:inset 0 2px 3px #08050dbb}
 .park-spin-contact,.park-spin-edge,.park-spin-rear,.park-spin-face{position:absolute;inset:8px 8px 9px;border-radius:22px;pointer-events:none}
 .park-spin-contact{background:#14232b55;filter:blur(3px);transform:translateY(-2px);transition:transform 180ms cubic-bezier(.2,.8,.3,1),opacity 180ms ease-out;opacity:.8}
-.park-spin-edge{background:var(--park-spin-base-color,#8e24ff);filter:brightness(.7);border:1px solid #47355277;box-sizing:border-box;z-index:1;overflow:hidden}
-.park-spin-rear{z-index:2;background:var(--park-spin-base-color,#8e24ff);filter:brightness(.7);overflow:hidden}
-.park-spin-face{inset:8px 10px 13px;transform:translateY(-4px);border-radius:20px;z-index:3;transition:inset 180ms cubic-bezier(.2,.8,.3,1),transform 180ms cubic-bezier(.2,.8,.3,1);filter:none;mask-image:none;background:var(--park-spin-base-color,#8e24ff);border:1px solid #6d4d9155;box-sizing:border-box;overflow:hidden;isolation:isolate}
+.park-spin-edge{background:var(--park-spin-base-color,#640c24);filter:brightness(.7);border:1px solid #47355277;box-sizing:border-box;z-index:1;overflow:hidden}
+.park-spin-rear{z-index:2;background:var(--park-spin-base-color,#640c24);filter:brightness(.7);overflow:hidden}
+.park-spin-face{inset:8px 10px 13px;transform:translateY(-4px);border-radius:20px;z-index:3;transition:inset 180ms cubic-bezier(.2,.8,.3,1),transform 180ms cubic-bezier(.2,.8,.3,1);filter:none;mask-image:none;background:var(--park-spin-base-color,#640c24);border:1px solid #6d4d9155;box-sizing:border-box;overflow:hidden;isolation:isolate}
 /* Shade only the resting paint; the radial wash lights it without dimming the LEDs. */
 .park-spin-face:before,.park-spin-edge:before,.park-spin-rear:before{content:'';position:absolute;inset:0;background:#08060e;opacity:.34;border-radius:inherit;pointer-events:none}
-.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash{position:absolute;inset:0;background:var(--park-spin-pulse-color,#8e24ff);pointer-events:none}
+.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash{position:absolute;inset:0;background:var(--park-spin-pulse-color,#640c24);pointer-events:none}
 .park-spin-side-wash{filter:none}
-.park-spin-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font:800 30px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.42em;padding-left:.42em;color:#b8c3ce;-webkit-text-stroke:2px #24324a;paint-order:stroke fill;text-shadow:0 -1px 0 #16283c66,0 1px 0 #eef5ff33,0 2px 0 #24324a}
-.park-spin-label-lit{color:#fff;text-shadow:0 0 1px #fff,0 0 4px #fffc,0 0 8px #b9edff80,0 2px 0 #24324a}
+.park-spin-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font:800 30px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.42em;padding-left:.42em;color:#f4c951;-webkit-text-stroke:1px #623513;paint-order:stroke fill;text-shadow:0 -1px #fff0b433,0 2px #5e2d14}
+.park-spin-label-lit{color:#ffe29b;text-shadow:0 0 3px #ffcf7188,0 2px #5e2d14}
 .park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit{clip-path:circle(0px at 50% 50%);transition:clip-path 40ms ease-out}
 .park-circus-stage [data-spin-btn][data-spin-active="1"] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit),[data-spin-btn][data-tactile-held] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit),[data-spin-btn][data-color-pending] :is(.park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash,.park-spin-label-lit){clip-path:circle(190px at 50% 50%);transition:clip-path 420ms cubic-bezier(.25,.4,.3,1)}
 .park-spin-wash,.park-spin-side-wash,.park-spin-rear-wash{transition:none}
@@ -235,11 +235,9 @@
 .park-home-back img{display:block;width:100%;height:100%}
 .park-home-header{gap:10px}
 
-/* Rotate only the iridescent light field; the rim and hit target remain rigid. */
-@property --park-rim-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+/* Wine/gold palette shared with the stake bar; charge colors belong to the rails. */
 .park-spin-rim>img{display:block;width:100%;height:100%}
-.park-spin-iridescence{position:absolute;inset:0;pointer-events:none;opacity:.84;background:conic-gradient(from var(--park-rim-angle),#ff7b7b 0deg,#ffbd7b 30deg,#ffff7b 60deg,#bdff7b 90deg,#7bff7b 120deg,#7bffbd 150deg,#7bffff 180deg,#7bbdff 210deg,#7b7bff 240deg,#bd7bff 270deg,#ff7bff 300deg,#ff7bbd 330deg,#ff7b7b 360deg);mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;animation:parkRimOrbit 40s linear infinite}
-@keyframes parkRimOrbit{to{--park-rim-angle:360deg}}
-@media(prefers-reduced-motion:reduce){.park-spin-iridescence{animation:none}}
-
-.park-spin-rim-pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:var(--park-rim-pulse-color,#8e24ff);mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-iridescent-v3.svg') center/100% 100% no-repeat}
+.park-spin-iridescence{display:none;animation:none}
+.park-spin-face{background-image:linear-gradient(#80142b,#640c24 60%,#3f091c)}
+.park-spin-wash{background-image:linear-gradient(#80142b,#640c24 60%,#3f091c)}
+.park-spin-rim-pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:var(--park-rim-pulse-color,#ffdf70);mask:url('/assets/machine/spin-rim-gold-contour-v1.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-rim-gold-contour-v1.svg') center/100% 100% no-repeat}

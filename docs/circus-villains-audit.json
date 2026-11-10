@@ -1,0 +1,35 @@
+{
+  "tonyCount": 2917,
+  "tuckerCount": 2977,
+  "rayCount": 2961,
+  "stolenPeaches": 2436,
+  "stolenTickets": 2961,
+  "stolenUnits": 2917000,
+  "theftPerStake": 0.002917,
+  "scope": "Fixed high balance: theft capped at one stake; net coin return subtracts theft. Tickets/recharges excluded.",
+  "version": 4,
+  "spins": 1000000,
+  "seed": 17843,
+  "bet": 10,
+  "coinRtp": 0.9274077,
+  "sample95Interval": [
+    0.9176969374241809,
+    0.9371184625758185
+  ],
+  "baseCoinRtp": 0.5545159,
+  "featureCoinRtp": 0.2023972,
+  "wheelExtraRtp": 0.1734116,
+  "prizeRate": 0.422339,
+  "profitRate": 0.15789,
+  "bigWinRate": 0.00831,
+  "megaWinRate": 0.000281,
+  "superWinRate": 0.000495,
+  "columnPrizeRate": 0.206896,
+  "ticketAppearances": [
+    445437,
+    261596,
+    173635,
+    119332
+  ],
+  "ticketsAwarded": 357996
+}

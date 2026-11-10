@@ -15,6 +15,7 @@ O código, os testes e o histórico Git resolvem divergências com textos antigo
 
 ## Interface e regras
 
+- [Ideias de jogos — propostas futuras do dono](IDEIAS-DE-JOGOS.md)
 - [Circus e parque: ingressos, roleta e Fingo rápido](PARQUE.md)
 
 - [Design System](../DESIGN-SYSTEM.md)

@@ -310,3 +310,136 @@ Atlas de céu/espaço, nuvens e máscaras da hélice acima incluídos em 7e41b89
 Nenhuma arte nova nesta correção: composição estabilizada com camadas opacas,
 recorte por overflow e giro 2D. Workflow oficial e inspeção pública confirmaram
 os arquivos; fonte/gastos das gerações anteriores continuam nos registros acima.
+
+### 2026-11-09 — Tony Tiger, conceitos e dois assets em avaliação
+GPT Imagens: uma prancha A/B/C e, após escolha de B pelo dono, uma arte de corpo
+inteiro e uma de cabeça, com alpha. Mudanças solicitadas: casaco vermelho discreto,
+sem faixa vinho, cabeça malandra com corpo forte e T sutil na pelagem do peito.
+Referências: King Rico fw6/master + turnaround; cabeça derivada da arte de corpo
+inteiro. Origens PNG: exec-32f98977-6cb0-4371-8db4-2b561df056b8.png,
+exec-e9a05124-d002-4737-a8b1-60052c29effc.png e
+exec-c9dabb16-a42d-41a1-96a4-2a14c0b06be1.png, em generated_images.
+Conversão WebP q94 sem alterar composição; arquivos em docs/concepts/tony-tiger.
+Sem Meshy; custo GPT Imagens não exposto. Alpha e conteúdo inspecionados;
+propostas aguardam feedback. Sem implementação, build ou publicação do jogo.
+
+### 2026-11-09 — Tony Tiger v2, expressão
+Duas edições GPT Imagens: corpo com bigode branco do primeiro B/Valentão,
+um pouco mais de dentes e olhos levemente mais abertos; cabeça derivada do
+corpo atualizado. Casaco, faixa ausente, T e pose preservados. PNGs originais:
+exec-be5e921a-e724-4d6a-b064-a56b18c9b4b0.png e
+exec-db0f58da-a357-4949-9749-ad9b08cc872e.png, em generated_images.
+WebP q94 em docs/concepts/tony-tiger/body-v2.webp e head-v2.webp; alpha conferido,
+conteúdo inspecionado. V1 preservada. Custo da ferramenta não exposto; sem
+Meshy, animação, build ou publicação no site. Aguardando feedback do dono.
+
+### 2026-11-09 — Tony Tiger v3/v4, queixo e T nas listras
+V3: duas edições GPT Imagens para reduzir dentes, áreas creme/bigode e integrar
+T às listras no tronco laranja; cabeça derivada do corpo. V4: após feedback,
+um pouco mais de dentes e haste do T alongada; cabeça atualizada. Origens PNG:
+v3 exec-db0e6a7b-85d6-4693-9808-989970febbda.png e
+exec-1a2af80f-fdd9-4c4f-bd41-c39445a66566.png; v4
+exec-d5e2b4ad-fbf1-41ab-a2aa-66d18fbacf42.png e
+exec-04b4a0f1-e5c8-446e-89b1-1cab7921e2e5.png, em generated_images.
+Conversão WebP q94, alpha conferido e artes inspecionadas. Histórico preservado
+em docs/concepts/tony-tiger. Custo GPT Imagens não exposto; sem Meshy.
+V4 ainda em avaliação; nenhum build, animação ou publicação no site.
+
+### 2026-11-09 — Tony Tiger v5, garras discretas nas mãos
+Uma edição GPT Imagens do corpo v4: pequenas pontas de garras em marfim nas
+mãos, sem mudar pés/figurino/cabeça. Original exec-ff6d09ce-7870-4288-8670-c479e190143f.png
+preservado em generated_images. WebP q94 em docs/concepts/tony-tiger/body-v5.webp;
+alpha e arte conferidos. Cabeça v4 reutilizada, sem geração desnecessária.
+Custo não exposto; sem Meshy ou publicação no site. V1–v4 preservadas.
+
+### 2026-11-09 — Tony Tiger v6, unhas sobre os dedos
+Uma edição GPT Imagens do corpo v5 para substituir as três garras não-polegares
+de cada mão por unhas curvas sobre os dedos; dedões preservados como referência
+aprovada. Original exec-bd500cde-2718-4a79-bda1-c82ecba23880.png preservado em
+generated_images. WebP q94 em docs/concepts/tony-tiger/body-v6.webp; alpha e
+imagem inspecionados. Cabeça v4 mantida. Custo da ferramenta não exposto;
+sem Meshy, build ou publicação no site. Revisão aguarda feedback.
+
+### 2026-11-09 — Tony Tiger v7, unhas largas
+V6 rejeitada pelo dono por parecer garra fina. Uma edição GPT Imagens: unhas
+largas como humanas sobre a ponta superior dos três dedos de cada mão, borda
+arredondada e pouco comprimento livre. Dedões preservados. Original
+exec-6c2e379f-47c8-411b-8e27-9266432aa074.png em generated_images; conversão
+WebP q94 em docs/concepts/tony-tiger/body-v7.webp. Alpha e imagem conferidos.
+Cabeça v4 mantida, histórico preservado. Custo não exposto; sem Meshy/build/site.
+
+### 2026-11-09 — Tony Tiger, turnaround da versão escolhida 866e780
+Dono escolheu corpo/cabeça v4 e descartou unhas posteriores. Uma geração GPT
+Imagens referenciada em body-v4.webp: prancha frente/perfil/costas alinhadas,
+com figurino e proporções. Original exec-719fc3a4-f4a9-4e70-84d6-360d842fe30c.png
+em generated_images; WebP q94 em docs/concepts/tony-tiger/turnaround-v4.webp.
+Prancha inspecionada. Perfil/costas são interpretações em avaliação, não novas
+referências aprovadas. Custo não exposto; sem Meshy/build/publicação no site.
+
+### 2026-11-09 — Tony na prévia
+Cabeça aprovada v4 (866e780) copiada sem edição de docs/concepts/tony-tiger/
+head-v4.webp para assets/tony/head.webp. Sem geração/custo adicional. Marcas de
+garra em SVG vetorial no módulo ui/park/tony.js, três cortes estilizados.
+Corpo/turnaround não entram no runtime. Conferência de navegador documentada
+no HANDOFF; integração somente na prévia, não publicada no oficial.
+
+### 2026-11-09 — Tucker Toucan, proposta v1
+Duas gerações GPT Imagens: corpo inteiro original e cabeça derivada desse
+corpo. Estilo de King Rico/Tony estudado; sem Meshy/modelo 3D nesta etapa.
+PNGs preservados em generated_images: exec-2a78a1c5-8b4c-4e2a-96ff-eac2442ba4cf.png
+(corpo), exec-5179e748-db77-4b9f-961f-08cdcc9bbe54.png (cabeça).
+WebP q94 em docs/concepts/tucker-toucan/body-v1.webp e head-v1.webp;
+alpha e artes inspecionados. Custo da ferramenta não exposto. Aguardando
+feedback; sem integração no jogo, build ou publicação. Checkpoint [skip ci].
+
+### 2026-11-09 — Tucker, assets provisórios na demonstração
+Dono pediu aplicar a arte v1 mesmo sem gostar dela ainda. Cópias sem edição
+body-v1/head-v1 para assets/tucker/body.webp e head.webp. Nenhuma geração nova
+ou uso Meshy. Máscara vetorial ui/park/tucker-body-mask.svg e recortes CSS
+separam asas para movimento com a mesma imagem. Cesta copiada do DOM real,
+não regenerada. Uso só para avaliação no canal de prévia, sem aprovação final.
+
+### 2026-11-09 — Tucker v2, duas garras na alça
+Uma edição GPT Imagens do corpo v1: pernas próximas e dois pés curvados em
+preensão, mantendo enquadramento/roupa/cabeça/asas. Original preservado:
+exec-0d1721ae-1321-42d3-85da-916ffddd40b7.png em generated_images.
+WebP q94 em docs/concepts/tucker-toucan/body-v2.webp e
+assets/tucker/body-grip-v2.webp; alpha e pose conferidos. Corpo/cabeça v1
+preservados. Custo da ferramenta não exposto; sem Meshy. Uso só na prévia.
+
+### 2026-11-09 — Ray Raccoon v1
+Duas gerações GPT Imagens: corpo original de guaxinim mascarado e cabeça
+derivada dele, estilo de King Rico/Tony/Tucker. Originais preservados em
+generated_images: exec-36fb5b36-ddc3-41cb-b821-1f08002dbac2.png (corpo),
+exec-1f2b4890-592e-465e-8bcd-4884e811c011.png (cabeça). WebP q94 em
+docs/concepts/ray-raccoon e assets/ray, body-v1/head-v1.webp. Alpha e imagens
+inspecionados; sem Meshy/modelo rigado. Custo da ferramenta não exposto.
+Artes provisórias usadas só na demonstração /circus?demo=ray da prévia.
+
+### 2026-11-09 — aro dourado com contorno preservado
+spin-rim-gold-contour-v1.svg deriva diretamente de spin-rim-iridescent-v3.svg,
+substituindo apenas 12 cores. Comparação textual ignorando hexadecimais confirmou
+geometria/espessura/abertura idênticas. Sem geração de imagem/Meshy; fonte SVG
+original preservada. Corrige a troca indevida pelo contorno de spin-rim-v3.svg.
+
+### 2026-11-09 — três opções de fundo para escolha
+Três edições GPT Imagens em paralelo, base circus-daylight-v1.webp. Pedido
+explícito de três alternativas, sem aplicar: jardim diurno, campo ao entardecer
+e parque verde/azul. Preservar acabamento após rejeição da versão infantil.
+PNGs: exec-fd804b4d-f1a3-4217-a11b-f646ae3cd7f5.png,
+exec-4dca235b-140b-45bc-9d38-2b2c26a11f40.png,
+exec-78d846a3-6d4d-4202-8c0f-0edf67a0542a.png, em generated_images.
+Artes inspecionadas, WebP q94 em docs/concepts/circus-background-options.
+Sem Meshy; custo da ferramenta não exposto. Checkpoint [skip ci], sem build,
+testes do app ou publicação; aguardar escolha do dono.
+
+### 2026-11-09 — aplicação da opção 3 aprovada
+Dono escolheu explicitamente 03-parque.webp. Copiada sem edição/recompressão
+para assets/scenes/circus-park-lawn-v1.webp; alterados somente fundo/preload do
+Circus. Sem nova geração de imagem/Meshy. Fonte e alternativas preservadas.
+
+### 2026-11-09 — correção da escolha pela imagem 151169
+Dono enviou referência inequívoca: corresponde a 01-jardim.webp, não a 03-parque.
+Copiada sem edição/recompressão para assets/scenes/circus-garden-lawn-v1.webp;
+CSS e preload corrigidos. Nenhuma geração de imagem/Meshy. Opções e arquivo
+anterior preservados como histórico; imagem enviada prevalece sobre numeração.

@@ -179,8 +179,8 @@ A máquina usa peças separadas para visor, barras, base e rolos, com montagem e
 numéricos não são nove animações independentes. A janela conserva as nove posições
 visíveis e uma curva suave nas linhas externas.
 
-Spin, auto e turbo compartilham aro fixo e face rígida. O spin acompanha a cor
-das barras com luz radial; auto e turbo mantêm seu azul. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
+Spin, auto e turbo compartilham aro fixo e face rígida. O spin é vinho como a barra de aposta, com aro/letras dourados e pulso radial
+na mesma paleta; as barras continuam arco-íris. Auto e turbo mantêm seu azul. O spin aprovado mede 373 × 88 na cena de referência 453 × 802.
 A roleta aceita botão e gesto e compartilha sua paleta arco-íris com as roletas
 pequenas das barras. O multiplicador viaja em dourado até o prêmio antes das
 moedas irem ao saldo. Detalhes de geometria e estados no
@@ -370,5 +370,76 @@ antes de usar. Hélice mantém o giro com transformação 2D; círculo luminoso
 oscila suavemente entre 78% e 100%, sem filtro variável sobre o prêmio inteiro.
 Destaque mantido sem pulsar grandes áreas de brilho sobre o fundo escuro.
 
-Revisão 09/11: centro e disco viajante do bônus usam a cor da casa sorteada
-pelo índice na paleta, inclusive após recarga. Pagamentos e tempos preservados.
+## Tony Tiger — prévia v4 (09/11/2026)
+
+Apenas a prévia pede slotVersion 4. Produção continua pedindo v3; não promover
+sem avaliação do dono. Tony é exclusivo: três rostos em uma das oito linhas,
+sem moedas, ingressos, Happeach ou especial junto. Não ocorre no décimo giro.
+Chance de 1% em giros elegíveis, independente de ganhos anteriores; exige
+saldo pós-aposta suficiente para três parcelas de pelo menos um centavo.
+Roubo adicional = mínimo entre uma aposta e 5% do saldo após apostar, em
+centavos inteiros. Total é salvo atomicamente no recibo do giro uma única vez.
+
+Apresentação: linha/círculos vermelhos, 700 ms de antecipação, três contatos
+separados por 1550 ms. Contato dispara três cortes pretos maiores, som, háptico, balanço
+curto e redução animada no saldo. O fundo dos rolos recebe desfoque breve;
+saldo e mostrador do prêmio continuam nítidos. Cada parcela aparece em vermelho
+no mostrador original do prêmio aos pés do King, sem cartão extra. Movimento reduzido elimina o balanço.
+Modal após o terceiro impacto mostra somente o total roubado e Continuar.
+Auto é interrompido. Erro de animação, recarga ou repetição de requisição não
+altera o desconto confirmado; recarga mostra o saldo real sem nova cobrança.
+
+Demo exclusiva da carteira fictícia: `/circus?demo=tony`, primeiro giro por toque.
+Core e regras já preparados para v4, mas regras NÃO publicadas nesta entrega.
+
+## Tucker Toucan — demonstração visual (09/11/2026)
+
+Prévia explícita `/circus?demo=tucker`, sem sorteio natural. Arte v1 provisória;
+dono pediu testar mesmo sem gostar ainda. Trinca na linha central, sinalização
+vermelha; ave pousa na alça, bate asas separadas do corpo e leva uma cópia da
+cesta com seus itens/contador. Original fica invisível, deixando o espaço vazio
+por 700 ms após a saída. Modal informa perda; Continuar restaura a cesta com
+contagem atualizada. O modal reaproveita a apresentação aprovada do Tony.
+
+Amostra: prepara 3 Happeach só uma vez, leva até 1 e preserva a proporção da banca
+de apostas dos restantes. Cobra apenas a aposta normal, sem roubar moedas ou
+ingressos. Recibo idempotente e restauração da carteira fictícia testados.
+Persistência dessa demonstração existe só em prototypes/circus-preview;
+cliente real, regras, geração natural e economia oficial permanecem iguais.
+
+Ajuste Tucker (09/11): com zero Happeach, a trinca e a sequência completa
+continuam disponíveis; roubo/contagem/banca permanecem zero, sem divisão por
+zero. Modal informa que nenhum Happeach foi perdido. Pose de preensão v2 usa
+ambos os pés juntos e ancora o centro das garras no topo da alça, sem deslocar
+o personagem para a esquerda apenas para enquadrar a ponta da asa.
+
+## Ray Raccoon — demonstração visual (09/11/2026)
+
+`/circus?demo=ray`, primeiro giro por toque. Trinca diagonal com sinalização
+vermelha; guaxinim de máscara aparece diretamente atrás do contador e foge
+à esquerda levando o asset completo da placa. Sem passos ou bilhete avulso.
+O lugar fica vazio até o modal/Continuar; a placa volta com até 1 ingresso a
+menos. A contagem anterior acompanha a placa durante a fuga. Zero ingressos não bloqueia a cena.
+Arte e quantidade em avaliação. Recibo salvo/deduplicado só na carteira
+fictícia; sem alteração de Firestore/cliente real ou sorteio natural. Ver
+[RAY-RACCOON.md](RAY-RACCOON.md). Não promover ao oficial por conta própria.
+
+## Fundo do Circus — imagem enviada 151169 (09/11/2026)
+
+Escolha confirmada pela imagem enviada 151169.jpg: jardim diurno com tenda
+vermelha maior à esquerda, pavilhão azul à direita e gramado aberto,
+sem caminhos. Integrada na prévia como circus-garden-lawn-v1.webp, com preload
+no manifesto do Circus. A imagem antiga permanece disponível para o parque;
+a revisão não troca os cenários dos demais jogos nem reposiciona controles.
+
+Prévia 09/11: preenchimento do centro e disco viajante usam a mesma cor da
+casa sorteada (índice na paleta), inclusive em resultados retomados após recarga.
+Casas com multiplicadores iguais podem ter cores diferentes; não derivar a cor
+do valor. Geometria, tempos e pagamento permanecem iguais.
+
+Integração 09/11: publicação completa autorizada da prévia: fundo
+circus-garden-lawn-v1.webp (imagem 151169), spin vinho/dourado no contorno
+aprovado, Tony/Tucker/Ray, centro/voo da roleta da cor sorteada. Cenas dos
+vilões partem de recibos reais, sem débito pela animação. Tucker/Ray carregam
+a cesta/placa, que retorna após Continuar. Zero mantém a cena sem perda.
+Economia/limites versionados em ECONOMIA.md.

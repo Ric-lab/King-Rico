@@ -1,8 +1,23 @@
 # Circus: entrega completa da prévia
 
-Atualizado em 03/11/2026. Branch de trabalho: `codex/penalty-clown-preview`.
-Não publicada no Firebase. A base é a prévia v79, com as sombras laterais do
-commit `955e081` e agora com os fontes que ativam os nove tambores.
+Atualizado em 09/11/2026. Branch de trabalho: `codex/penalty-clown-preview`.
+Prévia compartilhada em canal Firebase isolado, com três fitas contínuas.
+O protótipo de nove tambores foi descartado. Tony v4 pode ser testado em
+`/circus?demo=tony`: o primeiro giro por toque demonstra as três patadas.
+Oficial e regras de produção permanecem sem publicação desta mudança.
+
+## Tucker em avaliação
+
+Demo: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=tucker
+Primeiro giro por toque. Prepara 3 Happeach fictícios apenas uma vez neste
+navegador e demonstra perda de 1; recarregar preserva o restante. A arte v1
+é provisória e a quantidade/frequência oficial ainda não foi definida.
+
+## Ray em avaliação
+
+Demo: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=ray
+Primeiro giro por toque. Pega até 1 ingresso e foge pela esquerda; com zero,
+faz a cena sem perda. Sem sorteio natural ou alteração do site oficial.
 
 ## Rodar a prévia visual
 

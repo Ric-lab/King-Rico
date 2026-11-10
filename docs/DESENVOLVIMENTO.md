@@ -75,3 +75,7 @@ Reativação do Bounce no parque: com build emulado e servidores locais abertos,
 `python3 tests/bounce_park_browser.py` confere início por toque, carteira real
 emulada, recarga da página, recebimento e próxima entrada sem repetir modal.
 Usa contas fictícias; nunca apontar esse teste para produção.
+
+Com build emulado e emuladores já abertos: `python3 tests/villains_release_browser.py`
+confere os três vilões pelo cliente real v4, recibos, recursos e retomada. Nunca
+rodar esse teste contra o oficial; ele recusa configuração de produção.

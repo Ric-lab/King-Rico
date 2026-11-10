@@ -3,28 +3,255 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Publicação autorizada (2026-11-09 · cor do bônus)
-- Integração sobre main fc2cb40: somente centro e disco viajante da roleta com a cor da casa sorteada, inclusive retomada. Não promove demos, carteira fictícia ou economia v4 da prévia.
-- Teste focado de navegador para roxo/amarelo/rosa normal e reduzido; build final de produção após integração. Workflow oficial mantém testes, regras REST e Hosting.
-- Próximo passo: conferir o resultado do workflow deste commit e o CSS/JS no oficial; feedback do dono.
+## Publicação completa autorizada (2026-11-09 · correção de escopo)
+- A publicação f4904b7 levou somente a cor da roleta; o dono esclareceu que quer TODAS as mudanças da prévia. Merge completo de 8bfedfc sobre main f4904b7, preservando login, carteira real, bônus diário e workflows existentes.
+- Inclui fundo escolhido 151169/01-jardim, botão vinho/dourado no contorno aprovado, Tony/Tucker/Ray e refinamentos de movimento/arte da prévia. Não promover carteira fictícia ou demos ao build oficial.
+- Tucker/Ray antes só tinham demos: integrados a cloud/park.cjs, transações e regras. Cliente real v4; faixa fixa de 1% total dividida entre os três vilões, fora do décimo giro. Tony até uma aposta/5% pós-aposta, Tucker até 1 Happeach com banca proporcional, Ray até 1 ingresso; zero faz cena sem perda. Sem prêmio simultâneo; recibos antigos preservados.
+- Simulação e limites em ECONOMIA.md/circus-villains-audit.json. Testes de regras incluem concorrência, outro aparelho, zero e falsificação de perdas/grade/recursos. Navegador emulado confere os três eventos reais, assets, fundo, botão e reload. Build final de produção após integração.
+- Validação local concluída: 65 testes Firestore/transações; suítes unitárias existentes e teste novo de recursos; navegadores villains_release_browser, prize_release_browser e park_browser passaram. Capturas dos três vilões inspecionadas, sem assets faltantes/erros JS. Build final de produção gerado depois da integração.
+- Próximo passo: conferir workflow oficial deste merge e os arquivos servidos no site; depois feedback no celular. Não confundir a publicação parcial f4904b7 com o conjunto completo.
 
-## Publicado (2026-11-08 · voo estável e economia v3)
-- Dono confirmou explicitamente publicar visual E pagamentos. Integração preparada sobre main 6f382aa, preservando autenticação Google, carteira Firestore real, retorno diário uma vez por dia e publicador REST. Sem carteira de teste/demo no build de produção.
-- Visual atual da prévia incluído: céu/espaço ilustrados, curva/rotação do avião, hélice, prêmio único/círculo e faixas relativas de 20/35/50×. Fundo espacial sem máscara de viewport, camadas isoladas, sem filtros variáveis/rotação 3D; brilho do círculo suavizado. Captura inicial no desktop não reproduziu flash; mudanças reduzem fontes de recomposição no celular.
-- Novos giros usam slotVersion 3 no cliente real: oito combinações, ingressos avulsos e tabela balanceada. Recibos/rodadas v1/v2 continuam com perfil salvo. Fonte: cloud/circus-profile.cjs; apresentação isolada em cloud/prize-tier.cjs. Probabilidades/tabela e limites em docs/ECONOMIA.md; simulação fixa de 5 milhões: 95,313% de moedas, sem resgate de ingressos/políticas de variar aposta.
-- Validação: 62 testes de regras/transações já passaram com o mesmo core v3, incluindo reenvio e teto 4.000×; 213 unitários e testes focados de perfis/modelo. Nesta integração passaram 66 testes focados e navegador com Google Auth/Firestore emulados, giro real v3 de 40.000, espaço opaco e recarga sem novo crédito. Captura release-space-stable.png inspecionada. Build final de produção após integração.
-- Publicado código 7e41b89. Workflow oficial https://github.com/Ric-lab/King-Rico/actions/runs/42536204755 concluído com sucesso (verificar + publicar regras REST/Hosting). Prévia a4806d3: https://github.com/Ric-lab/King-Rico/actions/runs/42536299631 também concluído com sucesso.
-- Conferência no oficial: Firebase king-rico sem emuladores, cliente slotVersion 3, modos de teste ausentes, CSS/arte com bytes iguais ao build e assets/Three.js HTTP 200. Nenhuma aposta real. Próximo passo: feedback do dono no celular; limites econômicos da estimativa continuam em docs/ECONOMIA.md.
+## Prévia (2026-11-09 · cor do resultado da roleta)
+- Centro expansivo e disco viajante usam a cor da casa sorteada pelo índice na paleta, inclusive após recarga. Valores repetidos não determinam a cor. Sem alteração financeira, de geometria ou de duração.
+- Teste focado de navegador passou para roxo, amarelo e rosa, com movimento normal/reduzido, centro e voo. Capturas work/preview-wheel-color-*.png inspecionadas. Build de produção conferido após integração.
+- Próximo passo: dono avaliar na prévia online após Hosting desta revisão; oficial inalterado. Não afirmar suíte online concluída antes de conferir Actions.
 
-## Publicado (08/11/2026 · raspadinha e voo do big win)
-- Código oficial `6a7a775`, workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128: verificar e publicar concluídos com sucesso, preservando regras REST e Hosting existentes.
-- Site https://king-rico.web.app conferido no navegador: projeto king-rico ativo, sem emuladores/carteira fictícia/demo, cliente de cinco combinações. Avião, perfil e CSS novos HTTP 200 e bytes iguais aos locais; Three.js HTTP 200. Nenhuma aposta em conta real foi feita.
-- Autorizada pelo dono: publicar a revisão visual aprovada. Base conferida: main b698477. Inclui raspadinha diária 3×3, prêmio destacado, avião, King Rico de perfil/maior, comemoração e céu/espaço.
-- Seleção intencional: matemática oficial permanece com cinco combinações; proposta de oito (auditoria de retorno elevado) fica na prévia. engine/park/regras inalterados. Store só recebe a recuperação de conflito do bônus diário. Login Google, saldo Firestore, outras atrações e publicador REST preservados.
-- Produção não contém carteira fictícia, repetição por abertura nem giros de demonstração. Conferidos os bundles de produção; build final gerado após a integração. Próximo passo: dono avaliar a versão oficial; continuar balanceamento das oito combinações só na prévia antes de eventual promoção financeira.
-- Validação local: 204 testes de código e 57 de regras passaram. Navegador com conta emulada confirmou raspadinha diária única, giro financeiro real 20×, perfil maior, cinco combinações preservadas e saldo 1.240 após recarga, sem erros ou assets ausentes. Catálogo, sessão, entradas e menus de Penalty/Flying/Bounce/Fingo conferidos. Teste antigo do parque foi corrigido para não tentar montar jogos arquivados que retornam 404 intencionalmente.
+## Prévia (2026-11-09 · fundo confirmado pela imagem 151169)
+- Dono enviou a imagem exata desejada: é docs/concepts/circus-background-options/01-jardim.webp, com tenda vermelha grande à esquerda, pavilhão azul à direita e gramado claro. A interpretação anterior por números estava ERRADA; não usar 03-parque como escolha do dono.
+- Copiada sem editar/recomprimir para assets/scenes/circus-garden-lawn-v1.webp; referências do fundo do Circus e preload corrigidas. Cenários dos demais jogos/parque e controles preservados.
+- Teste focado de abertura/toque normal e reduzido; capturas work/preview-circus-screen-*.png inspecionadas. Conferir Actions da revisão.
+- Próximo passo: dono avaliar a imagem 151169 atrás da máquina na prévia. Usar a imagem enviada como referência inequívoca, sem presumir ordem/número exibido no chat. Oficial inalterado.
 
-## Estado anterior (2026-11-05)
+## Aplicação anterior por interpretação incorreta (2026-11-09)
+- Interpretação incorreta do agente pela numeração: aplicou a opção 3. Aplicada sem editar/recomprimir em assets/scenes/circus-park-lawn-v1.webp, só no fundo normal do Circus; manifesto de preload atualizado. Tendas laterais, gramado aberto sem caminhos, vegetação e céu azul.
+- Botões/posições/rolos e fundos dos outros jogos/parque preservados. Sem alteração financeira ou nova geração de arte. Teste focado de abertura/paleta/toque normal e reduzido, com captura de tela completa work/preview-circus-screen-*.png; conferir Actions da revisão.
+- Próximo passo: dono avaliar a opção escolhida atrás da máquina na prévia. Não pedir novamente qual opção nem aplicar a versão chapada rejeitada. Oficial permanece sem mudança.
+
+## Opções de fundo apresentadas (2026-11-09 · depois escolhida a 3)
+- Pedido explícito: três imagens para escolher. Geradas a partir do fundo atual, sem caminhos: 1 jardim diurno, 2 campo ao entardecer, 3 parque verde/azul. Artes em docs/concepts/circus-background-options; PNGs preservados e origem registrada no asset-pipeline.
+- Nenhuma opção aplicada ao runtime. Fundo atual preservado; sem builds/testes/deploy. Checkpoint [skip ci] para compartilhar propostas.
+- Decisão posterior do dono: opção 3 aprovada; integração registrada acima.
+
+## Fundo — tentativa rejeitada (2026-11-09)
+- Dono pediu menos ruído/caminhos e cores mais sólidas, mas rejeitou a imagem circus-lawn-simple-v1 por parecer infantil. Tentativa interrompida antes da publicação; referências no CSS/manifest/teste restauradas ao estado anterior.
+- Fundo atual preservado. Arte rejeitada fora do runtime em work/rejected-backgrounds e original em generated_images; não usar. Nenhum teste ou novo build necessário para este registro.
+- Próximo passo: respeitar o acabamento existente ao simplificar; não continuar a direção visual rejeitada nem gerar outra versão sem nova orientação do dono.
+
+## Prévia (2026-11-09 · contorno original do aro, só recolorido)
+- Dono confirmou que quer o contorno anterior do aro iridescente, apenas dourado. Criado spin-rim-gold-contour-v1.svg a partir do SVG aprovado: apenas 12 valores de cor mudaram. Paths, strokes, abertura, espessuras, dimensões e viewBox preservados; equivalência estrutural conferida ignorando somente cores.
+- Referência do botão e máscara do pulso usam esse SVG. Corpo vinho, letras douradas, posição, tamanho e clique preservados. O antigo spin-rim-v3.svg tem outro contorno e foi retirado desta montagem.
+- Verificação focada de paleta/toque normal e reduzido, com captura work/preview-spin-wine-*.png; conferir Actions no commit da revisão. Próximo passo: dono avaliar aro na prévia, sem alteração do oficial.
+
+## Prévia (2026-11-09 · spin vinho e dourado)
+- Dono pediu aro/letras dourados e corpo vinho como a barra de +/−. Reaproveitado spin-rim-v3.svg e gradiente vinho da base-controls-v4. Pulso permanece na paleta vinho/dourado; barras/roletas conservam arco-íris. Profundidade, geometria, som/háptico e clique preservados.
+- Teste focado do navegador (KING_RICO_PALETTE_ONLY=1) em normal/reduzido passou, com aro/texto/cor e toque/cancelamento; capturas work/preview-spin-wine-*.png inspecionadas. Regressão completa teve expectativas atualizadas para a paleta nova e será executada pelo workflow. Nenhuma mudança financeira.
+- Próximo passo: dono avaliar o botão na prévia; oficial continua inalterado. Conferir Actions desta revisão antes de afirmar sucesso da suíte online.
+
+## Prévia (2026-11-09 · Ray levando a placa inteira)
+- Dono rejeitou o andar e pediu surgimento direto atrás do contador, saída carregando seu asset e retorno após modal, como Tucker. Removidos passos, aproximação e bilhete avulso; contador real clonado na mesma escala/posição, original escondido. Ray e cópia saem juntos à esquerda.
+- Placa carregada mantém contagem anterior; após Continuar o original volta com a contagem confirmada. Zero ingressos também funciona. Sem nova arte ou alteração de economia/persistência.
+- Teste focado de navegador normal 390 px e reduzido 320 px: surgimento ancorado/rosto no enquadramento, clone igual ao original, fuga conjunta, espaço vazio, modal, retorno/contagem e reload. Capturas work/preview-ray-*.png. Conferir Actions desta revisão.
+- Próximo passo: dono avaliar /circus?demo=ray na prévia. Oficial inalterado.
+
+## Prévia (2026-11-09 · Ray Raccoon)
+- Dono pediu guaxinim com máscara tipo Zorro, roubo simples de ingressos e saída pela esquerda. Gerados corpo/cabeça v1, transparentes e provisórios; guia docs/RAY-RACCOON.md. Assets em assets/ray e conceitos preservados.
+- Demo explícita /circus?demo=ray. Trinca diagonal vermelha, surge atrás do mostrador, aproxima a pata dos ingressos, bilhete vai para o saco com contador/som/háptico no contato e foge à esquerda; modal depois. Pega até 1, inclusive cena com zero/sem perda. Sem sorteio natural, promoção oficial ou mudanças no Firestore/cliente real.
+- Modelo da carteira fictícia salva recibo idempotente e mantém saldo menos a aposta normal e Happeach inalterados. Testes focados: normal/zero, replay e reload; regressão da economia de prévia e Tucker. Navegador normal 390 px e reduzido 320 px confere rostos/linha, surgimento, contato/contador, direção de fuga, modal e persistência. Capturas work/preview-ray-*.png inspecionadas. Conferir Actions no commit desta revisão.
+- Próximo passo: dono avaliar arte e cena no celular; ajustar só feedback aprovado. Quantidade/frequência para carteira real ainda não definidas.
+
+## Prévia (2026-11-09 · Tucker com cesta vazia e duas garras)
+- Dono pediu a mesma sequência mesmo com zero Happeach. Demo agora gera trinca/cena com roubo zero, banca zero e aviso de nenhuma perda, sem bloquear ou produzir NaN. Aposta normal preservada; nenhuma regra/cliente financeiro real alterado.
+- Pose v2 gerada com os dois pés próximos/curvados; âncora entre garras alinhada ao topo da alça. Usa assets/tucker/body-grip-v2.webp; v1 preservada. Cabeça continua v1.
+- Verificação focada: teste da demo vazia/replay/reload e navegador em 390 px normal, 320 px reduzido e cesta vazia; conferir capturas work/preview-tucker-perched-*.png. Conferir resultado no workflow da revisão.
+- Próximo passo: dono avaliar /circus?demo=tucker; após consumir os frutos fictícios, a cena continua funcionando com zero. Arte segue provisória, sem ativação natural/oficial.
+
+## Prévia (2026-11-09 · Tucker levando a cesta)
+- Dono não gostou ainda da arte v1, mas pediu testar o rosto nos rolos e a animação: trinca vermelha, Tucker pousado na alça, voo levando a cesta, espaço vazio, modal e devolução com contagem atualizada.
+- Implementação visual em ui/park/tucker.js, asas separadas por máscara vetorial/CSS. Cesta clonada do DOM para levar frutos/contador; original escondida até Continuar. Arte copiada para assets/tucker, ainda provisória. Cliente real/core/regras de Firestore não alterados.
+- DEMO explícita: /circus?demo=tucker. Prepara 3 Happeach fictícios uma vez por navegador, primeiro giro leva 1; sem sorteio natural do Tucker. Quantidade é amostra para avaliar cena, não regra econômica aprovada. Carteira fictícia salva um recibo, remove a fração correspondente da banca e mantém moedas menos a aposta normal.
+- Verificação focada: modelo de demo/replay/reload e ausência de Tucker em giros comuns; navegador em 390 px normal e 320 px reduzido confere três rostos/linha, alça, asas, cesta saindo, espaço vazio, modal, volta com 2 e reload. Regressão Tony também passou. Capturas work/preview-tucker-*.png inspecionadas. Conferir Actions no commit desta revisão.
+- Próximo passo: dono avaliar a demo no celular e orientar arte/ritmo. Não ativar sorteio natural nem promover ao oficial sem definir/aprovar economia e validar regras reais.
+
+## Arte (2026-11-09 · Tucker Toucan v1)
+- Pedido: criar assets do Tucker. Produzidos corpo inteiro e cabeça transparente coerentes, em docs/concepts/tucker-toucan; guia docs/TUCKER-TOUCAN.md. Direção proposta: tucano azul-noite, bico amarelo/laranja/ameixa, olhos âmbar/turquesa, colete verde-petróleo/dourado e expressão malandra.
+- Artes e alpha conferidos. Duas gerações de imagem, sem Meshy, testes do app ou builds. Só checkpoint de fontes [skip ci], sem atualizar URL de prévia/oficial.
+- Próximo passo: dono avaliar arte v1 e pedir ajustes. Não integrar roubo/animação/sorteio antes de definir o comportamento com o dono.
+
+## Estratégia permanente (2026-11-09)
+- Dono pediu adotar sempre o fluxo econômico: alterações pequenas com teste focado e prévia cedo; agrupar ajustes aprovados para publicar; validar finanças quando afetadas; evitar releituras, testes e mensagens repetidos.
+- Registrado em AGENTS.md, docs/skills/publicar.md e docs/FLUXO-CLAUDE-CODEX.md. Checkpoints `[skip ci]` preservam colaboração sem disparar deploy; URL remota só pode ser anunciada como atualizada quando realmente publicada.
+- Próximo passo: aplicar essa estratégia às próximas tarefas. Esta entrega é só documentação, sem build, partidas ou publicação.
+
+## Prévia (2026-11-09 · destaque das garras do Tony)
+- Feedback: marcas anteriores feias/discretas; modal final aprovado. Cortes refeitos em preto, maiores, com desenho irregular e desfoque breve apenas na área dos rolos. Saldo e mostrador do prêmio ficam nítidos.
+- Cada desconto aparece agora no mostrador original do prêmio, aos pés do King Rico; cartão flutuante removido. Modal final, tempos/som/háptico e economia/Firestore não alterados.
+- Verificação focada: navegador em 390 px/normal e 320 px/movimento reduzido confere cor/tamanho visual, blur sem cobrir prêmio, três parcelas, saldo, modal, replay, reload entre patadas e falha de animação. Capturas em work/preview-tony-*.png. Build de produção após integração. Workflow da prévia deve ser conferido no commit desta revisão.
+- Próximo passo: dono avaliar /circus?demo=tony no canal de prévia. Oficial permanece sem mudança; nenhuma promoção para main autorizada nesta revisão.
+
+## Prévia (2026-11-09 · Tony Tiger, três patadas)
+- Dono aprovou três rostos/linha vermelha, três patadas com riscos, balanço, som/háptico, quedas separadas do saldo e modal do total. Esclareceu que Tony é exclusivo: sem outro prêmio na rodada. Cabeça v4 de 866e780 copiada sem alteração para assets/tony/head.webp.
+- Implementado slotVersion 4 só na carteira de prévia. Cliente de produção segue pedindo v3; oficial e regras publicadas não foram alterados. Core/store/regras locais preparados para o débito atômico no mesmo recibo; versão antiga preservada.
+- Chance 1% fora do décimo giro, roubo até uma aposta limitado a 5% do saldo pós-aposta. Três parcelas em centavos; nenhuma aleatoriedade/débito na animação. Auto interrompido. Demo: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=tony (primeiro giro por toque; só moedas fictícias).
+- Testes de código: npm test, 37 arquivos passaram. Firestore: 63 testes passaram, incluindo envio concorrente/replay, bootstrap e quatro fraudes de Tony rejeitadas. Navegador: três impactos/som/deltas, marca vermelha, modal, reload entre impactos, erro de animação e movimento reduzido passaram; regressões de três fitas/ingressos/líquido/roleta e Big Win passaram. Capturas locais em work/preview-tony-*.png inspecionadas. Build de produção gerado após navegador; conferir resultado do workflow da prévia no commit desta entrega.
+- Simulação 1 milhão/seed17843/aposta10/saldo alto: 9.004 eventos, retorno líquido em moedas 93,997% incluindo roleta/Happeach e descontando roubo. Não inclui resgate de ingressos, recargas ou variação de aposta; ver ECONOMIA.md e circus-tony-preview-audit.json.
+- Próximo passo: dono avaliar demo do Tony no celular; ajustar apenas feedback aprovado. Para levar ao oficial, ativar v4 no cliente real e publicar regras/Hosting pelo workflow existente após autorização; não publicar a carteira fictícia nem promover automaticamente esta branch.
+
+## Arte (2026-11-09 · Tony Tiger, retorno à v4 e vistas)
+- Dono escolheu explicitamente os assets de 866e780: corpo/cabeça v4, sem unhas/garras. V5–v7 são tentativas descartadas, preservadas como histórico.
+- Gerada prancha frente/perfil/costas a partir do corpo v4, inspecionada e salva em docs/concepts/tony-tiger/turnaround-v4.webp. Guia docs/TONY-TIGER.md atualizado.
+- Próximo passo: feedback do dono na prancha; perfil e costas são interpretações novas em avaliação. Nenhuma integração/publicação no jogo; animação ainda indefinida.
+
+## Arte (2026-11-09 · Tony Tiger, unhas largas v7)
+- V6 rejeitada por ainda parecer garra. V7 troca as seis unhas não-polegares por placas largas como unhas humanas, ocupando a ponta superior dos dedos, levemente compridas/arredondadas. Dedões e cabeça v4 preservados. Imagem e alpha conferidos; versões anteriores mantidas.
+- Próximo passo: feedback do dono nas unhas v7. Sem integração/publicação no jogo; animação ainda a definir pelo dono.
+
+## Arte (2026-11-09 · Tony Tiger, unhas v6)
+- Dedões da v5 aprovados; outras três unhas de cada mão refeitas para acompanhar a superfície superior dos dedos, em vez de pequenas pontas. Corpo v6 gerado e inspecionado, alpha conferido. Cabeça v4 preservada; versões anteriores mantidas.
+- Próximo passo: feedback do dono nas unhas v6 e definição da animação pelo dono. Arte só em docs/concepts; nenhuma integração ou publicação no jogo.
+
+## Arte (2026-11-09 · Tony Tiger com garras)
+- Dono aprovou a direção v4 e pediu apenas garras discretas nas mãos. Corpo v5 gerado/inspecionado, alpha conferido; cabeça v4 permanece a mesma. Ver docs/TONY-TIGER.md. Versões anteriores preservadas.
+- Próximo passo: feedback nas garras e definição da animação pelo dono; personagem ainda não foi integrado à slot nem publicado no jogo.
+
+## Arte em avaliação (2026-11-09 · Tony Tiger v4)
+- Dono pediu menos creme em queixo/bigode/tronco e T feito pelas listras escuras, como detalhe escondido (referência Toblerone). V3 fez essa direção; feedback seguinte pediu um pouco mais de dentes e haste do T mais longa/evidente. Corpo e cabeça v4 entregues, com alpha; ver docs/TONY-TIGER.md.
+- V1–v3 preservadas. V4 aguarda feedback; não há animação, sorteio ou integração do personagem na slot. Próximo passo: ajustes visuais que o dono pedir e, depois, definição da animação pelo dono.
+
+## Arte em avaliação (2026-11-09 · Tony Tiger v2)
+- Dono pediu restaurar bigode branco do Valentão inicial, mostrar um pouco mais de dentes e abrir levemente os olhos. Corpo/head v2 feitos com esses ajustes; casaco vermelho, T e corpo forte mantidos. Ver docs/TONY-TIGER.md; v1 preservada.
+- Alpha e imagens conferidos. Nenhuma animação, roubo ou alteração da slot; propostas não entram no build. Próximo passo: feedback do dono nas duas artes v2.
+
+## Arte em avaliação (2026-11-09 · Tony Tiger)
+- Dono pediu opções, escolheu B/Valentão e pediu casaco vermelho discreto, sem faixa vinho, rosto malandro e T sutil no peito. Foram produzidas exatamente uma arte de corpo inteiro e uma da cabeça, transparentes. Ver docs/TONY-TIGER.md e docs/concepts/tony-tiger/.
+- Direção escolhida, mas os dois assets finais ainda aguardam feedback. Conceitos não integram o build nem foram publicados no site. O dono disse que ainda pensará na animação: não implementar roubo, animação ou novos sorteios por conta própria.
+- Próximo passo: receber feedback nas duas artes e ajustar só o que o dono pedir; personagem/números ainda não entram na slot. Originais e gerações documentados no asset-pipeline.
+
+## Entrega autorizada na main (2026-11-08 · 7e41b89)
+- Dono autorizou explicitamente visual E pagamentos v3. Commit 7e41b89 enviado à main pelo workflow oficial, com carteira Google/Firestore real, oito combinações, ingressos avulsos e tabela v3; prévia continua fictícia, demos/raspadinha por abertura exclusivos do build:preview.
+- Correção do espaço: sem máscara do viewport/filtros variáveis/rotação 3D da hélice; camadas isoladas/opacas e círculo mais suave. Arte decodificada antes de usar. Apresentação separada de pagamento em cloud/prize-tier.cjs.
+- Testado em navegador do build real emulado: giro v3 de 40.000, fundo espacial estável, saldo preservado após reload e nenhum crédito duplicado. Suite focada de integração: 66 testes passaram; regressão da prévia cobre céu/espaço/reduzido/erro de imagem e opacidade monotônica. Capturas inspecionadas; produção gerada após navegador.
+- Oficial 7e41b89: workflow https://github.com/Ric-lab/King-Rico/actions/runs/42536204755 concluído com sucesso, regras REST e Hosting. Prévia a4806d3: https://github.com/Ric-lab/King-Rico/actions/runs/42536299631 concluído com sucesso.
+- Conferido no oficial: cliente v3, Firebase king-rico sem emuladores/modos de teste, assets/CSS com bytes esperados e HTTP 200. Nenhuma aposta real. Próximo passo: feedback do dono no celular; limites econômicos continuam documentados.
+
+## Prévia (2026-11-08 · economia v3 e Big Win proporcional)
+- Pedido: revisar referências Fortune Tiger e pagamentos. `cloud/circus-profile.cjs` define trincas sobre aposta TOTAL: bumbo 0,6; tenda 1; trevo 1,6; nuvem 2,5; capa 4; cetro 5; moeda 8; coroa 15; diamante 20; King 50. Oito linhas/tela cheia ×10 preservadas. Perfil v3: Happeach 0,005 por posição, especial mínima 20× na média salva.
+- Voo só ≥20×; Mega ≥35×; Super ≥50×. `showPrize` recebe a aposta da rodada/especial explicitamente. Tabela, som/destaque e linhas usam o perfil correto; recibos v1/v2 continuam intactos. Produção/client-src continua pedindo v2; só carteira de prévia inicia v3. Store/regras preparados e testados, sem publicar regras.
+- Cinco milhões de giros/seed17843/aposta10: 95,313% de retorno em moedas, incluindo Happeach e extra da roleta; IC por lotes aproximado 94,843–95,784%. Base paga em 42,599%; crédito maior que aposta em 16,017%; destaque de voo ~1/102. Dados em docs/circus-v3-audit.json; comparação Tiger/coeficientes por linha em docs/ECONOMIA.md.
+- Limite importante: simulação de aposta constante, sem resgate dos ingressos nem políticas de mudar aposta perto da roleta. Não é RTP global e não autoriza promover a economia para live; essas duas auditorias permanecem necessárias.
+- Validação: 213 testes da suíte de código passaram, além dos focados novos; 62 verificações Firestore/transações passaram, com v3, teto 4000× e reenvio idempotente. Modelo fictício comparado ao core auditado por 60 giros/roletas/reenvios. Navegador confirmou tabela/colunas, 15.000 em aposta1.000 SEM avião e demos 20×/200×; regressão de motion passou. Capturas inspecionadas; build de produção após integração.
+- Runner aceita lista de testes locais e cria servidor efêmero quando não há URL, evitando portas antigas; CI continua as seis suítes completas em pares. Próximo passo: conferir workflow desta revisão e dono avaliar prévia; oficial preservado.
+
+## Prévia (2026-11-08 · hélice em voo)
+- Pás originais separadas no render por duas máscaras SVG; removidas das camadas fixas, com cubo dourado preservado. Giro no eixo do motor de 110 ms, fantasma defasado e disco translúcido dão movimento sem regenerar/trocar o avião.
+- Máscaras versionadas em ui/park e incluídas no preload do Circus. Movimento reduzido usa pás/disco difusos estáticos. Trajetória, escala, círculo/prêmio, sons e pagamento não alterados.
+- Quatro fluxos de navegador passaram (céu, 320 px/reduzido, imagem falhando e espaço); teste verifica máscara, mudança real da transformação das pás, período e redução de movimento. Duas fases de giro capturadas e inspecionadas. Sem erros/assets ausentes; build de produção após integração.
+- Próximo passo: conferir Actions desta revisão e dono testar céu (?demo=bigwin) e espaço (?demo=spacewin). Somente prévia; oficial preservado. Um commit com documentação, sem registro extra após o workflow.
+
+## Prévia (2026-11-08 · nariz, centro da curva e círculo do prêmio)
+- Posição, inclinação e rastro agora derivam de uma curva quadrática única (`flightCurve`): nariz segue a tangente com entrada suave após embarque, linha termina na âncora central do avião. Escala menor acomoda a rotação no celular.
+- Círculo dourado luminoso atrás do prêmio pulsa a cada 1,6 s; estático com movimento reduzido. Número permanece o único contador; nenhuma mudança no pagamento confirmado, carteira ou demais jogos.
+- Unitário verifica continuidade de embarque/tangente/âncora. Navegador cobre 20×, 320 px/reduzido, erro de imagem e espaço 200×; exige nariz apontado para cima, alinhamento da linha a menos de 1 px e círculo redondo com redução de movimento respeitada. Capturas revisadas; build de produção após integração.
+- Próximo passo: conferir Actions desta entrega e dono testar separadamente céu (?demo=bigwin) e espaço (?demo=spacewin). Prévia isolada; não publicar em live sem autorização. Um único commit com documentação.
+
+## Prévia (2026-11-08 · referência Aviator e foco único no prêmio)
+- Pedido: Aviator como referência da curva/movimento, não do ícone; Fortune Tiger como hierarquia do prêmio. Avião/King próprios preservados, escala reduz até 42% durante subida à direita e curva dourada parte da base esquerda. Removido contador × da cena; prêmio é único número, título dourado/halo/radiação suaves.
+- Pesquisa: página SPRIBE, imagem pública da interface Aviator, gameplay mobile listado no Vimeo; ficha PG Soft e imagem Big Win pública. Fontes e limites em docs/PARQUE.md. Gravação antiga do dono não localizada; vídeos listados não foram assistidos. Nenhum asset/código externo integrado.
+- Verificado localmente em quatro fluxos (390 px/20×, 320 px/reduzido, falha do avião e 390 px/200×): redução contínua, valor legível sem ×, avião inteiro, retomada e uma aposta/prêmio confirmados. Capturas inspecionadas; unitários e build de produção após integração passaram.
+- Publicação simplificada: as mesmas seis suítes de navegador agora executam em pares isolados, com logs separados e falha propagada. Um commit/HANDOFF por entrega; resultado real de Actions comunicado ao dono sem segundo commit apenas de registro.
+- Próximo passo: conferir Actions desta revisão e dono avaliar ?demo=bigwin / ?demo=spacewin na prévia. Não promover à produção; oficial preservado.
+
+## Prévia (2026-11-08 · voo enquadrado e contagem em destaque)
+- Dono pediu remover resquício da nuvem colorida, prolongar voo e priorizar valor crescente. Mascote inteiro (incluindo nuvem) oculto após embarque/restaurado em toda saída; avião enquadrado no centro superior e subida de 6,8–9,8 s conforme altitude, sem alcançar o canto cedo.
+- Prêmio em moedas virou maior número, com dimensionamento pelo valor final, pulso suave e multiplicador secundário. Sem alterar prêmio confirmado, carteira ou matemática; movimento reduzido não balança/pulsa.
+- Quatro cenários locais passaram: 20×, 320 px/reduzido, falha de imagem e 200×/espaço; teste confere nuvem oculta/restaurada, duração, avião inteiro, valor maior/sem corte e prêmio único. Capturas inspecionadas. Respiro final do título conferido em novo giro; build de produção gerado após integração.
+- Código e4d8967 enviado à prévia; workflow https://github.com/Ric-lab/King-Rico/actions/runs/42519911793 concluído com sucesso, incluindo navegador no endereço público.
+- Próximo passo: dono avaliar a nova contagem/voo na prévia (?demo=bigwin ou ?demo=spacewin). Oficial preservado; não publicar em live sem autorização.
+
+## Prévia (2026-11-08 · cenário ilustrado do avião)
+- Novo atlas de céu/espaço com nuvens volumétricas, lua e Terra; nuvens próximas/distantes com velocidades diferentes e estrelas irregulares. Centro livre para o multiplicador. Assets finais versionados e no preload.
+- Sem mudança no avião, poses/proporções do King, duração, carteira ou pagamentos. Revisão exclusiva da prévia; oficial permanece em 6a7a775.
+- Validação local: quatro fluxos de navegador (20×, 320 px/reduzido, imagem com falha e 200×/espaço), paralaxe, prêmio único e zero assets ausentes/erros. Capturas inspecionadas; testes do voo e build de produção após integração passaram.
+- Código 8f54c22 publicado na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42517890549 concluído com sucesso, incluindo testes de navegador no endereço público.
+- Próximo passo: avaliação visual do dono nos demos bigwin/spacewin. Não publicar em live sem autorização.
+
+## Ideia registrada (2026-11-08 · três vilões)
+- Dono propôs Tiger Tony (moedas, assusta King/foge e morde placa três vezes), Tucker Toucan (leva Happeach voando pela cesta) e Ray Raccon (guaxinim de máscara/saco, sai de trás do prêmio e leva ingressos). Sequências completas em docs/IDEIAS-DE-JOGOS.md.
+- Apenas documentação: sem código, sorteios, perdas ou publicação. Frequência, quantidades e gatilhos ainda a definir. Recomendações do agente separadas das cenas pedidas; próximo passo é o dono avaliar a proposta e definir regras antes de implementação.
+
+## Oficial publicado (2026-11-08 · revisão visual aprovada)
+- Dono autorizou publicar. Main recebeu `6a7a775`: raspadinha diária 3×3/prêmio destacado e voo completo com King maior/de perfil, comemoração e céu/espaço; Google/Firestore reais. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42438873128 concluído com sucesso nos dois jobs; regras REST e Hosting preservados.
+- Seleção financeira explícita e comunicada: oficial conserva cinco combinações, engine/park/regras anteriores. As oito combinações e ingressos avulsos desta branch continuam só na prévia, aguardando balanceamento. A repetição por abertura e giros demo também continuam exclusivos da carteira fictícia.
+- Validação: 204 testes de código, 57 de regras e integração com conta emulada, incluindo saldo diário único, giro/recebimento/reload e catálogo atual. Site oficial confirmou configuração king-rico sem emuladores/demo e assets novos HTTP 200/bytes corretos; nenhuma aposta real.
+- Próximo passo: feedback do dono no oficial. Matemática de oito combinações continua pendente nesta branch; não incorporar em main como parte de uma simples revisão visual.
+
+## Prévia (2026-11-08 · proporções, comemoração e altitude)
+- Código `1aafefc` publicado na prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42437278106 concluído com sucesso: navegador público confirmou piloto maior, comemoração contínua, céu/estratosfera 20×, espaço 200×, carteira/aposta única e regressões do Circus/parque. Oficial preservado.
+- Pedido: King maior em salto/cabine, comemorando até embarcar; subida com mais cenário e céu/espaço conforme o big win, multiplicador evidente.
+- Piloto 31% → 43% da largura do avião; alvo do salto e encaixe recalculados juntos, salto começa até 12% maior. Aproximação continua o ciclo fw6 de comemoração e transfere a posição animada para o embarque.
+- Camadas de céu, estratosfera e espaço, com nuvens descendo e estrelas em paralaxe. Altitude e duração dependem do multiplicador já confirmado; multiplicador central ampliado/alto contraste. Sem alterar sorteio, aposta ou pagamento.
+- Prévia: ?demo=bigwin mostra 20×; ?demo=spacewin mostra 200× e espaço no primeiro giro, somente moedas de teste. Próximo passo: dono avaliar os dois percursos. Oficial e pendência de balanceamento preservados.
+- Validação local: três testes de apresentação passaram. Navegador confirmou piloto ampliado, sequência de poses/continuidade, trajetória e multiplicador nos modos normal/reduzido, céu 20×, espaço 200× e fallback na falha do avião; saldo e uma única aposta preservados, sem erros/assets ausentes. Capturas de subida e espaço revisadas. Produção gerada depois da integração.
+
+## Prévia (2026-11-08 · piloto de perfil)
+- Código `4d47c5b` publicado no canal de prévia. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42436195528 concluído com sucesso, incluindo navegador público do perfil, prêmio/erro e regressões de Circus/parque. Revisar em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin . Oficial preservado.
+- Dono pediu uma pose que cai na cabine virada para a frente do avião e indicou a arte de vistas. Usados turnaround da marca e fw6/master como referências para novo perfil direito sentado (GPT Image), com coroa/capa e mãos livres, sem cetro.
+- `pilotSide` entra na descida final e permanece como piloto; posição do encaixe ajustada junto da trajetória, pernas atrás da frente da fuselagem. Demais poses de impulso, avião e pagamentos preservados. Asset no preload e teste confere pose final real na cabine.
+- Validação: dois testes de apresentação passaram; navegador 320/390/430 px confirmou perfil final, sequência de embarque, prêmio 20×/aposta única, recebimento e fallback na falha do avião, sem erros ou assets ausentes. Captura na cabine revisada; produção gerada após integração.
+- Próximo passo: dono avaliar perfil/encaixe em /circus?demo=bigwin na prévia. Oficial preservado; não promover antes do balanceamento pendente.
+
+## Prévia (2026-11-08 · poses do salto para o avião)
+- Código `689f6a3` no canal /circus?demo=bigwin. Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42434696279 concluído com sucesso; conferência pública da sequência de poses, pagamento/erro, raspadinha e regressões de Circus/parque passou. Oficial preservado.
+- Dono aprovou o avião, rejeitou King Rico parado sendo movido e pediu replicar o método das animações anteriores. Consultado o cheer/frame de KingRico.dc.html; reaproveitados desenhos fw6 existentes, sem gerar arte nova.
+- ui/park/king-boarding.js alterna crouch2/cheerRise/cheer/cheerFall/land, com dissolução opaca de 110 ms e suavização 22/s/pivô 97% como o original. Copia a pose visível na partida, preserva o King durante a aproximação e amortece o pouso; piloto respira após entrar.
+- Avião, percurso, pagamentos, multiplicador e carteira preservados. Poses adicionadas ao preload e teste de navegador verifica a sequência real durante um giro 20×, além do recebimento e fallback existentes.
+- Dois testes de apresentação passaram. Navegador confirmou a ordem real crouch2/cheerRise/cheer/cheerFall/land nos modos normal/reduzido, carteira, aposta única e recuperação na falha do avião em 320/390/430 px; sem erros ou assets ausentes. Captura do ápice revisada; produção gerada após integração.
+- Próximo passo: dono avaliar o salto no link /circus?demo=bigwin da prévia. Produção permanece intacta; balanceamento das oito combinações continua pendente.
+
+## Prévia (2026-11-07 · revelação da raspadinha e voo do big win)
+- Código `5b7cbba` na prévia, com cena principal de `fb61818`. Workflow final https://github.com/Ric-lab/King-Rico/actions/runs/42336663835 concluído com sucesso, assim como o anterior https://github.com/Ric-lab/King-Rico/actions/runs/42336415877. Navegador público confirmou os dois motions, falha do avião, crédito único e regressões de ingressos/roleta/parque. Produção gerada após integração; oficial preservado.
+- Revisão rápida: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus?demo=bigwin — receber raspadinha e tocar no spin; primeiro giro demonstra 20× com moedas fictícias.
+- Pedido: substituir as nove casas por um prêmio destacado após os acertos; implementada pausa de reconhecimento, recolhimento ao centro e moeda/valor grande com PEGAR MOEDAS. Repetição de teste preservada.
+- Pedido: usar a linguagem do Aviator na celebração, sem parar. Avião novo gerado pelo GPT Image, King Rico oficial salta da coordenada real para a cabine, sobe e revela multiplicador/valor; substitui o modal de prêmios monetários ≥5× a aposta.
+- Assunção comunicada ao dono: revelar o prêmio já confirmado, sem novo sorteio ou pagamento extra. Nenhuma mudança de matemática, carteira, Firestore ou rodadas. Cena termina no fluxo de moedas/continuação existente; falha do asset ou timeout não duplica crédito.
+- Link de revisão: /circus?demo=bigwin na prévia força apenas o primeiro giro para diamantes 20×, com moedas fictícias; transporte de produção intacto. Dono ainda toca Girar. Teste do navegador usa esse link real, sem substituir respostas ou inventar saldo.
+- Validação local: 50 testes de apresentação/diário/adaptadores passaram. Navegador em 320/390/430 px confirmou a grade sumindo e prêmio único, salto/embarque, subida, ×20/200 moedas, apenas uma aposta e nenhuma transação de prêmio adicional. Falha do avião e movimento reduzido preservam saldo/continuação; sem erros ou assets ausentes. Capturas de embarque/subida/resultado revisadas.
+- Próximo passo: dono avaliar motion/encaixe da cabine e a nova revelação. Continuar somente na prévia; não promover à main antes do balanceamento pendente das oito combinações. A mecânica independente do Aviator continua apenas ideia.
+
+## Prévia (2026-11-07 · repetir raspadinha para testar)
+- Código `3b809cb` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42334250457 concluído com sucesso: navegador público confirmou repetição a cada abertura em 320/390/430 px, crédito único por visita e navegação/movimentos preservados. Cinco testes de ciclo/modelo/isolamento passaram; produção gerada após a integração. Oficial preservado.
+- Dono pediu reaparecer em toda abertura para conseguir testar. Somente o modelo da carteira fictícia reinicia o bônus ao carregar uma página; permite raspar e receber 50 moedas de teste novamente. Receber duas vezes na mesma visita continua bloqueado.
+- Cliente, calendário, regras Firestore e bônus de produção intactos. Testes de navegação adaptados para fechar o cartão e distinguir créditos de teste das entradas dos jogos.
+- Próximo passo: dono testar livremente recarregando a prévia. Não promover esta exceção para o cliente financeiro real.
+
+## Prévia (2026-11-07 · raspadinha 3×3)
+- Código `b2908dc` em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42333637286 concluído com sucesso; navegador no endereço público confirmou nove casas, seis X vermelhos, três valores iguais, raspagem e crédito único nas três larguras. Oficial preservado.
+- Dono confirmou seis X vermelhos e três casas com o valor do presente, total nove. Substituída a área única por nove coberturas raspáveis independentes, em posições embaralhadas.
+- Encontrar os três valores iguais revela as casas restantes e libera PEGAR MOEDAS; REVELAR continua como alternativa acessível. Três desenhos representam um único pagamento diário; valores, transação e regras não mudaram.
+- Navegador confirmou mouse, toque real via eventos de toque do Chromium, teclado, casas independentes, seis X/três valores, repetição e erro de confirmação/voo em 320/390/430 px. Sem erros ou assets ausentes. Dois testes de ciclo/layout passaram; tela de 320×568 também conferida, com botão e grade inteiros. Produção gerada após a integração.
+- Próximo passo: dono avaliar a grade no celular. Somente prévia; manter a pendência de balanceamento das oito combinações antes de qualquer promoção à main. Ideia de Aviator segue apenas documentada.
+
+## Anotação (2026-11-07 · direção Aviator)
+- Dono pediu registrar uma dinâmica mais claramente inspirada no Aviator: movimento/multiplicador contínuos, sem andares como o Flying atual. Proposta em docs/IDEIAS-DE-JOGOS.md, vinculada no índice; encaixe na dinâmica geral ainda a definir, sem implementar um jogo extra.
+- Naquele momento, a raspadinha tinha uma área única; substituída pela grade 3×3 registrada acima após confirmação do dono. O presente continua único/diário, inclusive ao abrir pelo Parque. Após receber não reaparece naquele dia; antes de receber pode reabrir após recarga. Oficial ainda preservado.
+- Encaixe da dinâmica contínua ainda a definir. Esta anotação foi apenas documental; pendência de balanceamento da prévia continua abaixo.
+
+## Prévia (2026-11-07 · raspadinha de retorno diário)
+- Código `75ea6c9` no canal https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42332248282 concluído com sucesso; raspadinha, movimentos, colunas e parque conferidos pelo navegador no endereço público. Produção preservada.
+- Pedido: receber o presente de retorno pela raspadinha na primeira abertura do dia. Fluxo compartilhado em ui/park/daily-reward.js/css, aberto depois da conta/carregamento no Circus e nas rotas do parque. Escolha de entrada aguarda a raspadinha.
+- Raspar revela; botão REVELAR oferece alternativa acessível. PEGAR MOEDAS chama Cloud.bonus existente, segura a atualização visual e libera voo/contagem compartilhados após confirmar. Falha permite tentar de novo; recarga antes da confirmação reabre, depois não repete.
+- Valores, ciclo de sete dias, calendário de São Paulo e regras financeiras preservados; teste de regras passa a disputar dois pedidos diferentes de bônus simultâneos. Nenhuma importação de moedas locais; carteira fictícia só na prévia.
+- Corrigida recuperação de conflito do bônus: segundo pedido com ID diferente relê a transação, como já ocorria na recarga, e retorna zero após o primeiro crédito. O novo teste inicialmente mostrou permission-denied; passou após a correção. Demais 59 casos de regras passaram na execução completa; os quatro casos financeiros afetados foram reexecutados e passaram.
+- Validação: 78 testes de diário/adaptadores/carteira e cinco de build/contagem passaram. Navegador em 320/390/430 px conferiu raspagem, alternativa de teclado, erro/repetição, saldo retido, animação indisponível e recarga/Parque sem repetir presente. Testes do parque em três larguras e movimentos do Circus normal/reduzido também passaram. Build de produção gerado depois da integração; sem publicar em live.
+- Próximo passo: conferir a raspadinha no celular com o dono. Esta revisão continua somente na prévia; o balanceamento das oito combinações abaixo permanece pendente antes de promover à main.
+
+## Próximo passo (2026-11-07 · ingressos avulsos e colunas, somente prévia)
+- Código `b41b60f` publicado somente em https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus . Workflow https://github.com/Ric-lab/King-Rico/actions/runs/42330832504 concluído com sucesso: testes no endereço público confirmaram ingressos avulsos, coluna premiada/destaque, carteira, sons/roleta e parque em três larguras. Oficial e regras de produção não publicados.
+- Implementado `slotVersion:2`: oito combinações pagam; ingressos avulsos aparecem sem crédito nem voo. Preservados pagamentos/células de prêmio, Happeach, versões antigas e repetição idempotente. Indicador vertical usa o mesmo contêiner transformado dos rolos.
+- Validação local: 205 testes de código e 60 testes de regras/transações passaram. Navegador confirmou um/dois ingressos avulsos sem crédito, pagamento/destaque alinhado de coluna, carteira, três notas sequenciais, líquido e roleta nos modos normal/reduzido; sem erros ou assets ausentes.
+- Auditoria reproduzível: `scripts/circus-lines-audit.cjs`, resultados em `docs/circus-lines-audit.json`. Cem mil giros por versão, incluindo bônus: retorno em moedas de 141,22% nas cinco combinações existentes e 189,92% nas oito novas. Não houve ajuste de pesos/pagamentos. Usuário informado; oficial preservado.
+- Próximo passo exato: avaliar a prévia com o dono e recalibrar o Circus completo (base + Happeach + décimo giro + roleta), repetindo a auditoria e testes antes de qualquer promoção à main. Não anunciar RTP de 95/98% com esses resultados.
+
+## Estado oficial (2026-11-05)
 - `main` = site oficial. Publicado `87244fe` em 05/11 após autorização do dono: Clown guardado, Bounce reativado, três cards Em breve e revisões aprovadas de parque/HUD/contador. Mantidas 3 fitas, carteira real, háptico e publicador REST de regras; prévia segue em projeto isolado.
 - No ar: Circus, Penalty (goleiro palhaço), Flying Clown e Bounce; Fingo só pela rota direta. Basquete/Bubble Plinko/Race Horse são cards Em breve, sem cobrança. Clown e demais arquivados: docs/ARQUIVADOS.md.
 - Histórico da prévia antiga (rolos 9 tambores, rejeitados): tag `archive/codex-penalty-clown-preview-rolos`.

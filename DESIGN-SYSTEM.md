@@ -21,26 +21,22 @@ preservados fora da Home não são novas atrações oficiais. Catálogo e fontes
 ## Direção visual atual
 
 Home e Circus usam o parque diurno `assets/scenes/circus-daylight-v1.webp`:
-céu azul, praça dourada, vegetação e espaço para respirar. O cenário normal não
+céu azul, gramado aberto verde, vegetação lateral e espaço para respirar. O cenário normal não
 recebe escurecimento ou desfoque global. Os outros jogos conservam seus cenários;
 não trocar todos os fundos como consequência de uma revisão do Circus.
 
-Creme e dourado sustentam números, molduras e superfícies dos rolos. Spin, auto e
-turbo do Circus usam texto/ícones claros: auto/turbo são azul-turquesa e o spin
-acompanha as cores da carga. O ouro
-do aro é discreto, sem reflexos brancos artificiais ou brilho varrendo o texto.
-Na versão aprovada em 02/11/2026 (prévia v54), o spin começa roxo, com letras brancas. Cada nova cor
-se expande em círculo sobre a anterior, na face e na lateral do relevo; a cor
-confirmada permanece após o giro. Não há face branca ou retorno ao branco. As letras funcionam como LED: núcleo branco acinzentado fosco em repouso
-(`#b8c3ce`), branco luminoso durante o pulso. O contorno azul-escuro sólido de
-2 unidades permanece nos dois estados; o halo é curto para manter a leitura
-no verde e no amarelo. A face e a lateral também ficam em meia-luz no
-repouso: uma camada escura de 34% acompanha seu formato. A cor viva e os LEDs
-acesos são revelados juntos pelo círculo do pulso, sem filtrar o texto ou o aro.
+Creme e dourado sustentam números, molduras e superfícies dos rolos.
+Na revisão de 09/11/2026, o spin usa o mesmo vinho da barra de aposta:
+`#80142b` → `#640c24` → `#3f091c`. Aro dourado com o asset
+`spin-rim-gold-contour-v1.svg`, texto dourado `#f4c951` e destaque quente `#ffe29b`
+ao apertar. Auto/turbo conservam seu azul-turquesa.
 
-O amarelo da carga usa `#ffda24`, mais quente que o antigo verde-limão,
-compartilhado por botão, líquido e miniatura das barras. O aro conserva brilho dourado suave. As propostas v46/v47 com face branca
-foram superadas por este pedido do autor.
+O botão mantém face rígida, relevo, som, háptico e pulso radial, mas permanece
+vinho ao longo da carga e depois da roleta. O aro não é mais iridescente nem
+recebe a cor das barras: seu pulso é dourado. O líquido e as mini-roletas
+continuam com a paleta arco-íris; amarelo da carga `#ffda24`.
+Esta escolha substitui a paleta roxa/branca/colorida da prévia v54.
+
 Roxo continua na marca, nos personagens e em telas que ainda o usam; não é uma
 regra para escurecer os novos fundos. Os tokens antigos são referências, não uma
 ordem para restaurar a paleta anterior.
@@ -169,8 +165,8 @@ substituído por esta revisão.
 
 A roleta bônus pequena e grande compartilham as cores de
 `ui/park/wheel-palette.js`. Números claros, centro sem “MULTIPLIQUE”, giro por
-botão ou gesto. O centro e o disco viajante usam a cor da casa sorteada, pelo índice na paleta.
-O multiplicador viaja até o prêmio; depois, as moedas
+botão ou gesto. O centro se preenche com a cor da casa sorteada, e o disco do multiplicador
+conserva essa cor durante o voo até o prêmio; depois, as moedas
 viajam ao saldo. Retomar conserva o sorteio e o crédito confirmado.
 
 Assets ativos, exportadores e histórico das tentativas estão em
@@ -241,3 +237,40 @@ Voo espacial: evitar máscara/filtros animados de tela inteira e rotação 3D de
 sprites recortados. Céu/espaço em camadas próprias, fundo opaco após entrada;
 rotação da hélice em 2D e brilho do círculo com variação suave. Não alterar a
 iluminação da tela inteira para destacar o prêmio.
+
+### Tony — evento de perda (prévia v4, 09/11/2026)
+Três rostos aprovados v4 usam círculos/linha vermelhos, sem dourado de vitória.
+Três contatos separados por 1,55 s: cortes pretos largos sobre os rolos brevemente desfocados,
+balanço curto (omitido com movimento reduzido), saldo vermelho e números
+caindo. Saldo e mostrador do prêmio permanecem nítidos; o mostrador original
+exibe em vermelho o desconto de cada patada, sem cartão flutuante no King. Modal claro com total vermelho e Continuar azul. Sem prêmio paralelo.
+Reutilizar sons/hápticos e contador compartilhados; não debitar pela animação.
+
+### Tucker — prévia de animação, arte provisória (09/11/2026)
+Trinca com círculos/linha vermelhos como Tony. Usar a cesta real como referência
+de posição/tamanho; durante o voo uma cópia visual leva frutos e contador,
+escondendo a original. Asas animadas separadamente por máscaras do asset,
+sem movimento repetitivo em modo reduzido. Mostrar espaço vazio antes do aviso.
+Cesta retorna somente após Continuar, com contagem confirmada. Arte v1 ainda
+não aprovada: não tratar o tucano atual como personagem finalizado.
+
+Tucker, ajuste de preensão: usar body-grip-v2.webp, com pés juntos/curvados.
+Ancorar o ponto médio das duas garras (49% X, 94,5% Y do quadro da ave) no topo
+da alça (50% X, 12% Y da cesta); manter esse vínculo durante o voo. A cesta
+vazia participa da mesma cena, com aviso de perda zero.
+
+### Ray — apresentação de roubo de ingresso, prévia v1 (09/11/2026)
+Máscara preta tipo dominó, guaxinim cinza/creme e saco de estopa. Cabeça para
+trinca; corpo para cena. Reutilizar vermelho dos outros vilões e modal claro
+aprovado. Surgimento direto atrás da placa de ingressos, com recorte. Ray e uma cópia
+visual do contador inteiro saem juntos à esquerda, sem movimento de passos.
+Original escondido, espaço vazio, modal e retorno da placa com nova contagem.
+Preservar escala e posição do contador real; manter rosto dentro da tela.
+
+### Fundo do Circus — imagem 151169 confirmada (09/11/2026)
+Usar assets/scenes/circus-garden-lawn-v1.webp: mesma arte de
+concepts/circus-background-options/01-jardim.webp, aprovada pelo dono.
+Gramado sem caminhos, tendas laterais, vegetação e céu azul, acabamento
+ilustrado com profundidade. A tentativa de gramado chapado foi rejeitada.
+Aplicado só ao cenário normal do Circus; componentes/posição da máquina,
+roleta e cenário do parque não mudam nesta revisão.
