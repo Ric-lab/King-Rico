@@ -20,3 +20,13 @@ quando a entrega for um checkpoint de fontes. Não confundir isso com atualizar
 a URL compartilhada. Pedidos explícitos de publicar ou testar remotamente
 continuam autorizando o workflow pertinente. Alterações financeiras continuam
 exigindo validação de regras, idempotência e recuperação.
+
+## Escopo da publicação — correção de 10/11/2026
+
+- Quando o dono pede publicar a prévia aprovada, comparar TODO o conjunto da
+  branch com main. Não publicar só o último ajuste por cherry-pick enquanto
+  fundo, personagens, controles e animações anteriores ficam de fora. Uma
+  publicação parcial só atende ao pedido se o dono limitar expressamente o escopo.
+- Recursos que eram demos precisam de integração real e testes de transação
+  antes de chegar ao oficial; copiar só a apresentação não conclui a entrega.
+- Rejeitado: anunciar f4904b7 como publicação completa; era somente a cor do bônus.

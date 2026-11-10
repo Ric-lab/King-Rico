@@ -3,13 +3,15 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
-## Publicação completa autorizada (2026-11-09 · correção de escopo)
+## Publicado (2026-11-10 · conjunto completo, correção de escopo)
 - A publicação f4904b7 levou somente a cor da roleta; o dono esclareceu que quer TODAS as mudanças da prévia. Merge completo de 8bfedfc sobre main f4904b7, preservando login, carteira real, bônus diário e workflows existentes.
 - Inclui fundo escolhido 151169/01-jardim, botão vinho/dourado no contorno aprovado, Tony/Tucker/Ray e refinamentos de movimento/arte da prévia. Não promover carteira fictícia ou demos ao build oficial.
 - Tucker/Ray antes só tinham demos: integrados a cloud/park.cjs, transações e regras. Cliente real v4; faixa fixa de 1% total dividida entre os três vilões, fora do décimo giro. Tony até uma aposta/5% pós-aposta, Tucker até 1 Happeach com banca proporcional, Ray até 1 ingresso; zero faz cena sem perda. Sem prêmio simultâneo; recibos antigos preservados.
 - Simulação e limites em ECONOMIA.md/circus-villains-audit.json. Testes de regras incluem concorrência, outro aparelho, zero e falsificação de perdas/grade/recursos. Navegador emulado confere os três eventos reais, assets, fundo, botão e reload. Build final de produção após integração.
 - Validação local concluída: 65 testes Firestore/transações; suítes unitárias existentes e teste novo de recursos; navegadores villains_release_browser, prize_release_browser e park_browser passaram. Capturas dos três vilões inspecionadas, sem assets faltantes/erros JS. Build final de produção gerado depois da integração.
-- Próximo passo: conferir workflow oficial deste merge e os arquivos servidos no site; depois feedback no celular. Não confundir a publicação parcial f4904b7 com o conjunto completo.
+- Publicado código 53c4f9e. Workflow oficial https://github.com/Ric-lab/King-Rico/actions/runs/42725728715: verificar e publicar concluídos com sucesso, incluindo regras REST e Hosting. HTTP 200 e bytes iguais ao build para cliente real, interface, fundo, aro e assets dos três vilões; /circus abre HTTP 200. Sem aposta em conta real.
+- main e codex/penalty-clown-preview compartilham o merge; Hosting da prévia 42725726287 também concluído, regressões online da prévia ainda em execução na conferência. Este checkpoint só documenta a entrega, não publica novo runtime.
+- Próximo passo: feedback do dono no oficial; preservar este conjunto completo nas próximas publicações. Não confundir f4904b7 (parcial) com 53c4f9e.
 
 ## Prévia (2026-11-09 · cor do resultado da roleta)
 - Centro expansivo e disco viajante usam a cor da casa sorteada pelo índice na paleta, inclusive após recarga. Valores repetidos não determinam a cor. Sem alteração financeira, de geometria ou de duração.
