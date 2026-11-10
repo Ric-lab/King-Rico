@@ -443,3 +443,8 @@ aprovado, Tony/Tucker/Ray, centro/voo da roleta da cor sorteada. Cenas dos
 vilões partem de recibos reais, sem débito pela animação. Tucker/Ray carregam
 a cesta/placa, que retorna após Continuar. Zero mantém a cena sem perda.
 Economia/limites versionados em ECONOMIA.md.
+
+Correção 10/11: todas as oito linhas premiadas ficam acima das células/sombras.
+Moedas usam coordenadas da origem e do saldo visíveis, incluindo vitórias verticais;
+renderer 2D pode inicializar sob demanda. Fita visual inclui os três vilões na
+passagem, sem alterar os símbolos finais confirmados ou a chance de roubo.

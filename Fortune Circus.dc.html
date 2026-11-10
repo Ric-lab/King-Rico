@@ -152,11 +152,11 @@ a:hover { color: #fff3c4; }
     <div class="park-antic-fx" style="position: absolute; left: 290.333px; top: 219.5px; width: 130px; height: 127.5px; border-radius: 6px; animation: parkReelAntic .45s ease-in-out infinite; pointer-events: none;"></div>
   </sc-if>
 
-  <sc-if value="{{ l0 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 280.75px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l1 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 411.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l2 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: 34.333px; top: 538.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
-  <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l0 }}" hint-placeholder-val="{{ false }}"><div data-payline="0" style="position: absolute; left: 34.333px; top: 280.75px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l1 }}" hint-placeholder-val="{{ false }}"><div data-payline="1" style="position: absolute; left: 34.333px; top: 411.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l2 }}" hint-placeholder-val="{{ false }}"><div data-payline="2" style="position: absolute; left: 34.333px; top: 538.5px; width: 386px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l3 }}" hint-placeholder-val="{{ false }}"><div data-payline="3" style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
+  <sc-if value="{{ l4 }}" hint-placeholder-val="{{ false }}"><div data-payline="4" style="position: absolute; left: -32.667px; top: 407.75px; width: 520px; height: 5px; border-radius: 3px; transform: rotate(-44.66deg); background: linear-gradient(90deg, rgba(255,214,90,0), #fff3b0, rgba(255,214,90,0)); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
 
   <sc-if value="{{ l5 }}" hint-placeholder-val="{{ false }}"><div data-payline="5" style="position: absolute; left: 94.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l6 }}" hint-placeholder-val="{{ false }}"><div data-payline="6" style="position: absolute; left: 224.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
@@ -621,7 +621,7 @@ class Component extends DCLogic {
       // Heavy 3D setup is deferred off the critical path: wait for first paint + idle time, then load
       // one module at a time (coins first, peach after). Until ready, the game uses its 2D fallbacks.
       const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 4000 }) : setTimeout(fn, 300));
-      const load3d = () => idle(() => { try { this._cf = this.coinCanvas(this.fxRef.current); } catch (e) { console.warn('coin2d', e); } });
+      const load3d = () => idle(() => { try { this._cf ||= this.coinCanvas(this.fxRef.current); } catch (e) { console.warn('coin2d', e); } });
       setTimeout(load3d, 2500);
     }
   }
@@ -1598,7 +1598,7 @@ class Component extends DCLogic {
   coinCanvas(layer) {
     if (!layer) return null;
     const W = 453, H = 802, B = 96;
-    const cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;left:0;top:0;width:453px;height:802px;pointer-events:none;z-index:6;display:none;';
+    const cv = document.createElement('canvas'); cv.dataset.coinFlight = ''; cv.style.cssText = 'position:absolute;left:0;top:0;width:453px;height:802px;pointer-events:none;z-index:6;display:none;';
     layer.appendChild(cv); const ctx = cv.getContext('2d');
     const src = new Image(); src.src = FC_ASSET('assets/symbols/sym-coin.webp');
     const bake = (fn) => { const c = document.createElement('canvas'); c.width = c.height = B; fn(c.getContext('2d')); return c; };
@@ -1631,20 +1631,29 @@ class Component extends DCLogic {
     };
   }
   coinFly(amount, done) {
-    const P = this._cf, layer = this.fxRef.current;
+    const layer = this.fxRef.current;
+    let P = this._cf;
+    if (!P && layer) { try { P = this._cf = this.coinCanvas(layer); } catch (e) {} }
     if (!P || !P.ready || !layer) { this.setState({ balPending: 0 }); done(); return; }
     P.fit();
     const bet = this.bet(), sp = this.state.turbo ? 0.7 : 1;
     const n = Math.min(P.max, amount >= bet * 12 ? 32 : amount >= bet * 4 ? 22 : 14);
-    const LC = [283.25, 414, 541, 410.25, 410.25], wl = (this.state.winLines || [])[0];
-    const prizeStyle = this._parkPrizeOrigin && this._parkPrizeTarget ? getComputedStyle(this._parkPrizeTarget) : null;
-    const sx = prizeStyle ? parseFloat(prizeStyle.left) + parseFloat(prizeStyle.width) / 2 : 227.3, sy = this._parkPrizeOrigin ? (prizeStyle ? parseFloat(prizeStyle.top) + parseFloat(prizeStyle.height) / 2 : 196) : this.reelY(wl != null ? LC[wl] : 400), tx = 36.8, ty = 48, STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
+    const wl = (this.state.winLines || [])[0], cell = LINES[wl]?.[1];
+    // Resolve the visible source for all eight lines, including vertical wins.
+    const source = this._parkPrizeOrigin ? this._parkPrizeTarget : document.querySelector('[data-sym="' + cell + '"]');
+    const origin = source?.getBoundingClientRect(), bounds = layer.getBoundingClientRect(), scale = bounds.width / 453 || 1;
+    const sx = origin?.width ? (origin.x + origin.width / 2 - bounds.x) / scale : 227.3;
+    const sy = origin?.height ? (origin.y + origin.height / 2 - bounds.y) / scale : this._parkPrizeOrigin ? 196 : this.reelY(411.5);
+    const pill = document.querySelector('[data-bal]'), wallet = pill?.getBoundingClientRect();
+    const tx = wallet?.width ? (wallet.x + wallet.height / 2 - bounds.x) / scale : 36.8;
+    const ty = wallet?.height ? (wallet.y + wallet.height / 2 - bounds.y) / scale : 48;
+    const STG = 48 * sp, BU = 340 * sp, FL = 820 * sp;
     const coins = Array.from({ length: n }, (_, i) => {
       const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.6, rr = 45 + Math.random() * 55;
       return { d: i * STG, bx: sx + Math.cos(a) * rr, by: sy + Math.sin(a) * rr * 0.8, cx: 60 + Math.random() * 90, cy: 120 + Math.random() * 120,
         spin: (2 + Math.random() * 1.5) * Math.PI * 2, tilt: 0.35 + Math.random() * 0.3, z: (Math.random() - 0.5) * 0.6, landed: false };
     });
-    const precision = Number.isInteger(amount) ? 1 : 100, totalUnits = Math.round(amount * precision), pill = document.querySelector('[data-bal]');
+    const precision = Number.isInteger(amount) ? 1 : 100, totalUnits = Math.round(amount * precision);
     let left = amount, landed = 0;
     const T0 = this.now(), END = (n - 1) * STG + BU + FL;
     this._cfRun = true; this.syncCeleb(); // keep the spin button dark/locked while coins fly

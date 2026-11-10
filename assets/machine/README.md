@@ -579,3 +579,11 @@ sobre a iridescência que continua girando, sem reiniciar seu ciclo de 40 s.
 Revisão da prévia 05/11: a batida sólida começa junto à pressão da face,
 sem atraso extra. O pulso elétrico posterior não a reinicia; auto continua
 com resposta própria. Movimento do aro por baixo permanece contínuo.
+
+### Feedback dos rolos — 10/11/2026
+
+A fita física intermediária contém 15 IDs, incluindo Tony (12), Tucker (13) e
+Ray (14). A passagem é decorativa; os três símbolos finais de cada coluna vêm
+sempre do recibo. Marcadores data-payline 0–7 têm camada 6 acima das células.
+Voo de moedas resolve origem/destino na geometria atual, nunca por uma tabela
+parcial de cinco linhas.

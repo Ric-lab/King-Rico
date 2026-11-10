@@ -21,3 +21,13 @@ test('special-round tape preserves held positions and empty outcomes',()=>{
   assert.deepEqual(Array.from(tape.filter(x=>x.index>=anchor&&x.index<anchor+3),x=>x.symbol),[target[column],target[column+3],target[column+6]]);
  }
 });
+
+test('moving tape includes all three villains without altering the saved starting or landing symbols',()=>{
+ const from=[0,1,2,3,4,5,6,7,8],target=[8,7,6,5,4,3,2,1,0];
+ for(let seed=0;seed<30;seed++)for(let column=0;column<3;column++){
+  const tape=plan({column,from,target,stop:128*28,seed});
+  const transient=tape.filter(x=>x.index<-2&&x.index>-25);
+  for(const villain of[12,13,14])assert.ok(transient.some(x=>x.symbol===villain));
+  assert.deepEqual(Array.from(tape.filter(x=>x.index>=-28&&x.index<-25),x=>x.symbol),[target[column],target[column+3],target[column+6]]);
+ }
+});

@@ -3,6 +3,12 @@
 Estado atual e próximo passo. Qualquer modelo: ler antes de começar; atualizar ao parar (feito + próximo passo).
 Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
+## Correção de linhas, moedas e passagem dos vilões (2026-11-10)
+- Linhas nativas ficavam sob células z-index 2; todos os oito marcadores recebem data-payline e camada 6. Voo normal ainda usava origem de apenas cinco linhas, produzindo NaN nas verticais: agora deriva origem/destino dos elementos visíveis, com fallback finito. Renderer 2D é criado sob demanda se o carregamento ocioso ainda não terminou, sem duplicar na inicialização atrasada.
+- Fita intermediária tinha só 12 símbolos, excluindo IDs 12/13/14. Ciclo visual de 15 inclui Tony/Tucker/Ray, mantendo símbolos iniciais/finais do recibo intactos. Não altera sorteio real (1% total dos giros elegíveis), limites de roubo, pagamentos ou regras.
+- Teste de fita passou; navegador focado conferiu os oito destaques acima dos rolos, pixels reais nas moedas, coordenadas finitas e saldo final. Conferência curta adicional viu os três animais atravessando o recorte visível durante o giro. Capturas work/preview-payout-* e preview-villains-passing.png inspecionadas. Build final de produção após navegador.
+- Próximo passo: conferir workflow oficial deste lote e artefatos servidos no site; depois feedback do dono. Preservar o conjunto completo publicado anteriormente.
+
 ## Publicado (2026-11-10 · conjunto completo, correção de escopo)
 - A publicação f4904b7 levou somente a cor da roleta; o dono esclareceu que quer TODAS as mudanças da prévia. Merge completo de 8bfedfc sobre main f4904b7, preservando login, carteira real, bônus diário e workflows existentes.
 - Inclui fundo escolhido 151169/01-jardim, botão vinho/dourado no contorno aprovado, Tony/Tucker/Ray e refinamentos de movimento/arte da prévia. Não promover carteira fictícia ou demos ao build oficial.
