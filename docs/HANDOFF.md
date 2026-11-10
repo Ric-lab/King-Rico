@@ -2,7 +2,7 @@
 
 ## Prévia (2026-11-10 · Claude · cor fixa por número na roleta do bônus)
 - Antes a cor era por POSIÇÃO (arco-íris de 13 casas), então x1 aparecia em 5 cores. Agora cor por VALOR em `ui/park/wheel-palette.js`: x1 azul, x2 verde, x3 amarelo, x5 laranja, x10 rosa. Roleta, disco-meta dos tubos, centro e ficha que voa usam a mesma cor. Sem mudança financeira.
-- A roleta do bônus não tem som (nenhum sfx no código de ui/park/index.js). Aguardando o dono decidir se adiciona.
+- Som da roleta restaurado (o dono confirmou que tinha): tique `fc.bell` a cada casa sob o ponteiro durante o giro (desacelera com a roleta) e `fc.sfxWin` na parada (grande se ×5/×10). Respeita o volume/silêncio do menu.
 - Atenção: tests/wheel_color_browser.py pode esperar as cores antigas por índice; ajustar o teste se falhar.
 - Próximo passo: dono avaliar na prévia; não publicar main sem aprovação.
 
