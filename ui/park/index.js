@@ -1,3 +1,4 @@
+import {createWheelSound} from './wheel-sound.js';
 import circusProfile from '../../cloud/engine.cjs';
 import {createEntryFlow} from './entry-flow.js';
 import {openDailyReward} from './daily-reward.js';
@@ -121,7 +122,7 @@ function showWheel(){
  const el=createWheelScene(fc.lightsRef.current.parentElement,`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Bonus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:#fff3c4"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`);
  const entrance=enterWheel(el);
  const btn=el.querySelector('[data-wheel-spin]'),rotor=el.querySelector('.park-wheel');let busy=false,ready=false,spun=false,wheelAngle=0,direction=1,drag=null;
- const machine=el.querySelector('.park-wheel-machine');
+ const machine=el.querySelector('.park-wheel-machine'),wheelSound=createWheelSound(fc,rotor,n);
  async function finish(w){
   el.querySelector('.park-wheel-machine').classList.add('is-spinning');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -129,8 +130,9 @@ function showWheel(){
   // Reduced motion keeps the meaningful result turn, without repeated laps.
   const end=reduced?wheelAngle+direction*((direction*(stop-wheelAngle)%360+360)%360||360):stop+360*(direction>0?Math.ceil((wheelAngle-stop)/360)+6:Math.floor((wheelAngle-stop)/360)-6);
   const duration=reduced?900:4200;
+  wheelSound.start();
   const anim=rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${end}deg)`}],{duration,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});
-  await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,duration+400))]);anim.cancel();rotor.style.transform=`rotate(${end}deg)`;
+  await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,duration+400))]);wheelSound.stop();anim.cancel();rotor.style.transform=`rotate(${end}deg)`;
   el.querySelector('.park-wheel-machine').classList.remove('is-spinning');
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
@@ -156,11 +158,11 @@ function showWheel(){
   if(el.isConnected&&!el._hoist.cleaned)await collect();
  }
  async function startSpin(){
-  if(busy||!ready||spun)return;spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');
+  if(busy||!ready||spun)return;wheelSound.start();spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');
   const coast=matchMedia('(prefers-reduced-motion: reduce)').matches?null:rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${wheelAngle+direction*720}deg)`}],{duration:1200,iterations:Infinity,easing:'linear'});
   const settle=()=>{if(!coast)return;try{const m=new DOMMatrix(getComputedStyle(rotor).transform);wheelAngle=Math.atan2(m.b,m.a)*180/Math.PI;}finally{coast.cancel();rotor.style.transform=`rotate(${wheelAngle}deg)`;}};
   try{const r=await call({action:'wheel',wheelId,requestId:id()});settle();busy=false;await finish(r.wheel);}
-  catch(e){settle();machine.classList.remove('is-spinning');Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;spun=false;}
+  catch(e){wheelSound.stop();settle();machine.classList.remove('is-spinning');Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;spun=false;}
  }
  btn.onclick=startSpin;
  machine.onpointerdown=e=>{

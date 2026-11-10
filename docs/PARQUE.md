@@ -448,3 +448,9 @@ Correção 10/11: todas as oito linhas premiadas ficam acima das células/sombra
 Moedas usam coordenadas da origem e do saldo visíveis, incluindo vitórias verticais;
 renderer 2D pode inicializar sob demanda. Fita visual inclui os três vilões na
 passagem, sem alterar os símbolos finais confirmados ou a chance de roubo.
+
+Som da roleta de bônus (10/11): ui/park/wheel-sound.js usa o timbre de Wheel.tick
+(Triangle 620–1040 Hz + Sine 170–260 Hz), pelo barramento de volume do Circus.
+Passagens de casas no ângulo renderizado acionam os cliques, com limite de 35 ms.
+Botão e swipe usam o mesmo caminho; som termina ao parar/errar/sair. Não é um
+arquivo MP3. Alterações visuais não devem retirar esse feedback aprovado.
