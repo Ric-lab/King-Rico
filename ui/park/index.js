@@ -131,7 +131,7 @@ function showWheel(){
   const duration=reduced?900:4200;
   const anim=rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${end}deg)`}],{duration,easing:'cubic-bezier(.12,.75,.15,1)',fill:'forwards'});
   await Promise.race([anim.finished.catch(()=>{}),new Promise(r=>setTimeout(r,duration+400))]);anim.cancel();rotor.style.transform=`rotate(${end}deg)`;
-  el.querySelector('.park-wheel-machine').classList.remove('is-spinning');cancelAnimationFrame(tickRaf);try{fc.sfxWin?.(w.result.multiplier>=5);}catch{}
+  el.querySelector('.park-wheel-machine').classList.remove('is-spinning');
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
   machine.style.setProperty('--park-result-color',colors[w.result.index]);
@@ -155,14 +155,12 @@ function showWheel(){
   await new Promise(resolve=>setTimeout(resolve,3600));
   if(el.isConnected&&!el._hoist.cleaned)await collect();
  }
- async // Som da roleta: tique a cada casa que passa sob o ponteiro (desacelera junto) + fanfarra na parada.
- let tickRaf=0,lastSeg=null;const ticker=()=>{try{const m=new DOMMatrix(getComputedStyle(rotor).transform),a=Math.atan2(m.b,m.a)*180/Math.PI,s=Math.floor((((a%360)+360)%360)/seg);if(lastSeg!==null&&s!==lastSeg)fc.bell?.(1480,0.035,0.035);lastSeg=s;}catch{}tickRaf=requestAnimationFrame(ticker);};
- function startSpin(){
-  if(busy||!ready||spun)return;spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');lastSeg=null;cancelAnimationFrame(tickRaf);tickRaf=requestAnimationFrame(ticker);
+ async function startSpin(){
+  if(busy||!ready||spun)return;spun=true;busy=true;btn.disabled=true;btn.textContent='GIRANDO…';machine.classList.add('is-spinning');
   const coast=matchMedia('(prefers-reduced-motion: reduce)').matches?null:rotor.animate([{transform:`rotate(${wheelAngle}deg)`},{transform:`rotate(${wheelAngle+direction*720}deg)`}],{duration:1200,iterations:Infinity,easing:'linear'});
   const settle=()=>{if(!coast)return;try{const m=new DOMMatrix(getComputedStyle(rotor).transform);wheelAngle=Math.atan2(m.b,m.a)*180/Math.PI;}finally{coast.cancel();rotor.style.transform=`rotate(${wheelAngle}deg)`;}};
   try{const r=await call({action:'wheel',wheelId,requestId:id()});settle();busy=false;await finish(r.wheel);}
-  catch(e){settle();cancelAnimationFrame(tickRaf);machine.classList.remove('is-spinning');Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;spun=false;}
+  catch(e){settle();machine.classList.remove('is-spinning');Cloud.error(e);btn.disabled=false;btn.textContent='TENTAR NOVAMENTE';busy=false;spun=false;}
  }
  btn.onclick=startSpin;
  machine.onpointerdown=e=>{
