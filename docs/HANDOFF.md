@@ -1,5 +1,12 @@
 # HANDOFF
 
+## Prévia (2026-11-10 · Claude · economia do Circus)
+- Pedido do dono: pagava demais, vilões raros, "saldo nunca cai". Meta: moedas + ingressos (25 moedas cada) = 90%.
+- `cloud/circus-profile.cjs` PAYS → [6.7,.4,.8,3.9,1.5,9,13.5,25,34,90] (tambor 0,6→0,4; tenda 1→0,8; topo maior). TARGET_COIN_RTP .80.
+- `cloud/park.cjs`: vilões 10% (Tony 5%, Tucker/Ray 2,5%); Tony leva até 1,5× aposta (máx. 5% do saldo); ingressos com chance min(14%, aposta/690).
+- Simulação com o código real (120 mil giros): aposta 1 → 87%, 10 → 89%, 100 → 81% (topo 90× = alta variância; amostra pequena). Codex: rodar `scripts/economy-audit.mjs` com milhões de giros e ajustar testes que esperam TONY_CHANCE .01/3 ou PAYS antigos.
+- Não publicado na main. Dono testa na prévia antes.
+
 ## Entrega de fontes ao Claude (2026-11-10 · sem deploy)
 - Dono determinou: o Claude fará a publicação. Codex entrega o som 6c25bad à branch codex/penalty-clown-preview em checkpoint [skip ci], sem push à main e sem disparar publicação.
 - Integrado o último commit do Claude d2a9918, preservando sua paleta fixa por valor e teste atualizado. Merge automático sem conflito; som da roleta em ui/park/wheel-sound.js, demais sons intactos.
