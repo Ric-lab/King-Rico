@@ -2,6 +2,8 @@
 
 ## Recuperação da prévia no GitHub Pages — em implantação
 
+- Tentativa REAL enviada no merge c702acb (preservou o ajuste de áudio fbe911d do Claude). Workflow https://github.com/Ric-lab/King-Rico/actions/runs/43118758132 falhou na configuração do Pages, ANTES de build/deploy: HTTP 403 do GitHub. Não há novo link publicado. Código e navegador local do subdiretório passaram; não é uma falha do jogo nem uma nova cobrança.
+- Bloqueio concreto: a credencial GITHUB_TOKEN não pode alterar a fonte do Pages existente. Solicitado ao dono abrir https://github.com/Ric-lab/King-Rico/settings/pages e selecionar Build and deployment > Source > GitHub Actions. Quando confirmar, repetir os jobs falhos do workflow 43118758132 e acompanhar até publicação e checagens HEAD aprovadas. Se ambiente github-pages negar a branch, informar a restrição real ao dono, sem contorná-la.
 - Após esgotar a franquia Firebase, o dono pediu uma prévia utilizável imediatamente. Preparado GitHub Pages no MESMO repositório, sem nova conta e sem alterar produção/Firestore.
 - Novo workflow `preview-pages.yml`: publica somente a branch de integração `codex/penalty-clown-preview`; usa configuração/artefatos/implantação Pages oficiais. A suíte completa continua no runner antes de publicar. Nenhum navegador completo usa Firebase ou Pages público; pós-deploy só HEAD.
 - O workflow tenta configurar o Pages existente como Actions usando apenas `GITHUB_TOKEN` com `pages:write`. Domínio próprio existente bloqueia a substituição. Se o GitHub negar configuração/permissão de ambiente, informar o erro real e pedir ao dono o ajuste exato em Settings > Pages / Environments; não contornar proteção nem pedir token em chat.
