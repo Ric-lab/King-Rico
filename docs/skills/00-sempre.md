@@ -14,5 +14,6 @@
 - Ao terminar qualquer mudança, entregar o link da prévia que já abre na situação mudada. O dono não consegue forçar eventos raros sozinho.
 - Base: https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
 - Atalhos existentes (?demo=): tony · tucker · ray · bigwin · spacewin. O 1º giro já cai no evento.
-- Se não existir atalho para o que mudou, criar um ?demo= novo em prototypes/circus-preview/browser-wallet.mjs (só prévia, nunca no build oficial).
+- Prévia ENGATILHADA: em prototypes/circus-preview/browser-wallet.mjs, trocar DEFAULT_DEMO para o evento da última mudança. Sem ?demo= o 1º giro de cada carregamento já mostra a mudança; ?demo=off volta ao jogo normal.
+- Se não existir atalho para o que mudou, criar um ?demo= novo no mesmo arquivo (só prévia, nunca no build oficial).
 - Esperar o workflow da prévia terminar com sucesso antes de mandar o link.
