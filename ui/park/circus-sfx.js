@@ -23,8 +23,8 @@ export function installCircusSfx(fc){
  // Tony: patada (zás + 3 unhas + pancada) e moedas saindo do saldo (cada vez mais grave).
  fc.sfxClaw=play(1.5,n=>{hiss(3200,1.2,.1,.16,0,'bandpass',700);[0,.03,.06].forEach(d=>hiss(5200,4,.06,.04,.05+d));sweep(150-n*15,55,.18,'sine',.12,.06);});
  fc.sfxCoinsLose=play(2.2,n=>{for(let i=0;i<7;i++)B(1400-i*120-n*60,.16,.04,.14+i*.06+Math.random()*.03);hiss(900,.6,.035,.35,.2,'lowpass');});
- // Tucker: batidas de asa e sobe levando a cesta.
- fc.sfxSnatch=play(3.4,()=>{for(let i=0;i<4;i++)hiss(700,1.4,.08,.07,i*.09);sweep(900,1800,.25,'triangle',.05,.05);hiss(500,.7,.045,.35,.1,'bandpass',1600);});
+ // Tucker: duas batidas de asa (tec… tec) e sobe levando a cesta.
+ fc.sfxSnatch=play(3.4,()=>{[0,.4].forEach(o=>{for(let i=0;i<4;i++)hiss(700,1.4,.08,.07,o+i*.09);});sweep(900,1800,.25,'triangle',.05,.05);hiss(500,.7,.045,.35,.1,'bandpass',1600);});
  // Ray: papel dos ingressos + "peguei!" de fininho; depois passinhos fugindo.
  fc.sfxSneak=play(1.8,()=>{for(let i=0;i<5;i++)hiss(4800,1.5,.045,.05,i*.045);[392,349.23,311.13,261.63].forEach((f,i)=>P(f,.08,.14,.08+i*.11));});
  fc.sfxScurry=play(1,()=>{for(let i=0;i<8;i++)hiss(1600+(i%2)*400,1.2,1.3,.04,i*.07);});
