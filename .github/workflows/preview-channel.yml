@@ -27,6 +27,13 @@ jobs:
         run: node scripts/preview-config.mjs
       - run: npm ci --ignore-scripts
       - run: npm run build:preview
+      # Serve dist/ inside the runner: full browsers must not consume Firebase GBs.
+      - name: Validar animações localmente antes de publicar (3 fitas)
+        env:
+          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+        run: |
+          python3 -m pip install playwright
+          python3 scripts/test-preview-browsers.py
       - name: Autorizar GitHub no Google sem chave privada
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
         with:
@@ -40,13 +47,29 @@ jobs:
           set -euo pipefail
           npx --no-install firebase hosting:channel:deploy previa --config firebase.preview.generated.json --project "$KING_RICO_PREVIEW_PROJECT_ID" --expires 30d --non-interactive --json > "$RUNNER_TEMP/preview-result.json"
           node scripts/preview-result.mjs "$RUNNER_TEMP/preview-result.json"
-      - name: Validar animações da prévia (3 fitas)
+      # HEAD checks routing/assets after deploy without downloading the game again.
+      - name: Conferir rotas publicadas sem baixar os assets
         env:
-          KING_RICO_TEST_URL: ${{ steps.hosting.outputs.url }}
-          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+          KING_RICO_PREVIEW_URL: ${{ steps.hosting.outputs.url }}
         run: |
-          python3 -m pip install playwright
-          python3 scripts/test-preview-browsers.py
+          node --input-type=module <<'JS'
+          const base = new URL(process.env.KING_RICO_PREVIEW_URL);
+          const checks = [
+            ['/circus', 'text/html'], ['/park', 'text/html'],
+            ['/cloud/client.js', 'javascript'], ['/runtime/react.js', 'javascript'],
+            ['/runtime/three.module.js', 'javascript'],
+            ['/assets/symbols/sym-coin.webp', 'image/webp']
+          ];
+          for (const [path, type] of checks) {
+            const response = await fetch(new URL(path, base), {
+              method: 'HEAD', redirect: 'error', signal: AbortSignal.timeout(15000)
+            });
+            if (!response.ok || !response.headers.get('content-type')?.includes(type)) {
+              throw new Error(`Prévia indisponível em ${path}: HTTP ${response.status}; confira também a cota do Hosting.`);
+            }
+            console.log(`HEAD ${path}: ${response.status}`);
+          }
+          JS
       - name: Guardar capturas da conferência
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
