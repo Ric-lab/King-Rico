@@ -1,5 +1,9 @@
 # HANDOFF
 
+## Prévia (2026-11-11 · Claude · som da roleta = tique original em arquivo)
+- Dono preferiu o tique ORIGINAL gerado por código. Renderizado exatamente (mesmo envelope de fc.tone) em 5 velocidades: `assets/sfx/wheel-tick-0..4.wav`. `ui/park/wheel-sound.js` toca o arquivo da velocidade mais próxima pelo bus do Circus; se não carregar, cai no fc.tone (mesmo som). Removido o tique Kenney (wheel-tick.wav).
+- Próximo passo: dono ouvir na prévia; publicar só com aprovação.
+
 ## Prévia (2026-11-11 · Claude · tique real da roleta)
 - `ui/park/wheel-sound.js` agora toca um tique gravado (`assets/sfx/wheel-tick.wav`, Kenney Interface Sounds tick_002, CC0) em vez dos dois tons gerados. Velocidade muda só um pouco o tom/volume. Se o arquivo não carregar, cai no som antigo. Crédito em `assets/sfx/CREDITS.md`.
 
