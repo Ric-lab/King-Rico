@@ -13,7 +13,7 @@ export function installTony(fc){
   if(fc._tonyPlaying)return;
   fc._tonyPlaying=true;fc._celebHold=true;
   fc.setState({spinning:false,auto:false,winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'TONY TIGER!'});
-  fc.kingSet('surprise');fc.lightsRest();
+  fc.kingSet('surprise');fc.lightsRest();try{fc.sfxVillain?.('tony');}catch{}
   const root=document.createElement('div');root.className='park-tony-scene';root.setAttribute('role','status');root.setAttribute('aria-label','Tony Tiger roubando moedas');
   root.innerHTML='<svg class="park-tony-lines" aria-hidden="true"></svg><div class="park-tony-veil" aria-hidden="true"></div><div class="park-tony-strikes" aria-hidden="true"></div><span class="park-tony-announcement" aria-live="polite"></span>';
   document.body.append(root);
@@ -22,7 +22,7 @@ export function installTony(fc){
   const timers=[],animations=[];let modal,finished=false,hit=0;
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!finished)fn();},ms));
   // Boundaries share one timer: contact, sound, shake, red flash and number decrease.
-  function sound(n){try{const now=0;fc.burst(230+n*35,1.1,.055,.18,now);fc.pluck([196,164.81,130.81][n],.14,.75,now);fc.hap('winMid');}catch{}}
+  function sound(n){try{fc.sfxClaw?.(n);fc.sfxCoinsLose?.(n);fc.hap('winMid');}catch{}}
   function lines(){
    const boxes=event&&res.cells.map(i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect()).filter(Boolean);
    if(boxes?.length!==3)return;

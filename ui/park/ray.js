@@ -8,7 +8,7 @@ export function installRay(fc){
   const event=fc._cloudSpin?.outcome?.ray;if(!event)return payout(res,...args);
   if(fc._rayPlaying)return;fc._rayPlaying=true;fc._celebHold=true;
   fc.setState({spinning:false,auto:false,winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'RAY RACCOON!'});
-  fc.kingSet('surprise');fc.lightsRest();
+  fc.kingSet('surprise');fc.lightsRest();try{fc.sfxVillain?.('ray');}catch{}
   const pocket=document.querySelector('.park-pocket'),count=pocket?.querySelector('[data-tickets]');
   const originalVisibility=pocket?.style.visibility||'';
   const p=pocket?.getBoundingClientRect()||{x:10,y:innerHeight*.3,width:80,height:50};
@@ -35,10 +35,10 @@ export function installRay(fc){
    svg.innerHTML=`<polyline points="${boxes.map(b=>`${b.x+b.width/2},${b.y+b.height/2}`).join(' ')}"/>`+boxes.map(b=>`<ellipse cx="${b.x+b.width/2}" cy="${b.y+b.height/2}" rx="${b.width*.45}" ry="${b.height*.43}"/>`).join('');});
   function peek(){scene.dataset.phase='peeking';actor.style.translate='0 0';animate(actor,[{translate:`0 ${height*.8}px`},{translate:'0 0'}],{duration:750,easing:'cubic-bezier(.2,.8,.2,1)'});}
   function grab(){scene.dataset.phase='grabbing';
-   try{fc.pluck(392,.11,.6);fc.hap('basketIn');}catch{}
+   try{fc.sfxSneak?.();fc.hap('basketIn');}catch{}
    animate(actor,[{rotate:'0deg'},{rotate:'-3deg',offset:.4},{rotate:'0deg'}],{duration:300,easing:'ease-out'});
   }
-  function flee(){scene.dataset.phase='leaving';try{fc.sfxWhoosh();}catch{}
+  function flee(){scene.dataset.phase='leaving';try{fc.sfxScurry?.();}catch{}
    const end=`${-p.x-Math.max(p.width,size)-35}px -8px`;carrier.style.translate=end;
    animate(carrier,[{translate:'0 0'},{translate:end}],{duration:1400,easing:'ease-in'});
   }

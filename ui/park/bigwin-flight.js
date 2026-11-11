@@ -49,12 +49,13 @@ export function installBigWinFlight(fc){
   function restore(){mascot.style.visibility=originalMascotVisibility;body.style.visibility=originalVisibility;inert.forEach(([e,v])=>e.inert=v);scene.remove();fc._parkBigWinFlight=false;if(previous?.isConnected)previous.focus({preventScroll:true});}
   function finish(){
    if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(frame);
+   engine?.stop();engine=null;try{fc.sfxBank?.();}catch{}
    window.removeEventListener('pagehide',hide);
    restore();fc.setState({displayWin:amount});fc._parkPrizeOrigin=true;
    nativeDismiss();fc._parkPrizeOrigin=false;
   }
   // Independent of animation support, RAF throttling and image decoding.
-  const safety=setTimeout(finish,20000);
+  let engine=null;const safety=setTimeout(finish,20000);
   const lerp=(a,b,p)=>a+(b-a)*p,smooth=p=>p*p*(3-2*p),clamp=p=>Math.max(0,Math.min(1,p));
   const place=(x,y,angle,scale)=>{plane.style.transform=`translate(${x-size*.515}px,${y-size*.42}px) rotate(${angle}deg) scale(${scale})`;};
   function tick(now){
@@ -74,7 +75,7 @@ export function installBigWinFlight(fc){
     const from=jumpStart||sourceRect;
     jumper.style.cssText=`width:${lerp(from.width,pw,p)}px;height:${lerp(from.height,ph,p)}px;transform:translate(${lerp(from.x,dx,p)}px,${lerp(from.y,dy,p)-Math.sin(p*Math.PI)*(reduced?20:72)}px) rotate(${-8*p+Math.sin(p*Math.PI)*-14}deg)`;
    }else{
-    if(pilot.hidden)try{fc.hap('winMid');}catch{}
+    if(pilot.hidden){try{fc.hap('winMid');fc.sfxTakeoff?.();engine=fc.sfxEngine?.()||null;}catch{}}
     mascot.style.visibility='hidden';jumper.hidden=true;pilot.hidden=false;scene.classList.add('is-climbing');score.classList.add('is-visible');
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
@@ -89,14 +90,14 @@ export function installBigWinFlight(fc){
     scene.dataset.altitude=altitude>.72?'space':altitude>.3?'stratosphere':'sky';
     scene.dataset.phase=p<1?'climbing':'result';
     const value=flightValue(amount,stake,p);amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
-    const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}}
+    engine?.set(p);const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}}
     if(t>returnAt){scene.dataset.phase='returning';const p=smooth(clamp((t-returnAt)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);scene.style.opacity=String(1-p);}
     if(t>=endAt){finish();return;}
    }
    place(x,y,angle,scale);frame=requestAnimationFrame(tick);
   }
   scene.querySelector('.park-bigwin-plane>img').onerror=finish;
-  function hide(){if(!ended){ended=true;clearTimeout(safety);cancelAnimationFrame(frame);restore();}}
+  function hide(){if(!ended){ended=true;clearTimeout(safety);cancelAnimationFrame(frame);engine?.stop();restore();}}
   window.addEventListener('pagehide',hide,{once:true});
   frame=requestAnimationFrame(tick);
  };

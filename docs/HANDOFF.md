@@ -1,5 +1,12 @@
 # HANDOFF
 
+## Prévia (2026-11-11 · Claude · efeitos sonoros do Circus)
+- Só som; nada de regra, tempo, saldo ou animação mudou.
+- Novo `ui/park/circus-sfx.js` (instalado em index.js): sfxVillain (entrada de Tony/Tucker/Ray), sfxClaw + sfxCoinsLose (patadas do Tony e moedas saindo), sfxSnatch (Tucker leva a cesta), sfxSneak + sfxScurry (Ray pega e foge com os ingressos), sfxTakeoff + sfxEngine (voo da big win, motor sobe com a altitude) e sfxBank (saldo recebendo no fim do voo).
+- Spin: tirado o sfxWhoosh do doSpin; o botão de spin agora soa igual ao turbo (só o clique) + chiado dos rolos.
+- Volume equalizado por medição offline (RMS ≈ 0,04 = vitória comum). Ingresso estava 2,3× mais alto: picos 0,48/0,30/0,055 → 0,21/0,13/0,024.
+- Próximo passo: dono ouvir na prévia; publicar na main só com aprovação.
+
 ## Publicação oficial autorizada e concluída — Circus v5
 
 - O dono autorizou publicar a prévia aprovada. Código publicado: `b394d9f3346f9871c542ec17784d8a59ad71e37d`, tag `circus-economia-v5-90-20261111`; mesma revisão validada na prévia.

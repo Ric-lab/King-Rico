@@ -9,7 +9,7 @@ export function installTucker(fc){
   if(fc._tuckerPlaying)return;
   fc._tuckerPlaying=true;fc._celebHold=true;
   fc.setState({spinning:false,auto:false,winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'TUCKER TOUCAN!'});
-  fc.kingSet('surprise');fc.lightsRest();
+  fc.kingSet('surprise');fc.lightsRest();try{fc.sfxVillain?.('tucker');}catch{}
   const basket=document.querySelector('.park-basket'),rect=basket?.getBoundingClientRect(),previousVisibility=basket?.style.visibility||'';
   const scene=document.createElement('div');scene.className='park-tucker-scene';scene.dataset.phase='line';
   scene.innerHTML='<svg class="park-tony-lines" aria-hidden="true"></svg><div class="park-tucker-carrier"><div class="park-tucker-bird" role="img" aria-label="Tucker Toucan"><img class="tucker-wing tucker-wing-left" src="'+BODY+'" alt=""><img class="tucker-body" src="'+BODY+'" alt=""><img class="tucker-wing tucker-wing-right" src="'+BODY+'" alt=""></div></div>';
@@ -33,7 +33,7 @@ export function installTucker(fc){
   function take(){
    scene.dataset.phase='flying';
    if(basket){clone=basket.cloneNode(true);clone.className='park-tucker-carried-basket';clone.removeAttribute('title');clone.style.cssText=`position:absolute;left:0;top:0;right:auto;width:96px;height:96px;transform:scale(${r.width/96},${r.height/96});transform-origin:0 0;pointer-events:none;`;carrier.prepend(clone);basket.style.visibility='hidden';}
-   try{fc.sfxWhoosh();}catch{}
+   try{fc.sfxSnatch?.();}catch{}
    const dx=innerWidth-r.x+r.width+size,dy=-Math.min(170,innerHeight*.2);
    animate(carrier,[{translate:'0 0',rotate:'0deg'},{translate:`${dx*.12}px -18px`,rotate:'-3deg',offset:.2},{translate:`${dx*.55}px ${dy*.52}px`,rotate:'-7deg',offset:.65},{translate:`${dx}px ${dy}px`,rotate:'-5deg'}],{duration:2100,easing:'cubic-bezier(.32,0,.72,1)',fill:'forwards'});
   }

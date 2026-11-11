@@ -6,6 +6,7 @@ import {installRay} from './ray.js';
 import {installTucker} from './tucker.js';
 import {installTony} from './tony.js';
 import {installBigWinFlight} from './bigwin-flight.js';
+import {installCircusSfx} from './circus-sfx.js';
 import {pocketColors,WHEEL_POCKETS} from './wheel-palette.js';
 import layout from '../../games/fingo/layout.cjs';
 import {installMotion} from './motion.js';
@@ -83,7 +84,7 @@ function bootCircus(){
   fc.renderVals();
   installMotion(fc,rails,{refresh:renderRails,showWheel});
   installSpinTactility(fc);
-  installBigWinFlight(fc);
+  installCircusSfx(fc);installBigWinFlight(fc);
   installTony(fc);
   installTucker(fc);
   installRay(fc);

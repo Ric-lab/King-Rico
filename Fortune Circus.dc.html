@@ -1226,9 +1226,9 @@ class Component extends DCLogic {
     voice.type = 'triangle'; voice.frequency.setValueAtTime([523.25, 659.25, 783.99][i], t);
     filter.type = 'lowpass'; filter.frequency.value = 2400; filter.Q.value = 0.4;
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.linearRampToValueAtTime(0.48, t + 0.006);
-    gain.gain.linearRampToValueAtTime(0.30, t + 0.06);
-    gain.gain.exponentialRampToValueAtTime(0.055, t + 0.24);
+    gain.gain.linearRampToValueAtTime(0.21, t + 0.006);
+    gain.gain.linearRampToValueAtTime(0.13, t + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.024, t + 0.24);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
     voice.connect(filter); filter.connect(gain); gain.connect(out);
     voice.start(t); voice.stop(t + duration + 0.04);
@@ -1347,7 +1347,7 @@ class Component extends DCLogic {
     });
     if (!fr && !this._fxFired) this.spinFx(true);
     this._fxFired = false;
-    try { this.sfxWhoosh(); this.startWhirr(); } catch (e) {}
+    try { this.startWhirr(); } catch (e) {}
 
     clearInterval(this.ticker);
     this.reelsStart(STOP_ORDER,target);
