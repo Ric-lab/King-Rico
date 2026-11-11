@@ -1,5 +1,13 @@
 # HANDOFF
 
+## Publicação oficial autorizada e concluída — Circus v5
+
+- O dono autorizou publicar a prévia aprovada. Código publicado: `b394d9f3346f9871c542ec17784d8a59ad71e37d`, tag `circus-economia-v5-90-20261111`; mesma revisão validada na prévia.
+- Workflow oficial concluído com sucesso: https://github.com/Ric-lab/King-Rico/actions/runs/42940263606. Passaram 248 testes de código e 67 testes Firestore; regras publicadas pelo publicador REST existente e Hosting publicado em https://king-rico.web.app.
+- Conferência pública após deploy: `/circus`, `/cloud/client.js`, `/ui/park/client.js` e `/ui/park/reel-tape.js` retornaram HTTP 200 e bytes iguais ao build de produção aprovado. Cliente oficial v5 e acumulador do ciclo presentes. Nenhuma aposta em conta real foi feita.
+- Este checkpoint altera somente documentação de autorização/estado publicado, com `[skip ci]`; não muda o código servido nem repete deploy. Main e prévia recebem a mesma documentação.
+- Próximo passo: recolher feedback do dono no oficial. Manter os limites, a tabela, os recibos antigos e a aposta livre documentados abaixo; não restaurar o bônus vulnerável a apostar alto só no décimo giro.
+
 ## Circus v5 — nova economia e aposta livre (11/11/2026 · Codex)
 
 - Base main/prévia confirmada na API do GitHub: 21f4ed4. Um fetch do transporte Git local devolveu a ref antiga 1d730fb; a API/Actions confirmam 21f4ed4 e publicação v4 aprovada. Preservar a base atual; não restaurar assets/documentos a partir dessa ref local antiga. Atualização será fast-forward, sem force push.
@@ -22,8 +30,8 @@
 - Regras: mantidos limites de perda, metadados, saldo e orçamento; avaliações repetidas foram reduzidas para caber nas 1.000 expressões do Firestore. Cap exato Tony e faixa/orçamento de recursos conferidos na escrita OBRIGATÓRIA do parque, com mesma operação nova da carteira. Rejeições automáticas de uma proposta alternativa de remoção de guardas foram respeitadas; ela NÃO foi aplicada. Corrigida divisão em ponto flutuante ao arredondar a reserva proporcional do Tucker; caso 751 unidades / 3 Happeach incluído em teste.
 - Testes novos/ajustados: circus-v5/control-v5/truncated-normal (tabela literal, cedro, distribuição, limites, zero, orçamento, décimo giro e reserva), circus-audit (v4/v5 e stress), circus-preview-economy (v3 explícita e equivalência v5), integration (concorrência, outro aparelho, replay, histórico adulterado, reservas, contadores, versões e resgate), browsers helpers/circus, circus_columns/payout, villains_release/prize_release para v5. Não alterar a regra para satisfazer fixture antiga.
 - Validação local final concluída: `npm test` passou (45 arquivos); auditorias v4/v5 e stress passaram; 67 testes Firestore passaram, incluindo reserva fracionária do Tucker, zero, replay e falsificações. Navegadores `villains_release_browser.py` e `prize_release_browser.py` passaram com autenticação/carteira emuladas, três perdas reais, reload, catálogo e assets sem erros. Os 12 navegadores da prévia passaram na primeira revisão; depois da base financiada, `preview_motion`, `circus_columns` e `wheel_sound` foram reconferidos e passaram, incluindo liquido, ingressos, multiplicação e áudio. Capturas Tony/Tucker inspecionadas. Build final de produção gerado DEPOIS da integração; o workflow da prévia reconfere todos os 12 no canal remoto.
-- Identificação da entrega: tag imutável proposta `refs/tags/circus-economia-v5-90-20261111` deve apontar para o MESMO commit enviado à prévia, após confirmar CI. Main permanece em 21f4ed4; esta rodada entrega a nova política na prévia para avaliação, sem publicar regras oficiais nem tocar no workflow REST.
-- Próximo passo EXATO: conferir o workflow da prévia desta entrega; se passar, dono testa a política e decide o ritmo dos vilões. Não chamar uma prévia antiga de atualizada. Claude: `git pull --ff-only origin codex/penalty-clown-preview`, ler esta seção e ECONOMIA.md; não reaplicar v4 nem promover main automaticamente sem avaliação desta política nova.
+- Entrega de código confirmada: tag imutável `refs/tags/circus-economia-v5-90-20261111` aponta para b394d9f, aprovado na prévia e publicado oficialmente após autorização do dono; ver registro no topo.
+- Próximo passo atualizado: dono avaliar o oficial. Claude: `git pull --ff-only origin codex/penalty-clown-preview`, ler o registro de publicação no topo e ECONOMIA.md; não reaplicar a economia v4.
 
 ## Auditoria da economia do Circus v4 (2026-11-10 · Codex)
 - Autorização atual do dono substitui a entrega anterior apenas ao Claude: auditar/calibrar, aprovar prévia e só depois publicar a MESMA revisão na main via fast-forward. Nunca publicar fora da faixa de 88,5–91,5% ou com retorno acima de 100%.

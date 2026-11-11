@@ -1,7 +1,7 @@
-# Circus v5 — candidato validado localmente (11/11/2026)
+# Circus v5 — publicado (b394d9f)
 
 Pedido mais recente do dono substitui a escala e as chances fixas do v4 apenas
-para novas rodadas v5. A versão oficial v4 e seus recibos continuam preservados.
+para novas rodadas v5. As rodadas e os recibos antigos v1–v4 mantêm seus termos; novas rodadas oficiais usam v5.
 
 Multiplicadores por ID estável do atlas:
 `[2.5,0.4,0.8,1.2,5,0,10,15,20,25]` (capa, tambor, tenda, nuvem,
@@ -71,9 +71,8 @@ estratégias e as quatro apostas constantes entre 88,5–91,5% e abaixo de 100%.
 
 
 A v4 foi reexecutada nas mesmas quatro apostas e cinco milhões por aposta;
-retornos idênticos aos aprovados, relatório `circus-economy-audit.json`. O build
-oficial continua usando recibos/versionamento; novo cliente v5 somente deverá
-ser promovido quando todos os gates, inclusive o problema acima, fecharem.
+retornos idênticos aos aprovados, relatório `circus-economy-audit.json`. A publicação oficial do cliente v5 foi autorizada e concluída após todos os gates.
+Código b394d9f; workflow 42940263606, regras e Hosting confirmados.
 Spark mantém sorteio no navegador: regras protegem limites, contabilidade e
 replay, mas não atestam aleatoriedade num cliente adulterado.
 

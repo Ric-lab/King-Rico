@@ -1,4 +1,4 @@
-## Candidato econômico v5 (11/11/2026 · não publicado)
+## Economia v5 publicada — b394d9f
 
 Novas rodadas usam a tabela literal pedida pelo dono, cedro fora da fita e
 vilões com perdas variáveis: Tony 1–25×, Tucker 1–4 Happeach, Ray 5–50% inteiros,
