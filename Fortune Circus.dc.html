@@ -512,7 +512,7 @@ class Component extends DCLogic {
   lightsTopRef = React.createRef(); // lâmpadas dos pilares: acima da crista (machine-front3 cobre a de cima)
   state = {
     balance: null, betIdx: null,
-    grid: [2, 8, 7, 1, 3, 6, 0, 4, 5],
+    grid: [2, 8, 7, 1, 3, 6, 0, 4, 6],
     locked: [], spinCells: [], stopped: [], winCells: [], winLines: [],
     winAmount: 0, displayWin: 0, showWin: false, winTitle: 'VOCÊ GANHOU',
     coins: false, shake: 'none', antic: false,
@@ -1944,8 +1944,8 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
-      tonyNote: globalThis.KingRicoCloud?.slotVersion>=4 ? 'Três Tony: até 1,5× a aposta, limitado a 5% do saldo após apostar. Tucker leva até 1 Happeach; Ray, até 1 ingresso. Sem outro prêmio nessas rodadas.' : '',
+      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      tonyNote: globalThis.KingRicoCloud?.slotVersion>=5 ? 'A roleta usa 4% da soma das últimas 10 apostas; o prêmio normal é separado. Três Tony: de 1× a 25× a aposta. Tucker: de 1 a 4 Happeach. Ray: de 5% a 50% dos ingressos, arredondado. Limitado ao disponível; vilões reagem ao retorno acumulado. Sem outro prêmio nessas rodadas.' : '',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1, spinPulseActive: busy || s.queued ? '1' : '0',

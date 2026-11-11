@@ -18,10 +18,10 @@ with sync_playwright() as p:
   const sample=()=>{for(const n of document.querySelectorAll('.park-tape-symbol')){const v=+n.dataset.symbol;if(v<12||v>14)continue;const r=n.getBoundingClientRect(),clip=n.closest('.park-physical-reel').getBoundingClientRect();if(r.bottom>clip.top+8&&r.top<clip.bottom-8&&!visibleVillains.includes(v))visibleVillains.push(v);}requestAnimationFrame(sample);};requestAnimationFrame(sample);
   __fc.setState({turbo:true});
  }''')
- weights=[3,30,20,8,12,5,4,3,2,2.4];total=sum(weights)
+ weights=[3,30,20,8,12,0,4,3,2,2.4];total=sum(weights)
  for li,line in enumerate(LINES):
   page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
-  grid=list(range(9))
+  grid=[0,1,2,3,4,6,6,7,8]
   for cell in line:grid[cell]=1
   draws=[.99]
   for symbol in grid:draws.extend([.99,(sum(weights[:symbol])+weights[symbol]/2)/total])

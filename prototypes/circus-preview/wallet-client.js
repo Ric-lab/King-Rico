@@ -1,5 +1,5 @@
 const watchers=new Set();let pending=Promise.resolve(),state,readyResolve;
-const Cloud=window.KingRicoCloud={enabled:true,slotVersion:4,uid:'park-preview',player:null,ready:new Promise(r=>readyResolve=r),
+const Cloud=window.KingRicoCloud={enabled:true,slotVersion:5,uid:'park-preview',player:null,ready:new Promise(r=>readyResolve=r),
  watch(fn){watchers.add(fn);if(this.player)fn(this.player);return()=>watchers.delete(fn);},
  track(){},dayKey(){return Number(new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'}).format(new Date()).replaceAll('-',''));},
  error(error){toast(error?.message||'Não foi possível confirmar. Tente novamente.');}};
@@ -21,7 +21,7 @@ async function request(data){
 }
 function call(data){const op=pending.then(()=>request(data));pending=op.catch(()=>{});return op;}
 const id=()=>crypto.randomUUID();
-Cloud.spin=async(game,bet,selected)=>{const before=state?.spins||0,fc=window.__fc,actual=!!fc?._cloudRequest;const response=await call({action:'spin',requestId:id(),game,bet,...(game==='circus'?{slotVersion:4}:{}),...(selected===undefined?{}:{selected})});if(game==='circus')fc?._parkChargeConfirmed?.(before,response,actual);return response;};
+Cloud.spin=async(game,bet,selected)=>{const before=state?.spins||0,fc=window.__fc,actual=!!fc?._cloudRequest;const response=await call({action:'spin',requestId:id(),game,bet,...(game==='circus'?{slotVersion:5}:{}),...(selected===undefined?{}:{selected})});if(game==='circus')fc?._parkChargeConfirmed?.(before,response,actual);return response;};
 Cloud.settings=settings=>call({action:'settings',requestId:id(),settings});
 Cloud.recharge=source=>call({action:'recharge',requestId:id(),...(source==='home'?{source:'home'}:{})});
 Cloud.bonus=()=>call({action:'bonus',requestId:id()});

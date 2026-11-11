@@ -1,3 +1,84 @@
+# Circus v5 — candidato validado localmente (11/11/2026)
+
+Pedido mais recente do dono substitui a escala e as chances fixas do v4 apenas
+para novas rodadas v5. A versão oficial v4 e seus recibos continuam preservados.
+
+Multiplicadores por ID estável do atlas:
+`[2.5,0.4,0.8,1.2,5,0,10,15,20,25]` (capa, tambor, tenda, nuvem,
+trevo, cedro inativo, moeda, coroa, diamante, King Rico). Cedro removido do
+sorteio, da fita transitória e da tabela; arquivos de arte mantidos. O ID 5 não
+foi renumerado; recibos antigos ainda podem exibi-lo.
+
+Limites novos: Tony 1–25× a aposta, até o saldo disponível pós-aposta; Tucker
+1–4 Happeach, até o disponível; Ray 5–50% do estoque, arredondado para inteiros
+(mínimo 1 com estoque positivo; zero sem ingressos). Uma unidade ×50% arredonda
+para 1. Cada sorteio usa normal truncada simétrica no intervalo EFETIVO, com
+média no meio e desvio (máximo−mínimo)/8. Limites de recurso e orçamento são
+aplicados antes da amostra, sem concentrar perdas no teto. Três parcelas do
+Tony somam exatamente a perda; não há outro prêmio junto ao evento.
+
+Controle persistente por jogador, separado do saldo disponível: `park.economy`
+guarda apostas, créditos base/especial/extra da roleta, perdas do Tony, ingressos
+emitidos e roubados pelo Ray. Ingressos são avaliados em 25 moedas. Recargas,
+raspadinhas, presentes e prêmios de outras atrações não entram no retorno.
+Orçamento de roubo = máximo(0, retorno acumulado anterior − 90% das apostas
+incluindo a atual). Sem excedente, não sorteia vilão. Com excedente, probabilidade
+condicional 50–85%, aumentando com pressão do retorno e saldo em apostas; a
+escolha entre vilões respeita os recursos e limites. Tony/Ray não podem levar
+mais que esse excedente; Tucker reduz proporcionalmente a reserva da cesta.
+Frequência efetiva é resultado do controle, NÃO chances fixas de 5/2,5/2,5%.
+Na auditoria final, Tony ficou em 0,059–0,113%, Tucker em 0,064–0,167% e Ray
+em 0,049–0,115% de TODOS os giros. Com a tabela menor e a roleta financiada, o
+excedente precisa de poucas perdas. O pedido de mais aparições não resultou em
+maior frequência efetiva que a v4; aumentar chances fixas aqui faria o retorno
+cair abaixo da meta. Não anunciar que os vilões ficaram mais frequentes.
+
+Auditoria reproduzível: `node scripts/economy-audit.mjs --circus-v5 --spins=5000000 --bets=1,10,100,1000`.
+Relatório e hashes: `circus-economy-v5-audit.json`; seed 472831, 20 milhões de
+rodadas no total. Créditos extras da roleta entram apenas uma vez no histórico,
+inclusive na carteira de teste. A roleta continua no décimo giro. Sua `prizeVersion:4` tem base = 4% da soma
+das apostas efetivamente registradas no ciclo (`cycleWagerUnits`); o multiplicador
+é aplicado a essa base e seu resultado INTEIRO é creditado no sorteio da roda,
+pois essa base ainda não foi paga. O prêmio normal do décimo giro é sorteado e
+pago normalmente, sem forçar outra grade vencedora. Todos os giros do ciclo,
+incluindo perdas/vilões, contribuem; replay não contribui de novo. Fechar a roda
+zera o acumulador, e alterá-lo isoladamente é proibido pelas regras. Uma roda
+antiga v3 mantém base/crédito originais. No primeiro ciclo após migração não se
+inventam apostas passadas: só contribuições registradas entram na base v5.
+
+| Aposta | Giros | Moedas + ingressos emitidos − Tony | Também descontando Ray |
+|---:|---:|---:|---:|
+| 1 | 5.000.000 | 90,176344% | 89,997844% |
+| 10 | 5.000.000 | 90,146887% | 89,988937% |
+| 100 | 5.000.000 | 90,138050% | 89,980025% |
+| 1000 | 5.000.000 | 90,156199% | 89,996197% |
+
+**Brecha corrigida com autorização do dono (aposta continua livre):** a versão
+intermediária que garantia um prêmio sobre a aposta do décimo giro retornava
+300,704332% quando a pessoa apostava 1 nove vezes e 1000 na última. Foi rejeitada
+e não foi publicada. A nova base de 4% das apostas acumuladas mantém o prêmio
+normal separado e remove essa vantagem de concentração. Testes finais, seed
+51421, 1.000.000 de giros por estratégia:
+
+| Estratégia | Retorno bruto | Também descontando Ray |
+|---|---:|---:|
+| Alternar 1/1000 | 90,090864% | 89,949900% |
+| Nove apostas 1 + décima 1000 | 89,899573% | 89,897566% |
+
+Reprodução: `node scripts/circus-control-sessions.mjs`; resultados em
+`circus-economy-v5-stake-stress.jsonl`. O gate automatizado exige as duas
+estratégias e as quatro apostas constantes entre 88,5–91,5% e abaixo de 100%.
+
+
+A v4 foi reexecutada nas mesmas quatro apostas e cinco milhões por aposta;
+retornos idênticos aos aprovados, relatório `circus-economy-audit.json`. O build
+oficial continua usando recibos/versionamento; novo cliente v5 somente deverá
+ser promovido quando todos os gates, inclusive o problema acima, fecharem.
+Spark mantém sorteio no navegador: regras protegem limites, contabilidade e
+replay, mas não atestam aleatoriedade num cliente adulterado.
+
+---
+
 # Economia — auditoria vigente do Circus (10/11/2026)
 
 Esta seção substitui, para o Circus v4, as metas e tabelas históricas abaixo.

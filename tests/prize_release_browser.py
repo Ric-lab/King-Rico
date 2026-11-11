@@ -23,7 +23,7 @@ with sync_playwright() as p:
  # Only the engine's scalar Uint32 draw is seeded. SDK/auth randomness remains
  # native; the actual click, store transaction, Rules and saved receipt all run.
  page.evaluate('''()=>{
-  const weights=[3,30,20,8,12,5,4,3,2,2.4],total=weights.reduce((a,b)=>a+b,0),grid=[8,8,8,0,1,2,3,4,5];
+  const weights=[3,30,20,8,12,0,4,3,2,2.4],total=weights.reduce((a,b)=>a+b,0),grid=[8,8,8,0,1,2,3,4,6];
   const draws=[.99,...grid.flatMap(s=>[.99,(weights.slice(0,s).reduce((a,b)=>a+b,0)+weights[s]/2)/total]).concat([.99])];
   const original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>{if(a instanceof Uint32Array&&a.length===1&&draws.length){a[0]=Math.floor(draws.shift()*2**32);return a;}return original(a);};
  }''')
@@ -31,7 +31,7 @@ with sync_playwright() as p:
  page.get_by_role('button',name='Girar',exact=True).click()
  flight=page.get_by_role('region',name='Voo do grande prêmio',exact=True);flight.wait_for(timeout=30000)
  assert page.evaluate('KingRicoCloud.player.balance')==expected_balance
- assert page.evaluate('__fc._cloudSpin.outcome.slotVersion||1')==4
+ assert page.evaluate('__fc._cloudSpin.outcome.slotVersion||1')==5
  page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"',timeout=20000)
  assert flight.locator('[data-flight-amount]').inner_text()=='+'+br_money(10*PAYS[8])
  assert flight.locator('.park-bigwin-pilot').get_attribute('data-pose')=='pilotSide'

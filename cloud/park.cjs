@@ -1,5 +1,6 @@
 'use strict';
 const engine=require('./engine.cjs');
+const controller=require('./circus-control-v5.cjs');
 const PRICE=25,METER_SPINS=10,TICKET=10;
 const ATTRACTIONS=['clown','penalty','flying','fingo','bounce'];
 const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
@@ -52,22 +53,31 @@ function resourceSpin(p,s,bet,kind,rng){
   peaches:kind==='tucker'?remaining:p.peaches,peachBank,slotVersion:4,parkVersion:1,ticketAward:0,winUnits:0,
   [kind]:{version:1,before,stolen,remaining}};
 }
-function spin(p,s,bet,id,rng,version=1){
+function spinLegacy(p,s,bet,id,rng,version=1){
  if(s.wheel)fail('round-conflict','Conclua a roleta bônus antes de girar novamente.');
  const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32),filling=s.spins===9;
- if(version>=4&&!filling){
+ if(version===4&&!filling){
   const draw=random();
   if(draw<TONY_CHANCE&&theftUnits(p.balanceUnits,engine.units(bet))>=3)return tonySpin(p,s,bet,id,random);
   if(draw>=TONY_CHANCE&&draw<TONY_CHANCE+RES_CHANCE)return resourceSpin(p,s,bet,'tucker',random);
   if(draw>=TONY_CHANCE+RES_CHANCE&&draw<TONY_CHANCE+2*RES_CHANCE)return resourceSpin(p,s,bet,'ray',random);
  }
  let x=engine.slot(bet,p.peaches,random,p.peachBank,version);
- if(filling){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank,version);
-  if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,5],res=engine.evaluate(grid,bet,version),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
+ if(filling&&version<5){let attempts=0;while((x.res.win<=0||x.feature)&&attempts++<128)x=engine.slot(bet,p.peaches,random,p.peachBank,version);
+  if(x.res.win<=0||x.feature){const grid=[1,1,1,0,3,6,7,8,version>=5?6:5],res=engine.evaluate(grid,bet,version),bank={count:p.peaches,units:p.peachBank?.count===p.peaches?p.peachBank.units:p.peaches*engine.units(bet)};x={grid,res,feature:null,peaches:p.peaches,peachBank:bank,winUnits:engine.units(res.win)};}}
  const award=!filling&&!x.res.peach.length&&!x.feature&&random()<Math.min(.14,bet/40000)?3:0; // Ingressos valem 25 moedas na auditoria total.
  if(award){placeTickets(x,bet,random,version);s.tickets+=3;}else if(version>=2)scatterTickets(x,random);
- s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:3,baseUnits:engine.units(x.res.win),pockets:[...POCKETS],result:null};
+ s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:version>=5?4:3,baseUnits:version>=5?Math.max(1,Math.round(s.cycleWagerUnits*4/100)):engine.units(x.res.win),pockets:[...POCKETS],result:null};
  return {...x,...(version>=2?{slotVersion:version}:{}),parkVersion:1,ticketAward:award};
+}
+function spin(p,s,bet,id,rng,version=1){
+ if(s.wheel)fail('round-conflict','Conclua a roleta bônus antes de girar novamente.');
+ const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);
+ if(version>=5||'cycleWagerUnits' in s)s.cycleWagerUnits=(s.cycleWagerUnits??0)+engine.units(bet);
+ const x=version>=5&&s.spins<9?controller.candidate(p,s,bet,random):null;
+ const result=x||spinLegacy(p,s,bet,id,random,version);
+ if(version>=5||s.economy)controller.recordSpin(s,result,bet);
+ return result;
 }
 function entry(p,s,game,method){
  if(!ATTRACTIONS.includes(game)||!['ticket','coins'].includes(method))fail('invalid-argument','Entrada inválida.');
@@ -95,7 +105,7 @@ function settle(s,data,x,payment){
 }
 function bonus(s,wheelId,rng){
  const w=s.wheel;if(!w||w.id!==wheelId)fail('round-conflict','Essa roleta já foi encerrada.');
- if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:winUnits-w.baseUnits};return w.result.extraUnits;}
+ if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:w.prizeVersion===4?winUnits:winUnits-w.baseUnits};controller.recordBonus(s,w.result.extraUnits);return w.result.extraUnits;}
  return 0;
 }
 module.exports={TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,scatterTickets,spin,entry,payment,settle,bonus};

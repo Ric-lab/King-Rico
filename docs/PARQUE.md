@@ -1,3 +1,12 @@
+## Candidato econômico v5 (11/11/2026 · não publicado)
+
+Novas rodadas usam a tabela literal pedida pelo dono, cedro fora da fita e
+vilões com perdas variáveis: Tony 1–25×, Tucker 1–4 Happeach, Ray 5–50% inteiros,
+respeitando recursos e controle acumulado de retorno. Cenas e sons preservados;
+recibos v1–v4 seguem seus termos. Aposta permanece livre: roleta a cada dez giros, base de 4% das apostas do
+ciclo, prêmio normal separado. Matemática e gate contra concentrar aposta no
+décimo giro: [ECONOMIA.md](ECONOMIA.md).
+
 # Circus e parque
 
 Na versão publicada em 05/11/2026 (`87244fe`), Circus é a tela inicial.

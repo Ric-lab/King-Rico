@@ -12,7 +12,7 @@ const watchers = new Set(), SKEY = 'fortuneCircus.slot.v3';
 let resolveReady, selectedConsent, lastInteraction = Date.now();
 let confirmedPlayer=null,settingsBuffer;
 const Cloud = window.KingRicoCloud = {
-  slotVersion:4,
+  slotVersion:5,
   enabled: config.enabled === true, player: null, uid: null,park:parkEngine.publicState(),parkMode:false,
   ready: new Promise(resolve => { resolveReady = resolve; }),
   watch(handler) { watchers.add(handler); if (Cloud.player) handler({...Cloud.player,settings:settingsBuffer?.overlay(Cloud.player.settings)||Cloud.player.settings}); return () => watchers.delete(handler); },
@@ -119,7 +119,7 @@ else {
       throw error;
     }
   }
-  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true,slotVersion:4}) });
+  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true,slotVersion:5}) });
   Cloud.parkEntry=(game,method)=>mutate({action:'parkEntry',game,method});
   Cloud.parkBonus=wheelId=>mutate({action:'parkBonus',wheelId});
   Cloud.parkBonusClose=wheelId=>mutate({action:'parkBonusClose',wheelId});

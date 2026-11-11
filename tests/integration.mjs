@@ -1159,3 +1159,62 @@ for(const [kind,draw]of[['tucker',.0625],['ray',.0875]]){
   }
  });
 }
+
+test('Circus v5 control persists bounded theft and ledger once across devices; rejects forged history and bounds',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');
+ const {default:controller}=await import('../cloud/circus-control-v5.cjs');
+ for(const [kind,draw,empty]of[['tony',.1,false],['tucker',.55,false],['ray',.75,false],['tucker',.55,true],['ray',.75,true]]){
+  const name='v5-'+kind+'-'+randomUUID(),c=await client(name,name,{rng:()=>draw});await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
+  await environment.withSecurityRulesDisabled(async context=>{
+   await updateDoc(doc(context.firestore(),'players',c.uid),{peaches:empty?0:3,peachBank:{count:empty?0:3,units:empty?0:751}});
+   await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:empty?0:100,economy:{...controller.freshEconomy(),wageredUnits:1000000,paidUnits:1900000}});
+  });
+  const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:5});
+  const [a,b]=await Promise.all([c.call(req),c.call(req)]).catch(error=>{error.message=kind+': '+error.message;throw error;});assert.ok(a.replayed||b.replayed);
+  const e=a.outcome[kind];assert.ok(e,kind);assert.equal(e.version,2);assert.equal(a.outcome.grid.includes(5),false);
+  if(kind==='tony')assert.ok(e.stolenUnits>=1000&&e.stolenUnits<=25000);
+  else assert.ok(Number.isInteger(e.stolen)&&e.stolen>=(empty?0:1)&&e.stolen<=(empty?0:kind==='tucker'?4:50));
+  assert.equal(a.park.economy.rounds,1);assert.equal(a.park.economy.wageredUnits,1001000);
+  const other=await client(name+'-other',name,{rng:()=>{throw Error('Replay cannot redraw');}});
+  assert.deepEqual((await other.call(req)).park.economy,a.park.economy);
+  assert.equal((await other.call(request({action:'bootstrap'}))).player.balance,a.player.balance);
+  const p=(await getDoc(ref)).data(),s=(await getDoc(parkRef)).data();
+  await new Promise(resolve=>setTimeout(resolve,750));
+  async function forge(change){
+   const id=randomUUID(),nextPark=structuredClone(s),x=park.spin(p,nextPark,10,id,()=>draw,5);
+   const next={...p,balanceUnits:p.balanceUnits-1000+x.winUnits-(x.tony?.stolenUnits||0),peaches:x.peaches,peachBank:x.peachBank,revision:p.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp()};
+   change(x,next,nextPark);nextPark.revision=s.revision+1;nextPark.playerRevision=next.revision;nextPark.lastOperationId=id;
+   const result={game:'circus',bet:10,balanceBefore:p.balanceUnits/100,balanceDebited:(p.balanceUnits-1000)/100,baseBalance:next.balanceUnits/100,outcome:x};
+   const batch=writeBatch(c.db);batch.set(ref,next);batch.set(parkRef,nextPark);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged-v5',betUnits:1000,winUnits:x.winUnits,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+   await assertFails(batch.commit());
+  }
+  if(kind==='tony')await forge(x=>{x.tony.maxUnits++;});
+  await forge((x,p,s)=>{s.cycleWagerUnits++;});
+  await forge((x,p,s)=>{s.economy.paidUnits++;});
+  await forge((x,p,s)=>{delete s.economy;});
+  await forge((x,p,s)=>{
+   if(kind==='tony'){const old=x.tony.stolenUnits,n=25001;x.tony.stolenUnits=n;x.tony.maxUnits=n;x.tony.hits=[8333,8333,8335];p.balanceUnits-=n-old;s.economy.tigerUnits+=n-old;}
+   else {const before=x[kind].before,n=before+1,delta=n-x[kind].stolen;x[kind].stolen=n;x[kind].remaining=before-n;if(kind==='ray'){s.tickets-=delta;s.economy.ticketsStolen+=delta;}else{p.peaches=before-n;x.peaches=p.peaches;}}
+  });
+ }
+});
+
+test('Circus v5 normal spin, tenth bonus, replay and old v4 client preserve the new ledger',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');
+ const name='v5-bonus-'+randomUUID(),c=await client(name,name,{rng:()=>.999});await c.call(request({action:'bootstrap'}));
+ const first=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:5}));
+ assert.equal(first.outcome.res.win,2000);assert.equal(first.park.economy.paidUnits,200000);
+ const parkRef=doc(c.db,'players',c.uid,'park','state');
+ await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid,'park','state'),{spins:9}));
+ await new Promise(resolve=>setTimeout(resolve,750));
+ const tenth=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:5}));assert.ok(tenth.park.wheel);
+ const req=request({action:'parkBonus',wheelId:tenth.park.wheel.id});
+ const [a,b]=await Promise.all([c.call(req),c.call(req)]);assert.ok(a.replayed||b.replayed);
+ const earned=a.park.wheel.result.extraUnits;assert.equal(a.park.economy.paidUnits,tenth.park.economy.paidUnits+earned);
+ const again=await c.call(request({action:'parkBonus',wheelId:tenth.park.wheel.id}));assert.deepEqual(again.park.economy,a.park.economy);
+ await c.call(request({action:'parkBonusClose',wheelId:tenth.park.wheel.id}));
+ await new Promise(resolve=>setTimeout(resolve,750));
+ const legacy=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:4}));assert.equal(legacy.park.economy.rounds,3);
+ assert.equal((await getDoc(parkRef)).data().economy.rounds,3);
+});

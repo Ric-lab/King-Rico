@@ -1,10 +1,10 @@
 /* Three continuous physical tapes. Identity belongs to a tape index, never a row. */
 (function(root){
- const PITCH=128,HEIGHT=382;
+ const PITCH=128,HEIGHT=382,ORDER=[0,1,2,3,4,6,7,8,9,10,11,12,13,14];
  function plan({column,from,target,stop,seed=0,ticket=false,wasTicket=false}){
   const anchor=-Math.round(stop/PITCH),items=[];
   for(let index=anchor-4;index<=5;index++){
-   let symbol=((index+column*5+(seed|0))%15+15)%15,isTicket;
+   let symbol=ORDER[((index+column*5+(seed|0))%ORDER.length+ORDER.length)%ORDER.length],isTicket;
    if(index>=0&&index<3){symbol=from[column+index*3];isTicket=symbol===10;}
    if(index>=anchor&&index<anchor+3){symbol=target[column+(index-anchor)*3];isTicket=symbol===10;}
    isTicket=symbol===10;

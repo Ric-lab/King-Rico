@@ -3,6 +3,7 @@ import {Timestamp} from 'firebase/firestore';
 import {createGameStore,publicPlayer} from '../../cloud/store.mjs';
 import engine from '../../cloud/engine.cjs';
 import parkRules from '../../cloud/park.cjs';
+import controller from '../../cloud/circus-control-v5.cjs';
 import {rayDemo} from './ray-demo.mjs';
 import {tuckerDemo} from './tucker-demo.mjs';
 import paths from '../../games/fingo/paths.json' with {type:'json'};
@@ -49,7 +50,9 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if(!engine.BETS.includes(data.bet))fail('Aposta inválida.');
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
-   const outcome=data.previewRay?rayDemo(p,park,data.bet):data.previewTucker?tuckerDemo(p,park,data.bet):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||3);
+   // Explicit visual demo only: seed test history, never a real wallet.
+   if(data.previewTony&&!park.economy)park.economy={...controller.freshEconomy(),paidUnits:cost*100};
+   const outcome=data.previewRay?rayDemo(p,park,data.bet):data.previewTucker?tuckerDemo(p,park,data.bet):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||5);
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,
@@ -62,11 +65,11 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
     const index=matches[Math.min(matches.length-1,Math.floor(rng()*matches.length))];
     const winUnits=park.wheel.baseUnits*multiplier,extraUnits=park.wheel.prizeVersion===3?winUnits-park.wheel.baseUnits:winUnits;
     park.wheel.result={index,multiplier,winUnits,extraUnits};
-    p.balanceUnits+=extraUnits;p.revision++;}
+    controller.recordBonus(park,extraUnits);p.balanceUnits+=extraUnits;p.revision++;}
    result={wheel:structuredClone(park.wheel)};
   }else if(data.action==='wheel-close'){
    if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('Conclua a roleta primeiro.');
-   park.wheel=null;park.spins=0;park.bankUnits=0;result={};
+   park.wheel=null;park.spins=0;park.bankUnits=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;result={};
   }else if(data.action==='fingo-play'){
    const pass=park.passes.fingo;
    if(!pass)fail('Escolha como entrar na atração.');

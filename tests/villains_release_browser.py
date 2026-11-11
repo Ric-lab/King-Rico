@@ -14,7 +14,7 @@ with sync_playwright() as p:
  assert page.evaluate('KING_RICO_FIREBASE.emulators&&KING_RICO_FIREBASE.firebase.projectId==="demo-king-rico"')
  page.locator('[data-cloud-test-account]').fill('villains-release-'+uuid.uuid4().hex[:18]);page.get_by_role('button',name='Entrar com conta de teste',exact=True).click()
  page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")&&KingRicoCloud.player');collect_daily(page)
- assert page.evaluate('KingRicoCloud.slotVersion')==4
+ assert page.evaluate('KingRicoCloud.slotVersion')==5
  assert 'circus-garden-lawn-v1.webp' in page.locator('.park-circus-ambient').evaluate('e=>getComputedStyle(e).backgroundImage')
  assert 'spin-rim-gold-contour-v1.svg' in page.locator('.park-spin-rim>img').get_attribute('src')
  uid=page.evaluate('KingRicoCloud.uid')
@@ -28,17 +28,25 @@ with sync_playwright() as p:
  patch(root+'/park/state',{'tickets':{'integerValue':'3'},'version':{'integerValue':'1'},'revision':{'integerValue':'0'},'spins':{'integerValue':'0'},'wheel':{'nullValue':None},'lastOperationId':{'nullValue':None},'passes':{'mapValue':{'fields':{}}}})
  page.wait_for_function('KingRicoCloud.player.peaches===3&&KingRicoCloud.park.tickets===3');page.reload()
  page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")&&KingRicoCloud.player')
- for kind,draw,label in [('tony',0,'Tony roubou moedas'),('tucker',.0625,'Tucker levou Happeach'),('ray',.0875,'Ray e os ingressos')]:
+ def field(v):
+  if isinstance(v,dict):return {'mapValue':{'fields':{k:field(x) for k,x in v.items()}}}
+  return {'integerValue':str(v)}
+ patch(root+'/park/state',{'economy':field({'version':1,'rounds':0,'wageredUnits':1000000,'paidUnits':1900000,'tigerUnits':0,'ticketsAwarded':0,'ticketsStolen':0})})
+ page.reload();page.wait_for_function('window.__fc?._parkHook&&KingRicoCloud.park?.economy')
+ peaches=3;tickets=3
+ for kind,draw,label in [('tony',.1,'Tony roubou moedas'),('tucker',.55,'Tucker levou Happeach'),('ray',.75,'Ray e os ingressos')]:
   page.wait_for_function('!__fc.cloudBusy()');before=page.evaluate('KingRicoCloud.player.balance')
-  page.evaluate('''draw=>{const draws=[draw,.1],original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>{if(a instanceof Uint32Array&&a.length===1&&draws.length){a[0]=Math.floor(draws.shift()*2**32);return a;}return original(a);};}''',draw)
+  page.evaluate('''draw=>{const draws=[draw,.1,.5,.25],original=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=a=>{if(a instanceof Uint32Array&&a.length===1&&draws.length){a[0]=Math.floor(draws.shift()*2**32);return a;}return original(a);};}''',draw)
   print('Testing '+kind,flush=True);page.locator('[data-spin-btn]').click();scene=page.locator('.park-'+kind+'-scene');scene.wait_for(timeout=30000)
-  receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];assert receipt['outcome']['slotVersion']==4
+  receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];assert receipt['outcome']['slotVersion']==5
   assert page.locator('[data-park-'+kind+'="true"]').count()==3
   if kind=='tony':
-   assert event['stolenUnits']==1500
+   assert 1000<=event['stolenUnits']<=25000
    page.wait_for_function('document.querySelector(".park-tony-scene")?.dataset.hit==="1"')
   else:
-   assert event['stolen']==1
+   assert 1<=event['stolen']<=(4 if kind=='tucker' else 2)
+   if kind=='tucker':peaches=event['remaining']
+   else:tickets=event['remaining']
    phase='flying' if kind=='tucker' else 'leaving'
    page.wait_for_function('(args)=>document.querySelector(".park-"+args[0]+"-scene")?.dataset.phase===args[1]',arg=[kind,phase]);page.wait_for_timeout(250)
    assert page.locator('.park-basket' if kind=='tucker' else '.park-circus-rails > .park-pocket').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
@@ -48,11 +56,11 @@ with sync_playwright() as p:
   dialog.get_by_role('button',name='CONTINUAR',exact=True).click();scene.wait_for(state='detached',timeout=5000)
   page.wait_for_function('!__fc.cloudBusy()');expected=before-10-(event['stolenUnits']/100 if kind=='tony' else 0)
   assert page.evaluate('KingRicoCloud.player.balance')==expected
-  assert page.evaluate('KingRicoCloud.player.peaches')==(2 if kind in ['tucker','ray'] else 3)
-  assert page.evaluate('KingRicoCloud.park.tickets')==(2 if kind=='ray' else 3)
+  assert page.evaluate('KingRicoCloud.player.peaches')==peaches
+  assert page.evaluate('KingRicoCloud.park.tickets')==tickets
   page.reload();page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")&&KingRicoCloud.player')
   assert page.evaluate('KingRicoCloud.player.balance')==expected
   assert page.locator('.park-tony-scene,.park-tucker-scene,.park-ray-scene').count()==0
  assert not errors and not missing,{'errors':errors,'missing':missing}
- print('Production v4: real emulated receipts, all three animations, new background/rim, resources and reload; no missing assets or JS errors')
+ print('Production v5: real emulated receipts, all three animations, new background/rim, resources and reload; no missing assets or JS errors')
  b.close()

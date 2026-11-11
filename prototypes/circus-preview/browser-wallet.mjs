@@ -8,9 +8,10 @@ async function execute(data){
  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
  const demo=demoSpin&&data.action==='spin'&&data.game==='circus';
- const total=engine.SYMBOLS.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='spacewin'?Array(9).fill(3):[8,8,8,0,1,2,3,4,5]).flatMap(symbol=>[.99,(engine.SYMBOLS.slice(0,symbol).reduce((n,s)=>n+s.w,0)+engine.SYMBOLS[symbol].w/2)/total]):[];
+ const symbols=engine.slotSymbols(5);
+ const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='spacewin'?Array(9).fill(3):[8,8,8,0,1,2,3,4,6]).flatMap(symbol=>[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
  if(demo&&demoMode!=='tony')draws.unshift(.99);
- if(demo&&demoMode==='tony')draws.splice(0,draws.length,0,.5);
+ if(demo&&demoMode==='tony'){data.previewTony=true;draws.splice(0,draws.length,0,.5);}
  if(demo&&demoMode==='tucker')data.previewTucker=true;
  if(demo&&demoMode==='ray')data.previewRay=true;
  const model=createPreview(saved||{},demo?()=>draws.shift()??.99:Math.random);

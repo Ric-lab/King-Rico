@@ -10,7 +10,8 @@ const SYMBOLS = [
 ];
 const circusProfile=require('./circus-profile.cjs');
 const SYMBOLS_V3=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS[i]}));
-const slotSymbols=version=>version>=3?SYMBOLS_V3:SYMBOLS;
+const SYMBOLS_V5=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS_V5[i],w:i===5?0:s.w,active:i!==5}));
+const slotSymbols=version=>version>=5?SYMBOLS_V5:version>=3?SYMBOLS_V3:SYMBOLS;
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
@@ -115,7 +116,7 @@ function weighted(pool, rng) {
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
   return 0;
 }
-function pick(rng = random,version=1) { return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(SYMBOLS, rng); }
+function pick(rng = random,version=1) { return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(slotSymbols(version), rng); }
 function lineSymbol(grid, line) {
   const v = line.map(i => grid[i]);
   if (v.some(s => s === undefined || s < 0 || s === 10 || s === 12 || s === 13 || s === 14 || s === PEACH)) return -1;
@@ -127,7 +128,7 @@ function evaluate(grid, bet, version=1) {
   let win = 0; const cells = new Set(), lines = [];
   (version>=2?ALL_LINES:LINES).forEach((line, li) => {
     const s = lineSymbol(grid, line);
-    if (s >= 0) { win += bet * slotSymbols(version)[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
+    if (s >= 0 && slotSymbols(version)[s].pay > 0) { win += bet * slotSymbols(version)[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
   });
   const base = grid.find(v => v !== WILD);
   const full = grid.every(v => v >= 0 && v !== 10 && v !== 12 && v !== 13 && v !== 14 && v !== PEACH) &&
@@ -137,7 +138,7 @@ function evaluate(grid, bet, version=1) {
     full: full && win > 0, peach: grid.flatMap((v,i) => v === PEACH ? [i] : []) };
 }
 function feature(bet, rng = random, version=1) {
-  const sym = weighted(SYMBOLS.slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
+  const sym = weighted(slotSymbols(version).slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
   for (let round = 0; round < FEAT_SPINS && grid.some(v => v < 0); round++) {
     const result = [];
     for (const i of [6,3,0,7,4,1,8,5,2]) if (grid[i] < 0) {

@@ -91,7 +91,7 @@ function bootCircus(){
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
- if(state.wheel?.prizeVersion===3&&fc.state.showWin&&!wheelOpen&&!fc._parkBigWinFlight){
+ if(state.wheel?.prizeVersion>=3&&fc.state.showWin&&!wheelOpen&&!fc._parkBigWinFlight){
   fc._parkDismissAt ||= performance.now()+1500;
   if(performance.now()>=fc._parkDismissAt){fc._spinAfterFly=false;fc.dismissWin();fc._parkDismissAt=0;}
  }

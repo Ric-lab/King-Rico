@@ -35,7 +35,7 @@ export function createGameStore(db, uid, dependencies={}) {
       bonus:['action','requestId'],recharge:['action','requestId','source'],settings:['action','requestId','settings','analyticsConsent']};
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
-    if(data.slotVersion!==undefined&&(![2,3,4].includes(data.slotVersion)||data.action!=='spin'||data.game!=='circus'||data.park!==true))fail('king-rico/invalid-argument','Versão do giro inválida.');
+    if(data.slotVersion!==undefined&&(![2,3,4,5].includes(data.slotVersion)||data.action!=='spin'||data.game!=='circus'||data.park!==true))fail('king-rico/invalid-argument','Versão do giro inválida.');
     if(data.park!==undefined&&data.park!==true)fail('king-rico/invalid-argument','Entrada inválida.');
     if(['parkBonus','parkBonusClose'].includes(data.action)&&!requestIdPattern.test(data.wheelId||''))fail('king-rico/invalid-argument','Roleta inválida.');
     if(data.action==='recharge' && data.source!==undefined && data.source!=='home')fail('king-rico/invalid-argument','Origem de recarga inválida.');
@@ -111,7 +111,7 @@ export function createGameStore(db, uid, dependencies={}) {
       if (data.action==='bootstrap' && !isNew) return {player:publicPlayer(p),...parkResult(),isNew:false};
       if(data.action==='parkEntry'){result=parkEngine.entry(p,park,data.game,data.method);parkDirty=true;
       }else if(data.action==='parkBonus'){winUnits=parkEngine.bonus(park,data.wheelId,rng);p.balanceUnits+=winUnits;result={wheel:structuredClone(park.wheel)};parkDirty=true;
-      }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');park.spins=0;park.wheel=null;parkDirty=true;
+      }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');park.spins=0;park.wheel=null;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;parkDirty=true;
       }else if (data.action==='spin') {
         if (p.lastSpinAt && time-p.lastSpinAt.toMillis()<700) fail('king-rico/resource-exhausted','Aguarde antes de girar.');
         betUnits=engine.units(data.bet);
