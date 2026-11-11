@@ -1,5 +1,8 @@
 # HANDOFF
 
+## Prévia (2026-11-11 · Claude · tique real da roleta)
+- `ui/park/wheel-sound.js` agora toca um tique gravado (`assets/sfx/wheel-tick.wav`, Kenney Interface Sounds tick_002, CC0) em vez dos dois tons gerados. Velocidade muda só um pouco o tom/volume. Se o arquivo não carregar, cai no som antigo. Crédito em `assets/sfx/CREDITS.md`.
+
 ## Prévia (2026-11-11 · Claude · efeitos sonoros do Circus)
 - Só som; nada de regra, tempo, saldo ou animação mudou.
 - Novo `ui/park/circus-sfx.js` (instalado em index.js): sfxVillain (entrada de Tony/Tucker/Ray), sfxClaw + sfxCoinsLose (patadas do Tony e moedas saindo), sfxSnatch (Tucker leva a cesta), sfxSneak + sfxScurry (Ray pega e foge com os ingressos), sfxTakeoff + sfxEngine (voo da big win, motor sobe com a altitude) e sfxBank (saldo recebendo no fim do voo).
