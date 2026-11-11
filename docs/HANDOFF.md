@@ -1,5 +1,13 @@
 # HANDOFF
 
+## Prévia (2026-11-11 · Antigravity · fundo das patadas do Tony alaranjado/avermelhado)
+
+- Pedido do dono: trocar o véu esbranquiçado (`#eef5ff5c`) que aparece atrás das três patadas do Tony Tiger por um tom alaranjado/avermelhado.
+- Alterado `.park-tony-veil` em `ui/park/park.css` de `#eef5ff5c` para `#ff4a2066` (`rgba(255, 74, 32, 0.4)`), preservando `backdrop-filter: blur(4px)`, máscara, posição abaixo do mostrador do prêmio e contraste com os cortes pretos (`#101018`).
+- `tests/tony_browser.py` atualizado e aprovado nos modos normal (`390 px`) e movimento reduzido (`320 px`), conferindo `rgba(255, 74, 32, 0.4)` e capturas em `work/preview-tony-hit-*.png`.
+- Com o GitHub conectado, configurado `build_type: workflow` em `/repos/Ric-lab/King-Rico/pages` e liberada a branch `codex/penalty-clown-preview` na política do ambiente `github-pages` para destravar o workflow `preview-pages.yml`.
+- Próximo passo: dono testar na prévia com `?demo=tony` (primeiro giro cai no Tony Tiger) e aprovar antes de levar à `main`.
+
 ## Recuperação da prévia no GitHub Pages — em implantação
 
 - Tentativa REAL enviada no merge c702acb (preservou o ajuste de áudio fbe911d do Claude). Workflow https://github.com/Ric-lab/King-Rico/actions/runs/43118758132 falhou na configuração do Pages, ANTES de build/deploy: HTTP 403 do GitHub. Não há novo link publicado. Código e navegador local do subdiretório passaram; não é uma falha do jogo nem uma nova cobrança.
