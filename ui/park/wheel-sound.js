@@ -18,6 +18,7 @@ export function createWheelSound(fc,rotor,segments){
    if(changed&&!document.hidden&&now-lastTick>=35&&fc.state.sound&&(fc.state.sfxLvl??2)>0){
     lastTick=now;const speed=Math.min(1,Math.abs(delta)*1000/dt/900);
     // Same short wooden click used by Fortune Wheel, through Circus's volume bus.
+    fc._wheelTicks=(fc._wheelTicks||0)+1;
     if(!playTick(fc,speed)){fc.tone(620+speed*420,.026,'triangle',.075);fc.tone(170+speed*90,.018,'sine',.055);}
    }
    lastTime=now;

@@ -11,7 +11,7 @@ with sync_playwright() as p:
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.goto(BASE+'/circus?demo=tony');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  page.evaluate('''()=>{window.tonyQA=[];const ss=__fc.setState.bind(__fc);__fc.setState=(s,...a)=>{if(__fc._tonyPlaying&&s&&typeof s==='object'&&'balance'in s)tonyQA.push({at:performance.now(),balance:s.balance});return ss(s,...a)};window.soundQA=[];const burst=__fc.burst.bind(__fc);__fc.burst=(...a)=>{if(__fc._tonyPlaying)soundQA.push(performance.now());return burst(...a)};}''')
+  page.evaluate('''()=>{window.tonyQA=[];const ss=__fc.setState.bind(__fc);__fc.setState=(s,...a)=>{if(__fc._tonyPlaying&&s&&typeof s==='object'&&'balance'in s)tonyQA.push({at:performance.now(),balance:s.balance});return ss(s,...a)};window.soundQA=[];const claw=__fc.sfxClaw.bind(__fc);__fc.sfxClaw=(...a)=>{if(__fc._tonyPlaying)soundQA.push(performance.now());return claw(...a)};}''')
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-tony-scene').wait_for(timeout=15000)
   page.wait_for_function('document.querySelector(".park-tony-scene")?.dataset.hit==="1"')
