@@ -28,3 +28,12 @@ test('publication result accepts only this isolated project preview URL',async()
   assert.equal((await run('https://'+project+'--previa-abc.web.app')).status,0);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('full browser suite runs locally before deploy, keeping Firebase transfer for human previews',async()=>{
+ const workflow=await readFile('.github/workflows/preview-channel.yml','utf8');
+ const browser=workflow.indexOf('python3 scripts/test-preview-browsers.py');
+ const deploy=workflow.indexOf('firebase hosting:channel:deploy');
+ assert.ok(browser>=0&&browser<deploy,'Full browser validation must gate publication locally');
+ assert.ok(!workflow.includes('KING_RICO_TEST_URL:'),'Do not point all browser contexts at Firebase');
+ assert.ok(workflow.includes("method: 'HEAD'"),'Remote route checks must not download the assets again');
+});

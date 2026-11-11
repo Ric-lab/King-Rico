@@ -1,5 +1,15 @@
 # HANDOFF
 
+## Limite de transferência da prévia — 11/11/2026
+
+- O dono recebeu aviso de 10/10 GB de download mensal no projeto Spark **king-rico-previa-1408805633**, separado de **king-rico** (oficial). O oficial respondeu HTTP 200 em verificação HEAD; não foi modificado nem recebeu plano pago.
+- O workflow executava todos os 12 navegadores DEPOIS do deploy, com `KING_RICO_TEST_URL` apontando para o Firebase. Cada novo contexto recarrega assets, consumindo transferência repetidamente. Esse fluxo contribuiu para o consumo; não temos a divisão completa da fatura por origem e não atribuímos todo o tráfego aos testes.
+- Correção: a MESMA suíte completa agora roda ANTES da autenticação/deploy, com `dist/` servido no próprio runner. Após publicar, somente seis requisições HEAD verificam rotas, cliente, runtime/Three e imagem; não baixam os corpos dos assets. Nenhum teste foi retirado. Produção e publicador REST inalterados.
+- Verificação proporcional: build de prévia; teste de navegador `circus_columns_browser.py` contra servidor local passou, sem erros JS/assets. Medição local sem compressão: 150 respostas, 15.537.852 bytes (~15,54 MB) nesse único teste; isso NÃO é o valor faturado pelo CDN. YAML validado, isolamento e guarda de orçamento do workflow testados. Não repetir a suíte completa contra o Hosting para validar esta correção.
+- Os 10 GB já consumidos NÃO são recuperados com esse patch, novo deploy ou exclusão de releases. No Spark, o site de prévia pode ficar suspenso até renovar a franquia. Não criar projetos Firebase descartáveis para contornar o limite e não ativar Blaze sem decisão expressa do dono.
+- Entrega de fontes com `[skip ci]` para não disparar outra publicação durante o incidente. Correção do workflow sincronizada nas branches main/prévia sem promover os ajustes de áudio do Claude ao oficial. Prévia hospedada NÃO foi reativada por este checkpoint.
+- Próximo passo: dono decide aguardar a renovação ou conectar uma hospedagem estática gratuita para a prévia (por exemplo, Cloudflare Pages). Se usar Pages: branch `codex/penalty-clown-preview`, build `npm run build:preview`, saída `dist`, Node conforme `.nvmrc`; carteira fictícia, sem credenciais Firebase de produção. Confirmar limites atuais do plano e validar o novo endereço antes de anunciá-lo. Oficial continua https://king-rico.web.app.
+
 ## Publicação oficial autorizada e concluída — Circus v5
 
 - O dono autorizou publicar a prévia aprovada. Código publicado: `b394d9f3346f9871c542ec17784d8a59ad71e37d`, tag `circus-economia-v5-90-20261111`; mesma revisão validada na prévia.

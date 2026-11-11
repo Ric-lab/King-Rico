@@ -1,3 +1,22 @@
+## Transferência Spark: testes locais obrigatórios
+
+A franquia mensal do projeto de prévia atingiu 10/10 GB (aviso recebido em
+11/11/2026). Isso é separado do projeto oficial king-rico. O fluxo anterior
+baixava o jogo do Firebase para cada contexto dos 12 navegadores automatizados.
+
+O workflow agora executa a suíte completa sobre `dist/` no runner do GitHub,
+**antes** de publicar. Não definir `KING_RICO_TEST_URL` com o canal público para
+a suíte completa. Depois do deploy, somente HEAD de rotas e arquivos confirma
+a disponibilidade sem baixar os assets. Não retirar testes para economizar GB.
+
+O patch não restaura a cota consumida. Excluir versões libera armazenamento,
+não transferência do mês. Um checkpoint `[skip ci]` não reativa o canal público.
+Para um link antes da renovação, é preciso outra hospedagem ou uma mudança de
+plano expressamente autorizada; manter produção no Spark. Ver HANDOFF para o
+estado do incidente e o próximo passo.
+
+---
+
 # Circus: entrega completa da prévia
 
 Atualizado em 09/11/2026. Branch de trabalho: `codex/penalty-clown-preview`.

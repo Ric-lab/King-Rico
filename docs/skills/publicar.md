@@ -9,7 +9,7 @@
 - Segredos (tokens, contas de serviço) nunca entram no Git.
 
 - Prévias: testes locais focados na mudança, um build de prévia e um de produção após integração quando exigido; um commit com HANDOFF, sem segundo commit só para copiar status do Actions. Conferir Actions com resumo curto, sem despejar payloads nem repetir diagnóstico.
-- Quando houver publicação, o workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`); logs separados e screenshots preservados. Não retirar testes para acelerar.
+- Quando houver publicação, o workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`) contra `dist/` servido localmente no runner, ANTES do deploy; logs separados e screenshots preservados. No Firebase, só checagens HEAD leves de rotas/assets. Não retirar testes nem apontar a suíte completa para o Hosting: cada contexto baixa os assets novamente e consome a franquia Spark.
 
 ## Iterações pequenas
 
