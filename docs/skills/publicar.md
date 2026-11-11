@@ -1,7 +1,7 @@
 # Commit, prévia, publicação
 
 - `main` publica sozinha no site oficial depois de passar nos testes (workflow "Publicar King Rico no Firebase"). Teste falhou = nada vai ao ar.
-- Prévia compartilhada: branch `codex/penalty-clown-preview` → canal de prévia isolado (ver docs/PREVIA-CIRCUS.md). Nunca usar a conta de produção para a prévia.
+- Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages em implantação após a cota Firebase esgotar (ver docs/PREVIA-CIRCUS.md e HANDOFF para estado/URL reais). Canal Firebase permanece opção manual. Nunca usar a carteira de produção para a prévia.
 - Commit: mensagem em português dizendo o que mudou. Confirmar ao dono com o hash curto.
 - Quando o push dispara uma publicação: conferir o resultado no Actions; se falhar, ler o log e corrigir antes de declarar a publicação concluída. Checkpoints `[skip ci]` não exigem aguardar workflow.
 - Ao parar: atualizar docs/HANDOFF.md com "feito" e "próximo passo".

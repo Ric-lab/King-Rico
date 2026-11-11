@@ -1,7 +1,5 @@
-name: Prévia compartilhada do Circus
+name: Prévia Firebase (manual)
 on:
-  push:
-    branches: ['codex/**']
   workflow_dispatch:
 permissions:
   contents: read

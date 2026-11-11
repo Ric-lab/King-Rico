@@ -1,5 +1,15 @@
 # HANDOFF
 
+## Recuperação da prévia no GitHub Pages — em implantação
+
+- Após esgotar a franquia Firebase, o dono pediu uma prévia utilizável imediatamente. Preparado GitHub Pages no MESMO repositório, sem nova conta e sem alterar produção/Firestore.
+- Novo workflow `preview-pages.yml`: publica somente a branch de integração `codex/penalty-clown-preview`; usa configuração/artefatos/implantação Pages oficiais. A suíte completa continua no runner antes de publicar. Nenhum navegador completo usa Firebase ou Pages público; pós-deploy só HEAD.
+- O workflow tenta configurar o Pages existente como Actions usando apenas `GITHUB_TOKEN` com `pages:write`. Domínio próprio existente bloqueia a substituição. Se o GitHub negar configuração/permissão de ambiente, informar o erro real e pedir ao dono o ajuste exato em Settings > Pages / Environments; não contornar proteção nem pedir token em chat.
+- Firebase preview mudou para execução MANUAL nesta branch para evitar outra publicação no projeto com cota esgotada. Workflow de produção e seu publicador REST não foram alterados.
+- `build:preview -- --base=/King-Rico` adapta SOMENTE os URLs dos arquivos gerados. Não altera produção, separadores `/`, URLs externas ou `/api/play` (API fictícia interceptada no navegador). O build de prévia sem --base mantém o comportamento anterior.
+- Verificação local concluída: unitários de base path e isolamento passaram; navegador sob /King-Rico abriu Circus/parque/Penalty/Flying/Bounce/Fingo, girou com moedas de teste, repetiu requisição sem novo débito, recarregou preservando saldo e navegou pelos controles. Zero assets ausentes, erros JS ou requisições escapando do subdiretório. Não houve acesso à carteira real. Captura work/preview-pages-park.png.
+- Próximo passo: conferir workflow Pages; fornecer somente a URL confirmada pelo deploy e pelas checagens HEAD. Não anunciar o endereço como pronto se a configuração ou implantação falhar. A prévia Firebase continua sujeita à cota mensal; a mudança não restaura seus GB.
+
 ## Limite de transferência da prévia — 11/11/2026
 
 - O dono recebeu aviso de 10/10 GB de download mensal no projeto Spark **king-rico-previa-1408805633**, separado de **king-rico** (oficial). O oficial respondeu HTTP 200 em verificação HEAD; não foi modificado nem recebeu plano pago.

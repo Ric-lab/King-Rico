@@ -1,3 +1,23 @@
+## Recuperação: prévia no GitHub Pages
+
+Workflow novo: `.github/workflows/preview-pages.yml`, branch compartilhada
+`codex/penalty-clown-preview`. O endereço será o `page_url` confirmado pelo
+GitHub Actions; não confundir preparação com deploy concluído.
+
+O build continua sendo a carteira fictícia, sem login/saldo de produção.
+No Pages, os URLs gerados recebem o `base_path` do projeto (normalmente
+`/King-Rico`). Comando local: `npm run build:preview -- --base=/King-Rico`.
+A suíte completa roda no runner; um teste adicional cobre caminhos, assets,
+entrada nas atrações, giro, replay e recarga sob o subdiretório.
+
+Firebase preview fica manual nesta branch. O projeto oficial `king-rico` e
+seu workflow continuam independentes. Se o Pages negar configuração, o dono
+pode precisar selecionar **Settings → Pages → Source → GitHub Actions** e
+permitir a branch de integração no ambiente `github-pages`. Respeitar eventuais
+restrições existentes; não anunciar disponibilidade antes do sucesso real.
+
+---
+
 ## Transferência Spark: testes locais obrigatórios
 
 A franquia mensal do projeto de prévia atingiu 10/10 GB (aviso recebido em
