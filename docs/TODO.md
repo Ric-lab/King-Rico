@@ -7,7 +7,6 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - [ ] Confirmar que a prévia engatilhada (dd789c1) mostra o Tucker no 1º giro sem ?demo
 - [ ] Música de fundo no mesmo ritmo da abertura do Bingo Plinko (repo Ric-lab/Bingo-Plinko-Lucky-Machine), sem letra, só em alguns momentos
 - [ ] Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin
-- [ ] Sfx na raspadinha
 - [ ] Tirar ingressos e atrações; no lugar: decidir entre minigames rápidos ou cedro mágico (defesa contra trinca de vilões)
 - [ ] Publicar no site os sons novos, depois que o dono aprovar na prévia
 
@@ -15,6 +14,7 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Sfx da raspadinha: raspar cada casa, abrir casa (plim no prêmio, toque grave no ×), 3 iguais (fanfarra) + prêmio aparecendo, botão (mesmo do spin), moedas subindo ao fechar — prévia (abre sozinha ao carregar)
 - [x] Tony Tiger: efeito alaranjado/avermelhado na tela toda durante as patadas (prévia)
 - [x] Roleta: sfx na parada mostrando o valor (fanfarra, grande em ×5/×10) + sfx da ficha batendo no prêmio (baque + plim) — prévia
 - [x] Roleta: moedas voavam 2× (economia v5 = prizeVersion 4 não adiava o voo do giro); agora só o voo final — prévia

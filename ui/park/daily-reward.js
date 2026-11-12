@@ -14,6 +14,18 @@ export function scratchGrid(random=Math.random) {
  return cells;
 }
 
+// Sons da raspadinha (mesmo bus/volume do Circus): raspar, abrir casa, 3 iguais, botão, moedas subindo.
+const S=(fn)=>{try{const fc=window.__fc;if(fc)fn(fc);}catch{}};
+let scratchT=0;
+const sfx={
+ scratch:()=>{const n=performance.now();if(n-scratchT<55)return;scratchT=n;S(fc=>fc.burst(2400+Math.random()*1600,1.3,.022,.05));},
+ cell:win=>S(fc=>win?(fc.bell(1175,.28,.07),fc.bell(1568,.22,.045,.05)):fc.pluck(392,.05,.14)),
+ three:()=>S(fc=>fc.sfxWin(false)),
+ prize:()=>S(fc=>[784,988,1319].forEach((f,i)=>fc.bell(f,.5,.08,i*.06))),
+ button:()=>S(fc=>fc.sfxClick()),
+ coins:()=>S(fc=>fc.sfxCoins())
+};
+
 export async function openDailyReward(Cloud) {
  await Cloud.ready;
  if(!Cloud.player||Cloud.dailyRewardActive)return;
@@ -56,7 +68,7 @@ export async function openDailyReward(Cloud) {
   function trap(e){if(e.key==='Tab'){e.preventDefault();button.focus();}if(e.key==='Escape')e.preventDefault();}
   document.addEventListener('keydown',trap);button.focus({preventScroll:true});
   async function reveal(){
-   if(revealed)return;revealed=true;last=null;cells.forEach(revealCell);
+   if(revealed)return;revealed=true;last=null;cells.forEach(c=>revealCell(c,true));sfx.three();
    overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';status.textContent='3 prêmios iguais!';
    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
    const space=overlay.querySelector('.park-daily-reveal-space'),summary=overlay.querySelector('.park-daily-summary'),r=grid.getBoundingClientRect();space.style.height=r.height+'px';
@@ -65,7 +77,7 @@ export async function openDailyReward(Cloud) {
     const animations=cells.map((cell,i)=>{const c=cell.getBoundingClientRect();return cell.animate([{transform:'none',opacity:1},{transform:`translate(${r.x+r.width/2-c.x-c.width/2}px,${r.y+r.height/2-c.y-c.height/2}px) scale(.25)`,opacity:0}],{duration:reduced?120:480,delay:reduced?0:i*24,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished;});
     await Promise.race([Promise.allSettled(animations),new Promise(resolve=>setTimeout(resolve,900))]);
    }catch{/* A missing animation still reveals the saved gift. */}
-   if(finished)return;grid.hidden=true;summary.hidden=false;overlay.dataset.phase='prize';
+   if(finished)return;grid.hidden=true;summary.hidden=false;overlay.dataset.phase='prize';sfx.prize();
    overlay.querySelector('.park-daily-instruction').textContent='Seu presente está aqui!';
    try{summary.animate([{transform:'translateY(18px) scale(.75)',opacity:0},{transform:'translateY(-4px) scale(1.04)',opacity:1,offset:.7},{transform:'none',opacity:1}],{duration:reduced?160:600,easing:'cubic-bezier(.2,.7,.25,1)'});}catch{}
    status.textContent=`Você ganhou ${gift.amount.toLocaleString('pt-BR')} moedas`;button.textContent='PEGAR MOEDAS';button.disabled=false;
@@ -73,14 +85,14 @@ export async function openDailyReward(Cloud) {
   // A large reveal button offers the same result to keyboard users and anyone
   // who finds scratching difficult; no amount is drawn or decided by the canvas.
   button.onclick=async()=>{
-   if(!revealed){reveal();return;}if(busy)return;busy=true;button.disabled=true;button.textContent='CONFIRMANDO…';status.textContent='';
-   try{await Cloud.bonus();close();}catch(error){
+   sfx.button();if(!revealed){reveal();return;}if(busy)return;busy=true;button.disabled=true;button.textContent='CONFIRMANDO…';status.textContent='';
+   try{await Cloud.bonus();sfx.coins();close();}catch(error){
     status.textContent='Não foi possível confirmar. Toque para tentar de novo.';
     button.disabled=false;button.textContent='PEGAR MOEDAS';Cloud.error(error);
    }finally{busy=false;}
   };
-  function revealCell(cell){
-   cell.classList.add('is-revealed');cell.querySelector('canvas').hidden=true;
+  function revealCell(cell,quiet){
+   if(!quiet&&!cell.classList.contains('is-revealed'))sfx.cell(cell.dataset.prize==='true');cell.classList.add('is-revealed');cell.querySelector('canvas').hidden=true;
    const result=cell.querySelector('.park-daily-result');result.removeAttribute('aria-hidden');
    result.setAttribute('aria-label',cell.dataset.prize==='true'?`${gift.amount.toLocaleString('pt-BR')} moedas`:'X, sem prêmio nesta casa');
   }
@@ -101,7 +113,7 @@ export async function openDailyReward(Cloud) {
      const r=canvas.getBoundingClientRect(),radius=r.width*.16;
      if(Math.max(last.x,point.x)<r.left-radius||Math.min(last.x,point.x)>r.right+radius||Math.max(last.y,point.y)<r.top-radius||Math.min(last.y,point.y)>r.bottom+radius)continue;
      const local=p=>({x:(p.x-r.x)*180/r.width,y:(p.y-r.y)*180/r.height}),from=local(last),to=local(point);
-     ctx.globalCompositeOperation='destination-out';ctx.lineWidth=56;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
+     sfx.scratch();ctx.globalCompositeOperation='destination-out';ctx.lineWidth=56;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
      const data=ctx.getImageData(0,0,180,180).data;let clear=0,total=0;
      for(let i=3;i<data.length;i+=64){total++;if(data[i]<128)clear++;}
      if(clear/total>=.36)revealCell(cell);
