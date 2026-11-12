@@ -22,7 +22,12 @@ export function installCircusSfx(fc){
  });
  // Tony: patada (zás + 3 unhas + pancada) e moedas saindo do saldo (cada vez mais grave).
  // Patada: zuum de ar cortado (sobe e desce), sem moedas — moedas só no CONTINUAR.
-fc.sfxClaw=play(3.4,n=>{const d=.34;hiss(380,1.2,.5,d*.55,0,'bandpass',2800);hiss(2800,1.2,.5,d*.5,d*.45,'bandpass',360);hiss(240,.7,.28,d,0,'lowpass',1000);sweep(170-n*10,48,.22,'sine',.5,d*.85);hiss(160,.8,.35,.12,d*.85,'lowpass',90);});
+// Patada: UM som contínuo — um só chiado que desce (zuum) e um grave que desce junto, mesmo envelope.
+ fc.sfxClaw=play(3.4,n=>{const ac=fc.ac(),out=fc.out(),t=ac.currentTime,d=.3;
+  const src=ac.createBufferSource();src.buffer=fc.noise(ac);const f=ac.createBiquadFilter();f.type='bandpass';f.Q.value=1.1;f.frequency.setValueAtTime(3200,t);f.frequency.exponentialRampToValueAtTime(260,t+d);
+  const o=ac.createOscillator();o.type='sine';o.frequency.setValueAtTime(220-n*10,t);o.frequency.exponentialRampToValueAtTime(50,t+d);
+  const g=ac.createGain(),go=ac.createGain();for(const [x,v] of [[g,.55*K],[go,.4*K]]){x.gain.setValueAtTime(.0001,t);x.gain.exponentialRampToValueAtTime(v,t+d*.55);x.gain.exponentialRampToValueAtTime(.0001,t+d);}
+  src.connect(f);f.connect(g);g.connect(out);o.connect(go);go.connect(out);src.start(t);src.stop(t+d+.02);o.start(t);o.stop(t+d+.02);});
  fc.sfxCoinsLose=play(2.2,n=>{for(let i=0;i<7;i++)B(1400-i*120-n*60,.16,.04,.14+i*.06+Math.random()*.03);hiss(900,.6,.035,.35,.2,'lowpass');});
  // Tucker: duas batidas de asa (tec… tec) e sobe levando a cesta.
  fc.sfxSnatch=play(3.4,()=>{[0,.4].forEach(o=>{for(let i=0;i<4;i++)hiss(700,1.4,.08,.07,o+i*.09);});sweep(900,1800,.25,'triangle',.05,.05);hiss(500,.7,.045,.35,.1,'bandpass',1600);});
