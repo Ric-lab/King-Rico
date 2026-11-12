@@ -20,7 +20,7 @@ with sync_playwright() as p:
    assert page.evaluate('KingRicoCloud.uid')=='park-preview','Only the fictitious preview wallet is allowed'
    assert page.locator('script[src*="ui/park/client.js"]').count()==0,'Duplicate native UI controller'
    collect_daily(page)
-  page.goto(BASE+'/circus');ready()
+  page.goto(BASE+'/circus?demo=off');ready()
   rim=page.locator('.park-spin-iridescence')
   assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
   assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-gold-contour-v1.svg')

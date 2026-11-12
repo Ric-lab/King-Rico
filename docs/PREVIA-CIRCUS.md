@@ -1,3 +1,26 @@
+# Prévia padrão: GitHub Pages
+
+**Abra:** https://ric-lab.github.io/King-Rico/circus/
+
+Decisão do dono: usar SEMPRE esse host nos links de teste. O site oficial segue
+https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fictícias.
+
+- Demonstração da última mudança: endereço acima, com o primeiro giro engatilhado.
+- Jogo normal: https://ric-lab.github.io/King-Rico/circus/?demo=off
+- Eventos específicos: `?demo=tony`, `?demo=tucker`, `?demo=ray`,
+  `?demo=bigwin` e `?demo=spacewin`.
+- Atualização: push na branch `codex/penalty-clown-preview` → workflow
+  **Prévia no GitHub Pages** (`preview-pages.yml`). Só anunciar a revisão após sucesso.
+- Os testes que verificam giros naturais precisam de `?demo=off`; não remover
+  a demonstração padrão para fazê-los passar. Regressões completas ficam locais
+  ao runner; no host público, apenas HEAD.
+- O canal Firebase é legado/manual. Os endereços abaixo são histórico da migração;
+  não devem ser usados como links atuais para o dono.
+
+---
+
+## Histórico da migração e do canal anterior
+
 ## Recuperação: prévia no GitHub Pages
 
 Workflow novo: `.github/workflows/preview-pages.yml`, branch compartilhada
@@ -117,7 +140,7 @@ nativas usam os emuladores; a prévia visual não comprova login real.
 Enviar commits para esta branch não publica o site. O workflow de Hosting
 publica ao atualizar `main`; não mesclar sem autorização para publicação.
 
-## Prévia online
+## Canal Firebase anterior — histórico/manual
 
 **Abra:** https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
 

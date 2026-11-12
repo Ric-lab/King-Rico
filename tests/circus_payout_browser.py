@@ -8,7 +8,7 @@ LINES=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]]
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox'])
  page=b.new_page(viewport={'width':390,'height':844});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
- page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
+ page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
  page.evaluate('''()=>{
   const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin'||!window.winDraws)return fetch(u,o);const draws=window.winDraws;window.winDraws=null;let i=0;const random=Math.random;Math.random=()=>draws[i++]??.99;try{return await fetch(u,o)}finally{Math.random=random}};
   window.coinQA={frames:0,painted:false,invalid:0};const create=__fc.coinCanvas.bind(__fc);__fc._cf=null;

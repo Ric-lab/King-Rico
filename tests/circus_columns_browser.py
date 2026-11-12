@@ -10,7 +10,7 @@ with sync_playwright() as p:
  page=b.new_page(viewport={'width':390,'height':844});errors=[];missing=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
- page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
+ page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")')
  assert page.evaluate('KingRicoCloud.uid')=='park-preview'
  collect_daily(page)
  page.evaluate('''()=>{

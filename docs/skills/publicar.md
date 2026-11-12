@@ -1,7 +1,7 @@
 # Commit, prévia, publicação
 
 - `main` publica sozinha no site oficial depois de passar nos testes (workflow "Publicar King Rico no Firebase"). Teste falhou = nada vai ao ar.
-- Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages em implantação após a cota Firebase esgotar (ver docs/PREVIA-CIRCUS.md e HANDOFF para estado/URL reais). Canal Firebase permanece opção manual. Nunca usar a carteira de produção para a prévia.
+- Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages: https://ric-lab.github.io/King-Rico/circus/ (workflow `preview-pages.yml`). Sempre entregar links de teste nesse endereço. Não usar o canal Firebase como alternativa automática; ele é apenas legado/manual. Nunca usar a carteira de produção para a prévia.
 - Commit: mensagem em português dizendo o que mudou. Confirmar ao dono com o hash curto.
 - Quando o push dispara uma publicação: conferir o resultado no Actions; se falhar, ler o log e corrigir antes de declarar a publicação concluída. Checkpoints `[skip ci]` não exigem aguardar workflow.
 - Ao parar: atualizar docs/HANDOFF.md com "feito" e "próximo passo".
@@ -9,7 +9,7 @@
 - Segredos (tokens, contas de serviço) nunca entram no Git.
 
 - Prévias: testes locais focados na mudança, um build de prévia e um de produção após integração quando exigido; um commit com HANDOFF, sem segundo commit só para copiar status do Actions. Conferir Actions com resumo curto, sem despejar payloads nem repetir diagnóstico.
-- Quando houver publicação, o workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`) contra `dist/` servido localmente no runner, ANTES do deploy; logs separados e screenshots preservados. No Firebase, só checagens HEAD leves de rotas/assets. Não retirar testes nem apontar a suíte completa para o Hosting: cada contexto baixa os assets novamente e consome a franquia Spark.
+- Quando houver publicação, o workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`) contra `dist/` servido localmente no runner, ANTES do deploy; logs separados e screenshots preservados. No host público, só checagens HEAD leves de rotas/assets. Não retirar testes nem apontar a suíte completa para o Hosting: cada contexto baixa os assets novamente e consome a franquia Spark.
 
 ## Iterações pequenas
 

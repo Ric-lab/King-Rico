@@ -1,5 +1,13 @@
 # HANDOFF
 
+## Prévia padrão fixada no GitHub Pages — decisão do dono
+
+- Link de teste SEMPRE: **https://ric-lab.github.io/King-Rico/circus/**. Jogo normal com `?demo=off`; exemplos engatilhados com `?demo=tony/tucker/ray/bigwin/spacewin`. Oficial continua https://king-rico.web.app. Não substituir o link de teste por Firebase quando o Pages falhar.
+- Pages está configurado e já publicou de verdade: workflow 43121737708, commit 32086d4, build/deploy e cinco HEAD aprovados. O Antigravity destravou a configuração Pages e a branch no ambiente; o bloqueio HTTP 403 anterior está resolvido.
+- Último commit dd789c1 não chegou ao host: workflow 43123394485 reprovou preview_motion/circus_columns/circus_payout porque o novo DEFAULT_DEMO=tucker interferia nos cenários naturais. Corrigidos somente os URLs desses testes e do smoke do subdiretório para `?demo=off`; demonstração padrão do dono preservada.
+- README, guia de prévia, fluxo entre agentes e skills apontam ao Pages. Infra Pages e política também sincronizadas à main sem levar mudanças visuais/áudio ainda em avaliação ao oficial; checkpoint de main usa `[skip ci]`.
+- Próximo passo: conferir o workflow Pages desta correção, entregar o link confirmado e manter essa política em toda próxima mudança. Não anunciar uma revisão cujo workflow falhou.
+
 ## Prévia (2026-11-11 · Antigravity · fundo das patadas do Tony alaranjado/avermelhado)
 
 - Pedido do dono: trocar o véu esbranquiçado (`#eef5ff5c`) que aparece atrás das três patadas do Tony Tiger por um tom alaranjado/avermelhado.
@@ -8,7 +16,7 @@
 - Com o GitHub conectado, configurado `build_type: workflow` em `/repos/Ric-lab/King-Rico/pages` e liberada a branch `codex/penalty-clown-preview` na política do ambiente `github-pages` para destravar o workflow `preview-pages.yml`.
 - Próximo passo: dono testar na prévia com `?demo=tony` (primeiro giro cai no Tony Tiger) e aprovar antes de levar à `main`.
 
-## Recuperação da prévia no GitHub Pages — em implantação
+## Histórico: recuperação inicial do Pages (bloqueio já resolvido)
 
 - Tentativa REAL enviada no merge c702acb (preservou o ajuste de áudio fbe911d do Claude). Workflow https://github.com/Ric-lab/King-Rico/actions/runs/43118758132 falhou na configuração do Pages, ANTES de build/deploy: HTTP 403 do GitHub. Não há novo link publicado. Código e navegador local do subdiretório passaram; não é uma falha do jogo nem uma nova cobrança.
 - Bloqueio concreto: a credencial GITHUB_TOKEN não pode alterar a fonte do Pages existente. Solicitado ao dono abrir https://github.com/Ric-lab/King-Rico/settings/pages e selecionar Build and deployment > Source > GitHub Actions. Quando confirmar, repetir os jobs falhos do workflow 43118758132 e acompanhar até publicação e checagens HEAD aprovadas. Se ambiente github-pages negar a branch, informar a restrição real ao dono, sem contorná-la.

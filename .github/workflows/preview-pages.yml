@@ -109,5 +109,6 @@ jobs:
           }
           JS
           echo "### Prévia compartilhada" >> "$GITHUB_STEP_SUMMARY"
-          echo "$PREVIEW_URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "${PREVIEW_URL%/}/circus/" >> "$GITHUB_STEP_SUMMARY"
+          echo "Jogo normal: ${PREVIEW_URL%/}/circus/?demo=off" >> "$GITHUB_STEP_SUMMARY"
           echo "Moedas fictícias; Firebase de produção e site oficial inalterados." >> "$GITHUB_STEP_SUMMARY"

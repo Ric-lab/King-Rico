@@ -1,3 +1,7 @@
+> A prévia padrão agora é **https://ric-lab.github.io/King-Rico/circus/**.
+> Este documento trata somente da autenticação do canal Firebase legado/manual.
+> Não enviar seu endereço Firebase como link atual de teste.
+
 # Prévia isolada provisionada — 03/11/2026
 
 O proprietário autorizou e provisionou um projeto Firebase separado no Spark.

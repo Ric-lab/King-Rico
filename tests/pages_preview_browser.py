@@ -30,7 +30,7 @@ with sync_playwright() as p:
   u=urlsplit(r.url)
   if u.netloc==urlsplit(base).netloc and not u.path.startswith(prefix+'/'):escaped.append(r.url)
  page.on('request',request)
- page.goto(base+'/circus');collect_daily(page)
+ page.goto(base+'/circus?demo=off');collect_daily(page)
  page.wait_for_function('window.__fc?._parkHook&&!__fc.cloudBusy()&&!__fc.state.balPending')
  assert page.evaluate('KingRicoCloud.uid')=='park-preview'
  assert page.evaluate('KING_RICO_FIREBASE.enabled')==False
