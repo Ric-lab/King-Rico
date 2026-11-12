@@ -1,5 +1,13 @@
 # HANDOFF
 
+## Em andamento: Circus v6, cedros e arquivamento das atrações
+
+- Codex assumiu a implementação pedida pelo dono sobre f23d8d7. Escopo/arquivos e checklist em docs/TODO.md; evitar edição paralela dos mesmos módulos. Sons/patada/raspadinha da prévia foram testados e aprovados pelo dono; preservar.
+- Nova tabela: ingresso .4, circo .8, capa 1.2, moeda 2.5, diamante 5, coroa 10. Retirar ingresso como recurso/entrada e arquivar atrações, preservando código/assets e recibos antigos.
+- Confirmações posteriores: 1 cedro defende UMA ocorrência de qualquer vilão, inclusive Ray; estoque até 5, trinca dá 1. Controle de videogame é somente asset reservado, sem sorteio por enquanto. Não inventar minigame nem valor futuro do controle no RTP.
+- Economia nova será versionada, auditada perto de 90% e testada em carteira/regras/navegador antes da prévia. Não publicar no oficial nesta etapa; usar Pages para o dono avaliar. Não atribuir valor de 25 moedas ao ingresso pagante nem migrar ingressos antigos para cedros.
+- Próximo passo: implementar perfil/motor v6 e persistência de defesa, adaptar UI/catálogo, auditar e validar. Este checkpoint é registro de coordenação, não atualização da prévia.
+
 ## Regra permanente do dono: equipe com conhecimento compartilhado
 
 - Claude, Gemini/Antigravity e Codex têm a mesma hierarquia, autonomia e responsabilidade; o dono decide a direção/aprovação. Nenhum agente é chefe dos outros.

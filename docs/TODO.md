@@ -3,8 +3,22 @@
 Uma lista só para os 3 modelos. Ninguém tem lista própria.
 Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de teste; acrescentar o que o dono pedir; nunca apagar item de outro modelo.
 
+## Em andamento — nova fase do Circus (Codex)
+
+Escopo reservado nesta tarefa: `cloud/` (perfil/motor v6/carteira), `firestore.rules`,
+`ui/park/` (símbolos, defesa e retirada do acesso às atrações), Circus, catálogo/build,
+testes e documentação da economia. Preservar sons, patadas e raspadinha aprovados.
+Claude/Gemini: consultar este registro antes de editar os mesmos módulos; regras
+compartilhadas, sem hierarquia entre agentes.
+
+- [ ] Seis pagantes: ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10.
+- [ ] Cedro: trinca dá 1, estoque até 5; gastar 1 para impedir uma ocorrência de Tony, Tucker OU Ray (confirmação atual do dono). Não converter ingressos antigos em cedros.
+- [ ] Controle de videogame: reservar asset; fora do sorteio até definir o jogo (confirmação atual do dono).
+- [ ] Ingresso deixa de ser recurso especial/entrada. Arquivar atrações e acessos, preservando fontes e assets.
+- [ ] Recalibrar/simular retorno próximo de 90%, testar regras/replay/retomada e entregar prévia Pages. Sem publicação oficial automática.
+
 ## A fazer
-- [ ] Testar na prévia: zuum mais alto, háptico nas patadas/Tucker/Ray, raspagem audível
+- [x] Dono testou e aprovou: patada nova, raspagem e moedas no fim da raspadinha — base f23d8d7 (prévia Pages).
 - [ ] Rolos da máquina — novos assets e pagamentos, NESTA ORDEM (menor → maior):
   ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10
 - [ ] Símbolos especiais além desses:
