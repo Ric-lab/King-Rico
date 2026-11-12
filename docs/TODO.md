@@ -16,6 +16,7 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Prévia oficial agora é o GitHub Pages: https://ric-lab.github.io/King-Rico/circus (Firebase da prévia estourou 10 GB/mês; workflow Firebase da prévia fica só manual)
 - [x] Sons dos vilões, big win, spin igual ao turbo, volumes equalizados (prévia)
 - [x] Som antigo da roleta gravado em arquivo (prévia)
 - [x] Tucker com duas batidas de asa (prévia)
