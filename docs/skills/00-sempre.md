@@ -18,3 +18,6 @@
 - Prévia ENGATILHADA: em prototypes/circus-preview/browser-wallet.mjs, trocar DEFAULT_DEMO para o evento da última mudança. Sem ?demo= o 1º giro de cada carregamento já mostra a mudança; ?demo=off volta ao jogo normal.
 - Se não existir atalho para o que mudou, criar um ?demo= novo no mesmo arquivo (só prévia, nunca no build oficial).
 - Esperar o workflow da prévia terminar com sucesso antes de mandar o link.
+
+## Lista de tarefas
+- Uma só, `docs/TODO.md`, dos 3 modelos (Claude, GPT/Codex, Gemini). Toda resposta ao dono mostra essa lista atualizada.

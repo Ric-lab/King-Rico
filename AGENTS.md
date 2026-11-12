@@ -90,3 +90,5 @@ links e diff, sem repetir partidas nem publicar outro build do jogo.
   persistência pertinentes. Preservar as verificações obrigatórias da publicação.
 - Reaproveitar o contexto já lido, limitar chamadas e saídas ao necessário e
   comunicar marcos úteis; evitar mensagens repetitivas só para dizer que aguarda.
+
+**Lista de tarefas única: `docs/TODO.md`** — compartilhada por Claude, GPT/Codex e Gemini. Ler antes de começar e atualizar ao parar. Nada é de um modelo só.
