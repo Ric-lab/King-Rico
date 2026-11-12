@@ -5,6 +5,24 @@
 Leia `README.md` e `docs/README.md` antes de alterar o projeto. São o ponto de
 entrada atual; `docs/historico/` contém registros antigos, não tarefas aprovadas.
 
+## Regra permanente: equipe e conhecimento compartilhado
+
+Claude, Gemini (inclusive pelo Antigravity) e Codex têm a **mesma hierarquia,
+autonomia e responsabilidade**. O dono decide a direção e aprova o produto;
+nenhum agente é chefe ou aprovador obrigatório dos demais.
+
+Antes de agir, ler também `docs/FLUXO-CLAUDE-CODEX.md`, consumir as mudanças e
+pendências dos colegas e conferir se há trabalho paralelo. Compartilhar pelo
+GitHub o código, assets, decisões, descobertas, padrões e ferramentas úteis —
+não apenas a conclusão da tarefa. Atualizar o guia pertinente e o HANDOFF no
+mesmo trabalho. Nada essencial pode ficar só na conversa, memória ou VM de um agente.
+
+Quando houver trabalho paralelo, explicitar escopo/arquivos e coordenar a divisão
+em um registro ou canal realmente compartilhado. Não sobrescrever mudanças de
+outro agente nem presumir que ele viu uma mensagem. Todos têm o dever recíproco
+de ler, contribuir, revisar e dar continuidade ao trabalho dos demais. Detalhes
+operacionais ficam no fluxo entre agentes, sem criar regras conflitantes locais.
+
 ## Fontes e limites
 
 - Páginas `.dc.html` e `site/routes.json` definem as telas publicadas. A Home

@@ -1,5 +1,12 @@
 # HANDOFF
 
+## Regra permanente do dono: equipe com conhecimento compartilhado
+
+- Claude, Gemini/Antigravity e Codex têm a mesma hierarquia, autonomia e responsabilidade; o dono decide a direção/aprovação. Nenhum agente é chefe dos outros.
+- AGENTS.md e a skill 00-sempre agora obrigam a consultar o fluxo da equipe e o trabalho dos colegas. `docs/FLUXO-CLAUDE-CODEX.md` detalha o dever RECÍPROCO de compartilhar código, assets, decisões, descobertas e ferramentas no GitHub/documentos, coordenar tarefas sobrepostas e preservar mudanças alheias.
+- Não basta prometer na conversa nem deixar algo na própria VM. Cada agente deve consumir e produzir o conhecimento compartilhado, enviar as fontes e deixar o próximo passo exato no HANDOFF. Não presumir comunicação direta ou leitura automática por outro agente.
+- Regra sincronizada em main e na branch de prévia com checkpoints somente de documentação `[skip ci]`. Nenhum build, teste de jogo ou deploy é necessário para esta alteração. Próximo passo: todos os agentes aplicarem o acordo na próxima tarefa; prévia padrão permanece GitHub Pages.
+
 ## Prévia padrão fixada no GitHub Pages — decisão do dono
 
 - Link de teste SEMPRE: **https://ric-lab.github.io/King-Rico/circus/**. Jogo normal com `?demo=off`; exemplos engatilhados com `?demo=tony/tucker/ray/bigwin/spacewin`. Oficial continua https://king-rico.web.app. Não substituir o link de teste por Firebase quando o Pages falhar.
