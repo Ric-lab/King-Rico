@@ -1,5 +1,6 @@
 // A committed debit, presented in three beats. This module never mutates the wallet.
 const HEAD='/assets/tony/head.webp';
+function adBottom(){const b=document.querySelector('.park-banner,[data-ad-banner]');if(b)return Math.max(0,b.getBoundingClientRect().bottom);if(!window.__fcAdBanner)return 0;const s=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top'))||0;return s+60;}
 export function installTony(fc){
  const image=new Image();image.src=HEAD;image.decode?.().catch(()=>{});
  const payout=fc.payout.bind(fc),busy=fc.cloudBusy.bind(fc),spin=fc.doSpin.bind(fc);
@@ -38,7 +39,8 @@ export function installTony(fc){
    fc._tonyHitValue=event.hits[n];prize?.classList.add('is-tony-loss');
    fc.setState({balance:(start-spent)/100,hint:'Tony roubou '+fc.money(spent/100)+' moedas'});
    root.querySelector('.park-tony-announcement').textContent='Tony roubou '+fc.money(event.hits[n]/100)+' moedas';
-   veil.style.opacity='1';later(()=>{veil.style.opacity='0';},1250);
+   // Tela toda, menos a faixa do anúncio no topo (quando há anúncio carregado).
+   veil.style.top=adBottom()+'px';veil.style.opacity='1';later(()=>{veil.style.opacity='0';},1250);
    wallet?.classList.add('is-tony-hit');sound(n);
    const marks=document.createElement('div');marks.className='park-tony-claws';marks.dataset.strike=String(n);
    marks.innerHTML='<svg viewBox="0 0 320 180" preserveAspectRatio="none"><g fill="#101018"><path d="M8 49 Q111 7 310 10 Q237 16 168 32 L154 29 143 36 Q62 39 8 49Z"/><path d="M0 105 Q116 55 320 62 Q244 68 182 84 L165 80 151 88 Q58 94 0 105Z"/><path d="M18 164 Q123 111 303 121 Q222 125 175 144 L158 140 149 146 Q68 150 18 164Z"/></g></svg>';root.querySelector('.park-tony-strikes').append(marks);
