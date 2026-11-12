@@ -92,7 +92,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  const originalFly=fc.coinFly.bind(fc);fc._parkOriginalFly=originalFly;
  fc.coinFly=(amount,done)=>{
   const state=window.KingRicoPark.state;
-  if(state.wheel?.prizeVersion===3&&!fc._parkCollecting){fc._parkPrizeFlight={amount,done};fc.setState({auto:false});showWheel();return;}
+  if(state.wheel?.prizeVersion>=3&&!fc._parkCollecting){fc._parkPrizeFlight={amount,done};fc.setState({auto:false});showWheel();return;}
   record(fc,'coins:start',{amount});originalFly(amount,()=>fc._parkAfterCoinFlight(done));
  };
 }

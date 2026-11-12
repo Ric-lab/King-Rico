@@ -28,6 +28,7 @@ export async function applyMultiplier(fc,w,source){
  }catch{/* The authoritative prize is already saved. */}
  finally{clearTimeout(timer);animation?.cancel();node?.remove();}
  record(fc,'multiplier:landed',{multiplier:w.result.multiplier});
+ try{fc.tone?.(150,.18,'sine',.09);[1047,1568].forEach((f,i)=>fc.bell?.(f,.3,.09,i*.05));}catch{}
  if(!reduced())try{target?.animate([{transform:'scale(1)',filter:'brightness(1)'},{transform:'scale(1.18)',filter:'brightness(1.65)',offset:.3},{transform:'scale(1)',filter:'brightness(1)'}],{duration:470,easing:'ease-out'});}catch{}
  // Count from the prize already on the machine, rather than restarting at zero.
  await new Promise(resolve=>{

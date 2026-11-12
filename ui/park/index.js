@@ -138,7 +138,7 @@ function showWheel(){
   const winner=rotor.children[w.result.index];winner?.classList.add('is-winning');
   const highlight=document.createElement('i');highlight.className='park-wheel-winner';highlight.style.background=`conic-gradient(from ${(w.result.index-.5)*seg}deg,#fff2a0aa 0deg,#ffc54a88 ${seg}deg,transparent ${seg}deg)`;rotor.append(highlight);
   machine.style.setProperty('--park-result-color',colors[w.result.index]);
-  machine.classList.add('is-won');
+  machine.classList.add('is-won');try{window.__fc?.sfxWin?.(w.result.multiplier>=5);}catch{}
   el.querySelector('.park-wheel-hub strong').textContent='×'+w.result.multiplier;
   btn.hidden=true;
   const collect=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
