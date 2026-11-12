@@ -1,3 +1,16 @@
+## Circus v6 — em integração na prévia (12/11/2026)
+
+Tabela literal e defesa aprovadas pelo dono: [PARQUE.md](PARQUE.md).
+Simulação completa: cinco milhões de giros em cada aposta 1/10/100/1000,
+retorno aproximado 89,99%; moedas base + Happeach + bônus da roleta − Tony.
+Sem conversão/valorização de ingressos antigos. Arquivos reprodutíveis:
+`node scripts/circus-v6-audit.mjs` e `docs/circus-economy-v6-audit.json`.
+Mudança de aposta no décimo giro, alternância, cultivar defesas com aposta baixa
+e teste artificial de estoque sempre cheio: um milhão cada, 88,5–91,5%.
+As versões v4/v5 também foram reexecutadas após alterar módulos compartilhados.
+Os resultados são estimativas de longo prazo, não promessa de saldo individual.
+Não liberar no oficial sem as regras Firestore e testes de persistência passarem.
+
 # Circus v5 — publicado (b394d9f)
 
 Pedido mais recente do dono substitui a escala e as chances fixas do v4 apenas

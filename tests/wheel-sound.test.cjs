@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 function setup(){
- let at=0,angle=0,id=0;const frames=new Map(),tones=[],listeners=new Set(),fc={state:{sound:true,sfxLvl:2},ac(){},tone(...a){tones.push(a);}},rotor={isConnected:true};
+ let at=0,angle=0,id=0;const frames=new Map(),tones=[],listeners=new Set(),fc={state:{sound:true,sfxLvl:2},ac(){},out(){return null},tone(...a){tones.push(a);}},rotor={isConnected:true};
  const ctx={window:{addEventListener:(n,f)=>listeners.add(f),removeEventListener:(n,f)=>listeners.delete(f)},document:{hidden:false},performance:{now:()=>at},requestAnimationFrame:f=>(frames.set(++id,f),id),cancelAnimationFrame:i=>frames.delete(i),getComputedStyle:()=>({transform:angle}),DOMMatrix:class{constructor(v){this.a=Math.cos(v*Math.PI/180);this.b=Math.sin(v*Math.PI/180);}}};
  vm.createContext(ctx);vm.runInContext(fs.readFileSync('ui/park/wheel-sound.js','utf8').replace('export function','function'),ctx);
  const sound=ctx.createWheelSound(fc,rotor,13);return {sound,tones,fc,ctx,rotor,frames,listeners,step(a,ms){angle=a;at+=ms;const f=[...frames.values()][0];frames.clear();f?.(at);}};

@@ -1,4 +1,4 @@
-from helpers.circus import PAYS
+from helpers.circus import PAYS, draws_for_grid
 from helpers.daily_reward import collect_daily
 """Actual Circus animation for loose tickets and a committed vertical coin win."""
 import os,json
@@ -23,15 +23,11 @@ with sync_playwright() as p:
   };
  }''')
  balance=page.evaluate('KingRicoCloud.player.balance');tickets=page.evaluate('KingRicoCloud.park.tickets')
- weights=[3,30,20,8,12,0,4,3,2,2.4];total=sum(weights)
- def draws(grid,loose):
-  values=[.99] # V5 control draw: skip it in ordinary/ticket scenarios.
-  for symbol in grid:values.extend([.99,(sum(weights[:symbol])+weights[symbol]/2)/total])
-  return values+[.99,loose,0,0]
+ def draws(grid,loose=.99):return draws_for_grid(grid)
  for count,loose in [(1,.1),(2,.4)]:
   page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
   before=page.evaluate('KingRicoCloud.park.spins')
-  page.evaluate('values=>{window.columnDraws=values;__fc._parkMotionLog=[]}',draws([0,1,2,3,4,6,6,7,8],loose))
+  page.evaluate('values=>{window.columnDraws=values;__fc._parkMotionLog=[]}',draws([10,10 if count==2 else 2,0,6,8,7,0,2,6]))
   page.get_by_role('button',name='Girar',exact=True).click()
   page.wait_for_function('n=>KingRicoCloud.park.spins===n+1',arg=before)
   page.wait_for_function('!__fc.state.spinning')
@@ -43,7 +39,7 @@ with sync_playwright() as p:
   page.screenshot(path=f'work/preview-loose-tickets-{count}.png')
  page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
  before=page.evaluate('KingRicoCloud.park.spins')
- page.evaluate('values=>{window.columnDraws=values}',draws([1,2,3,1,4,6,1,6,7],.99))
+ page.evaluate('values=>{window.columnDraws=values}',draws([10,2,0,10,8,6,10,6,7]))
  page.get_by_role('button',name='Girar',exact=True).click()
  page.wait_for_function('n=>KingRicoCloud.park.spins===n+1',arg=before)
  page.wait_for_function('!__fc.state.spinning&&__fc.state.winLines.includes(5)')
@@ -56,7 +52,7 @@ with sync_playwright() as p:
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun')
  assert page.evaluate('__fc.payoutSymbols().map(s=>s.pay)')==PAYS
  before_high=page.evaluate('KingRicoCloud.player.balance')
- page.evaluate("values=>{window.columnDraws=values;window.unexpectedFlight=false;new MutationObserver(records=>{for(const r of records)for(const e of r.addedNodes)if(e.classList?.contains('park-bigwin-flight'))window.unexpectedFlight=true;}).observe(document.body,{childList:true});__fc.setState({betIdx:9});}",draws([6,6,6,0,1,2,3,4,6],.99))
+ page.evaluate("values=>{window.columnDraws=values;window.unexpectedFlight=false;new MutationObserver(records=>{for(const r of records)for(const e of r.addedNodes)if(e.classList?.contains('park-bigwin-flight'))window.unexpectedFlight=true;}).observe(document.body,{childList:true});__fc.setState({betIdx:9});}",draws([6,6,6,0,2,7,8,10,5]))
  page.get_by_role('button',name='Girar',exact=True).click()
  page.wait_for_function('KingRicoCloud.park.spins===4&&!__fc.state.spinning')
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun',timeout=20000)

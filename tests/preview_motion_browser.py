@@ -1,4 +1,5 @@
 from helpers.daily_reward import collect_daily
+from helpers.circus import draws_for_grid
 """Preview-only regressions: one UI controller, liquid, tickets and bonus wheel.
 Run after npm run build:preview, against a static/Hosting server via KING_RICO_TEST_URL.
 """
@@ -62,15 +63,13 @@ with sync_playwright() as p:
    for note,frequency in zip([audio['current'],audio['second'],audio['third']],[523.25,659.25,783.99]):
     assert note['voices']==1 and abs(note['frequencies'][0]-frequency)<.1 and note['tailRms']>.0003 and note['peak']<1,audio
     assert note['attackRms']>note['decayRms']*2,audio
-  ticket_line=6 if mode=='no-preference' else 4
-  ticket_cells=[1,4,7] if ticket_line==6 else [2,4,6]
-  page.evaluate('''row=>{
+  ticket_cells=[0,1,2,3,4,6]
+  page.evaluate('''values=>{
    const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
    fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
-   // V4 samples the exclusive Tony event before the 18 ordinary symbol draws.
-   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin')return fetch(u,o);const random=Math.random;let draw=0;Math.random=()=>{const n=++draw;return n===1?.99:n===20?0:n===21?(row+.5)/8:.1;};try{return await fetch(u,o);}finally{Math.random=random;}};
-  }''',ticket_line)
-  before=page.evaluate('KingRicoCloud.park.tickets')
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin'||!values)return fetch(u,o);const list=values;values=null;const random=Math.random;let i=0;Math.random=()=>list[i++]??.99;try{return await fetch(u,o);}finally{Math.random=random;}};
+  }''',draws_for_grid([5,5,5,5,5,6,5,7,8]))
+  before=page.evaluate('(KingRicoCloud.park.cedros||0)')
   page.get_by_role('button',name='Girar',exact=True).click()
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="charge:arrived")')
   page.screenshot(path='work/preview-liquid-'+mode+'.png')
@@ -84,12 +83,12 @@ with sync_playwright() as p:
   assert sum(x['type']=='charge:done' for x in first['log'])==1,first
   assert sum(x['type']=='tickets:done' for x in first['log'])==1,first
   assert first['spins']==1 and first['tickets']==before+3,first
-  assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===10?[i]:[])')==ticket_cells
-  assert page.locator('.park-reels [data-sym][data-park-ticket="true"]').evaluate_all('nodes=>nodes.map(n=>Number(n.dataset.sym))')==ticket_cells
+  assert page.evaluate('__fc._cloudSpin.outcome.grid.flatMap((v,i)=>v===5?[i]:[])')==ticket_cells
+
   page.screenshot(path='work/preview-tickets-'+mode+'.png')
   assert not page.locator('.park-circus-rails').evaluate('e=>e.classList.contains("has-lit-goals")'),'Goal must not latch before red'
   assert [x['count'] for x in first['sounds']]==[before+1,before+2,before+3],first
-  assert [int(x['shown']) for x in first['sounds']]==[before+1,before+2,before+3],first
+  assert [int(x['shown'].split('/')[0]) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
   arrivals=[x['at'] for x in first['sounds']]
   expected=620 if mode=='no-preference' else 400

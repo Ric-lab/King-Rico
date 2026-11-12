@@ -1,14 +1,12 @@
 {
-  "date": "2026-11-11T00:55:50.128Z",
+  "date": "2026-11-12T20:59:53.746Z",
   "command": [
-    "--circus-v4",
-    "--spins=5000000",
-    "--bets=1,10,100,1000"
+    "--circus-v4"
   ],
   "sourceHashes": {
-    "cloud/circus-profile.cjs": "05845751d26ea761e963739e5f70c7c65c50abde85a63bd59a1387e65270ce1e",
-    "cloud/park.cjs": "7481916af2ba292aa41b9411476f075a9c7d7446c49d9c592fc32356ee1bee6a",
-    "cloud/engine.cjs": "affb101735844942239441c7dcfe6b4e4576a0c8cc1555b3c4df15e3781cef2a",
+    "cloud/circus-profile.cjs": "6d3d9cc4a5fdbf3b2ae7427e35fb8678403e63a8df776021cde58252bbfb1a65",
+    "cloud/park.cjs": "c459b21eb743651c2fa3ef8500037dc8e083308256e13655ce0cd09cfd050c67",
+    "cloud/engine.cjs": "453a48f1571b5f4f471d40d207c41bc38aee92101c9363049b44d0c9f9268eaa",
     "cloud/circus-control-v5.cjs": "00103107b4e88da579a67cd370efff42bf6b83095d68483791f7544b1a79fecd",
     "cloud/truncated-normal.cjs": "05dbbdee3b1866bc64b7cbdbed74de6d3f9735951bcf6fd1b6aa14c83dd05aeb",
     "scripts/economy-audit.mjs": "1494f9cb8d94dd56f0118db4092b531eea35668c10ac2314f3113b3edd08d8fc"

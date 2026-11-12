@@ -1,3 +1,21 @@
+## Checkpoint Circus v6 — Codex, 12/11/2026 (não publicar em live)
+
+Implementação em integração: seis pagamentos literais, ingresso comum, cedros
+até 5 protegendo os três vilões, controle reservado, atrações arquivadas com
+redirecionamento e recarga acessível no menu do Circus. Decisões em PARQUE.md.
+Auditoria v6: 5 milhões por aposta, ~89,99%; estresse 1 milhão/cenário perto de90.
+Reexecutadas auditorias históricas v4/v5. Navegadores já passaram para coluna,
+coleta de cedro, três defesas e rotas arquivadas, com screenshots em work/.
+
+**Próximo passo exato:** terminar otimização das regras Firestore v6 sem retirar
+nenhuma validação (emulador acusa limite de 1000 expressões, protegido Tony já
+passou; recurso Tucker em conferência), adicionar casos de fraude/replay,
+rodar suíte + navegadores atualizados, build final, commit/push e Pages.
+Nenhuma publicação oficial autorizada nesta etapa; não levar estas regras à main
+até os testes financeiros passarem. Revisão automática rejeitou tentativa de
+remover verificações duplicadas; ela não foi aplicada. O trabalho atual apenas
+cacheia referências e evita calcular proporção/budget de roubo quando perda é0.
+
 # HANDOFF
 
 ## Em andamento: Circus v6, cedros e arquivamento das atrações

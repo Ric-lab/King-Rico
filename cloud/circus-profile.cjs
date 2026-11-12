@@ -10,4 +10,8 @@ const PAYS=[6.7,.4,.8,3.9,1.5,9,13.5,25,34,90].map((pay,i)=>i===1||i===2?pay:Num
 const PAYS_V5=Object.freeze([2.5,.4,.8,1.2,5,0,10,15,20,25]);
 const {tier}=require('./prize-tier.cjs');
 
-module.exports={VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};
+// V6 keeps atlas IDs; tickets now pay coins, cedar is protection, controller reserved.
+const PAYS_V6=Object.freeze([1.2,0,.8,0,0,0,2.5,10,5,0,.4,0,0,0,0,0]);
+const WEIGHTS_V6=Object.freeze([9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,0]);
+const CEDAR_P=.12;
+module.exports={PAYS_V6,WEIGHTS_V6,CEDAR_P,VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};

@@ -1,3 +1,45 @@
+# Nova fase do Circus v6 — prévia em integração, 12/11/2026
+
+A decisão nova substitui o parque publicado descrito no histórico abaixo.
+Somente Circus permanece ativo. `site/routes.json` marca as atrações como
+`archived`; seus HTML publicados redirecionam para Circus. Fontes, modelos,
+assets e recibos antigos continuam no Git. Não há novas entradas no catálogo.
+O botão do anúncio de 30s / +1.000 moedas fica no menu do Circus, reutilizando
+anúncio simulado, recibo e voo de moedas existentes. A raspadinha diária permanece.
+
+Seis símbolos pagam moedas, sem coringa: **ingresso 0,4×, circo 0,8×, capa 1,2×,
+moeda 2,5×, diamante 5×, coroa 10×**. São as mesmas oito linhas (inclusive colunas).
+Tela cheia mantém ×10. IDs históricos do atlas não são renumerados. Bumbo,
+nuvem, trevo e King deixam os sorteios novos; seus assets e pagamentos antigos
+continuam disponíveis para recibos históricos. O King continua como personagem.
+
+Três cedros numa linha dão **1 defesa**, com estoque máximo **5**, indicado à
+esquerda do prêmio como **n/5**. Cada linha completa conta uma vez. Um cedro
+bloqueia um evento inteiro de Tony, Tucker **ou Ray**, sendo consumido na mesma
+transação do giro; Tony não consome três defesas pelas três patadas. Um ataque de
+Tucker contra cesta vazia não gasta defesa. Sem estoque, Ray aparece sem perda.
+Como Ray ataca o próprio estoque de cedros, qualquer estoque positivo consome
+uma defesa e preserva o resto: não há segundo desconto. A apresentação de defesa
+é informativa e nunca altera a carteira. Ingressos antigos não viram cedros nem
+moedas. O contador antigo de entradas deixa a interface.
+
+Happeach mantém coleta e rodada especial. O controle de videogame está reservado
+em `ui/park/controller-reserved.svg`, ID 15 inativo, sem peso/sorteio ou jogo.
+As três fitas contínuas usam a sequência dos seis pagamentos e dos especiais;
+Tony/Tucker/Ray passam visualmente durante o giro, sem antecipar o sorteio.
+A roda continua a cada 10 giros: base de 4% de todas as apostas reais do ciclo,
+mudança de aposta permitida, prêmio normal separado. Cenas/sons aprovados
+(patada, raspagem, moedas, roleta, botão) ficam preservados.
+
+Economia v6 usa ledger separado (`economyV6`), moedas + bônus − Tony; ingresso
+comum não tem valor adicional de 25 moedas. Cedros são defesa, não dinheiro.
+Auditoria e cenários adversariais: `circus-economy-v6-audit.json` e
+`circus-economy-v6-stress.json`. Publicação oficial depende de passar regras e
+persistência; documentação de prévia não significa mudança já publicada em live.
+
+---
+## Histórico anterior à decisão v6 (não reativar automaticamente)
+
 ## Economia v5 publicada — b394d9f
 
 Novas rodadas usam a tabela literal pedida pelo dono, cedro fora da fita e

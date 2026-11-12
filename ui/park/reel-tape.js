@@ -1,6 +1,6 @@
 /* Three continuous physical tapes. Identity belongs to a tape index, never a row. */
 (function(root){
- const PITCH=128,HEIGHT=382,ORDER=[0,1,2,3,4,6,7,8,9,10,11,12,13,14];
+ const PITCH=128,HEIGHT=382,ORDER=[10,2,0,6,8,7,5,11,12,13,14];
  function plan({column,from,target,stop,seed=0,ticket=false,wasTicket=false}){
   const anchor=-Math.round(stop/PITCH),items=[];
   for(let index=anchor-4;index<=5;index++){

@@ -1,5 +1,6 @@
 """All eight paid lines remain visible and produce painted, finite coin flights."""
 from helpers.daily_reward import collect_daily
+from helpers.circus import draws_for_grid
 from playwright.sync_api import sync_playwright
 import os
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178');os.makedirs('work',exist_ok=True)
@@ -21,11 +22,9 @@ with sync_playwright() as p:
  weights=[3,30,20,8,12,0,4,3,2,2.4];total=sum(weights)
  for li,line in enumerate(LINES):
   page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
-  grid=[0,1,2,3,4,6,6,7,8]
-  for cell in line:grid[cell]=1
-  draws=[.99]
-  for symbol in grid:draws.extend([.99,(sum(weights[:symbol])+weights[symbol]/2)/total])
-  draws.extend([.99,.99]);before=page.evaluate('KingRicoCloud.player.balance')
+  grid=[0,2,6,7,8,10,0,6,2]
+  for cell in line:grid[cell]=10
+  draws=draws_for_grid(grid);before=page.evaluate('KingRicoCloud.player.balance')
   page.evaluate('draws=>{window.winDraws=draws;coinQA={frames:0,painted:false,invalid:0};}',draws)
   page.get_by_role('button',name='Girar',exact=True).click()
   if REEL_ONLY:

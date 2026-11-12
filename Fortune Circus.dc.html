@@ -336,12 +336,12 @@ a:hover { color: #fff3c4; }
       </div><div style="display: grid; grid-template-columns: repeat(2, 192px); gap: 8px 16px;">
         <sc-for list="{{ payList }}" as="row" hint-placeholder-count="10">
           <div style="display: flex; align-items: center; gap: 12px; padding: 5px 10px 5px 6px; border-radius: 10px; background: rgba(255,255,255,.08);">
-            <div style="flex: 0 0 auto; width: 50px; height: 50px; border-radius: 6px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position-x: {{ row.pos }};"></div>
+            <div style="flex: 0 0 auto; width: 50px; height: 50px; border-radius: 6px; background-image: {{ row.image }}; background-size: {{ row.size }}; background-repeat: no-repeat; background-position-x: {{ row.pos }};"></div>
             <span style="font-size: 28px; font-weight: 800; line-height: 1; color: #fff3c4; font-variant-numeric: tabular-nums;">{{ row.mult }}</span>
           </div>
         </sc-for>
       </div>
-      <div style="max-width: 400px; padding: 0 12px; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-wrap: pretty;">Multiplicadores sobre a aposta total. 8 combinações: 3 deitadas, 3 em pé e 2 diagonais. O elefante vale por qualquer símbolo, menos o Happeach e os ingressos. Três ingressos alinhados dão 3 entradas. Um ou dois não dão prêmio. Tela cheia paga x10. {{ tonyNote }}</div>
+      <div style="max-width: 400px; padding: 0 12px; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.35; color: #f0dcff; text-wrap: pretty;">Multiplicadores sobre a aposta total. 8 combinações: 3 deitadas, 3 em pé e 2 diagonais. O ingresso agora paga moedas. Apenas os seis símbolos da tabela pagam linhas. Tela cheia paga x10. {{ tonyNote }}</div>
       <div class="kr-button kr-button--gold" style="padding: 10px 28px; font-size: 20px; font-weight: 800; letter-spacing: 1px;">FECHAR</div>
     </div>
   </sc-if>
@@ -512,7 +512,7 @@ class Component extends DCLogic {
   lightsTopRef = React.createRef(); // lâmpadas dos pilares: acima da crista (machine-front3 cobre a de cima)
   state = {
     balance: null, betIdx: null,
-    grid: [2, 8, 7, 1, 3, 6, 0, 4, 6],
+    grid: [2, 8, 7, 10, 0, 6, 5, 11, 10],
     locked: [], spinCells: [], stopped: [], winCells: [], winLines: [],
     winAmount: 0, displayWin: 0, showWin: false, winTitle: 'VOCÊ GANHOU',
     coins: false, shake: 'none', antic: false,
@@ -1273,6 +1273,7 @@ class Component extends DCLogic {
     return 0;
   }
   lineSymbol(g, line) {
+    if((this._cloudSpin?.outcome?.slotVersion||globalThis.KingRicoCloud?.slotVersion)>=6){const s=g[line[0]];return [0,2,6,7,8,10].includes(s)&&line.every(i=>g[i]===s)?s:-1;}
     const v = line.map(i => g[i]);
     if (v.some(s => s === undefined || s < 0 || s === 10)) return -1;
     if (v.some(s => s === PEACH)) return -1; // Happeach não paga linha: só conta para a Rodada Especial
@@ -1289,7 +1290,7 @@ class Component extends DCLogic {
     });
     const base = g.find(v => v !== WILD);
     const peach = g.map((v, i) => (v === PEACH ? i : -1)).filter(i => i >= 0);
-    const full = g.every(v => v >= 0 && v !== 10 && v !== PEACH) && (base === undefined || g.every(v => v === base || v === WILD));
+    const full = (this._cloudSpin?.outcome?.slotVersion||globalThis.KingRicoCloud?.slotVersion)>=6? [0,2,6,7,8,10].includes(g[0])&&g.every(v=>v===g[0]) : g.every(v => v >= 0 && v !== 10 && v !== PEACH) && (base === undefined || g.every(v => v === base || v === WILD));
     if (full && win > 0) win *= 10;
     return { win: Math.round(win * 100) / 100, cells: Object.keys(cells).map(Number), lines, full: full && win > 0, peach };
   }
@@ -1944,8 +1945,8 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false).sort((a, b) => b.sy.pay - a.sy.pay).map(o => ({ pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
-      tonyNote: globalThis.KingRicoCloud?.slotVersion>=5 ? 'A roleta usa 4% da soma das últimas 10 apostas; o prêmio normal é separado. Três Tony: de 1× a 25× a aposta. Tucker: de 1 a 4 Happeach. Ray: de 5% a 50% dos ingressos, arredondado. Limitado ao disponível; vilões reagem ao retorno acumulado. Sem outro prêmio nessas rodadas.' : '',
+      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v1.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      tonyNote: 'A roleta usa 4% das últimas 10 apostas. Três cedros alinhados dão 1 defesa, até 5. Um cedro bloqueia um ataque do Tony, Tucker ou Ray. Tony leva de 1× a 25× a aposta; Tucker, até 4 Happeach. Ray tenta levar seus cedros. Limitado ao disponível.',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1, spinPulseActive: busy || s.queued ? '1' : '0',

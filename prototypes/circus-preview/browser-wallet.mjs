@@ -3,15 +3,15 @@ import engine from '../../cloud/engine.cjs';
 const KEY='kingRico.parque.mobile-preview.v1',networkFetch=globalThis.fetch.bind(globalThis);
 let tail=Promise.resolve();
 // Prévia engatilhada: sem ?demo= o 1º giro de cada carregamento já mostra a última mudança. ?demo=off = jogo normal.
-const DEFAULT_DEMO='tony';
+const DEFAULT_DEMO=null;
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
 let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel'].includes(demoMode);
 async function execute(data){
  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
  const demo=demoSpin&&data.action==='spin'&&data.game==='circus';
- const symbols=engine.slotSymbols(5);
- const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='spacewin'?Array(9).fill(3):[8,8,8,0,1,2,3,4,6]).flatMap(symbol=>[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
+ const symbols=engine.slotSymbols(6);
+ const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='spacewin'?Array(9).fill(7):[8,8,8,0,2,6,7,10,5]).flatMap(symbol=>[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
  if(demo&&demoMode!=='tony')draws.unshift(.99);
  if(demo&&demoMode==='tony'){data.previewTony=true;draws.splice(0,draws.length,0,.5);}
  if(demo&&demoMode==='tucker')data.previewTucker=true;

@@ -26,7 +26,7 @@ test('Preview v5 wallet and controller follow the same saved ledger as real stor
  const a=seeded(7163),b=seeded(7163),model=createPreview({},a),p={balanceUnits:500000,peaches:0,peachBank:{count:0,units:0}},s={...park.fresh(),tickets:3};
  await model.run({action:'state'});
  for(let i=0;i<200;i++){
-  const id=randomUUID(),expected=park.spin(p,s,10,id,b,5),request={action:'spin',game:'circus',bet:10,requestId:id};
+  const id=randomUUID(),expected=park.spin(p,s,10,id,b,5),request={action:'spin',game:'circus',bet:10,requestId:id,slotVersion:5};
   p.balanceUnits+=expected.winUnits-1000-(expected.tony?.stolenUnits||0);p.peaches=expected.peaches;p.peachBank=expected.peachBank;
   const actual=await model.run(request);assert.deepEqual(actual.outcome,expected);assert.deepEqual(actual.park.economy,s.economy);assert.equal(actual.player.balance,p.balanceUnits/100);
   assert.deepEqual((await model.run(request)).park.economy,s.economy);

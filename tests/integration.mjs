@@ -1218,3 +1218,19 @@ test('Circus v5 normal spin, tenth bonus, replay and old v4 client preserve the 
  const legacy=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:4}));assert.equal(legacy.park.economy.rounds,3);
  assert.equal((await getDoc(parkRef)).data().economy.rounds,3);
 });
+test('Circus v6: real rules, cedar awards and all protected villains commit and replay once',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');const {default:controller}=await import('../cloud/circus-control-v6.cjs');
+ for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0]]){
+  let sequence=[];const c=await client('v6-'+kind+'-'+randomUUID(),undefined,{rng:()=>sequence.length?sequence.shift():.99});await c.call(request({action:'bootstrap'}));
+  const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
+  await environment.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),'players',c.uid),{peaches,peachBank:{count:peaches,units:peaches*251}});await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:100,cedros,economyV6:{...controller.freshEconomy(),paidUnits:kind==='tony'||draw>.5&&draw<.55?100000:0}});});
+  sequence=kind==='cedar'?[.99,...Array(9).fill(.1)]:kind==='normal'?Array(30).fill(.99):Array(30).fill(draw);
+  const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
+  const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
+  if(cedros){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990);}
+  if(kind==='cedar'){assert.equal(r.outcome.cedarAward,5);assert.equal(r.park.cedros,5);}
+  assert.deepEqual((await c.call(req)).park,r.park);
+  // Same client's retry validates the immutable operation; refresh reads persisted stock.
+  assert.equal((await getDoc(parkRef)).data().cedros,r.park.cedros);
+ }
+});

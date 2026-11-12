@@ -8,18 +8,8 @@
     const scale=Math.max(.25,Math.min(width/453,height/802));
     const banner=document.getElementById('kr-ad-banner')?.getBoundingClientRect().bottom||0;
     for(const row of document.querySelectorAll('.kr-hud-row')){
-      let park=row.querySelector('.kr-hud-park');
-      if(!park){park=document.createElement('a');park.className='kr-hud-park';park.href='/park';park.setAttribute('aria-label','Abrir parque');park.title='Parque';row.append(park);}
-      const game=document.querySelector('meta[name="king-rico-game"]')?.content;
-      if(['clown','penalty','flying','fingo','bounce'].includes(game)){
-        let counter=row.querySelector('.kr-hud-tickets');
-        if(!counter){counter=document.createElement('div');counter.className='kr-hud-tickets';counter.setAttribute('role','status');counter.setAttribute('aria-live','polite');counter.innerHTML='<img src="/assets/machine/ticket-symbol-v1.webp" alt=""><strong data-hud-tickets></strong>';row.append(counter);}
-        const count=window.KingRicoPark?.state?.tickets??window.KingRicoCloud?.park?.tickets;
-        if(Number.isInteger(count)){
-          const value=counter.querySelector('[data-hud-tickets]'),text=count.toLocaleString('pt-BR');
-          if(value.textContent!==text){const hadValue=value.textContent!=='';value.textContent=text;counter.setAttribute('aria-label',`${text} ingressos`);if(hadValue){counter.classList.remove('is-changing');void counter.offsetWidth;counter.classList.add('is-changing');}}
-        }
-      }
+      row.querySelector('.kr-hud-park')?.remove();
+      row.querySelector('.kr-hud-tickets')?.remove();
       const parent=row.parentElement,r=parent.getBoundingClientRect();if(!r.width)continue;
       for(let ancestor=parent;ancestor&&ancestor!==document.body;ancestor=ancestor.parentElement)
         layoutObserver.observe(ancestor,{attributes:true,attributeFilter:['style']});

@@ -1,3 +1,14 @@
+## Nova decisão — 12/11/2026, Circus v6 na prévia
+
+Parque e atrações (Pênalti, Flying Clown, Bounce, Fingo, além dos já arquivados)
+ficam guardados. Os seis registros atuais de `site/routes.json` preservam nomes
+históricos, mas apenas Circus é ativo; os demais têm `archived:true` e geram
+redirecionamentos sem cobrança para `/circus`, inclusive no GitHub Pages.
+Recibos, APIs de retomada, fontes e assets antigos permanecem. Para reativar,
+revisar a economia e remover explicitamente o `archived`, sem ressuscitar a
+antiga moeda de ingresso. Testes de navegador do catálogo antigo são históricos;
+o fluxo público substituto é coberto por `circus_v6_browser.py` e pelo teste Pages.
+
 # Jogos arquivados (atualizado em 05/11/2026)
 
 Decisão do dono: estes jogos saem do site. Os arquivos-fonte continuam no repositório (os testes de unidade os usam); só a rota pública foi removida de `site/routes.json` e `firebase.json`.

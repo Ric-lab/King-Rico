@@ -11,7 +11,8 @@ const SYMBOLS = [
 const circusProfile=require('./circus-profile.cjs');
 const SYMBOLS_V3=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS[i]}));
 const SYMBOLS_V5=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS_V5[i],w:i===5?0:s.w,active:i!==5}));
-const slotSymbols=version=>version>=5?SYMBOLS_V5:version>=3?SYMBOLS_V3:SYMBOLS;
+const SYMBOLS_V6=Array.from({length:16},(_,i)=>({id:SYMBOLS[i]?.id||['ticket','happeach','tony','tucker','ray','controller'][i-10],pay:circusProfile.PAYS_V6[i],w:circusProfile.WEIGHTS_V6[i],active:[0,2,5,6,7,8,10,11,12,13,14].includes(i)}));
+const slotSymbols=version=>version>=6?SYMBOLS_V6:version>=5?SYMBOLS_V5:version>=3?SYMBOLS_V3:SYMBOLS;
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]];
@@ -116,8 +117,9 @@ function weighted(pool, rng) {
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
   return 0;
 }
-function pick(rng = random,version=1) { return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(slotSymbols(version), rng); }
-function lineSymbol(grid, line) {
+function pick(rng = random,version=1) { if(version>=6){const r=rng();return r<circusProfile.PEACH_P?PEACH:r<circusProfile.PEACH_P+circusProfile.CEDAR_P?5:weighted(SYMBOLS_V6,rng);}return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(slotSymbols(version), rng); }
+function lineSymbol(grid, line,version=1) {
+  if(version>=6){const s=grid[line[0]];return [0,2,6,7,8,10].includes(s)&&line.every(i=>grid[i]===s)?s:-1;}
   const v = line.map(i => grid[i]);
   if (v.some(s => s === undefined || s < 0 || s === 10 || s === 12 || s === 13 || s === 14 || s === PEACH)) return -1;
   const base = v.find(s => s !== WILD);
@@ -127,22 +129,22 @@ function lineSymbol(grid, line) {
 function evaluate(grid, bet, version=1) {
   let win = 0; const cells = new Set(), lines = [];
   (version>=2?ALL_LINES:LINES).forEach((line, li) => {
-    const s = lineSymbol(grid, line);
+    const s = lineSymbol(grid, line,version);
     if (s >= 0 && slotSymbols(version)[s].pay > 0) { win += bet * slotSymbols(version)[s].pay; lines.push(li); line.forEach(i => cells.add(i)); }
   });
   const base = grid.find(v => v !== WILD);
-  const full = grid.every(v => v >= 0 && v !== 10 && v !== 12 && v !== 13 && v !== 14 && v !== PEACH) &&
+  const full = version>=6? [0,2,6,7,8,10].includes(grid[0])&&grid.every(v=>v===grid[0]) : grid.every(v => v >= 0 && v !== 10 && v !== 12 && v !== 13 && v !== 14 && v !== PEACH) &&
     (base === undefined || grid.every(v => v === base || v === WILD));
   if (full && win > 0) win *= 10;
   return { win: coins(units(win)), cells: [...cells].sort((a,b) => a-b), lines,
     full: full && win > 0, peach: grid.flatMap((v,i) => v === PEACH ? [i] : []) };
 }
 function feature(bet, rng = random, version=1) {
-  const sym = weighted(slotSymbols(version).slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
+  const sym = weighted(version>=6?SYMBOLS_V6:slotSymbols(version).slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
   for (let round = 0; round < FEAT_SPINS && grid.some(v => v < 0); round++) {
     const result = [];
     for (const i of [6,3,0,7,4,1,8,5,2]) if (grid[i] < 0) {
-      const r = rng(), v = r < FEAT_P_SYM ? sym : r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1;
+      const r = rng(), v = version>=6?(r<FEAT_P_SYM+FEAT_P_WILD?sym:-1):r < FEAT_P_SYM ? sym : r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1;
       grid[i] = v; result.push({ i, v });
     }
     // Firestore cannot store an array directly inside another array.
@@ -159,7 +161,8 @@ function slot(bet, peaches = 0, rng = random, bank = null, version=1) {
   }
   const res = evaluate(grid, bet, version), total = peaches + res.peach.length;
   const stake = units(bet), saved = bank?.count===peaches ? bank.units : peaches*stake;
-  const featureBet = (saved+(PEACH_GOAL-peaches)*stake)/PEACH_GOAL/100;
+  const featureUnits=(saved+(PEACH_GOAL-peaches)*stake)/PEACH_GOAL;
+  const featureBet = (version>=6?Math.floor(featureUnits):featureUnits)/100;
   const bonus = total >= PEACH_GOAL ? {...feature(featureBet, rng, version),bet:featureBet} : null;
   const remaining = bonus ? total-PEACH_GOAL : total;
   const peachBank = {count:remaining,units:bonus ? remaining*stake : saved+res.peach.length*stake};

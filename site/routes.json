@@ -3,7 +3,8 @@
     "file": "Home.dc.html",
     "path": "/park",
     "game": "home",
-    "title": "Parque do King Rico"
+    "title": "Parque do King Rico",
+    "archived": true
   },
   {
     "file": "Fortune Circus.dc.html",
@@ -15,24 +16,28 @@
     "file": "Fortune Fingo.dc.html",
     "path": "/fingo",
     "game": "fingo",
-    "title": "Fortune Fingo"
+    "title": "Fortune Fingo",
+    "archived": true
   },
   {
     "file": "Fortune Penalty.dc.html",
     "path": "/penalty",
     "game": "penalty",
-    "title": "Fortune Penalty"
+    "title": "Fortune Penalty",
+    "archived": true
   },
   {
     "file": "Fortune Flying Clown.dc.html",
     "path": "/flying-clown",
     "game": "flying",
-    "title": "Fortune Flying Clown"
+    "title": "Fortune Flying Clown",
+    "archived": true
   },
   {
     "file": "Fortune Bounce.dc.html",
     "path": "/bounce",
     "game": "bounce",
-    "title": "Fortune Bounce"
+    "title": "Fortune Bounce",
+    "archived": true
   }
 ]

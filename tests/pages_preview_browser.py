@@ -36,27 +36,20 @@ with sync_playwright() as p:
  assert page.evaluate('KING_RICO_FIREBASE.enabled')==False
  before=page.evaluate('KingRicoCloud.player.balance')
  page.locator('[data-spin-btn]').click()
- page.wait_for_function('__fc._cloudSpin?.outcome?.slotVersion===5')
+ page.wait_for_function('__fc._cloudSpin?.outcome?.slotVersion===6')
  receipt=page.evaluate('__fc._cloudSpin');expected=round(before-10+receipt['outcome']['winUnits']/100-(receipt['outcome'].get('tony',{}).get('stolenUnits',0))/100,2)
  assert abs(page.evaluate('KingRicoCloud.player.balance')-expected)<.001
  replay=page.evaluate('''async()=>{const saved=JSON.parse(localStorage.getItem('kingRico.parque.mobile-preview.v1'));const [id,o]=saved.once.filter(([id,o])=>o.result.outcome?.slotVersion).at(-1);return (await fetch('/api/play',{method:'POST',body:JSON.stringify({...JSON.parse(o.fingerprint),requestId:id})})).json()}''')
  assert replay['replayed'] and abs(replay['player']['balance']-expected)<.001
  page.reload();page.wait_for_function('KingRicoCloud.player');assert abs(page.evaluate('KingRicoCloud.player.balance')-expected)<.001
  collect_daily(page)
- page.locator('.kr-hud-park').click();page.wait_for_url('**/Home.dc.html*');collect_daily(page)
- assert page.locator('.kr-hud-home').get_attribute('href')==prefix+'/circus'
- assert page.locator('[data-game]').count()==3
- page.screenshot(path='work/preview-pages-park.png')
- for route in ['penalty','flying-clown','bounce','fingo']:
+ assert page.locator('.kr-hud-park').count()==0
+ for route in ['park','penalty','flying-clown','bounce','fingo']:
   page.goto(base+'/'+route);collect_daily(page)
-  page.wait_for_function('KingRicoCloud.player&&!document.querySelector("#kr-boot-screen")')
-  assert page.evaluate('KingRicoCloud.uid')=='park-preview'
-  if page.locator('.park-modal [data-ticket]').count():
-   page.locator('.park-modal [data-ticket]').click()
-   page.wait_for_function('!document.querySelector(".park-modal [data-ticket]")')
-  assert urlsplit(page.locator('.kr-hud-home').evaluate('e=>e.href')).path.startswith(prefix+'/'),route
-  page.wait_for_timeout(700)
- page.locator('.kr-hud-home').click();page.wait_for_url('**/Fortune%20Circus.dc.html*');collect_daily(page)
+  page.wait_for_function('window.__fc?._parkHook')
+  assert 'Fortune%20Circus.dc.html' in page.url
+  assert page.locator('.park-modal [data-ticket]').count()==0
+  assert page.evaluate('KingRicoCloud.player.balance')>=expected
  assert not missing and not errors and not escaped,{'missing':missing,'errors':errors,'outsideBase':escaped}
  print(json.dumps({'base':base,'allRoutes':True,'walletSpinReplayReload':True,'firebaseDisabled':True,'errors':errors,'missing':missing,'outsideBase':escaped}),flush=True)
  b.close()

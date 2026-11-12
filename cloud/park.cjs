@@ -1,6 +1,7 @@
 'use strict';
 const engine=require('./engine.cjs');
 const controller=require('./circus-control-v5.cjs');
+const controllerV6=require('./circus-control-v6.cjs');
 const PRICE=25,METER_SPINS=10,TICKET=10;
 const ATTRACTIONS=['clown','penalty','flying','fingo','bounce'];
 const POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
@@ -70,9 +71,23 @@ function spinLegacy(p,s,bet,id,rng,version=1){
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:version>=5?4:3,baseUnits:version>=5?Math.max(1,Math.round(s.cycleWagerUnits*4/100)):engine.units(x.res.win),pockets:[...POCKETS],result:null};
  return {...x,...(version>=2?{slotVersion:version}:{}),parkVersion:1,ticketAward:award};
 }
+function spinV6(p,s,bet,id,rng){
+ s.cedros??=0;
+ s.cycleWagerUnits=(s.cycleWagerUnits||0)+engine.units(bet);
+ let x=s.spins<9?controllerV6.candidate(p,s,bet,rng):null;
+ if(!x){
+  x=engine.slot(bet,p.peaches,rng,p.peachBank,6);
+  const cedarLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===5)?[i]:[]);
+  const award=Math.min(5-s.cedros,cedarLines.length);
+  x={...x,parkVersion:1,ticketAward:0,cedarAward:award,cedarLines};s.cedros+=award;s.spins++;
+ }
+ if(s.spins===10)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(s.cycleWagerUnits*4/100)),pockets:[...POCKETS],result:null};
+ controllerV6.recordSpin(s,x,bet);return x;
+}
 function spin(p,s,bet,id,rng,version=1){
  if(s.wheel)fail('round-conflict','Conclua a roleta bônus antes de girar novamente.');
  const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);
+ if(version>=6)return spinV6(p,s,bet,id,random);
  if(version>=5||'cycleWagerUnits' in s)s.cycleWagerUnits=(s.cycleWagerUnits??0)+engine.units(bet);
  const x=version>=5&&s.spins<9?controller.candidate(p,s,bet,random):null;
  const result=x||spinLegacy(p,s,bet,id,random,version);
@@ -105,7 +120,7 @@ function settle(s,data,x,payment){
 }
 function bonus(s,wheelId,rng){
  const w=s.wheel;if(!w||w.id!==wheelId)fail('round-conflict','Essa roleta já foi encerrada.');
- if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:w.prizeVersion===4?winUnits:winUnits-w.baseUnits};controller.recordBonus(s,w.result.extraUnits);return w.result.extraUnits;}
+ if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:w.prizeVersion===4?winUnits:winUnits-w.baseUnits};if(w.economyVersion===6)controllerV6.recordBonus(s,w.result.extraUnits);else controller.recordBonus(s,w.result.extraUnits);return w.result.extraUnits;}
  return 0;
 }
 module.exports={TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,scatterTickets,spin,entry,payment,settle,bonus};

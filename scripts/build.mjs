@@ -97,7 +97,9 @@ await writeFile(path.join(destination,'game.html'),`<!doctype html>
 const loadingMarkup=await readFile('ui/loading.html','utf8');
 const loadingStyles=await readFile('ui/loading.css','utf8');
 const loadingPreview=(await readFile('assets/brand/loading-king-rico-preview.webp')).toString('base64');
-for(const {file,game,title} of routes) {
+for(const {file,game,title,archived} of routes) {
+  if(archived){await writeFile(path.join(destination,file),'<!doctype html><meta charset="utf-8"><script>location.replace("/circus"+location.search+location.hash)</script><a href="/circus">Fortune Circus</a>');continue;}
+
   const source=(await readFile(file,'utf8')).replace(/<script\b[^>]*src=["']\.\/cloud\/(?:firebase-config|client)\.js["'][^>]*>\s*<\/script>\s*/g,'');
   if (!source.includes('<head>')) throw new Error(`Missing HTML head in ${file}`);
   const cloudTags='<script defer src="./cloud/firebase-config.js"></script>\n<script defer src="./cloud/client.js"></script>';

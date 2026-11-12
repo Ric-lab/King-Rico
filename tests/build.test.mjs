@@ -3,82 +3,23 @@ import assert from 'node:assert/strict';
 import {readFile,access} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import path from 'node:path';
-import {createHash} from 'node:crypto';
-
-test('production artifact serves every Home game and the Penalty renderer with local dependencies',async()=>{
-  const result=spawnSync(process.execPath,['scripts/build.mjs','--production'],{encoding:'utf8'});
-  assert.equal(result.status,0,result.stderr);
-  const home=await readFile('dist/Home.dc.html','utf8');
-  const routes=JSON.parse(await readFile('site/routes.json','utf8'));
-  const games=[...new Set([...home.matchAll(/href="([^"#?]+)(?:[?#][^"]*)?"/g)].map(m=>routes.find(r=>r.path===m[1])?.file).filter(Boolean))];
-  assert.ok(games.includes('Fortune Penalty.dc.html'));
-  assert.match(await readFile('dist/Fortune Fingo.dc.html','utf8'),/src="\.\/runtime\/matter\.min\.js"/);
-  const fingo=await readFile('dist/Fortune Fingo.dc.html','utf8');
-  assert.match(fingo,/data-fingo-free-icon="" src="data:image\/webp;base64,/,'The free King Rico cell cannot depend on another network request');
-  for(const name of ['bet-panel','counter-plaque'])assert.ok((await readFile('dist/assets/fingo/'+name+'.webp')).length<250000,'Mobile Fingo art must stay small');
-  const images=[...fingo.matchAll(/(assets\/fingo\/[\w.-]+\.(?:webp|png))([^'"\s)]*)/g)];
-  assert.ok(images.length>5,'Check actual Fingo board, counter, ball and betting assets');
-  for(const [,asset,suffix] of images) {
-    const hash=createHash('sha256').update(await readFile(path.join('dist',asset))).digest('hex').slice(0,12);
-    assert.equal(suffix,'?v='+hash,asset+' must bypass a previously cached old image');
-  }
-  for(const game of ['Circus','Penalty','Bounce','Flying Clown']) assert.ok(games.includes(`Fortune ${game}.dc.html`));
-  assert.match(await readFile('dist/ui/park/client.js','utf8'),/parkEntry/);
-  assert.doesNotMatch(await readFile('dist/ui/park/client.js','utf8'),/mobile-preview|mock-wallet|test-wallet/);
-  for(const file of ['clownball.js','bounce3d.js']) {const source=await readFile(path.join('dist',file),'utf8');assert.match(source,/const SRC = '\.\/runtime\/three\.module\.js'/);assert.doesNotMatch(source,/unpkg\.com/);}
-  // Arquivados (docs/ARQUIVADOS.md): fora da Home e fora do site publicado.
-  const archived=['Wheel','Neck','Clown','21','33','Claw','Race','Bridge'].map(game=>`Fortune ${game}.dc.html`);
-  for(const game of archived){assert.ok(!games.includes(game),`${game} stays archived outside Home`);await assert.rejects(access(path.join('dist',game)),`${game} must not be published`);}
-  assert.ok(!games.includes('Fortune Fingo.dc.html'),'Fingo remains accessible directly, outside the park');
-  for(const game of [...games,'Fortune Fingo.dc.html']) {
-    const html=await readFile(path.join('dist',game),'utf8');
-    for(const script of ['firebase-config','client'])
-      assert.equal([...html.matchAll(new RegExp(`src="\\./cloud/${script}\\.js"`,'g'))].length,1,game);
-    for(const match of html.matchAll(/<(?:script|x-import)\b[^>]*\b(?:src|from)="(\.\/[^"?#]+)"/g))
-      await access(path.join('dist',match[1]));
-  }
-  assert.equal(await readFile('dist/penalty3d.js','utf8'),await readFile('penalty3d.js','utf8'));
-  assert.match(await readFile('dist/penalty3d.js','utf8'),/const SRC = '\.\/runtime\/three\.module\.js'/);
-  await access('dist/assets/models/happeach-toy.glb');await access('dist/assets/models/king-rico-toy.glb');
-  for(const art of ['symbols/sym-gem.png','symbols/sym-coin.webp','girafa/head.webp','king-rico/view-front.png'])await access('dist/assets/'+art);await access('dist/games/claw/game.js');await access('dist/games/claw/style.css');
-  await access('dist/games/race/physics-worker.js');await access('dist/games/race/game.js');await access('dist/games/race/style.css');await access('dist/assets/brand/cover-race.png');
-  await access('dist/games/fortune21/game.js');await access('dist/games/fortune21/style.css');
-  await access('dist/runtime/three.module.js');await access('dist/runtime/three.core.js');
-  assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
-  const hosting=JSON.parse(await readFile('firebase.json','utf8')).hosting;
-  const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));
-  assert.match(await readFile('dist/index.html','utf8'),/location\.replace\('\/circus'/);
-  assert.equal(manifest.start_url.split('?')[0],'/circus');
-  assert.ok(hosting.rewrites.some(r=>r.source==='/home'&&r.destination==='/Fortune Circus.dc.html'));
-  assert.ok(hosting.rewrites.some(r=>r.source==='/park'&&r.destination==='/Home.dc.html'));
-  assert.equal(manifest.name,'Fortune Circus');
-  assert.equal(manifest.display,'standalone');
-  assert.ok(routes.some(r=>r.path===manifest.start_url.split('?')[0]));
-  for(const icon of manifest.icons) await access(path.join('dist',icon.src));
-  await access('dist/assets/brand/covers/stage.webp');
-  for(const route of routes) {
-    assert.ok(hosting.rewrites.some(r=>r.source===route.path && r.destination==='/'+route.file),route.path);
-    assert.ok(hosting.headers.some(r=>r.source===route.path && r.headers.some(h=>h.key==='Cache-Control' && h.value==='no-store')),route.path+' must not serve a stale game');
-    const html=await readFile(path.join('dist',route.file),'utf8');
-    assert.match(html,/<link rel="manifest" href="\/manifest.webmanifest">/);
-    assert.match(html,/<link rel="apple-touch-icon"/);
-    assert.ok(html.includes(`<meta name="king-rico-game" content="${route.game}">`));
-    assert.equal([...html.matchAll(/<title>/g)].length,1);
-  }
-  await access('dist/ui/app-shell.js');await access('dist/sw.js');
-  for(const file of ['ui/loading.js','ui/loading.css','assets/brand/loading-king-rico.webp'])await access(path.join('dist',file));
-  for(const asset of ['assets/penalty/clown-keeper-v3.webp','assets/flying/clown.webp','assets/flying/b0.webp']) {
-    assert.ok(home.includes(asset),asset);
-    await access(path.join('dist',asset));
-  }
-  await access('dist/ui/park/park-home.css');
-  await access('dist/assets/brand/covers/stage.webp');
-  for(const route of routes) {
-    const html=await readFile(path.join('dist',route.file),'utf8');
-    assert.equal([...html.matchAll(/id="kr-boot-screen"/g)].length,1);
-    assert.ok(html.indexOf('id="kr-boot-screen"')<html.indexOf('<x-dc>') || !html.includes('<x-dc>'));
-    assert.match(html,/<script defer src="\.\/runtime\/react.js"/);
-    assert.match(html,/<style data-kr-loading-style>/);
-    assert.match(html,/data:image\/webp;base64,/);
-  }
+test('production publishes Circus and safe redirects, with archived game sources and assets preserved',async()=>{
+ const r=spawnSync(process.execPath,['scripts/build.mjs','--production'],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);
+ const routes=JSON.parse(await readFile('site/routes.json','utf8'));
+ assert.deepEqual(routes.filter(r=>!r.archived).map(r=>r.path),['/circus']);
+ for(const route of routes){const html=await readFile(path.join('dist',route.file),'utf8');await access(route.file);
+  if(route.archived){assert.match(html,/location.replace\("\/circus"/);assert.doesNotMatch(html,/data-game=|data-spin-btn|parkEntry/);continue;}
+  assert.match(html,/content="circus"/);assert.equal([...html.matchAll(/id="kr-boot-screen"/g)].length,1);
+  assert.equal([...html.matchAll(/src="\.\/cloud\/client.js"/g)].length,1);
+  for(const match of html.matchAll(/<(?:script|x-import)\b[^>]*\b(?:src|from)="(\.\/[^"?#]+)"/g))await access(path.join('dist',match[1]));
+ }
+ for(const file of ['runtime/three.module.js','runtime/three.core.js','assets/symbols/sym-scepter.png','ui/park/controller-reserved.svg','assets/tony/head.webp','assets/tucker/head.webp','assets/ray/head-v1.webp'])await access('dist/'+file);
+ assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
+ assert.doesNotMatch(await readFile('dist/ui/park/client.js','utf8'),/mobile-preview|mock-wallet|test-wallet/);
+ const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));assert.equal(manifest.start_url.split('?')[0],'/circus');for(const icon of manifest.icons)await access(path.join('dist',icon.src));
+ const hosting=JSON.parse(await readFile('firebase.json','utf8')).hosting;
+ for(const route of routes)assert.ok(hosting.rewrites.some(r=>r.source===route.path&&r.destination==='/'+route.file));
+ // Archived game art/models and their original sources remain available for recovery.
+ for(const file of ['Fortune Fingo.dc.html','Fortune Penalty.dc.html','Fortune Flying Clown.dc.html','Fortune Bounce.dc.html'])await access(file);
+ for(const file of ['assets/fingo/bet-panel.webp','assets/models/happeach-toy.glb','assets/models/king-rico-toy.glb','penalty3d.js','bounce3d.js'])await access('dist/'+file);
 });

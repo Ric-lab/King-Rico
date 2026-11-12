@@ -192,7 +192,7 @@ service cloud.firestore {
     function controlBudget(o,b) {
       let e='economy' in b?b.economy:emptyCircusEconomy();
       let returned=e.paidUnits-e.tigerUnits+(e.ticketsAwarded-e.ticketsStolen)*2500;
-      let target=int(((e.wageredUnits+o.betUnits)*9+9) / 10);
+      let target=int(((e.get('wageredUnits',0)+o.betUnits)*9+9) / 10);
       return returned>target ? returned-target : 0;
     }
     function tigerMaximumV5(old,o,b) {
@@ -209,11 +209,15 @@ service cloud.firestore {
         && (bird || stolen*2500<=budget);
     }
     function villainGrid(x,symbol) {
-      let cells=x.res.cells; let base=x.get('slotVersion',1)>=5?[0,1,2,3,4,9,6,7,8]:[0,1,2,3,4,5,6,7,8];
-      return x.res.lines.size()==1 && x.res.lines[0] in [0,1,2,3,4,5,6,7]
-        && cells==[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][x.res.lines[0]]
-        && x.grid.size()==9 && x.grid[cells[0]]==symbol && x.grid[cells[1]]==symbol && x.grid[cells[2]]==symbol
-        && x.grid.removeAll([symbol])==base.removeAll([base[cells[0]],base[cells[1]],base[cells[2]]]);
+      let g=x.grid; let r=x.res; let cells=r.cells; let base=x.get('slotVersion',1)>=6?[10,2,0,6,8,7,10,0,2]:x.get('slotVersion',1)>=5?[0,1,2,3,4,9,6,7,8]:[0,1,2,3,4,5,6,7,8];
+      return r.lines.size()==1 && r.lines[0] in [0,1,2,3,4,5,6,7]
+        && cells==[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][r.lines[0]]
+        && (x.get('slotVersion',1)>=6?
+          g==[0 in cells?symbol:10,1 in cells?symbol:2,2 in cells?symbol:0,
+            3 in cells?symbol:6,4 in cells?symbol:8,5 in cells?symbol:7,
+            6 in cells?symbol:10,7 in cells?symbol:0,8 in cells?symbol:2]
+          :g.size()==9 && g[cells[0]]==symbol && g[cells[1]]==symbol && g[cells[2]]==symbol
+            && g.removeAll([symbol])==base.removeAll([base[cells[0]],base[cells[1]],base[cells[2]]]));
     }
 
     function legacyTigerAmount(old,o) {
@@ -267,7 +271,7 @@ service cloud.firestore {
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(700,'ms'))
         && (o.game == 'wheel' ? o.selected is int && o.selected >= 0 && o.selected <= (o.rulesVersion.matches('^(2026-10-19-spark-v3|2026-10-20-spark-v4|2026-10-22-balance-v5|2026-10-23-guided-v6|2026-10-23-ladder-v7|2026-10-26-session-v8|2026-10-27-fingo-card-v9|2026-10-27-fingo-double-v10|2026-10-28-fingo-free-v11)$') ? 12 : 11)
             && (o.rulesVersion.matches('^(2026-10-19-spark-v3|2026-10-20-spark-v4|2026-10-22-balance-v5|2026-10-23-guided-v6|2026-10-23-ladder-v7|2026-10-26-session-v8|2026-10-27-fingo-card-v9|2026-10-27-fingo-double-v10|2026-10-28-fingo-free-v11)$') ? wheelWin(o) : o.winUnits in [0, o.betUnits * 10]) && p.peaches == old.peaches && p.get('peachBank',null) == old.get('peachBank',null)
-          : o.selected == -1 && (t!=null ? tonyResult(p,old,o) : resource ? resourceVillain(p,old,o) : (o.rulesVersion in '2026-10-22-balance-v5,2026-10-23-guided-v6,2026-10-23-ladder-v7,2026-10-26-session-v8,2026-10-27-fingo-card-v9,2026-10-27-fingo-double-v10,2026-10-28-fingo-free-v11'.split(',') ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null))))
+          : o.selected == -1 && (version==6?x.parkVersion==1:(t!=null ? tonyResult(p,old,o) : resource ? resourceVillain(p,old,o) : (o.rulesVersion in '2026-10-22-balance-v5,2026-10-23-guided-v6,2026-10-23-ladder-v7,2026-10-26-session-v8,2026-10-27-fingo-card-v9,2026-10-27-fingo-double-v10,2026-10-28-fingo-free-v11'.split(',') ? circusBank(p,old,o) : o.winUnits <= o.betUnits * 3330 && p.get('peachBank',null) == old.get('peachBank',null)))))
         && result.keys().hasOnly('player,game,bet,balanceBefore,balanceDebited,outcome,baseBalance'.split(','))
         && result.game == o.game && result.bet == o.betUnits / 100.0
         && result.balanceBefore == old.balanceUnits / 100.0
@@ -815,9 +819,10 @@ service cloud.firestore {
       return first ? (o.result.outcome.get('parkVersion',0) == 1 && get(parkPath(request.auth.uid)).data.passes[o.game].method == 'ticket' ? 0 : o.result.outcome.betUnits) : 0;
     }
     function parkShape(s) {
-      return s.keys().hasOnly('version,revision,lastOperationId,playerRevision,tickets,spins,wheel,passes,economy,cycleWagerUnits'.split(','))
+      return s.keys().hasOnly('version,revision,lastOperationId,playerRevision,tickets,spins,wheel,passes,economy,cycleWagerUnits,cedros,economyV6'.split(','))
         && s.version == 1 && s.revision is int && s.revision >= 1 && s.revision <= 1000000000
         && s.playerRevision is int && s.lastOperationId is string
+        && s.get('cedros',0) is int && s.get('cedros',0)>=0 && s.get('cedros',0)<=5
         && s.tickets is int && s.tickets >= 0 && s.tickets <= 1000000000
         && s.spins is int && s.spins >= 0 && s.spins <= 10
         && s.passes is map && s.passes.keys().hasOnly('clown,penalty,flying,fingo,bounce'.split(','))
@@ -866,6 +871,92 @@ service cloud.firestore {
       let before=bird?get(/databases/$(database)/documents/players/$(request.auth.uid)).data.peaches:b.tickets;
       return x.get('slotVersion',1)!=5 || e==null || resourceBoundsV5(o,before,e.stolen,bird,b);
     }
+    // V6 checks live on the mandatory linked park write, once per atomic batch.
+    function v6Line(g,a,b,c) {
+      return g[a]>=0 && g[a]==g[b] && g[b]==g[c] ? [12,0,8,0,0,0,25,100,50,0,4,0][g[a]] : 0;
+    }
+    function v6Prize(g,stake) {
+      let sum=v6Line(g,0,1,2)+v6Line(g,3,4,5)+v6Line(g,6,7,8)+v6Line(g,0,4,8)+v6Line(g,2,4,6)+v6Line(g,0,3,6)+v6Line(g,1,4,7)+v6Line(g,2,5,8);
+      return int(stake*sum / 10.0)*(g.toSet().size()==1?10:1);
+    }
+    function cedarLine(g,a,b,c) { return g[a]==5 && g[b]==5 && g[c]==5?1:0; }
+    function cedarMatches(g) {
+      return cedarLine(g,0,1,2)+cedarLine(g,3,4,5)+cedarLine(g,6,7,8)+cedarLine(g,0,4,8)+cedarLine(g,2,4,6)+cedarLine(g,0,3,6)+cedarLine(g,1,4,7)+cedarLine(g,2,5,8);
+    }
+    function v6Normal(p,old,o,s,b) {
+      let x=o.result.outcome; let n=cedarMatches(x.grid); let free=5-b.get('cedros',0);
+      let base=v6Prize(x.grid,o.betUnits); let f=x.feature;
+      return x.grid.size()==9 && x.grid.hasOnly([0,2,5,6,7,8,10,11])
+        && x.get('defense',null)==null && circusBank(p,old,o)
+        && x.cedarAward==(n<free?n:free) && s.cedros==b.get('cedros',0)+x.cedarAward
+        && x.res.win==base / 100.0
+        && (f==null ? o.winUnits==base : f.sym in [0,2,6,7,8,10] && f.grid.size()==9 && f.grid.hasOnly([-1,f.sym])
+          && v6Feature(f,o.winUnits-base) ) ;
+    }
+
+    function v6Feature(f,units) {
+      let stake=int(f.bet*100+0.5); let actual=v6Prize(f.grid,stake); let min=stake*20;
+      return f.res.win==(actual>min?actual:min) / 100.0 && units==(actual>min?actual:min);
+    }
+    function v6Maximum(old,o,b) {
+      let e=b.get('economyV6',{});
+      let target=int(((e.get('wageredUnits',0)+o.betUnits)*9+9) / 10);
+      let budget=e.get('paidUnits',0)-e.get('tigerUnits',0)-target;
+      let available=old.balanceUnits-o.betUnits; let limit=o.betUnits*25;
+      let cap=available<limit?available:limit;
+      return budget<0?0:budget<cap?budget:cap;
+    }
+    function v6Villain(p,old,o,s,b) {
+      let x=o.result.outcome; let r=x.res; let kind=x.get('tony',null)!=null?'tony':x.get('tucker',null)!=null?'tucker':'ray';
+      let stock=b.get('cedros',0); let defended=stock>0 && (kind!='tucker' || old.peaches>0);
+      let defense=x.get('defense',null);
+      return b.spins<9 && x.cedarAward==0 && s.cedros==stock-(defended?1:0)
+        && (defended?defense=={'against':kind,'before':stock,'used':1,'remaining':stock-1}:defense==null)
+        && r.win==0 && r.peach==[] && r.full==false && x.feature==null && o.winUnits==0
+        && villainGrid(x,kind=='tony'?12:kind=='tucker'?13:14)
+        && (kind=='tony'?v6Tony(p,old,o,b,defended):v6Resource(p,old,o,b,defended,kind));
+    }
+    function v6Tony(p,old,o,b,defended) {
+      let x=o.result.outcome; let t=x.tony; let amount=t.stolenUnits; let third=int(amount / 3);
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      return t=={'version':3,'minUnits':o.betUnits,'maxUnits':defended?0:v6Maximum(old,o,b),'stolenUnits':amount,'hits':[third,third,amount-2*third]}
+        && amount is int && (defended?t.maxUnits==0 && amount==0:t.maxUnits>=o.betUnits && amount>=o.betUnits && amount<=t.maxUnits)
+        && p.peaches==old.peaches && x.peaches==p.peaches && p.peachBank==bank && x.peachBank==bank;
+    }
+    function v6Resource(p,old,o,b,defended,kind) {
+      let x=o.result.outcome; let bird=kind=='tucker'; let e=bird?x.tucker:x.ray;
+      let before=bird?old.peaches:b.get('cedros',0); let stolen=e.stolen;
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      // A blocked attack has zero theft, so its exact remaining bank is the old bank.
+      let remainingUnits=bird && stolen>0?bank.units-int(bank.units*stolen / (before*1.0)+0.5):bank.units;
+      return e=={'version':3,'before':before,'stolen':stolen,'remaining':before-stolen-(!bird && defended?1:0)}
+        && stolen is int && (bird && !defended && before>0?stolen>=1 && stolen<=before && stolen<=4:stolen==0)
+        && (bird?p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}:p.peaches==old.peaches && p.peachBank==bank)
+        && x.peaches==p.peaches && x.peachBank==p.peachBank;
+    }
+    function v6Wheel(s) {
+      let w=s.wheel;
+      return s.spins==10?w=={'id':s.lastOperationId,'roundId':s.lastOperationId,'prizeVersion':4,'economyVersion':6,
+        'baseUnits':int(s.cycleWagerUnits*4 / 100.0+0.5),'pockets':[10,1,2,1,3,2,1,5,2,1,3,2,1],'result':null}:w==null;
+    }
+    function v6Spin(s,b,o) {
+      let x=o.result.outcome; let old=get(/databases/$(database)/documents/players/$(request.auth.uid)).data;
+      let p=getAfter(/databases/$(database)/documents/players/$(request.auth.uid)).data;
+      let villain=x.get('tony',null)!=null || x.get('tucker',null)!=null || x.get('ray',null)!=null;
+      return o.game=='circus' && x.parkVersion==1 && x.ticketAward==0 && b.wheel==null && s.spins==b.spins+1
+        && s.cycleWagerUnits==b.get('cycleWagerUnits',0)+o.betUnits && s.tickets==b.tickets && s.passes==b.passes
+        && s.diff(b).affectedKeys().hasOnly('revision,playerRevision,lastOperationId,spins,wheel,cedros,economyV6,cycleWagerUnits'.split(','))
+        && (villain?v6Villain(p,old,o,s,b):v6Normal(p,old,o,s,b)) && v6Wheel(s);
+    }
+    function economyV6Write(s,b,o) {
+      let x=o.result.get('outcome',{}); let spin=o.action=='spin' && x.get('slotVersion',1)==6;
+      let bonus=o.action=='parkBonus' && b.wheel!=null && b.wheel.get('economyVersion',0)==6;
+      let e=b.get('economyV6',{});
+      return (!spin?s.get('cedros',0)==b.get('cedros',0):true) && (spin||bonus?s.economyV6=={'version':1,'rounds':e.get('rounds',0)+(spin?1:0),'wageredUnits':e.get('wageredUnits',0)+(spin?o.betUnits:0),
+        'paidUnits':e.get('paidUnits',0)+o.winUnits,'tigerUnits':e.get('tigerUnits',0)+(spin?x.get('tony',{}).get('stolenUnits',0):0)}
+        : s.get('economyV6',null)==b.get('economyV6',null) && s.get('cedros',0)==b.get('cedros',0));
+    }
+
     function parkSpinState(s,b,o) {
       let x=o.result.outcome; let award=x.ticketAward; let modern=x.get('slotVersion',1)>=2;
       let w=s.wheel;
@@ -892,7 +983,7 @@ service cloud.firestore {
         && r.multiplier in [1,2,3,5,10] && w.pockets[r.index] == r.multiplier
         && r.winUnits == old.baseUnits*r.multiplier && r.extraUnits == (old.prizeVersion==4?r.winUnits:r.winUnits-old.baseUnits)
         && o.winUnits == r.extraUnits && o.result.wheel == w)
-        && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,wheel,economy'.split(','));
+        && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,wheel,economy,economyV6'.split(','));
     }
     function parkCloseState(s,b) {
       return b.wheel != null && b.wheel.result != null && s.wheel == null && s.spins == 0
@@ -911,13 +1002,13 @@ service cloud.firestore {
         && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,passes,tickets'.split(','));
     }
     function circusEconomyWrite(s,b,o) {
-      let before='economy' in b?b.economy:emptyCircusEconomy();
-      let x=o.result.get('outcome',{}); let spin=o.action=='spin' && o.game=='circus';
+      let before='economy' in b?b.economy:{};
+      let x=o.result.get('outcome',{}); let spin=o.action=='spin' && o.game=='circus' && x.get('slotVersion',1)!=6;
       let tracked='economy' in b || spin && x.get('slotVersion',1)==5;
       let e=s.get('economy',{});
       return tracked ? e=={'version':1,'rounds':before.rounds+(spin?1:0),
         'wageredUnits':before.wageredUnits+(spin?o.betUnits:0),
-        'paidUnits':before.paidUnits+((spin||o.action=='parkBonus')?o.winUnits:0),
+        'paidUnits':before.paidUnits+((spin||o.action=='parkBonus' && b.wheel!=null && b.wheel.get('economyVersion',0)!=6)?o.winUnits:0),
         'tigerUnits':before.tigerUnits+(spin?x.get('tony',{}).get('stolenUnits',0):0),
         'ticketsAwarded':before.ticketsAwarded+(spin?x.ticketAward:0),
         'ticketsStolen':before.ticketsStolen+(spin?x.get('ray',{}).get('stolen',0):0)}
@@ -928,12 +1019,12 @@ service cloud.firestore {
     function parkWrite(uid,s) {
       let b=parkBefore(uid);let p=getAfter(/databases/$(database)/documents/players/$(uid)).data;
       let path=operationPath(uid,s.lastOperationId);let o=getAfter(path).data;
-      return parkShape(s) && circusEconomyWrite(s,b,o) && s.revision == b.revision+1 && s.playerRevision == p.revision
+      return parkShape(s) && circusEconomyWrite(s,b,o) && economyV6Write(s,b,o) && s.revision == b.revision+1 && s.playerRevision == p.revision
         // A previously absent operation must be created in this atomic request.
         // /operations/{id}.create validates its full envelope exactly once.
         && p.lastOperationId == s.lastOperationId && !exists(path)
         && (o.action == 'fingo' ? parkGameState(s,b,o) : o.action == 'parkEntry' ? parkEntryState(s,b,p,o) : o.action == 'parkBonus' ? parkBonusState(s,b,o)
-          : o.action == 'parkBonusClose' ? parkCloseState(s,b) : o.action == 'spin' ? parkSpinState(s,b,o) : parkGameState(s,b,o));
+          : o.action == 'parkBonusClose' ? parkCloseState(s,b) : o.action == 'spin' ? (o.result.outcome.get('slotVersion',1)==6?v6Spin(s,b,o):parkSpinState(s,b,o)) : parkGameState(s,b,o));
     }
 
     function financial(uid, p, old) {
