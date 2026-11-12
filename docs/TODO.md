@@ -15,6 +15,7 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Tony Tiger: efeito alaranjado/avermelhado na tela toda durante as patadas (prévia)
 - [x] Roleta: sfx na parada mostrando o valor (fanfarra, grande em ×5/×10) + sfx da ficha batendo no prêmio (baque + plim) — prévia
 - [x] Roleta: moedas voavam 2× (economia v5 = prizeVersion 4 não adiava o voo do giro); agora só o voo final — prévia
 - [x] Prévia oficial agora é o GitHub Pages: https://ric-lab.github.io/King-Rico/circus (Firebase da prévia estourou 10 GB/mês; workflow Firebase da prévia fica só manual)

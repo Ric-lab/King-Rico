@@ -23,9 +23,9 @@ with sync_playwright() as p:
   assert page.locator('.park-prize-value').inner_text()==first_amount
   assert page.locator('.park-tony-loss').count()==0,'Do not add a separate loss badge over King Rico'
   assert page.locator('.park-tony-claws g').first.get_attribute('fill')=='#101018'
-  veil=page.locator('.park-tony-veil').evaluate('e=>({opacity:+getComputedStyle(e).opacity,blur:getComputedStyle(e).backdropFilter,bg:getComputedStyle(e).backgroundColor,top:e.getBoundingClientRect().top})')
-  assert veil['opacity']>.9 and veil['blur']=='blur(4px)' and veil['bg']=='rgba(255, 74, 32, 0.4)',veil
-  assert veil['top']>page.locator('.park-prize-value').bounding_box()['y']+page.locator('.park-prize-value').bounding_box()['height']
+  veil=page.locator('.park-tony-veil').evaluate('e=>({opacity:+getComputedStyle(e).opacity,blur:getComputedStyle(e).backdropFilter,bg:getComputedStyle(e).backgroundColor,top:e.getBoundingClientRect().top,height:e.getBoundingClientRect().height,vh:innerHeight})')
+  assert veil['opacity']>.9 and veil['blur']=='blur(4px)' and '255, 69, 24' in veil['bg'],veil
+  assert veil['top']==0 and veil['height']==veil['vh'],veil
   assert page.evaluate('getComputedStyle(document.querySelector("[data-park-tony=true]")).backgroundImage.includes("assets/tony/head.webp")')
   page.screenshot(path=f'work/preview-tony-hit-{mode}.png')
   page.get_by_role('dialog',name='Tony roubou moedas',exact=True).wait_for(timeout=10000)

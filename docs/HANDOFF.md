@@ -15,13 +15,13 @@
 - README, guia de prévia, fluxo entre agentes e skills apontam ao Pages. Infra Pages e política também sincronizadas à main sem levar mudanças visuais/áudio ainda em avaliação ao oficial; checkpoint de main usa `[skip ci]`.
 - Próximo passo: conferir o workflow Pages desta correção, entregar o link confirmado e manter essa política em toda próxima mudança. Não anunciar uma revisão cujo workflow falhou.
 
-## Prévia (2026-11-11 · Antigravity · fundo das patadas do Tony alaranjado/avermelhado)
+## Prévia (2026-11-12 · Antigravity · efeito alaranjado/avermelhado do Tony na tela toda)
 
-- Pedido do dono: trocar o véu esbranquiçado (`#eef5ff5c`) que aparece atrás das três patadas do Tony Tiger por um tom alaranjado/avermelhado.
-- Alterado `.park-tony-veil` em `ui/park/park.css` de `#eef5ff5c` para `#ff4a2066` (`rgba(255, 74, 32, 0.4)`), preservando `backdrop-filter: blur(4px)`, máscara, posição abaixo do mostrador do prêmio e contraste com os cortes pretos (`#101018`).
-- `tests/tony_browser.py` atualizado e aprovado nos modos normal (`390 px`) e movimento reduzido (`320 px`), conferindo `rgba(255, 74, 32, 0.4)` e capturas em `work/preview-tony-hit-*.png`.
-- Com o GitHub conectado, configurado `build_type: workflow` em `/repos/Ric-lab/King-Rico/pages` e liberada a branch `codex/penalty-clown-preview` na política do ambiente `github-pages` para destravar o workflow `preview-pages.yml`.
-- Próximo passo: dono testar na prévia com `?demo=tony` (primeiro giro cai no Tony Tiger) e aprovar antes de levar à `main`.
+- Pedido do dono: o véu alaranjado/avermelhado das patadas do Tony Tiger estava aparecendo apenas na metade inferior (abaixo do mostrador de prêmio); pediu que cubra a tela toda.
+- Removido o deslocamento vertical `veil.style.top` em `ui/park/tony.js` e alterado `.park-tony-veil` em `ui/park/park.css` para `inset: 0` sem `mask-image`, cobrindo 100% da tela com `#ff4a2066` (`rgba(255, 74, 32, 0.4)`) e mantendo as três garras pretas (`#101018`) por cima.
+- `DEFAULT_DEMO` em `prototypes/circus-preview/browser-wallet.mjs` ajustado para `'tony'` (1º giro já cai no Tony mesmo sem `?demo=`, além de `?demo=tony`).
+- `tests/tony_browser.py` atualizado (`veil.top == 0` e `veil.height == innerHeight`) e aprovado nos modos normal e reduzido, com capturas conferidas em `work/preview-tony-hit-*.png`.
+- Próximo passo: dono testar em https://ric-lab.github.io/King-Rico/circus/?demo=tony e aprovar antes de levar à `main`.
 
 ## Histórico: recuperação inicial do Pages (bloqueio já resolvido)
 

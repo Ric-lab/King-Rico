@@ -3,7 +3,7 @@ import engine from '../../cloud/engine.cjs';
 const KEY='kingRico.parque.mobile-preview.v1',networkFetch=globalThis.fetch.bind(globalThis);
 let tail=Promise.resolve();
 // Prévia engatilhada: sem ?demo= o 1º giro de cada carregamento já mostra a última mudança. ?demo=off = jogo normal.
-const DEFAULT_DEMO='wheel';
+const DEFAULT_DEMO='tony';
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
 let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel'].includes(demoMode);
 async function execute(data){

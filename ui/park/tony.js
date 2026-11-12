@@ -38,8 +38,6 @@ export function installTony(fc){
    fc._tonyHitValue=event.hits[n];prize?.classList.add('is-tony-loss');
    fc.setState({balance:(start-spent)/100,hint:'Tony roubou '+fc.money(spent/100)+' moedas'});
    root.querySelector('.park-tony-announcement').textContent='Tony roubou '+fc.money(event.hits[n]/100)+' moedas';
-   // Keep the actual prize display and HUD sharp; soften the reels below them.
-   veil.style.top=Math.max(wallet?.getBoundingClientRect().bottom||0,(prize?.getBoundingClientRect().bottom||innerHeight*.34)+8)+'px';
    veil.style.opacity='1';later(()=>{veil.style.opacity='0';},1250);
    wallet?.classList.add('is-tony-hit');sound(n);
    const marks=document.createElement('div');marks.className='park-tony-claws';marks.dataset.strike=String(n);

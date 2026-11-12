@@ -180,7 +180,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-tony-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .park-tony-lines polyline{fill:none;stroke:#ed3041;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #ffb3a5)}
 .park-tony-lines ellipse{fill:#ff354410;stroke:#e82839;stroke-width:3;filter:drop-shadow(0 0 3px #ffb3a5)}
-.park-tony-veil{position:absolute;left:0;right:0;bottom:0;top:36%;opacity:0;background:#ff4a2066;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);mask-image:linear-gradient(transparent,#000 36px);-webkit-mask-image:linear-gradient(transparent,#000 36px);transition:opacity .16s ease-out}
+.park-tony-veil{position:absolute;inset:0;opacity:0;background:#ff45187a;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:opacity .16s ease-out}
 .park-tony-claws{position:absolute;left:10%;top:40%;width:80%;height:30%;transform:rotate(-24deg)}
 .park-tony-claws[data-strike="1"]{left:6%;top:44%;transform:rotate(20deg)}
 .park-tony-claws[data-strike="2"]{left:13%;top:41%;transform:rotate(-16deg)}
