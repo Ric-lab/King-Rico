@@ -3,7 +3,7 @@
 Uma lista só para os 3 modelos. Ninguém tem lista própria.
 Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de teste; acrescentar o que o dono pedir; nunca apagar item de outro modelo.
 
-## Em andamento — nova fase do Circus (Codex)
+## Circus v6 — prévia entregue; integração real bloqueada (Codex)
 
 Escopo reservado nesta tarefa: `cloud/` (perfil/motor v6/carteira), `firestore.rules`,
 `ui/park/` (símbolos, defesa e retirada do acesso às atrações), Circus, catálogo/build,
@@ -17,7 +17,8 @@ compartilhadas, sem hierarquia entre agentes.
 - [x] Ingresso deixa de ser recurso especial/entrada. Arquivar atrações e acessos, preservando fontes e assets.
 - [x] Recalibrar/simular retorno próximo de 90%: 5 milhões por aposta e estresse, relatórios v6 compartilhados.
 - [ ] Concluir regras Firestore v6 / persistência real antes de qualquer publicação oficial. Bloqueio: limite de 1.000 expressões; revisão automática rejeitou refatoração do validador central. Defesas de Tony/Tucker/Ray passaram; giros, feature e perdas sem defesa pendentes.
-- [ ] Entregar lote v6 no Pages e confirmar o workflow, sem publicação oficial.
+- [x] Prévia Pages v6 entregue: código `c6bdb3c`, workflow [43312770870](https://github.com/Ric-lab/King-Rico/actions/runs/43312770870) success, 12 navegadores + subdiretório + HEAD 200. Sem mudança no oficial.
+- [ ] Na integração real, conferir snapshot concorrente do contador de cedros/recibo da defesa (ver próximo passo no HANDOFF).
 
 ## A fazer
 - [x] Dono testou e aprovou: patada nova, raspagem e moedas no fim da raspadinha — base f23d8d7 (prévia Pages).

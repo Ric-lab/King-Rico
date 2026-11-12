@@ -1,3 +1,36 @@
+## Prévia v6 online — publicação confirmada, 12/11/2026
+
+**Código publicado:** `c6bdb3c6522cfdd9c76ca993f6e6ed0b3dc75f0a`.
+**Prévia:** https://ric-lab.github.io/King-Rico/circus/ — primeiro giro com cedros.
+**Jogo normal:** https://ric-lab.github.io/King-Rico/circus/?demo=off
+
+[Workflow 43312770870](https://github.com/Ric-lab/King-Rico/actions/runs/43312770870)
+concluiu com **success**: 12 navegadores passaram, incluindo a recarga nova no menu;
+carteira/replay/rotas sob `/King-Rico` passaram; deploy e os cinco HEAD públicos
+retornaram 200. Esta atualização final de documentação não muda o artefato.
+
+**Oficial inalterado:** main `9808d53552fefe412ef31d5ec3e03328068e8c32`.
+Não houve deploy de Hosting Firebase nem regras Firestore. Auditoria v6 (~89,99%)
+e `npm test` (47 arquivos) passaram; integração real **não está pronta**.
+
+**Próximo passo exato:** resolver os sete testes de regras listados em
+[CIRCUS-V6-VALIDACAO.md](CIRCUS-V6-VALIDACAO.md), sem alterar PAYS ou retirar guardas.
+A revisão automática desta sessão do Codex bloqueou a refatoração central; foi
+solicitada autorização específica ao dono e a resposta ainda está pendente.
+Isso é um bloqueio da ferramenta nesta sessão, não uma aprovação entre agentes.
+
+Proposta técnica ainda NÃO aplicada: distribuir os cálculos v6 de pagamento/banco
+no write obrigatório do player e estoque/ledger no write obrigatório do parque,
+preservando os vínculos atômicos e envelopes para exigir ambos; otimizar o caso
+legado sem estoque/ledger v6. Provar aceitação de operações legítimas e rejeição
+de fraude/replay, inclusive v5, antes de main. Durante essa integração, conferir
+que o contador de cedros acompanha snapshots de outro aparelho quando ocioso e
+que a contagem anterior da defesa vem do recibo, sem exibir mais de 5 por uma
+atualização concorrente. A animação nunca escreve recursos.
+
+---
+## Registro do checkpoint anterior (substituído pelo resultado acima)
+
 ## Checkpoint Circus v6 — Codex, 12/11/2026 (não publicar em live)
 
 Implementação em integração: seis pagamentos literais, ingresso comum, cedros

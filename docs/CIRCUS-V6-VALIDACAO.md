@@ -27,6 +27,13 @@ sempre cheio **90,0013%**. Todos em 88,5–91,5%, nenhum acima de 100%.
 As simulações históricas v4/v5 também foram reexecutadas (5 milhões por aposta)
 e seus hashes de módulos comuns atualizados, com retorno na faixa original.
 
+## Publicação da prévia confirmada
+
+Código `c6bdb3c`, [Actions 43312770870](https://github.com/Ric-lab/King-Rico/actions/runs/43312770870), **success**.
+Todos os 12 navegadores e o teste do subdiretório passaram; deploy e HEAD públicos
+200 para circus/, park/, client.js, Three.js e moeda. URL fixa:
+https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53`.
+
 ## Testes
 
 - `npm test`: passou nos 47 arquivos. Casos novos cobrem seis pagamentos,
