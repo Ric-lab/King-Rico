@@ -37,3 +37,14 @@ test('full browser suite runs locally before deploy, keeping Firebase transfer f
  assert.ok(!workflow.includes('KING_RICO_TEST_URL:'),'Do not point all browser contexts at Firebase');
  assert.ok(workflow.includes("method: 'HEAD'"),'Remote route checks must not download the assets again');
 });
+
+test('Pages preview uses fictitious build and local regressions, with Firebase kept manual',async()=>{
+ const pages=await readFile('.github/workflows/preview-pages.yml','utf8');
+ const firebase=await readFile('.github/workflows/preview-channel.yml','utf8');
+ assert.ok(pages.includes('npm run build:preview'));
+ assert.ok(pages.includes('python3 scripts/test-preview-browsers.py'));
+ assert.ok(pages.includes('python3 tests/pages_preview_browser.py'));
+ assert.ok(!pages.includes('hosting:channel:deploy')&&!pages.includes('publish-firestore-rules'));
+ assert.ok(!pages.includes('KING_RICO_TEST_URL:'));
+ assert.ok(!firebase.includes('  push:'));
+});

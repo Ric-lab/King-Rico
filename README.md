@@ -1,7 +1,9 @@
 # King Rico
 
 Jogos casuais de moedas virtuais, com identidade de circo e interface em português.
-Site oficial: **https://king-rico.web.app**. Repositório: **Ric-lab/King-Rico**;
+Site oficial: **https://king-rico.web.app**.
+Prévia padrão para testes: **https://ric-lab.github.io/King-Rico/circus/**
+(carteira fictícia; atualizada pela branch `codex/penalty-clown-preview`). Repositório: **Ric-lab/King-Rico**;
 branch de publicação: **main**. Firebase **king-rico**, plano Spark, sem Cloud Functions.
 
 ## Jogos e fontes

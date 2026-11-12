@@ -3,6 +3,7 @@ import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {build} from 'esbuild';
+import {relocatePreview} from './preview-base.mjs';
 const root=path.resolve(import.meta.dirname,'..');process.chdir(root);
 execFileSync(process.execPath,['scripts/build.mjs','--emulator'],{stdio:'inherit'});
 await mkdir('work',{recursive:true});
@@ -29,4 +30,5 @@ for(const route of [...routes,{path:'/home',file:'Fortune Circus.dc.html'}]){
  const dir=path.join('dist',route.path.slice(1));await mkdir(dir,{recursive:true});
  await writeFile(path.join(dir,'index.html'),'<script>location.replace('+JSON.stringify('/'+encodeURIComponent(route.file))+'+location.search+location.hash)</script>');
 }
+await relocatePreview('dist',process.argv.find(a=>a.startsWith('--base='))?.slice(7)||'');
 console.log('Local preview ready in dist/; use a static server on port 4178.');

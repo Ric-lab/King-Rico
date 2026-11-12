@@ -1,0 +1,114 @@
+name: Prévia no GitHub Pages
+on:
+  push:
+    branches: ['codex/penalty-clown-preview']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: king-rico-preview-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+    outputs:
+      base_path: ${{ steps.pages.outputs.base_path }}
+      base_url: ${{ steps.pages.outputs.base_url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Preparar o Pages existente para publicação por Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_API: ${{ github.api_url }}
+          GH_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          url = os.environ['GH_API']+'/repos/'+os.environ['GH_REPOSITORY']+'/pages'
+          headers = {'Authorization':'Bearer '+os.environ['GH_TOKEN'], 'Accept':'application/vnd.github+json', 'Content-Type':'application/json', 'X-GitHub-Api-Version':'2022-11-28'}
+          def request(method, data=None):
+              body = json.dumps(data).encode() if data else None
+              with urllib.request.urlopen(urllib.request.Request(url, data=body, headers=headers, method=method)) as r:
+                  return json.load(r)
+          try:
+              try:
+                  site = request('GET')
+              except urllib.error.HTTPError as error:
+                  if error.code != 404: raise
+                  site = request('POST', {'build_type':'workflow'})
+              if site.get('cname'):
+                  raise RuntimeError('O Pages já possui domínio próprio; revisar antes de substituir esse site.')
+              if site.get('build_type') != 'workflow':
+                  site = request('PUT', {'build_type':'workflow'})
+              print('GitHub Pages preparado:', site['html_url'])
+          except urllib.error.HTTPError as error:
+              raise SystemExit(f'HTTP {error.code}: habilite Settings > Pages > Source > GitHub Actions no repositório; não é preciso criar conta em outro serviço.')
+          PY
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+        id: pages
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run build:preview
+      - name: Validar todos os navegadores dentro do runner
+        env:
+          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+        run: |
+          python3 -m pip install playwright
+          python3 scripts/test-preview-browsers.py
+      - name: Ajustar somente a prévia para o subdiretório do Pages
+        env:
+          PREVIEW_BASE: ${{ steps.pages.outputs.base_path }}
+        run: node scripts/preview-base.mjs --base="$PREVIEW_BASE"
+      - name: Conferir rotas, assets e carteira no subdiretório
+        env:
+          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+          KING_RICO_PREVIEW_BASE: ${{ steps.pages.outputs.base_path }}
+        run: python3 tests/pages_preview_browser.py
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: dist
+      - name: Guardar evidências da prévia
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: previa-pages-${{ github.sha }}
+          path: |
+            work/preview-*.png
+            work/*_browser.py.log
+          if-no-files-found: ignore
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        id: deployment
+      - name: Conferir publicação com requisições sem corpo
+        env:
+          PREVIEW_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          node --input-type=module <<'JS'
+          const root = process.env.PREVIEW_URL.replace(/\/$/, '') + '/';
+          for (const file of ['circus/', 'park/', 'cloud/client.js', 'runtime/three.module.js', 'assets/symbols/sym-coin.webp']) {
+            const response = await fetch(new URL(file, root), {method:'HEAD', signal:AbortSignal.timeout(20000)});
+            if (!response.ok) throw Error(`${file}: HTTP ${response.status}`);
+            console.log(`HEAD ${file}: ${response.status}`);
+          }
+          JS
+          echo "### Prévia compartilhada" >> "$GITHUB_STEP_SUMMARY"
+          echo "${PREVIEW_URL%/}/circus/" >> "$GITHUB_STEP_SUMMARY"
+          echo "Jogo normal: ${PREVIEW_URL%/}/circus/?demo=off" >> "$GITHUB_STEP_SUMMARY"
+          echo "Moedas fictícias; Firebase de produção e site oficial inalterados." >> "$GITHUB_STEP_SUMMARY"

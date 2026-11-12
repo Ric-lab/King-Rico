@@ -1,3 +1,46 @@
+# Prévia padrão: GitHub Pages
+
+**Abra:** https://ric-lab.github.io/King-Rico/circus/
+
+Decisão do dono: usar SEMPRE esse host nos links de teste. O site oficial segue
+https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fictícias.
+
+- Demonstração da última mudança: endereço acima, com o primeiro giro engatilhado.
+- Jogo normal: https://ric-lab.github.io/King-Rico/circus/?demo=off
+- Eventos específicos: `?demo=tony`, `?demo=tucker`, `?demo=ray`,
+  `?demo=bigwin` e `?demo=spacewin`.
+- Atualização: push na branch `codex/penalty-clown-preview` → workflow
+  **Prévia no GitHub Pages** (`preview-pages.yml`). Só anunciar a revisão após sucesso.
+- Os testes que verificam giros naturais precisam de `?demo=off`; não remover
+  a demonstração padrão para fazê-los passar. Regressões completas ficam locais
+  ao runner; no host público, apenas HEAD.
+- O canal Firebase é legado/manual. Os endereços abaixo são histórico da migração;
+  não devem ser usados como links atuais para o dono.
+
+---
+
+## Histórico da migração e do canal anterior
+
+## Recuperação: prévia no GitHub Pages
+
+Workflow novo: `.github/workflows/preview-pages.yml`, branch compartilhada
+`codex/penalty-clown-preview`. O endereço será o `page_url` confirmado pelo
+GitHub Actions; não confundir preparação com deploy concluído.
+
+O build continua sendo a carteira fictícia, sem login/saldo de produção.
+No Pages, os URLs gerados recebem o `base_path` do projeto (normalmente
+`/King-Rico`). Comando local: `npm run build:preview -- --base=/King-Rico`.
+A suíte completa roda no runner; um teste adicional cobre caminhos, assets,
+entrada nas atrações, giro, replay e recarga sob o subdiretório.
+
+Firebase preview fica manual nesta branch. O projeto oficial `king-rico` e
+seu workflow continuam independentes. Se o Pages negar configuração, o dono
+pode precisar selecionar **Settings → Pages → Source → GitHub Actions** e
+permitir a branch de integração no ambiente `github-pages`. Respeitar eventuais
+restrições existentes; não anunciar disponibilidade antes do sucesso real.
+
+---
+
 ## Transferência Spark: testes locais obrigatórios
 
 A franquia mensal do projeto de prévia atingiu 10/10 GB (aviso recebido em
@@ -97,7 +140,7 @@ nativas usam os emuladores; a prévia visual não comprova login real.
 Enviar commits para esta branch não publica o site. O workflow de Hosting
 publica ao atualizar `main`; não mesclar sem autorização para publicação.
 
-## Prévia online
+## Canal Firebase anterior — histórico/manual
 
 **Abra:** https://king-rico-previa-1408805633--previa-okw4doeq.web.app/circus
 

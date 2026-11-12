@@ -1,5 +1,13 @@
 # HANDOFF
 
+## Prévia padrão fixada no GitHub Pages — decisão do dono
+
+- Link de teste SEMPRE: **https://ric-lab.github.io/King-Rico/circus/**. Jogo normal com `?demo=off`; exemplos engatilhados com `?demo=tony/tucker/ray/bigwin/spacewin`. Oficial continua https://king-rico.web.app. Não substituir o link de teste por Firebase quando o Pages falhar.
+- Pages está configurado e já publicou de verdade: workflow 43121737708, commit 32086d4, build/deploy e cinco HEAD aprovados. O Antigravity destravou a configuração Pages e a branch no ambiente; o bloqueio HTTP 403 anterior está resolvido.
+- Último commit dd789c1 não chegou ao host: workflow 43123394485 reprovou preview_motion/circus_columns/circus_payout porque o novo DEFAULT_DEMO=tucker interferia nos cenários naturais. Corrigidos somente os URLs desses testes e do smoke do subdiretório para `?demo=off`; demonstração padrão do dono preservada.
+- README, guia de prévia, fluxo entre agentes e skills apontam ao Pages. Infra Pages e política também sincronizadas à main sem levar mudanças visuais/áudio ainda em avaliação ao oficial; checkpoint de main usa `[skip ci]`.
+- Próximo passo: conferir o workflow Pages desta correção, entregar o link confirmado e manter essa política em toda próxima mudança. Não anunciar uma revisão cujo workflow falhou.
+
 ## Limite de transferência da prévia — 11/11/2026
 
 - O dono recebeu aviso de 10/10 GB de download mensal no projeto Spark **king-rico-previa-1408805633**, separado de **king-rico** (oficial). O oficial respondeu HTTP 200 em verificação HEAD; não foi modificado nem recebeu plano pago.
