@@ -1,5 +1,19 @@
 # Peças da máquina Circus
 
+## Símbolos e contador v6 — prévia, 12/11/2026
+
+As três fitas e toda a geometria aprovada são preservadas. Sequência transitória
+por ID estável: ingresso (10), circo (2), capa (0), moeda (6), diamante (8),
+coroa (7), cedro (5), Happeach (11), Tony (12), Tucker (13), Ray (14).
+Os seis primeiros pagam; os demais são especiais. Cabeças dos vilões e o
+ingresso usam seus assets separados, sem recortar uma casa errada do atlas.
+A placa à esquerda agora exibe cedros **n/5**, com `sym-scepter.png`; o antigo
+`ticket-wallet-v2.webp` fica guardado. O controle está reservado em
+`ui/park/controller-reserved.svg` e não entra nas fitas nem no sorteio.
+Nenhum aro, formato, posição, cor ou clique do spin foi redesenhado nesta fase.
+
+
+
 ## Spin atual da prévia — 09/11/2026
 
 Correção de contorno: o dourado atual deriva de spin-rim-iridescent-v3.svg,

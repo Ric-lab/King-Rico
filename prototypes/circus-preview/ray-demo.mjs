@@ -1,5 +1,7 @@
 // Explicit visual demo; production store and normal lotteries never invoke it.
-export function rayDemo(player,park,bet){
+import {resourceDemo} from './resource-demo.mjs';
+export function rayDemo(player,park,bet,version=6){
+ if(version>=6)return resourceDemo(player,park,bet,'ray');
  const before=park.tickets;
  if(!Number.isInteger(before)||before<0)throw Error('Contagem de ingressos inválida.');
  const stolen=Math.min(1,before),remaining=before-stolen;

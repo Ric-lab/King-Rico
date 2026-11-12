@@ -1,5 +1,6 @@
 // Rebuild the visual preview entirely from this checkout; no Firebase connection.
 import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {build} from 'esbuild';
@@ -21,7 +22,13 @@ await writeFile('dist/ui/app-shell.js','/* Local preview: no service worker or i
 // bonus handlers that call unavailable production wallet methods.
 for(const name of await readdir('dist'))if(name.endsWith('.html')){
  const file=path.join('dist',name),html=await readFile(file,'utf8');
- await writeFile(file,html.replace(/<script\b[^>]*\bsrc=["'][^"']*ui\/park\/client\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/g,''));
+ let updated=html.replace(/<script\b[^>]*\bsrc=["'][^"']*ui\/park\/client\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/g,'');
+ // Pages may cache scripts for minutes; tie changed preview modules to their bytes.
+ for(const [,url] of updated.matchAll(/(?:src|from)="(\.\/[^"?]+\.js)"/g)){
+  const revision=createHash('sha256').update(await readFile(path.join('dist',url))).digest('hex').slice(0,12);
+  updated=updated.replaceAll('="'+url+'"','="'+url+'?v='+revision+'"');
+ }
+ await writeFile(file,updated);
 }
 
 const routes=JSON.parse(await readFile('site/routes.json','utf8'));

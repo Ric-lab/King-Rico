@@ -1,5 +1,7 @@
 // Explicit demo only: not called by the production store or normal slot lottery.
-export function tuckerDemo(player,park,bet){
+import {resourceDemo} from './resource-demo.mjs';
+export function tuckerDemo(player,park,bet,version=6){
+ if(version>=6)return resourceDemo(player,park,bet,'tucker');
  const before=player.peaches;
  if(!Number.isInteger(before)||before<0)throw Error('Contagem de Happeach inválida.');
  const bank=player.peachBank?.count===before?player.peachBank:{count:before,units:before*Math.round(bet*100)};

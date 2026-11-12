@@ -15,7 +15,7 @@ with sync_playwright() as p:
   page.add_init_script('''window.boardingPoses=[];new MutationObserver(records=>{for(const r of records){const e=r.target;if(e.classList?.contains('park-bigwin-jumper')&&e.dataset.pose&&boardingPoses.at(-1)!==e.dataset.pose)boardingPoses.push(e.dataset.pose);}}).observe(document,{subtree:true,attributes:true,attributeFilter:['data-pose']});''')
   page.goto(BASE+('/circus?demo=spacewin' if space else '/circus?demo=bigwin'));page.wait_for_function('window.__fc?._parkHook&&!document.querySelector("#kr-boot-screen")');collect_daily(page)
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
-  initial=page.evaluate('KingRicoCloud.player.balance');prize=round(10*80*PAYS[3] if space else 10*PAYS[8],2);suffix=str(width)+('-space' if space else '')
+  initial=page.evaluate('KingRicoCloud.player.balance');prize=round(10*80*PAYS[7] if space else 10*2*PAYS[7],2);suffix=str(width)+('-space' if space else '')
   page.evaluate('''()=>{const fetch=window.fetch;window.flightRequests=[];window.fetch=(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d)flightRequests.push(d.action);return fetch(u,o);};}''')
   page.get_by_role('button',name='Girar',exact=True).click()
   flight=page.get_by_role('region',name='Voo do grande prêmio',exact=True);flight.wait_for()
@@ -83,7 +83,7 @@ with sync_playwright() as p:
    assert float(flight.evaluate('e=>getComputedStyle(e).getPropertyValue("--flight-space")'))>(.99 if space else 0)
 
    frames=page.evaluate('flightBackgroundFrames.filter(f=>f.elapsed>1400)')
-   assert len(frames)>10 and all(f['sky']>.999 and f['scene']>.999 for f in frames),'Background must remain opaque while counting'
+   assert len(frames)>10 and all(f['sky']>.999 and f['scene']>.999 for f in frames),('Background must remain opaque while counting',len(frames),[f for f in frames if f['sky']<=.999 or f['scene']<=.999][:8])
    assert all(b['space']>=a['space']-.001 for a,b in zip(frames,frames[1:])),'Space must fade in continuously without reverting to sky'
    assert flight.locator('.park-propeller-rotor').first.evaluate('e=>!getComputedStyle(e).transform.startsWith("matrix3d")')
    page.screenshot(path=f'work/preview-bigwin-result-{suffix}.png')

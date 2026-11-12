@@ -1,7 +1,7 @@
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {readFile} from 'node:fs/promises';
+import {readFile,writeFile} from 'node:fs/promises';
 import {initializeApp,deleteApp} from 'firebase/app';
 import {getAuth,connectAuthEmulator,GoogleAuthProvider,signInWithCredential,signOut} from 'firebase/auth';
 import {getFirestore,connectFirestoreEmulator,doc,getDoc,setDoc,updateDoc,deleteDoc,writeBatch,serverTimestamp} from 'firebase/firestore';
@@ -13,7 +13,7 @@ const apps=[];let environment;
 before(async()=>{
   environment=await initializeTestEnvironment({projectId:'demo-king-rico',firestore:{host:'127.0.0.1',port:8085,rules:await readFile('firestore.rules','utf8')}});
 });
-after(async()=>{await Promise.all(apps.map(deleteApp));await environment?.cleanup();});
+after(async()=>{if(process.env.KR_RULE_COVERAGE)try{await writeFile('work/v6-rule-coverage.json',await (await fetch('http://127.0.0.1:8085/emulator/v1/projects/demo-king-rico:ruleCoverage')).text());}catch{}await Promise.all(apps.map(deleteApp));await environment?.cleanup();});
 const request=data=>({requestId:randomUUID(),...data});
 test('Circus v5 banks contributing stakes, rejects inflation, and replays a bonus across devices once',async()=>{
   const name='circus-bank-'+randomUUID();let draws=[];
@@ -1218,13 +1218,13 @@ test('Circus v5 normal spin, tenth bonus, replay and old v4 client preserve the 
  const legacy=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:4}));assert.equal(legacy.park.economy.rounds,3);
  assert.equal((await getDoc(parkRef)).data().economy.rounds,3);
 });
-test('Circus v6: real rules, cedar awards and all protected villains commit and replay once',async()=>{
+for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0],['tony-bare',0,0,3],['feature',0,0,4],['tenth',.99,0,0]])test('Circus v6 rules/replay '+kind+' stock '+cedros,async()=>{
  const {default:park}=await import('../cloud/park.cjs');const {default:controller}=await import('../cloud/circus-control-v6.cjs');
- for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0]]){
   let sequence=[];const c=await client('v6-'+kind+'-'+randomUUID(),undefined,{rng:()=>sequence.length?sequence.shift():.99});await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
-  await environment.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),'players',c.uid),{peaches,peachBank:{count:peaches,units:peaches*251}});await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:100,cedros,economyV6:{...controller.freshEconomy(),paidUnits:kind==='tony'||draw>.5&&draw<.55?100000:0}});});
-  sequence=kind==='cedar'?[.99,...Array(9).fill(.1)]:kind==='normal'?Array(30).fill(.99):Array(30).fill(draw);
+  await environment.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),'players',c.uid),{peaches,peachBank:{count:peaches,units:peaches*251}});await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:100,cedros,economyV6:{...controller.freshEconomy(),paidUnits:kind.startsWith('tony')||draw>.5&&draw<.55?100000:0}});});
+  if(kind==='tenth')await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid,'park','state'),{spins:9,cycleWagerUnits:9000}));
+  sequence=kind==='feature'?[.99,0,...Array.from({length:8},()=>[.99,.4]).flat()]:kind==='tenth'?Array(30).fill(.99):kind==='cedar'?[.99,...Array(9).fill(.1)]:kind==='normal'?Array(30).fill(.99):Array(30).fill(draw);
   const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
   const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
   if(cedros){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990);}
@@ -1232,5 +1232,21 @@ test('Circus v6: real rules, cedar awards and all protected villains commit and 
   assert.deepEqual((await c.call(req)).park,r.park);
   // Same client's retry validates the immutable operation; refresh reads persisted stock.
   assert.equal((await getDoc(parkRef)).data().cedros,r.park.cedros);
+});
+test('Circus v6 rejects forged coin awards, defense stock, conversion of old tickets and economy history',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');const name='v6-forgery-'+randomUUID(),c=await client(name);await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state'),old=(await getDoc(ref)).data(),before=park.fresh();
+ async function forge(change){
+  const id=randomUUID(),s=structuredClone(before),x=park.spin(old,s,10,id,()=>.99,6);
+  const p={...old,balanceUnits:old.balanceUnits-1000+x.winUnits,peaches:x.peaches,peachBank:x.peachBank,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp()};
+  change(x,p,s);s.revision=1;s.playerRevision=p.revision;s.lastOperationId=id;
+  const result={game:'circus',bet:10,balanceBefore:1000,balanceDebited:990,baseBalance:p.balanceUnits/100,outcome:x};
+  const batch=writeBatch(c.db);batch.set(ref,p);batch.set(parkRef,s);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged-v6',betUnits:1000,winUnits:x.winUnits,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});await assertFails(batch.commit());
  }
+ await forge((x,p,s)=>{x.winUnits++;x.res.win+=.01;p.balanceUnits++;s.economyV6.paidUnits++;});
+ await forge((x,p,s)=>{x.cedarAward=1;s.cedros=1;});
+ await forge((x,p,s)=>{s.cedros=6;});
+ await forge((x,p,s)=>{s.tickets=1;s.cedros=1;});
+ await forge((x,p,s)=>{s.economyV6.paidUnits++;});
+ await forge((x,p,s)=>{x.defense={against:'tony'};});
 });

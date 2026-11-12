@@ -1,3 +1,9 @@
+> **Prévia v6 (12/11/2026):** apenas Circus ativo; ingresso comum paga moedas,
+> cedros protegem dos três vilões e atrações ficam arquivadas. Leia
+> [PARQUE.md](docs/PARQUE.md), [TODO](docs/TODO.md) e o bloqueio financeiro em
+> [HANDOFF](docs/HANDOFF.md) antes de integrar esta branch à main.
+> A prévia Pages usa moedas fictícias; não publicar v6 em live com testes de regras falhando.
+
 # King Rico
 
 Jogos casuais de moedas virtuais, com identidade de circo e interface em português.

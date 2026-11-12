@@ -11,26 +11,28 @@ testes e documentação da economia. Preservar sons, patadas e raspadinha aprova
 Claude/Gemini: consultar este registro antes de editar os mesmos módulos; regras
 compartilhadas, sem hierarquia entre agentes.
 
-- [ ] Seis pagantes: ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10.
-- [ ] Cedro: trinca dá 1, estoque até 5; gastar 1 para impedir uma ocorrência de Tony, Tucker OU Ray (confirmação atual do dono). Não converter ingressos antigos em cedros.
-- [ ] Controle de videogame: reservar asset; fora do sorteio até definir o jogo (confirmação atual do dono).
-- [ ] Ingresso deixa de ser recurso especial/entrada. Arquivar atrações e acessos, preservando fontes e assets.
-- [ ] Recalibrar/simular retorno próximo de 90%, testar regras/replay/retomada e entregar prévia Pages. Sem publicação oficial automática.
+- [x] Seis pagantes: ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10.
+- [x] Cedro: trinca dá 1, estoque até 5; gastar 1 para impedir uma ocorrência de Tony, Tucker OU Ray (confirmação atual do dono). Não converter ingressos antigos em cedros.
+- [x] Controle de videogame: reservar asset; fora do sorteio até definir o jogo (confirmação atual do dono).
+- [x] Ingresso deixa de ser recurso especial/entrada. Arquivar atrações e acessos, preservando fontes e assets.
+- [x] Recalibrar/simular retorno próximo de 90%: 5 milhões por aposta e estresse, relatórios v6 compartilhados.
+- [ ] Concluir regras Firestore v6 / persistência real antes de qualquer publicação oficial. Bloqueio: limite de 1.000 expressões; revisão automática rejeitou refatoração do validador central. Defesas de Tony/Tucker/Ray passaram; giros, feature e perdas sem defesa pendentes.
+- [ ] Entregar lote v6 no Pages e confirmar o workflow, sem publicação oficial.
 
 ## A fazer
 - [x] Dono testou e aprovou: patada nova, raspagem e moedas no fim da raspadinha — base f23d8d7 (prévia Pages).
-- [ ] Rolos da máquina — novos assets e pagamentos, NESTA ORDEM (menor → maior):
+- [x] Rolos da máquina — assets e pagamentos v6, NESTA ORDEM (menor → maior):
   ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10
-- [ ] Símbolos especiais além desses:
+- [x] Símbolos especiais além desses (v6 na prévia):
   - Vilões: Tiger (Tony), Toucan (Tucker), Ray
   - Defesa: cedro — cada trinca dá 1, junta até 5; o Ray passa a roubar cedros
   - Happeach
-  - Controle de videogame (abre um jogo ainda a definir)
-- [ ] Refazer a economia (RTP ~90%) com a nova tabela antes de publicar
-- [ ] Confirmar que a prévia engatilhada (dd789c1) mostra o Tucker no 1º giro sem ?demo
+  - Controle de videogame reservado, fora do sorteio até definir o jogo
+- [x] Refazer a economia (RTP ~90%) com a nova tabela — auditoria v6; regras reais ainda bloqueiam a publicação oficial
+- [x] Engatilhamento antigo substituído na v6: padrão mostra trinca de cedros; `?demo=off` é jogo normal; `?demo=tucker` continua disponível para testar a cena, sem afetar o sorteio normal.
 - [ ] Música de fundo no mesmo ritmo da abertura do Bingo Plinko (repo Ric-lab/Bingo-Plinko-Lucky-Machine), sem letra, só em alguns momentos
 - [ ] Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin
-- [ ] Tirar ingressos e atrações; no lugar: decidir entre minigames rápidos ou cedro mágico (defesa contra trinca de vilões)
+- [x] Tirar ingressos como recurso e arquivar atrações; decisão confirmada: cedro protege dos três vilões, até 5. Ingresso comum paga 0,4×.
 - [ ] Publicar no site os sons novos, depois que o dono aprovar na prévia
 
 ## Ideias soltas (não fazer sem o dono pedir)

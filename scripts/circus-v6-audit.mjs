@@ -12,7 +12,7 @@ export function auditV6({spins=5000000,bet=10,seed=472831,strategy='fixed',armor
   if(armor)s.cedros=5;
   const x=park.spin(p,s,b,'audit',rng,6),loss=x.tony?.stolenUnits||0;
   p.balanceUnits+=x.winUnits-stake-loss;p.peaches=x.peaches;p.peachBank=x.peachBank;
-  wagered+=stake;paid+=x.winUnits;theft+=loss;defenses+=x.defense?.used||0;awards+=x.cedarAward||0;hits+=x.winUnits>0;features+=!!x.feature;
+  wagered+=stake;paid+=x.winUnits;theft+=loss;defenses+=x.defense?1:0;awards+=x.cedarAward||0;hits+=x.winUnits>0;features+=!!x.feature;
   for(const k of Object.keys(villains))villains[k]+=!!x[k];
   if(s.wheel){const extra=park.bonus(s,s.wheel.id,rng);wheel+=extra;p.balanceUnits+=extra;s.wheel=null;s.spins=0;s.cycleWagerUnits=0;}
  }

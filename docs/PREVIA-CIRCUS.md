@@ -5,10 +5,10 @@
 Decisão do dono: usar SEMPRE esse host nos links de teste. O site oficial segue
 https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fictícias.
 
-- Demonstração da última mudança: endereço acima, com o primeiro giro engatilhado.
+- Demonstração v6: endereço acima, primeiro giro com trinca de **cedros** para testar a coleta/defesa. Moedas fictícias.
 - Jogo normal: https://ric-lab.github.io/King-Rico/circus/?demo=off
 - Eventos específicos: `?demo=tony`, `?demo=tucker`, `?demo=ray`,
-  `?demo=bigwin` e `?demo=spacewin`.
+  `?demo=cedar`, `?demo=bigwin` e `?demo=spacewin`.
 - Atualização: push na branch `codex/penalty-clown-preview` → workflow
   **Prévia no GitHub Pages** (`preview-pages.yml`). Só anunciar a revisão após sucesso.
 - Os testes que verificam giros naturais precisam de `?demo=off`; não remover
@@ -16,6 +16,10 @@ https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fict
   ao runner; no host público, apenas HEAD.
 - O canal Firebase é legado/manual. Os endereços abaixo são histórico da migração;
   não devem ser usados como links atuais para o dono.
+
+**V6:** pagamentos novos, cedros até 5 e atrações arquivadas. Ver
+[CIRCUS-V6-VALIDACAO.md](CIRCUS-V6-VALIDACAO.md). Regras reais ainda bloqueadas;
+esta publicação é apenas a prévia fictícia, sem mudança no oficial.
 
 ---
 

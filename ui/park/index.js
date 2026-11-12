@@ -71,7 +71,7 @@ function bootCircus(){
  const timer=setInterval(()=>{
  const fc=window.__fc;if(!fc||!Cloud.player||!state)return;
  if(!fc._parkHook){
-  globalThis.KingRicoCircusEconomy={symbols:circusProfile.slotSymbols,tier:circusProfile.circusProfile.tier};
+  globalThis.KingRicoCircusEconomy={symbols:circusProfile.slotSymbols,pick:circusProfile.pick,tier:circusProfile.circusProfile.tier};
   fc._parkHook=true;fc.setState({homeOpen:false});
   const stage=fc.lightsRef.current.parentElement;
   const backdrop=[...document.querySelectorAll('div')].find(e=>e.style.backgroundImage.includes('stage-bleed-v5-lossless.webp'));

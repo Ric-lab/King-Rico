@@ -1,3 +1,9 @@
+> Prévia Circus v6 (12/11/2026): cabeçalho mostra saldo, Home e menu, sem botão
+> Parque nem contador de entradas. A placa esquerda da máquina mostra cedros n/5
+> e abre uma explicação por toque. A recarga simulada de 30s / +1.000 moedas fica
+> no menu, com os componentes RewardAd e RewardReceipt existentes. As instruções
+> de navegação do parque abaixo são históricas para os jogos arquivados.
+
 # Controles compartilhados
 
 Fortune Wheel é a referência para gradiente dourado, aro escuro e profundidade dos controles. `controls.css` concentra a aparência; cada jogo mantém posicionamento, dimensões de ações e lógica.

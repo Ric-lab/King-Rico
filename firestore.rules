@@ -872,20 +872,25 @@ service cloud.firestore {
       return x.get('slotVersion',1)!=5 || e==null || resourceBoundsV5(o,before,e.stolen,bird,b);
     }
     // V6 checks live on the mandatory linked park write, once per atomic batch.
-    function v6Line(g,a,b,c) {
-      return g[a]>=0 && g[a]==g[b] && g[b]==g[c] ? [12,0,8,0,0,0,25,100,50,0,4,0][g[a]] : 0;
+    // Classify each combination once. Count those IDs for both coins and cedars.
+    // Property-tested against engine.evaluate on 100,000 grids (circus-v6.test.cjs).
+    function v6Matches(g) {
+      return [g[0]==g[1] && g[1]==g[2]?g[0]:-1,g[3]==g[4] && g[4]==g[5]?g[3]:-1,
+        g[6]==g[7] && g[7]==g[8]?g[6]:-1,g[0]==g[4] && g[4]==g[8]?g[0]:-1,
+        g[2]==g[4] && g[4]==g[6]?g[2]:-1,g[0]==g[3] && g[3]==g[6]?g[0]:-1,
+        g[1]==g[4] && g[4]==g[7]?g[1]:-1,g[2]==g[5] && g[5]==g[8]?g[2]:-1];
+    }
+    function v6Sum(lines) {
+      return (8-lines.removeAll([0]).size())*12+(8-lines.removeAll([2]).size())*8
+        +(8-lines.removeAll([6]).size())*25+(8-lines.removeAll([7]).size())*100
+        +(8-lines.removeAll([8]).size())*50+(8-lines.removeAll([10]).size())*4;
     }
     function v6Prize(g,stake) {
-      let sum=v6Line(g,0,1,2)+v6Line(g,3,4,5)+v6Line(g,6,7,8)+v6Line(g,0,4,8)+v6Line(g,2,4,6)+v6Line(g,0,3,6)+v6Line(g,1,4,7)+v6Line(g,2,5,8);
-      return int(stake*sum / 10.0)*(g.toSet().size()==1?10:1);
-    }
-    function cedarLine(g,a,b,c) { return g[a]==5 && g[b]==5 && g[c]==5?1:0; }
-    function cedarMatches(g) {
-      return cedarLine(g,0,1,2)+cedarLine(g,3,4,5)+cedarLine(g,6,7,8)+cedarLine(g,0,4,8)+cedarLine(g,2,4,6)+cedarLine(g,0,3,6)+cedarLine(g,1,4,7)+cedarLine(g,2,5,8);
+      return int(stake*v6Sum(v6Matches(g))*(g.toSet().size()==1?10:1) / 10.0+0.5);
     }
     function v6Normal(p,old,o,s,b) {
-      let x=o.result.outcome; let n=cedarMatches(x.grid); let free=5-b.get('cedros',0);
-      let base=v6Prize(x.grid,o.betUnits); let f=x.feature;
+      let x=o.result.outcome; let lines=v6Matches(x.grid); let n=8-lines.removeAll([5]).size(); let free=5-b.get('cedros',0);
+      let base=int(o.betUnits*v6Sum(lines)*(x.grid.toSet().size()==1?10:1) / 10.0+0.5); let f=x.feature;
       return x.grid.size()==9 && x.grid.hasOnly([0,2,5,6,7,8,10,11])
         && x.get('defense',null)==null && circusBank(p,old,o)
         && x.cedarAward==(n<free?n:free) && s.cedros==b.get('cedros',0)+x.cedarAward
@@ -911,10 +916,10 @@ service cloud.firestore {
       let stock=b.get('cedros',0); let defended=stock>0 && (kind!='tucker' || old.peaches>0);
       let defense=x.get('defense',null);
       return b.spins<9 && x.cedarAward==0 && s.cedros==stock-(defended?1:0)
-        && (defended?defense=={'against':kind,'before':stock,'used':1,'remaining':stock-1}:defense==null)
+        && (defended?defense=={'against':kind}:defense==null)
         && r.win==0 && r.peach==[] && r.full==false && x.feature==null && o.winUnits==0
         && villainGrid(x,kind=='tony'?12:kind=='tucker'?13:14)
-        && (kind=='tony'?v6Tony(p,old,o,b,defended):v6Resource(p,old,o,b,defended,kind));
+        && (kind=='tony'?v6Tony(p,old,o,b,defended):defended || kind=='ray'?v6UntouchedResource(p,old,o,kind):v6Tucker(p,old,o));
     }
     function v6Tony(p,old,o,b,defended) {
       let x=o.result.outcome; let t=x.tony; let amount=t.stolenUnits; let third=int(amount / 3);
@@ -923,15 +928,22 @@ service cloud.firestore {
         && amount is int && (defended?t.maxUnits==0 && amount==0:t.maxUnits>=o.betUnits && amount>=o.betUnits && amount<=t.maxUnits)
         && p.peaches==old.peaches && x.peaches==p.peaches && p.peachBank==bank && x.peachBank==bank;
     }
-    function v6Resource(p,old,o,b,defended,kind) {
-      let x=o.result.outcome; let bird=kind=='tucker'; let e=bird?x.tucker:x.ray;
-      let before=bird?old.peaches:b.get('cedros',0); let stolen=e.stolen;
+    // These branches enforce the same resource transition, without computing a
+    // proportional Happeach loss for Ray or a blocked/zero-loss event.
+    function v6UntouchedResource(p,old,o,kind) {
+      let x=o.result.outcome; let event=kind=='ray'?x.ray:x.tucker;
       let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
-      // A blocked attack has zero theft, so its exact remaining bank is the old bank.
-      let remainingUnits=bird && stolen>0?bank.units-int(bank.units*stolen / (before*1.0)+0.5):bank.units;
-      return e=={'version':3,'before':before,'stolen':stolen,'remaining':before-stolen-(!bird && defended?1:0)}
-        && stolen is int && (bird && !defended && before>0?stolen>=1 && stolen<=before && stolen<=4:stolen==0)
-        && (bird?p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}:p.peaches==old.peaches && p.peachBank==bank)
+      return event=={'version':3,'stolen':0}
+        && p.peaches==old.peaches && p.peachBank==bank
+        && x.peaches==p.peaches && x.peachBank==p.peachBank;
+    }
+    function v6Tucker(p,old,o) {
+      let x=o.result.outcome; let before=old.peaches; let stolen=x.tucker.stolen;
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      let remainingUnits=before>0?bank.units-int(bank.units*stolen / (before*1.0)+0.5):0;
+      return x.tucker=={'version':3,'stolen':stolen} && stolen is int
+        && (before>0?stolen>=1 && stolen<=before && stolen<=4:stolen==0)
+        && p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}
         && x.peaches==p.peaches && x.peachBank==p.peachBank;
     }
     function v6Wheel(s) {
@@ -939,9 +951,9 @@ service cloud.firestore {
       return s.spins==10?w=={'id':s.lastOperationId,'roundId':s.lastOperationId,'prizeVersion':4,'economyVersion':6,
         'baseUnits':int(s.cycleWagerUnits*4 / 100.0+0.5),'pockets':[10,1,2,1,3,2,1,5,2,1,3,2,1],'result':null}:w==null;
     }
-    function v6Spin(s,b,o) {
+    function v6Spin(s,b,o,p) {
       let x=o.result.outcome; let old=get(/databases/$(database)/documents/players/$(request.auth.uid)).data;
-      let p=getAfter(/databases/$(database)/documents/players/$(request.auth.uid)).data;
+      // p is the identical getAfter player already read by parkWrite.
       let villain=x.get('tony',null)!=null || x.get('tucker',null)!=null || x.get('ray',null)!=null;
       return o.game=='circus' && x.parkVersion==1 && x.ticketAward==0 && b.wheel==null && s.spins==b.spins+1
         && s.cycleWagerUnits==b.get('cycleWagerUnits',0)+o.betUnits && s.tickets==b.tickets && s.passes==b.passes
@@ -1024,7 +1036,7 @@ service cloud.firestore {
         // /operations/{id}.create validates its full envelope exactly once.
         && p.lastOperationId == s.lastOperationId && !exists(path)
         && (o.action == 'fingo' ? parkGameState(s,b,o) : o.action == 'parkEntry' ? parkEntryState(s,b,p,o) : o.action == 'parkBonus' ? parkBonusState(s,b,o)
-          : o.action == 'parkBonusClose' ? parkCloseState(s,b) : o.action == 'spin' ? (o.result.outcome.get('slotVersion',1)==6?v6Spin(s,b,o):parkSpinState(s,b,o)) : parkGameState(s,b,o));
+          : o.action == 'parkBonusClose' ? parkCloseState(s,b) : o.action == 'spin' ? (o.result.outcome.get('slotVersion',1)==6?v6Spin(s,b,o,p):parkSpinState(s,b,o)) : parkGameState(s,b,o));
     }
 
     function financial(uid, p, old) {

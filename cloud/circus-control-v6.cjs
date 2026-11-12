@@ -21,17 +21,17 @@ function candidate(p,s,bet,rng){
  const bank=p.peachBank||{count:p.peaches,units:p.peaches*c.stake},before=s.cedros||0;
  const protect=before>0&&(kind!=='tucker'||p.peaches>0);
  const x={grid,res:{win:0,cells,lines:[engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))],full:false,peach:[]},feature:null,peaches:p.peaches,peachBank:bank,slotVersion:6,parkVersion:1,ticketAward:0,cedarAward:0,winUnits:0};
- if(protect){s.cedros=before-1;x.defense={against:kind,before,used:1,remaining:s.cedros};}
+ if(protect){s.cedros=before-1;x.defense={against:kind};}
  if(kind==='tony'){
   const amount=protect?0:boundedNormalInt(c.stake,c.maxTiger,rng);
   x.tony={version:3,minUnits:c.stake,maxUnits:protect?0:c.maxTiger,stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};
  }else if(kind==='tucker'){
   const count=p.peaches,stolen=protect?0:boundedNormalInt(count?1:0,Math.min(4,count),rng),remaining=count-stolen;
   x.peaches=remaining;x.peachBank={count:remaining,units:count?bank.units-Math.round(bank.units*stolen/count):0};
-  x.tucker={version:3,before:count,stolen,remaining};
+  x.tucker={version:3,stolen};
  }else{
   // Every non-empty stock blocks Ray by consuming one cedar. No double loss.
-  x.ray={version:3,before,stolen:0,remaining:s.cedros||0};
+  x.ray={version:3,stolen:0};
  }
  s.spins++;return x;
 }

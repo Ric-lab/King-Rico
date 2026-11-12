@@ -34,7 +34,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   schedule();};
  const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
- const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._parkTicketAward&&res.win<=0)flyTickets(fc,refresh);};
+ const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}

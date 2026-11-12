@@ -4,7 +4,7 @@ import os
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178');os.makedirs('work',exist_ok=True)
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox','--autoplay-policy=no-user-gesture-required'])
- for count,width,mode in [(3,390,'no-preference'),(0,320,'reduce')]:
+ for count,width,mode in [(0,390,'no-preference'),(0,320,'reduce')]:
   ctx=b.new_context(viewport={'width':width,'height':844},reduced_motion=mode);page=ctx.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.goto(BASE+'/circus?demo=ray');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
@@ -25,8 +25,8 @@ with sync_playwright() as p:
   page.screenshot(path=f'work/preview-ray-peeking-{count}.png')
   page.wait_for_function('document.querySelector(".park-ray-scene")?.dataset.phase==="grabbing"');page.wait_for_timeout(200)
   assert original.evaluate('e=>getComputedStyle(e).visibility')=='hidden'
-  assert copy.locator('[data-tickets]').inner_text()==str(count)
-  assert page.evaluate('KingRicoPark.state.tickets')==max(0,count-1)
+  assert copy.locator('[data-tickets]').inner_text()=='0/5'
+  assert page.evaluate('(KingRicoPark.state.cedros||0)')==0
   page.screenshot(path=f'work/preview-ray-grab-{count}.png')
   page.wait_for_function('document.querySelector(".park-ray-scene")?.dataset.phase==="leaving"')
   x=page.locator('.park-ray-carrier').bounding_box()['x'];page.wait_for_timeout(500)
@@ -37,16 +37,16 @@ with sync_playwright() as p:
   page.wait_for_function('document.querySelector(".park-ray-scene")?.dataset.phase==="empty"')
   assert original.evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   page.screenshot(path=f'work/preview-ray-empty-{count}.png')
-  dialog=page.get_by_role('dialog',name='Ray e os ingressos',exact=True);dialog.wait_for()
+  dialog=page.get_by_role('dialog',name='Ray e os cedros',exact=True);dialog.wait_for()
   assert dialog.locator('.park-tony-total').inner_text()==str(min(1,count))
   assert page.evaluate('KingRicoCloud.player.balance')==before-10
   assert page.evaluate('KingRicoCloud.player.peaches')==peaches
   page.screenshot(path=f'work/preview-ray-result-{count}.png')
   dialog.get_by_role('button',name='CONTINUAR',exact=True).click();scene.wait_for(state='detached')
   assert original.evaluate('e=>getComputedStyle(e).visibility')=='visible'
-  assert original.locator('[data-tickets]').inner_text()==str(max(0,count-1))
+  assert original.locator('[data-tickets]').inner_text()=='0/5'
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  assert page.evaluate('KingRicoPark.state.tickets')==max(0,count-1)
+  assert page.evaluate('(KingRicoPark.state.cedros||0)')==0
   assert page.locator('.park-ray-scene').count()==0
   assert not errors and not missing,(errors,missing)
   ctx.close()

@@ -37,3 +37,16 @@ test('Preview v5 wallet and controller follow the same saved ledger as real stor
   }
  }
 });
+test('Preview v6 matches the production engine, cedar stock and coin-only ledger through replay and reload',async()=>{
+ const a=seeded(763),b=seeded(763);let model=createPreview({},a);const p={balanceUnits:500000,peaches:0,peachBank:{count:0,units:0}},s={...park.fresh(),tickets:3};await model.run({action:'state'});
+ let awards=0,defenses=0;
+ for(let i=0;i<1000;i++){
+  const id=randomUUID(),expected=park.spin(p,s,10,id,b,6),req={action:'spin',game:'circus',bet:10,requestId:id,slotVersion:6};
+  p.balanceUnits+=expected.winUnits-1000-(expected.tony?.stolenUnits||0);p.peaches=expected.peaches;p.peachBank=expected.peachBank;
+  const r=await model.run(req);assert.deepEqual(r.outcome,expected);assert.deepEqual(r.park.economyV6,s.economyV6);assert.equal(r.park.cedros,s.cedros);assert.equal(r.park.tickets,3);assert.equal(r.player.balance,p.balanceUnits/100);
+  assert.deepEqual((await model.run(req)).park.economyV6,s.economyV6);awards+=expected.cedarAward;defenses+=!!expected.defense;
+  if(s.wheel){const extra=park.bonus(s,s.wheel.id,b);p.balanceUnits+=extra;const wheelReq={action:'wheel',wheelId:s.wheel.id,requestId:randomUUID()},w=await model.run(wheelReq);assert.deepEqual(w.park.economyV6,s.economyV6);assert.equal(w.player.balance,p.balanceUnits/100);assert.deepEqual((await model.run(wheelReq)).park.economyV6,s.economyV6);await model.run({action:'wheel-close',wheelId:s.wheel.id,requestId:randomUUID()});s.spins=0;s.wheel=null;s.cycleWagerUnits=0;}
+  if(i%100===99)model=createPreview(JSON.parse(JSON.stringify(model.exportState())),a);
+ }
+ assert.ok(awards>0&&defenses>0);
+});

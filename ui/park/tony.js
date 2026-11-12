@@ -65,6 +65,6 @@ export function installTony(fc){
   }
   function hide(){if(finished)return;finished=true;clean();modal?.close();}
   window.addEventListener('pagehide',hide,{once:true});
-  later(()=>impact(0),700);later(()=>impact(1),2250);later(()=>impact(2),3800);later(result,5400);
+  later(()=>{impact(0);later(()=>{impact(1);later(()=>{impact(2);later(result,1600);},1550);},1550);},700);
  }
 }

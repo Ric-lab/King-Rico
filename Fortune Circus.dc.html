@@ -1266,6 +1266,7 @@ class Component extends DCLogic {
   money(v) { return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   speed() { return this.state.turbo ? 0.45 : 1; }
   pick() {
+    if(globalThis.KingRicoCloud?.slotVersion>=6 && globalThis.KingRicoCircusEconomy?.pick)return globalThis.KingRicoCircusEconomy.pick(Math.random,6);
     if (Math.random() < PEACH_P) return PEACH;
     const total = SYMBOLS.reduce((a, s) => a + s.w, 0);
     let r = Math.random() * total;

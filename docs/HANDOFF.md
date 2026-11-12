@@ -7,16 +7,38 @@ Auditoria v6: 5 milhões por aposta, ~89,99%; estresse 1 milhão/cenário perto 
 Reexecutadas auditorias históricas v4/v5. Navegadores já passaram para coluna,
 coleta de cedro, três defesas e rotas arquivadas, com screenshots em work/.
 
-**Próximo passo exato:** terminar otimização das regras Firestore v6 sem retirar
-nenhuma validação (emulador acusa limite de 1000 expressões, protegido Tony já
-passou; recurso Tucker em conferência), adicionar casos de fraude/replay,
-rodar suíte + navegadores atualizados, build final, commit/push e Pages.
-Nenhuma publicação oficial autorizada nesta etapa; não levar estas regras à main
-até os testes financeiros passarem. Revisão automática rejeitou tentativa de
-remover verificações duplicadas; ela não foi aplicada. O trabalho atual apenas
-cacheia referências e evita calcular proporção/budget de roubo quando perda é0.
+**Próximo passo exato (BLOQUEIO, não publicar em live):** concluir o validador
+Firestore v6 dentro de 1.000 expressões. As transações protegidas dos três vilões
+e Ray sem estoque passaram no emulador; Tucker sem proteção, Tony sem proteção,
+giro normal, ganho de cedros, Happeach/feature e décimo giro ainda excedem o limite.
+A classificação das oito linhas foi compactada com equivalência contra 100.000
+grids, sem retirar validações de pagamento. Guardas originais de forma do parque,
+ledger legado, envelopes, saldo, vínculo atômico e replay estão mantidas.
 
-# HANDOFF
+**Validação final:** `npm test` passou (47 arquivos); regras 71/78, incluindo
+regressão v5 normal/bônus a resolver além dos seis casos v6 listados. Resultado,
+retorno por aposta, PAYS e comandos em [CIRCUS-V6-VALIDACAO.md](CIRCUS-V6-VALIDACAO.md).
+Recarga pelo menu do Circus passou com cancelamento, 30s, recibo, voo e saldo.
+O build Pages versiona scripts e módulos DC por hash, sem mudar o de produção.
+
+A revisão automática rejeitou refatorações do dispatcher/validador central por
+risco de alterar a proteção financeira legada; essas propostas não foram aplicadas.
+É necessária autorização explícita para essa refatoração antes de continuar no
+caminho real. A prévia Pages usa só carteira fictícia e não carrega essas regras.
+Não apresentar aprovação da prévia visual como aprovação de Firestore ou live.
+
+Os recibos v6 são enxutos: `defense:{against}`, consumo derivado exatamente do
+estoque anterior; Tucker/Ray registram `{version:3,stolen}`. Versões antigas
+preservam os campos/termos originais, inclusive demos explícitas v4. O primeiro giro padrão da
+prévia mostra cedros; `?demo=off` é jogo normal; `?demo=cedar|tony|tucker|ray|wheel|bigwin|spacewin` testa cenas.
+Big win de céu usa duas linhas de coroa (20×), espaço usa tela cheia de coroa
+(800×). Não aumentar os pagamentos para recuperar fixtures da tabela antiga.
+
+Cronometragem nominal das três patadas preservada (700 ms +1550 +1550; resultado
+1600 ms depois da terceira), agora encadeada para evitar sons juntos caso a thread
+atrase. Não houve alteração de timbre. Teste unitário do som da roleta ganhou
+`out()` no stub, compatível com o caminho WAV já existente.
+
 
 ## Em andamento: Circus v6, cedros e arquivamento das atrações
 
