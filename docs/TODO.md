@@ -23,6 +23,7 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Patada do Tony mais alta (zuum + impacto grave); raspagem bem mais alta; moedas no fim da raspadinha = mesmo tique do voo de moedas do jogo — prévia
 - [x] Roleta aprovada pelo dono
 - [x] Tony: véu alaranjado cobre a tela toda MENOS a faixa do anúncio (AdMob 60px + área segura, ou .park-banner) — prévia
 - [x] Tony: patada = zuum de ar (sem moedas); moedas saindo só ao tocar CONTINUAR — prévia (1º giro = Tony)

@@ -22,7 +22,7 @@ export function installCircusSfx(fc){
  });
  // Tony: patada (zás + 3 unhas + pancada) e moedas saindo do saldo (cada vez mais grave).
  // Patada: zuum de ar cortado (sobe e desce), sem moedas — moedas só no CONTINUAR.
-fc.sfxClaw=play(2.6,n=>{const d=.34;hiss(380,1.4,.3,d*.55,0,'bandpass',2800);hiss(2800,1.4,.3,d*.5,d*.45,'bandpass',360);hiss(240,.7,.14,d,0,'lowpass',1000);sweep(110-n*8,55,d,'sine',.14,.04);});
+fc.sfxClaw=play(3.4,n=>{const d=.34;hiss(380,1.2,.5,d*.55,0,'bandpass',2800);hiss(2800,1.2,.5,d*.5,d*.45,'bandpass',360);hiss(240,.7,.28,d,0,'lowpass',1000);sweep(170-n*10,48,.22,'sine',.5,d*.85);hiss(160,.8,.35,.12,d*.85,'lowpass',90);});
  fc.sfxCoinsLose=play(2.2,n=>{for(let i=0;i<7;i++)B(1400-i*120-n*60,.16,.04,.14+i*.06+Math.random()*.03);hiss(900,.6,.035,.35,.2,'lowpass');});
  // Tucker: duas batidas de asa (tec… tec) e sobe levando a cesta.
  fc.sfxSnatch=play(3.4,()=>{[0,.4].forEach(o=>{for(let i=0;i<4;i++)hiss(700,1.4,.08,.07,o+i*.09);});sweep(900,1800,.25,'triangle',.05,.05);hiss(500,.7,.045,.35,.1,'bandpass',1600);});

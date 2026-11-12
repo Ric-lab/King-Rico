@@ -18,12 +18,12 @@ export function scratchGrid(random=Math.random) {
 const S=(fn)=>{try{const fc=window.__fc;if(fc)fn(fc);}catch{}};
 let scratchT=0;
 const sfx={
- scratch:()=>{const n=performance.now();if(n-scratchT<70)return;scratchT=n;S(fc=>{fc.burst(1500+Math.random()*900,1.1,.1,.07);fc.buzz?.([8]);});},
+ scratch:()=>{const n=performance.now();if(n-scratchT<70)return;scratchT=n;S(fc=>{fc.burst(1100+Math.random()*700,.9,.38,.09);fc.burst(3200+Math.random()*900,1.4,.16,.06,.02);fc.buzz?.([8]);});},
  cell:win=>S(fc=>win?(fc.bell(1175,.28,.07),fc.bell(1568,.22,.045,.05)):fc.pluck(392,.05,.14)),
  three:()=>S(fc=>fc.sfxWin(false)),
  prize:()=>S(fc=>[784,988,1319].forEach((f,i)=>fc.bell(f,.5,.08,i*.06))),
  button:()=>S(fc=>fc.sfxClick()),
- coins:()=>S(fc=>fc.sfxCoins())
+ coins:()=>S(fc=>{for(let i=0;i<14;i++)fc.bell(1760+i*70,.12,.035,.45+i*.055);})
 };
 
 export async function openDailyReward(Cloud) {
