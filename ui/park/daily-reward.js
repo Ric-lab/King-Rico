@@ -18,7 +18,7 @@ export function scratchGrid(random=Math.random) {
 const S=(fn)=>{try{const fc=window.__fc;if(fc)fn(fc);}catch{}};
 let scratchT=0;
 const sfx={
- scratch:()=>{const n=performance.now();if(n-scratchT<55)return;scratchT=n;S(fc=>fc.burst(2400+Math.random()*1600,1.3,.022,.05));},
+ scratch:()=>{const n=performance.now();if(n-scratchT<70)return;scratchT=n;S(fc=>{fc.burst(1500+Math.random()*900,1.1,.1,.07);fc.buzz?.([8]);});},
  cell:win=>S(fc=>win?(fc.bell(1175,.28,.07),fc.bell(1568,.22,.045,.05)):fc.pluck(392,.05,.14)),
  three:()=>S(fc=>fc.sfxWin(false)),
  prize:()=>S(fc=>[784,988,1319].forEach((f,i)=>fc.bell(f,.5,.08,i*.06))),

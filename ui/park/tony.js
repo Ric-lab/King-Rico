@@ -23,7 +23,7 @@ export function installTony(fc){
   const timers=[],animations=[];let modal,finished=false,hit=0;
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!finished)fn();},ms));
   // Boundaries share one timer: contact, sound, shake, red flash and number decrease.
-  function sound(n){try{fc.sfxClaw?.(n);fc.hap('winMid');}catch{}}
+  function sound(n){try{fc.sfxClaw?.(n);fc.buzz?.([70]);}catch{}}
   function lines(){
    const boxes=event&&res.cells.map(i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect()).filter(Boolean);
    if(boxes?.length!==3)return;

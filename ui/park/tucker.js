@@ -33,7 +33,7 @@ export function installTucker(fc){
   function take(){
    scene.dataset.phase='flying';
    if(basket){clone=basket.cloneNode(true);clone.className='park-tucker-carried-basket';clone.removeAttribute('title');clone.style.cssText=`position:absolute;left:0;top:0;right:auto;width:96px;height:96px;transform:scale(${r.width/96},${r.height/96});transform-origin:0 0;pointer-events:none;`;carrier.prepend(clone);basket.style.visibility='hidden';}
-   try{fc.sfxSnatch?.();}catch{}
+   try{fc.sfxSnatch?.();fc.buzz?.([35,45,35,45,80]);}catch{}
    const dx=innerWidth-r.x+r.width+size,dy=-Math.min(170,innerHeight*.2);
    animate(carrier,[{translate:'0 0',rotate:'0deg'},{translate:`${dx*.12}px -18px`,rotate:'-3deg',offset:.2},{translate:`${dx*.55}px ${dy*.52}px`,rotate:'-7deg',offset:.65},{translate:`${dx}px ${dy}px`,rotate:'-5deg'}],{duration:2100,easing:'cubic-bezier(.32,0,.72,1)',fill:'forwards'});
   }

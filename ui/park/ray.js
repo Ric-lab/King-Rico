@@ -35,7 +35,7 @@ export function installRay(fc){
    svg.innerHTML=`<polyline points="${boxes.map(b=>`${b.x+b.width/2},${b.y+b.height/2}`).join(' ')}"/>`+boxes.map(b=>`<ellipse cx="${b.x+b.width/2}" cy="${b.y+b.height/2}" rx="${b.width*.45}" ry="${b.height*.43}"/>`).join('');});
   function peek(){scene.dataset.phase='peeking';actor.style.translate='0 0';animate(actor,[{translate:`0 ${height*.8}px`},{translate:'0 0'}],{duration:750,easing:'cubic-bezier(.2,.8,.2,1)'});}
   function grab(){scene.dataset.phase='grabbing';
-   try{fc.sfxSneak?.();fc.hap('basketIn');}catch{}
+   try{fc.sfxSneak?.();fc.buzz?.([25,35,25,35,25,35,70]);fc.hap('basketIn');}catch{}
    animate(actor,[{rotate:'0deg'},{rotate:'-3deg',offset:.4},{rotate:'0deg'}],{duration:300,easing:'ease-out'});
   }
   function flee(){scene.dataset.phase='leaving';try{fc.sfxScurry?.();}catch{}

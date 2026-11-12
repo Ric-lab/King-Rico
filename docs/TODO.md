@@ -4,6 +4,15 @@ Uma lista só para os 3 modelos. Ninguém tem lista própria.
 Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de teste; acrescentar o que o dono pedir; nunca apagar item de outro modelo.
 
 ## A fazer
+- [ ] Testar na prévia: zuum mais alto, háptico nas patadas/Tucker/Ray, raspagem audível
+- [ ] Rolos da máquina — novos assets e pagamentos, NESTA ORDEM (menor → maior):
+  ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10
+- [ ] Símbolos especiais além desses:
+  - Vilões: Tiger (Tony), Toucan (Tucker), Ray
+  - Defesa: cedro — cada trinca dá 1, junta até 5; o Ray passa a roubar cedros
+  - Happeach
+  - Controle de videogame (abre um jogo ainda a definir)
+- [ ] Refazer a economia (RTP ~90%) com a nova tabela antes de publicar
 - [ ] Confirmar que a prévia engatilhada (dd789c1) mostra o Tucker no 1º giro sem ?demo
 - [ ] Música de fundo no mesmo ritmo da abertura do Bingo Plinko (repo Ric-lab/Bingo-Plinko-Lucky-Machine), sem letra, só em alguns momentos
 - [ ] Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin
@@ -14,6 +23,7 @@ Regras: ler antes de começar; marcar [x] o que terminar, com commit e link de t
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Roleta aprovada pelo dono
 - [x] Tony: véu alaranjado cobre a tela toda MENOS a faixa do anúncio (AdMob 60px + área segura, ou .park-banner) — prévia
 - [x] Tony: patada = zuum de ar (sem moedas); moedas saindo só ao tocar CONTINUAR — prévia (1º giro = Tony)
 - [x] Sfx da raspadinha: raspar cada casa, abrir casa (plim no prêmio, toque grave no ×), 3 iguais (fanfarra) + prêmio aparecendo, botão (mesmo do spin), moedas subindo ao fechar — prévia (abre sozinha ao carregar)
