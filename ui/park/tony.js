@@ -22,7 +22,7 @@ export function installTony(fc){
   const timers=[],animations=[];let modal,finished=false,hit=0;
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!finished)fn();},ms));
   // Boundaries share one timer: contact, sound, shake, red flash and number decrease.
-  function sound(n){try{fc.sfxClaw?.(n);fc.sfxCoinsLose?.(n);fc.hap('winMid');}catch{}}
+  function sound(n){try{fc.sfxClaw?.(n);fc.hap('winMid');}catch{}}
   function lines(){
    const boxes=event&&res.cells.map(i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect()).filter(Boolean);
    if(boxes?.length!==3)return;
@@ -51,7 +51,7 @@ export function installTony(fc){
   function clearPrize(){fc._tonyHitValue=null;prize?.classList.remove('is-tony-loss');}
   function clean(){timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
   function release(){
-   if(finished)return;finished=true;clean();modal?.close();
+   if(finished)return;finished=true;try{fc.sfxClick?.();fc.sfxCoinsLose?.(2);}catch{}clean();modal?.close();
    // The current confirmed snapshot may include a concurrent-device update.
    fc._tonyPlaying=false;fc._celebHold=false;fc.syncCeleb();
    fc.setState({balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?',winCells:[],winLines:[]});fc.kingSet('idle');
