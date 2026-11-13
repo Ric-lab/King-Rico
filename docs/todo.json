@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "t-melhorar-modal-da-rasp-29",
+      "title": "Melhorar modal da raspadinha nao tem algo tipo \"raspe e ganhe!\"",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
       "id": "t-controle-asset",
       "title": "Controle: primeira proposta de asset azul e dourado para avaliação",
       "status": "preview",
