@@ -31,7 +31,7 @@ compartilhadas, sem hierarquia entre agentes.
 - [ ] Big win: sfx do avião parece moto — trocar por som de avião de verdade
 - [ ] Big win: retângulo branco com border-radius pulsando atrás do saldo subindo (legibilidade)
 - [ ] King Rico: reações casadas com o que acontece (ação no jogo → reação dele), mais longas e melhores; hoje é um loop independente
-- [x] Ingresso (asset): centro dourado mel/âmbar e inclinação suave (<20°), estrela roxa/moldura preservadas — ticket-symbol-v2, 13/11. Prévia engatilhada `?demo=ticket`.
+- [x] Ingresso (asset): centro dourado mel/âmbar e inclinação suave (<20°), estrela roxa/moldura preservadas — ticket-symbol-v2, 13/11, commit `87d90e0` (Pages confirmado). Prévia engatilhada `?demo=ticket`.
 - [ ] Símbolo do controle de videogame já no jogo: por enquanto abre o antigo Fortune Penalty (só para funcionar; o jogo definitivo vem depois)
 
 ### Pedidos do dono — 12/11 (fazer na prévia, um de cada vez, com link de teste)

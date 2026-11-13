@@ -1,4 +1,10 @@
-## Ajuste visual do ingresso — 13/11/2026 (Codex)
+## Ajuste visual do ingresso publicado — 13/11/2026 (Codex)
+
+Prévia atualizada: https://ric-lab.github.io/King-Rico/circus/?demo=ticket
+Código `87d90e0`; [workflow 43429606219](https://github.com/Ric-lab/King-Rico/actions/runs/43429606219)
+**success**: navegadores, subdiretório/rotas e publicação/HEAD aprovados.
+Conferido também em 390×844: três ingressos v2, sem assets faltantes/erros,
+pagamento de 4 moedas para aposta 10 preservado. Oficial inalterado.
 
 Base dos colegas puxada: `1a7f198` (nova tabela e anúncio no header preservados); preservadas mudanças no King Rico/HUD.
 Somente asset: `assets/machine/ticket-symbol-v2.png` (fonte) e `.webp`
