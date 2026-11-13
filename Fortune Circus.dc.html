@@ -526,8 +526,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     // Swipe leve (para cima ou para baixo) na área dos rolos = girar.
-    this._reelSwipe = { down: e => { const r = document.querySelector('.park-reels'); if (!r || e.target.closest('button,a,[data-overlay],.kr-menu,[role=dialog]')) return; const b = r.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) return; this._swipe = { y: e.clientY, fired: false }; },
-      move: e => { const s = this._swipe; if (!s || s.fired || Math.abs(e.clientY - s.y) < 10) return; s.fired = true; if (this.state.menu || this.state.pays) return; this.spin(); },
+    this._reelSwipe = { down: e => { const r = document.querySelector('.park-reels'); if (!r || e.target.closest('button,a,[role=button],[data-spin-btn],[data-overlay],.kr-menu,[role=dialog]')) return; const b = r.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) return; this._swipe = { y: e.clientY, fired: false }; },
+      move: e => { const s = this._swipe; if (!s || s.fired || !e.buttons && e.pointerType === 'mouse' || Math.abs(e.clientY - s.y) < 10) return; s.fired = true; if (this.state.menu || this.state.pays) return; this.spin(); },
       up: () => { this._swipe = null; } };
     window.addEventListener('pointerdown', this._reelSwipe.down, { passive: true }); window.addEventListener('pointermove', this._reelSwipe.move, { passive: true }); window.addEventListener('pointerup', this._reelSwipe.up); window.addEventListener('pointercancel', this._reelSwipe.up);
     const cloud = window.KingRicoCloud;
