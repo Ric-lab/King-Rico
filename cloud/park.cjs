@@ -78,8 +78,9 @@ function spinV6(p,s,bet,id,rng){
  if(!x){
   x=engine.slot(bet,p.peaches,rng,p.peachBank,6);
   const cedarLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===5)?[i]:[]);
+  const controllerLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===15)?[i]:[]);
   const award=Math.min(5-s.cedros,cedarLines.length);
-  x={...x,parkVersion:1,ticketAward:0,cedarAward:award,cedarLines};s.cedros+=award;s.spins++;
+  x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};s.cedros+=award;s.spins++;
  }
  if(s.spins===10)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(s.cycleWagerUnits*4/100)),pockets:[...POCKETS],result:null};
  controllerV6.recordSpin(s,x,bet);return x;

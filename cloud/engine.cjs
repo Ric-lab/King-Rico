@@ -11,7 +11,7 @@ const SYMBOLS = [
 const circusProfile=require('./circus-profile.cjs');
 const SYMBOLS_V3=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS[i]}));
 const SYMBOLS_V5=SYMBOLS.map((s,i)=>({...s,pay:circusProfile.PAYS_V5[i],w:i===5?0:s.w,active:i!==5}));
-const SYMBOLS_V6=Array.from({length:16},(_,i)=>({id:SYMBOLS[i]?.id||['ticket','happeach','tony','tucker','ray','controller'][i-10],pay:circusProfile.PAYS_V6[i],w:circusProfile.WEIGHTS_V6[i],active:[0,2,5,6,7,8,10,11,12,13,14].includes(i)}));
+const SYMBOLS_V6=Array.from({length:16},(_,i)=>({id:SYMBOLS[i]?.id||['ticket','happeach','tony','tucker','ray','controller'][i-10],pay:circusProfile.PAYS_V6[i],w:circusProfile.WEIGHTS_V6[i],active:[0,2,5,6,7,8,10,11,12,13,14,15].includes(i)}));
 const slotSymbols=version=>version>=6?SYMBOLS_V6:version>=5?SYMBOLS_V5:version>=3?SYMBOLS_V3:SYMBOLS;
 const TARGET_RTP = .98;
 const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];

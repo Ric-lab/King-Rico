@@ -230,3 +230,5 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @keyframes cedarWard{from{opacity:0;scale:.7}to{opacity:1;scale:1}}
 @keyframes cedarRepel{0%,35%{translate:0 0;rotate:0deg}100%{translate:-55vw -60px;rotate:-25deg;opacity:0}}
 @media(prefers-reduced-motion:reduce){.park-defense-villain,.park-defense-shield{animation:none}}
+
+[data-park-controller="true"],.park-tape-symbol.is-controller{background-image:url('/assets/machine/controller-symbol-v1.webp')!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}

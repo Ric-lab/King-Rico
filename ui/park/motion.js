@@ -1,3 +1,9 @@
+// Controle: 3 em linha abre o jogo (por enquanto o antigo Fortune Penalty).
+function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;try{fc.sfxWin?.(false);navigator.vibrate?.([40,40,80]);}catch{}
+ const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');o.style.cssText='position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(12,2,24,.8)';
+ const go=location.pathname.startsWith('/King-Rico/')?'/King-Rico/penalty/':'/penalty';
+ o.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 30px;border-radius:26px;background:linear-gradient(180deg,#7a2bb8,#3a0d62);box-shadow:0 0 0 4px #f0b41f,0 0 0 8px #6b2e05,0 20px 40px #0009"><img src="/assets/machine/controller-symbol-v1.webp" alt="" style="width:140px;height:140px;object-fit:contain"><a href="'+go+'" style="padding:14px 54px;border-radius:999px;font:800 26px/1 Baloo\\ 2,system-ui,sans-serif;color:#fff;text-decoration:none;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36">JOGAR</a><button type="button" aria-label="Fechar" style="border:0;background:none;color:#e8d4ff;font:800 18px/1 inherit;cursor:pointer">agora não</button></div>';
+ o.querySelector('button').onclick=()=>o.remove();document.body.append(o);}
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
@@ -34,7 +40,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   schedule();};
  const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
- const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
+ const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
