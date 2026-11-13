@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Gerenciador único do backlog compartilhado (Dono, Claude, GPT/Codex e Gemini/Antigravity).
-// Fonte estruturada: docs/todo.json -> gera automaticamente docs/TODO.md e abastece /todo/.
+// Gerenciador único do painel de tarefas compartilhado (Dono, Claude, GPT/Codex e Gemini/Antigravity).
+// Substitui o antigo TODO.md. A única fonte da verdade é docs/todo.json (lida e gravada pelo site /todo/ e pelas 3 IAs).
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,57 +13,31 @@ export function loadBoard() {
   return JSON.parse(readFileSync(jsonPath, 'utf8'));
 }
 
-export function renderMarkdown(board) {
-  const byStatus = s => board.items.filter(i => i.status === s);
-  const fmt = item => {
-    const box = item.status === 'done' ? '[x]' : item.status === 'preview' ? '[~]' : '[ ]';
-    const parts = [`- ${box} **[\`${item.id}\`]** ${item.title}`];
-    const meta = [];
-    if (item.category) meta.push(item.category);
-    if (item.agent) meta.push(item.agent);
-    if (item.commit) meta.push(`\`${item.commit}\``);
-    if (item.demoUrl) meta.push(`[Testar](${item.demoUrl})`);
-    if (meta.length) parts.push(`*(${meta.join(' · ')})*`);
-    if (item.notes) parts.push(`— ${item.notes}`);
-    return parts.join(' ');
-  };
+export function renderPointerMarkdown(board) {
+  return `# Painel de Tarefas — King Rico
 
-  return `# TODO — Painel Compartilhado (Dono, Claude, GPT/Codex, Gemini)
+Este arquivo \`.md\` foi **aposentado e substituído** pelo painel web sincronizado entre o dono, **Antigravity (Gemini)**, **Claude** e **GPT/Codex**:
 
-👉 **Painel Visual Interativo:** **${board.boardUrl}**
+- 🌐 **Painel Web (Dono + IAs):** **${board.boardUrl || 'https://ric-lab.github.io/King-Rico/todo/'}**
+- 📄 **Fonte de dados única (JSON):** [\`docs/todo.json\`](todo.json)
+- 🛠️ **CLI obrigatória para os 3 agentes de IA:**
+  - \`node scripts/todo.mjs list\` — lê todas as tarefas atualizadas pelo dono no site ou pelas outras IAs
+  - \`node scripts/todo.mjs add "Título" --cat="Visual & Ritmo" --demo="https://..."\` — cria nova tarefa
+  - \`node scripts/todo.mjs move <id> <todo|preview|done> --agent="Claude|Codex|Antigravity" --commit="abc1234" --demo="https://..."\` — move tarefa
+  - \`node scripts/todo.mjs edit <id> --title="..." --notes="..." --demo="https://..."\` — edita tarefa
+  - \`node scripts/todo.mjs rm <id>\` — remove tarefa
 
-> **Para os 3 agentes (Claude, Codex/GPT, Gemini/Antigravity):**
-> - A fonte oficial é \`docs/todo.json\`. Use \`node scripts/todo.mjs\` para listar, adicionar ou mover tarefas (ele atualiza \`docs/todo.json\` e regenera este \`docs/TODO.md\` automaticamente).
-> - Comandos rápidos:
->   - \`node scripts/todo.mjs list\`
->   - \`node scripts/todo.mjs add "Título da tarefa" --cat="Visual & Ritmo" --demo="https://ric-lab.github.io/King-Rico/circus/?demo=..."\`
->   - \`node scripts/todo.mjs move <id> <todo|preview|done> --agent="Claude|Codex|Antigravity" --commit="abc1234" --demo="https://..."\`
->   - \`node scripts/todo.mjs sync\`
+> **Atenção agentes:** Nunca recrie listas de tarefas neste \`.md\`. Leia e grave sempre em \`docs/todo.json\` via \`node scripts/todo.mjs\`.
 
 ## Escopo ativo reservado — Circus v6 (Codex)
 Escopo reservado: \`cloud/\` (perfil/motor v6/carteira), \`firestore.rules\`, \`ui/park/\` (símbolos, defesa e retirada do acesso às atrações), Circus, catálogo/build, testes e documentação da economia. Preservar sons, patadas e raspadinha aprovados.
-
----
-
-## 📋 A Fazer — Backlog (${byStatus('todo').length})
-${byStatus('todo').map(fmt).join('\n') || '_Nenhuma tarefa pendente._'}
-
----
-
-## 🧪 Na Prévia — Para o Dono Testar / Aprovar (${byStatus('preview').length})
-${byStatus('preview').map(fmt).join('\n') || '_Nenhum item aguardando avaliação na prévia._'}
-
----
-
-## ✅ Feito — Aprovado / Concluído (${byStatus('done').length})
-${byStatus('done').map(fmt).join('\n') || '_Nenhum item concluído._'}
 `;
 }
 
 export function saveBoard(board) {
   board.updatedAt = new Date().toISOString().slice(0, 10);
   writeFileSync(jsonPath, JSON.stringify(board, null, 2) + '\n');
-  writeFileSync(mdPath, renderMarkdown(board));
+  writeFileSync(mdPath, renderPointerMarkdown(board));
 }
 
 function parseFlags(args) {
@@ -87,13 +61,13 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
 
   if (cmd === 'sync') {
     saveBoard(board);
-    console.log('Sincronizado docs/todo.json -> docs/TODO.md (' + board.items.length + ' itens).');
+    console.log('Sincronizado docs/todo.json (' + board.items.length + ' itens).');
   } else if (cmd === 'list') {
     for (const [status, label] of [['todo', '📋 A FAZER'], ['preview', '🧪 NA PRÉVIA (TESTAR)'], ['done', '✅ FEITO']]) {
       const list = board.items.filter(i => i.status === status);
       console.log(`\n=== ${label} (${list.length}) ===`);
       for (const i of list) {
-        console.log(`  [${i.id}] (${i.category}) ${i.title}${i.demoUrl ? ' -> ' + i.demoUrl : ''}`);
+        console.log(`  [${i.id}] (${i.category}) ${i.title}${i.demoUrl ? ' -> ' + i.demoUrl : ''}${i.notes ? ' | ' + i.notes : ''}`);
       }
     }
   } else if (cmd === 'add') {
@@ -126,6 +100,25 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     if (flags.notes !== undefined) item.notes = flags.notes;
     saveBoard(board);
     console.log(`Movido [${id}] para ${status}.`);
+  } else if (cmd === 'edit') {
+    const [id] = positional;
+    const item = board.items.find(i => i.id === id);
+    if (!item) throw new Error(`Tarefa não encontrada: ${id}`);
+    if (flags.title !== undefined) item.title = flags.title;
+    if (flags.cat !== undefined) item.category = flags.cat;
+    if (flags.agent !== undefined) item.agent = flags.agent;
+    if (flags.commit !== undefined) item.commit = flags.commit;
+    if (flags.demo !== undefined) item.demoUrl = flags.demo;
+    if (flags.notes !== undefined) item.notes = flags.notes;
+    saveBoard(board);
+    console.log(`Editado [${id}].`);
+  } else if (cmd === 'rm' || cmd === 'delete') {
+    const [id] = positional;
+    const idx = board.items.findIndex(i => i.id === id);
+    if (idx === -1) throw new Error(`Tarefa não encontrada: ${id}`);
+    const [removed] = board.items.splice(idx, 1);
+    saveBoard(board);
+    console.log(`Removido [${removed.id}].`);
   } else {
     throw new Error(`Comando desconhecido: ${cmd}`);
   }

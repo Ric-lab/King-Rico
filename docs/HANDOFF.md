@@ -1,3 +1,11 @@
+# HANDOFF
+
+## Painel `/todo/` com Auto-Sync e aposentadoria da lista em `.md` — 13/11/2026 (Antigravity)
+
+- `docs/TODO.md` foi aposentado como lista manual e virou apenas um ponteiro curto para **`https://ric-lab.github.io/King-Rico/todo/`** e **`docs/todo.json`** (evitando conflitos de merge em `.md`).
+- **Para os 3 agentes (Claude, Codex, Antigravity):** ler e atualizar sempre `docs/todo.json` via `node scripts/todo.mjs` (`list`, `add`, `move`, `edit`, `rm`).
+- **No site (`/todo/`):** agora tem **Auto-Save automático em 1s** (ao ativar `⚡ Auto-Sync` 1 vez no navegador ou via Link Mágico `#token=...`, qualquer clique em criar/editar/mover/excluir já grava direto no GitHub `docs/todo.json` com `[skip ci]`) e **Auto-Refresh a cada 20s** para refletir mudanças das IAs sem precisar recarregar.
+
 ## Ingresso v3 publicado — correção de cor, 13/11/2026 (Codex)
 
 Código `e63b194`; [workflow 43432793759](https://github.com/Ric-lab/King-Rico/actions/runs/43432793759)
@@ -12,20 +20,6 @@ dourado claro/champagne, menos laranja no centro e na moldura, mesma estrela rox
 inclinação e encaixe. Somente referências de imagem/pré-carga; regras e controles
 intactos. Demo existente `?demo=ticket`. Base dos colegas `b4c2d28` preservada,
 inclusive painel /todo e JSON/CLI compartilhados. Próximo passo: avaliar a cor.
-
-# HANDOFF
-
-## Painel Web de Tarefas (13/11/2026 · Antigravity)
-
-- O dono pediu transformar o `docs/TODO.md` em um site simples compartilhado entre ele, Antigravity (Gemini), Claude e GPT/Codex.
-- Publicado em **https://ric-lab.github.io/King-Rico/todo/** (`site/todo/index.html` copiado para `dist/todo/` em `scripts/build-preview.mjs`).
-- Estrutura escolhida para fluxo com IA (3 colunas):
-  1. **📋 A Fazer (Backlog)** — fila priorizada e desduplicada;
-  2. **🧪 Na Prévia (Testar)** — itens já feitos pelas IAs na prévia (com botão direto **▶ Testar** para o `?demo=` correspondente) aguardando avaliação/aprovação do dono;
-  3. **✅ Feito (Aprovado)** — itens validados e concluídos.
-- **Como os 3 agentes usam:** fonte única em `docs/todo.json` + CLI `node scripts/todo.mjs` (`list`, `add`, `move <id> <todo|preview|done>`, `sync`), que atualiza `docs/todo.json` e regenera `docs/TODO.md` automaticamente sem duplicatas.
-- **Como o dono usa no navegador:** a página lê `docs/todo.json` em tempo real da branch `codex/penalty-clown-preview` no GitHub API (com fallback para `./todo.json`), permite criar/mover/excluir tarefas, filtrar por categoria e salvar direto no GitHub (com token opcional salvo no aparelho) ou copiar o resumo de mudanças com 1 clique (`📋 Copiar p/ IA`) para colar em qualquer chat.
-- Próximo passo: dono usar https://ric-lab.github.io/King-Rico/todo/ e escolher o próximo item da fila para atacarmos.
 
 ## Ajuste visual do ingresso publicado — 13/11/2026 (Codex)
 

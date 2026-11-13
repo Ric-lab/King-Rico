@@ -50,6 +50,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
     .brand h1 {
       margin: 0;
@@ -60,11 +61,21 @@
     }
     .sync-badge {
       font-size: 0.76rem;
-      padding: 4px 9px;
+      padding: 4px 10px;
       border-radius: 999px;
       background: var(--surface-2);
       color: var(--muted);
       border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+    .sync-badge.live {
+      border-color: #2ec46d88;
+      color: #8ce9b0;
+      background: rgba(46, 196, 109, 0.14);
+    }
+    .sync-badge.saving {
+      border-color: var(--gold);
+      color: var(--gold);
     }
     .header-actions {
       display: flex;
@@ -78,7 +89,7 @@
       background: var(--surface-2);
       color: var(--text);
       font: inherit;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       font-weight: 700;
       padding: 8px 13px;
       border-radius: 10px;
@@ -98,7 +109,11 @@
     .btn-preview-link {
       background: rgba(56, 182, 255, 0.18);
       border-color: #38b6ff88;
-      color: #8fd8ff;
+      color: #9be0ff;
+    }
+    .btn-connected {
+      border-color: #2ec46d88;
+      color: #8ce9b0;
     }
     .toolbar {
       max-width: 1280px;
@@ -109,13 +124,13 @@
       align-items: center;
     }
     .search-input {
-      flex: 1 1 200px;
+      flex: 1 1 220px;
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
       padding: 8px 12px;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     .cat-pills {
       display: flex;
@@ -125,16 +140,16 @@
       max-width: 100%;
     }
     .cat-pill {
-      padding: 6px 11px;
-      border-radius: 999px;
+      padding: 5px 11px;
       font-size: 0.78rem;
+      border-radius: 999px;
       white-space: nowrap;
       background: var(--surface);
       color: var(--muted);
     }
     .cat-pill.active {
       background: var(--gold);
-      color: #281500;
+      color: #2b1600;
       border-color: var(--gold);
     }
     .mobile-tabs {
@@ -224,6 +239,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
     }
     .card-top {
       display: flex;
@@ -233,29 +249,32 @@
       flex-wrap: wrap;
     }
     .tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 2px 8px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 3px 8px;
       border-radius: 6px;
-      background: rgba(255, 202, 58, 0.16);
+      background: rgba(255, 202, 58, 0.15);
       color: var(--gold);
     }
     .agent-tag {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
       padding: 2px 7px;
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     }
     .task-title {
-      font-size: 0.94rem;
+      font-size: 0.93rem;
       line-height: 1.38;
       font-weight: 600;
+      color: var(--text);
       margin: 0;
-      word-break: break-word;
     }
     .task-notes {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--muted);
       margin: 0;
       line-height: 1.35;
@@ -265,22 +284,82 @@
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 2px;
+      align-items: center;
     }
     .card-actions button, .card-actions .btn-link {
-      font-size: 0.76rem;
-      padding: 6px 10px;
+      padding: 5px 9px;
+      font-size: 0.75rem;
       border-radius: 8px;
     }
-    .btn-move-todo { border-color: #ff8c4288; color: #ffb482; }
-    .btn-move-preview { border-color: #38b6ff88; color: #8fd8ff; }
-    .btn-move-done { border-color: #2ec46d88; color: #7bf1a8; background: rgba(46, 196, 109, 0.14); }
-    .btn-delete { border-color: transparent; background: transparent; color: #ff8fa3; margin-left: auto; }
+    .btn-move-preview {
+      border-color: #38b6ff66;
+      color: #9be0ff;
+    }
+    .btn-move-done {
+      border-color: #2ec46d66;
+      color: #8ce9b0;
+      background: rgba(46, 196, 109, 0.14);
+    }
+    .btn-move-todo {
+      border-color: #ff8c4266;
+      color: #ffc196;
+    }
+    .btn-icon {
+      margin-left: auto;
+      background: transparent;
+      border-color: transparent;
+      color: #cbbce0aa;
+      padding: 4px 7px;
+    }
+    .btn-delete {
+      background: transparent;
+      border-color: transparent;
+      color: #ff8fa399;
+      padding: 4px 7px;
+    }
+    .btn-delete:hover {
+      color: var(--danger);
+      background: rgba(255, 77, 109, 0.12);
+    }
+    dialog {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+      padding: 20px;
+      width: min(92vw, 480px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    }
+    dialog::backdrop {
+      background: rgba(10, 6, 18, 0.75);
+      backdrop-filter: blur(4px);
+    }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+    .form-row label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .form-row input, .form-row select, .form-row textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 11px;
+      border-radius: 9px;
+      font: inherit;
+      font-size: 0.9rem;
+    }
     .dirty-bar {
       position: fixed;
       bottom: 14px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(94vw, 680px);
+      width: min(94vw, 720px);
       background: #2b1d42;
       border: 2px solid var(--gold);
       border-radius: 14px;
@@ -289,49 +368,16 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.55);
-      z-index: 100;
+      flex-wrap: wrap;
+      z-index: 60;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
     }
-    .dirty-bar.visible { display: flex; flex-wrap: wrap; }
-    dialog {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      width: min(92vw, 460px);
+    .dirty-bar.visible { display: flex; }
+    .dirty-bar span {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--gold);
     }
-    dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
-    .form-row {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-bottom: 12px;
-    }
-    .form-row label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
-    .form-row input, .form-row textarea, .form-row select {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 11px;
-      font: inherit;
-    }
-    .ai-box {
-      max-width: 1280px;
-      margin: 8px auto 24px;
-      padding: 0 14px;
-    }
-    .ai-box details {
-      background: rgba(35, 26, 52, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-    .ai-box summary { cursor: pointer; font-weight: 700; color: var(--gold); }
-    .ai-box code { background: #120c1c; padding: 2px 6px; border-radius: 5px; color: #fff; }
   </style>
 </head>
 <body>
@@ -342,10 +388,9 @@
         <span id="sync-status" class="sync-badge">Carregando...</span>
       </div>
       <div class="header-actions">
-        <a class="btn-link btn-preview-link" href="https://ric-lab.github.io/King-Rico/circus/" target="_blank" rel="noopener">🎰 Abrir Prévia do Jogo</a>
+        <a class="btn-link btn-preview-link" href="https://ric-lab.github.io/King-Rico/circus/" target="_blank" rel="noopener">🎰 Abrir Prévia</a>
         <button type="button" class="btn-primary" id="btn-add">+ Nova Tarefa</button>
-        <button type="button" id="btn-copy-chat" title="Copia um resumo pronto para colar no chat do Claude, GPT ou Antigravity">📋 Copiar p/ IA</button>
-        <button type="button" id="btn-gh-config" title="Opcional: conectar token do GitHub para salvar direto no repositório">⚙️ GitHub</button>
+        <button type="button" id="btn-gh-config" title="Ativar sincronização automática direta com Antigravity, Claude e GPT">⚡ Auto-Sync</button>
       </div>
     </div>
     <div class="toolbar">
@@ -388,29 +433,19 @@
     </section>
   </main>
 
-  <div class="ai-box">
-    <details>
-      <summary>🤖 Como você, Antigravity (Gemini), Claude e GPT/Codex usam este painel juntos</summary>
-      <p>
-        1. <strong>Leitura em tempo real:</strong> Esta página lê <code>docs/todo.json</code> direto da branch <code>codex/penalty-clown-preview</code> no GitHub. Assim que qualquer IA fizer commit, já aparece aqui na hora.<br>
-        2. <strong>Para as IAs (Claude, Codex, Antigravity):</strong> Rodar <code>node scripts/todo.mjs list</code>, <code>node scripts/todo.mjs add "..."</code> ou <code>node scripts/todo.mjs move &lt;id&gt; preview|done</code> (atualiza <code>docs/todo.json</code> e <code>docs/TODO.md</code> juntos).<br>
-        3. <strong>Quando você mexer por aqui:</strong> Você pode clicar em <strong>📋 Copiar p/ IA</strong> e colar no chat de qualquer agente, ou configurar seu token 1 vez em <strong>⚙️ GitHub</strong> para salvar direto no repositório com 1 clique.
-      </p>
-    </details>
-  </div>
-
   <div class="dirty-bar" id="dirty-bar">
-    <span id="dirty-text">Você fez alterações locais no painel.</span>
+    <span id="dirty-text">Ative o Auto-Sync (1 vez) para gravar direto para as 3 IAs, ou copie para o chat:</span>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button type="button" class="btn-primary" id="btn-save-gh">💾 Salvar no GitHub</button>
-      <button type="button" id="btn-copy-diff">📋 Copiar p/ colar no chat da IA</button>
+      <button type="button" class="btn-primary" id="btn-save-gh">⚡ Ativar Auto-Sync</button>
+      <button type="button" id="btn-copy-diff">📋 Copiar p/ Chat</button>
       <button type="button" id="btn-discard">Desfazer</button>
     </div>
   </div>
 
   <dialog id="modal-task">
     <form id="form-task" method="dialog">
-      <h3 style="margin-top:0">Nova Tarefa</h3>
+      <h3 id="modal-task-heading" style="margin-top:0">Nova Tarefa</h3>
+      <input type="hidden" id="inp-id" value="">
       <div class="form-row">
         <label for="inp-title">O que precisa ser feito?</label>
         <textarea id="inp-title" rows="3" required placeholder="Ex.: Diminuir o tempo da roleta antes das moedas voarem"></textarea>
@@ -435,29 +470,39 @@
         </select>
       </div>
       <div class="form-row">
-        <label for="inp-notes">Observação / Link de demo (opcional)</label>
-        <input type="text" id="inp-notes" placeholder="Observações extras...">
+        <label for="inp-notes">Observações (opcional)</label>
+        <input type="text" id="inp-notes" placeholder="Detalhes extras...">
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px">
         <button type="button" id="btn-cancel-task">Cancelar</button>
-        <button type="submit" class="btn-primary">Adicionar</button>
+        <button type="submit" class="btn-primary">Salvar</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="modal-gh">
     <form id="form-gh" method="dialog">
-      <h3 style="margin-top:0">⚙️ Salvar direto no GitHub (Opcional)</h3>
-      <p style="font-size:0.82rem;color:var(--muted);line-height:1.4">
-        Se quiser que o botão <strong>💾 Salvar no GitHub</strong> grave direto no repositório sem passar pelo chat, cole um Personal Access Token do GitHub com permissão <code>repo</code> ou <code>contents:write</code>. Ele fica salvo <strong>apenas no navegador deste aparelho</strong>.
+      <h3 style="margin-top:0">⚡ Sincronização Automática (Você + 3 IAs)</h3>
+      <p style="font-size:0.83rem;color:var(--muted);line-height:1.45;margin-top:0">
+        Quando ativado, <strong>qualquer clique seu neste site salva sozinho em 1 segundo no GitHub</strong> (<code>docs/todo.json</code>) e o <strong>Antigravity, Claude e GPT</strong> já leem na hora — sem precisar clicar em salvar e sem copiar/colar!
       </p>
+      <div style="margin-bottom:12px">
+        <a class="btn-link btn-preview-link" href="https://github.com/settings/tokens/new?description=Painel+King+Rico&scopes=repo" target="_blank" rel="noopener" style="width:100%;justify-content:center">
+          🔑 Passo 1: Gerar chave no GitHub (já vem preenchido, só rolar e clicar Generate)
+        </a>
+      </div>
       <div class="form-row">
-        <label for="inp-token">GitHub Token</label>
-        <input type="password" id="inp-token" placeholder="ghp_... ou github_pat_...">
+        <label for="inp-token">Passo 2: Cole a chave gerada (`ghp_...`) abaixo (só precisa 1 vez):</label>
+        <input type="password" id="inp-token" autocomplete="new-password" placeholder="ghp_...">
+      </div>
+      <div id="magic-link-row" style="display:none;margin-bottom:12px">
+        <button type="button" id="btn-magic-link" style="width:100%;justify-content:center">
+          📱 Copiar Link Mágico (abre já conectado no seu celular/PC)
+        </button>
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px">
         <button type="button" id="btn-cancel-gh">Fechar</button>
-        <button type="submit" class="btn-primary">Salvar no aparelho</button>
+        <button type="submit" class="btn-primary">Ativar Auto-Sync</button>
       </div>
     </form>
   </dialog>
@@ -468,9 +513,18 @@
     const LOCAL_STORAGE_DRAFT = 'kingRico.todo.draft.v1';
     const LOCAL_STORAGE_TOKEN = 'kingRico.todo.ghToken.v1';
 
+    // Suporte a Link Mágico (#token=ghp_...) para conectar celular/PC sem digitar
+    if (location.hash.startsWith('#token=')) {
+      const t = decodeURIComponent(location.hash.slice(7)).trim();
+      if (t) localStorage.setItem(LOCAL_STORAGE_TOKEN, t);
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+
     let remoteBoard = null;
     let board = { updatedAt: '', items: [] };
     let dirty = false;
+    let saving = false;
+    let autoSaveTimer = null;
     let changeLog = [];
     let activeCategory = 'Todas';
     let activeMobileTab = 'todo';
@@ -478,33 +532,64 @@
 
     const syncEl = document.getElementById('sync-status');
     const dirtyBar = document.getElementById('dirty-bar');
+    const ghBtn = document.getElementById('btn-gh-config');
 
-    async function fetchLiveBoard() {
-      syncEl.textContent = 'Sincronizando com GitHub...';
+    function hasToken() {
+      return Boolean(localStorage.getItem(LOCAL_STORAGE_TOKEN));
+    }
+
+    function updateHeaderStatus(text, mode = '') {
+      syncEl.textContent = text;
+      syncEl.className = 'sync-badge' + (mode ? ' ' + mode : '');
+      if (hasToken()) {
+        ghBtn.textContent = '🟢 Auto-Sync Ativo';
+        ghBtn.classList.add('btn-connected');
+        document.getElementById('magic-link-row').style.display = 'block';
+      } else {
+        ghBtn.textContent = '⚡ Auto-Sync';
+        ghBtn.classList.remove('btn-connected');
+        document.getElementById('magic-link-row').style.display = 'none';
+      }
+    }
+
+    async function fetchLiveBoard(silent = false) {
+      if (!silent) updateHeaderStatus('Sincronizando...');
       try {
+        const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+        const headers = { Accept: 'application/vnd.github.raw+json' };
+        if (token) headers.Authorization = `Bearer ${token}`;
         const res = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
-          headers: { Accept: 'application/vnd.github.raw+json' },
+          headers,
           cache: 'no-store'
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         remoteBoard = JSON.parse(JSON.stringify(data));
-        syncEl.textContent = `Sincronizado · ${data.updatedAt || 'ao vivo'}`;
+        updateHeaderStatus(hasToken() ? '🟢 Sincronizado com as 3 IAs' : `Ao vivo · ${data.updatedAt || ''}`, hasToken() ? 'live' : '');
         return data;
       } catch {
         const res = await fetch(`./todo.json?t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
         remoteBoard = JSON.parse(JSON.stringify(data));
-        syncEl.textContent = ` Cópia da prévia · ${data.updatedAt || ''}`;
+        updateHeaderStatus(`Cópia da prévia · ${data.updatedAt || ''}`);
         return data;
       }
     }
 
-    function saveDraft() {
-      dirty = true;
-      localStorage.setItem(LOCAL_STORAGE_DRAFT, JSON.stringify({ board, changeLog }));
-      dirtyBar.classList.add('visible');
+    function recordChange(msg) {
+      changeLog.push(msg);
       render();
+      if (hasToken()) {
+        dirty = false;
+        dirtyBar.classList.remove('visible');
+        updateHeaderStatus('⏳ Salvando para as IAs...', 'saving');
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => pushToGitHub(), 600);
+      } else {
+        dirty = true;
+        localStorage.setItem(LOCAL_STORAGE_DRAFT, JSON.stringify({ board, changeLog }));
+        dirtyBar.classList.add('visible');
+      }
     }
 
     function clearDraft() {
@@ -512,6 +597,52 @@
       changeLog = [];
       localStorage.removeItem(LOCAL_STORAGE_DRAFT);
       dirtyBar.classList.remove('visible');
+    }
+
+    async function pushToGitHub() {
+      const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+      if (!token) {
+        document.getElementById('modal-gh').showModal();
+        return;
+      }
+      if (saving) return;
+      saving = true;
+      updateHeaderStatus('⏳ Salvando no GitHub...', 'saving');
+      try {
+        const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+          cache: 'no-store'
+        });
+        if (!metaRes.ok) throw new Error('Chave inválida ou sem permissão repo (' + metaRes.status + ')');
+        const meta = await metaRes.json();
+        board.updatedAt = new Date().toISOString().slice(0, 10);
+        const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(board, null, 2) + '\n')));
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Painel /todo/: atualização automática pelo dono [skip ci]',
+            content: contentB64,
+            sha: meta.sha,
+            branch: BRANCH
+          })
+        });
+        if (!putRes.ok) throw new Error('HTTP ' + putRes.status);
+        remoteBoard = JSON.parse(JSON.stringify(board));
+        clearDraft();
+        updateHeaderStatus('🟢 Salvo! As 3 IAs já enxergam', 'live');
+      } catch (err) {
+        dirty = true;
+        localStorage.setItem(LOCAL_STORAGE_DRAFT, JSON.stringify({ board, changeLog }));
+        dirtyBar.classList.add('visible');
+        updateHeaderStatus('⚠️ Falha ao salvar (veja barra abaixo)');
+      } finally {
+        saving = false;
+      }
     }
 
     function renderCategories() {
@@ -542,17 +673,25 @@
       const item = board.items.find(i => i.id === id);
       if (!item || item.status === nextStatus) return;
       const labels = { todo: 'A Fazer', preview: 'Na Prévia', done: 'Feito' };
-      changeLog.push(`Mover [${item.id}] ("${item.title.slice(0, 48)}...") para ${labels[nextStatus]}`);
       item.status = nextStatus;
-      saveDraft();
+      recordChange(`Mover [${item.id}] ("${item.title.slice(0, 48)}...") para ${labels[nextStatus]}`);
     }
 
     function deleteTask(id) {
       const idx = board.items.findIndex(i => i.id === id);
       if (idx === -1) return;
       const [removed] = board.items.splice(idx, 1);
-      changeLog.push(`Remover [${removed.id}] ("${removed.title.slice(0, 48)}...")`);
-      saveDraft();
+      recordChange(`Remover [${removed.id}] ("${removed.title.slice(0, 48)}...")`);
+    }
+
+    function openEditModal(item) {
+      document.getElementById('modal-task-heading').textContent = 'Editar Tarefa';
+      document.getElementById('inp-id').value = item.id;
+      document.getElementById('inp-title').value = item.title;
+      document.getElementById('inp-cat').value = item.category || 'Visual & Ritmo';
+      document.getElementById('inp-status').value = item.status || 'todo';
+      document.getElementById('inp-notes').value = item.notes || '';
+      document.getElementById('modal-task').showModal();
     }
 
     function render() {
@@ -640,6 +779,14 @@
             actions.append(bDone);
           }
 
+          const bEdit = document.createElement('button');
+          bEdit.type = 'button';
+          bEdit.className = 'btn-icon';
+          bEdit.title = 'Editar tarefa';
+          bEdit.textContent = '✎';
+          bEdit.onclick = () => openEditModal(item);
+          actions.append(bEdit);
+
           const bDel = document.createElement('button');
           bDel.type = 'button';
           bDel.className = 'btn-delete';
@@ -654,57 +801,12 @@
       }
     }
 
-    function buildChatSummary() {
-      if (changeLog.length) {
-        return `Atualize o docs/todo.json (node scripts/todo.mjs) com estas mudanças que fiz no painel:\n- ` + changeLog.join('\n- ');
-      }
-      const todos = board.items.filter(i => i.status === 'todo').map(i => `- [ ] (${i.id}) ${i.title}`);
-      const previews = board.items.filter(i => i.status === 'preview').map(i => `- [~] (${i.id}) ${i.title}`);
-      return `Estado atual do painel King Rico:\n\nA Fazer (${todos.length}):\n${todos.slice(0, 10).join('\n')}\n\nNa Prévia (${previews.length}):\n${previews.join('\n')}`;
-    }
-
     async function copyForChat() {
-      const text = buildChatSummary();
+      const text = changeLog.length
+        ? `Atualize o docs/todo.json (node scripts/todo.mjs) com estas mudanças que fiz no painel:\n- ` + changeLog.join('\n- ')
+        : `Confira o painel de tarefas em docs/todo.json (node scripts/todo.mjs list).`;
       await navigator.clipboard.writeText(text);
-      syncEl.textContent = '📋 Copiado! Cole no chat da IA.';
-    }
-
-    async function saveToGitHub() {
-      const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
-      if (!token) {
-        document.getElementById('modal-gh').showModal();
-        return;
-      }
-      syncEl.textContent = 'Salvando no GitHub...';
-      try {
-        const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
-        });
-        if (!metaRes.ok) throw new Error('Token sem permissão ou inválido (' + metaRes.status + ')');
-        const meta = await metaRes.json();
-        board.updatedAt = new Date().toISOString().slice(0, 10);
-        const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(board, null, 2) + '\n')));
-        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Atualiza painel de tarefas (docs/todo.json) [skip ci]',
-            content: contentB64,
-            sha: meta.sha,
-            branch: BRANCH
-          })
-        });
-        if (!putRes.ok) throw new Error('Falha ao gravar: HTTP ' + putRes.status);
-        clearDraft();
-        syncEl.textContent = '✅ Salvo no GitHub!';
-      } catch (err) {
-        alert('Não foi possível salvar direto no GitHub: ' + err.message + '\nUse o botão "📋 Copiar p/ colar no chat da IA" ou confira o token.');
-        syncEl.textContent = 'Erro ao salvar';
-      }
+      updateHeaderStatus('📋 Copiado! Cole no chat da IA.');
     }
 
     document.getElementById('search-input').addEventListener('input', e => {
@@ -720,50 +822,95 @@
     }
 
     const modalTask = document.getElementById('modal-task');
-    document.getElementById('btn-add').onclick = () => modalTask.showModal();
+    document.getElementById('btn-add').onclick = () => {
+      document.getElementById('modal-task-heading').textContent = 'Nova Tarefa';
+      document.getElementById('form-task').reset();
+      document.getElementById('inp-id').value = '';
+      modalTask.showModal();
+    };
     document.getElementById('btn-cancel-task').onclick = () => modalTask.close();
     document.getElementById('form-task').onsubmit = e => {
       e.preventDefault();
+      const idVal = document.getElementById('inp-id').value.trim();
       const title = document.getElementById('inp-title').value.trim();
       if (!title) return;
       const category = document.getElementById('inp-cat').value;
       const status = document.getElementById('inp-status').value;
       const notes = document.getElementById('inp-notes').value.trim();
-      const id = 't-' + title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) + '-' + Math.floor(Math.random() * 90 + 10);
-      board.items.unshift({ id, title, status, category, agent: 'Dono', commit: '', demoUrl: '', notes });
-      changeLog.push(`Adicionar tarefa [${id}] (${category}, ${status}): "${title}"${notes ? ' — ' + notes : ''}`);
+
+      if (idVal) {
+        const existing = board.items.find(i => i.id === idVal);
+        if (existing) {
+          existing.title = title;
+          existing.category = category;
+          existing.status = status;
+          existing.notes = notes;
+          recordChange(`Editar tarefa [${idVal}]: "${title}"`);
+        }
+      } else {
+        const id = 't-' + title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) + '-' + Math.floor(Math.random() * 90 + 10);
+        board.items.unshift({ id, title, status, category, agent: 'Dono', commit: '', demoUrl: '', notes });
+        recordChange(`Adicionar tarefa [${id}] (${category}, ${status}): "${title}"${notes ? ' — ' + notes : ''}`);
+      }
       document.getElementById('form-task').reset();
       modalTask.close();
-      saveDraft();
     };
 
     const modalGh = document.getElementById('modal-gh');
-    document.getElementById('btn-gh-config').onclick = () => {
+    const openGhModal = () => {
       document.getElementById('inp-token').value = localStorage.getItem(LOCAL_STORAGE_TOKEN) || '';
+      updateHeaderStatus(syncEl.textContent);
       modalGh.showModal();
     };
+    document.getElementById('btn-gh-config').onclick = openGhModal;
+    document.getElementById('btn-save-gh').onclick = openGhModal;
     document.getElementById('btn-cancel-gh').onclick = () => modalGh.close();
     document.getElementById('form-gh').onsubmit = e => {
       e.preventDefault();
       const val = document.getElementById('inp-token').value.trim();
-      if (val) localStorage.setItem(LOCAL_STORAGE_TOKEN, val);
-      else localStorage.removeItem(LOCAL_STORAGE_TOKEN);
-      modalGh.close();
+      if (val) {
+        localStorage.setItem(LOCAL_STORAGE_TOKEN, val);
+        modalGh.close();
+        if (dirty) pushToGitHub();
+        else updateHeaderStatus('🟢 Auto-Sync Ativo!', 'live');
+      } else {
+        localStorage.removeItem(LOCAL_STORAGE_TOKEN);
+        modalGh.close();
+        updateHeaderStatus('Auto-Sync desativado');
+      }
     };
 
-    document.getElementById('btn-copy-chat').onclick = copyForChat;
+    document.getElementById('btn-magic-link').onclick = async () => {
+      const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+      if (!token) return;
+      const url = `${location.origin}${location.pathname}#token=${encodeURIComponent(token)}`;
+      await navigator.clipboard.writeText(url);
+      document.getElementById('btn-magic-link').textContent = '✅ Link Mágico copiado! Envie para seu celular.';
+    };
+
     document.getElementById('btn-copy-diff').onclick = copyForChat;
-    document.getElementById('btn-save-gh').onclick = saveToGitHub;
     document.getElementById('btn-discard').onclick = () => {
       if (remoteBoard) board = JSON.parse(JSON.stringify(remoteBoard));
       clearDraft();
       render();
     };
 
+    // Auto-polling a cada 20s e ao voltar para a aba para refletir mudanças das IAs na hora
+    async function pollIfClean() {
+      if (dirty || saving) return;
+      const live = await fetchLiveBoard(true);
+      if (JSON.stringify(live.items) !== JSON.stringify(board.items)) {
+        board = live;
+        render();
+      }
+    }
+    setInterval(pollIfClean, 20000);
+    window.addEventListener('focus', pollIfClean);
+
     (async () => {
       const live = await fetchLiveBoard();
       const saved = localStorage.getItem(LOCAL_STORAGE_DRAFT);
-      if (saved) {
+      if (saved && !hasToken()) {
         try {
           const parsed = JSON.parse(saved);
           board = parsed.board;
