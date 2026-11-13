@@ -44,7 +44,7 @@ with sync_playwright() as p:
  page.reload();page.wait_for_function('KingRicoCloud.player');assert abs(page.evaluate('KingRicoCloud.player.balance')-expected)<.001
  collect_daily(page)
  assert page.locator('.kr-hud-park').count()==0
- for route in ['park','penalty','flying-clown','bounce','fingo']:
+ for route in ['park','flying-clown','bounce','fingo']:  # penalty voltou: o controle abre esse jogo
   page.goto(base+'/'+route);collect_daily(page)
   page.wait_for_function('window.__fc?._parkHook')
   assert 'Fortune%20Circus.dc.html' in page.url
