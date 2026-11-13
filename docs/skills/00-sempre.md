@@ -19,5 +19,6 @@
 - Se não existir atalho para o que mudou, criar um ?demo= novo no mesmo arquivo (só prévia, nunca no build oficial).
 - Esperar o workflow da prévia terminar com sucesso antes de mandar o link.
 
-## Lista de tarefas
-- Uma só, `docs/TODO.md`, dos 3 modelos (Claude, GPT/Codex, Gemini). Toda resposta ao dono mostra essa lista atualizada.
+## Lista de tarefas (Painel Web + JSON/MD)
+- Site compartilhado: **https://ric-lab.github.io/King-Rico/todo/** (3 colunas: **A Fazer**, **Na Prévia (Testar)**, **Feito**).
+- Fonte estruturada única dos 3 modelos (Claude, GPT/Codex, Gemini): `docs/todo.json` + CLI `node scripts/todo.mjs` (que atualiza `docs/todo.json` e regenera `docs/TODO.md` automaticamente). Toda resposta ao dono inclui o link do painel.

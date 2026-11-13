@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>King Rico · Painel de Tarefas</title>
+  <style>
+    :root {
+      --bg: #161021;
+      --surface: #231a34;
+      --surface-2: #2f2346;
+      --border: #473668;
+      --text: #fff8ed;
+      --muted: #cbbce0;
+      --gold: #ffca3a;
+      --gold-dark: #d99316;
+      --todo: #ff8c42;
+      --preview: #38b6ff;
+      --done: #2ec46d;
+      --danger: #ff4d6d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #2c1e45 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 96px;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(22, 16, 33, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    .header-top {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.3px;
+    }
+    .sync-badge {
+      font-size: 0.76rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    button, .btn-link {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 700;
+      padding: 8px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease, background 0.15s ease;
+    }
+    button:active, .btn-link:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      color: #2b1600;
+      border-color: #ffe07d;
+    }
+    .btn-preview-link {
+      background: rgba(56, 182, 255, 0.18);
+      border-color: #38b6ff88;
+      color: #8fd8ff;
+    }
+    .toolbar {
+      max-width: 1280px;
+      margin: 10px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .search-input {
+      flex: 1 1 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+    .cat-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      max-width: 100%;
+    }
+    .cat-pill {
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      background: var(--surface);
+      color: var(--muted);
+    }
+    .cat-pill.active {
+      background: var(--gold);
+      color: #281500;
+      border-color: var(--gold);
+    }
+    .mobile-tabs {
+      display: none;
+      max-width: 1280px;
+      margin: 10px auto 0;
+      gap: 6px;
+    }
+    .mobile-tab {
+      flex: 1;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      padding: 9px 4px;
+      font-size: 0.8rem;
+      border-radius: 10px;
+    }
+    .mobile-tab.active {
+      background: var(--surface-2);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    @media (max-width: 860px) {
+      .mobile-tabs { display: flex; }
+      .board-col[data-hidden-mobile="true"] { display: none; }
+    }
+    main {
+      max-width: 1280px;
+      margin: 16px auto;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+    }
+    .board-col {
+      background: rgba(35, 26, 52, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    .col-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .col-todo .col-header { border-bottom-color: var(--todo); }
+    .col-preview .col-header { border-bottom-color: var(--preview); }
+    .col-done .col-header { border-bottom-color: var(--done); }
+    .col-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: -6px;
+    }
+    .count-pill {
+      background: var(--surface-2);
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .task-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(255, 202, 58, 0.16);
+      color: var(--gold);
+    }
+    .agent-tag {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+    .task-title {
+      font-size: 0.94rem;
+      line-height: 1.38;
+      font-weight: 600;
+      margin: 0;
+      word-break: break-word;
+    }
+    .task-notes {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.35;
+    }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .card-actions button, .card-actions .btn-link {
+      font-size: 0.76rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .btn-move-todo { border-color: #ff8c4288; color: #ffb482; }
+    .btn-move-preview { border-color: #38b6ff88; color: #8fd8ff; }
+    .btn-move-done { border-color: #2ec46d88; color: #7bf1a8; background: rgba(46, 196, 109, 0.14); }
+    .btn-delete { border-color: transparent; background: transparent; color: #ff8fa3; margin-left: auto; }
+    .dirty-bar {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94vw, 680px);
+      background: #2b1d42;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+      z-index: 100;
+    }
+    .dirty-bar.visible { display: flex; flex-wrap: wrap; }
+    dialog {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      width: min(92vw, 460px);
+    }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+    .form-row label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .form-row input, .form-row textarea, .form-row select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 11px;
+      font: inherit;
+    }
+    .ai-box {
+      max-width: 1280px;
+      margin: 8px auto 24px;
+      padding: 0 14px;
+    }
+    .ai-box details {
+      background: rgba(35, 26, 52, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .ai-box summary { cursor: pointer; font-weight: 700; color: var(--gold); }
+    .ai-box code { background: #120c1c; padding: 2px 6px; border-radius: 5px; color: #fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div class="brand">
+        <h1>🎪 King Rico · Tarefas</h1>
+        <span id="sync-status" class="sync-badge">Carregando...</span>
+      </div>
+      <div class="header-actions">
+        <a class="btn-link btn-preview-link" href="https://ric-lab.github.io/King-Rico/circus/" target="_blank" rel="noopener">🎰 Abrir Prévia do Jogo</a>
+        <button type="button" class="btn-primary" id="btn-add">+ Nova Tarefa</button>
+        <button type="button" id="btn-copy-chat" title="Copia um resumo pronto para colar no chat do Claude, GPT ou Antigravity">📋 Copiar p/ IA</button>
+        <button type="button" id="btn-gh-config" title="Opcional: conectar token do GitHub para salvar direto no repositório">⚙️ GitHub</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input type="search" id="search-input" class="search-input" placeholder="Buscar tarefa (ex.: roleta, Tony, cedro, som)...">
+      <div class="cat-pills" id="cat-pills"></div>
+    </div>
+    <div class="mobile-tabs" id="mobile-tabs">
+      <button type="button" class="mobile-tab active" data-tab="todo">📋 A Fazer (<span id="m-count-todo">0</span>)</button>
+      <button type="button" class="mobile-tab" data-tab="preview">🧪 Na Prévia (<span id="m-count-preview">0</span>)</button>
+      <button type="button" class="mobile-tab" data-tab="done">✅ Feito (<span id="m-count-done">0</span>)</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="board-col col-todo" data-col="todo">
+      <div class="col-header">
+        <h2>📋 A Fazer (Backlog)</h2>
+        <span class="count-pill" id="count-todo">0</span>
+      </div>
+      <div class="col-sub">Fila priorizada para Antigravity, Claude e GPT/Codex</div>
+      <div class="card-list" id="list-todo"></div>
+    </section>
+
+    <section class="board-col col-preview" data-col="preview">
+      <div class="col-header">
+        <h2>🧪 Na Prévia (Testar)</h2>
+        <span class="count-pill" id="count-preview">0</span>
+      </div>
+      <div class="col-sub">Pronto na prévia esperando seu teste / aprovação</div>
+      <div class="card-list" id="list-preview"></div>
+    </section>
+
+    <section class="board-col col-done" data-col="done">
+      <div class="col-header">
+        <h2>✅ Feito (Aprovado)</h2>
+        <span class="count-pill" id="count-done">0</span>
+      </div>
+      <div class="col-sub">Concluído e validado</div>
+      <div class="card-list" id="list-done"></div>
+    </section>
+  </main>
+
+  <div class="ai-box">
+    <details>
+      <summary>🤖 Como você, Antigravity (Gemini), Claude e GPT/Codex usam este painel juntos</summary>
+      <p>
+        1. <strong>Leitura em tempo real:</strong> Esta página lê <code>docs/todo.json</code> direto da branch <code>codex/penalty-clown-preview</code> no GitHub. Assim que qualquer IA fizer commit, já aparece aqui na hora.<br>
+        2. <strong>Para as IAs (Claude, Codex, Antigravity):</strong> Rodar <code>node scripts/todo.mjs list</code>, <code>node scripts/todo.mjs add "..."</code> ou <code>node scripts/todo.mjs move &lt;id&gt; preview|done</code> (atualiza <code>docs/todo.json</code> e <code>docs/TODO.md</code> juntos).<br>
+        3. <strong>Quando você mexer por aqui:</strong> Você pode clicar em <strong>📋 Copiar p/ IA</strong> e colar no chat de qualquer agente, ou configurar seu token 1 vez em <strong>⚙️ GitHub</strong> para salvar direto no repositório com 1 clique.
+      </p>
+    </details>
+  </div>
+
+  <div class="dirty-bar" id="dirty-bar">
+    <span id="dirty-text">Você fez alterações locais no painel.</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn-primary" id="btn-save-gh">💾 Salvar no GitHub</button>
+      <button type="button" id="btn-copy-diff">📋 Copiar p/ colar no chat da IA</button>
+      <button type="button" id="btn-discard">Desfazer</button>
+    </div>
+  </div>
+
+  <dialog id="modal-task">
+    <form id="form-task" method="dialog">
+      <h3 style="margin-top:0">Nova Tarefa</h3>
+      <div class="form-row">
+        <label for="inp-title">O que precisa ser feito?</label>
+        <textarea id="inp-title" rows="3" required placeholder="Ex.: Diminuir o tempo da roleta antes das moedas voarem"></textarea>
+      </div>
+      <div class="form-row">
+        <label for="inp-cat">Categoria</label>
+        <select id="inp-cat">
+          <option value="Visual & Ritmo">Visual & Ritmo</option>
+          <option value="Sons">Sons</option>
+          <option value="Economia & Regras">Economia & Regras</option>
+          <option value="Menu & Topo">Menu & Topo</option>
+          <option value="Ideias">Ideias</option>
+          <option value="Infra">Infra</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="inp-status">Coluna</label>
+        <select id="inp-status">
+          <option value="todo">📋 A Fazer (Backlog)</option>
+          <option value="preview">🧪 Na Prévia (Testar)</option>
+          <option value="done">✅ Feito</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="inp-notes">Observação / Link de demo (opcional)</label>
+        <input type="text" id="inp-notes" placeholder="Observações extras...">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button type="button" id="btn-cancel-task">Cancelar</button>
+        <button type="submit" class="btn-primary">Adicionar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="modal-gh">
+    <form id="form-gh" method="dialog">
+      <h3 style="margin-top:0">⚙️ Salvar direto no GitHub (Opcional)</h3>
+      <p style="font-size:0.82rem;color:var(--muted);line-height:1.4">
+        Se quiser que o botão <strong>💾 Salvar no GitHub</strong> grave direto no repositório sem passar pelo chat, cole um Personal Access Token do GitHub com permissão <code>repo</code> ou <code>contents:write</code>. Ele fica salvo <strong>apenas no navegador deste aparelho</strong>.
+      </p>
+      <div class="form-row">
+        <label for="inp-token">GitHub Token</label>
+        <input type="password" id="inp-token" placeholder="ghp_... ou github_pat_...">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button type="button" id="btn-cancel-gh">Fechar</button>
+        <button type="submit" class="btn-primary">Salvar no aparelho</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module">
+    const REPO = 'Ric-lab/King-Rico';
+    const BRANCH = 'codex/penalty-clown-preview';
+    const LOCAL_STORAGE_DRAFT = 'kingRico.todo.draft.v1';
+    const LOCAL_STORAGE_TOKEN = 'kingRico.todo.ghToken.v1';
+
+    let remoteBoard = null;
+    let board = { updatedAt: '', items: [] };
+    let dirty = false;
+    let changeLog = [];
+    let activeCategory = 'Todas';
+    let activeMobileTab = 'todo';
+    let searchQuery = '';
+
+    const syncEl = document.getElementById('sync-status');
+    const dirtyBar = document.getElementById('dirty-bar');
+
+    async function fetchLiveBoard() {
+      syncEl.textContent = 'Sincronizando com GitHub...';
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
+          headers: { Accept: 'application/vnd.github.raw+json' },
+          cache: 'no-store'
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        remoteBoard = JSON.parse(JSON.stringify(data));
+        syncEl.textContent = `Sincronizado · ${data.updatedAt || 'ao vivo'}`;
+        return data;
+      } catch {
+        const res = await fetch(`./todo.json?t=${Date.now()}`, { cache: 'no-store' });
+        const data = await res.json();
+        remoteBoard = JSON.parse(JSON.stringify(data));
+        syncEl.textContent = ` Cópia da prévia · ${data.updatedAt || ''}`;
+        return data;
+      }
+    }
+
+    function saveDraft() {
+      dirty = true;
+      localStorage.setItem(LOCAL_STORAGE_DRAFT, JSON.stringify({ board, changeLog }));
+      dirtyBar.classList.add('visible');
+      render();
+    }
+
+    function clearDraft() {
+      dirty = false;
+      changeLog = [];
+      localStorage.removeItem(LOCAL_STORAGE_DRAFT);
+      dirtyBar.classList.remove('visible');
+    }
+
+    function renderCategories() {
+      const cats = ['Todas', ...new Set(board.items.map(i => i.category).filter(Boolean))];
+      const container = document.getElementById('cat-pills');
+      container.innerHTML = '';
+      for (const c of cats) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cat-pill' + (c === activeCategory ? ' active' : '');
+        btn.textContent = c;
+        btn.onclick = () => { activeCategory = c; render(); };
+        container.append(btn);
+      }
+    }
+
+    function matchesFilter(item) {
+      if (activeCategory !== 'Todas' && item.category !== activeCategory) return false;
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const hay = `${item.title} ${item.category || ''} ${item.notes || ''} ${item.agent || ''}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    }
+
+    function moveTask(id, nextStatus) {
+      const item = board.items.find(i => i.id === id);
+      if (!item || item.status === nextStatus) return;
+      const labels = { todo: 'A Fazer', preview: 'Na Prévia', done: 'Feito' };
+      changeLog.push(`Mover [${item.id}] ("${item.title.slice(0, 48)}...") para ${labels[nextStatus]}`);
+      item.status = nextStatus;
+      saveDraft();
+    }
+
+    function deleteTask(id) {
+      const idx = board.items.findIndex(i => i.id === id);
+      if (idx === -1) return;
+      const [removed] = board.items.splice(idx, 1);
+      changeLog.push(`Remover [${removed.id}] ("${removed.title.slice(0, 48)}...")`);
+      saveDraft();
+    }
+
+    function render() {
+      renderCategories();
+      for (const col of document.querySelectorAll('.board-col')) {
+        col.dataset.hiddenMobile = String(col.dataset.col !== activeMobileTab);
+      }
+      for (const btn of document.querySelectorAll('.mobile-tab')) {
+        btn.classList.toggle('active', btn.dataset.tab === activeMobileTab);
+      }
+
+      for (const status of ['todo', 'preview', 'done']) {
+        const listEl = document.getElementById(`list-${status}`);
+        const items = board.items.filter(i => i.status === status && matchesFilter(i));
+        document.getElementById(`count-${status}`).textContent = String(items.length);
+        document.getElementById(`m-count-${status}`).textContent = String(items.length);
+        listEl.innerHTML = '';
+
+        for (const item of items) {
+          const card = document.createElement('article');
+          card.className = 'task-card';
+
+          const top = document.createElement('div');
+          top.className = 'card-top';
+          const tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.textContent = item.category || 'Geral';
+          top.append(tag);
+
+          if (item.agent || item.commit) {
+            const meta = document.createElement('span');
+            meta.className = 'agent-tag';
+            meta.textContent = [item.agent, item.commit].filter(Boolean).join(' · ');
+            top.append(meta);
+          }
+
+          const title = document.createElement('p');
+          title.className = 'task-title';
+          title.textContent = item.title;
+
+          card.append(top, title);
+
+          if (item.notes) {
+            const notes = document.createElement('p');
+            notes.className = 'task-notes';
+            notes.textContent = item.notes;
+            card.append(notes);
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'card-actions';
+
+          if (item.demoUrl) {
+            const a = document.createElement('a');
+            a.className = 'btn-link btn-preview-link';
+            a.href = item.demoUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = '▶ Testar';
+            actions.append(a);
+          }
+
+          if (status !== 'todo') {
+            const bTodo = document.createElement('button');
+            bTodo.type = 'button';
+            bTodo.className = 'btn-move-todo';
+            bTodo.textContent = '↩ A Fazer';
+            bTodo.onclick = () => moveTask(item.id, 'todo');
+            actions.append(bTodo);
+          }
+          if (status !== 'preview') {
+            const bPrev = document.createElement('button');
+            bPrev.type = 'button';
+            bPrev.className = 'btn-move-preview';
+            bPrev.textContent = '🧪 Prévia';
+            bPrev.onclick = () => moveTask(item.id, 'preview');
+            actions.append(bPrev);
+          }
+          if (status !== 'done') {
+            const bDone = document.createElement('button');
+            bDone.type = 'button';
+            bDone.className = 'btn-move-done';
+            bDone.textContent = '✓ Feito';
+            bDone.onclick = () => moveTask(item.id, 'done');
+            actions.append(bDone);
+          }
+
+          const bDel = document.createElement('button');
+          bDel.type = 'button';
+          bDel.className = 'btn-delete';
+          bDel.title = 'Excluir tarefa';
+          bDel.textContent = '✕';
+          bDel.onclick = () => deleteTask(item.id);
+          actions.append(bDel);
+
+          card.append(actions);
+          listEl.append(card);
+        }
+      }
+    }
+
+    function buildChatSummary() {
+      if (changeLog.length) {
+        return `Atualize o docs/todo.json (node scripts/todo.mjs) com estas mudanças que fiz no painel:\n- ` + changeLog.join('\n- ');
+      }
+      const todos = board.items.filter(i => i.status === 'todo').map(i => `- [ ] (${i.id}) ${i.title}`);
+      const previews = board.items.filter(i => i.status === 'preview').map(i => `- [~] (${i.id}) ${i.title}`);
+      return `Estado atual do painel King Rico:\n\nA Fazer (${todos.length}):\n${todos.slice(0, 10).join('\n')}\n\nNa Prévia (${previews.length}):\n${previews.join('\n')}`;
+    }
+
+    async function copyForChat() {
+      const text = buildChatSummary();
+      await navigator.clipboard.writeText(text);
+      syncEl.textContent = '📋 Copiado! Cole no chat da IA.';
+    }
+
+    async function saveToGitHub() {
+      const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+      if (!token) {
+        document.getElementById('modal-gh').showModal();
+        return;
+      }
+      syncEl.textContent = 'Salvando no GitHub...';
+      try {
+        const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+        });
+        if (!metaRes.ok) throw new Error('Token sem permissão ou inválido (' + metaRes.status + ')');
+        const meta = await metaRes.json();
+        board.updatedAt = new Date().toISOString().slice(0, 10);
+        const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(board, null, 2) + '\n')));
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Atualiza painel de tarefas (docs/todo.json) [skip ci]',
+            content: contentB64,
+            sha: meta.sha,
+            branch: BRANCH
+          })
+        });
+        if (!putRes.ok) throw new Error('Falha ao gravar: HTTP ' + putRes.status);
+        clearDraft();
+        syncEl.textContent = '✅ Salvo no GitHub!';
+      } catch (err) {
+        alert('Não foi possível salvar direto no GitHub: ' + err.message + '\nUse o botão "📋 Copiar p/ colar no chat da IA" ou confira o token.');
+        syncEl.textContent = 'Erro ao salvar';
+      }
+    }
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      searchQuery = e.target.value.trim();
+      render();
+    });
+
+    for (const btn of document.querySelectorAll('.mobile-tab')) {
+      btn.addEventListener('click', () => {
+        activeMobileTab = btn.dataset.tab;
+        render();
+      });
+    }
+
+    const modalTask = document.getElementById('modal-task');
+    document.getElementById('btn-add').onclick = () => modalTask.showModal();
+    document.getElementById('btn-cancel-task').onclick = () => modalTask.close();
+    document.getElementById('form-task').onsubmit = e => {
+      e.preventDefault();
+      const title = document.getElementById('inp-title').value.trim();
+      if (!title) return;
+      const category = document.getElementById('inp-cat').value;
+      const status = document.getElementById('inp-status').value;
+      const notes = document.getElementById('inp-notes').value.trim();
+      const id = 't-' + title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) + '-' + Math.floor(Math.random() * 90 + 10);
+      board.items.unshift({ id, title, status, category, agent: 'Dono', commit: '', demoUrl: '', notes });
+      changeLog.push(`Adicionar tarefa [${id}] (${category}, ${status}): "${title}"${notes ? ' — ' + notes : ''}`);
+      document.getElementById('form-task').reset();
+      modalTask.close();
+      saveDraft();
+    };
+
+    const modalGh = document.getElementById('modal-gh');
+    document.getElementById('btn-gh-config').onclick = () => {
+      document.getElementById('inp-token').value = localStorage.getItem(LOCAL_STORAGE_TOKEN) || '';
+      modalGh.showModal();
+    };
+    document.getElementById('btn-cancel-gh').onclick = () => modalGh.close();
+    document.getElementById('form-gh').onsubmit = e => {
+      e.preventDefault();
+      const val = document.getElementById('inp-token').value.trim();
+      if (val) localStorage.setItem(LOCAL_STORAGE_TOKEN, val);
+      else localStorage.removeItem(LOCAL_STORAGE_TOKEN);
+      modalGh.close();
+    };
+
+    document.getElementById('btn-copy-chat').onclick = copyForChat;
+    document.getElementById('btn-copy-diff').onclick = copyForChat;
+    document.getElementById('btn-save-gh').onclick = saveToGitHub;
+    document.getElementById('btn-discard').onclick = () => {
+      if (remoteBoard) board = JSON.parse(JSON.stringify(remoteBoard));
+      clearDraft();
+      render();
+    };
+
+    (async () => {
+      const live = await fetchLiveBoard();
+      const saved = localStorage.getItem(LOCAL_STORAGE_DRAFT);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          board = parsed.board;
+          changeLog = parsed.changeLog || [];
+          dirty = true;
+          dirtyBar.classList.add('visible');
+        } catch {
+          board = live;
+        }
+      } else {
+        board = live;
+      }
+      render();
+    })();
+  </script>
+</body>
+</html>

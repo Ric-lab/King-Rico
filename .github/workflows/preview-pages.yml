@@ -102,7 +102,7 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           const root = process.env.PREVIEW_URL.replace(/\/$/, '') + '/';
-          for (const file of ['circus/', 'park/', 'cloud/client.js', 'runtime/three.module.js', 'assets/symbols/sym-coin.webp']) {
+          for (const file of ['circus/', 'park/', 'todo/', 'todo/todo.json', 'cloud/client.js', 'runtime/three.module.js', 'assets/symbols/sym-coin.webp']) {
             const response = await fetch(new URL(file, root), {method:'HEAD', signal:AbortSignal.timeout(20000)});
             if (!response.ok) throw Error(`${file}: HTTP ${response.status}`);
             console.log(`HEAD ${file}: ${response.status}`);
@@ -111,4 +111,5 @@ jobs:
           echo "### Prévia compartilhada" >> "$GITHUB_STEP_SUMMARY"
           echo "${PREVIEW_URL%/}/circus/" >> "$GITHUB_STEP_SUMMARY"
           echo "Jogo normal: ${PREVIEW_URL%/}/circus/?demo=off" >> "$GITHUB_STEP_SUMMARY"
+          echo "Painel de tarefas: ${PREVIEW_URL%/}/todo/" >> "$GITHUB_STEP_SUMMARY"
           echo "Moedas fictícias; Firebase de produção e site oficial inalterados." >> "$GITHUB_STEP_SUMMARY"

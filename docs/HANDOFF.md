@@ -1,3 +1,17 @@
+# HANDOFF
+
+## Painel Web de Tarefas (13/11/2026 · Antigravity)
+
+- O dono pediu transformar o `docs/TODO.md` em um site simples compartilhado entre ele, Antigravity (Gemini), Claude e GPT/Codex.
+- Publicado em **https://ric-lab.github.io/King-Rico/todo/** (`site/todo/index.html` copiado para `dist/todo/` em `scripts/build-preview.mjs`).
+- Estrutura escolhida para fluxo com IA (3 colunas):
+  1. **📋 A Fazer (Backlog)** — fila priorizada e desduplicada;
+  2. **🧪 Na Prévia (Testar)** — itens já feitos pelas IAs na prévia (com botão direto **▶ Testar** para o `?demo=` correspondente) aguardando avaliação/aprovação do dono;
+  3. **✅ Feito (Aprovado)** — itens validados e concluídos.
+- **Como os 3 agentes usam:** fonte única em `docs/todo.json` + CLI `node scripts/todo.mjs` (`list`, `add`, `move <id> <todo|preview|done>`, `sync`), que atualiza `docs/todo.json` e regenera `docs/TODO.md` automaticamente sem duplicatas.
+- **Como o dono usa no navegador:** a página lê `docs/todo.json` em tempo real da branch `codex/penalty-clown-preview` no GitHub API (com fallback para `./todo.json`), permite criar/mover/excluir tarefas, filtrar por categoria e salvar direto no GitHub (com token opcional salvo no aparelho) ou copiar o resumo de mudanças com 1 clique (`📋 Copiar p/ IA`) para colar em qualquer chat.
+- Próximo passo: dono usar https://ric-lab.github.io/King-Rico/todo/ e escolher o próximo item da fila para atacarmos.
+
 ## Ajuste visual do ingresso publicado — 13/11/2026 (Codex)
 
 Prévia atualizada: https://ric-lab.github.io/King-Rico/circus/?demo=ticket

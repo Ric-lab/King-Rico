@@ -1,0 +1,287 @@
+{
+  "updatedAt": "2026-11-13",
+  "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
+  "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
+  "items": [
+    {
+      "id": "t-cedro-todos",
+      "title": "Cedro defende de TODOS os vilões (Tony, Tucker e Ray), não só do Tony; com 0 cedros não defende. Melhorar o depósito (onde ficam guardados) e as animações",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=cedar",
+      "notes": "Sorteio/defesa base já existe na prévia v6; falta refinar onde os cedros ficam guardados e a animação da defesa."
+    },
+    {
+      "id": "t-ray-1a4",
+      "title": "Ray rouba só de 1 a 4 cedros por vez (ajustar)",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=ray",
+      "notes": "Limitar o roubo do Ray para 1 a 4 cedros."
+    },
+    {
+      "id": "t-roleta-min",
+      "title": "Roleta nunca abre com prêmio da slot zerado: o 10º giro tem que pagar pelo menos o mínimo para o ×1 sempre devolver alguma coisa (ajustar economia junto)",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "notes": "Garantir retorno mínimo no giro que abre a roleta mantendo RTP ~90%."
+    },
+    {
+      "id": "t-controle-penalty",
+      "title": "Símbolo do controle de videogame já no jogo: por enquanto abre o antigo Fortune Penalty (só para funcionar; o jogo definitivo vem depois)",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Ativar o símbolo do controle nos rolos abrindo o Fortune Penalty temporariamente."
+    },
+    {
+      "id": "t-raspadinha-rapida",
+      "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
+      "status": "todo",
+      "category": "Sons",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Destravar/iniciar o áudio logo no pointerdown/primeiro movimento rápido."
+    },
+    {
+      "id": "t-sfx-levanta",
+      "title": "Sfx quando a slot machine levanta e abre a roleta",
+      "status": "todo",
+      "category": "Sons",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "notes": "Som mecânico/cordas ao içar a máquina para revelar a roleta."
+    },
+    {
+      "id": "t-sfx-aviao",
+      "title": "Big win: sfx do avião parece moto — trocar por som de avião de verdade (hélice/jato leve)",
+      "status": "todo",
+      "category": "Sons",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=bigwin",
+      "notes": "Substituir síntese atual de motor por timbre de avião mais limpo."
+    },
+    {
+      "id": "t-musica-fundo",
+      "title": "Música de fundo no mesmo ritmo da abertura do Bingo Plinko (repo Ric-lab/Bingo-Plinko-Lucky-Machine), sem letra, só em alguns momentos",
+      "status": "todo",
+      "category": "Sons",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Referência no repo Ric-lab/Bingo-Plinko-Lucky-Machine."
+    },
+    {
+      "id": "t-roleta-tempo",
+      "title": "Roleta: diminuir o tempo entre mostrar o valor sorteado e as moedas viajarem (fica tempo demais na tela)",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "notes": "Encurtar a pausa após a parada da roleta antes do voo do disco/moedas."
+    },
+    {
+      "id": "t-bigwin-placa",
+      "title": "Big win: retângulo branco com border-radius pulsando atrás do saldo subindo (legibilidade)",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=bigwin",
+      "notes": "Destacar o número do prêmio durante o voo do avião."
+    },
+    {
+      "id": "t-king-reacoes",
+      "title": "King Rico: reações casadas com o que acontece no jogo (ação → reação), mais longas e melhores; hoje é um loop independente",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Sincronizar expressões/poses do King Rico com giro, quase-vitória, ganho, vilão e bônus."
+    },
+    {
+      "id": "t-ingresso-asset",
+      "title": "Ingresso (asset): mais dourado no meio e levemente inclinado",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "87d90e0",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=ticket",
+      "notes": "Centro dourado mel/âmbar e inclinação suave (<20°), estrela roxa/moldura preservadas (ticket-symbol-v2)."
+    },
+    {
+      "id": "t-happeach-raio",
+      "title": "Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Substituir cesta por placa com contador e ícone de raio pêssego."
+    },
+    {
+      "id": "t-firestore-v6",
+      "title": "Concluir regras Firestore v6 / persistência real (limite de 1.000 expressões) e conferir snapshot concorrente de cedros antes de publicar no oficial",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Bloqueio técnico para promover a v6 ao site oficial."
+    },
+    {
+      "id": "t-ideia-king-nuvem",
+      "title": "Ideia futura (só fazer quando o dono pedir): King Rico caindo da nuvem até a roleta",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Guardado em ideias."
+    },
+    {
+      "id": "p-menu-tabela-3blocos",
+      "title": "Tabela em 3 blocos (Prêmios, Power-ups, Vilões), só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 no header (fora do menu)",
+      "status": "preview",
+      "category": "Menu & Topo",
+      "agent": "Claude",
+      "commit": "1a7f198",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
+      "notes": "Pronto na prévia para avaliação do dono."
+    },
+    {
+      "id": "p-circus-v6",
+      "title": "Circus v6 na prévia: 6 pagantes (ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10), trinca de cedro (até 5) e atrações arquivadas",
+      "status": "preview",
+      "category": "Economia & Regras",
+      "agent": "Codex",
+      "commit": "c6bdb3c",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=cedar",
+      "notes": "Auditoria RTP ~90% concluída na prévia."
+    },
+    {
+      "id": "p-tony-patada-som",
+      "title": "Patada do Tony = um som só, contínuo (zuum que desce até o grave com impacto) e moedas saindo ao tocar CONTINUAR",
+      "status": "preview",
+      "category": "Sons",
+      "agent": "Claude",
+      "commit": "f23d8d7",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tony",
+      "notes": "Aprovado na base f23d8d7; aguardando publicação conjunta no oficial."
+    },
+    {
+      "id": "p-tony-veu-tela-toda",
+      "title": "Tony Tiger: efeito alaranjado/avermelhado na tela toda (preservando faixa de anúncio) durante as patadas",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity / Claude",
+      "commit": "4bc80fa",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tony",
+      "notes": "Véu alaranjado/avermelhado em tela cheia na prévia."
+    },
+    {
+      "id": "p-raspadinha-sfx",
+      "title": "Sfx da raspadinha: raspar cada casa (mais alto), abrir casa (plim/toque grave), 3 iguais (fanfarra) e moedas subindo com tique do voo",
+      "status": "preview",
+      "category": "Sons",
+      "agent": "Claude",
+      "commit": "b61619a",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Abre ao carregar quando o bônus diário está disponível."
+    },
+    {
+      "id": "p-roleta-sfx-voo",
+      "title": "Roleta: tique original em arquivo WAV, sfx na parada e na ficha batendo no prêmio, e moedas voando uma única vez",
+      "status": "preview",
+      "category": "Sons",
+      "agent": "Claude",
+      "commit": "6e00ec6",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "notes": "Pronto na prévia."
+    },
+    {
+      "id": "p-tucker-asas",
+      "title": "Tucker com duas batidas de asa no roubo da cesta",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": "fbe911d",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tucker",
+      "notes": "Pronto na prévia."
+    },
+    {
+      "id": "p-viloes-bigwin-sfx",
+      "title": "Sons dos vilões, big win, spin igual ao turbo e volumes equalizados",
+      "status": "preview",
+      "category": "Sons",
+      "agent": "Claude",
+      "commit": "10f23cc",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
+      "notes": "Aguardando aprovação final do pacote de sons para publicar no site oficial."
+    },
+    {
+      "id": "d-roleta-aprovada",
+      "title": "Roleta de bônus aprovada pelo dono (cores fixas por multiplicador + tique original)",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Equipe",
+      "commit": "b0ffe91",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "notes": ""
+    },
+    {
+      "id": "d-patada-raspadinha-base",
+      "title": "Dono testou e aprovou base de patada nova, raspagem e moedas no fim da raspadinha",
+      "status": "done",
+      "category": "Sons",
+      "agent": "Equipe",
+      "commit": "f23d8d7",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "d-pages-previa",
+      "title": "Prévia oficial migrada e destravada no GitHub Pages (sem consumir cota do Firebase)",
+      "status": "done",
+      "category": "Infra",
+      "agent": "Codex / Antigravity",
+      "commit": "32086d4",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": ""
+    },
+    {
+      "id": "d-previa-engatilhada",
+      "title": "Prévia engatilhada: 1º giro mostra a última mudança (?demo=off abre jogo normal)",
+      "status": "done",
+      "category": "Infra",
+      "agent": "Claude / Codex",
+      "commit": "6a199ce",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": ""
+    },
+    {
+      "id": "d-circus-v5-live",
+      "title": "Economia Circus v5 publicada no site oficial (king-rico.web.app)",
+      "status": "done",
+      "category": "Economia & Regras",
+      "agent": "Codex",
+      "commit": "b394d9f",
+      "demoUrl": "https://king-rico.web.app/circus",
+      "notes": ""
+    }
+  ]
+}

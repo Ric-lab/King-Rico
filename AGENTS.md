@@ -91,4 +91,4 @@ links e diff, sem repetir partidas nem publicar outro build do jogo.
 - Reaproveitar o contexto já lido, limitar chamadas e saídas ao necessário e
   comunicar marcos úteis; evitar mensagens repetitivas só para dizer que aguarda.
 
-**Lista de tarefas única: `docs/TODO.md`** — compartilhada por Claude, GPT/Codex e Gemini. Ler antes de começar e atualizar ao parar. Nada é de um modelo só.
+**Painel e lista de tarefas única: `docs/todo.json` + `docs/TODO.md` (site: https://ric-lab.github.io/King-Rico/todo/)** — compartilhada pelo dono, Claude, GPT/Codex e Gemini. Usar `node scripts/todo.mjs` (`list` / `add` / `move` / `sync`) para ler antes de começar e atualizar ao parar. Nada é de um modelo só.

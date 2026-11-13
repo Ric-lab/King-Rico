@@ -37,5 +37,8 @@ for(const route of [...routes,{path:'/home',file:'Fortune Circus.dc.html'}]){
  const dir=path.join('dist',route.path.slice(1));await mkdir(dir,{recursive:true});
  await writeFile(path.join(dir,'index.html'),'<script>location.replace('+JSON.stringify('/'+encodeURIComponent(route.file))+'+location.search+location.hash)</script>');
 }
+await mkdir('dist/todo',{recursive:true});
+await writeFile('dist/todo/index.html',await readFile('site/todo/index.html','utf8'));
+await writeFile('dist/todo/todo.json',await readFile('docs/todo.json','utf8'));
 await relocatePreview('dist',process.argv.find(a=>a.startsWith('--base='))?.slice(7)||'');
 console.log('Local preview ready in dist/; use a static server on port 4178.');
