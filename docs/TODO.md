@@ -34,7 +34,7 @@ Escopo reservado: `cloud/` (perfil/motor v6/carteira), `firestore.rules`, `ui/pa
 ---
 
 ## 🧪 Na Prévia — Para o Dono Testar / Aprovar (9)
-- [~] **[`t-ingresso-asset`]** Ingresso (asset): mais dourado no meio e levemente inclinado *(Visual & Ritmo · Codex · `87d90e0` · [Testar](https://ric-lab.github.io/King-Rico/circus/?demo=ticket))* — Centro dourado mel/âmbar e inclinação suave (<20°), estrela roxa/moldura preservadas (ticket-symbol-v2).
+- [~] **[`t-ingresso-asset`]** Ingresso (asset): mais dourado no meio e levemente inclinado *(Visual & Ritmo · Codex · `87d90e0` · [Testar](https://ric-lab.github.io/King-Rico/circus/?demo=ticket))* — V2 rejeitado por ficar alaranjado. V3 em dourado claro/champagne; mesma estrela roxa, inclinação e encaixe. Aguardando avaliação do dono.
 - [~] **[`p-menu-tabela-3blocos`]** Tabela em 3 blocos (Prêmios, Power-ups, Vilões), só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 no header (fora do menu) *(Menu & Topo · Claude · `1a7f198` · [Testar](https://ric-lab.github.io/King-Rico/circus/?demo=off))* — Pronto na prévia para avaliação do dono.
 - [~] **[`p-circus-v6`]** Circus v6 na prévia: 6 pagantes (ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10), trinca de cedro (até 5) e atrações arquivadas *(Economia & Regras · Codex · `c6bdb3c` · [Testar](https://ric-lab.github.io/King-Rico/circus/?demo=cedar))* — Auditoria RTP ~90% concluída na prévia.
 - [~] **[`p-tony-patada-som`]** Patada do Tony = um som só, contínuo (zuum que desce até o grave com impacto) e moedas saindo ao tocar CONTINUAR *(Sons · Claude · `f23d8d7` · [Testar](https://ric-lab.github.io/King-Rico/circus/?demo=tony))* — Aprovado na base f23d8d7; aguardando publicação conjunta no oficial.

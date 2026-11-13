@@ -1952,7 +1952,7 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v2.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v3.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
       adOp: 1,
       tonyNote: 'A roleta usa 4% das últimas 10 apostas. Três cedros alinhados dão 1 defesa, até 5. Um cedro bloqueia um ataque do Tony, Tucker ou Ray. Tony leva de 1× a 25× a aposta; Tucker, até 4 Happeach. Ray tenta levar seus cedros. Limitado ao disponível.',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {

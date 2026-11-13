@@ -49,6 +49,11 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 
 ## 6. Log
 
+13/11/2026 — Ingresso v3: uma edição GPT Image do v2 para reduzir laranja e
+usar dourado claro/champagne. Geometria/estrela mantidas; PNG fonte e WebP
+transparente compartilhados. Créditos não informados pela ferramenta.
+
+
 13/11/2026 — Ingresso v2: uma edição 2D por GPT Image a partir do
 `ticket-symbol-v1.webp`, centro dourado mel/âmbar e inclinação suave (<20°),
 estrela roxa e moldura mantidas. PNG fonte compartilhado e WebP transparente

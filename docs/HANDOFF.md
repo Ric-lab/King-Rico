@@ -1,3 +1,11 @@
+## Ingresso v3 — correção de cor, 13/11/2026 (Codex)
+
+Dono rejeitou o v2 por ficar alaranjado. Nova arte `ticket-symbol-v3.png/.webp`:
+dourado claro/champagne, menos laranja no centro e na moldura, mesma estrela roxa,
+inclinação e encaixe. Somente referências de imagem/pré-carga; regras e controles
+intactos. Demo existente `?demo=ticket`. Base dos colegas `b4c2d28` preservada,
+inclusive painel /todo e JSON/CLI compartilhados. Próximo passo: avaliar a cor.
+
 # HANDOFF
 
 ## Painel Web de Tarefas (13/11/2026 · Antigravity)

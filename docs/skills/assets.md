@@ -11,5 +11,6 @@ Ler `guidelines/asset-pipeline.md` antes de gastar créditos.
 8. Registrar custo e resultado no Log do asset-pipeline.
 
 Rejeitado:
+- Ingresso com centro mel/âmbar alaranjado (v2): dono prefere dourado mais claro/champagne, mantendo estrela roxa e inclinação.
 - Lava/estética agressiva fora da paleta do circo.
 - Bola/gota "água" com blobs (marching cubes): pareceu sólido imitando líquido.

@@ -1,5 +1,12 @@
 # Peças da máquina Circus
 
+## Ingresso v3 — correção de cor, 13/11/2026
+
+`ticket-symbol-v3.png/.webp` substitui v2 nas referências ativas. Centro em
+dourado claro/champagne, sem o tom alaranjado rejeitado; estrela roxa, inclinação
+e geometria preservadas. v1/v2 são históricos, não restabelecer o âmbar do v2.
+
+
 ## Ingresso v2 — 13/11/2026
 
 `ticket-symbol-v2.webp` substitui o v1 nos rolos, na tabela de pagamentos e na
