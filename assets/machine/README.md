@@ -3,8 +3,8 @@
 ## Controle v1 — proposta, 13/11/2026
 
 `controller-symbol-v1.png` é a fonte transparente; `.webp` é a exportação
-lossless 560×560. Controle azul royal e dourado com botões coloridos, para
-avaliação. Ainda não substitui o placeholder nem entra no sorteio/fitas.
+lossless 560×560. Controle azul royal e dourado com botões coloridos, aprovado pelo dono. Substitui o placeholder na tabela do menu e entra na
+pré-carga. Ainda não entra no sorteio/fitas; ativação é tarefa separada.
 
 
 ## Altura do ingresso nos rolos — 13/11/2026

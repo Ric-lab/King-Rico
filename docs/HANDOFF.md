@@ -1,3 +1,12 @@
+## Controle aprovado aplicado à interface — 13/11/2026 (Codex)
+
+Asset `controller-symbol-v1.webp` substitui o SVG provisório no bloco de
+power-ups da tabela do Circus e entra na pré-carga compartilhada. Conferido
+em navegador 390×844: visível, sem erros JS ou assets faltantes. Build de
+prévia passou. Não muda sorteio/rolo/economia; ativação do evento Penalty
+continua tarefa separada. Próximo passo: avaliar o encaixe no jogo; consultar
+Actions deste commit para o resultado da publicação da prévia.
+
 ## Controle de videogame — proposta de asset, 13/11/2026 (Codex)
 
 Criados `assets/machine/controller-symbol-v1.png` (fonte transparente) e

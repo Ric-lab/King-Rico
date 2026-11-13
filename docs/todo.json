@@ -10,8 +10,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://github.com/Ric-lab/King-Rico/blob/codex/penalty-clown-preview/assets/machine/controller-symbol-v1.png",
-      "notes": "PNG transparente e WebP lossless conferidos. Somente arte, ainda sem ativar o símbolo ou o minigame. Tarefa t-controle-penalty continua separada."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
+      "notes": "Arte aprovada pelo dono e aplicada na tabela do Circus e pré-carga. Navegador 390x844 sem erros/assets faltantes; ativação do evento é tarefa separada."
     },
     {
       "id": "t-cedro-todos",
