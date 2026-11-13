@@ -1,4 +1,11 @@
-## Ingresso v3 — correção de cor, 13/11/2026 (Codex)
+## Ingresso v3 publicado — correção de cor, 13/11/2026 (Codex)
+
+Código `e63b194`; [workflow 43432793759](https://github.com/Ric-lab/King-Rico/actions/runs/43432793759)
+**success**, incluindo navegadores, rotas e deploy. Prévia:
+https://ric-lab.github.io/King-Rico/circus/?demo=ticket&v=e63b194
+Teste local: três ingressos v3 carregados, sem erros/404; encaixe conferido em
+390×844, mesma aposta/prêmio. Painel atualizado pela CLI, status Na Prévia.
+
 
 Dono rejeitou o v2 por ficar alaranjado. Nova arte `ticket-symbol-v3.png/.webp`:
 dourado claro/champagne, menos laranja no centro e na moldura, mesma estrela roxa,
