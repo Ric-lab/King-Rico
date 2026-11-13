@@ -454,3 +454,10 @@ Dono enviou referência inequívoca: corresponde a 01-jardim.webp, não a 03-par
 Copiada sem edição/recompressão para assets/scenes/circus-garden-lawn-v1.webp;
 CSS e preload corrigidos. Nenhuma geração de imagem/Meshy. Opções e arquivo
 anterior preservados como histórico; imagem enviada prevalece sobre numeração.
+
+### 2026-11-13 — controle de videogame v1 (proposta)
+Uma geração GPT Imagens, objeto isolado com transparência, azul royal e ouro,
+controles legíveis e pequena coroa. Fonte PNG e export WebP lossless em
+assets/machine/controller-symbol-v1.*. Arte e exportação inspecionadas.
+Sem Meshy; custo/créditos não informados pela ferramenta. Checkpoint de arte,
+sem publicação nem mudança de matemática. Aguardando avaliação do dono.

@@ -1,3 +1,13 @@
+## Controle de videogame — proposta de asset, 13/11/2026 (Codex)
+
+Criados `assets/machine/controller-symbol-v1.png` (fonte transparente) e
+`controller-symbol-v1.webp` (560×560, lossless). Azul royal, aro dourado,
+quatro botões coloridos e pequena coroa. Arte exibida ao dono e exportação
+inspecionada; aguardando avaliação. Checkpoint de fontes, sem deploy nem
+alterações em sorteio, rolos, carteira ou economia. Ingresso aprovado pelo
+“Okay” do dono e movido para Feito via CLI. Próximo passo: avaliar o controle;
+ativação/abertura do Penalty continua na tarefa separada `t-controle-penalty`.
+
 ## Ingresso mais alto nos rolos publicado — 13/11/2026 (Codex)
 
 Código `7d89071`; [workflow 43461170042](https://github.com/Ric-lab/King-Rico/actions/runs/43461170042)

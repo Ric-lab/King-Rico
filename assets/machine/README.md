@@ -1,5 +1,12 @@
 # Peças da máquina Circus
 
+## Controle v1 — proposta, 13/11/2026
+
+`controller-symbol-v1.png` é a fonte transparente; `.webp` é a exportação
+lossless 560×560. Controle azul royal e dourado com botões coloridos, para
+avaliação. Ainda não substitui o placeholder nem entra no sorteio/fitas.
+
+
 ## Altura do ingresso nos rolos — 13/11/2026
 
 Exibição v3: `background-size:100% 55%` em gabinete, tanto nas fitas quanto no

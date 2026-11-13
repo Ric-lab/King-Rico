@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "t-controle-asset",
+      "title": "Controle: primeira proposta de asset azul e dourado para avaliação",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://github.com/Ric-lab/King-Rico/blob/codex/penalty-clown-preview/assets/machine/controller-symbol-v1.png",
+      "notes": "PNG transparente e WebP lossless conferidos. Somente arte, ainda sem ativar o símbolo ou o minigame. Tarefa t-controle-penalty continua separada."
+    },
+    {
       "id": "t-cedro-todos",
       "title": "Cedro defende de TODOS os vilões (Tony, Tucker e Ray), não só do Tony; com 0 cedros não defende. Melhorar o depósito (onde ficam guardados) e as animações",
       "status": "todo",
@@ -116,12 +126,12 @@
     {
       "id": "t-ingresso-asset",
       "title": "Ingresso (asset): mais dourado no meio e levemente inclinado",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "7d89071",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=ticket&v=7d89071",
-      "notes": "V3 dourado claro. Aumentada apenas a altura nos rolos (~40%), largura preservada; arquivo, estrela, inclinação e demais ícones intactos. Aguardando avaliação."
+      "notes": "V3 dourado claro e proporção mais alta aprovados pelo dono: Okay. Largura preservada."
     },
     {
       "id": "t-happeach-raio",
