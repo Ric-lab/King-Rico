@@ -3,10 +3,10 @@
     "assets/stage-lit.webp",
     "assets/symbols/sym-coin.webp",
     "ui/park/park-gamepad-v2.svg",
-    "assets/machine/ticket-symbol-v1.webp"
+    "assets/machine/ticket-symbol-v2.webp"
   ],
   "home": [
-    "assets/machine/ticket-symbol-v1.webp",
+    "assets/machine/ticket-symbol-v2.webp",
     "assets/penalty/clown-keeper-v3.webp",
     "assets/flying/clown.webp",
     "assets/flying/b0.webp",
@@ -42,7 +42,7 @@
     "assets/machine/auto-v1.webp",
     "assets/machine/turbo-v1.webp",
     "assets/machine/ticket-wallet-v2.webp",
-    "assets/machine/ticket-symbol-v1.webp",
+    "assets/machine/ticket-symbol-v2.webp",
     "assets/machine/gauge-shade-mask.webp",
     "assets/machine/turbo-socket-rim-v3.svg",
     "assets/machine/auto-socket-rim-v3.svg",

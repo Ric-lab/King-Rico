@@ -49,6 +49,12 @@ Formato: "Isso tende a falhar porque X. Para acertar preciso de Y. Custo estimad
 
 ## 6. Log
 
+13/11/2026 — Ingresso v2: uma edição 2D por GPT Image a partir do
+`ticket-symbol-v1.webp`, centro dourado mel/âmbar e inclinação suave (<20°),
+estrela roxa e moldura mantidas. PNG fonte compartilhado e WebP transparente
+560 × 263; conversão/escala por ImageMagick. Ferramenta não informou créditos.
+
+
 08/11/2026 — Pose do piloto de perfil: GPT Image a partir da prancha
 `assets/brand/king-rico-turnaround.png` e do fw6/master. Perfil direito sentado,
 coroa/capa preservadas e mãos livres à frente, sem cetro. Arte transparente

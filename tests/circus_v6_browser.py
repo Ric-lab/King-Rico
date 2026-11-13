@@ -36,7 +36,7 @@ with sync_playwright() as p:
  for route in ['park','fingo','penalty','flying-clown','bounce']:
   page.goto(BASE+'/'+route);ready();assert 'Fortune%20Circus.dc.html' in page.url
   assert page.locator('[data-ticket],.kr-hud-park').count()==0
- page.goto(BASE+'/circus');ready()
+ page.goto(BASE+'/circus?demo=cedar');ready()
  previous=page.evaluate('KingRicoPark.state.cedros||0');page.locator('[data-spin-btn]').click()
  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
  assert page.evaluate('KingRicoPark.state.cedros')==min(5,previous+1)

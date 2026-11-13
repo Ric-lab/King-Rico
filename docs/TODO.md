@@ -31,7 +31,7 @@ compartilhadas, sem hierarquia entre agentes.
 - [ ] Big win: sfx do avião parece moto — trocar por som de avião de verdade
 - [ ] Big win: retângulo branco com border-radius pulsando atrás do saldo subindo (legibilidade)
 - [ ] King Rico: reações casadas com o que acontece (ação no jogo → reação dele), mais longas e melhores; hoje é um loop independente
-- [ ] Ingresso (asset): mais dourado no meio e levemente inclinado
+- [x] Ingresso (asset): centro dourado mel/âmbar e inclinação suave (<20°), estrela roxa/moldura preservadas — ticket-symbol-v2, 13/11. Prévia engatilhada `?demo=ticket`.
 - [ ] Símbolo do controle de videogame já no jogo: por enquanto abre o antigo Fortune Penalty (só para funcionar; o jogo definitivo vem depois)
 
 ### Pedidos do dono — 12/11 (fazer na prévia, um de cada vez, com link de teste)
@@ -47,7 +47,7 @@ compartilhadas, sem hierarquia entre agentes.
 - [ ] Roleta: encurtar o tempo entre mostrar o valor sorteado e as moedas viajarem
 - [ ] Big win: retângulo branco com border-radius pulsando atrás do saldo subindo
 - [ ] King Rico: reações casadas com o que acontece no jogo (ação → reação), durando mais; hoje é um loop independente
-- [ ] Ingresso: asset mais dourado no meio e levemente inclinado
+- [x] Ingresso: asset mais dourado no meio e levemente inclinado — entregue em `ticket-symbol-v2`, ver item acima.
 - [ ] Tabela de pagamentos: quase sem texto — só os itens e o que cada um faz (prêmio ou prejuízo)
 **Topo / menu**
 - [ ] Tirar o botão que leva à Home (só existe a slot)

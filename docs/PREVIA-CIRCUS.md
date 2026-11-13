@@ -5,10 +5,10 @@
 Decisão do dono: usar SEMPRE esse host nos links de teste. O site oficial segue
 https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fictícias.
 
-- Demonstração v6: endereço acima, primeiro giro com trinca de **cedros** para testar a coleta/defesa. Moedas fictícias.
+- Demonstração v6: endereço acima, primeiro giro com três **ingressos dourados/inclinados** para conferir o asset. Moedas fictícias.
 - Jogo normal: https://ric-lab.github.io/King-Rico/circus/?demo=off
 - Eventos específicos: `?demo=tony`, `?demo=tucker`, `?demo=ray`,
-  `?demo=cedar`, `?demo=bigwin` e `?demo=spacewin`.
+  `?demo=ticket`, `?demo=cedar`, `?demo=bigwin` e `?demo=spacewin`.
 - Atualização: push na branch `codex/penalty-clown-preview` → workflow
   **Prévia no GitHub Pages** (`preview-pages.yml`). Só anunciar a revisão após sucesso.
 - Os testes que verificam giros naturais precisam de `?demo=off`; não remover

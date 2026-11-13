@@ -1,5 +1,16 @@
 # Peças da máquina Circus
 
+## Ingresso v2 — 13/11/2026
+
+`ticket-symbol-v2.webp` substitui o v1 nos rolos, na tabela de pagamentos e na
+pré-carga: interior dourado mel/âmbar, estrela roxa e moldura preservadas,
+inclinação suave para a esquerda (menos de 20°) incorporada à arte. Fundo
+transparente; export WebP 560 × 263. Fonte editável `ticket-symbol-v2.png`.
+Não aplicar outra rotação por CSS nem alterar o encaixe/geometria dos rolos.
+O v1 fica preservado como histórico. Prévia `?demo=ticket`: primeira linha de
+três ingressos; matemática e economia inalteradas.
+
+
 ## Símbolos e contador v6 — prévia, 12/11/2026
 
 As três fitas e toda a geometria aprovada são preservadas. Sequência transitória

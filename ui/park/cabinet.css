@@ -133,7 +133,7 @@
 .park-physical-reel{position:absolute;top:219.5px;width:126px;height:382px;overflow:hidden;z-index:1;pointer-events:none;contain:paint}
 .park-physical-film{position:absolute;inset:0;will-change:transform;pointer-events:none}
 .park-tape-symbol{position:absolute;left:11.062825px;width:103.87435px;height:124px;background:url('/assets/symbols-v7.webp') 0 50%/1200% 100% no-repeat;backface-visibility:hidden;transform-origin:50% 50%}
-.park-tape-symbol.is-ticket,[data-park-ticket="true"]{background-image:url('/assets/machine/ticket-symbol-v1.webp')!important;background-size:contain!important;background-position:50% 50%!important;background-repeat:no-repeat}
+.park-tape-symbol.is-ticket,[data-park-ticket="true"]{background-image:url('/assets/machine/ticket-symbol-v2.webp')!important;background-size:contain!important;background-position:50% 50%!important;background-repeat:no-repeat}
 /* Each darkener follows the source alpha; empty sky and the white glass stay clear. */
 .park-meter-dimmer{display:none}
 .park-meter:after{content:'';position:absolute;left:-.4348px;top:-1.3325px;width:36.5217px;height:297.4892px;z-index:2;pointer-events:none;background:#18223a;opacity:var(--park-shade-opacity,.25);mask-image:url('/assets/machine/gauge-v2.webp');mask-size:433.80952% 101.34977%;mask-position:50.07133% 52.17391%;mask-repeat:no-repeat;transition:opacity .18s ease-out}

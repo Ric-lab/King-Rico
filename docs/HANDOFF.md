@@ -1,3 +1,20 @@
+## Ajuste visual do ingresso — 13/11/2026 (Codex)
+
+Base dos colegas puxada: `1a7f198` (nova tabela e anúncio no header preservados); preservadas mudanças no King Rico/HUD.
+Somente asset: `assets/machine/ticket-symbol-v2.png` (fonte) e `.webp`
+(transparente, 560×263), interior dourado e inclinação leve (<20°).
+Referências e pré-carga atualizadas; nenhum pagamento/regra alterado.
+Prévia padrão engatilha `?demo=ticket`; `?demo=off` é jogo normal.
+Na integração, o novo botão do header não recebia `watchAd` no renderVals.
+Conectado ao handler já existente (sem alterar pagamentos/fluxo); o teste de
+recarga acompanha a entrada do header, preservando
+as verificações de cancelamento, 30s e crédito único.
+O teste da coleta de cedros agora usa `?demo=cedar` explicitamente, mantendo
+sua cobertura ao mudar a demonstração padrão.
+
+Próximo passo: avaliar visualmente o ingresso na prévia. As pendências financeiras
+abaixo continuam separadas desta mudança; não publicar v6 em live com regras falhando.
+
 ## Prévia v6 online — publicação confirmada, 12/11/2026
 
 **Código publicado:** `c6bdb3c6522cfdd9c76ca993f6e6ed0b3dc75f0a`.
