@@ -99,6 +99,7 @@ function MenuPanel({open,onClose,onPaytable,onNewRound,newRoundLabel='Nova carte
         appState && !appState.installed && appButton(appState.fullscreen?'Sair da tela cheia':'Tela cheia','⛶',app.toggleFullscreen),
         appState && !appState.installed && appButton('Instalar no celular','↓',app.install),
         appHelp && h('p',{className:'kr-menu-app-help',role:'status'},appHelp),
+        window.KingRicoPreviewPicker && h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:()=>window.KingRicoPreviewPicker()},h('span',{className:'kr-menu-icon','aria-hidden':true},'🎯'),h('span',{className:'kr-menu-label'},'Prévia: escolher próximos giros')),
         levels('Efeitos sonoros','♫',sfxLvl,onSfx),levels('Vibração','≈',vibLvl,onVib),
         onNewRound && h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:onNewRound},h('span',{className:'kr-menu-label'},newRoundLabel),h('span',{className:'kr-menu-arrow','aria-hidden':true},'›')),
         onPaytable && h('button',{type:'button',className:'kr-menu-row kr-menu-paytable',

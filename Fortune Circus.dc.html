@@ -337,7 +337,7 @@ a:hover { color: #fff3c4; }
       <div style="display: grid; grid-template-columns: repeat(3, 112px); gap: 8px;">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position: 100% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #fff3c4; white-space: nowrap;">5 = ★</span></div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position: 45.45454545454545% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #7fe3a0; white-space: nowrap;">+1 🛡</span></div>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/machine/controller-symbol-v1.webp'); background-size: contain; background-repeat: no-repeat; background-position: 50% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #fff3c4; white-space: nowrap;">JOGO</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('ui/park/controller-reserved.svg'); background-size: contain; background-repeat: no-repeat; background-position: 50% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #fff3c4; white-space: nowrap;">JOGO</span></div>
       </div>
       <div style="width: 352px; display: flex; align-items: center; gap: 10px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #ff7a7a);"></div><span style="font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #ff7a7a;">VILÕES</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, #ff7a7a, transparent);"></div></div>
       <div style="display: grid; grid-template-columns: repeat(3, 112px); gap: 8px;">
@@ -525,6 +525,11 @@ class Component extends DCLogic {
   timers = [];
 
   componentDidMount() {
+    // Swipe leve (para cima ou para baixo) na área dos rolos = girar.
+    this._reelSwipe = { down: e => { const r = document.querySelector('.park-reels'); if (!r || e.target.closest('button,a,[data-overlay],.kr-menu,[role=dialog]')) return; const b = r.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) return; this._swipe = { y: e.clientY, fired: false }; },
+      move: e => { const s = this._swipe; if (!s || s.fired || Math.abs(e.clientY - s.y) < 10) return; s.fired = true; if (this.state.menu || this.state.pays) return; this.spin(); },
+      up: () => { this._swipe = null; } };
+    window.addEventListener('pointerdown', this._reelSwipe.down, { passive: true }); window.addEventListener('pointermove', this._reelSwipe.move, { passive: true }); window.addEventListener('pointerup', this._reelSwipe.up); window.addEventListener('pointercancel', this._reelSwipe.up);
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
       this._cloudDeferred = p;
@@ -639,6 +644,7 @@ class Component extends DCLogic {
   introLights() { clearTimeout(this._il1); clearTimeout(this._il2); clearTimeout(this._ib); this.introBulbs(); this.setState({ introLit: true, introFade: false });
     this._il1 = setTimeout(() => this.setState({ introLit: false, introFade: true }), 3000); this._il2 = setTimeout(() => this.setState({ introFade: false }), 5100); }
   componentWillUnmount() {
+    if (this._reelSwipe) { window.removeEventListener('pointerdown', this._reelSwipe.down); window.removeEventListener('pointermove', this._reelSwipe.move); window.removeEventListener('pointerup', this._reelSwipe.up); window.removeEventListener('pointercancel', this._reelSwipe.up); }
     this._unwatchCloud && this._unwatchCloud();
     clearTimeout(this._flashT);
     this.stopAll(); clearInterval(this._arpTimer);
@@ -1952,7 +1958,7 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v3.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v1.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
       adOp: 1,
       tonyNote: 'A roleta usa 4% das últimas 10 apostas. Três cedros alinhados dão 1 defesa, até 5. Um cedro bloqueia um ataque do Tony, Tucker ou Ray. Tony leva de 1× a 25× a aposta; Tucker, até 4 Happeach. Ray tenta levar seus cedros. Limitado ao disponível.',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
@@ -1983,7 +1989,7 @@ class Component extends DCLogic {
         o[k + 'BgPos'] = '-' + l + 'px -' + (on && !glow ? t - 1 : t) + 'px';
         o[k + 'Filter'] = on ? (glow ? 'brightness(1.22) saturate(1.15)' : 'brightness(.84) saturate(1.08)') : 'none';
         o[k + 'Shadow'] = on ? (glow ? 'none' : 'inset 0 2px 6px rgba(0,0,0,.32)') : 'none'; }); return o; })(),
-      spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, watchAd: this.watchAd, incBet: this.incBet, decBet: this.decBet,
+      spin: this.spin, pressDown: this.pressDown, pressUp: this.pressUp, pressSpin: this.pressSpin, pressTurbo: this.pressTurbo, pressAuto: this.pressAuto, pressHome: this.pressHome, pressMenu: this.pressMenu, recharge: this.recharge, incBet: this.incBet, decBet: this.decBet,
       goHome: () => { location.href="/home"; },
       homeOpen: !!s.homeOpen, closeHome: () => { this.introLights(); const sv = this.loadSave(); this.setState(sv && typeof sv.balance === 'number' ? { homeOpen: false, balance: sv.balance } : { homeOpen: false }); window.KingRicoCloud && window.KingRicoCloud.track && window.KingRicoCloud.track('screen_viewed', {game:'circus'}); },
       toggleTurbo: this.toggleTurbo, toggleAuto: this.toggleAuto, toggleSound: this.toggleSound, togglePays: this.togglePays,
