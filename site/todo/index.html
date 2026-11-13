@@ -266,6 +266,44 @@
       border-radius: 6px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     }
+    .agent-tag.assigned-todo {
+      background: linear-gradient(90deg, #ffca3a33, #ff8c4233);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-weight: 800;
+    }
+    .task-card.assigned-card {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px rgba(255, 202, 58, 0.35), 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+    .assign-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .assign-label {
+      font-size: 0.71rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-right: 2px;
+    }
+    .btn-assign {
+      padding: 3px 8px;
+      font-size: 0.71rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-assign.active {
+      background: var(--gold);
+      color: #2b1600;
+      border-color: var(--gold);
+      font-weight: 800;
+    }
     .task-title {
       font-size: 0.93rem;
       line-height: 1.38;
@@ -467,6 +505,15 @@
           <option value="todo">📋 A Fazer (Backlog)</option>
           <option value="preview">🧪 Na Prévia (Testar)</option>
           <option value="done">✅ Feito</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="inp-agent">🎯 Atribuir / Acionar qual IA?</label>
+        <select id="inp-agent">
+          <option value="">🤖 Qualquer IA (fila livre)</option>
+          <option value="Antigravity">♊ Antigravity (Gemini)</option>
+          <option value="Claude">🟠 Claude</option>
+          <option value="Codex">🟢 Codex (GPT)</option>
         </select>
       </div>
       <div class="form-row">
@@ -699,6 +746,20 @@
       recordChange(`Mover [${item.id}] ("${item.title.slice(0, 48)}...") para ${labels[nextStatus]}`);
     }
 
+    function assignTask(id, agentName) {
+      const idx = board.items.findIndex(i => i.id === id);
+      if (idx === -1) return;
+      const item = board.items[idx];
+      const nextAgent = item.agent === agentName ? '' : agentName;
+      item.agent = nextAgent;
+      // Ao atribuir para uma IA, coloca no topo da fila para ela pegar primeiro
+      if (nextAgent && item.status === 'todo' && idx > 0) {
+        board.items.splice(idx, 1);
+        board.items.unshift(item);
+      }
+      recordChange(`Atribuir [${item.id}] para ${nextAgent || 'Qualquer IA'}`);
+    }
+
     function deleteTask(id) {
       const idx = board.items.findIndex(i => i.id === id);
       if (idx === -1) return;
@@ -712,6 +773,8 @@
       document.getElementById('inp-title').value = item.title;
       document.getElementById('inp-cat').value = item.category || 'Visual & Ritmo';
       document.getElementById('inp-status').value = item.status || 'todo';
+      const agentSelect = document.getElementById('inp-agent');
+      agentSelect.value = ['Antigravity', 'Claude', 'Codex'].includes(item.agent) ? item.agent : '';
       document.getElementById('inp-notes').value = item.notes || '';
       document.getElementById('modal-task').showModal();
     }
@@ -733,8 +796,9 @@
         listEl.innerHTML = '';
 
         for (const item of items) {
+          const isAssignedTodo = status === 'todo' && ['Antigravity', 'Claude', 'Codex'].includes(item.agent);
           const card = document.createElement('article');
-          card.className = 'task-card';
+          card.className = 'task-card' + (isAssignedTodo ? ' assigned-card' : '');
 
           const top = document.createElement('div');
           top.className = 'card-top';
@@ -745,8 +809,10 @@
 
           if (item.agent || item.commit) {
             const meta = document.createElement('span');
-            meta.className = 'agent-tag';
-            meta.textContent = [item.agent, item.commit].filter(Boolean).join(' · ');
+            meta.className = 'agent-tag' + (isAssignedTodo ? ' assigned-todo' : '');
+            meta.textContent = isAssignedTodo
+              ? `🎯 Para: ${item.agent}`
+              : [item.agent, item.commit].filter(Boolean).join(' · ');
             top.append(meta);
           }
 
@@ -761,6 +827,25 @@
             notes.className = 'task-notes';
             notes.textContent = item.notes;
             card.append(notes);
+          }
+
+          if (status === 'todo') {
+            const assignRow = document.createElement('div');
+            assignRow.className = 'assign-row';
+            const lbl = document.createElement('span');
+            lbl.className = 'assign-label';
+            lbl.textContent = '🎯 Acionar:';
+            assignRow.append(lbl);
+
+            for (const [agName, agLabel] of [['Antigravity', '♊ Antigravity'], ['Claude', '🟠 Claude'], ['Codex', '🟢 Codex']]) {
+              const bAg = document.createElement('button');
+              bAg.type = 'button';
+              bAg.className = 'btn-assign' + (item.agent === agName ? ' active' : '');
+              bAg.textContent = agLabel;
+              bAg.onclick = () => assignTask(item.id, agName);
+              assignRow.append(bAg);
+            }
+            card.append(assignRow);
           }
 
           const actions = document.createElement('div');
@@ -848,6 +933,7 @@
       document.getElementById('modal-task-heading').textContent = 'Nova Tarefa';
       document.getElementById('form-task').reset();
       document.getElementById('inp-id').value = '';
+      document.getElementById('inp-agent').value = '';
       modalTask.showModal();
     };
     document.getElementById('btn-cancel-task').onclick = () => modalTask.close();
@@ -858,6 +944,7 @@
       if (!title) return;
       const category = document.getElementById('inp-cat').value;
       const status = document.getElementById('inp-status').value;
+      const agent = document.getElementById('inp-agent').value;
       const notes = document.getElementById('inp-notes').value.trim();
 
       if (idVal) {
@@ -866,13 +953,14 @@
           existing.title = title;
           existing.category = category;
           existing.status = status;
+          existing.agent = agent;
           existing.notes = notes;
           recordChange(`Editar tarefa [${idVal}]: "${title}"`);
         }
       } else {
         const id = 't-' + title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) + '-' + Math.floor(Math.random() * 90 + 10);
-        board.items.unshift({ id, title, status, category, agent: 'Dono', commit: '', demoUrl: '', notes });
-        recordChange(`Adicionar tarefa [${id}] (${category}, ${status}): "${title}"${notes ? ' — ' + notes : ''}`);
+        board.items.unshift({ id, title, status, category, agent: agent || '', commit: '', demoUrl: '', notes });
+        recordChange(`Adicionar tarefa [${id}] (${category}, ${status}${agent ? ', ' + agent : ''}): "${title}"`);
       }
       document.getElementById('form-task').reset();
       modalTask.close();
