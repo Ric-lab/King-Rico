@@ -1,4 +1,10 @@
-## Ingresso mais alto nos rolos — 13/11/2026 (Codex)
+## Ingresso mais alto nos rolos publicado — 13/11/2026 (Codex)
+
+Código `7d89071`; [workflow 43461170042](https://github.com/Ric-lab/King-Rico/actions/runs/43461170042)
+**success** (navegadores, rotas e deploy). Prévia:
+https://ric-lab.github.io/King-Rico/circus/?demo=ticket&v=7d89071
+Conferido em tela: altura maior, largura mantida; sem erros/assets faltantes.
+
 
 Ajuste somente de exibição em `ui/park/cabinet.css`: ingresso passa de contain
 (aprox. 48,8px de altura) para 55% da janela de 124px (68,2px), mantendo
