@@ -32,11 +32,11 @@ parado. Arquivo v3, dourado claro, estrela e inclinação preservados; tabela de
 pagamentos e demais ícones intactos. Demo `?demo=ticket`. Base dos colegas
 `f10e754` preservada. Próximo passo: avaliar a proporção na prévia.
 
-## Painel `/todo/` com Auto-Sync, atribuição de IA e aposentadoria da lista em `.md` — 13/11/2026 (Antigravity)
+## Painel `/todo/` com Auto-Sync persistente, atribuição de IA e aposentadoria da lista em `.md` — 13/11/2026 (Antigravity)
 
 - `docs/TODO.md` foi aposentado como lista manual e virou apenas um ponteiro curto para **`https://ric-lab.github.io/King-Rico/todo/`** e **`docs/todo.json`** (evitando conflitos de merge em `.md`).
-- **No site (`/todo/`):** agora tem **Auto-Save automático em 1s**, **Auto-Refresh a cada 20s** e botões **`🎯 Acionar: [♊ Antigravity] [🟠 Claude] [🟢 Codex]`** em cada card da coluna **📋 A Fazer** (além do seletor no modal `+ Nova Tarefa`), movendo o card para o topo da fila com destaque dourado.
-- **Para os 3 agentes (Claude, Codex, Antigravity):** `node scripts/todo.mjs list` destaca no topo as tarefas atribuídas pelo dono (`🎯 ATRIBUÍDAS PELO DONO`), e `node scripts/todo.mjs watch --agent=<Antigravity|Claude|Codex>` escuta o GitHub em background para acordar o agente quando o dono acionar uma tarefa no site.
+- **No site (`/todo/`):** agora tem **Auto-Save automático com fila e 3 tentativas (auto-retry)**, **persistência tripla da chave** (`localStorage` + `sessionStorage` + cookie de 10 anos + preservação do `#token=` na URL para não perder em recargas/webviews), **Auto-Refresh a cada 20s** e botões **`🎯 Acionar: [♊ Antigravity] [🟠 Claude] [🟢 Codex]`** em cada card da coluna **📋 A Fazer**.
+- **Para os 3 agentes (Claude, Codex, Antigravity):** `node scripts/todo.mjs list` destaca no topo as tarefas atribuídas pelo dono (`🎯 ATRIBUÍDAS PELO DONO`), e `node scripts/todo.mjs watch --agent=<Antigravity|Claude|Codex>` escuta o GitHub em background.
 
 ## Ingresso v3 publicado — correção de cor, 13/11/2026 (Codex)
 
