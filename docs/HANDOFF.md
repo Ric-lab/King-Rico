@@ -1,3 +1,12 @@
+## Ingresso mais alto nos rolos — 13/11/2026 (Codex)
+
+Ajuste somente de exibição em `ui/park/cabinet.css`: ingresso passa de contain
+(aprox. 48,8px de altura) para 55% da janela de 124px (68,2px), mantendo
+100% da largura anterior (103,87435px). Mesma regra para fita girando e símbolo
+parado. Arquivo v3, dourado claro, estrela e inclinação preservados; tabela de
+pagamentos e demais ícones intactos. Demo `?demo=ticket`. Base dos colegas
+`f10e754` preservada. Próximo passo: avaliar a proporção na prévia.
+
 # HANDOFF
 
 ## Painel `/todo/` com Auto-Sync e aposentadoria da lista em `.md` — 13/11/2026 (Antigravity)

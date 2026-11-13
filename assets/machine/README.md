@@ -1,5 +1,12 @@
 # Peças da máquina Circus
 
+## Altura do ingresso nos rolos — 13/11/2026
+
+Exibição v3: `background-size:100% 55%` em gabinete, tanto nas fitas quanto no
+símbolo parado. Largura 103,87435px preservada; altura pintada ~68,2px em vez
+de ~48,8px. Sem alterar o PNG/WebP, a inclinação ou a tabela de pagamentos.
+
+
 ## Ingresso v3 — correção de cor, 13/11/2026
 
 `ticket-symbol-v3.png/.webp` substitui v2 nas referências ativas. Centro em
