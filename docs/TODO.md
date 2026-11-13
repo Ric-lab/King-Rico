@@ -21,6 +21,29 @@ compartilhadas, sem hierarquia entre agentes.
 - [ ] Na integração real, conferir snapshot concorrente do contador de cedros/recibo da defesa (ver próximo passo no HANDOFF).
 
 ## A fazer
+
+### Pedidos do dono — 12/11 (fazer na prévia, um de cada vez, com link de teste)
+**Economia e regras**
+- [ ] Roleta nunca abre com prêmio da slot zerado: o giro que abre a roleta paga pelo menos o mínimo (×1 ainda devolve algo)
+- [ ] Cedro defende de TODOS os vilões (não só do Tiger); com 0 cedros não há defesa. Melhorar depósito (onde aparece) e animações
+- [ ] Ray rouba só de 1 a 4 cedros por vez (ajustar)
+**Sons**
+- [ ] Raspadinha: o 1º risco rápido não toca o som da raspagem (corrigir)
+- [ ] Sfx quando a slot machine levanta e a roleta abre
+- [ ] Sfx do avião da big win parece moto — refazer (hélice/jato leve)
+**Ritmo e visual**
+- [ ] Roleta: encurtar o tempo entre mostrar o valor sorteado e as moedas viajarem
+- [ ] Big win: retângulo branco com border-radius pulsando atrás do saldo subindo
+- [ ] King Rico: reações casadas com o que acontece no jogo (ação → reação), durando mais; hoje é um loop independente
+- [ ] Ingresso: asset mais dourado no meio e levemente inclinado
+- [ ] Tabela de pagamentos: quase sem texto — só os itens e o que cada um faz (prêmio ou prejuízo)
+**Topo / menu**
+- [ ] Tirar o botão que leva à Home (só existe a slot)
+- [ ] Botão de menu: trocar as 3 linhas por uma engrenagem
+- [ ] Entre o saldo e o menu: botão "ver anúncio por +1.000"
+**Controle de videogame**
+- [ ] Já incluir o ícone do controle no jogo; por enquanto ele abre o antigo Fortune Penalty (o jogo definitivo vem depois)
+
 - [x] Dono testou e aprovou: patada nova, raspagem e moedas no fim da raspadinha — base f23d8d7 (prévia Pages).
 - [x] Rolos da máquina — assets e pagamentos v6, NESTA ORDEM (menor → maior):
   ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10
