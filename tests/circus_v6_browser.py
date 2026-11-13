@@ -33,7 +33,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-cedar-defense-'+kind+'.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
   assert page.locator('[data-tickets]').inner_text()=='1/5'
- for route in ['park','fingo','penalty','flying-clown','bounce']:
+ for route in ['park','fingo','flying-clown','bounce']:  # penalty voltou: o controle abre esse jogo
   page.goto(BASE+'/'+route);ready();assert 'Fortune%20Circus.dc.html' in page.url
   assert page.locator('[data-ticket],.kr-hud-park').count()==0
  page.goto(BASE+'/circus?demo=cedar');ready()
