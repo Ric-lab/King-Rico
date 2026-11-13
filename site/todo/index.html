@@ -552,18 +552,43 @@
       }
     }
 
+    let lastBlobSha = '';
+
+    async function fetchUncachedViaGraphQL(token) {
+      const [owner, name] = REPO.split('/');
+      const query = `{ repository(owner:${JSON.stringify(owner)}, name:${JSON.stringify(name)}) { object(expression:${JSON.stringify(BRANCH + ':docs/todo.json')}) { ... on Blob { oid text } } } }`;
+      const res = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query }),
+        cache: 'no-store'
+      });
+      if (!res.ok) throw new Error('GraphQL HTTP ' + res.status);
+      const json = await res.json();
+      const blob = json?.data?.repository?.object;
+      if (!blob?.oid || !blob?.text) throw new Error('Blob not found');
+      lastBlobSha = blob.oid;
+      return JSON.parse(blob.text);
+    }
+
     async function fetchLiveBoard(silent = false) {
       if (!silent) updateHeaderStatus('Sincronizando...');
       try {
         const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
-        const headers = { Accept: 'application/vnd.github.raw+json' };
-        if (token) headers.Authorization = `Bearer ${token}`;
-        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
-          headers,
-          cache: 'no-store'
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
+        let data;
+        if (token) {
+          data = await fetchUncachedViaGraphQL(token);
+        } else {
+          const res = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
+            headers: { Accept: 'application/vnd.github.raw+json' },
+            cache: 'no-store'
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          data = await res.json();
+        }
         remoteBoard = JSON.parse(JSON.stringify(data));
         updateHeaderStatus(hasToken() ? '🟢 Sincronizado com as 3 IAs' : `Ao vivo · ${data.updatedAt || ''}`, hasToken() ? 'live' : '');
         return data;
@@ -609,12 +634,7 @@
       saving = true;
       updateHeaderStatus('⏳ Salvando no GitHub...', 'saving');
       try {
-        const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json?ref=${BRANCH}&t=${Date.now()}`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
-          cache: 'no-store'
-        });
-        if (!metaRes.ok) throw new Error('Chave inválida ou sem permissão repo (' + metaRes.status + ')');
-        const meta = await metaRes.json();
+        await fetchUncachedViaGraphQL(token);
         board.updatedAt = new Date().toISOString().slice(0, 10);
         const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(board, null, 2) + '\n')));
         const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/docs/todo.json`, {
@@ -627,11 +647,13 @@
           body: JSON.stringify({
             message: 'Painel /todo/: atualização automática pelo dono [skip ci]',
             content: contentB64,
-            sha: meta.sha,
+            sha: lastBlobSha,
             branch: BRANCH
           })
         });
         if (!putRes.ok) throw new Error('HTTP ' + putRes.status);
+        const putJson = await putRes.json();
+        if (putJson?.content?.sha) lastBlobSha = putJson.content.sha;
         remoteBoard = JSON.parse(JSON.stringify(board));
         clearDraft();
         updateHeaderStatus('🟢 Salvo! As 3 IAs já enxergam', 'live');
