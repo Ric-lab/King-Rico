@@ -32,7 +32,6 @@ compartilhadas, sem hierarquia entre agentes.
 - [ ] Big win: retângulo branco com border-radius pulsando atrás do saldo subindo (legibilidade)
 - [ ] King Rico: reações casadas com o que acontece (ação no jogo → reação dele), mais longas e melhores; hoje é um loop independente
 - [ ] Ingresso (asset): mais dourado no meio e levemente inclinado
-- [ ] Anúncio premiado: crédito real no servidor (cloud.adReward) + anúncio nativo (KingRicoApp.showRewardedAd). Hoje a prévia simula 3 s e soma 1000 só na tela
 - [ ] Símbolo do controle de videogame já no jogo: por enquanto abre o antigo Fortune Penalty (só para funcionar; o jogo definitivo vem depois)
 
 ### Pedidos do dono — 12/11 (fazer na prévia, um de cada vez, com link de teste)
@@ -76,6 +75,7 @@ compartilhadas, sem hierarquia entre agentes.
 - King Rico caindo da nuvem até a roleta
 
 ## Feito
+- [x] Tabela em 3 blocos (Prêmios, Power-ups, Vilões); anúncio saiu do menu e foi para o botão ▶ +1000 do header (fluxo real de recharge.js), alinhado ao saldo e ao menu — prévia
 - [x] Tabela de pagamentos só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 entre saldo e menu — prévia
 - [x] Patada do Tony = um som só, contínuo (zuum que desce até o grave, sem 'tachi-bom') — prévia
 - [x] Patada do Tony mais alta (zuum + impacto grave); raspagem bem mais alta; moedas no fim da raspadinha = mesmo tique do voo de moedas do jogo — prévia

@@ -96,7 +96,6 @@ function MenuPanel({open,onClose,onPaytable,onNewRound,newRoundLabel='Nova carte
         h('button',{type:'button',className:'kr-menu-close','aria-label':'Fechar menu',onClick:onClose},'✕')),
       h('p',{className:'kr-menu-screen'},screen),
       h('div',{className:'kr-menu-controls'},
-        screen==='Fortune Circus' && h('button',{type:'button',className:'kr-menu-row kr-menu-app-button',onClick:()=>window.KingRicoCircusRecharge?.()},h('span',{className:'kr-menu-icon','aria-hidden':true},'▶'),h('span',{className:'kr-menu-label'},'+1.000 moedas · Ver anúncio de 30s')),
         appState && !appState.installed && appButton(appState.fullscreen?'Sair da tela cheia':'Tela cheia','⛶',app.toggleFullscreen),
         appState && !appState.installed && appButton('Instalar no celular','↓',app.install),
         appHelp && h('p',{className:'kr-menu-app-help',role:'status'},appHelp),
