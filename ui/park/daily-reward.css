@@ -7,9 +7,8 @@
 .park-daily-instruction{font-size:clamp(25px,7.2vw,30px);line-height:1.12;font-weight:800;color:#632d26;margin:0 0 14px}
 .park-daily-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;touch-action:none}
 .park-daily-reveal-space{position:relative}.park-daily-grid[hidden],.park-daily-summary[hidden],.park-daily-instruction[hidden]{display:none}
-.park-daily-unlock{position:absolute;inset:0;z-index:3;display:grid;place-items:center;border:2px dashed #c28a2966;border-radius:16px;background:#fffbed6b;backdrop-filter:blur(1.5px);touch-action:none;cursor:pointer;padding:12px}
-.park-daily-unlock span{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border:2px solid #8cd5ff;border-radius:999px;background:#1274ed;box-shadow:0 4px 0 #104fa4,0 8px 20px #10214644;color:#fff;font:800 17px/1.15 Baloo,'Baloo 2',sans-serif;letter-spacing:.4px}
-.park-daily-unlock:active span{transform:translateY(3px);box-shadow:0 1px 0 #104fa4}
+.park-daily-unlock{position:absolute;inset:0;z-index:3;border-radius:16px;background:rgba(255,255,255,.46);backdrop-filter:blur(2px);pointer-events:none;transition:opacity .25s ease}
+.park-daily-unlock.is-clear{opacity:0}
 .park-daily-hap{position:fixed;left:0;top:0;width:1px;height:1px;opacity:.01;pointer-events:none}
 .park-daily-summary{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.park-daily-summary img{width:min(112px,30vw);height:min(112px,30vw);object-fit:contain;filter:drop-shadow(0 6px 5px #b68d3540)}.park-daily-summary strong{font-size:clamp(48px,14vw,62px);line-height:1.05;color:#2c7e2c}.park-daily-summary span{font-size:24px;font-weight:700}
 .park-daily-cell{position:relative;aspect-ratio:1;border:2px solid #c28a29;border-radius:14px;overflow:hidden;background:#fffef0;box-shadow:inset 0 2px 5px #ab753622}
@@ -25,5 +24,5 @@
 .park-daily-button:active{transform:translateY(2px)}
 .park-daily-button.is-primary{min-height:57px;border:2px solid #8cd5ff;border-radius:18px;background:#1274ed;box-shadow:0 5px 0 #104fa4;color:white;font-size:21px;padding:12px}
 .park-daily-button.is-primary:active{transform:translateY(4px);box-shadow:0 1px 0 #104fa4}
-.park-daily-button:focus-visible,.park-daily-unlock:focus-visible{outline:3px solid #7939ba;outline-offset:4px}
+.park-daily-button:focus-visible{outline:3px solid #7939ba;outline-offset:4px}
 @media(max-height:650px){.park-daily{padding:12px}.park-daily-panel{padding:12px 20px 16px}.park-daily-eyebrow{font-size:11px}.park-daily-king{width:50px;height:50px}.park-daily h2{font-size:16px}.park-daily-instruction{font-size:22px;margin-bottom:10px}.park-daily-status{font-size:14px;margin:9px 0 8px}.park-daily-grid{gap:7px}.park-daily-button{min-height:42px;font-size:15px}.park-daily-button.is-primary{min-height:52px;font-size:19px}}

@@ -93,7 +93,7 @@
       "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Selo TOQUE PARA RASPAR (1 toque antes das 9 casas) + silent WebAudio unlock + .park-daily-hap no viewport + check ok!==false em navigator.vibrate para som e háptico funcionando desde a 1ª raspagem no Android Chrome e iOS Safari."
+      "notes": "Sem botão TOQUE PARA RASPAR (só véu esbranquiçado translúcido que some ao tocar), pincel 34px + limiar 60% por quadrado para exigir mais raspagem, + silent WebAudio unlock e háptico 22ms."
     },
     {
       "id": "t-sfx-levanta",

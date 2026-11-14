@@ -29,11 +29,11 @@ with sync_playwright() as p:
   assert page.locator('[data-spin-btn]').evaluate('e=>!!e.closest("[inert]")')
   assert gift.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
   page.screenshot(path=f'work/preview-daily-covered-{width}.png')
-  def scratch_cell(cell,touch=False):
+  def scratch_cell(cell,touch=False,rows=(.16,.39,.61,.84)):
    r=cell.bounding_box()
    points=[]
-   for row in [.22,.5,.78]:
-    points.extend([(r['x']+r['width']*.15,r['y']+r['height']*row),(r['x']+r['width']*.85,r['y']+r['height']*row)])
+   for row in rows:
+    points.extend([(r['x']+r['width']*.1,r['y']+r['height']*row),(r['x']+r['width']*.9,r['y']+r['height']*row)])
    if touch:
     session=context.new_cdp_session(page)
     session.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':points[0][0],'y':points[0][1]}]})
@@ -43,23 +43,22 @@ with sync_playwright() as p:
     page.mouse.move(*points[0]);page.mouse.down()
     for x,y in points:page.mouse.move(x,y,steps=6)
     page.mouse.up()
+  assert gift.get_by_role('button',name='TOQUE PARA RASPAR').count()==0
   if width in [390,430]:
-   unlock=gift.get_by_role('button',name='TOQUE PARA RASPAR',exact=True)
-   if unlock.count():
-    unlock.click() if width==390 else unlock.tap()
-    unlock.wait_for(state='detached')
+   assert gift.locator('.park-daily-unlock').is_visible()
    page.evaluate('window.__vibs=[];window.__audioStarts=0')
-   scratch_cell(gift.locator('[data-prize=false]').first,touch=width==430)
+   first_miss=gift.locator('[data-prize=false]').first
+   scratch_cell(first_miss,touch=width==430,rows=(.5,))
+   assert gift.locator('.park-daily-cell.is-revealed').count()==0
    assert page.evaluate('window.__vibs.length>=1&&window.__vibs[0][0]>=20'),page.evaluate('window.__vibs')
    page.wait_for_function('window.__audioStarts>=1')
+   gift.locator('.park-daily-unlock').wait_for(state='detached')
+   scratch_cell(first_miss,touch=width==430)
    assert gift.locator('.park-daily-cell.is-revealed').count()==1
    assert gift.locator('canvas:visible').count()==8
    assert page.evaluate('KingRicoCloud.player.balance')==before
    if width==390:
     page.reload();gift.wait_for();assert gift.locator('canvas:visible').count()==9
-    unlock=gift.get_by_role('button',name='TOQUE PARA RASPAR',exact=True)
-    if unlock.count():
-     unlock.click();unlock.wait_for(state='detached')
    for n in range(3):
     scratch_cell(gift.locator('[data-prize=true]').nth(n),touch=width==430)
     if n<2:

@@ -151,7 +151,7 @@ export async function openDailyReward(Cloud) {
    <img class="park-daily-king" src="/assets/symbols/sym-wild-s.webp" alt="">
    <h2 id="daily-title">Presente do dia</h2>
    <p class="park-daily-instruction">Raspe e ganhe!</p>
-   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<button type="button" class="park-daily-unlock"><span>TOQUE PARA RASPAR</span></button>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
+   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<div class="park-daily-unlock" aria-hidden="true"></div>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
    <p class="park-daily-status" role="status" aria-live="polite">0 de 3 prêmios encontrados</p>
    <button type="button" class="park-daily-button">REVELAR</button>
   </section>`;
@@ -159,17 +159,13 @@ export async function openDailyReward(Cloud) {
   const background=[...document.body.children].filter(e=>!e.matches('script,style,#fc-ios-hap'));
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
-  const unlock=()=>warmAudio(true);
+  const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockVeil=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
+  const clearVeil=()=>{if(!unlockVeil||unlockVeil.classList.contains('is-clear'))return;unlockVeil.classList.add('is-clear');setTimeout(()=>unlockVeil.remove(),260);};
+  const unlock=()=>{warmAudio(true);};
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchstart',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchend',unlock,{capture:true,passive:true});
-  const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockBtn=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
-  if(unlockBtn){
-   let endT=0;
-   const finishUnlock=()=>{clearTimeout(endT);if(!unlockBtn.isConnected)return;warmAudio(true);playScratchHaptic(true,overlay);sfx.button();unlockBtn.remove();};
-   unlockBtn.onclick=finishUnlock;
-   unlockBtn.ontouchend=()=>{clearTimeout(endT);endT=setTimeout(()=>{if(navigator.userActivation?.hasBeenActive)finishUnlock();},40);};
-  }
+  overlay.addEventListener('click',unlock,{capture:true,passive:true});
   let revealed=false,busy=false,finished=false,last=null,unwatch=()=>{};
   const cells=[...overlay.querySelectorAll('.park-daily-cell')];
   function close(){
@@ -187,7 +183,7 @@ export async function openDailyReward(Cloud) {
   function trap(e){if(e.key==='Tab'){e.preventDefault();button.focus();}if(e.key==='Escape')e.preventDefault();}
   document.addEventListener('keydown',trap);panel.focus({preventScroll:true});
   async function reveal(){
-   if(revealed)return;revealed=true;last=null;unlockBtn?.remove();cells.forEach(c=>revealCell(c,true));sfx.three();
+   if(revealed)return;revealed=true;last=null;unlockVeil?.remove();cells.forEach(c=>revealCell(c,true));sfx.three();
    overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';status.textContent='3 prêmios iguais!';
    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
    const space=overlay.querySelector('.park-daily-reveal-space'),summary=overlay.querySelector('.park-daily-summary'),r=grid.getBoundingClientRect();space.style.height=r.height+'px';
@@ -228,14 +224,14 @@ export async function openDailyReward(Cloud) {
     if(revealed||!last)return;const point={x:pt.clientX,y:pt.clientY};let hit=false;
     for(const {cell,canvas,ctx}of surfaces){
      if(cell.classList.contains('is-revealed'))continue;
-     const r=canvas.getBoundingClientRect(),radius=r.width*.16;
+     const r=canvas.getBoundingClientRect(),radius=r.width*.1;
      if(Math.max(last.x,point.x)<r.left-radius||Math.min(last.x,point.x)>r.right+radius||Math.max(last.y,point.y)<r.top-radius||Math.min(last.y,point.y)>r.bottom+radius)continue;
      hit=true;
      const local=p=>({x:(p.x-r.x)*180/r.width,y:(p.y-r.y)*180/r.height}),from=local(last),to=local(point);
-     ctx.globalCompositeOperation='destination-out';ctx.lineWidth=56;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
+     ctx.globalCompositeOperation='destination-out';ctx.lineWidth=34;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
      const data=ctx.getImageData(0,0,180,180).data;let clear=0,total=0;
      for(let i=3;i<data.length;i+=64){total++;if(data[i]<128)clear++;}
-     if(clear/total>=.36)revealCell(cell);
+     if(clear/total>=.60)revealCell(cell);
     }
     if(hit)sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);
     last=point;
@@ -247,7 +243,7 @@ export async function openDailyReward(Cloud) {
     if(pts&&pts.length){for(const pt of pts){if(revealed)break;scratchPoint(pt,false);}}
     else scratchPoint(e,false);
    }
-   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
+   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);clearVeil();last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
    grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{last=null;};
   }catch{reveal();}
   // Another tab may collect while this card is open. Never offer a second credit.
