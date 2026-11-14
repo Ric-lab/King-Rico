@@ -109,10 +109,8 @@ service cloud.firestore {
         && ((x.grid[8] == 11) == x.res.peach.hasAny([8]))
         && p.peaches == left && x.peaches == left
         && p.peachBank == {'count':left,'units':saved} && x.peachBank == p.peachBank
-        && (trigger ? x.feature is map && x.feature.bet == bonusUnits / 100.0 : x.feature == null)
-        // Legacy: 5 * 33.3 * full-screen x10 = 1665. Version 2: 8 * 33.3 * 10 = 2664.
-        // Current table: eight lines * 115.2x wild * full-screen x10 = 9216; v1/v2 caps unchanged.
-        && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)>=5 ? 2000 : x.get('slotVersion',1)>=3 ? 9216 : x.get('slotVersion',1)==2 ? 2664 : 1665);
+        && (x.get('slotVersion',1)>=6 || (trigger ? x.feature is map && x.feature.bet == bonusUnits / 100.0 : x.feature == null)
+          && o.winUnits <= (o.betUnits+(trigger ? bonusUnits : 0))*(x.get('slotVersion',1)>=5 ? 2000 : x.get('slotVersion',1)>=3 ? 9216 : x.get('slotVersion',1)==2 ? 2664 : 1665));
     }
     function bounce(p, old, o) {
       let x = o.result.outcome;
@@ -891,12 +889,15 @@ service cloud.firestore {
     function v6Normal(p,old,o,s,b) {
       let x=o.result.outcome; let lines=v6Matches(x.grid); let n=8-lines.removeAll([5]).size(); let free=5-b.get('cedros',0);
       let base=int(o.betUnits*v6Sum(lines)*(x.grid.toSet().size()==1?10:1) / 10.0+0.5); let f=x.feature;
-      return x.grid.size()==9 && x.grid.hasOnly([0,2,5,6,7,8,10,11])
+      let prevSpins=b.spins>=10?0:b.spins; let prevCycle=b.spins>=10?0:b.get('cycleWagerUnits',0);
+      let step=s.spins-prevSpins; let barBonus=int(s.cycleWagerUnits / 10);
+      return x.grid.size()==9 && x.grid.hasOnly([0,2,5,6,7,8,10,11,15])
+        && step>=0 && step<=2 && s.cycleWagerUnits==prevCycle+step*o.betUnits
         && x.get('defense',null)==null && circusBank(p,old,o)
         && x.cedarAward==(n<free?n:free) && s.cedros==b.get('cedros',0)+x.cedarAward
         && x.res.win==base / 100.0
-        && (f==null ? o.winUnits==base : f.sym in [0,2,6,7,8,10] && f.grid.size()==9 && f.grid.hasOnly([-1,f.sym])
-          && v6Feature(f,o.winUnits-base) ) ;
+        && (s.spins==10 ? f!=null && f.bet==(barBonus>0?barBonus:1) / 100.0 && f.sym in [0,2,6,7,8,10] && f.grid.size()==9 && f.grid.hasOnly([-1,f.sym])
+          && v6Feature(f,o.winUnits-base) : f==null && o.winUnits==base);
     }
 
     function v6Feature(f,units) {
@@ -913,13 +914,15 @@ service cloud.firestore {
     }
     function v6Villain(p,old,o,s,b) {
       let x=o.result.outcome; let r=x.res; let kind=x.get('tony',null)!=null?'tony':x.get('tucker',null)!=null?'tucker':'ray';
-      let stock=b.get('cedros',0); let defended=stock>0 && (kind!='tucker' || old.peaches>0);
+      let stock=b.get('cedros',0); let defended=stock>0 && kind!='ray' && (kind!='tucker' || old.peaches>0);
       let defense=x.get('defense',null);
-      return b.spins<9 && x.cedarAward==0 && s.cedros==stock-(defended?1:0)
+      let prevSpins=b.spins>=10?0:b.spins; let prevCycle=b.spins>=10?0:b.get('cycleWagerUnits',0);
+      return prevSpins<9 && s.spins==prevSpins && s.cycleWagerUnits==prevCycle && x.cedarAward==0
+        && (kind=='ray'?s.cedros==stock-x.ray.stolen:s.cedros==stock-(defended?1:0))
         && (defended?defense=={'against':kind}:defense==null)
         && r.win==0 && r.peach==[] && r.full==false && x.feature==null && o.winUnits==0
         && villainGrid(x,kind=='tony'?12:kind=='tucker'?13:14)
-        && (kind=='tony'?v6Tony(p,old,o,b,defended):defended || kind=='ray'?v6UntouchedResource(p,old,o,kind):v6Tucker(p,old,o));
+        && (kind=='tony'?v6Tony(p,old,o,b,defended):kind=='ray'?v6Ray(p,old,o,stock):defended?v6UntouchedResource(p,old,o,kind):v6Tucker(p,old,o));
     }
     function v6Tony(p,old,o,b,defended) {
       let x=o.result.outcome; let t=x.tony; let amount=t.stolenUnits; let third=int(amount / 3);
@@ -927,6 +930,13 @@ service cloud.firestore {
       return t=={'version':3,'minUnits':o.betUnits,'maxUnits':defended?0:v6Maximum(old,o,b),'stolenUnits':amount,'hits':[third,third,amount-2*third]}
         && amount is int && (defended?t.maxUnits==0 && amount==0:t.maxUnits>=o.betUnits && amount>=o.betUnits && amount<=t.maxUnits)
         && p.peaches==old.peaches && x.peaches==p.peaches && p.peachBank==bank && x.peachBank==bank;
+    }
+    function v6Ray(p,old,o,stock) {
+      let x=o.result.outcome; let stolen=x.ray.stolen;
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      return x.ray=={'version':3,'before':stock,'stolen':stolen,'remaining':stock-stolen} && stolen is int
+        && (stock>0?stolen>=1 && stolen<=stock && stolen<=4:stolen==0)
+        && p.peaches==old.peaches && p.peachBank==bank && x.peaches==p.peaches && x.peachBank==p.peachBank;
     }
     // These branches enforce the same resource transition, without computing a
     // proportional Happeach loss for Ray or a blocked/zero-loss event.
@@ -946,19 +956,23 @@ service cloud.firestore {
         && p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}
         && x.peaches==p.peaches && x.peachBank==p.peachBank;
     }
-    function v6Wheel(s) {
-      let w=s.wheel;
-      return s.spins==10?w=={'id':s.lastOperationId,'roundId':s.lastOperationId,'prizeVersion':4,'economyVersion':6,
-        'baseUnits':int(s.cycleWagerUnits*4 / 100.0+0.5),'pockets':[10,1,2,1,3,2,1,5,2,1,3,2,1],'result':null}:w==null;
+    function v6Wheel(s,old,o) {
+      let x=o.result.outcome; let count=x.res.peach.size();
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
+      let before=bank.count==old.peaches?bank.units:old.peaches*o.betUnits;
+      let wheelUnits=old.peaches+count>=5?before+(5-old.peaches)*o.betUnits:0;
+      let baseUnits=int(wheelUnits*36 / 100.0+0.5);
+      return wheelUnits>0?s.wheel=={'id':s.lastOperationId,'roundId':s.lastOperationId,'prizeVersion':4,'economyVersion':6,
+        'baseUnits':baseUnits>0?baseUnits:1,'pockets':[10,1,2,1,3,2,1,5,2,1,3,2,1],'result':null} && s.spins<10:s.wheel==null;
     }
     function v6Spin(s,b,o,p) {
       let x=o.result.outcome; let old=get(/databases/$(database)/documents/players/$(request.auth.uid)).data;
       // p is the identical getAfter player already read by parkWrite.
       let villain=x.get('tony',null)!=null || x.get('tucker',null)!=null || x.get('ray',null)!=null;
-      return o.game=='circus' && x.parkVersion==1 && x.ticketAward==0 && b.wheel==null && s.spins==b.spins+1
-        && s.cycleWagerUnits==b.get('cycleWagerUnits',0)+o.betUnits && s.tickets==b.tickets && s.passes==b.passes
+      return o.game=='circus' && x.parkVersion==1 && x.ticketAward==0 && b.wheel==null
+        && s.tickets==b.tickets && s.passes==b.passes
         && s.diff(b).affectedKeys().hasOnly('revision,playerRevision,lastOperationId,spins,wheel,cedros,economyV6,cycleWagerUnits'.split(','))
-        && (villain?v6Villain(p,old,o,s,b):v6Normal(p,old,o,s,b)) && v6Wheel(s);
+        && (villain?v6Villain(p,old,o,s,b):v6Normal(p,old,o,s,b)) && v6Wheel(s,old,o);
     }
     function economyV6Write(s,b,o) {
       let x=o.result.get('outcome',{}); let spin=o.action=='spin' && x.get('slotVersion',1)==6;
@@ -998,9 +1012,10 @@ service cloud.firestore {
         && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,wheel,economy,economyV6'.split(','));
     }
     function parkCloseState(s,b) {
-      return b.wheel != null && b.wheel.result != null && s.wheel == null && s.spins == 0
-        && s.tickets == b.tickets && s.passes == b.passes
-        && s.get('cycleWagerUnits',0)==0;
+      let v6=b.wheel != null && b.wheel.get('economyVersion',0) == 6;
+      return b.wheel != null && b.wheel.result != null && s.wheel == null
+        && (v6 ? s.spins == b.spins && s.get('cycleWagerUnits',0) == b.get('cycleWagerUnits',0) : s.spins == 0 && s.get('cycleWagerUnits',0) == 0)
+        && s.tickets == b.tickets && s.passes == b.passes;
     }
     function parkGameState(s,b,o) {
       let x=o.result.outcome; let previous=oldPlayerRound(request.auth.uid,o.game); let first=previous == null;

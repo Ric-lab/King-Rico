@@ -10,8 +10,8 @@ const PAYS=[6.7,.4,.8,3.9,1.5,9,13.5,25,34,90].map((pay,i)=>i===1||i===2?pay:Num
 const PAYS_V5=Object.freeze([2.5,.4,.8,1.2,5,0,10,15,20,25]);
 const {tier}=require('./prize-tier.cjs');
 
-// V6 keeps atlas IDs; tickets now pay coins, cedar is protection, controller reserved.
+// V6 keeps atlas IDs; tickets now pay coins, clover is protection, controller reserved.
 const PAYS_V6=Object.freeze([1.2,0,.8,0,0,0,2.5,10,5,0,.4,0,0,0,0,0]);
 const WEIGHTS_V6=Object.freeze([9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]); // 15 = controle (3 em linha abre um jogo)
-const CEDAR_P=.12;
-module.exports={PAYS_V6,WEIGHTS_V6,CEDAR_P,VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};
+const CEDAR_P=.12,PEACH_P_V6=.015,WHEEL_SHARE_V6=.36,BAR_P1_V6=.08,BAR_P2_V6=.02;
+module.exports={PAYS_V6,WEIGHTS_V6,CEDAR_P,PEACH_P_V6,WHEEL_SHARE_V6,BAR_P1_V6,BAR_P2_V6,VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};

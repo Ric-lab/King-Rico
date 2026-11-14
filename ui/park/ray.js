@@ -23,7 +23,7 @@ export function installRay(fc){
   let ended=false,modal,copy;const timers=[],animations=[];
   const later=(fn,t)=>timers.push(setTimeout(()=>{if(!ended)fn();},t));
   function animate(el,keys,opts){try{const a=el.animate(keys,opts);animations.push(a);return a;}catch{return null;}}
-  function visibleTickets(n){fc._parkVisibleTickets=n;if(count)count.textContent=n.toLocaleString('pt-BR')+(event.version>=3?'/5':'');pocket?.setAttribute('aria-label',`Parque: ${n} cedros`);}
+  function visibleTickets(n){fc._parkVisibleTickets=n;if(count)count.textContent=n.toLocaleString('pt-BR')+(event.version>=3?'/5':'');pocket?.setAttribute('aria-label',`Parque: ${n} trevos`);}
   visibleTickets(event.before??window.KingRicoPark.state.cedros??0);
   // Carry the actual counter artwork and its old count, preserving its rendered scale.
   if(pocket){copy=pocket.cloneNode(true);copy.classList.add('park-ray-carried-pocket');copy.removeAttribute('href');copy.removeAttribute('aria-label');copy.setAttribute('aria-hidden','true');
@@ -43,7 +43,7 @@ export function installRay(fc){
    animate(carrier,[{translate:'0 0'},{translate:end}],{duration:1400,easing:'ease-in'});
   }
   function empty(){scene.dataset.phase='empty';carrier.style.visibility='hidden';}
-  function result(){scene.dataset.phase='result';modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Ray Raccoon"><h2>${event.stolen?'Ray levou':'Sem cedros!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'cedro':'cedros'):'Nenhum cedro perdido'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Ray e os cedros');modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;}
+  function result(){scene.dataset.phase='result';modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Ray Raccoon"><h2>${event.stolen?'Ray levou':'Sem trevos!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'trevo':'trevos'):'Nenhum trevo perdido'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Ray e os trevos');modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;}
   function clean(){timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});if(pocket)pocket.style.visibility=originalVisibility;scene.remove();window.removeEventListener('pagehide',hide);}
   function done(){if(ended)return;ended=true;clean();fc._rayPlaying=false;fc._celebHold=false;fc.syncCeleb();fc.kingSet('idle');fc.setState({balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}
   function back(){if(scene.dataset.phase==='returning')return;scene.dataset.phase='returning';modal?.close();visibleTickets(window.KingRicoPark.state.cedros??0);

@@ -73,16 +73,24 @@ function spinLegacy(p,s,bet,id,rng,version=1){
 }
 function spinV6(p,s,bet,id,rng){
  s.cedros??=0;
- s.cycleWagerUnits=(s.cycleWagerUnits||0)+engine.units(bet);
+ if(s.spins>=10){s.spins=0;s.cycleWagerUnits=0;}
+ s.cycleWagerUnits??=0;
  let x=s.spins<9?controllerV6.candidate(p,s,bet,rng):null;
  if(!x){
-  x=engine.slot(bet,p.peaches,rng,p.peachBank,6);
+  const prof=engine.circusProfile;
+  x=engine.slot(bet,p.peaches,rng,p.peachBank,6,wheelTrigger=>{
+   const r=rng(),step=r>=1-prof.BAR_P1_V6?1:r>=1-prof.BAR_P1_V6-prof.BAR_P2_V6?2:0;
+   const next=Math.min(wheelTrigger?9:10,s.spins+step),delta=next-s.spins;
+   s.spins=next;s.cycleWagerUnits+=delta*engine.units(bet);
+   return s.spins===10?s.cycleWagerUnits:0;
+  });
+  const wheelUnits=x.wheelUnits||0;delete x.wheelUnits;
   const cedarLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===5)?[i]:[]);
   const controllerLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===15)?[i]:[]);
   const award=Math.min(5-s.cedros,cedarLines.length);
-  x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};s.cedros+=award;s.spins++;
+  x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};s.cedros+=award;
+  if(wheelUnits>0)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(wheelUnits*prof.WHEEL_SHARE_V6)),pockets:[...POCKETS],result:null};
  }
- if(s.spins===10)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(s.cycleWagerUnits*4/100)),pockets:[...POCKETS],result:null};
  controllerV6.recordSpin(s,x,bet);return x;
 }
 function spin(p,s,bet,id,rng,version=1){

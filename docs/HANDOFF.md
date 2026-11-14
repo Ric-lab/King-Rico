@@ -1,3 +1,20 @@
+## Trevo no lugar do cedro + Roleta (0/5) no lugar do Happeach + Barra lateral Good Luck aleatória — 14/11/2026 (Antigravity)
+
+- **1. Troca do cedro pelo trevo (`assets/symbols/sym-clover.png`):**
+  - Substituída a célula 5 do atlas `assets/symbols-v7.webp` pelo trevo (`assets/symbols/sym-clover.png`), além do depósito (`.park-pocket`), voo (`flyTickets`), cena de defesa (`"Trevo da sorte te protegeu!"`), tela do Ray (`"Ray levou N trevo(s)"` / `"Sem trevos!"`), modal (`"Trevos de proteção"`, `"Seus trevos"`), tabela de pagamentos e seletor `⚙ → 🎯` (`"Trevo"`).
+  - Atualizado `tests/circus_v6_browser.py` para `"Trevos de proteção"`.
+- **2. Happeach guardado e Roleta no lugar dele (`0/5`):**
+  - Happeach retirado do sorteio, contador e cesta (arquivos preservados no repositório).
+  - No depósito superior direito (`0/5`, `.park-basket`), agora ficam guardadas as roletas (`assets/wheel/wheel-symbol-v1.webp`, célula 11 de `assets/symbols-v7.webp`). Ao juntar 5 (`5/5`), abre a roleta bônus (`baseUnits = round(wheelUnits * 0.36)`). Tucker rouba de 1 a 4 roletas guardadas (ou é bloqueado por 1 trevo).
+- **3. Barra lateral vira o Good Luck:**
+  - Topo das barras laterais (`.park-meter-goal`) agora exibe a nuvem (`assets/symbols/sym-candy.webp`).
+  - Enchimento aleatório nos giros normais (`+1` em 8%, `+2` em 2%, `+0` em 90%). Ao chegar a 10, a nuvem pisca e ativa os 5 giros Good Luck (`featureBet = floor(cycleWagerUnits / 10) / 100`).
+- **4. Seletor `⚙ → 🎯` e Auditoria v6 (~90% RTP):**
+  - Incluídas no seletor `⚙ → 🎯` as opções `"Trevo"`, `"Good Luck (barra cheia)"` e `"Roleta (5 guardadas)"`.
+  - Parâmetros calibrados em `cloud/circus-profile.cjs`: `CEDAR_P = 0.12`, `PEACH_P_V6 = 0.015`, `WHEEL_SHARE_V6 = 0.36`, `BAR_P1_V6 = 0.08`, `BAR_P2_V6 = 0.02`.
+  - Auditoria (`docs/circus-economy-v6-audit.json`, 5M giros/aposta): retorno líquido **89,99%–90,00%** em todas as apostas (1 a 1.000), retorno bruto sem Tony **91,49%–91,83%** (nunca acima de 93%). Cenários de stress (`docs/circus-economy-v6-stress.json`, 1M giros): `tenth-high` **90,27%**, `armor-farm` **90,02%**, `alternating` **89,98%**, `armor=true` **89,97%**.
+
+
 ## Controle v2 aprovado + prévia sempre na demo normal (sem links específicos) — 13/11/2026 (Antigravity)
 
 - **Controle aprovado pelo dono (`t-controle-asset` → ✅ Feito):** o asset remasterizado (`assets/machine/controller-symbol-v1.png` / `.webp`, iluminação única superior suave e acabamento fosco/acetinado no padrão de `sym-crown.png` e `sym-drum.png`) passou no teste do dono e foi movido para **Feito** em `docs/todo.json`.

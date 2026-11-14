@@ -31,11 +31,11 @@ function candidate(p,s,bet,rng){
   x.peaches=remaining;x.peachBank={count:remaining,units:count?bank.units-Math.round(bank.units*stolen/count):0};
   x.tucker={version:3,stolen};
  }else{
-  // Ray rouba de 1 a 4 cedros (limitado ao estoque); com 0 cedros, não leva nada.
+  // Ray rouba de 1 a 4 trevos (limitado ao estoque); com 0 trevos, não leva nada.
   const stolen=before?boundedNormalInt(1,Math.min(4,before),rng):0;s.cedros=before-stolen;
   x.ray={version:3,before,stolen,remaining:before-stolen};
  }
- s.spins++;return x;
+ return x;
 }
 function recordSpin(s,x,bet){const e=s.economyV6||freshEconomy();s.economyV6={...e,rounds:e.rounds+1,wageredUnits:e.wageredUnits+engine.units(bet),paidUnits:e.paidUnits+x.winUnits,tigerUnits:e.tigerUnits+(x.tony?.stolenUnits||0)};}
 function recordBonus(s,extra){if(s.economyV6)s.economyV6={...s.economyV6,paidUnits:s.economyV6.paidUnits+extra};}

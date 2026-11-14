@@ -40,25 +40,25 @@
       0,
       0,
       0,
-      0
+      4
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 100900000,
-      "paid": 84374513.4,
-      "wheel": 9357829.24,
-      "theft": 2820353.56
+      "wagered": 85964950,
+      "paid": 70369939.1,
+      "wheel": 8506055.47,
+      "theft": 1425442.33
     },
-    "return": 0.9010107936570863,
-    "defenses": 10217,
-    "awards": 10217,
+    "return": 0.9009550082911698,
+    "defenses": 5477,
+    "awards": 11543,
     "villains": {
-      "tony": 220317,
-      "tucker": 22330,
-      "ray": 22353
+      "tony": 111197,
+      "tucker": 22827,
+      "ray": 23159
     },
-    "prizeRate": 0.503503,
-    "features": 3160,
+    "prizeRate": 0.535965,
+    "features": 9869,
     "inRange": true
   },
   {
@@ -102,25 +102,25 @@
       0,
       0,
       0,
-      0
+      4
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 145188667,
-      "paid": 120599072.7,
-      "wheel": 13505830.76,
-      "theft": 3489258.82
+      "wagered": 207952840,
+      "paid": 168970627.4,
+      "wheel": 20303620.37,
+      "theft": 2090480.66
     },
-    "return": 0.8996269980218222,
-    "defenses": 9542,
-    "awards": 9542,
+    "return": 0.9001260435298696,
+    "defenses": 5462,
+    "awards": 10944,
     "villains": {
-      "tony": 272258,
-      "tucker": 22621,
-      "ray": 22562
+      "tony": 162745,
+      "tucker": 22893,
+      "ray": 23153
     },
-    "prizeRate": 0.467439,
-    "features": 2657,
+    "prizeRate": 0.50304,
+    "features": 9252,
     "inRange": true
   },
   {
@@ -164,25 +164,25 @@
       0,
       0,
       0,
-      0
+      4
     ],
     "cedarProbability": 0.12,
     "components": {
       "wagered": 500500000,
-      "paid": 416257029.26,
-      "wheel": 46389343,
-      "theft": 12222346.12
+      "paid": 412746810.7,
+      "wheel": 44769324.06,
+      "theft": 7143334.64
     },
-    "return": 0.8999481041758242,
-    "defenses": 13399,
-    "awards": 13399,
+    "return": 0.8998457544855145,
+    "defenses": 5416,
+    "awards": 13135,
     "villains": {
-      "tony": 11641,
-      "tucker": 22431,
-      "ray": 22283
+      "tony": 5349,
+      "tucker": 22514,
+      "ray": 22729
     },
-    "prizeRate": 0.646914,
-    "features": 5131,
+    "prizeRate": 0.604274,
+    "features": 11141,
     "inRange": true
   },
   {
@@ -226,25 +226,25 @@
       0,
       0,
       0,
-      0
+      4
     ],
     "cedarProbability": 0.12,
     "components": {
       "wagered": 10000000,
-      "paid": 8069801,
-      "wheel": 930332,
+      "paid": 7962941,
+      "wheel": 1036764,
       "theft": 0
     },
-    "return": 0.9000133,
-    "defenses": 141932,
+    "return": 0.8999705,
+    "defenses": 52326,
     "awards": 0,
     "villains": {
-      "tony": 101786,
-      "tucker": 22619,
-      "ray": 22354
+      "tony": 34159,
+      "tucker": 22845,
+      "ray": 22610
     },
-    "prizeRate": 0.585783,
-    "features": 7711,
+    "prizeRate": 0.585296,
+    "features": 10823,
     "inRange": true
   }
 ]

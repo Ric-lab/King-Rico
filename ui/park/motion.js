@@ -56,15 +56,16 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   const charge=queuedCharge;queuedCharge=null;clearTimeout(charge.fallback);lastPulse=cue.seq;
   const tubes=[...rails.querySelectorAll('.park-meter')],animations=[],timers=[];let done=false,finished=0;
   const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));commitSpinColor(charge.target);spinButton?.removeAttribute('data-color-pending');fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;rails.style.setProperty('--park-fill',charge.target*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
+  const baseBefore=charge.before>=10?0:charge.before;
   for(const [side,tube]of tubes.entries()){
    const fill=tube.querySelector('.park-meter-fill'),stream=tube.querySelector('.park-liquid-stream'),drops=[...tube.querySelectorAll('.park-liquid-drop')];
-   const track=tube.querySelector('.park-meter-track'),h=track.clientHeight,from=h*charge.before/10,to=h*charge.target/10,x=tube.offsetLeft+track.offsetLeft+track.clientWidth/2,y=tube.offsetTop+track.offsetTop+h-from,originY=722-(fc.machineCut?.()||0);
+   const track=tube.querySelector('.park-meter-track'),h=track.clientHeight,from=h*baseBefore/10,to=h*charge.target/10,x=tube.offsetLeft+track.offsetLeft+track.clientWidth/2,y=tube.offsetTop+track.offsetTop+h-from,originY=722-(fc.machineCut?.()||0);
    // The exact origin, distance and propagation speed used by Circus.lightsPulse.
    const arrival=cue.at+Number(cue.delay||0)+Math.hypot(x-223.5,y-originY)/2.2;
    const delay=Math.max(0,arrival-performance.now()),pourLead=Math.min(150,delay),startDelay=Math.max(0,delay-pourLead);
    record(fc,'charge:scheduled',{side,arrival,level:charge.target,pulse:cue.at,pulseDelay:cue.delay,surfaceY:y});
    const color=colorAt(Math.min(1,charge.target/10));tube.style.setProperty('--park-pour-color',color);
-   tube.classList.remove('is-empty');
+   tube.classList.toggle('is-empty',charge.target===0);
    stream.style.height=Math.max(4,h-from)+'px';drops.forEach(d=>d.style.top=(h-from-2)+'px');
    const calm=reduced();
    try{
@@ -139,7 +140,7 @@ function flyTickets(fc,refresh,done=()=>{}){
   const flights=award.cells.slice(0,award.count||3).map((cell,i)=>{
    const source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/sym-scepter.png';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
+   const node=document.createElement('img');node.src='/assets/symbols/sym-clover.png';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
    const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
    const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
    const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};

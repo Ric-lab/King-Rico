@@ -13,7 +13,8 @@
 .park-ticket-wallet-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .park-ticket-wallet-label{position:absolute;left:39px;right:15px;top:17px;text-align:center;color:#81451e;font-size:10px;line-height:13px;font-weight:800;letter-spacing:.8px;pointer-events:none}
 .park-pocket [data-tickets]{position:absolute;left:39px;right:15px;top:28px;height:29px;display:flex;align-items:center;justify-content:center;font-size:var(--park-ticket-font,27px);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:#682556;text-shadow:0 1px #fff7bd;pointer-events:none}
-.park-meter-goal{position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:#9b661d;box-shadow:0 2px 3px #2b0e2288;z-index:4;pointer-events:none}
+.park-meter-goal{position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:40px;height:36px;border-radius:50%;background:none;box-shadow:none;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.park-goal-cloud{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px #1b0529bb)}
 .park-goal-disk{position:absolute;inset:3px;border-radius:50%}
 .park-goal-rim{position:absolute;inset:0;border-radius:50%;background:url('/assets/wheel/gold-atlas.webp') -3.214px -1.544px/56.095px 37.641px no-repeat}
 .park-meter-goal>b{position:absolute;left:11px;top:11px;width:12px;height:12px;border:1px solid #f7d575;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#238837;color:#fff1bd;font:800 12px/1 'Baloo 2',Baloo,sans-serif;box-shadow:0 1px 2px #0005}
@@ -65,7 +66,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @keyframes parkMeniscus{from{transform:skewY(-9deg) scaleY(.85)}to{transform:skewY(9deg) scaleY(1.05)}}
 @keyframes parkBubble{0%{opacity:0;transform:translateY(0)}25%{opacity:.8}100%{opacity:0;transform:translateY(-24px)}}
 .park-confetti{position:absolute;inset:0;pointer-events:none;z-index:15;overflow:visible}.park-confetti>i{position:absolute;left:0;top:0;box-shadow:inset 1px 1px #fff6;will-change:transform,opacity}
-.is-overflowing .park-meter-goal{animation:parkGoalWin .5s ease-in-out 2;filter:brightness(1.25);box-shadow:0 0 8px 3px #fff4b6,0 0 28px #ffc943}
+.is-overflowing .park-meter-goal{animation:parkGoalWin .5s ease-in-out 2;filter:brightness(1.45) drop-shadow(0 0 8px #fff4b6) drop-shadow(0 0 18px #ffc943);box-shadow:none}
 .is-overflowing .park-meter{filter:drop-shadow(0 0 6px #ffd064)}
 @keyframes parkGoalWin{50%{transform:translateX(-50%) scale(1.18)}}
 /* The bonus wheel is a foreground object, without a dialog cabinet around it. */
@@ -144,7 +145,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-wheel-scene button[hidden]{display:none}
 
 /* Only the final red charge latches the goal lights until the bonus is lifted. */
-.park-circus-rails.has-lit-goals .park-meter-goal{animation:parkGoalWin .5s ease-in-out infinite;filter:brightness(1.22);box-shadow:0 0 7px 2px #fff1a8,0 0 22px #ffc943cc}
+.park-circus-rails.has-lit-goals .park-meter-goal{animation:parkGoalWin .5s ease-in-out infinite;filter:brightness(1.22);box-shadow:none}.park-circus-rails.has-lit-goals .park-goal-cloud{filter:brightness(1.18) drop-shadow(0 0 7px #fff1a8) drop-shadow(0 0 16px #ffc943cc)}
 .park-wheel-scene .park-wheel-machine.is-won .park-wheel-bulb{opacity:1;animation-duration:1.8s;animation-iteration-count:3;box-shadow:0 0 5px #fff3b0,0 0 12px #ffbd39}
 .park-wheel-scene .park-wheel-machine.is-won .park-wheel-hub{box-shadow:inset 0 2px 4px #efffc377,0 0 15px #fff1a899,0 6px 14px #0007}
 
@@ -218,12 +219,12 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-ray-actor{position:absolute;transform-origin:50% 90%;will-change:translate}
 .park-ray-actor img{width:100%;height:100%;object-fit:contain;display:block}
 /* Cedars replace admission tickets, at the same established HUD anchor. */
-.park-pocket .park-ticket-wallet-face{background:#fff4cd;border:2px solid #eab744;border-radius:18px;box-shadow:0 3px 0 #9d652a;overflow:visible}
-.park-pocket .park-ticket-wallet-art{width:45%;height:110%;object-fit:contain;left:0;top:-6%;filter:drop-shadow(0 2px 1px #543b3355)}
-.park-pocket [data-tickets]{left:42%;right:5%;width:auto;font-size:23px!important;color:#663114;text-shadow:none}
+.park-pocket .park-ticket-wallet-face,.park-basket .park-ticket-wallet-face,.park-tucker-carried-basket .park-ticket-wallet-face{background:#fff4cd;border:2px solid #eab744;border-radius:18px;box-shadow:0 3px 0 #9d652a;overflow:visible}
+.park-pocket .park-ticket-wallet-art,.park-basket .park-ticket-wallet-art,.park-tucker-carried-basket .park-ticket-wallet-art{width:45%;height:110%;object-fit:contain;left:0;top:-6%;filter:drop-shadow(0 2px 1px #543b3355)}
+.park-pocket [data-tickets],.park-basket [data-wheels],.park-tucker-carried-basket [data-wheels]{position:absolute;left:42%;right:5%;top:9px;height:34px;width:auto;display:flex;align-items:center;justify-content:center;font-size:23px!important;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:#663114;text-shadow:none;pointer-events:none}
 .park-defense-art{width:80px;height:95px;object-fit:contain}
 .park-defense-scene{position:fixed;inset:0;z-index:8000;display:grid;place-content:center;background:#072c3655;backdrop-filter:blur(3px);pointer-events:none}
-.park-defense-shield{display:flex;align-items:center;flex-direction:column;padding:25px 32px;border:3px solid #ffe184;border-radius:45% 45% 35% 35%;background:radial-gradient(#fff5be,#43a7ba);box-shadow:0 0 65px #fbeca8;color:#493213;animation:cedarWard .5s ease-out both;z-index:1}
+.park-defense-shield{display:flex;align-items:center;flex-direction:column;text-align:center;padding:25px 32px;border:3px solid #ffe184;border-radius:45% 45% 35% 35%;background:radial-gradient(#fff5be,#43a7ba);box-shadow:0 0 65px #fbeca8;color:#493213;animation:cedarWard .5s ease-out both;z-index:1}
 .park-defense-shield img{height:120px;width:100px;object-fit:contain}
 .park-defense-shield strong{font:bold 30px system-ui;margin:12px 0}.park-defense-shield span{font:bold 17px system-ui}
 .park-defense-villain{position:absolute;width:80px;left:calc(50% - 40px);top:22%;animation:cedarRepel 2.5s ease-in both}

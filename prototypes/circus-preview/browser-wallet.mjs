@@ -5,17 +5,17 @@ let tail=Promise.resolve();
 // Prévia padrão: demo normal (aleatório). Para forçar eventos, o dono usa o seletor no jogo (⚙ → 🎯).
 const DEFAULT_DEMO=null;
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
-let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller','goodluck'].includes(demoMode);
 // Seletor da prévia (menu → 🎯): o modo escolhido vale para TODOS os giros até trocar; recarregar zera (aleatório).
 let forced=null;
 const SYM={ticket:10,circus:2,cape:0,coin:6,diamond:8,crown:7,cedar:5,controller:15};
 const trio=s=>{const f=[0,2,6,7,8,10].filter(x=>x!==s);return [s,s,s,f[0],f[1],f[2],f[3],f[4],f[0]];};
-const gridFor=m=>m in SYM?trio(SYM[m]):m==='peach'?[11,11,0,2,6,7,8,10,2]:m==='lose'?[0,2,6,7,8,10,2,6,0]:m==='spacewin'?Array(9).fill(7):m==='bigwin'?[7,7,7,7,7,7,0,2,6]:[7,7,7,7,7,7,0,2,6];
+const gridFor=m=>m in SYM?trio(SYM[m]):m==='wheel'?[11,0,2,6,7,8,10,2,6]:m==='goodluck'||m==='lose'?[0,2,6,7,8,10,2,6,0]:m==='spacewin'?Array(9).fill(7):m==='bigwin'?[7,7,7,7,7,7,0,2,6]:[7,7,7,7,7,7,0,2,6];
 const PICKS=[
  ['ticket','Ingresso',"/assets/symbols-v7.webp|1200% 100%|90.909% 50%"],['circus','Circo',"/assets/symbols-v7.webp|1200% 100%|18.182% 50%"],['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
  ['diamond','Diamante',"/assets/symbols-v7.webp|1200% 100%|72.727% 50%"],['crown','Coroa',"/assets/symbols-v7.webp|1200% 100%|63.636% 50%"],['tony','Tiger','/assets/tony/head.webp|contain|50% 50%'],['tucker','Toucan','/assets/tucker/head.webp|contain|50% 50%'],
- ['ray','Ray','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Cedro',"/assets/symbols-v7.webp|1200% 100%|45.455% 50%"],['peach','Happeach',"/assets/symbols-v7.webp|1200% 100%|100.000% 50%"],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
- ['lose','Sem trinca',''],['bigwin','Big win',''],['spacewin','Super win',''],['wheel','Roleta','']];
+ ['ray','Ray','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Trevo',"/assets/symbols-v7.webp|1200% 100%|45.455% 50%"],['goodluck','Good Luck (barra cheia)',"/assets/symbols/sym-candy.webp|contain|50% 50%"],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
+ ['lose','Sem trinca',''],['bigwin','Big win',''],['spacewin','Super win',''],['wheel','Roleta (5 guardadas)',"/assets/symbols-v7.webp|1200% 100%|100.000% 50%"]];
 function badge(){let b=document.getElementById('kr-preview-pick');if(!forced){b?.remove();return;}if(!b){b=document.createElement('button');b.id='kr-preview-pick';b.type='button';b.onclick=openPicker;b.style.cssText='position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:99998;padding:8px 16px;border:0;border-radius:999px;font:800 15px/1 Baloo\\ 2,system-ui,sans-serif;color:#4a1a00;background:linear-gradient(180deg,#fff1a8,#f0a018);box-shadow:0 3px 0 #8a4a05,0 6px 14px #0006';document.body.append(b);}b.textContent='🎯 '+(PICKS.find(p=>p[0]===forced)?.[1]||forced)+' · trocar';}
 function openPicker(){document.getElementById('kr-preview-picker')?.remove();const o=document.createElement('div');o.id='kr-preview-picker';o.setAttribute('role','dialog');
  o.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(12,2,24,.88);font-family:Baloo\\ 2,system-ui,sans-serif';
@@ -36,12 +36,14 @@ async function execute(data){
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
  const mode=forced||demoMode,demo=(forced||demoSpin)&&data.action==='spin'&&data.game==='circus';
  const symbols=engine.slotSymbols(6);
- const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(forced?gridFor(mode):mode==='ticket'?[10,10,10,0,2,6,7,8,5]:mode==='cedar'?[5,5,5,0,2,6,7,8,10]:mode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:symbol===11?[.001]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
+ const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(forced?gridFor(mode):mode==='ticket'?[10,10,10,0,2,6,7,8,5]:mode==='cedar'?[5,5,5,0,2,6,7,8,10]:mode==='wheel'?[11,0,2,6,7,8,10,2,6]:mode==='goodluck'?[0,2,6,7,8,10,2,6,0]:mode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:symbol===11?[.001]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
  if(demo&&mode!=='tony')draws.unshift(.99);
  if(demo&&mode==='tony'){data.previewTony=true;draws.splice(0,draws.length,0,.5);}
  if(demo&&mode==='tucker')data.previewTucker=true;
- if(demo&&mode==='ray')data.previewRay=true;if(demo&&mode==='wheel')data.previewWheel=true;
- const model=createPreview(saved||{},demo&&mode!=='wheel'?()=>draws.shift()??.99:Math.random);
+ if(demo&&mode==='ray')data.previewRay=true;
+ if(demo&&mode==='wheel'){data.previewWheel=true;draws.push(.5);}
+ if(demo&&mode==='goodluck'){data.previewGoodLuck=true;draws.push(.99);}
+ const model=createPreview(saved||{},demo?()=>draws.shift()??(mode==='goodluck'?.1:.5):Math.random);
  try{const result=await model.run(data);if(demo&&!forced)demoSpin=false;localStorage.setItem(KEY,JSON.stringify(model.exportState()));return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});}
  catch(e){return new Response(JSON.stringify({error:e.message}),{status:400,headers:{'Content-Type':'application/json'}});}
 }

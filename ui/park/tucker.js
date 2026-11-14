@@ -32,14 +32,14 @@ export function installTucker(fc){
   function perch(){scene.dataset.phase='perched';bird.style.opacity='1';animate(bird,[{translate:'0 -14px'},{translate:'0 3px',offset:.7},{translate:'0 0'}],{duration:500,easing:'ease-out'});try{fc.pluck(880,.09,.4);fc.hap('basketIn');}catch{}}
   function take(){
    scene.dataset.phase='flying';
-   if(basket){clone=basket.cloneNode(true);clone.className='park-tucker-carried-basket';clone.removeAttribute('title');clone.style.cssText=`position:absolute;left:0;top:0;right:auto;width:96px;height:96px;transform:scale(${r.width/96},${r.height/96});transform-origin:0 0;pointer-events:none;`;carrier.prepend(clone);basket.style.visibility='hidden';}
+   if(basket){clone=basket.cloneNode(true);clone.className='park-tucker-carried-basket';clone.removeAttribute('title');const w=basket.offsetWidth||r.width,h=basket.offsetHeight||r.height;clone.style.cssText=`position:absolute!important;left:0!important;top:0!important;right:auto!important;width:${w}px!important;height:${h}px!important;transform:scale(${r.width/w},${r.height/h})!important;transform-origin:0 0!important;visibility:visible!important;opacity:1!important;pointer-events:none!important;`;carrier.prepend(clone);basket.style.visibility='hidden';}
    try{fc.sfxSnatch?.();fc.buzz?.([35,45,35,45,80]);}catch{}
    const dx=innerWidth-r.x+r.width+size,dy=-Math.min(170,innerHeight*.2);
    animate(carrier,[{translate:'0 0',rotate:'0deg'},{translate:`${dx*.12}px -18px`,rotate:'-3deg',offset:.2},{translate:`${dx*.55}px ${dy*.52}px`,rotate:'-7deg',offset:.65},{translate:`${dx}px ${dy}px`,rotate:'-5deg'}],{duration:2100,easing:'cubic-bezier(.32,0,.72,1)',fill:'forwards'});
   }
   function result(){
    scene.dataset.phase='result';carrier.style.visibility='hidden';
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>${event.stolen?'Tucker levou':'Cesta vazia!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?'Happeach':'Nenhum Happeach perdido'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou Happeach');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>${event.stolen?'Tucker levou':'Sem roletas!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'roleta':'roletas'):'Nenhuma roleta perdida'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou roletas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;
   }
   function settle(){fc.setState({peaches:window.KingRicoCloud.player.peaches,peachShownBase:null,peachShownAdd:0,balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}

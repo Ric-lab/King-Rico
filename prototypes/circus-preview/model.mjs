@@ -53,7 +53,9 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
-   if(data.previewWheel&&!park.wheel){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}const outcome=data.previewRay?rayDemo(p,park,data.bet,data.slotVersion||6):data.previewTucker?tuckerDemo(p,park,data.bet,data.slotVersion||6):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6);
+   if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}
+   if(data.previewWheel&&!park.wheel){if((data.slotVersion||6)>=6){p.peaches=4;p.peachBank={count:4,units:cost*4};}else{park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}}
+   const outcome=data.previewRay?rayDemo(p,park,data.bet,data.slotVersion||6):data.previewTucker?tuckerDemo(p,park,data.bet,data.slotVersion||6):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6);
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,
@@ -70,7 +72,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    result={wheel:structuredClone(park.wheel)};
   }else if(data.action==='wheel-close'){
    if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('Conclua a roleta primeiro.');
-   park.wheel=null;park.spins=0;park.bankUnits=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;result={};
+   const v6=park.wheel.economyVersion===6;park.wheel=null;if(!v6){park.spins=0;park.bankUnits=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;}result={};
   }else if(data.action==='fingo-play'){
    const pass=park.passes.fingo;
    if(!pass)fail('Escolha como entrar na atração.');

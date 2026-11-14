@@ -117,7 +117,7 @@ function weighted(pool, rng) {
   for (let i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return i; }
   return 0;
 }
-function pick(rng = random,version=1) { if(version>=6){const r=rng();return r<circusProfile.PEACH_P?PEACH:r<circusProfile.PEACH_P+circusProfile.CEDAR_P?5:weighted(SYMBOLS_V6,rng);}return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(slotSymbols(version), rng); }
+function pick(rng = random,version=1) { if(version>=6){const r=rng(),pp=circusProfile.PEACH_P_V6??circusProfile.PEACH_P;return r<pp?PEACH:r<pp+circusProfile.CEDAR_P?5:weighted(SYMBOLS_V6,rng);}return rng() < (version>=3?circusProfile.PEACH_P:PEACH_P) ? PEACH : weighted(slotSymbols(version), rng); }
 function lineSymbol(grid, line,version=1) {
   if(version>=6){const s=grid[line[0]];return [0,2,6,7,8,10].includes(s)&&line.every(i=>grid[i]===s)?s:-1;}
   const v = line.map(i => grid[i]);
@@ -153,7 +153,7 @@ function feature(bet, rng = random, version=1) {
   const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * (version>=3?circusProfile.FEATURE_MIN:FEAT_MIN))));
   return { sym, rounds, grid, res };
 }
-function slot(bet, peaches = 0, rng = random, bank = null, version=1) {
+function slot(bet, peaches = 0, rng = random, bank = null, version=1, onGrid = null) {
   const grid = Array.from({ length: 9 }, () => pick(rng,version));
   let pc = 0;
   for (let i = 0; i < 9; i++) if (grid[i] === PEACH && ++pc > 2) {
@@ -161,6 +161,16 @@ function slot(bet, peaches = 0, rng = random, bank = null, version=1) {
   }
   const res = evaluate(grid, bet, version), total = peaches + res.peach.length;
   const stake = units(bet), saved = bank?.count===peaches ? bank.units : peaches*stake;
+  if (version >= 6) {
+    const wheelTrigger = total >= PEACH_GOAL, remaining = wheelTrigger ? total - PEACH_GOAL : total;
+    const wheelUnits = wheelTrigger ? saved + (PEACH_GOAL - peaches) * stake : 0;
+    const peachBank = { count: remaining, units: wheelTrigger ? remaining * stake : saved + res.peach.length * stake };
+    const barUnits = typeof onGrid === 'function' ? onGrid(wheelTrigger) : 0;
+    const featureBet = barUnits > 0 ? Math.max(1, Math.floor(barUnits / 10)) / 100 : bet;
+    const bonus = barUnits > 0 ? { ...feature(featureBet, rng, version), bet: featureBet } : null;
+    return { grid, res, feature: bonus, peaches: remaining, peachBank, slotVersion: version, wheelUnits,
+      winUnits: units(res.win) + (bonus ? units(bonus.res.win) : 0) };
+  }
   const featureUnits=(saved+(PEACH_GOAL-peaches)*stake)/PEACH_GOAL;
   const featureBet = (version>=6?Math.floor(featureUnits):featureUnits)/100;
   const bonus = total >= PEACH_GOAL ? {...feature(featureBet, rng, version),bet:featureBet} : null;

@@ -1,11 +1,11 @@
 {
   "sourceHashes": {
-    "cloud/engine.cjs": "453a48f1571b5f4f471d40d207c41bc38aee92101c9363049b44d0c9f9268eaa",
-    "cloud/park.cjs": "c459b21eb743651c2fa3ef8500037dc8e083308256e13655ce0cd09cfd050c67",
-    "cloud/circus-profile.cjs": "6d3d9cc4a5fdbf3b2ae7427e35fb8678403e63a8df776021cde58252bbfb1a65",
-    "cloud/circus-control-v6.cjs": "cadd9d9221f57321200c7666e6bc034f5c6eb782a04d940f673bb7846a999a7e",
+    "cloud/engine.cjs": "daf74ab4ceede48ec3fb6db22bc430f04a74902300ce9d003e0493866a60ae1e",
+    "cloud/park.cjs": "ddb80f7065187c4c7aa9cdad280fcb4220373566437886be0b8374bf7f2ac2ed",
+    "cloud/circus-profile.cjs": "d96f67994de2aaf22bebfa49995470afdd3f36095650ccc689096cd892b3fd3e",
+    "cloud/circus-control-v6.cjs": "dfecf4987bcf22771e588818c0175fe6abc71801647a275528876eddd3304717",
     "cloud/truncated-normal.cjs": "05dbbdee3b1866bc64b7cbdbed74de6d3f9735951bcf6fd1b6aa14c83dd05aeb",
-    "scripts/circus-v6-audit.mjs": "55c4800313b55c0b7c6bddf3b24c49fba86a3465d5ce499d5272174805d0327f"
+    "scripts/circus-v6-audit.mjs": "cc55aaaf6d41fabafce943a506943109b42b8f1bb8058ac3bae8f5e1351c330b"
   },
   "results": [
     {
@@ -49,25 +49,25 @@
         0,
         0,
         0,
-        0
+        4
       ],
       "cedarProbability": 0.12,
       "components": {
         "wagered": 5000000,
-        "paid": 4135673.4,
-        "wheel": 464242.8,
-        "theft": 100248.36
+        "paid": 4145805.8,
+        "wheel": 445746.6,
+        "theft": 91885.06
       },
-      "return": 0.899933568,
-      "defenses": 65919,
-      "awards": 65922,
+      "return": 0.899933468,
+      "defenses": 27075,
+      "awards": 65399,
       "villains": {
-        "tony": 17071,
-        "tucker": 112361,
-        "ray": 112715
+        "tony": 14123,
+        "tucker": 112876,
+        "ray": 112927
       },
-      "prizeRate": 0.6524214,
-      "features": 25552,
+      "prizeRate": 0.605672,
+      "features": 56005,
       "inRange": true
     },
     {
@@ -111,25 +111,25 @@
         0,
         0,
         0,
-        0
+        4
       ],
       "cedarProbability": 0.12,
       "components": {
         "wagered": 50000000,
-        "paid": 41331565,
-        "wheel": 4639172,
-        "theft": 974226.57
+        "paid": 41426000,
+        "wheel": 4463244,
+        "theft": 890362.47
       },
-      "return": 0.8999302086,
-      "defenses": 65945,
-      "awards": 65945,
+      "return": 0.8999776306,
+      "defenses": 27164,
+      "awards": 65492,
       "villains": {
-        "tony": 16555,
-        "tucker": 112667,
-        "ray": 112698
+        "tony": 13929,
+        "tucker": 112956,
+        "ray": 112887
       },
-      "prizeRate": 0.6524504,
-      "features": 25507,
+      "prizeRate": 0.605735,
+      "features": 56025,
       "inRange": true
     },
     {
@@ -173,25 +173,25 @@
         0,
         0,
         0,
-        0
+        4
       ],
       "cedarProbability": 0.12,
       "components": {
         "wagered": 500000000,
-        "paid": 413308140,
-        "wheel": 46391480,
-        "theft": 9734515.74
+        "paid": 414260200,
+        "wheel": 44631540,
+        "theft": 8902084.71
       },
-      "return": 0.89993020852,
-      "defenses": 65949,
-      "awards": 65949,
+      "return": 0.89997931058,
+      "defenses": 27162,
+      "awards": 65480,
       "villains": {
-        "tony": 16543,
-        "tucker": 112665,
-        "ray": 112710
+        "tony": 13938,
+        "tucker": 112993,
+        "ray": 112909
       },
-      "prizeRate": 0.6524498,
-      "features": 25507,
+      "prizeRate": 0.6057312,
+      "features": 56033,
       "inRange": true
     },
     {
@@ -235,25 +235,25 @@
         0,
         0,
         0,
-        0
+        4
       ],
       "cedarProbability": 0.12,
       "components": {
         "wagered": 5000000000,
-        "paid": 4133081400,
-        "wheel": 463914800,
-        "theft": 97345157.43
+        "paid": 4142602000,
+        "wheel": 446315400,
+        "theft": 89020847.14
       },
-      "return": 0.899930208514,
-      "defenses": 65949,
-      "awards": 65949,
+      "return": 0.899979310572,
+      "defenses": 27162,
+      "awards": 65480,
       "villains": {
-        "tony": 16543,
-        "tucker": 112665,
-        "ray": 112710
+        "tony": 13938,
+        "tucker": 112993,
+        "ray": 112909
       },
-      "prizeRate": 0.6524498,
-      "features": 25507,
+      "prizeRate": 0.6057312,
+      "features": 56033,
       "inRange": true
     }
   ],

@@ -146,14 +146,8 @@
 .park-circus-stage .park-pocket{left:5px;top:calc(var(--park-prize-top) + 56px - 52px);width:112px;height:52px;transform:none}
 .park-pocket .park-ticket-wallet-label{left:36%;right:6%;top:10px;font-size:10px;line-height:12px;letter-spacing:.3px}
 .park-pocket [data-tickets]{left:36%;right:6%;top:22px;height:23px;font-size:var(--park-ticket-font,26px)}
-.park-circus-stage .park-basket[data-park-side="true"]{right:5px!important;top:calc(var(--park-prize-top) + 56px - 83.64px)!important;transform:scale(.82)!important;transform-origin:100% 0;translate:none}
-.park-basket-halo{display:none!important}
-.park-basket img[src$="basket.webp"],.park-basket img[src$="basket-front.webp"]{filter:none!important}
-.park-peach-count{box-shadow:none!important}
-.park-circus-stage .park-basket[data-park-side="true"]{transform-origin:100% 0!important}
-.park-peach-count{gap:4px!important}
-.park-peach-count>span{font-size:21px!important}
-.park-peach-count>div>div{width:5px!important;height:5px!important}
+.park-circus-stage .park-basket,.park-circus-stage .park-basket[data-park-side="true"]{right:5px!important;top:calc(var(--park-prize-top) + 56px - 52px)!important;width:112px!important;height:52px!important;transform:none!important;translate:none!important}
+.park-basket .park-ticket-wallet-face,.park-tucker-carried-basket .park-ticket-wallet-face{transform-origin:100% 100%}
 
 .park-reel-cell>[data-sym]{transition:filter .18s ease-out}
 .park-reel-cell[data-dimmed="true"]>[data-sym]{filter:brightness(.58) saturate(.85)}

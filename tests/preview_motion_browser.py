@@ -94,18 +94,29 @@ with sync_playwright() as p:
   expected=620 if mode=='no-preference' else 400
   assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
-  page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.spins=9;localStorage.setItem(key,JSON.stringify(s));}''')
-  page.reload();ready();rest_y=page.locator('[data-spin-btn]').bounding_box()['y'];page.get_by_role('button',name='Girar',exact=True).click()
+  page.evaluate('''values=>{
+   const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));
+   s.park.spins=0;s.park.cycleWagerUnits=0;
+   const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=4;p.peachBank={count:4,units:4000};
+   localStorage.setItem(key,JSON.stringify(s));
+  }''')
+  page.reload();ready()
+  page.evaluate('''values=>{
+   const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin'||!values)return fetch(u,o);const list=values;values=null;const random=Math.random;let i=0;Math.random=()=>list[i++]??0;try{return await fetch(u,o);}finally{Math.random=random;}};
+  }''',draws_for_grid([11,0,2,6,7,8,10,2,6])+[0])
+  rest_y=page.locator('[data-spin-btn]').bounding_box()['y'];page.get_by_role('button',name='Girar',exact=True).click()
   dialog=page.get_by_role('region',name='Roleta multiplicadora',exact=True);dialog.wait_for(timeout=30000)
   if mode=='no-preference':
    page.wait_for_timeout(300)
    assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='rigging'
    page.screenshot(path='work/preview-ropes-arrival.png')
+   page.evaluate('KingRicoPark.state.spins=10;__fc._parkMeterLevel=10;document.querySelector(".park-circus-rails")?.classList.add("has-lit-goals")')
    goal=page.locator('.park-meter-goal').first
    assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
    assert goal.evaluate('e=>getComputedStyle(e).animationIterationCount')=='infinite'
    page.wait_for_timeout(600)
    assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
+   page.evaluate('KingRicoPark.state.spins=0;__fc._parkMeterLevel=0;document.querySelector(".park-circus-rails")?.classList.remove("has-lit-goals")')
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
    page.wait_for_timeout(350);page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1

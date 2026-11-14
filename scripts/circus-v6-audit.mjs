@@ -14,7 +14,7 @@ export function auditV6({spins=5000000,bet=10,seed=472831,strategy='fixed',armor
   p.balanceUnits+=x.winUnits-stake-loss;p.peaches=x.peaches;p.peachBank=x.peachBank;
   wagered+=stake;paid+=x.winUnits;theft+=loss;defenses+=x.defense?1:0;awards+=x.cedarAward||0;hits+=x.winUnits>0;features+=!!x.feature;
   for(const k of Object.keys(villains))villains[k]+=!!x[k];
-  if(s.wheel){const extra=park.bonus(s,s.wheel.id,rng);wheel+=extra;p.balanceUnits+=extra;s.wheel=null;s.spins=0;s.cycleWagerUnits=0;}
+  if(s.wheel){const extra=park.bonus(s,s.wheel.id,rng);wheel+=extra;p.balanceUnits+=extra;s.wheel=null;}
  }
  const r=(paid+wheel-theft)/wagered;
  return {version:6,spins,bet,strategy,armor,seed,pays:engine.circusProfile.PAYS_V6,weights:engine.circusProfile.WEIGHTS_V6,cedarProbability:engine.circusProfile.CEDAR_P,components:{wagered:wagered/100,paid:paid/100,wheel:wheel/100,theft:theft/100},return:r,defenses,awards,villains,prizeRate:hits/spins,features,inRange:r>=.885&&r<=.915};

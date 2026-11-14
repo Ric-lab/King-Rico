@@ -111,7 +111,7 @@ export function createGameStore(db, uid, dependencies={}) {
       if (data.action==='bootstrap' && !isNew) return {player:publicPlayer(p),...parkResult(),isNew:false};
       if(data.action==='parkEntry'){result=parkEngine.entry(p,park,data.game,data.method);parkDirty=true;
       }else if(data.action==='parkBonus'){winUnits=parkEngine.bonus(park,data.wheelId,rng);p.balanceUnits+=winUnits;result={wheel:structuredClone(park.wheel)};parkDirty=true;
-      }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');park.spins=0;park.wheel=null;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;parkDirty=true;
+      }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');const v6=park.wheel.economyVersion===6;park.wheel=null;if(!v6){park.spins=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;}parkDirty=true;
       }else if (data.action==='spin') {
         if (p.lastSpinAt && time-p.lastSpinAt.toMillis()<700) fail('king-rico/resource-exhausted','Aguarde antes de girar.');
         betUnits=engine.units(data.bet);

@@ -6,24 +6,26 @@ prévia Pages é fictícia. Fontes e decisões compartilhadas em HANDOFF/TODO.
 ## Economia
 
 `node scripts/circus-v6-audit.mjs` — 5.000.000 giros por aposta, semente 472831,
-mesmo motor da carteira. Retorno = moedas normais + Happeach + roleta − Tony.
-Ingressos antigos não entram no cálculo. Cedro não é dinheiro nem entrada.
+mesmo motor da carteira. Retorno = moedas normais + Good Luck (barra lateral aleatória) + roleta (5 símbolos guardados) − Tony.
+Ingressos antigos não entram no cálculo. Trevo não é dinheiro nem entrada.
 
-| Aposta | Giros | Retorno |
-|---|---:|---:|
-| 1 | 5.000.000 | 89,9933568% |
-| 10 | 5.000.000 | 89,99302086% |
-| 100 | 5.000.000 | 89,993020852% |
-| 1.000 | 5.000.000 | 89,9930208514% |
+| Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto (sem Tony) | Tony | Retorno Líquido |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 | 5.000.000 | 82,92% | 8,91% | 91,83% | -1,84% | **89,9907%** |
+| 10 | 5.000.000 | 82,85% | 8,93% | 91,78% | -1,78% | **89,9951%** |
+| 100 | 5.000.000 | 82,85% | 8,93% | 91,78% | -1,78% | **89,9951%** |
+| 1.000 | 5.000.000 | 82,85% | 8,93% | 91,78% | -1,78% | **89,9951%** |
+
+*(Demais apostas de 2,5 a 500 simuladas com 1.000.000 giros cada: retorno líquido **89,99%** em todas, bruto sem Tony ≤ **91,83%**, nunca acima de 93%.)*
 
 PAYS por ID estável: `[1.2,0,0.8,0,0,0,2.5,10,5,0,0.4,0,0,0,0,0]`.
 Pagantes na fita/tabela: ingresso, circo, capa, moeda, diamante, coroa.
-Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,0]`, cedro 0,12, Happeach 0,005.
+Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,0]`, trevo (`CEDAR_P`) `0,12`, símbolo de roleta (`PEACH_P_V6`) `0,015`, `WHEEL_SHARE_V6 = 0,36`, barra Good Luck aleatória (`BAR_P1_V6 = 0,08`, `BAR_P2_V6 = 0,02`).
 Os arquivos JSON incluem componentes e hashes das fontes da simulação.
 
-Um milhão por cenário adicional: décimo giro alto **90,1011%**, cultivar cedros
-com aposta baixa **89,9627%**, alternar 1/1.000 **89,9948%**, estoque artificial
-sempre cheio **90,0013%**. Todos em 88,5–91,5%, nenhum acima de 100%.
+Um milhão por cenário adicional: décimo giro alto **90,2679%**, cultivar trevos
+com aposta baixa **90,0247%**, alternar 1/1.000 **89,9752%**, estoque artificial
+sempre cheio **89,9706%**. Todos em 88,5–91,5%, nenhum acima de 93%.
 As simulações históricas v4/v5 também foram reexecutadas (5 milhões por aposta)
 e seus hashes de módulos comuns atualizados, com retorno na faixa original.
 

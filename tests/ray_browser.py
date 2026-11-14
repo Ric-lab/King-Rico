@@ -37,7 +37,7 @@ with sync_playwright() as p:
   page.wait_for_function('document.querySelector(".park-ray-scene")?.dataset.phase==="empty"')
   assert original.evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   page.screenshot(path=f'work/preview-ray-empty-{count}.png')
-  dialog=page.get_by_role('dialog',name='Ray e os cedros',exact=True);dialog.wait_for()
+  dialog=page.get_by_role('dialog',name='Ray e os trevos',exact=True);dialog.wait_for()
   assert dialog.locator('.park-tony-total').inner_text()==str(min(1,count))
   assert page.evaluate('KingRicoCloud.player.balance')==before-10
   assert page.evaluate('KingRicoCloud.player.peaches')==peaches

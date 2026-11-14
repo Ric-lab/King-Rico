@@ -35,24 +35,35 @@
       "updatedAt": "2026-11-14"
     },
     {
-      "id": "t-cedro-todos",
-      "title": "Cedro defende do Tony e do Tucker — NUNCA do Ray (o Ray existe para roubar cedros; se o cedro o defendesse, perderia o sentido). Com 0 cedros não defende. Melhorar o depósito e as animações",
+      "id": "p-trevo-roleta-goodluck",
+      "title": "Trevo no lugar do cedro, Roleta guardada (0/5) no lugar do Happeach e barra lateral Good Luck aleatória com nuvem no topo",
       "status": "preview",
       "category": "Economia & Regras",
-      "agent": "Claude",
+      "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Regra no servidor feita (Tony/Tucker defendidos, Ray não). Depósito e animações ainda pendentes. Testar: ⚙ → 🎯 Ray / Tiger / Toucan."
+      "notes": "RTP auditado ~89,99% em todas as apostas (bruto ≤ 91,83%). Testar em ⚙ → 🎯: Trevo, Good Luck (barra cheia) e Roleta (5 guardadas).",
+      "updatedAt": "2026-11-14"
+    },
+    {
+      "id": "t-cedro-todos",
+      "title": "Trevo defende do Tony e do Tucker — NUNCA do Ray (o Ray existe para roubar trevos; se o trevo o defendesse, perderia o sentido). Com 0 trevos não defende",
+      "status": "preview",
+      "category": "Economia & Regras",
+      "agent": "Claude / Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Trevo (sym-clover.png) no atlas, depósito, voo, defesa ('Trevo da sorte te protegeu!') e seletor 🎯. Testar: ⚙ → 🎯 Trevo / Ray / Tiger / Toucan."
     },
     {
       "id": "t-ray-1a4",
-      "title": "Ray rouba só de 1 a 4 cedros por vez (ajustar)",
+      "title": "Ray rouba só de 1 a 4 trevos por vez (ajustar)",
       "status": "preview",
       "category": "Economia & Regras",
-      "agent": "Claude",
+      "agent": "Claude / Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Ray leva 1–4 (limitado ao estoque), sem defesa. Testar: ⚙ → 🎯 Ray / Tiger / Toucan."
+      "notes": "Ray leva 1–4 trevos (limitado ao estoque), sem defesa ('Ray levou N trevos' / 'Sem trevos!'). Testar: ⚙ → 🎯 Ray / Tiger / Toucan."
     },
     {
       "id": "t-roleta-min",

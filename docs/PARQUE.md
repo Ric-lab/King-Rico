@@ -13,26 +13,38 @@ Tela cheia mantém ×10. IDs históricos do atlas não são renumerados. Bumbo,
 nuvem, trevo e King deixam os sorteios novos; seus assets e pagamentos antigos
 continuam disponíveis para recibos históricos. O King continua como personagem.
 
-Três cedros numa linha dão **1 defesa**, com estoque máximo **5**, indicado à
-esquerda do prêmio como **n/5**. Cada linha completa conta uma vez. Um cedro
-bloqueia um evento inteiro de Tony, Tucker **ou Ray**, sendo consumido na mesma
+Três **trevos** (`assets/symbols/sym-clover.png`, célula 5 do atlas `symbols-v7.webp`)
+numa linha dão **1 defesa**, com estoque máximo **5**, indicado à esquerda do
+prêmio como **n/5**. Cada linha completa conta uma vez. Um trevo bloqueia um
+evento inteiro de **Tony ou Tucker — nunca de Ray**, sendo consumido na mesma
 transação do giro; Tony não consome três defesas pelas três patadas. Um ataque de
-Tucker contra cesta vazia não gasta defesa. Sem estoque, Ray aparece sem perda.
-Como Ray ataca o próprio estoque de cedros, qualquer estoque positivo consome
-uma defesa e preserva o resto: não há segundo desconto. A apresentação de defesa
-é informativa e nunca altera a carteira. Ingressos antigos não viram cedros nem
+Tucker contra depósito vazio não gasta defesa. Ray rouba de **1 a 4 trevos**
+(limitado ao estoque); sem estoque, Ray aparece sem perda (`"Sem trevos!"`).
+A mensagem da defesa é **"Trevo da sorte te protegeu!"**. A apresentação de defesa
+é informativa e nunca altera a carteira. Ingressos antigos não viram trevos nem
 moedas. O contador antigo de entradas deixa a interface.
 
-Happeach mantém coleta e rodada especial. O controle de videogame está reservado
-em `ui/park/controller-reserved.svg`, ID 15 inativo, sem peso/sorteio ou jogo.
-As três fitas contínuas usam a sequência dos seis pagamentos e dos especiais;
-Tony/Tucker/Ray passam visualmente durante o giro, sem antecipar o sorteio.
-A roda continua a cada 10 giros: base de 4% de todas as apostas reais do ciclo,
-mudança de aposta permitida, prêmio normal separado. Cenas/sons aprovados
-(patada, raspagem, moedas, roleta, botão) ficam preservados.
+O **Happeach** deixa de ser sorteado e saem seu contador e cesta (arquivos
+mantidos no repositório). No lugar onde o Happeach ficava guardado (topo direito,
+`0/5`), passa a ficar guardada a **Roleta** (`assets/wheel/wheel-symbol-v1.webp`,
+célula 11 de `symbols-v7.webp`, chance `0,015` por célula). Quando juntar **5**,
+abre a tela da roleta bônus (`baseUnits = round(wheelUnits * 0.36)`, onde
+`wheelUnits` soma as 5 apostas em que cada roleta foi guardada).
 
-Economia v6 usa ledger separado (`economyV6`), moedas + bônus − Tony; ingresso
-comum não tem valor adicional de 25 moedas. Cedros são defesa, não dinheiro.
+As **barras laterais** viram o **Good Luck**: no topo de cada barra entra o asset
+da nuvem (`assets/symbols/sym-candy.webp`). A barra deixa de encher nos 10 giros
+fixos e passa a encher de forma aleatória (`+1` em 8% dos giros normais, `+2` em
+2%, `+0` em 90%). No giro em que a barra chega ao topo (`10`), a nuvem pisca e
+ativa os **5 giros Good Luck** (`featureBet = floor(cycleWagerUnits / 10) / 100`).
+
+O controle de videogame (`assets/machine/controller-symbol-v1.webp`, ID 15) está
+reservado sem sorteio enquanto a abertura do Penalty é tarefa separada. As três
+fitas contínuas usam a sequência dos seis pagamentos e dos especiais;
+Tony/Tucker/Ray passam visualmente durante o giro, sem antecipar o sorteio.
+Cenas/sons aprovados (patada, raspagem, moedas, roleta, botão) ficam preservados.
+
+Economia v6 usa ledger separado (`economyV6`), moedas + Good Luck + roleta − Tony;
+ingresso comum não tem valor adicional de 25 moedas. Trevos são defesa, não dinheiro.
 Auditoria e cenários adversariais: `circus-economy-v6-audit.json` e
 `circus-economy-v6-stress.json`. Publicação oficial depende de passar regras e
 persistência; documentação de prévia não significa mudança já publicada em live.

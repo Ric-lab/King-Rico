@@ -45,7 +45,7 @@ test('Preview v6 matches the production engine, cedar stock and coin-only ledger
   p.balanceUnits+=expected.winUnits-1000-(expected.tony?.stolenUnits||0);p.peaches=expected.peaches;p.peachBank=expected.peachBank;
   const r=await model.run(req);assert.deepEqual(r.outcome,expected);assert.deepEqual(r.park.economyV6,s.economyV6);assert.equal(r.park.cedros,s.cedros);assert.equal(r.park.tickets,3);assert.equal(r.player.balance,p.balanceUnits/100);
   assert.deepEqual((await model.run(req)).park.economyV6,s.economyV6);awards+=expected.cedarAward;defenses+=!!expected.defense;
-  if(s.wheel){const extra=park.bonus(s,s.wheel.id,b);p.balanceUnits+=extra;const wheelReq={action:'wheel',wheelId:s.wheel.id,requestId:randomUUID()},w=await model.run(wheelReq);assert.deepEqual(w.park.economyV6,s.economyV6);assert.equal(w.player.balance,p.balanceUnits/100);assert.deepEqual((await model.run(wheelReq)).park.economyV6,s.economyV6);await model.run({action:'wheel-close',wheelId:s.wheel.id,requestId:randomUUID()});s.spins=0;s.wheel=null;s.cycleWagerUnits=0;}
+  if(s.wheel){const extra=park.bonus(s,s.wheel.id,b);p.balanceUnits+=extra;const wheelReq={action:'wheel',wheelId:s.wheel.id,requestId:randomUUID()},w=await model.run(wheelReq);assert.deepEqual(w.park.economyV6,s.economyV6);assert.equal(w.player.balance,p.balanceUnits/100);assert.deepEqual((await model.run(wheelReq)).park.economyV6,s.economyV6);await model.run({action:'wheel-close',wheelId:s.wheel.id,requestId:randomUUID()});s.wheel=null;}
   if(i%100===99)model=createPreview(JSON.parse(JSON.stringify(model.exportState())),a);
  }
  assert.ok(awards>0&&defenses>0);

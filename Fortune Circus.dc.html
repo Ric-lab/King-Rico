@@ -248,27 +248,9 @@ a:hover { color: #fff3c4; }
     </div>
   </div>
   <sc-if value="{{ peachShow }}" hint-placeholder-val="{{ true }}">
-    <div class="park-basket" data-park-side="{{ peachSide }}" title="Junte 5 Happeach para abrir a Rodada Especial" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 96px; height: 96px; transform: scale({{ peachScale }}); transform-origin: 50% 50%; transition: right .55s cubic-bezier(.3,1.25,.5,1), top .55s cubic-bezier(.3,1.25,.5,1), transform .55s cubic-bezier(.3,1.25,.5,1); pointer-events: none;">
-      <div class="park-basket-content" style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 70%;">
-        <div class="park-basket-halo" style="position: absolute; left: -34px; top: -26px; width: 164px; height: 150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16,2,26,.72) 0%, rgba(16,2,26,.5) 45%, rgba(16,2,26,0) 100%); pointer-events: none;"></div>
-        <div class="park-basket-halo" style="position: absolute; left: 8px; top: 84px; width: 80px; height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(10,0,18,.7), rgba(10,0,18,0)); pointer-events: none;"></div>
-        <img src="assets/fx/basket.webp" alt="Cesta de Happeach" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; filter: drop-shadow(0 4px 5px rgba(0,0,0,.55)) drop-shadow(0 0 1px rgba(0,0,0,.6));">
-        <sc-for list="{{ basketLow }}" as="p" hint-placeholder-count="0">
-          <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
-        </sc-for>
-        <img src="assets/fx/basket-front.webp" alt="" style="position: absolute; left: 0; top: 4px; width: 96px; height: 92px; pointer-events: none;">
-        <sc-for list="{{ basketTop }}" as="p" hint-placeholder-count="0">
-          <img src="assets/fx/peach-plain.webp" alt="" style="position: absolute; left: {{ p.x }}; top: {{ p.y }}; width: 34px; height: 34px; transform: rotate({{ p.r }}) scale({{ p.s }}); transform-origin: 50% 85%; opacity: {{ p.o }}; transition: transform .38s cubic-bezier(.3,1.6,.5,1), opacity .2s ease; filter: saturate(1.25) contrast(1.05) drop-shadow(0 1.5px 2px rgba(60,10,30,.6)); pointer-events: none;">
-        </sc-for>
-
-        <div class="park-peach-count" style="position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 2px 9px 3px; border-radius: 999px; background: linear-gradient(180deg, rgba(74,10,106,.96), rgba(36,4,58,.96)); border: 2px solid #f0b41f; box-shadow: 0 3px 8px rgba(0,0,0,.5); white-space: nowrap;">
-          <span style="font-size: 17px; font-weight: 800; line-height: 1; color: #fff3c4; text-shadow: 0 1px 0 rgba(0,0,0,.45); font-variant-numeric: tabular-nums;">{{ peachText }}</span>
-          <div style="display: flex; gap: 2px;">
-            <sc-for list="{{ peachDots }}" as="d" hint-placeholder-count="5">
-              <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ d.bg }}; box-shadow: {{ d.sh }};"></div>
-            </sc-for>
-          </div>
-        </div>
+    <div class="park-basket" data-park-side="{{ peachSide }}" title="Junte 5 roletas para abrir a Roleta Bônus" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 112px; height: 52px; pointer-events: none;">
+      <div class="park-basket-content" style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 50%;">
+        <span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="assets/wheel/wheel-symbol-v1.webp" alt="Roletas de bônus"><b data-wheels>{{ peachText }}</b></span>
       </div>
     </div>
   </sc-if>
@@ -682,80 +664,43 @@ class Component extends DCLogic {
     if (!layer || !sym || !sym.animate) return;
     const stage=document.querySelector('.park-circus-stage').getBoundingClientRect(),r=sym.getBoundingClientRect(),sc=stage.width/453;
     const cx=(r.x+r.width/2-stage.x)/sc,cy=(r.y+r.height/2-stage.y)/sc;
-    const S = 121, feetY = cy + S * 0.43, nodes = [];
+    const S = 108, nodes = [];
     const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
-    const T = 2400;
-    // glow behind
-    const glow = el('left:' + (cx - 110) + 'px;top:' + (cy - 118) + 'px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,170,.95) 0%,rgba(255,120,170,.55) 38%,rgba(255,120,170,0) 70%);will-change:transform,opacity;');
-    glow.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1.1)', opacity: 1, offset: .2 }, { transform: 'scale(.9)', opacity: .7, offset: .55 }, { transform: 'scale(1.25)', opacity: .9, offset: .8 }, { transform: 'scale(1.5)', opacity: 0 }], { duration: T, easing: 'ease-out', fill: 'forwards' });
-    // ground shadow
-    const sh = el('left:' + (cx - 40) + 'px;top:' + (feetY - 7) + 'px;width:80px;height:14px;border-radius:50%;background:radial-gradient(ellipse,rgba(40,6,30,.55),rgba(40,6,30,0) 70%);');
-    // dancer
-    const w = el('left:' + (cx - S / 2) + 'px;top:' + (cy - S / 2) + 'px;width:' + S + 'px;height:' + S + 'px;transform-origin:50% 93%;will-change:transform;');
-    const img = (src, css) => { const i = document.createElement('img'); i.src = src; i.alt = ''; i.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;' + (css || ''); w.appendChild(i); return i; };
-    // drawn dance frames alternate on the beat (same approach as King Rico)
-    const dA = img(FC_ASSET('assets/happeach/f-danceA.webp')), dB = img(FC_ASSET('assets/happeach/f-danceB.webp'), 'opacity:0;'), dV = img(FC_ASSET('assets/happeach/f-victory.webp'), 'opacity:0;');
-    const sw = (a, b, c) => { dA.style.opacity = a; dB.style.opacity = b; dV.style.opacity = c; };
-    [[.13, 0, 0, 1], [.37, 1, 0, 0], [.54, 0, 1, 0], [.66, 1, 0, 0], [.78, 0, 1, 0], [.88, 0, 0, 1]].forEach(([o, a, b, c]) => this.later(() => sw(a, b, c), T * o));
-    const leaf = { animate() {} };
+    const T = 650;
+    const glow = el('left:' + (cx - 95) + 'px;top:' + (cy - 95) + 'px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,175,.95) 0%,rgba(255,190,60,.5) 42%,rgba(255,190,60,0) 70%);will-change:transform,opacity;');
+    glow.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1.1)', opacity: 1, offset: .28 }, { transform: 'scale(1.3)', opacity: 0 }], { duration: T, easing: 'ease-out', fill: 'forwards' });
+    const w = el('left:' + (cx - S / 2) + 'px;top:' + (cy - S / 2) + 'px;width:' + S + 'px;height:' + S + 'px;transform-origin:50% 50%;will-change:transform;', '<img src="' + FC_ASSET('assets/wheel/wheel-symbol-v1.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">');
     sym.style.visibility = 'hidden';
-    const k = (o, y, r, sx, sy, x) => ({ offset: o, transform: 'translate(' + (x || 0) + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + sx + ',' + sy + ')' });
-    const B = 1.3;
     w.animate([
-      k(0, 0, 0, 1, 1), k(.05, 4, 0, 1.2, .78),
-      k(.13, -40, -4, .95 * B, 1.12 * B), k(.2, -58, 0, B, B), k(.25, -58, 0, -B, B), k(.3, -54, 0, B, B),
-      k(.37, 2, 0, 1.2 * B, .8 * B), k(.42, -10, -3, .96 * B, 1.06 * B),
-      k(.48, 0, -13, 1.04 * B, .94 * B, -6), k(.54, -12, -4, .96 * B, 1.05 * B, 0), k(.6, 0, 13, 1.04 * B, .94 * B, 6), k(.66, -12, 4, .96 * B, 1.05 * B, 0),
-      k(.72, 0, -13, 1.04 * B, .94 * B, -6), k(.78, -12, -4, .96 * B, 1.05 * B, 0), k(.84, 0, 13, 1.04 * B, .94 * B, 6),
-      k(.9, -20, 0, 1.08 * B, 1.08 * B), k(.95, 2, 0, 1.08, .92), k(1, 0, 0, 1, 1)
-    ], { duration: T, easing: 'cubic-bezier(.45,0,.35,1)', fill: 'forwards' });
-    leaf.animate([0, -22, 20, -26, 18, -14, 16, -16, 14, -12, 10, -16, 8, 0].map((r, i, a) => ({ offset: i / (a.length - 1), transform: 'rotate(' + r + 'deg)' })), { duration: T, easing: 'ease-in-out' });
-    sh.animate([
-      { offset: 0, transform: 'scale(1)', opacity: 1 }, { offset: .05, transform: 'scale(1.3,1)', opacity: 1 }, { offset: .2, transform: 'scale(.45)', opacity: .35 },
-      { offset: .3, transform: 'scale(.5)', opacity: .4 }, { offset: .37, transform: 'scale(1.6,1.1)', opacity: 1 }, { offset: .48, transform: 'translateX(-6px) scale(1.4,1)', opacity: .9 },
-      { offset: .6, transform: 'translateX(6px) scale(1.4,1)', opacity: .9 }, { offset: .72, transform: 'translateX(-6px) scale(1.4,1)', opacity: .9 }, { offset: .84, transform: 'translateX(6px) scale(1.4,1)', opacity: .9 },
-      { offset: .9, transform: 'scale(1.1)', opacity: .6 }, { offset: 1, transform: 'scale(1)', opacity: 0 }
-    ], { duration: T, fill: 'forwards' });
-    // landing ring
-    const ring = el('left:' + (cx - 50) + 'px;top:' + (feetY - 16) + 'px;width:100px;height:32px;border-radius:50%;border:3px solid rgba(255,230,150,.95);box-shadow:0 0 12px rgba(255,190,90,.9);opacity:0;');
-    ring.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(.4)', opacity: 1, offset: .05 }, { transform: 'scale(2)', opacity: 0 }], { duration: 520, delay: T * .37, easing: 'ease-out', fill: 'forwards' });
-    // sparkles at launch/turn
+      { offset: 0, transform: 'scale(.85) rotate(0deg)' },
+      { offset: .35, transform: 'scale(1.22) rotate(120deg)' },
+      { offset: .75, transform: 'scale(1.14) rotate(280deg)' },
+      { offset: 1, transform: 'scale(1) rotate(360deg)' }
+    ], { duration: T, easing: 'cubic-bezier(.25,.8,.3,1)', fill: 'forwards' });
     const stars = this.starUrls();
-    for (let i = 0; i < 9; i++) {
-      const a = (i / 9) * Math.PI * 2 + Math.random() * .3, r = 55 + Math.random() * 45, s = 12 + Math.random() * 8;
-      const st = el('left:' + (cx - s / 2) + 'px;top:' + (cy - 55 - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:url(' + stars[i % stars.length] + ') center/100% 100% no-repeat;will-change:transform,opacity;opacity:0;');
-      st.animate([{ transform: 'translate(0,0) scale(.2) rotate(0)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * r * .5 + 'px,' + Math.sin(a) * r * .5 + 'px) scale(1.2) rotate(90deg)', opacity: 1, offset: .35 }, { transform: 'translate(' + Math.cos(a) * r + 'px,' + (Math.sin(a) * r + 14) + 'px) scale(0) rotate(200deg)', opacity: 0 }],
-        { duration: 760 + Math.random() * 240, delay: T * .16 + i * 12, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * Math.PI * 2 + Math.random() * .3, rad = 45 + Math.random() * 35, s = 12 + Math.random() * 6;
+      const st = el('left:' + (cx - s / 2) + 'px;top:' + (cy - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:url(' + stars[i % stars.length] + ') center/100% 100% no-repeat;will-change:transform,opacity;opacity:0;');
+      st.animate([{ transform: 'translate(0,0) scale(.2) rotate(0)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * rad * .55 + 'px,' + Math.sin(a) * rad * .55 + 'px) scale(1.15) rotate(90deg)', opacity: 1, offset: .35 }, { transform: 'translate(' + Math.cos(a) * rad + 'px,' + (Math.sin(a) * rad + 10) + 'px) scale(0) rotate(180deg)', opacity: 0 }],
+        { duration: 540, delay: 80 + i * 15, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
     }
-    // music notes during samba
-    ['\u266A', '\u266B', '\u266A', '\u266B'].forEach((g, i) => {
-      const side = i % 2 ? 1 : -1, n = el('left:' + (cx + side * 38 - 9) + 'px;top:' + (cy - 30) + 'px;font:800 22px/1 \'Baloo 2\',sans-serif;color:#fff;-webkit-text-stroke:3px #d6336c;paint-order:stroke fill;will-change:transform,opacity;opacity:0;', g);
-      n.animate([{ transform: 'translate(0,0) rotate(' + (-side * 10) + 'deg) scale(.5)', opacity: 0 }, { transform: 'translate(' + side * 8 + 'px,-24px) rotate(' + (side * 12) + 'deg) scale(1)', opacity: 1, offset: .3 }, { transform: 'translate(' + side * 22 + 'px,-72px) rotate(' + (-side * 8) + 'deg) scale(.9)', opacity: 0 }],
-        { duration: 1000, delay: T * .44 + i * 230, easing: 'ease-out', fill: 'forwards' });
-    });
-    // after the samba: shrink + fly in an arc into the counter icon
-    const basket=document.querySelector('.park-basket img[src$="basket.webp"]')?.getBoundingClientRect();
-    const tx=basket?(basket.x+basket.width*.5-stage.x)/sc:394.333,ty=basket?(basket.y+basket.height*.48-stage.y)/sc:138,dx=tx-cx,dy=ty-cy;
-    const fly = el('left:' + (cx - 30) + 'px;top:' + (cy - 30) + 'px;width:60px;height:60px;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/fx/peach-plain.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
+    const basket = document.querySelector('.park-basket .park-ticket-wallet-art, .park-basket')?.getBoundingClientRect();
+    const tx = basket ? (basket.x + basket.width * .5 - stage.x) / sc : 374, ty = basket ? (basket.y + basket.height * .5 - stage.y) / sc : 222, dx = tx - cx, dy = ty - cy;
+    const fly = el('left:' + (cx - 32) + 'px;top:' + (cy - 32) + 'px;width:64px;height:64px;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/wheel/wheel-symbol-v1.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">');
     const arc = [];
-    for (let i = 0; i <= 10; i++) { const u = i / 10, e = u * u * (3 - 2 * u), lift = -70 * Math.sin(Math.PI * u); arc.push({ offset: u, opacity: u < .05 ? u * 20 : 1, transform: 'translate(' + (dx * e).toFixed(1) + 'px,' + (dy * e + lift).toFixed(1) + 'px) rotate(' + (360 * e).toFixed(0) + 'deg) scale(' + (1.3 - 0.5 * e).toFixed(2) + ')' }); }
-    const FD = 620, FS = T - 80;
+    for (let i = 0; i <= 10; i++) { const u = i / 10, e = u * u * (3 - 2 * u), lift = -65 * Math.sin(Math.PI * u); arc.push({ offset: u, opacity: u < .05 ? u * 20 : 1, transform: 'translate(' + (dx * e).toFixed(1) + 'px,' + (dy * e + lift).toFixed(1) + 'px) rotate(' + (360 * e).toFixed(0) + 'deg) scale(' + (1.15 - 0.55 * e).toFixed(2) + ')' }); }
+    const FD = 520, FS = T - 50;
     fly.animate(arc, { duration: FD, delay: FS, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
-    w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, delay: FS, fill: 'forwards' });
-    for (let i = 0; i < 8; i++) {
-      const tr = el('left:' + (cx - 5) + 'px;top:' + (cy - 5) + 'px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff6c8,rgba(255,150,190,0) 70%);opacity:0;');
-      const u0 = .1 + i * .1, e = u0 * u0 * (3 - 2 * u0);
-      tr.animate([{ opacity: 0, transform: 'translate(' + (dx * e) + 'px,' + (dy * e - 70 * Math.sin(Math.PI * u0)) + 'px) scale(1.4)' }, { opacity: .9, offset: .15 }, { opacity: 0, transform: 'translate(' + (dx * e) + 'px,' + (dy * e - 70 * Math.sin(Math.PI * u0) + 10) + 'px) scale(.2)' }], { duration: 420, delay: FS + FD * u0, fill: 'forwards' });
-    }
-    const pop = el('left:' + (tx - 34) + 'px;top:' + (ty - 34) + 'px;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,140,90,0) 70%);will-change:transform,opacity;opacity:0;');
-    pop.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(1.2)', opacity: 1, offset: .3 }, { transform: 'scale(1.8)', opacity: 0 }], { duration: 480, delay: FS + FD, fill: 'forwards' });
+    w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 100, delay: FS, fill: 'forwards' });
+    const pop = el('left:' + (tx - 32) + 'px;top:' + (ty - 32) + 'px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,190,60,0) 70%);will-change:transform,opacity;opacity:0;');
+    pop.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(1.2)', opacity: 1, offset: .3 }, { transform: 'scale(1.8)', opacity: 0 }], { duration: 420, delay: FS + FD, fill: 'forwards' });
     this.later(() => { this._peachLand && this._peachLand(cell); try { this.bell(1760, 0.4, 0.07, 0.04); this.pluck(880, 0.06, 0.25); } catch (e) {} this.hap('basketIn'); }, FS + FD);
     const rec = { nodes, sym, t: 0 };
-    rec.t = this.later(() => { nodes.forEach(n => n.remove()); sym.style.visibility = ''; this._dances = (this._dances || []).filter(o => o !== rec); if (!this._dances.length && !this._holdWin) this._celebHold = false; this.syncCeleb(); }, T + 720);
+    rec.t = this.later(() => { nodes.forEach(n => n.remove()); sym.style.visibility = ''; this._dances = (this._dances || []).filter(o => o !== rec); if (!this._dances.length && !this._holdWin) { if (this._wheelTriggerV6) { this._wheelTriggerV6 = false; this.setState({ peaches: this._peachCarry || 0, peachShownBase: null, peachShownAdd: 0 }, this.save); } this._celebHold = false; } this.syncCeleb(); }, FS + FD + 360);
     (this._dances = this._dances || []).push(rec); this.syncCeleb();
     this.sfxDance();
   }
-  // TEST: fill the basket one by one, then open the Special Round
+  // TEST: fill the counter one by one, then open the Special Round
   testFill = () => {
     if (window.KingRicoCloud && window.KingRicoCloud.enabled) return;
     const s = this.state;
@@ -765,112 +710,31 @@ class Component extends DCLogic {
     for (let i = start + 1; i <= PEACH_GOAL; i++) this.later(() => { this.setState({ peaches: i, peachShownBase: null, peachShownAdd: 0, peachBump: Date.now() }); try { this.bell(1318 + i * 160, 0.3, 0.05); } catch (e) {} }, (i - start) * 220);
     this.later(() => { this._testing = false; this.startPeachFeature(this.bet()); }, (PEACH_GOAL - start) * 220 + 500);
   };
-  // Special Round: one peach leaves the counter, arcs to the spin button, presses it, then the reels go.
+  // Good Luck Special Round: pulse the spin button and launch the next respin without Happeach.
   peachPress(go) {
     const layer = this.fxRef.current;
-    this.setState(s => ({ featLeft: Math.max(0, (s.featLeft ?? FEAT_SPINS) - 1), peachBump: Date.now() }));
-    this.setState({ featReady: true });
-    if (!layer || !layer.animate) { go(); return; }
-    // peach pops up onto the basket rim, stands, crouches, then a back-flip that accelerates toward the button, landing upright
-    const feat=!!this.state.feature,stage=document.querySelector('.park-circus-stage').getBoundingClientRect(),basket=document.querySelector('.park-basket img[src$="basket.webp"]')?.getBoundingClientRect(),sc=stage.width/453;
-    const sx=basket?(basket.x+basket.width*.5-stage.x)/sc:(feat?226.5:394.333),rimY=basket?(basket.y+basket.height*.45-stage.y)/sc:(feat?100:134),bx=226.833,by=712-this.machineCut(),landY=697-this.machineCut();
-    const dx = bx - sx, dy = landY - rimY, nodes = [];
+    this.setState(s => ({ featLeft: Math.max(0, (s.featLeft ?? FEAT_SPINS) - 1) }));
+    this.setState({ featReady: false, pressed: 'spin' });
+    this.click(true); this.hap('impact');
+    if (!layer || !layer.animate) { this.later(() => { this.click(false); this.setState({ pressed: null }); go(); }, 180); return; }
+    const bx = 226.833, by = 712 - this.machineCut(), nodes = [];
     const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
-    const sp = this.state.turbo ? 0.7 : 1, UP = 300 * sp, HOLD = 520 * sp, FD = 780 * sp, P = 220 * sp, PRE = UP + HOLD + FD, D = PRE;
-    // drawn-frame Happeach (same approach as King Rico): pose swaps per phase; the flip spins the side-view tucked
-    // frame IN the screen plane = a true forward somersault.
-    const PS = 92, FR = ['ready', 'crouch', 'launch', 'tuck', 'drop', 'victory'];
-    const p = el('left:' + (sx - PS / 2) + 'px;top:' + (rimY - PS * 0.9) + 'px;width:' + PS + 'px;height:' + PS + 'px;transform-origin:50% 55%;) drop-shadow(0 3px 3px rgba(60,10,40,.5));opacity:0;z-index:3;',
-      FR.map(n => '<img data-hf="' + n + '" src="' + FC_ASSET(HP_FRAMES[n]) + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;">').join(''));
-    const show = n => p.querySelectorAll('[data-hf]').forEach(i => { i.style.opacity = i.dataset.hf === n ? '1' : '0'; });
-    const K = (t, x, y, r, a, b, o) => ({ offset: Math.min(1, t / D), opacity: o == null ? 1 : o, transform: 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + r.toFixed(1) + 'deg) scale(' + a.toFixed(3) + ',' + b.toFixed(3) + ')' });
-    const fr = [K(0, 0, 26, 0, .5, .5, 0), K(UP * .45, 0, -14, 0, .92, 1.12), K(UP * .75, 0, 2, 0, 1.12, .88), K(UP, 0, 0, 0, 1, 1),
-      K(UP + HOLD * .45, 0, 0, 0, 1, 1), K(UP + HOLD, 0, 3, 0, 1.06, .94)];
-    const t0 = UP + HOLD, N = 22, tf = u => t0 + FD * (u - 0.32 * Math.sin(2 * Math.PI * u) / (2 * Math.PI));
-    for (let i = 1; i <= N; i++) {
-      const u = i / N, e = Math.pow(u, 1.7);
-      const x = dx * e, y = dy * e - 150 * Math.sin(Math.PI * Math.pow(u, 0.85)) * (1 - u * .35);
-      // no somersault: roller-coaster drop, arms up, light happy sway; butt-first slam squash at the end
-      const r = 7 * Math.sin(u * Math.PI * 3) * (1 - u);
-      const g = 1 + 0.3 * u, st = i <= 2 ? [0.9, 1.12] : u > 0.94 ? [1.28, 0.74] : u > 0.86 ? [0.94, 1.08] : [1, 1];
-      fr.push(K(tf(u), x, y, r, g * st[0], g * st[1]));
-    }
-    p.animate(fr, { duration: D, easing: 'linear', fill: 'forwards' });
-    // frame schedule: ready on the rim → crouch → launch (side) → tuck spin → land (feet down, before touch)
-    show('ready');
-    [[UP + HOLD * .5, 'crouch'], [t0, 'launch'], [tf(.16), 'drop']].forEach(([t, n]) => this.later(() => show(n), t));
-    // afterimage ghosts of the tucked ball along the flip
-    for (let i = 2; i <= 1; i++) {
-      const u = i / 6, e = Math.pow(u, 1.7), gx = dx * e, gy = dy * e - 150 * Math.sin(Math.PI * Math.pow(u, 0.85)) * (1 - u * .35), ru = Math.min(1, Math.max(0, (u - .12) / .7)), gr = -360 * (ru * ru * (3 - 2 * ru));
-      const gh = el('left:' + (sx - PS / 2) + 'px;top:' + (rimY - PS * 0.9) + 'px;width:' + PS + 'px;height:' + PS + 'px;transform-origin:50% 55%;opacity:0;filter:sepia(1) saturate(4) hue-rotate(' + (300 + i * 22) + 'deg) brightness(1.15);mix-blend-mode:screen;transform:translate(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px) rotate(' + gr.toFixed(0) + 'deg) scale(' + (1 + .3 * u).toFixed(2) + ');',
-        '<img src="' + FC_ASSET('assets/happeach/f-tuck.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;">');
-      gh.animate([{ opacity: 0 }, { opacity: .5, offset: .1 }, { opacity: 0 }], { duration: 420, delay: tf(u), fill: 'forwards' });
-    }
-    // climax staging: dim the stage, rotating rays behind the rim during the wind-up
-    const rays = el('left:' + (sx - 110) + 'px;top:' + (rimY - 150) + 'px;width:220px;height:220px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,226,140,.55) 0deg 9deg,rgba(255,120,180,0) 9deg 24deg);-webkit-mask:radial-gradient(closest-side,#000 25%,transparent 100%);mask:radial-gradient(closest-side,#000 25%,transparent 100%);opacity:0;z-index:2;');
-    rays.animate([{ opacity: 0, transform: 'rotate(0) scale(.4)' }, { opacity: 1, transform: 'rotate(40deg) scale(1)', offset: .45 }, { opacity: 0, transform: 'rotate(90deg) scale(1.3)' }], { duration: UP + HOLD + 260, delay: UP * .3, fill: 'forwards' });
-    // sound: drum roll through the wind-up, rising plucks through the flip
+    const flash = el('left:' + (bx - 34) + 'px;top:' + (by - 34) + 'px;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,220,1),rgba(255,170,110,0) 70%);mix-blend-mode:screen;');
+    flash.animate([{ transform: 'scale(.6)', opacity: 1 }, { transform: 'scale(1.6)', opacity: 0 }], { duration: 260, easing: 'ease-out', fill: 'forwards' });
+    const btn = document.querySelector('[data-spin-btn]');
+    if (btn && btn.animate) btn.animate([
+      { transform: 'translateY(0) scale(1)', filter: 'brightness(1.25)' },
+      { transform: 'translateY(4px) scale(.955,.93)', filter: 'brightness(.42) saturate(1.3)', offset: .28 },
+      { transform: 'translateY(1px) scale(1.01,.99)', filter: 'brightness(.62) saturate(1.2)', offset: .7 },
+      { transform: 'translateY(0) scale(1)', filter: 'brightness(.6) saturate(1.2)' }
+    ], { duration: 320, easing: 'cubic-bezier(.3,.7,.4,1)' });
     try {
-      const n = Math.round(HOLD / 38);
-      for (let i = 0; i < n; i++) this.burst(i % 2 ? 1700 : 1300, 3, 0.012 + 0.018 * i / n, 0.04, (UP + i * 38) / 1000);
-      [1397, 1175, 988, 784, 659].forEach((q, i) => this.pluck(q, 0.022, 0.14, (t0 + 140 + (FD - 200) * (i / 5)) / 1000));
-      this.wheee((t0 - 60) / 1000, FD * 1.0 / 1000);
+      this.burst(150, 1, 0.08, 0.24);
+      [1047, 1319, 1568].forEach((q, i) => this.bell(q, 0.45, 0.05, 0.03 + i * 0.03));
     } catch (e) {}
-    // dust puff on the rim at take-off + sparkle trail
-    const puff = el('left:' + (sx - 22) + 'px;top:' + (rimY - 6) + 'px;width:44px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,240,200,.9),rgba(255,240,200,0));opacity:0;');
-    puff.animate([{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1)', offset: .25 }, { opacity: 0, transform: 'scale(1.8,1.3)' }], { duration: 380, delay: t0, fill: 'forwards' });
-    for (let i = 0; i < 8; i++) {
-      const u = .14 + i * .1, e = Math.pow(u, 1.7), x = sx + dx * e, y = rimY - 24 + dy * e - 150 * Math.sin(Math.PI * Math.pow(u, 0.85)) * (1 - u * .35);
-      const t = el('left:' + (x - 6) + 'px;top:' + (y - 6) + 'px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff6c8,rgba(255,150,190,0) 70%);opacity:0;');
-      t.animate([{ opacity: 0, transform: 'scale(1.3)' }, { opacity: .95, offset: .2 }, { opacity: 0, transform: 'translateY(8px) scale(.2)' }], { duration: 420, delay: t0 + FD * u, fill: 'forwards' });
-    }
-    this.later(() => { try { this.pluck(659, 0.04, 0.18); } catch (e) {} }, UP * .5);
-    this.later(() => { try { this.sfxWhoosh(); } catch (e) {} }, t0);
-    this.later(() => {
-      p.remove();
-      const flash = el('left:' + (bx - 34) + 'px;top:' + (by - 34) + 'px;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,220,1),rgba(255,170,110,0) 70%);mix-blend-mode:screen;');
-      flash.animate([{ transform: 'scale(.6)', opacity: 1 }, { transform: 'scale(1.6)', opacity: 0 }], { duration: 260, easing: 'ease-out', fill: 'forwards' });
-      this.setState({ featReady: false, pressed: 'spin' }); this.click(true); this.hap('impact');
-      const btn = document.querySelector('[data-spin-btn]');
-      if (btn && btn.animate) btn.animate([
-        { transform: 'translateY(0) scale(1)', filter: 'brightness(1.25)' },
-        { transform: 'translateY(4px) scale(.955,.93)', filter: 'brightness(.42) saturate(1.3)', offset: .28 },
-        { transform: 'translateY(1px) scale(1.01,.99)', filter: 'brightness(.62) saturate(1.2)', offset: .7 },
-        { transform: 'translateY(0) scale(1)', filter: 'brightness(.6) saturate(1.2)' }
-      ], { duration: 360, easing: 'cubic-bezier(.3,.7,.4,1)' });
-      const ring = el('left:' + (bx - 150) + 'px;top:' + (723.25 - 26) + 'px;width:300px;height:52px;border-radius:30px;border:3px solid rgba(255,230,150,.95);box-shadow:0 0 16px rgba(255,200,90,.9);opacity:0;');
-      ring.animate([{ transform: 'scale(.85)', opacity: 0 }, { transform: 'scale(.9)', opacity: 1, offset: .1 }, { transform: 'scale(1.18,1.5)', opacity: 0 }], { duration: 480, easing: 'ease-out', fill: 'forwards' });
-      const cols = ['#fff6c8', '#ffd257', '#ff8cc0', '#ffffff'];
-      for (let i = 0; i < 10; i++) {
-        const a = Math.PI + (i / 9) * Math.PI, r = 40 + Math.random() * 30, s = 8 + Math.random() * 6;
-        const st = el('left:' + (bx - s / 2) + 'px;top:' + (723.25 - s / 2) + 'px;width:' + s + 'px;height:' + s + 'px;background:' + cols[i % 4] + ';clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);opacity:0;');
-        st.animate([{ transform: 'translate(0,0) scale(.3)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * r * .5 + 'px,' + Math.sin(a) * r * .5 + 'px) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(' + Math.cos(a) * r + 'px,' + (Math.sin(a) * r + 10) + 'px) scale(0) rotate(160deg)', opacity: 0 }], { duration: 600, delay: P * .6, easing: 'ease-out', fill: 'forwards' });
-      }
-    }, PRE);
-    // impact climax: white flash, shake, golden rays, confetti, big hit sound
-    this.later(() => {
-      const fl = el('left:0;top:0;width:453px;height:802px;background:radial-gradient(60% 40% at 50% 90.2%,rgba(255,250,220,.95),rgba(255,210,120,.35) 45%,rgba(255,210,120,0) 75%);z-index:4;');
-      fl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: 'ease-out', fill: 'forwards' });
-      const br = el('left:' + (bx - 150) + 'px;top:' + (723.25 - 150) + 'px;width:300px;height:300px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,232,150,.8) 0deg 7deg,rgba(255,232,150,0) 7deg 20deg);-webkit-mask:radial-gradient(closest-side,#000 20%,transparent 100%);mask:radial-gradient(closest-side,#000 20%,transparent 100%);z-index:3;');
-      br.animate([{ opacity: 1, transform: 'scale(.3) rotate(0)' }, { opacity: 0, transform: 'scale(1.4) rotate(35deg)' }], { duration: 700, easing: 'ease-out', fill: 'forwards' });
-      const cols = ['#ffd257', '#ff5fa2', '#4fd97a', '#5ac8ff', '#ffffff', '#ff9a3c'];
-      for (let i = 0; i < 34; i++) {
-        const a = -Math.PI * (0.08 + 0.84 * Math.random()), v = 90 + Math.random() * 150, w = 5 + Math.random() * 5, h = w * (1.4 + Math.random());
-        const cf = el('left:' + (bx - w / 2) + 'px;top:' + (723.25 - h / 2) + 'px;width:' + w + 'px;height:' + h + 'px;border-radius:2px;background:' + cols[i % cols.length] + ';z-index:5;');
-        const ex = Math.cos(a) * v, ey = Math.sin(a) * v, sp2 = (Math.random() - .5) * 900;
-        cf.animate([{ transform: 'translate(0,0) rotate(0)', opacity: 1 }, { transform: 'translate(' + ex * .7 + 'px,' + ey * .8 + 'px) rotate(' + sp2 * .5 + 'deg)', opacity: 1, offset: .45 }, { transform: 'translate(' + ex + 'px,' + (ey * .6 + 110) + 'px) rotate(' + sp2 + 'deg)', opacity: 0 }], { duration: 1000 + Math.random() * 400, easing: 'cubic-bezier(.2,.6,.4,1)', fill: 'forwards' });
-      }
-      this.setState({ shake: 'fcShake .38s ease-in-out 1' });
-      this.later(() => this.setState({ shake: 'none' }), 420);
-      try {
-        this.burst(150, 1, 0.09, 0.28); this.pluck(98, 0.1, 0.35);
-        this.burst(6500, 1.2, 0.028, 0.7, 0.01);
-        [1047, 1319, 1568, 2093].forEach((q, i) => this.bell(q, 0.6, 0.06, 0.04 + i * 0.035));
-      } catch (e) {}
-    }, PRE);
-    this.later(() => { this.click(false); this.setState({ pressed: null }); }, PRE + P + 60);
-    this.later(go, PRE + P + 140);
-    this.later(() => nodes.forEach(n => n.remove()), PRE + P + 900);
+    this.later(() => { this.click(false); this.setState({ pressed: null }); }, 220);
+    this.later(go, 300);
+    this.later(() => nodes.forEach(n => n.remove()), 600);
   }
   stopAll() { this._celebHold = false; this._holdWin = false; this._autoPending = false; this._p3run = false; this._cfRun = false; this.danceClear(); this.timers.forEach(r => clearTimeout(r.id)); this.timers = []; clearInterval(this.ticker); clearInterval(this.counter); this.stopWhirr(); this.reelsHalt(); }
 
@@ -1386,6 +1250,9 @@ class Component extends DCLogic {
       this.kingSet(w >= bet ? 'cheer' : w > 0 ? 'happy' : res.peach.length ? 'surprise' : this._dry >= 4 ? 'sad' : 'idle'); this.later(() => { if (!this.state.spinning) this.kingSet('idle'); }, w > 0 ? 3400 : 2200); }
     const big = res.win >= bet * 20, fr = this.state.free, got = res.peach.length;
     const tot = (this.state.peaches || 0) + got, pc = Math.min(PEACH_GOAL, tot), peach = pc >= PEACH_GOAL;
+    const v6 = (this._cloudSpin?.outcome?.slotVersion || globalThis.KingRicoCloud?.slotVersion) >= 6;
+    const goodLuck = v6 ? !!(this._cloudSpin?.outcome?.feature || trigger) : (peach || trigger);
+    this._wheelTriggerV6 = !!(v6 && peach);
     this._celebHold = !!(got || res.win > 0); this._holdWin = res.win > 0; this.syncCeleb();
     this._peachCarry = Math.max(0, tot - PEACH_GOAL);
     if (got) { const prev = this.state.peaches || 0; let n = 0; this._peachLand = c => { n++; this.setState(s => ({ peachShownAdd: n, peachBump: Date.now(), winCells: s.winCells.filter(x => x !== c) })); }; this.setState({ peachShownBase: prev, peachShownAdd: 0 }); }
@@ -1395,19 +1262,29 @@ class Component extends DCLogic {
       coins: big, shake: big ? 'fcShake .5s ease-in-out 2' : 'none',
       balance: Math.round((this.balance() + res.win) * 100) / 100, balPending: Math.round(((this.state.balPending || 0) + res.win) * 100) / 100,
       free: fr ? Object.assign({}, fr, { won: Math.round((fr.won + res.win) * 100) / 100 }) : fr,
-      hint: peach ? 'HAPPEACH!' : res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Linha premiada!') : (fr ? 'Giro grátis' : 'Tente de novo!')
+      hint: (v6 && peach) ? 'ROLETA BÔNUS!' : goodLuck ? 'GOOD LUCK!' : peach ? 'HAPPEACH!' : res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Linha premiada!') : (fr ? 'Giro grátis' : 'Tente de novo!')
     });
     if (res.win > 0) { this.sfxWin(big); if (big) this.sfxCoins(); this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win >= bet * 4 ? 'winMid' : 'win'); this.later(() => this.lightsFlash(big || res.win >= bet * 4), 120); }
     else this.lightsRest(); // sem prêmio: luzes voltam à meia luz quando o último rolo para
     this.save();
-    // all reels have stopped: each Happeach dances, then flies to the counter
-    // sequence: win lines + sound first, short beat, peaches dance one after another, short beat, then the prize modal
-    const dStart = got && res.win > 0 ? 1100 : 250, STAG = 480, LAND = 2940;
+    // all reels have stopped: each Roleta symbol spins and flies to the counter
+    const dStart = got && res.win > 0 ? 1100 : 250, STAG = 480, LAND = 1200;
     res.peach.forEach((c, k) => this.later(() => this.dance(c), dStart + k * STAG));
-    const wait = got ? dStart + LAND + STAG * (got - 1) + 650 : 950; // plain win: show the line first, then the modal
-    if (peach || trigger) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
+    const wait = got ? dStart + LAND + STAG * (got - 1) + 450 : 950; // plain win: show the line first, then the modal
+    if (goodLuck) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
     const next = () => {
-      if (peach) return this.later(() => this.startPeachFeature(bet), 300);
+      if (v6 && peach && this._wheelTriggerV6) {
+        this._wheelTriggerV6 = false;
+        this.setState({ peaches: this._peachCarry || 0, peachShownBase: null, peachShownAdd: 0 }, this.save);
+      }
+      if (!v6 && peach) return this.later(() => this.startPeachFeature(bet), 300);
+      if (goodLuck) {
+        const launch = () => {
+          if (this._parkMeterBusy) return this.later(launch, 120);
+          this.later(() => this.startPeachFeature(bet), 450);
+        };
+        return launch();
+      }
       const f2 = this.state.free;
       if (f2) return f2.left > 0 ? this.later(() => this.doSpin(), 500) : this.endFree();
       if (trigger) { this.setState({ featLock: true }); return this.later(() => this.startFeature(bet), 300); }
@@ -1415,7 +1292,7 @@ class Component extends DCLogic {
     };
     // modal only for big prizes; regular prizes count up inside the message bar
     const lbls = res.win > 0 ? this.lineLabels(res, bet, this.state.grid) : null, modal = res.win >= bet * 20;
-    if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, peach || !!trigger || !!fr, bet), wait); }
+    if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, goodLuck || !!fr, bet), wait); }
     else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250);
     else this.later(next, got ? wait + 200 : 800);
   }
@@ -1580,7 +1457,7 @@ class Component extends DCLogic {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
     const d = document.createElement('div');
     d.style.cssText = "position:absolute;left:50%;top:330px;z-index:5;pointer-events:none;padding:14px 28px;border-radius:20px;background:linear-gradient(180deg,#ff6aa2,#c2185b);border:4px solid #ffd257;box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 40px rgba(255,200,80,.6);font:800 32px/1.05 'Baloo 2',sans-serif;color:#fff;text-align:center;white-space:nowrap;text-shadow:0 3px 0 rgba(120,0,40,.6);";
-    d.innerHTML = 'RODADA<br>ESPECIAL!'; layer.appendChild(d);
+    d.innerHTML = 'GOOD<br>LUCK!'; layer.appendChild(d);
     d.animate([{ transform: 'translate(-50%,-260%) scale(.6)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1.12)', opacity: 1, offset: .28 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .4 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .8 }, { transform: 'translate(-50%,-50%) scale(1.4)', opacity: 0 }], { duration: 1600, easing: 'cubic-bezier(.3,.8,.3,1)', fill: 'forwards' });
     try { this.sfxWin(false); } catch (e) {}
     this.later(() => d.remove(), 1700);
@@ -1703,15 +1580,17 @@ class Component extends DCLogic {
   startPeachFeature(bet) {
     bet=this._cloudSpin?.outcome.feature?.bet ?? bet;
     this._featPending = false;
-    const carry = this._peachCarry || 0; this._peachCarry = 0;
-    this.setState({ peaches: carry, peachShownBase: null, peachShownAdd: 0 }, this.save);
+    if (!this._cloudSpin?.outcome?.feature) {
+      const carry = this._peachCarry || 0; this._peachCarry = 0;
+      this.setState({ peaches: carry, peachShownBase: null, peachShownAdd: 0 }, this.save);
+    }
     this.setState({
-      featLock: true, auto: false, hint: 'HAPPEACH! Rodada Especial', shake: 'fcShake .5s ease-in-out 1'
+      featLock: true, auto: false, hint: 'GOOD LUCK! 5 giros especiais', shake: 'fcShake .5s ease-in-out 1'
     });
     this._peachWasAuto = this.state.auto;
     try { this.sfxWin(true); } catch (e) {}
     this.hap('feature');
-    // single intro: the pink banner only (the gold "HAPPEACH! RODADA ESPECIAL" modal was removed)
+    // single intro: the pink banner only
     this.later(() => { this.featBanner(); this.later(() => { this.startFeature(bet); if (this._peachWasAuto) this.setState({ auto: true }); }, 1300); }, 300);
   }
   startFree(bet) {
@@ -1748,7 +1627,7 @@ class Component extends DCLogic {
     this.lightsLevel(true); // Rodada Especial: palco todo aceso
     this.setState({
       feature: { sym, round: 0 }, featLeft: FEAT_SPINS, bet, grid: [-1,-1,-1,-1,-1,-1,-1,-1,-1], locked: [],
-      winCells: [], winLines: [], showWin: false, displayWin: 0, hint: 'RODADA ESPECIAL!',
+      winCells: [], winLines: [], showWin: false, displayWin: 0, hint: 'GOOD LUCK!',
       shake: 'fcShake .5s ease-in-out 1'
     });
     this.later(() => this.setState({ shake: 'none' }), 600);
@@ -1797,11 +1676,19 @@ class Component extends DCLogic {
     const res = plan ? plan.res : this.evaluate(grid, bet);
     if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
     const big = res.win >= bet * 20;
+    this._parkMeterLevel = 0;
+    if (window.KingRicoPark?.state) window.KingRicoPark.state.spins = 0;
+    const rails = typeof document !== 'undefined' && document.querySelector('.park-circus-rails');
+    if (rails) {
+      rails.classList.remove('has-lit-goals', 'is-overflowing');
+      rails.style.setProperty('--park-fill', '0%');
+      rails.querySelectorAll('.park-meter').forEach(t => t.classList.add('is-empty'));
+    }
     this.setState({
       feature: null, featLock: false, featReady: false, locked: [], winCells: res.cells, winLines: res.lines, winAmount: res.win, winDim: true, goldGrid: !!res.full,
       coins: big, shake: big ? 'fcShake .5s ease-in-out 2' : 'none',
       balance: Math.round((this.balance() + res.win) * 100) / 100, balPending: Math.round(((this.state.balPending || 0) + res.win) * 100) / 100,
-      hint: res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Rodada especial paga!') : 'A rodada especial terminou'
+      hint: res.win > 0 ? (res.full ? 'TELA CHEIA x10!' : 'Good Luck pagou!') : 'O Good Luck terminou'
     });
     if (res.win > 0) {
       this.sfxWin(big);
@@ -1822,7 +1709,7 @@ class Component extends DCLogic {
         if (this.state.auto) this.later(() => this.doSpin(), 400);
       }, 1800);
     };
-    if (res.win > 0) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : 'RODADA ESPECIAL', after, false, bet), 950);
+    if (res.win > 0) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : 'GOOD LUCK', after, false, bet), 950);
     else this.later(after, 900);
   }
 
@@ -1892,7 +1779,7 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const pv = s.peachShownBase != null ? Math.min(s.peaches || 0, s.peachShownBase + (s.peachShownAdd || 0)) : (s.peaches || 0);
-    const cv = s.feature ? (s.featLeft ?? FEAT_SPINS) : pv;
+    const cv = pv;
     const feat = !!s.feature;
     const vals = {
       ...(() => { const sc = s.scale ?? 1, left = ((s.vw || 453 * sc) - 453 * sc) / 2;
@@ -1925,7 +1812,7 @@ class Component extends DCLogic {
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
       menuButton: {onClick:this.toggleMenu,onPointerDown:this.pressMenu,onPointerUp:this.pressUp,hidden:!!s.homeOpen,style:{marginTop:-(s.hudD || 0)+'px'}},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Circus',
-        details:'Gire os símbolos e veja os prêmios na tabela. A Rodada Especial usa a média das apostas que coletaram os cinco Happeach.',
+        details:'Gire os símbolos e veja os prêmios na tabela. A barra lateral ativa os 5 giros Good Luck e 5 roletas abrem a Roleta Bônus.',
         sfxLvl:s.sfxLvl ?? 2,vibLvl:s.vibLvl ?? 2,onSfx:this.setSfx,onVib:this.setVib},
       hint: s.hint, turbo: s.turbo, auto: s.auto, pays: s.pays, menu: s.menu,
       soundIcon: s.sound ? '♪' : '✕',
@@ -1951,7 +1838,7 @@ class Component extends DCLogic {
       pageDimBg: s.pays ? 'rgba(12,2,24,.93)' : s.menu ? 'rgba(10,2,20,.78)' : 'rgba(18,2,34,.62)',
       pageDimClick: s.pays ? this.togglePays : s.menu ? this.closeMenu : this.dismissTap,
       peachShow: !s.free || feat || pv >= PEACH_GOAL,
-      peachSide: !feat, peachRight: feat ? '178.5px' : '10.667px', peachTop: feat ? '50px' : (84 - (s.hudD || 0)) + 'px', peachScale: feat ? 1.3 : 1, kingOn: feat ? 0 : 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
+      peachSide: true, peachRight: '5px', peachTop: (84 - (s.hudD || 0)) + 'px', peachScale: 1, kingOn: 1, kingMood: s.kingMood || 'idle', kingKey: s.kingKey || 0,
       peachDots: Array.from({ length: PEACH_GOAL }, (_, i) => ({ bg: i < cv ? '#ff9a5a' : 'rgba(255,255,255,.18)', sh: i < cv ? '0 0 6px rgba(255,150,90,.9)' : 'none' })),
       peachText: cv + '/' + PEACH_GOAL,
       basketLow: [[18, 46, -6, 1], [48, 47, 3, 0], [78, 46, 7, 2]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
@@ -1960,7 +1847,7 @@ class Component extends DCLogic {
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
       payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v3.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
       adOp: 1,
-      tonyNote: 'A roleta usa 4% das últimas 10 apostas. Três cedros alinhados dão 1 defesa, até 5. Um cedro bloqueia um ataque do Tony, Tucker ou Ray. Tony leva de 1× a 25× a aposta; Tucker, até 4 Happeach. Ray tenta levar seus cedros. Limitado ao disponível.',
+      tonyNote: 'Junte 5 roletas para abrir a Roleta Bônus. A barra lateral cheia ativa 5 giros Good Luck. Três trevos alinhados dão 1 defesa, até 5. O trevo defende do Tony e do Tucker, nunca do Ray. Ray leva de 1 a 4 trevos.',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {
         spinCursor: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'default' : 'pointer', spinEvents: (s.feature || s.featLock || lockC || (busy && s.pressed !== 'spin')) ? 'none' : 'auto',
         spinPressedOp: busy ? 0 : 1, spinTextOp: busy ? 0.6 : 1, spinPulseActive: busy || s.queued ? '1' : '0',

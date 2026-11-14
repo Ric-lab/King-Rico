@@ -77,9 +77,8 @@ function bootCircus(){
   const backdrop=[...document.querySelectorAll('div')].find(e=>e.style.backgroundImage.includes('stage-bleed-v5-lossless.webp'));
   if(backdrop){backdrop.classList.add('park-circus-backdrop');const scene=backdrop.parentElement;scene.classList.add('park-circus-scene');[...scene.children].find(e=>e.style.filter.includes('blur(34px)'))?.classList.add('park-circus-ambient');fc.lightsBleedRef?.current?.classList.add('park-circus-bleed-lights');}
   fc._parkPrizeTarget=[...stage.querySelectorAll('span')].find(n=>n.parentElement.style.top==='180px'&&n.parentElement.style.left==='165.333px')?.parentElement;fc._parkPrizeTarget?.setAttribute('data-park-prize','');
-  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso da roleta" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="#defesas" aria-label="Cedros de proteção"><span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="/assets/symbols/sym-scepter.png" alt=""><b data-tickets>0/5</b></span></a>`;stage.append(rails);
-  const miniGradient=pocketColors(13,WHEEL_POCKETS).map((color,i)=>color+' '+i*360/13+'deg '+(i+1)*360/13+'deg').join(',');
-  rails.querySelectorAll('.park-meter').forEach(tube=>{const goal=document.createElement('span');goal.className='park-meter-goal';goal.setAttribute('role','img');goal.setAttribute('aria-label','Barra cheia libera a roleta multiplicadora');goal.innerHTML=`<i class="park-goal-disk" style="background:conic-gradient(from -13.846deg,${miniGradient})"></i><i class="park-goal-rim"></i><b>×</b><i class="park-goal-pointer"></i>`;tube.append(goal);});
+  const rails=document.createElement('div');rails.className='park-circus-rails';rails.innerHTML=`<div class="park-meter park-meter-left" role="progressbar" aria-label="Progresso do Good Luck" aria-valuemin="0" aria-valuemax="10"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter park-meter-right" aria-hidden="true"><div class="park-meter-track"><div class="park-meter-fill"><i class="park-liquid-cap"></i><svg class="park-liquid-surface" viewBox="0 0 10 9" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4Q2 1 5 4T10 4V9H0Z"/><path class="park-surface-glint" d="M1 4Q3 2 5 4T9 4"/></svg><i class="park-liquid-bubble"></i><i class="park-liquid-bubble"></i></div><i class="park-liquid-stream"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i><i class="park-liquid-drop"></i></div></div><div class="park-meter-dimmer" aria-hidden="true"></div><a class="park-pocket" href="#defesas" aria-label="Trevos de proteção"><span class="park-ticket-wallet-face"><img class="park-ticket-wallet-art" src="/assets/symbols/sym-clover.png" alt=""><b data-tickets>0/5</b></span></a>`;stage.append(rails);
+  rails.querySelectorAll('.park-meter').forEach(tube=>{const goal=document.createElement('span');goal.className='park-meter-goal';goal.setAttribute('role','img');goal.setAttribute('aria-label','Barra cheia libera os 5 giros Good Luck');goal.innerHTML=`<img class="park-goal-cloud" src="/assets/symbols/sym-candy.webp" alt="">`;tube.append(goal);});
   const originalVals=fc.renderVals.bind(fc);
   fc.renderVals=(...args)=>{const vals=originalVals(...args);if(fc._parkWheelVisible)vals.winAnim='none';rails.style.setProperty('--park-shade-opacity',vals.frameOff==='100%'?'0':'.28');rails.style.setProperty('--park-goal-brightness',vals.frameOff==='100%'?'1':'.82');rails.style.setProperty('--park-light-y',vals.frameOff);rails.style.setProperty('--park-light-transition',vals.frameOffT);rails.style.setProperty('--park-basket-top',(84-(fc.state.hudD||0))+'px');return vals;};
   fc.renderVals();
@@ -90,7 +89,7 @@ function bootCircus(){
   installTucker(fc);
   installRay(fc);
   installDefense(fc,rails);installRecharge(fc);
-  rails.querySelector('.park-pocket').onclick=e=>{e.preventDefault();const m=modal('<img class="park-defense-art" src="/assets/symbols/sym-scepter.png" alt=""><h2>Seus cedros</h2><p>Três cedros alinhados dão 1 defesa. Guarde até 5.</p><p>Cada defesa impede um ataque do Tony, Tucker ou Ray.</p><button class="park-action park-action-blue">ENTENDI</button>','Cedros de proteção');m.querySelector('button').onclick=m.close;};
+  rails.querySelector('.park-pocket').onclick=e=>{e.preventDefault();const m=modal('<img class="park-defense-art" src="/assets/symbols/sym-clover.png" alt=""><h2>Seus trevos</h2><p>Três trevos alinhados dão 1 defesa. Guarde até 5.</p><p>Cada defesa impede um ataque do Tony ou do Tucker.</p><button class="park-action park-action-blue">ENTENDI</button>','Trevos de proteção');m.querySelector('button').onclick=m.close;};
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.
  }
@@ -99,7 +98,7 @@ function bootCircus(){
   if(performance.now()>=fc._parkDismissAt){fc._spinAfterFly=false;fc.dismissWin();fc._parkDismissAt=0;}
  }
  if(!fc.state.spinning&&!fc.state.queued){displayState=state;if(!fc._parkMeterBusy)fc._parkMeterLevel=state.spins;renderRails();}
- if(fc.cloudBusy()||fc.state.showWin||fc.state.homeOpen||Cloud.dailyRewardActive)return;
+ if(fc.cloudBusy()||fc.isCeleb()||fc.state.showWin||fc.state.homeOpen||Cloud.dailyRewardActive)return;
 
  if(state.wheel){fc.setState({auto:false});showWheel();}
  },160);
@@ -108,12 +107,12 @@ function bootCircus(){
 function renderRails(){const el=document.querySelector('.park-circus-rails');if(!el||!displayState)return;
  const fc=window.__fc;if(!fc?._parkMeterBusy){const level=fc?._parkMeterLevel??displayState.spins;el.style.setProperty('--park-fill',Math.min(100,level/displayState.meterSpins*100)+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',level===0));}
  el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',displayState.spins);
- el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${displayState.spins} de ${displayState.meterSpins} giros`);
+ el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${displayState.spins} de ${displayState.meterSpins} no Good Luck`);
  const tickets=fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';el.querySelector('[data-tickets]').textContent=count;
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
- el.querySelector('.park-pocket').setAttribute('aria-label',`${tickets} de 5 cedros de proteção`);
+ el.querySelector('.park-pocket').setAttribute('aria-label',`${tickets} de 5 trevos de proteção`);
  el.classList.toggle('is-ready',!!displayState.wheel);
- el.classList.toggle('has-lit-goals',(fc?._parkMeterLevel??displayState.spins)>=10||(!!displayState.wheel&&!fc?._parkMeterBusy));
+ el.classList.toggle('has-lit-goals',(fc?._parkMeterLevel??displayState.spins)>=10||!!fc?.state?.feature);
  fc?._parkSyncIdlePulseColor?.();
 }
 function showWheel(){

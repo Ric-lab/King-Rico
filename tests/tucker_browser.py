@@ -35,9 +35,9 @@ with sync_playwright() as p:
   page.screenshot(path=f'work/preview-tucker-flying-{mode}.png')
   page.wait_for_function('document.querySelector(".park-tucker-scene")?.dataset.phase==="empty"')
   assert page.locator('.park-basket').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
-  assert page.get_by_role('dialog',name='Tucker levou Happeach',exact=True).count()==0
+  assert page.get_by_role('dialog',name='Tucker levou roletas',exact=True).count()==0
   page.screenshot(path=f'work/preview-tucker-empty-{mode}.png')
-  dialog=page.get_by_role('dialog',name='Tucker levou Happeach',exact=True);dialog.wait_for()
+  dialog=page.get_by_role('dialog',name='Tucker levou roletas',exact=True);dialog.wait_for()
   assert dialog.locator('.park-tony-total').inner_text()==str(page.evaluate('__fc._cloudSpin.outcome.tucker.stolen'))
   assert page.evaluate('KingRicoCloud.player.balance')==before-10
   page.screenshot(path=f'work/preview-tucker-result-{mode}.png')
