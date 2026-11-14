@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13",
+  "updatedAt": "2026-11-14T00:07:19.399Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -25,13 +25,13 @@
     },
     {
       "id": "t-cedro-todos",
-      "title": "Cedro defende de TODOS os vilões (Tony, Tucker e Ray), não só do Tony; com 0 cedros não defende. Melhorar o depósito (onde ficam guardados) e as animações",
+      "title": "Cedro defende do Tony e do Tucker — NUNCA do Ray (o Ray existe para roubar cedros; se o cedro o defendesse, perderia o sentido). Com 0 cedros não defende. Melhorar o depósito e as animações",
       "status": "todo",
       "category": "Economia & Regras",
       "agent": "",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=cedar",
-      "notes": "Sorteio/defesa base já existe na prévia v6; falta refinar onde os cedros ficam guardados e a animação da defesa."
+      "notes": "Dono (13/11): Ray NÃO é bloqueado pelo cedro. Sorteio/defesa base já existe na prévia v6; falta refinar onde os cedros ficam guardados e a animação da defesa."
     },
     {
       "id": "t-ray-1a4",
