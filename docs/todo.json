@@ -16,12 +16,13 @@
     {
       "id": "t-controle-asset",
       "title": "Controle: primeira proposta de asset azul e dourado para avaliação",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
-      "agent": "Antigravity",
+      "agent": "Codex / Antigravity",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
-      "notes": "Arte aprovada pelo dono e aplicada na tabela do Circus e pré-carga. Navegador 390x844 sem erros/assets faltantes; ativação do evento é tarefa separada."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Aprovado pelo dono após ajuste de iluminação única e acabamento acetinado (v2).",
+      "updatedAt": "2026-11-14"
     },
     {
       "id": "t-cedro-todos",
@@ -50,7 +51,7 @@
       "category": "Economia & Regras",
       "agent": "",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Garantir retorno mínimo no giro que abre a roleta mantendo RTP ~90%."
     },
     {
@@ -80,7 +81,7 @@
       "category": "Sons",
       "agent": "",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Som mecânico/cordas ao içar a máquina para revelar a roleta."
     },
     {
@@ -90,7 +91,7 @@
       "category": "Sons",
       "agent": "",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=bigwin",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Substituir síntese atual de motor por timbre de avião mais limpo."
     },
     {
@@ -110,7 +111,7 @@
       "category": "Visual & Ritmo",
       "agent": "",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Encurtar a pausa após a parada da roleta antes do voo do disco/moedas."
     },
     {
@@ -120,7 +121,7 @@
       "category": "Visual & Ritmo",
       "agent": "",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=bigwin",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Destacar o número do prêmio durante o voo do avião."
     },
     {
@@ -140,7 +141,7 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "7d89071",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=ticket&v=7d89071",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "V3 dourado claro e proporção mais alta aprovados pelo dono: Okay. Largura preservada."
     },
     {
@@ -180,7 +181,7 @@
       "category": "Menu & Topo",
       "agent": "Claude",
       "commit": "1a7f198",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Pronto na prévia para avaliação do dono."
     },
     {
@@ -190,7 +191,7 @@
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "c6bdb3c",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=cedar",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Auditoria RTP ~90% concluída na prévia."
     },
     {
@@ -200,7 +201,7 @@
       "category": "Sons",
       "agent": "Claude",
       "commit": "f23d8d7",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tony",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Aprovado na base f23d8d7; aguardando publicação conjunta no oficial."
     },
     {
@@ -210,7 +211,7 @@
       "category": "Visual & Ritmo",
       "agent": "Antigravity / Claude",
       "commit": "4bc80fa",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tony",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Véu alaranjado/avermelhado em tela cheia na prévia."
     },
     {
@@ -230,7 +231,7 @@
       "category": "Sons",
       "agent": "Claude",
       "commit": "6e00ec6",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Pronto na prévia."
     },
     {
@@ -240,7 +241,7 @@
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": "fbe911d",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=tucker",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Pronto na prévia."
     },
     {
@@ -250,7 +251,7 @@
       "category": "Sons",
       "agent": "Claude",
       "commit": "10f23cc",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": "Aguardando aprovação final do pacote de sons para publicar no site oficial."
     },
     {
@@ -260,7 +261,7 @@
       "category": "Visual & Ritmo",
       "agent": "Equipe",
       "commit": "b0ffe91",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=wheel",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
       "notes": ""
     },
     {

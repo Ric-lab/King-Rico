@@ -2,10 +2,10 @@ import {createPreview} from './model.mjs';
 import engine from '../../cloud/engine.cjs';
 const KEY='kingRico.parque.mobile-preview.v1',networkFetch=globalThis.fetch.bind(globalThis);
 let tail=Promise.resolve();
-// Prévia engatilhada: sem ?demo= o 1º giro de cada carregamento já mostra a última mudança. ?demo=off = jogo normal.
-const DEFAULT_DEMO='ticket';
+// Prévia padrão: demo normal (aleatório). Para forçar eventos, o dono usa o seletor no jogo (⚙ → 🎯).
+const DEFAULT_DEMO=null;
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
-let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller'].includes(demoMode);
 // Seletor da prévia (menu → 🎯): o modo escolhido vale para TODOS os giros até trocar; recarregar zera (aleatório).
 let forced=null;
 const SYM={ticket:10,circus:2,cape:0,coin:6,diamond:8,crown:7,cedar:5,controller:15};

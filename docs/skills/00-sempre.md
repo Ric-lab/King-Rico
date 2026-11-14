@@ -11,12 +11,10 @@
 - Antes de dizer "pronto": ver o resultado (print/teste). Sem ver, dizer "não conferi".
 - Catálogo desta versão: Circus (/circus = abertura), Penalty, Flying Clown, Bounce; Fingo só na rota direta. Clown guardado. Basquete/Bubble Plinko/Race Horse são cards Em breve. Arquivados: ver docs/ARQUIVADOS.md.
 
-## Toda mudança sai com link de teste pronto (regra do dono)
-- Ao terminar qualquer mudança, entregar o link da prévia que já abre na situação mudada. O dono não consegue forçar eventos raros sozinho.
-- Base: https://ric-lab.github.io/King-Rico/circus/
-- Atalhos existentes (?demo=): tony · tucker · ray · bigwin · spacewin. O 1º giro já cai no evento.
-- Prévia ENGATILHADA: em prototypes/circus-preview/browser-wallet.mjs, trocar DEFAULT_DEMO para o evento da última mudança. Sem ?demo= o 1º giro de cada carregamento já mostra a mudança; ?demo=off volta ao jogo normal.
-- Se não existir atalho para o que mudou, criar um ?demo= novo no mesmo arquivo (só prévia, nunca no build oficial).
+## Link único da prévia em demo normal (regra do dono, 13/11/2026)
+- **NÃO criar nem enviar links específicos (`?demo=...`, `?v=...`) para cada coisa.** Usar sempre o link único limpo: **https://ric-lab.github.io/King-Rico/circus/**
+- Manter `DEFAULT_DEMO = null` em `prototypes/circus-preview/browser-wallet.mjs` (a prévia abre no jogo normal; quando quiser forçar um símbolo/evento, o dono usa o seletor `⚙ → 🎯` dentro do próprio jogo).
+- Parâmetros `?demo=` continuam funcionando apenas para os testes automatizados de navegador (`tests/*_browser.py`).
 - Esperar o workflow da prévia terminar com sucesso antes de mandar o link.
 
 ## Lista de tarefas (Painel Web + JSON/MD)

@@ -1,10 +1,10 @@
-## Controle de videogame v2 — iluminação única e acabamento no padrão do jogo, 13/11/2026 (Antigravity)
+## Controle v2 aprovado + prévia sempre na demo normal (sem links específicos) — 13/11/2026 (Antigravity)
 
-- **Feedback do dono:** o asset anterior (`controller-symbol-v1`) tinha muitos pontos de iluminação (faixas brancas de reflexo tipo plástico molhado na carcaça azul, brilhos circulares brancos nos botões e ~10 focos especulares no aro dourado) e não seguia o padrão visual do jogo.
-- **Solução aplicada:** nova geração via `generate_image` usando `sym-crown.png`, `sym-drum.png` e a v1 como referências diretas. Removidos os reflexos brancos especulares dispersos e adotada **iluminação única superior suave**, carcaça azul royal e botões com acabamento **fosco/acetinado aveludado** e aro em **ouro quente acetinado** idêntico aos símbolos aprovados dos rolos.
-- **Arquivos atualizados:** `assets/machine/controller-symbol-v1.png` (`1254×1254` RGBA, recorte com descontaminação de borda sem halo) e `assets/machine/controller-symbol-v1.webp` (`560×560` WebP lossless). Documentados em `guidelines/asset-pipeline.md`, `assets/machine/README.md` e `docs/todo.json` (`t-controle-asset`).
-- **Conferência visual:** inspecionado sobre fundo escuro (`#240a42`) e nos rolos do Fortune Circus em `390×844` ao lado da coroa, diamante, tenda, cetro, ingresso e Happeach.
-- **Prévia para teste:** `https://ric-lab.github.io/King-Rico/circus/?demo=controller`
+- **Controle aprovado pelo dono (`t-controle-asset` → ✅ Feito):** o asset remasterizado (`assets/machine/controller-symbol-v1.png` / `.webp`, iluminação única superior suave e acabamento fosco/acetinado no padrão de `sym-crown.png` e `sym-drum.png`) passou no teste do dono e foi movido para **Feito** em `docs/todo.json`.
+- **Decisão do dono sobre links e demo da prévia:** *"deixa na demo normal, não faz isso de criar um link especifico para cada coisa"*.
+  - `DEFAULT_DEMO` em `prototypes/circus-preview/browser-wallet.mjs` agora é `null` (abrir `https://ric-lab.github.io/King-Rico/circus/` entra direto na demo normal/aleatória; para forçar qualquer símbolo/evento, usa-se o seletor `⚙ → 🎯` dentro do próprio jogo).
+  - Atualizados `docs/skills/00-sempre.md` e os links de `docs/todo.json` para usar sempre o link único limpo **`https://ric-lab.github.io/King-Rico/circus/`**, sem sufixos `?demo=...` ou `?v=...` por tarefa (parâmetros `?demo=` continuam funcionando apenas para os testes automatizados `tests/*_browser.py`).
+
 
 ## Controle aprovado aplicado à interface — 13/11/2026 (Codex)
 
