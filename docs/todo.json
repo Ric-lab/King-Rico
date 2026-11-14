@@ -93,7 +93,7 @@
       "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "AudioContext destrava no primeiro pointerdown/touchstart (aguarda resume antes do 1º burst, sem perder o som nem queimar o throttle) e háptico >= 22ms + iOS switch fora do inert desde a 1ª raspagem."
+      "notes": "Selo TOQUE PARA RASPAR (1 toque antes das 9 casas) + silent WebAudio unlock + .park-daily-hap no viewport + check ok!==false em navigator.vibrate para som e háptico funcionando desde a 1ª raspagem no Android Chrome e iOS Safari."
     },
     {
       "id": "t-sfx-levanta",

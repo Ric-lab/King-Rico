@@ -14,7 +14,7 @@ export function scratchGrid(random=Math.random) {
  return cells;
 }
 
-// Sons e háptico da raspadinha (mesmo bus/volume do Circus): destravam já no primeiro toque/movimento.
+// Sons e háptico da raspadinha (mesmo bus/volume do Circus): destravam no 1º toque e funcionam desde a 1ª casa.
 let fbAc=null,fbNoise=null;
 function fbAudio(){
  try{
@@ -30,7 +30,10 @@ function fbBurst(freq,q,vol,dur,when){
  const g=ac.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
  src.connect(bp);bp.connect(g);g.connect(ac.destination);src.start(t);src.stop(t+dur+.05);
 }
-function warmAudio(){
+function playSilentBuffer(ac){
+ try{const b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(0);}catch{}
+}
+function warmAudio(gesture){
  try{
   const fc=window.__fc;
   if(fc){
@@ -38,9 +41,12 @@ function warmAudio(){
    const ac=fc.ac?.();if(!ac)return;
    fc.out?.();fc.noise?.(ac);
    if(ac.state==='suspended')ac.resume?.().catch(()=>{});
+   if(gesture)playSilentBuffer(ac);
    return;
   }
-  const ac=fbAudio();if(ac&&ac.state==='suspended')ac.resume?.().catch(()=>{});
+  const ac=fbAudio();if(!ac)return;
+  if(ac.state==='suspended')ac.resume?.().catch(()=>{});
+  if(gesture)playSilentBuffer(ac);
  }catch{}
 }
 function withAudio(fn,fb){
@@ -60,20 +66,30 @@ function withAudio(fn,fb){
  }catch{}
 }
 let scratchT=0,hapT=0,scratchQueued=false;
-function playScratchHaptic(force){
+function getIosHap(overlay){
+ const fc=window.__fc;
+ let el=overlay?.querySelector('.park-daily-hap');
+ if(!el&&overlay&&!navigator.vibrate){
+  el=document.createElement('label');el.className='park-daily-hap';
+  el.innerHTML='<input type="checkbox" switch tabindex="-1" aria-hidden="true">';
+  overlay.append(el);
+ }
+ return el||fc?._iosHap||document.getElementById('fc-ios-hap');
+}
+function playScratchHaptic(force,overlay){
  const n=performance.now();if(!force&&n-hapT<55)return;
  try{
   const fc=window.__fc;
-  if(fc){
-   if(!fc.state?.vibrate||!(fc.state?.vibLvl>0))return;
-   hapT=n;
-   const nativeHap=!!window.Capacitor?.PluginHeaders?.some?.(h=>h.name==='FcHaptics');
-   if(navigator.vibrate||nativeHap){fc.buzz?.([22]);return;}
-   const ios=fc._iosHap||document.getElementById('fc-ios-hap');
-   if(ios)ios.click();
+  if(fc&&(!fc.state?.vibrate||!(fc.state?.vibLvl>0)))return;
+  const nativeHap=!!window.Capacitor?.PluginHeaders?.some?.(h=>h.name==='FcHaptics');
+  if(nativeHap&&fc?.buzz){hapT=n;fc.buzz([22]);return;}
+  if(typeof navigator.vibrate==='function'){
+   const ok=navigator.vibrate(fc?.vib?fc.vib([22]):[22]);
+   if(ok!==false)hapT=n;
    return;
   }
-  hapT=n;navigator.vibrate?.(22);
+  const ios=getIosHap(overlay);
+  if(ios){hapT=n;ios.click();}
  }catch{}
 }
 function playScratchSound(isActive,force){
@@ -108,7 +124,7 @@ function playScratchSound(isActive,force){
  }catch{}
 }
 const sfx={
- scratch:(isActive=()=>true,force=false)=>{playScratchHaptic(force);playScratchSound(isActive,force);},
+ scratch:(isActive=()=>true,force=false,overlay=null)=>{playScratchHaptic(force,overlay);playScratchSound(isActive,force);},
  cell:win=>withAudio(fc=>win?(fc.bell(1175,.28,.07),fc.bell(1568,.22,.045,.05)):fc.pluck(392,.05,.14)),
  three:()=>withAudio(fc=>fc.sfxWin(false)),
  prize:()=>withAudio(fc=>[784,988,1319].forEach((f,i)=>fc.bell(f,.5,.08,i*.06))),
@@ -127,13 +143,15 @@ export async function openDailyReward(Cloud) {
  const gift=dailyGift(Cloud.player,Cloud.dayKey());if(!gift)return;
  Cloud.dailyRewardActive=true;
  return new Promise(resolve=>{
+  const acReady=(window.__fc?._ac||fbAc)?.state==='running';
+  const needsTap=!navigator.userActivation?.hasBeenActive||!acReady;
   const overlay=document.createElement('div');overlay.className='park-daily';overlay.dataset.phase='scratch';
   overlay.innerHTML=`<section class="park-daily-panel" tabindex="-1" role="dialog" aria-modal="true" aria-label="Presente do dia" aria-labelledby="daily-title">
    <p class="park-daily-eyebrow">Dia ${gift.day} de 7</p>
    <img class="park-daily-king" src="/assets/symbols/sym-wild-s.webp" alt="">
    <h2 id="daily-title">Presente do dia</h2>
    <p class="park-daily-instruction">Raspe e ganhe!</p>
-   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div><div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
+   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<button type="button" class="park-daily-unlock"><span>TOQUE PARA RASPAR</span></button>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
    <p class="park-daily-status" role="status" aria-live="polite">0 de 3 prêmios encontrados</p>
    <button type="button" class="park-daily-button">REVELAR</button>
   </section>`;
@@ -141,11 +159,17 @@ export async function openDailyReward(Cloud) {
   const background=[...document.body.children].filter(e=>!e.matches('script,style,#fc-ios-hap'));
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
-  const unlock=()=>warmAudio();
+  const unlock=()=>warmAudio(true);
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchstart',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchend',unlock,{capture:true,passive:true});
-  const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('button'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
+  const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockBtn=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
+  if(unlockBtn){
+   let endT=0;
+   const finishUnlock=()=>{clearTimeout(endT);if(!unlockBtn.isConnected)return;warmAudio(true);playScratchHaptic(true,overlay);sfx.button();unlockBtn.remove();};
+   unlockBtn.onclick=finishUnlock;
+   unlockBtn.ontouchend=()=>{clearTimeout(endT);endT=setTimeout(()=>{if(navigator.userActivation?.hasBeenActive)finishUnlock();},40);};
+  }
   let revealed=false,busy=false,finished=false,last=null,unwatch=()=>{};
   const cells=[...overlay.querySelectorAll('.park-daily-cell')];
   function close(){
@@ -163,7 +187,7 @@ export async function openDailyReward(Cloud) {
   function trap(e){if(e.key==='Tab'){e.preventDefault();button.focus();}if(e.key==='Escape')e.preventDefault();}
   document.addEventListener('keydown',trap);panel.focus({preventScroll:true});
   async function reveal(){
-   if(revealed)return;revealed=true;last=null;cells.forEach(c=>revealCell(c,true));sfx.three();
+   if(revealed)return;revealed=true;last=null;unlockBtn?.remove();cells.forEach(c=>revealCell(c,true));sfx.three();
    overlay.classList.add('is-revealed');button.disabled=true;button.textContent='…';status.textContent='3 prêmios iguais!';
    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
    const space=overlay.querySelector('.park-daily-reveal-space'),summary=overlay.querySelector('.park-daily-summary'),r=grid.getBoundingClientRect();space.style.height=r.height+'px';
@@ -213,7 +237,7 @@ export async function openDailyReward(Cloud) {
      for(let i=3;i<data.length;i+=64){total++;if(data[i]<128)clear++;}
      if(clear/total>=.36)revealCell(cell);
     }
-    if(hit)sfx.scratch(()=>!finished&&!revealed,fromDown);
+    if(hit)sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);
     last=point;
     const found=cells.filter(c=>c.dataset.prize==='true'&&c.classList.contains('is-revealed')).length;
     if(found===3)reveal();else status.textContent=`${found} de 3 prêmios encontrados`;
@@ -223,7 +247,7 @@ export async function openDailyReward(Cloud) {
     if(pts&&pts.length){for(const pt of pts){if(revealed)break;scratchPoint(pt,false);}}
     else scratchPoint(e,false);
    }
-   grid.onpointerdown=e=>{e.preventDefault();warmAudio();last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
+   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
    grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{last=null;};
   }catch{reveal();}
   // Another tab may collect while this card is open. Never offer a second credit.

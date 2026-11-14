@@ -4,11 +4,12 @@
   - **Layout/textos sem repetição (`ui/park/daily-reward.js` e `ui/park/daily-reward.css`):**
     - Antes de revelar: `Dia X de 7` em fonte pequena no topo → ícone do King Rico → `Presente do dia` menor → **`Raspe e ganhe!`** em destaque → tabuleiro 3×3 → `0 de 3 prêmios encontrados` desde o início → botão `REVELAR` discreto (só borda azul, fundo transparente, foco inicial no painel para não destacar o botão).
     - Depois de revelar: `Dia X de 7` → King Rico → `Presente do dia` → moeda + `+ X` + `moedas` → botão `PEGAR MOEDAS` sólido e bem visível (escondendo `Raspe e ganhe!` e o status redundante em tela, mantendo `aria-live` acessível e exibindo mensagem de status apenas em caso de erro de rede).
-  - **Som e háptico imediatos na 1ª raspagem (`ui/park/daily-reward.js`):**
-    - Desbloqueio imediato do `AudioContext` + buffer de ruído no primeiro `pointerdown`/`touchstart`/`touchend` do modal, aguardando `ac.resume()` antes de disparar o burst se o contexto ainda estiver `suspended` (evitando perder o 1º som e sem queimar a janela de throttle de 55 ms) e com fallback WebAudio/vibração fora do Circus (ex.: `/park`).
-    - Pulso háptico ajustado de `8 ms` para `22 ms` (acima do limiar mínimo de 15–20 ms dos motores móveis), liberando `#fc-ios-hap` do `inert` enquanto o modal está aberto e usando `getCoalescedEvents` em raspagens rápidas.
-  - Atualizados `tests/daily_reward_browser.py` (incluindo checagem de `navigator.vibrate >= 20` e `AudioBufferSourceNode.start >= 1` logo na 1ª raspagem) e movidos `t-melhorar-modal-da-rasp-29` e `t-raspadinha-rapida` para **Na Prévia** em `docs/todo.json`.
-- **Próximo passo:** Acompanhar deploy da prévia (`codex/penalty-clown-preview`) e dono validar a raspadinha em `https://ric-lab.github.io/King-Rico/circus/`.
+  - **Som e háptico imediatos na 1ª raspagem (`ui/park/daily-reward.js` e `ui/park/daily-reward.css`):**
+    - **Causa raiz mobile:** como o modal abre automaticamente após o loading sem nenhum clique prévio (`navigator.userActivation.hasBeenActive === false`), Android Chrome e iOS Safari bloqueiam `navigator.vibrate`, háptico de switch iOS e `AudioContext` durante `touchstart`/`touchmove` até que um `touchend`/`click` seja concluído — deixando a 1ª casa muda/sem vibração e só liberando ao soltar o dedo para a 2ª casa.
+    - Quando a página ainda não teve ativação do usuário ou o `AudioContext` não está `running`, exibe um selo translúcido **`TOQUE PARA RASPAR`** (`.park-daily-unlock`) sobre o tabuleiro 3×3: o toque conclui `click`/`touchend`, dispara `playSilentBuffer(ac)`, vibração e som de clique, e libera todas as 9 casas desde a 1ª raspagem (o botão `REVELAR` abaixo continua livre).
+    - Pulso háptico de `22 ms`, checagem de retorno `ok !== false` em `navigator.vibrate` para não queimar o throttle de 55 ms quando bloqueado, switch `.park-daily-hap` visível no viewport para iOS e fallback WebAudio/vibração fora do Circus (`/park`).
+  - Atualizados `tests/daily_reward_browser.py` (clicando `TOQUE PARA RASPAR` quando exibido e validando `navigator.vibrate >= 20` e `AudioBufferSourceNode.start >= 1` logo na 1ª raspagem) e movidos `t-melhorar-modal-da-rasp-29` e `t-raspadinha-rapida` para **Na Prévia** em `docs/todo.json`.
+- **Próximo passo:** Dono validar o selo `TOQUE PARA RASPAR` + som/háptico desde a 1ª raspagem e o novo visual em `https://ric-lab.github.io/King-Rico/circus/`.
 
 
 ## Ajustes Trevo + Roleta Arco-Íris + Good Luck (mín. 25 giros) — 14/11/2026 (Antigravity)
