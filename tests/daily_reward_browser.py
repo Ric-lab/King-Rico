@@ -7,6 +7,12 @@ with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox'])
  for width,mode in [(390,'no-preference'),(320,'reduce'),(430,'no-preference')]:
   context=b.new_context(viewport={'width':width,'height':844},reduced_motion=mode,has_touch=True,is_mobile=True)
+  context.add_init_script('''(()=>{
+   window.__vibs=[];window.__audioStarts=0;
+   try{Object.defineProperty(navigator,'vibrate',{configurable:true,value:p=>{window.__vibs.push(Array.isArray(p)?p:[p]);return true;}});}catch{}
+   const origStart=AudioBufferSourceNode.prototype.start;
+   AudioBufferSourceNode.prototype.start=function(...args){window.__audioStarts++;return origStart.apply(this,args);};
+  })();''')
   page=context.new_page();errors=[];missing=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
@@ -15,6 +21,10 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
   before=page.evaluate('KingRicoCloud.player.balance')
   assert gift.locator('canvas:visible').count()==9
+  assert gift.locator('.park-daily-eyebrow').inner_text()=='Dia 1 de 7'
+  assert gift.locator('.park-daily-instruction').inner_text()=='Raspe e ganhe!'
+  assert gift.get_by_role('status').inner_text()=='0 de 3 prêmios encontrados'
+  assert not gift.get_by_role('button',name='REVELAR',exact=True).evaluate('e=>e.classList.contains("is-primary")')
   assert gift.locator('[data-prize=true]').count()==3 and gift.locator('[data-prize=false]').count()==6
   assert page.locator('[data-spin-btn]').evaluate('e=>!!e.closest("[inert]")')
   assert gift.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
@@ -35,6 +45,8 @@ with sync_playwright() as p:
     page.mouse.up()
   if width in [390,430]:
    scratch_cell(gift.locator('[data-prize=false]').first,touch=width==430)
+   assert page.evaluate('window.__vibs.length>=1&&window.__vibs[0][0]>=20'),page.evaluate('window.__vibs')
+   page.wait_for_function('window.__audioStarts>=1')
    assert gift.locator('.park-daily-cell.is-revealed').count()==1
    assert gift.locator('canvas:visible').count()==8
    assert page.evaluate('KingRicoCloud.player.balance')==before
@@ -52,7 +64,9 @@ with sync_playwright() as p:
   gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).wait_for()
   page.wait_for_function('document.querySelector(".park-daily")?.dataset.phase==="prize"')
   assert not gift.locator('.park-daily-grid').is_visible()
+  assert not gift.locator('.park-daily-instruction').is_visible()
   assert gift.locator('.park-daily-summary').is_visible()
+  assert gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).evaluate('e=>e.classList.contains("is-primary")')
   assert gift.locator('canvas:visible').count()==0
   assert gift.locator('.park-daily-x').count()==6
   assert gift.locator('[data-prize=true] strong').all_text_contents()==['50']*3

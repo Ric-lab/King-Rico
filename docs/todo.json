@@ -16,12 +16,12 @@
     {
       "id": "t-melhorar-modal-da-rasp-29",
       "title": "Melhorar modal da raspadinha nao tem algo tipo \"raspe e ganhe!\"",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
-      "agent": "",
+      "agent": "Antigravity",
       "commit": "",
-      "demoUrl": "",
-      "notes": ""
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Dia X de Y no topo, Presente do dia menor, Raspe e ganhe! em destaque, 0 de 3 desde o início, REVELAR discreto só com borda azul e pós-revelação limpo sem texto repetido."
     },
     {
       "id": "t-controle-asset",
@@ -88,12 +88,12 @@
     {
       "id": "t-raspadinha-rapida",
       "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
-      "status": "todo",
+      "status": "preview",
       "category": "Sons",
-      "agent": "",
+      "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Destravar/iniciar o áudio logo no pointerdown/primeiro movimento rápido."
+      "notes": "AudioContext destrava no primeiro pointerdown/touchstart (aguarda resume antes do 1º burst, sem perder o som nem queimar o throttle) e háptico >= 22ms + iOS switch fora do inert desde a 1ª raspagem."
     },
     {
       "id": "t-sfx-levanta",
