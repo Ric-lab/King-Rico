@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "t-o-super-win-nao-e-um-a-31",
+      "title": "O super win não é um avião é um foguete",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
       "id": "t-melhorar-modal-da-rasp-29",
       "title": "Melhorar modal da raspadinha nao tem algo tipo \"raspe e ganhe!\"",
       "status": "todo",
