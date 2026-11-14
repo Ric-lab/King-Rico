@@ -19,7 +19,8 @@ function candidate(p,s,bet,rng){
  const cells=[...engine.ALL_LINES[Math.min(7,Math.floor(rng()*8))]],symbol={tony:12,tucker:13,ray:14}[kind];
  const grid=[10,2,0,6,8,7,10,0,2];cells.forEach(i=>grid[i]=symbol);
  const bank=p.peachBank||{count:p.peaches,units:p.peaches*c.stake},before=s.cedros||0;
- const protect=before>0&&(kind!=='tucker'||p.peaches>0);
+ // Cedro defende Tony e Tucker (nunca o Ray: ele existe para roubar cedros). Sem alvo, não gasta cedro.
+ const protect=before>0&&kind!=='ray'&&(kind!=='tucker'||p.peaches>0);
  const x={grid,res:{win:0,cells,lines:[engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))],full:false,peach:[]},feature:null,peaches:p.peaches,peachBank:bank,slotVersion:6,parkVersion:1,ticketAward:0,cedarAward:0,winUnits:0};
  if(protect){s.cedros=before-1;x.defense={against:kind};}
  if(kind==='tony'){
@@ -30,8 +31,9 @@ function candidate(p,s,bet,rng){
   x.peaches=remaining;x.peachBank={count:remaining,units:count?bank.units-Math.round(bank.units*stolen/count):0};
   x.tucker={version:3,stolen};
  }else{
-  // Every non-empty stock blocks Ray by consuming one cedar. No double loss.
-  x.ray={version:3,stolen:0};
+  // Ray rouba de 1 a 4 cedros (limitado ao estoque); com 0 cedros, não leva nada.
+  const stolen=before?boundedNormalInt(1,Math.min(4,before),rng):0;s.cedros=before-stolen;
+  x.ray={version:3,before,stolen,remaining:before-stolen};
  }
  s.spins++;return x;
 }

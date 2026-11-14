@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T00:07:19.399Z",
+  "updatedAt": "2026-11-14T00:10:27.382Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -26,22 +26,22 @@
     {
       "id": "t-cedro-todos",
       "title": "Cedro defende do Tony e do Tucker — NUNCA do Ray (o Ray existe para roubar cedros; se o cedro o defendesse, perderia o sentido). Com 0 cedros não defende. Melhorar o depósito e as animações",
-      "status": "todo",
+      "status": "preview",
       "category": "Economia & Regras",
-      "agent": "",
+      "agent": "Claude",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=cedar",
-      "notes": "Dono (13/11): Ray NÃO é bloqueado pelo cedro. Sorteio/defesa base já existe na prévia v6; falta refinar onde os cedros ficam guardados e a animação da defesa."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Regra no servidor feita (Tony/Tucker defendidos, Ray não). Depósito e animações ainda pendentes. Testar: ⚙ → 🎯 Ray / Tiger / Toucan."
     },
     {
       "id": "t-ray-1a4",
       "title": "Ray rouba só de 1 a 4 cedros por vez (ajustar)",
-      "status": "todo",
+      "status": "preview",
       "category": "Economia & Regras",
-      "agent": "",
+      "agent": "Claude",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=ray",
-      "notes": "Limitar o roubo do Ray para 1 a 4 cedros."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
+      "notes": "Ray leva 1–4 (limitado ao estoque), sem defesa. Testar: ⚙ → 🎯 Ray / Tiger / Toucan."
     },
     {
       "id": "t-roleta-min",
