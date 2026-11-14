@@ -633,3 +633,14 @@ Ray (14). A passagem é decorativa; os três símbolos finais de cada coluna vê
 sempre do recibo. Marcadores data-payline 0–7 têm camada 6 acima das células.
 Voo de moedas resolve origem/destino na geometria atual, nunca por uma tabela
 parcial de cinco linhas.
+
+### Símbolo de controle (ID 15) — 13/11/2026
+
+`controller-symbol-v1.png` (1254 × 1254, RGBA) e `controller-symbol-v1.webp`
+(560 × 560, WebP lossless): símbolo especial do controle nos rolos (`ID 15`,
+`.is-controller` / `[data-park-controller="true"]`), na tabela de pagamentos e
+no modal que abre o minigame (`?demo=controller`). Remasterizado após feedback
+do dono para eliminar múltiplos pontos de brilho especular e adotar iluminação
+única superior suave, azul royal acetinado/fosco e ouro quente no mesmo padrão
+de `sym-crown.png`, `sym-drum.png` e `sym-tent.png`.
+

@@ -1,3 +1,11 @@
+## Controle de videogame v2 — iluminação única e acabamento no padrão do jogo, 13/11/2026 (Antigravity)
+
+- **Feedback do dono:** o asset anterior (`controller-symbol-v1`) tinha muitos pontos de iluminação (faixas brancas de reflexo tipo plástico molhado na carcaça azul, brilhos circulares brancos nos botões e ~10 focos especulares no aro dourado) e não seguia o padrão visual do jogo.
+- **Solução aplicada:** nova geração via `generate_image` usando `sym-crown.png`, `sym-drum.png` e a v1 como referências diretas. Removidos os reflexos brancos especulares dispersos e adotada **iluminação única superior suave**, carcaça azul royal e botões com acabamento **fosco/acetinado aveludado** e aro em **ouro quente acetinado** idêntico aos símbolos aprovados dos rolos.
+- **Arquivos atualizados:** `assets/machine/controller-symbol-v1.png` (`1254×1254` RGBA, recorte com descontaminação de borda sem halo) e `assets/machine/controller-symbol-v1.webp` (`560×560` WebP lossless). Documentados em `guidelines/asset-pipeline.md`, `assets/machine/README.md` e `docs/todo.json` (`t-controle-asset`).
+- **Conferência visual:** inspecionado sobre fundo escuro (`#240a42`) e nos rolos do Fortune Circus em `390×844` ao lado da coroa, diamante, tenda, cetro, ingresso e Happeach.
+- **Prévia para teste:** `https://ric-lab.github.io/King-Rico/circus/?demo=controller`
+
 ## Controle aprovado aplicado à interface — 13/11/2026 (Codex)
 
 Asset `controller-symbol-v1.webp` substitui o SVG provisório no bloco de
@@ -6,6 +14,7 @@ em navegador 390×844: visível, sem erros JS ou assets faltantes. Build de
 prévia passou. Não muda sorteio/rolo/economia; ativação do evento Penalty
 continua tarefa separada. Próximo passo: avaliar o encaixe no jogo; consultar
 Actions deste commit para o resultado da publicação da prévia.
+
 
 ## Controle de videogame — proposta de asset, 13/11/2026 (Codex)
 

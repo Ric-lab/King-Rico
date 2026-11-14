@@ -461,3 +461,18 @@ controles legíveis e pequena coroa. Fonte PNG e export WebP lossless em
 assets/machine/controller-symbol-v1.*. Arte e exportação inspecionadas.
 Sem Meshy; custo/créditos não informados pela ferramenta. Checkpoint de arte,
 sem publicação nem mudança de matemática. Aguardando avaliação do dono.
+
+### 2026-11-13 — controle de videogame v2 (ajuste de iluminação e acabamento ao padrão do jogo)
+Feedback do dono: a v1 tinha pontos de iluminação demais (reflexos brancos de
+plástico molhado na carcaça azul, bolhas brancas nos botões e múltiplos focos
+especulares no aro dourado) e fugia do padrão visual do jogo. Uma geração via
+`generate_image` (Gemini) com `sym-crown.png`, `sym-drum.png` e a v1 como
+referências diretas: iluminação única suave vinda de cima, carcaça azul royal e
+botões com acabamento fosco/acetinado aveludado (sem faixas brancas de reflexo)
+e aro dourado acetinado quente coerente com os símbolos aprovados dos rolos.
+Recorte alpha com descontaminação de borda conferido sobre fundo escuro e em
+`390×844` nos rolos do Fortune Circus. Atualizados `assets/machine/controller-symbol-v1.png`
+(1254×1254 RGBA) e `assets/machine/controller-symbol-v1.webp` (560×560 WebP lossless).
+Sem Meshy; custo monetário não exposto pela ferramenta. Publicado na prévia para
+avaliação do dono.
+

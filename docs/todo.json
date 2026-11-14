@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T00:10:27.382Z",
+  "updatedAt": "2026-11-14",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -18,7 +18,7 @@
       "title": "Controle: primeira proposta de asset azul e dourado para avaliação",
       "status": "preview",
       "category": "Visual & Ritmo",
-      "agent": "Codex",
+      "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
       "notes": "Arte aprovada pelo dono e aplicada na tabela do Circus e pré-carga. Navegador 390x844 sem erros/assets faltantes; ativação do evento é tarefa separada."
