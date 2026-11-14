@@ -1,4 +1,4 @@
-"""V6: archive redirects, six cash symbols, actual cedar collection and three defenses."""
+"""V6: archive redirects, six cash symbols, actual cedar collection, Tony/Tucker defenses and Ray stealing cedars."""
 from helpers.daily_reward import collect_daily
 from helpers.circus import draws_for_grid
 from playwright.sync_api import sync_playwright
@@ -21,7 +21,7 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoPark.state.cedros')==1
  assert page.locator('[data-tickets]').inner_text()=='1/5'
  page.screenshot(path='work/preview-cedar-collected.png')
- for kind,draw in [('tony',0),('tucker',.51),('ray',.54)]:
+ for kind,draw in [('tony',0),('tucker',.51)]:  # cedro NÃO defende o Ray (dono, 13/11)
   page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=2;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=3;p.peachBank={count:3,units:3000};localStorage.setItem(k,JSON.stringify(s));}''')
   page.reload();ready()
   page.evaluate('''r=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>r;try{return await fetch(u,o)}finally{Math.random=random}}}''',draw)
@@ -33,6 +33,16 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-cedar-defense-'+kind+'.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
   assert page.locator('[data-tickets]').inner_text()=='1/5'
+ # Ray: sem defesa; leva 1 a 2 dos 2 cedros guardados
+ page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=2;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));}''')
+ page.reload();ready()
+ page.evaluate('''r=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>r;try{return await fetch(u,o)}finally{Math.random=random}}}''',.54)
+ page.locator('[data-spin-btn]').click()
+ page.wait_for_function('__fc._cloudSpin?.outcome?.ray',timeout=15000)
+ ray=page.evaluate('__fc._cloudSpin.outcome')
+ assert not ray.get('defense') and ray['ray']['before']==2 and 1<=ray['ray']['stolen']<=2,ray
+ assert page.evaluate('KingRicoPark.state.cedros')==2-ray['ray']['stolen']
+ page.screenshot(path='work/preview-ray-steals-cedars.png')
  for route in ['park','fingo','flying-clown','bounce']:  # penalty voltou: o controle abre esse jogo
   page.goto(BASE+'/'+route);ready();assert 'Fortune%20Circus.dc.html' in page.url
   assert page.locator('[data-ticket],.kr-hud-park').count()==0
@@ -42,5 +52,5 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoPark.state.cedros')==min(5,previous+1)
  page.screenshot(path='work/preview-circus-v6.png')
  assert not errors and not missing,(errors,missing)
- print(json.dumps({'cedarCollection':True,'defense':['tony','tucker','ray'],'archivedRoutes':True,'errors':errors,'missing':missing}))
+ print(json.dumps({'cedarCollection':True,'defense':['tony','tucker'],'rayStealsCedars':True,'archivedRoutes':True,'errors':errors,'missing':missing}))
  b.close()
