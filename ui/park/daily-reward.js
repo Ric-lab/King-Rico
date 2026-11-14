@@ -143,7 +143,10 @@ export async function openDailyReward(Cloud) {
  const gift=dailyGift(Cloud.player,Cloud.dayKey());if(!gift)return;
  Cloud.dailyRewardActive=true;
  return new Promise(resolve=>{
-  const acReady=(window.__fc?._ac||fbAc)?.state==='running';
+  const fcPre=window.__fc;
+  if(fcPre?.state?.sound){try{const a=fcPre.ac?.();if(a){fcPre.out?.();fcPre.noise?.(a);}}catch{}}
+  else fbAudio();
+  const acReady=(fcPre?._ac||fbAc)?.state==='running';
   const needsTap=!navigator.userActivation?.hasBeenActive||!acReady;
   const overlay=document.createElement('div');overlay.className='park-daily';overlay.dataset.phase='scratch';
   overlay.innerHTML=`<section class="park-daily-panel" tabindex="-1" role="dialog" aria-modal="true" aria-label="Presente do dia" aria-labelledby="daily-title">
@@ -151,7 +154,7 @@ export async function openDailyReward(Cloud) {
    <img class="park-daily-king" src="/assets/symbols/sym-wild-s.webp" alt="">
    <h2 id="daily-title">Presente do dia</h2>
    <p class="park-daily-instruction">Raspe e ganhe!</p>
-   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<div class="park-daily-unlock" aria-hidden="true"></div>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
+   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<button type="button" class="park-daily-unlock" aria-label="Toque para liberar a raspadinha"></button>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
    <p class="park-daily-status" role="status" aria-live="polite">0 de 3 prêmios encontrados</p>
    <button type="button" class="park-daily-button">REVELAR</button>
   </section>`;
@@ -160,12 +163,26 @@ export async function openDailyReward(Cloud) {
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
   const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockVeil=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
-  const clearVeil=()=>{if(!unlockVeil||unlockVeil.classList.contains('is-clear'))return;unlockVeil.classList.add('is-clear');setTimeout(()=>unlockVeil.remove(),260);};
   const unlock=()=>{warmAudio(true);};
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchstart',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchend',unlock,{capture:true,passive:true});
   overlay.addEventListener('click',unlock,{capture:true,passive:true});
+  if(unlockVeil){
+   let endT=0;
+   const finishUnlock=()=>{
+    clearTimeout(endT);
+    if(!unlockVeil.isConnected||unlockVeil.dataset.done)return;
+    unlockVeil.dataset.done='1';unlockVeil.style.pointerEvents='none';
+    warmAudio(true);hapT=0;scratchT=0;
+    unlockVeil.classList.add('is-clear');
+    setTimeout(()=>unlockVeil.remove(),160);
+   };
+   unlockVeil.onpointerdown=()=>{unlockVeil.classList.add('is-pressing');warmAudio(true);};
+   unlockVeil.onpointerup=unlockVeil.onpointercancel=()=>{unlockVeil.classList.remove('is-pressing');};
+   unlockVeil.onclick=finishUnlock;
+   unlockVeil.ontouchend=()=>{clearTimeout(endT);endT=setTimeout(()=>{const ac=(window.__fc?._ac||fbAc);if(navigator.userActivation?.hasBeenActive||ac?.state==='running')finishUnlock();},35);};
+  }
   let revealed=false,busy=false,finished=false,last=null,unwatch=()=>{};
   const cells=[...overlay.querySelectorAll('.park-daily-cell')];
   function close(){
@@ -226,14 +243,13 @@ export async function openDailyReward(Cloud) {
      if(cell.classList.contains('is-revealed'))continue;
      const r=canvas.getBoundingClientRect(),radius=r.width*.1;
      if(Math.max(last.x,point.x)<r.left-radius||Math.min(last.x,point.x)>r.right+radius||Math.max(last.y,point.y)<r.top-radius||Math.min(last.y,point.y)>r.bottom+radius)continue;
-     hit=true;
+     if(!hit){hit=true;sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);}
      const local=p=>({x:(p.x-r.x)*180/r.width,y:(p.y-r.y)*180/r.height}),from=local(last),to=local(point);
      ctx.globalCompositeOperation='destination-out';ctx.lineWidth=34;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
      const data=ctx.getImageData(0,0,180,180).data;let clear=0,total=0;
      for(let i=3;i<data.length;i+=64){total++;if(data[i]<128)clear++;}
      if(clear/total>=.60)revealCell(cell);
     }
-    if(hit)sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);
     last=point;
     const found=cells.filter(c=>c.dataset.prize==='true'&&c.classList.contains('is-revealed')).length;
     if(found===3)reveal();else status.textContent=`${found} de 3 prêmios encontrados`;
@@ -243,7 +259,7 @@ export async function openDailyReward(Cloud) {
     if(pts&&pts.length){for(const pt of pts){if(revealed)break;scratchPoint(pt,false);}}
     else scratchPoint(e,false);
    }
-   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);clearVeil();last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
+   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
    grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{last=null;};
   }catch{reveal();}
   // Another tab may collect while this card is open. Never offer a second credit.

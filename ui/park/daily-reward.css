@@ -7,8 +7,9 @@
 .park-daily-instruction{font-size:clamp(25px,7.2vw,30px);line-height:1.12;font-weight:800;color:#632d26;margin:0 0 14px}
 .park-daily-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;touch-action:none}
 .park-daily-reveal-space{position:relative}.park-daily-grid[hidden],.park-daily-summary[hidden],.park-daily-instruction[hidden]{display:none}
-.park-daily-unlock{position:absolute;inset:0;z-index:3;border-radius:16px;background:rgba(255,255,255,.46);backdrop-filter:blur(2px);pointer-events:none;transition:opacity .25s ease}
-.park-daily-unlock.is-clear{opacity:0}
+.park-daily-unlock{position:absolute;inset:0;z-index:3;width:100%;height:100%;border:0;padding:0;border-radius:16px;background:rgba(255,255,255,.46);backdrop-filter:blur(2px);touch-action:none;cursor:pointer;transition:opacity .16s ease,background .12s ease}
+.park-daily-unlock.is-pressing{background:rgba(255,255,255,.28)}
+.park-daily-unlock.is-clear{opacity:0;pointer-events:none}
 .park-daily-hap{position:fixed;left:0;top:0;width:1px;height:1px;opacity:.01;pointer-events:none}
 .park-daily-summary{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.park-daily-summary img{width:min(112px,30vw);height:min(112px,30vw);object-fit:contain;filter:drop-shadow(0 6px 5px #b68d3540)}.park-daily-summary strong{font-size:clamp(48px,14vw,62px);line-height:1.05;color:#2c7e2c}.park-daily-summary span{font-size:24px;font-weight:700}
 .park-daily-cell{position:relative;aspect-ratio:1;border:2px solid #c28a29;border-radius:14px;overflow:hidden;background:#fffef0;box-shadow:inset 0 2px 5px #ab753622}
