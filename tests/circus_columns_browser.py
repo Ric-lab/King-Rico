@@ -14,23 +14,22 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoCloud.uid')=='park-preview'
  collect_daily(page)
  page.evaluate('''()=>{
-  const fetch=window.fetch;
+  const fetch=window.fetch;window.__colSpins=0;
   window.fetch=async(u,o)=>{
    const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin'||!window.columnDraws)return fetch(u,o);
    const values=window.columnDraws;window.columnDraws=null;let i=0;const random=Math.random;
    Math.random=()=>values[i++]??.99;
-   try{return await fetch(u,o);}finally{Math.random=random;}
+   try{const r=await fetch(u,o);window.__colSpins++;return r;}finally{Math.random=random;}
   };
  }''')
  balance=page.evaluate('KingRicoCloud.player.balance');tickets=page.evaluate('KingRicoCloud.park.tickets')
  def draws(grid,loose=.99):return draws_for_grid(grid)
  for count,loose in [(1,.1),(2,.4)]:
   page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
-  before=page.evaluate('KingRicoCloud.park.spins')
+  expected_spin=page.evaluate('window.__colSpins+1')
   page.evaluate('values=>{window.columnDraws=values;__fc._parkMotionLog=[]}',draws([10,10 if count==2 else 2,0,6,8,7,0,2,6]))
   page.get_by_role('button',name='Girar',exact=True).click()
-  page.wait_for_function('n=>KingRicoCloud.park.spins===n+1',arg=before)
-  page.wait_for_function('!__fc.state.spinning')
+  page.wait_for_function('n=>window.__colSpins===n&&!__fc.state.spinning',arg=expected_spin)
   assert page.evaluate('__fc._cloudSpin.outcome.grid.filter(x=>x===10).length')==count
   assert page.locator('[data-sym][data-park-ticket="true"]').count()==count
   assert page.evaluate('__fc._cloudSpin.outcome.ticketAward')==0
@@ -38,11 +37,10 @@ with sync_playwright() as p:
   assert not page.evaluate('__fc._parkMotionLog.some(x=>x.type==="tickets:start")')
   page.screenshot(path=f'work/preview-loose-tickets-{count}.png')
  page.wait_for_function('!__fc.cloudBusy()&&!__fc._parkMeterBusy&&!__fc.state.balPending')
- before=page.evaluate('KingRicoCloud.park.spins')
+ expected_spin=page.evaluate('window.__colSpins+1')
  page.evaluate('values=>{window.columnDraws=values}',draws([10,2,0,10,8,6,10,6,7]))
  page.get_by_role('button',name='Girar',exact=True).click()
- page.wait_for_function('n=>KingRicoCloud.park.spins===n+1',arg=before)
- page.wait_for_function('!__fc.state.spinning&&__fc.state.winLines.includes(5)')
+ page.wait_for_function('n=>window.__colSpins===n&&!__fc.state.spinning&&__fc.state.winLines.includes(5)',arg=expected_spin)
  marker=page.locator('[data-payline="5"]');marker.wait_for()
  m=marker.bounding_box();symbol=page.locator('[data-sym="3"]').bounding_box()
  assert abs(m['x']+m['width']/2-symbol['x']-symbol['width']/2)<3,(m,symbol)
@@ -52,9 +50,10 @@ with sync_playwright() as p:
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun')
  assert page.evaluate('__fc.payoutSymbols().map(s=>s.pay)')==PAYS
  before_high=page.evaluate('KingRicoCloud.player.balance')
+ expected_spin=page.evaluate('window.__colSpins+1')
  page.evaluate("values=>{window.columnDraws=values;window.unexpectedFlight=false;new MutationObserver(records=>{for(const r of records)for(const e of r.addedNodes)if(e.classList?.contains('park-bigwin-flight'))window.unexpectedFlight=true;}).observe(document.body,{childList:true});__fc.setState({betIdx:9});}",draws([6,6,6,0,2,7,8,10,5]))
  page.get_by_role('button',name='Girar',exact=True).click()
- page.wait_for_function('KingRicoCloud.park.spins===4&&!__fc.state.spinning')
+ page.wait_for_function('n=>window.__colSpins===n&&!__fc.state.spinning',arg=expected_spin)
  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun',timeout=20000)
  expected=round(1000*page.evaluate('__fc.payoutSymbols()[6].pay'),2)
  assert page.evaluate('__fc._cloudSpin.outcome.res.win')==expected
