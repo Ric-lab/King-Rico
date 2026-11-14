@@ -73,14 +73,18 @@ function spinLegacy(p,s,bet,id,rng,version=1){
 }
 function spinV6(p,s,bet,id,rng){
  s.cedros??=0;
- if(s.spins>=10){s.spins=0;s.cycleWagerUnits=0;}
+ if(s.spins>=10){s.spins=0;s.cycleWagerUnits=0;Object.defineProperty(s,'_barSpins',{value:0,writable:true,configurable:true});}
  s.cycleWagerUnits??=0;
+ if(s._barSpins==null||(s.spins===9&&s._barSpins<22))Object.defineProperty(s,'_barSpins',{value:s.spins>=9?24:s.spins*3,writable:true,configurable:true});
  let x=s.spins<9?controllerV6.candidate(p,s,bet,rng):null;
  if(!x){
+  s._barSpins++;
   const prof=engine.circusProfile;
   x=engine.slot(bet,p.peaches,rng,p.peachBank,6,wheelTrigger=>{
    const r=rng(),step=r>=1-prof.BAR_P1_V6?1:r>=1-prof.BAR_P1_V6-prof.BAR_P2_V6?2:0;
-   const next=Math.min(wheelTrigger?9:10,s.spins+step),delta=next-s.spins;
+   const barCap=s._barSpins<25?Math.min(9,Math.ceil(s._barSpins*9/24)):10;
+   const cap=Math.min(wheelTrigger?9:10,barCap);
+   const next=Math.max(s.spins,Math.min(cap,s.spins+step)),delta=next-s.spins;
    s.spins=next;s.cycleWagerUnits+=delta*engine.units(bet);
    return s.spins===10?s.cycleWagerUnits:0;
   });

@@ -1,9 +1,9 @@
 {
   "sourceHashes": {
-    "cloud/engine.cjs": "daf74ab4ceede48ec3fb6db22bc430f04a74902300ce9d003e0493866a60ae1e",
-    "cloud/park.cjs": "ddb80f7065187c4c7aa9cdad280fcb4220373566437886be0b8374bf7f2ac2ed",
-    "cloud/circus-profile.cjs": "d96f67994de2aaf22bebfa49995470afdd3f36095650ccc689096cd892b3fd3e",
-    "cloud/circus-control-v6.cjs": "dfecf4987bcf22771e588818c0175fe6abc71801647a275528876eddd3304717",
+    "cloud/engine.cjs": "426ca2e0c0fb9110a88faa5989c0d2ea04a928aeebe1a3b74f2ffb550ad3d92c",
+    "cloud/park.cjs": "7febc2de03e2214ed4ea03a68ee67c6949ee2bab6f20bb50107ee7456d52a47e",
+    "cloud/circus-profile.cjs": "fd4493790cfa5395482342c94929dcb7e7b59780cbf00408f617b2b571e89b2f",
+    "cloud/circus-control-v6.cjs": "5a8eeb64203a72f4dbd1d00271106abd61bf83ab964f5841b9e345dbea5a4c09",
     "cloud/truncated-normal.cjs": "05dbbdee3b1866bc64b7cbdbed74de6d3f9735951bcf6fd1b6aa14c83dd05aeb",
     "scripts/circus-v6-audit.mjs": "cc55aaaf6d41fabafce943a506943109b42b8f1bb8058ac3bae8f5e1351c330b"
   },
@@ -54,20 +54,20 @@
       "cedarProbability": 0.12,
       "components": {
         "wagered": 5000000,
-        "paid": 4145805.8,
-        "wheel": 445746.6,
-        "theft": 91885.06
+        "paid": 4165719.3,
+        "wheel": 443172.6,
+        "theft": 109067.51
       },
-      "return": 0.899933468,
-      "defenses": 27075,
-      "awards": 65399,
+      "return": 0.899964878,
+      "defenses": 30881,
+      "awards": 65286,
       "villains": {
-        "tony": 14123,
-        "tucker": 112876,
-        "ray": 112927
+        "tony": 16217,
+        "tucker": 112900,
+        "ray": 112410
       },
-      "prizeRate": 0.605672,
-      "features": 56005,
+      "prizeRate": 0.6052088,
+      "features": 56801,
       "inRange": true
     },
     {
@@ -116,20 +116,20 @@
       "cedarProbability": 0.12,
       "components": {
         "wagered": 50000000,
-        "paid": 41426000,
-        "wheel": 4463244,
-        "theft": 890362.47
+        "paid": 41652217,
+        "wheel": 4438494,
+        "theft": 1092596.79
       },
-      "return": 0.8999776306,
-      "defenses": 27164,
-      "awards": 65492,
+      "return": 0.8999622842,
+      "defenses": 31050,
+      "awards": 65446,
       "villains": {
-        "tony": 13929,
-        "tucker": 112956,
-        "ray": 112887
+        "tony": 16293,
+        "tucker": 113033,
+        "ray": 112412
       },
-      "prizeRate": 0.605735,
-      "features": 56025,
+      "prizeRate": 0.6052866,
+      "features": 56804,
       "inRange": true
     },
     {
@@ -178,20 +178,20 @@
       "cedarProbability": 0.12,
       "components": {
         "wagered": 500000000,
-        "paid": 414260200,
-        "wheel": 44631540,
-        "theft": 8902084.71
+        "paid": 416715870,
+        "wheel": 44386920,
+        "theft": 11116027.89
       },
-      "return": 0.89997931058,
-      "defenses": 27162,
-      "awards": 65480,
+      "return": 0.89997352422,
+      "defenses": 31042,
+      "awards": 65425,
       "villains": {
-        "tony": 13938,
-        "tucker": 112993,
-        "ray": 112909
+        "tony": 16507,
+        "tucker": 113009,
+        "ray": 112445
       },
-      "prizeRate": 0.6057312,
-      "features": 56033,
+      "prizeRate": 0.605272,
+      "features": 56805,
       "inRange": true
     },
     {
@@ -240,20 +240,20 @@
       "cedarProbability": 0.12,
       "components": {
         "wagered": 5000000000,
-        "paid": 4142602000,
-        "wheel": 446315400,
-        "theft": 89020847.14
+        "paid": 4167158700,
+        "wheel": 443869200,
+        "theft": 111160278.91
       },
-      "return": 0.899979310572,
-      "defenses": 27162,
-      "awards": 65480,
+      "return": 0.899973524218,
+      "defenses": 31042,
+      "awards": 65425,
       "villains": {
-        "tony": 13938,
-        "tucker": 112993,
-        "ray": 112909
+        "tony": 16507,
+        "tucker": 113009,
+        "ray": 112445
       },
-      "prizeRate": 0.6057312,
-      "features": 56033,
+      "prizeRate": 0.605272,
+      "features": 56805,
       "inRange": true
     }
   ],

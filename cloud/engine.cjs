@@ -140,12 +140,24 @@ function evaluate(grid, bet, version=1) {
     full: full && win > 0, peach: grid.flatMap((v,i) => v === PEACH ? [i] : []) };
 }
 function feature(bet, rng = random, version=1) {
-  const sym = weighted(version>=6?SYMBOLS_V6:slotSymbols(version).slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
+  const sym = weighted(version>=6?SYMBOLS_V6.slice(0,11):slotSymbols(version).slice(0, WILD), rng), grid = Array(9).fill(-1), rounds = [];
   for (let round = 0; round < FEAT_SPINS && grid.some(v => v < 0); round++) {
     const result = [];
     for (const i of [6,3,0,7,4,1,8,5,2]) if (grid[i] < 0) {
       const r = rng(), v = version>=6?(r<FEAT_P_SYM+FEAT_P_WILD?sym:-1):r < FEAT_P_SYM ? sym : r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1;
       grid[i] = v; result.push({ i, v });
+    }
+    if (version >= 6 && round === 0 && grid.every(v => v < 0)) {
+      grid[4] = sym;
+      const c = result.find(o => o.i === 4);
+      if (c) c.v = sym;
+    }
+    if (version >= 6 && round === FEAT_SPINS - 1 && !ALL_LINES.some(l => l.every(i => grid[i] === sym))) {
+      for (const i of ALL_LINES[1]) {
+        grid[i] = sym;
+        const c = result.find(o => o.i === i);
+        if (c) c.v = sym; else result.push({ i, v: sym });
+      }
     }
     // Firestore cannot store an array directly inside another array.
     rounds.push({ result });

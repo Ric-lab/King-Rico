@@ -914,7 +914,7 @@ service cloud.firestore {
     }
     function v6Villain(p,old,o,s,b) {
       let x=o.result.outcome; let r=x.res; let kind=x.get('tony',null)!=null?'tony':x.get('tucker',null)!=null?'tucker':'ray';
-      let stock=b.get('cedros',0); let defended=stock>0 && kind!='ray' && (kind!='tucker' || old.peaches>0);
+      let stock=b.get('cedros',0); let defended=stock>0 && kind!='ray';
       let defense=x.get('defense',null);
       let prevSpins=b.spins>=10?0:b.spins; let prevCycle=b.spins>=10?0:b.get('cycleWagerUnits',0);
       return prevSpins<9 && s.spins==prevSpins && s.cycleWagerUnits==prevCycle && x.cedarAward==0

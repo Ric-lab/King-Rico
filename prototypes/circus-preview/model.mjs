@@ -16,6 +16,7 @@ const fail=message=>{throw new Error(message);};
 const fresh=()=>({tickets:3,spins:0,bankUnits:0,wheel:null,passes:{},fingo:null});
 export function createPreview(saved={},rng=Math.random,clock=Date.now){
  const records=new Map(saved.records||[]),park=saved.park||fresh();
+ if(park._barSpins==null)Object.defineProperty(park,'_barSpins',{value:saved.barSpins??(park.spins>=9?25:park.spins*3),writable:true,configurable:true});
  let tuckerSeeded=!!saved.tuckerSeeded;
  const ref='players/preview';
  const deps={reference:p=>p.join('/'),stamp:()=>Timestamp.fromMillis(clock()),now:clock,rng,read:async p=>snap(p),
@@ -25,7 +26,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
  function player(){return publicPlayer(records.get(ref));}
  function state(){return {...structuredClone(park),price:PRICE,meterSpins:METER_SPINS};}
  function envelope(extra={}){return {...extra,player:player(),park:state()};}
- function exportState(){return {records:[...records],park,tuckerSeeded};}
+ function exportState(){return {records:[...records],park,barSpins:park._barSpins||0,tuckerSeeded};}
  const once=new Map(saved.once||[]);
  async function run(data){
   if(!records.has(ref)){await call({action:'bootstrap',requestId:randomUUID()});const p=records.get(ref);p.balanceUnits=500000;p.settings={...p.settings,clownBetIdx:4,penaltyBetIdx:4,flyingBetIdx:4,fingoBetIdx:4,bounceBetIdx:4};}
@@ -53,7 +54,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
-   if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}
+   if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;Object.defineProperty(park,'_barSpins',{value:25,writable:true,configurable:true});}
    if(data.previewWheel&&!park.wheel){if((data.slotVersion||6)>=6){p.peaches=4;p.peachBank={count:4,units:cost*4};}else{park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}}
    const outcome=data.previewRay?rayDemo(p,park,data.bet,data.slotVersion||6):data.previewTucker?tuckerDemo(p,park,data.bet,data.slotVersion||6):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6);
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;

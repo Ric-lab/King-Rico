@@ -19,8 +19,8 @@ function candidate(p,s,bet,rng){
  const cells=[...engine.ALL_LINES[Math.min(7,Math.floor(rng()*8))]],symbol={tony:12,tucker:13,ray:14}[kind];
  const grid=[10,2,0,6,8,7,10,0,2];cells.forEach(i=>grid[i]=symbol);
  const bank=p.peachBank||{count:p.peaches,units:p.peaches*c.stake},before=s.cedros||0;
- // Cedro defende Tony e Tucker (nunca o Ray: ele existe para roubar cedros). Sem alvo, não gasta cedro.
- const protect=before>0&&kind!=='ray'&&(kind!=='tucker'||p.peaches>0);
+ // Trevo defende Tony e Tucker (nunca o Ray: ele existe para roubar trevos).
+ const protect=before>0&&kind!=='ray';
  const x={grid,res:{win:0,cells,lines:[engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))],full:false,peach:[]},feature:null,peaches:p.peaches,peachBank:bank,slotVersion:6,parkVersion:1,ticketAward:0,cedarAward:0,winUnits:0};
  if(protect){s.cedros=before-1;x.defense={against:kind};}
  if(kind==='tony'){

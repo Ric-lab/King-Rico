@@ -146,7 +146,7 @@
 .park-circus-stage .park-pocket{left:5px;top:calc(var(--park-prize-top) + 56px - 52px);width:112px;height:52px;transform:none}
 .park-pocket .park-ticket-wallet-label{left:36%;right:6%;top:10px;font-size:10px;line-height:12px;letter-spacing:.3px}
 .park-pocket [data-tickets]{left:36%;right:6%;top:22px;height:23px;font-size:var(--park-ticket-font,26px)}
-.park-circus-stage .park-basket,.park-circus-stage .park-basket[data-park-side="true"]{right:5px!important;top:calc(var(--park-prize-top) + 56px - 52px)!important;width:112px!important;height:52px!important;transform:none!important;translate:none!important}
+.park-circus-stage .park-basket,.park-circus-stage .park-basket[data-park-side="true"]{right:5px!important;top:calc(var(--park-prize-top) + 56px - 52px)!important;width:112px!important;height:52px!important;transform:none!important;translate:0 0}
 .park-basket .park-ticket-wallet-face,.park-tucker-carried-basket .park-ticket-wallet-face{transform-origin:100% 100%}
 
 .park-reel-cell>[data-sym]{transition:filter .18s ease-out}

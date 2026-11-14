@@ -44,6 +44,16 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-cedar-defense-'+kind+'.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
   assert page.locator('[data-tickets]').inner_text()=='1/5'
+ # Tucker com 0 roletas guardadas ainda deve ser bloqueado pelo trevo
+ page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=1;const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=0;p.peachBank={count:0,units:0};localStorage.setItem(k,JSON.stringify(s));}''')
+ page.reload();ready()
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Toucan').click()
+ page.locator('[data-spin-btn]').click()
+ page.locator('.park-defense-scene').wait_for(timeout=15000)
+ assert page.evaluate('__fc._cloudSpin.outcome.defense.against')=='tucker'
+ page.locator('.park-defense-scene').wait_for(state='detached')
+ assert page.locator('[data-tickets]').inner_text()=='0/5'
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Aleatório').click()
  # Ray: sem defesa; leva 1 a 2 dos 2 trevos guardados
  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=2;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));}''')
  page.reload();ready()
@@ -53,7 +63,29 @@ with sync_playwright() as p:
  ray=page.evaluate('__fc._cloudSpin.outcome')
  assert not ray.get('defense') and ray['ray']['before']==2 and 1<=ray['ray']['stolen']<=2,ray
  assert page.evaluate('KingRicoPark.state.cedros')==2-ray['ray']['stolen']
+ page.locator('.park-tony-result').wait_for(timeout=15000)
  page.screenshot(path='work/preview-ray-steals-cedars.png')
+ page.locator('.park-tony-result').get_by_role('button',name='CONTINUAR').click()
+ page.wait_for_function('!__fc._cfRun',timeout=15000)
+ # Good Luck (barra cheia): trava símbolos na máquina e não mostra o halo antigo da cesta
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Good Luck (barra cheia)').click()
+ page.locator('[data-spin-btn]').click()
+ page.wait_for_function('Boolean(__fc.state.feature)',timeout=15000)
+ assert page.evaluate('document.querySelectorAll("[style*=fcHalo]").length')==0
+ feat=page.evaluate('__fc._cloudSpin.outcome.feature')
+ assert feat['sym'] in [0,2,6,7,8,10] and feat['grid'].count(feat['sym'])>=3,feat
+ page.wait_for_function('document.querySelectorAll(\'.park-reel-cell[data-held="true"]\').length>=1',timeout=15000)
+ page.screenshot(path='work/preview-goodluck-held.png')
+ page.wait_for_function('!__fc.state.feature&&!__fc._cfRun&&!__fc.cloudBusy()&&!document.querySelector(".park-bigwin-flight")&&(!document.querySelector("[data-bigwin-modal]")||getComputedStyle(document.querySelector("[data-bigwin-modal]")).visibility==="hidden")',timeout=45000)
+ # Roleta (5 guardadas): o contador .park-basket deve subir junto com as cordas
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Roleta (5 guardadas)').click()
+ page.locator('[data-spin-btn]').click()
+ page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=20000)
+ basket_translate=page.locator('.park-basket').evaluate('e=>getComputedStyle(e).translate')
+ assert '-920px' in basket_translate,basket_translate
+ page.screenshot(path='work/preview-wheel-hoist.png')
+ page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.wheel=null;localStorage.setItem(k,JSON.stringify(s));}''')
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Aleatório').click()
  for route in ['park','fingo','flying-clown','bounce']:  # penalty voltou: o controle abre esse jogo
   page.goto(BASE+'/'+route);ready();assert 'Fortune%20Circus.dc.html' in page.url
   assert page.locator('[data-ticket],.kr-hud-park').count()==0
@@ -63,5 +95,5 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoPark.state.cedros')==min(5,previous+1)
  page.screenshot(path='work/preview-circus-v6.png')
  assert not errors and not missing,(errors,missing)
- print(json.dumps({'cloverCollection':True,'defense':['tony','tucker'],'rayStealsClovers':True,'archivedRoutes':True,'errors':errors,'missing':missing}))
+ print(json.dumps({'cloverCollection':True,'defense':['tony','tucker','tuckerZeroWheels'],'basketHoistsWithRopes':True,'rayStealsClovers':True,'archivedRoutes':True,'errors':errors,'missing':missing}))
  b.close()

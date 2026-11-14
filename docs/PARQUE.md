@@ -17,8 +17,8 @@ Três **trevos** (`assets/symbols/sym-clover.png`, célula 5 do atlas `symbols-v
 numa linha dão **1 defesa**, com estoque máximo **5**, indicado à esquerda do
 prêmio como **n/5**. Cada linha completa conta uma vez. Um trevo bloqueia um
 evento inteiro de **Tony ou Tucker — nunca de Ray**, sendo consumido na mesma
-transação do giro; Tony não consome três defesas pelas três patadas. Um ataque de
-Tucker contra depósito vazio não gasta defesa. Ray rouba de **1 a 4 trevos**
+transação do giro; Tony não consome três defesas pelas três patadas. Mesmo com `0/5`
+roletas guardadas, o trevo ainda protege contra o Tucker. Ray rouba de **1 a 4 trevos**
 (limitado ao estoque); sem estoque, Ray aparece sem perda (`"Sem trevos!"`).
 A mensagem da defesa é **"Trevo da sorte te protegeu!"**. A apresentação de defesa
 é informativa e nunca altera a carteira. Ingressos antigos não viram trevos nem
@@ -26,16 +26,17 @@ moedas. O contador antigo de entradas deixa a interface.
 
 O **Happeach** deixa de ser sorteado e saem seu contador e cesta (arquivos
 mantidos no repositório). No lugar onde o Happeach ficava guardado (topo direito,
-`0/5`), passa a ficar guardada a **Roleta** (`assets/wheel/wheel-symbol-v1.webp`,
-célula 11 de `symbols-v7.webp`, chance `0,015` por célula). Quando juntar **5**,
-abre a tela da roleta bônus (`baseUnits = round(wheelUnits * 0.36)`, onde
-`wheelUnits` soma as 5 apostas em que cada roleta foi guardada).
+`0/5`), passa a ficar guardada a **Roleta** em arco-íris (`assets/wheel/wheel-symbol-v1.webp`,
+célula 11 de `symbols-v7.webp`, chance `0,015` por célula). O contador `0/5` sobe junto
+com as cordas quando a máquina é içada. Quando juntar **5**, abre a tela da roleta bônus
+(`baseUnits = round(wheelUnits * 0.36)`, onde `wheelUnits` soma as 5 apostas em que cada roleta foi guardada).
 
 As **barras laterais** viram o **Good Luck**: no topo de cada barra entra o asset
 da nuvem (`assets/symbols/sym-candy.webp`). A barra deixa de encher nos 10 giros
-fixos e passa a encher de forma aleatória (`+1` em 8% dos giros normais, `+2` em
-2%, `+0` em 90%). No giro em que a barra chega ao topo (`10`), a nuvem pisca e
-ativa os **5 giros Good Luck** (`featureBet = floor(cycleWagerUnits / 10) / 100`).
+fixos e passa a encher de forma aleatória (`BAR_P1_V6 = 0,12`, máximo de 1 nível por giro),
+exigindo **no mínimo 25 giros** no ciclo (média ~88 giros) para chegar ao topo (`10`).
+Quando chega ao topo (`10`), a nuvem pisca e ativa os **5 giros Good Luck**
+(`featureBet = floor(cycleWagerUnits / 10) / 100`), travando símbolos pagantes reais na grade.
 
 O controle de videogame (`assets/machine/controller-symbol-v1.webp`, ID 15) está
 reservado sem sorteio enquanto a abertura do Penalty é tarefa separada. As três

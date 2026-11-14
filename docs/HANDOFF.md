@@ -1,18 +1,16 @@
-## Trevo no lugar do cedro + Roleta (0/5) no lugar do Happeach + Barra lateral Good Luck aleatória — 14/11/2026 (Antigravity)
+## Ajustes Trevo + Roleta Arco-Íris + Good Luck (mín. 25 giros) — 14/11/2026 (Antigravity)
 
-- **1. Troca do cedro pelo trevo (`assets/symbols/sym-clover.png`):**
-  - Substituída a célula 5 do atlas `assets/symbols-v7.webp` pelo trevo (`assets/symbols/sym-clover.png`), além do depósito (`.park-pocket`), voo (`flyTickets`), cena de defesa (`"Trevo da sorte te protegeu!"`), tela do Ray (`"Ray levou N trevo(s)"` / `"Sem trevos!"`), modal (`"Trevos de proteção"`, `"Seus trevos"`), tabela de pagamentos e seletor `⚙ → 🎯` (`"Trevo"`).
-  - Atualizado `tests/circus_v6_browser.py` para `"Trevos de proteção"`.
-- **2. Happeach guardado e Roleta no lugar dele (`0/5`):**
-  - Happeach retirado do sorteio, contador e cesta (arquivos preservados no repositório).
-  - No depósito superior direito (`0/5`, `.park-basket`), agora ficam guardadas as roletas (`assets/wheel/wheel-symbol-v1.webp`, célula 11 de `assets/symbols-v7.webp`). Ao juntar 5 (`5/5`), abre a roleta bônus (`baseUnits = round(wheelUnits * 0.36)`). Tucker rouba de 1 a 4 roletas guardadas (ou é bloqueado por 1 trevo).
-- **3. Barra lateral vira o Good Luck:**
-  - Topo das barras laterais (`.park-meter-goal`) agora exibe a nuvem (`assets/symbols/sym-candy.webp`).
-  - Enchimento aleatório nos giros normais (`+1` em 8%, `+2` em 2%, `+0` em 90%). Ao chegar a 10, a nuvem pisca e ativa os 5 giros Good Luck (`featureBet = floor(cycleWagerUnits / 10) / 100`).
-- **4. Seletor `⚙ → 🎯` e Auditoria v6 (~90% RTP):**
-  - Incluídas no seletor `⚙ → 🎯` as opções `"Trevo"`, `"Good Luck (barra cheia)"` e `"Roleta (5 guardadas)"`.
-  - Parâmetros calibrados em `cloud/circus-profile.cjs`: `CEDAR_P = 0.12`, `PEACH_P_V6 = 0.015`, `WHEEL_SHARE_V6 = 0.36`, `BAR_P1_V6 = 0.08`, `BAR_P2_V6 = 0.02`.
-  - Auditoria (`docs/circus-economy-v6-audit.json`, 5M giros/aposta): retorno líquido **89,99%–90,00%** em todas as apostas (1 a 1.000), retorno bruto sem Tony **91,49%–91,83%** (nunca acima de 93%). Cenários de stress (`docs/circus-economy-v6-stress.json`, 1M giros): `tenth-high` **90,27%**, `armor-farm` **90,02%**, `alternating` **89,98%**, `armor=true` **89,97%**.
+- **Feito:**
+  - **Trevo protege contra Tony e Tucker mesmo com 0 roletas (`0/5`):** corrigidos `cloud/circus-control-v6.cjs` e `firestore.rules` (`v6Villain`) para que `protect` dependa apenas de `cedros > 0 && kind !== 'ray'`, sem exigir `peaches > 0` contra o Tucker.
+  - **Roleta em arco-íris:** recoloridos os 13 setores de `assets/wheel/wheel-symbol-v1.png`, `.webp` e célula 11 de `assets/symbols-v7.webp` em arco-íris contínuo preservando o aro, ponteiro e miolo dourados.
+  - **Contador `0/5` sobe junto com as cordas:** removido `translate:none!important` em `.park-circus-stage .park-basket` (`ui/park/cabinet.css`) para permitir que `wheel-transition.js` / `.park-hoist-deck[data-hoist="wheel"]` icem o contador de roletas guardadas junto com a máquina.
+  - **Good Luck aleatório com mínimo de 25 giros e animações corrigidas:**
+    - Em `cloud/park.cjs` (`spinV6`), adicionado controle `_barSpins` (persistido na prévia em `prototypes/circus-preview/model.mjs`) exigindo **no mínimo 25 giros** para atingir o nível `10`, com `BAR_P1_V6 = 0.12`, `BAR_P2_V6 = 0` e `WHEEL_SHARE_V6 = 0.36` em `cloud/circus-profile.cjs` (mín. **25 giros**, média **~88 giros**). Auditoria de 5M giros/aposta validou **~90,00% líquido** (**92,18%–92,22% bruto**, `≤ 93%`) e todos os cenários de stress (`90,10%` décimo giro alto).
+    - Em `prototypes/circus-preview/browser-wallet.mjs`, o fallback de `draws.shift()` voltou para `Math.random()` (evitando que testes manuais em `🎯` avançassem `+1` na barra a cada giro e travassem `.99` no Good Luck, o que deixava os rolos vazios).
+    - Em `cloud/engine.cjs` (`feature` v6), sorteio limitado aos 6 símbolos pagantes (`SYMBOLS_V6.slice(0, 11)`, sem `controller`) com garantia de símbolo travado e ao menos uma trinca antes do pagamento.
+    - Em `Fortune Circus.dc.html`, removido o efeito antigo `fcHalo` (raios atrás da antiga cesta centralizada).
+  - Atualizados `tests/circus-v6.test.cjs`, `tests/circus_v6_browser.py`, `docs/PARQUE.md`, `docs/CIRCUS-V6-VALIDACAO.md`, `docs/todo.json` e `docs/circus-economy-v6-audit.json` / `v6-stress.json`.
+- **Próximo passo:** Dono avaliar as correções na prévia única (`https://ric-lab.github.io/King-Rico/circus/`) usando `⚙ → 🎯` (**Trevo**, **Toucan**, **Good Luck (barra cheia)** e **Roleta (5 guardadas)**) antes da promoção ao oficial (`t-firestore-v6` segue com Codex).
 
 
 ## Controle v2 aprovado + prévia sempre na demo normal (sem links específicos) — 13/11/2026 (Antigravity)

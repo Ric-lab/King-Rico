@@ -43,7 +43,8 @@ async function execute(data){
  if(demo&&mode==='ray')data.previewRay=true;
  if(demo&&mode==='wheel'){data.previewWheel=true;draws.push(.5,.5);}
  if(demo&&mode==='goodluck'){data.previewGoodLuck=true;draws.push(.99);}
- const model=createPreview(saved||{},demo?()=>draws.shift()??.99:Math.random);
+ if(demo&&!forced&&(mode==='bigwin'||mode==='spacewin'))draws.push(.99);
+ const model=createPreview(saved||{},demo?()=>draws.shift()??Math.random():Math.random);
  try{const result=await model.run(data);if(demo&&!forced)demoSpin=false;localStorage.setItem(KEY,JSON.stringify(model.exportState()));return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});}
  catch(e){return new Response(JSON.stringify({error:e.message}),{status:400,headers:{'Content-Type':'application/json'}});}
 }

@@ -17,13 +17,14 @@ test('one cedar blocks the entire attack of Tony and Tucker',()=>{
 });
 test('without defenses, Tony and Tucker keep aggressive bounded losses; zero target is valid',()=>{
  for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(!x.defense);if(kind==='tony')assert.ok(x.tony.stolenUnits>=1000&&x.tony.stolenUnits<=25000);else {assert.ok(x.tucker.stolen>=1&&x.tucker.stolen<=3);assert.equal(x.peachBank.units,751-Math.round(751*x.tucker.stolen/3));}}
- const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};assert.ok(!park.spin(p,s,10,'a',()=>.01,6).defense);assert.equal(s.cedros,3);
+ const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};assert.deepEqual(park.spin(p,s,10,'a',()=>.01,6).defense,{against:'tucker'});assert.equal(s.cedros,2);
+ const s0={...park.fresh(),cedros:0};assert.ok(!park.spin(p,s0,10,'b',()=>.01,6).defense);
 });
 test('5 stored Roletas open the bonus wheel and full random sidebar triggers Good Luck',()=>{
  const s={...park.fresh(),spins:4,cycleWagerUnits:400,cedros:0,tickets:999},p={balanceUnits:1000000,peaches:4,peachBank:{count:4,units:900}};
  const q=[.99,.001,...Array(20).fill(.5)];let idx=0;
  const x=park.spin(p,s,1000,'a',()=>q[idx++]??.5,6);
- assert.equal(x.peaches,0);assert.equal(s.wheel.baseUnits,Math.round(100900*.36));assert.equal(s.wheel.economyVersion,6);
+ assert.equal(x.peaches,0);assert.equal(s.wheel.baseUnits,Math.round(100900*e.circusProfile.WHEEL_SHARE_V6));assert.equal(s.wheel.economyVersion,6);
  const extra=park.bonus(s,'a',()=>.9);assert.equal(s.economyV6.paidUnits,s.wheel.result.winUnits+x.winUnits);assert.ok(extra>0);assert.equal(park.bonus(s,'a',()=>.9),0);
  s.wheel=null;s.spins=9;s.cycleWagerUnits=9000;
  const y=park.spin(p,s,10,'b',()=>.99,6);
