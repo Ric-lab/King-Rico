@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-15T02:12:57.907Z",
+  "updatedAt": "2026-11-15T02:15:47.744Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -328,9 +328,10 @@
     {
       "id": "t-meter-cor",
       "title": "Barra lateral: cor do giro não fica armazenada (após mudanças da v6)",
-      "status": "todo",
-      "agent": "",
-      "notes": "Servidor conta o giro em todos os casos (s.spins++ em spinV6, resourceSpin, tonySpin e no candidato v6). Investigar o cliente: ui/park/motion.js _parkChargeConfirmed/schedule (pulso de luz / fallback 450 ms) e ui/park/index.js Cloud.spin; testar com vilão, trevo e controle."
+      "status": "preview",
+      "agent": "Claude",
+      "notes": "Causa: véu escuro dos tubos (.park-meter-dimmer, 76%) cobria a tinta depois que a luz passava. Véu baixou para 30% e a tinta ficou mais viva.",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?v=9"
     }
   ]
 }
