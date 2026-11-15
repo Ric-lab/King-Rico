@@ -147,7 +147,8 @@ export async function openDailyReward(Cloud) {
   if(fcPre?.state?.sound){try{const a=fcPre.ac?.();if(a){fcPre.out?.();fcPre.noise?.(a);}}catch{}}
   else fbAudio();
   const acReady=(fcPre?._ac||fbAc)?.state==='running';
-  const needsTap=!navigator.userActivation?.hasBeenActive||!acReady;
+  // Sem véu: o 1º toque já raspa (o áudio destrava pelos listeners de captura do overlay). Pedido do dono.
+  const needsTap=false;void acReady;
   const overlay=document.createElement('div');overlay.className='park-daily';overlay.dataset.phase='scratch';
   overlay.innerHTML=`<section class="park-daily-panel" tabindex="-1" role="dialog" aria-modal="true" aria-label="Presente do dia" aria-labelledby="daily-title">
    <p class="park-daily-eyebrow">Dia ${gift.day} de 7</p>

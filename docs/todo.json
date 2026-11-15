@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14",
+  "updatedAt": "2026-11-15T02:12:57.907Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -324,6 +324,13 @@
       "commit": "b394d9f",
       "demoUrl": "https://king-rico.web.app/circus",
       "notes": ""
+    },
+    {
+      "id": "t-meter-cor",
+      "title": "Barra lateral: cor do giro não fica armazenada (após mudanças da v6)",
+      "status": "todo",
+      "agent": "",
+      "notes": "Servidor conta o giro em todos os casos (s.spins++ em spinV6, resourceSpin, tonySpin e no candidato v6). Investigar o cliente: ui/park/motion.js _parkChargeConfirmed/schedule (pulso de luz / fallback 450 ms) e ui/park/index.js Cloud.spin; testar com vilão, trevo e controle."
     }
   ]
 }
