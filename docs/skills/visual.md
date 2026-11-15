@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Ajustes isolados de tinta com teto visual atingido após duas doses e jato/menisco de outra paleta: conferir vários giros seguidos, além do primeiro print.
 - Tony com grande área creme no queixo/tronco e T desenhado como letra: dono prefere queixo/peito alaranjados e T integrado às listras escuras, com haste suficientemente longa para ser reconhecido. Dentes discretos, mas visíveis.
 - Tony Tiger sem os tufos brancos curvados do primeiro Valentão perdeu identidade; dono prefere esse bigode, um pouco mais de dentes e olhos levemente mais abertos, mantendo expressão malandra.
 - Piscadas na celebração espacial: fundo opaco em camadas isoladas, sem máscara/filtros animados do viewport e sem giro 3D de sprites; círculo com brilho suave.

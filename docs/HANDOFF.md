@@ -1,3 +1,30 @@
+## Revisão dos ajustes recentes — 15/11/2026 (Codex)
+
+Base: `fc77f2d`, preservando trevo (não cedro), Ray sem defesa, roletas guardadas
+(não Happeach), Good Luck aleatório com mínimo 25 giros, controle v2 ativo e
+seletor 🎯. Nenhuma mudança de matemática/carteira/regras nesta revisão.
+
+**Corrigido:** tinta visual travava em +0,9 após duas doses; agora aproximação
+suave sem teto brusco. Paleta do jato/menisco alinhada à do preenchimento,
+menos superexposição e sem listras brancas correndo. Na raspadinha, recuperação
+da vibração bloqueada no primeiro gesto é independente do áudio; uma retomada
+de áudio já atendida não dispara outra raspagem duplicada. Canvas desenha todos
+os pontos, mas mede a cobertura uma vez por quadro/casa (30 amostras → 1 leitura),
+com verificação final ao soltar/cancelar. Sem véu nem toque extra para começar.
+
+**Conferido:** build de prévia; testes Node do líquido e recompensa diária;
+regressão diária em 320/390/430px, movimento normal/reduzido, coleta/retry/recarga;
+navegador com bloqueio simulado da primeira vibração e seis giros sem avanço real
+(sem estagnar tinta, JS ou 404). Isso não substitui teste háptico num iPhone físico.
+Nova regressão `circus_feedback_browser.py` incluída no workflow existente.
+Próximo passo: validar nesta prévia única https://ric-lab.github.io/King-Rico/Preview
+(escolher eventos em ⚙ → 🎯); consultar Actions deste commit antes de anunciar deploy.
+
+**Fontes antigas:** estudo anterior do controle guardado em
+`codex/controller-draw-checkpoint` (`7623b0c`), já superado pelo código dos colegas;
+não integrar aquele checkpoint à branch atual. Guias atualizados para não dizer
+que o controle ainda está reservado ou que o anúncio está no menu.
+
 ## Modal da raspadinha diária + som/háptico na 1ª raspagem — 14/11/2026 (Antigravity)
 
 - **Feito:**

@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-15T02:15:47.744Z",
+  "updatedAt": "2026-11-15",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "p-refino-barra-raspa",
+      "title": "Revisão dos commits recentes: tinta contínua, paleta coerente e primeira raspagem sem perder vibração",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Base fc77f2d preservada. Sem mudar economia: tinta sem teto após duas doses; jato/menisco coerentes; vibração recuperada independentemente do áudio, sem duplicar som; cobertura do canvas medida uma vez por quadro. Testes focados e navegador passaram."
+    },
     {
       "id": "t-o-super-win-nao-e-um-a-31",
       "title": "O super win não é um avião é um foguete",

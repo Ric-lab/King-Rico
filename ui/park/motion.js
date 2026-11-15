@@ -4,10 +4,16 @@ function openControllerGame(fc){if(document.getElementById('kr-controller-game')
  const go=location.pathname.startsWith('/King-Rico/')?'/King-Rico/penalty/':'/penalty';
  o.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 30px;border-radius:26px;background:linear-gradient(180deg,#7a2bb8,#3a0d62);box-shadow:0 0 0 4px #f0b41f,0 0 0 8px #6b2e05,0 20px 40px #0009"><img src="/assets/machine/controller-symbol-v1.webp" alt="" style="width:140px;height:140px;object-fit:contain"><a href="'+go+'" style="padding:14px 54px;border-radius:999px;font:800 26px/1 Baloo\\ 2,system-ui,sans-serif;color:#fff;text-decoration:none;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36">JOGAR</a><button type="button" aria-label="Fechar" style="border:0;background:none;color:#e8d4ff;font:800 18px/1 inherit;cursor:pointer">agora não</button></div>';
  o.querySelector('button').onclick=()=>o.remove();document.body.append(o);}
-const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
+const STOPS=[[0,[194,123,255]],[.13,[143,107,255]],[.27,[79,125,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
 function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
+// Cosmetic sub-level only: repeated pours approach the next real level smoothly.
+// A real level change or a new cycle always owns the boundary and completion.
+export function nextPourLevel(before,target,shown=before){
+ const start=before>=10?0:Math.max(before,Math.min(Number.isFinite(shown)?shown:before,before+.98));
+ return {from:start,show:target!==before||before>=10?target:start+(before+.98-start)*.3};
+}
 export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkMeterLevel=window.KingRicoPark.state.spins;fc._parkVisibleTickets=window.KingRicoPark.state.cedros;
  const spinButton=document.querySelector('[data-spin-btn]');
@@ -44,9 +50,8 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkChargeConfirmed=(before,response,actual)=>{
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
-  { const lvl=response.park.spins,shownBefore=Math.max(before>=10?0:before,Math.min((fc._parkShown??before),(before>=10?0:before)+.9));
-   const show=lvl>before||lvl<before||before>=10?lvl:Math.min(lvl+.9,shownBefore+.5);
-   queuedCharge={before,target:lvl,show,from:before>=10?0:shownBefore}; }fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
+  {const target=response.park.spins,visual=nextPourLevel(before,target,fc._parkShown);
+   queuedCharge={before,target,...visual};}fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
   // Keep the circular cover until the confirmed color becomes the new base.
   spinButton?.setAttribute('data-color-pending','1');
   const pending=queuedCharge;pending.fallback=setTimeout(()=>{if(queuedCharge===pending){fc._parkPulse={at:performance.now(),delay:0,seq:++pulseNo};schedule();}},450);
@@ -66,7 +71,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
    const arrival=cue.at+Number(cue.delay||0)+Math.hypot(x-223.5,y-originY)/2.2;
    const delay=Math.max(0,arrival-performance.now()),pourLead=Math.min(150,delay),startDelay=Math.max(0,delay-pourLead);
    record(fc,'charge:scheduled',{side,arrival,level:charge.target,pulse:cue.at,pulseDelay:cue.delay,surfaceY:y});
-   const color=colorAt(Math.min(1,charge.target/10));tube.style.setProperty('--park-pour-color',color);
+   const color=colorAt(Math.min(1,(charge.show??charge.target)/10));tube.style.setProperty('--park-pour-color',color);
    tube.classList.toggle('is-empty',(charge.show??charge.target)===0);
    stream.style.height=Math.max(4,h-from)+'px';drops.forEach(d=>d.style.top=(h-from-2)+'px');
    const calm=reduced();

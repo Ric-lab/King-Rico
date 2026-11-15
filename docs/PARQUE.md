@@ -4,7 +4,7 @@ A decisão nova substitui o parque publicado descrito no histórico abaixo.
 Somente Circus permanece ativo. `site/routes.json` marca as atrações como
 `archived`; seus HTML publicados redirecionam para Circus. Fontes, modelos,
 assets e recibos antigos continuam no Git. Não há novas entradas no catálogo.
-O botão do anúncio de 30s / +1.000 moedas fica no menu do Circus, reutilizando
+O botão do anúncio de 30s / +1.000 moedas fica no cabeçalho do Circus, reutilizando
 anúncio simulado, recibo e voo de moedas existentes. A raspadinha diária permanece.
 
 Seis símbolos pagam moedas, sem coringa: **ingresso 0,4×, circo 0,8×, capa 1,2×,
@@ -35,11 +35,16 @@ As **barras laterais** viram o **Good Luck**: no topo de cada barra entra o asse
 da nuvem (`assets/symbols/sym-candy.webp`). A barra deixa de encher nos 10 giros
 fixos e passa a encher de forma aleatória (`BAR_P1_V6 = 0,12`, máximo de 1 nível por giro),
 exigindo **no mínimo 25 giros** no ciclo (média ~88 giros) para chegar ao topo (`10`).
+A exibição mantém um pequeno depósito visual entre níveis reais: em giros sem
+avanço, aproxima-se gradualmente do próximo nível (sem atingir `10` nem disparar
+Good Luck por animação). O jato e a superfície usam a mesma paleta do líquido;
+o jato é liso, sem faixas brancas rolando. Não alterar o sorteio para corrigir tinta.
 Quando chega ao topo (`10`), a nuvem pisca e ativa os **5 giros Good Luck**
 (`featureBet = floor(cycleWagerUnits / 10) / 100`), travando símbolos pagantes reais na grade.
 
-O controle de videogame (`assets/machine/controller-symbol-v1.webp`, ID 15) está
-reservado sem sorteio enquanto a abertura do Penalty é tarefa separada. As três
+O controle de videogame (`assets/machine/controller-symbol-v1.webp`, arte v2
+aprovada, ID 15, peso 4) já está ativo nesta prévia. Uma trinca abre o convite
+para o antigo Penalty. Não restabelecer o estado reservado de versões anteriores. As três
 fitas contínuas usam a sequência dos seis pagamentos e dos especiais;
 Tony/Tucker/Ray passam visualmente durante o giro, sem antecipar o sorteio.
 Cenas/sons aprovados (patada, raspagem, moedas, roleta, botão) ficam preservados.

@@ -77,20 +77,21 @@ function getIosHap(overlay){
  return el||fc?._iosHap||document.getElementById('fc-ios-hap');
 }
 function playScratchHaptic(force,overlay){
- const n=performance.now();if(!force&&n-hapT<55)return;
+ const n=performance.now();if(!force&&n-hapT<55)return true;
  try{
   const fc=window.__fc;
-  if(fc&&(!fc.state?.vibrate||!(fc.state?.vibLvl>0)))return;
+  if(fc&&(!fc.state?.vibrate||!(fc.state?.vibLvl>0)))return true;
   const nativeHap=!!window.Capacitor?.PluginHeaders?.some?.(h=>h.name==='FcHaptics');
-  if(nativeHap&&fc?.buzz){hapT=n;fc.buzz([22]);return;}
+  if(nativeHap&&fc?.buzz){hapT=n;fc.buzz([22]);return true;}
   if(typeof navigator.vibrate==='function'){
    const ok=navigator.vibrate(fc?.vib?fc.vib([22]):[22]);
    if(ok!==false)hapT=n;
-   return;
+   return ok!==false;
   }
   const ios=getIosHap(overlay);
   if(ios){hapT=n;ios.click();}
- }catch{}
+  return true;
+ }catch{return false;}
 }
 function playScratchSound(isActive,force){
  const n=performance.now();if(!force&&n-scratchT<55)return;
@@ -106,6 +107,7 @@ function playScratchSound(isActive,force){
    if(!scratchQueued){
     scratchQueued=true;
     ac.resume?.().then(()=>{
+     if(!scratchQueued)return;
      scratchQueued=false;
      if(isActive()&&fc.state?.sound&&ac.state==='running'){scratchT=performance.now();fire(fc);}
     }).catch(()=>{scratchQueued=false;});
@@ -117,6 +119,7 @@ function playScratchSound(isActive,force){
   if(!scratchQueued){
    scratchQueued=true;
    ac.resume?.().then(()=>{
+    if(!scratchQueued)return;
     scratchQueued=false;
     if(isActive()&&ac.state==='running'){scratchT=performance.now();fireFb();}
    }).catch(()=>{scratchQueued=false;});
@@ -124,7 +127,7 @@ function playScratchSound(isActive,force){
  }catch{}
 }
 const sfx={
- scratch:(isActive=()=>true,force=false,overlay=null)=>{playScratchHaptic(force,overlay);playScratchSound(isActive,force);},
+ scratch:(isActive=()=>true,force=false,overlay=null)=>{const haptic=playScratchHaptic(force,overlay);playScratchSound(isActive,force);return haptic;},
  cell:win=>withAudio(fc=>win?(fc.bell(1175,.28,.07),fc.bell(1568,.22,.045,.05)):fc.pluck(392,.05,.14)),
  three:()=>withAudio(fc=>fc.sfxWin(false)),
  prize:()=>withAudio(fc=>[784,988,1319].forEach((f,i)=>fc.bell(f,.5,.08,i*.06))),
@@ -164,8 +167,14 @@ export async function openDailyReward(Cloud) {
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
   const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockVeil=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
-  let missedScratch=false;
-  const unlock=e=>{warmAudio(true);if(missedScratch&&e&&(e.type==='touchend'||e.type==='click'||e.type==='pointerup')){missedScratch=false;playScratchHaptic(true,overlay);setTimeout(()=>playScratchSound(()=>!finished&&!revealed,true),20);}};
+  let missedScratch=null,missedHaptic=false;
+  const unlock=e=>{
+   warmAudio(true);
+   if(!e||!['touchend','click','pointerup'].includes(e.type))return;
+   // Vibration can be blocked independently of audio on the first mobile gesture.
+   if(missedHaptic)missedHaptic=playScratchHaptic(true,overlay)===false;
+   if(missedScratch!==null){const silent=scratchT===missedScratch;missedScratch=null;if(silent)playScratchSound(()=>!finished&&!revealed,true);}
+  };
   overlay.addEventListener('pointerup',unlock,{capture:true,passive:true});
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchstart',unlock,{capture:true,passive:true});
@@ -246,14 +255,25 @@ export async function openDailyReward(Cloud) {
      if(cell.classList.contains('is-revealed'))continue;
      const r=canvas.getBoundingClientRect(),radius=r.width*.1;
      if(Math.max(last.x,point.x)<r.left-radius||Math.min(last.x,point.x)>r.right+radius||Math.max(last.y,point.y)<r.top-radius||Math.min(last.y,point.y)>r.bottom+radius)continue;
-     if(!hit){hit=true;const a=(window.__fc?._ac||fbAc);if(!a||a.state!=='running')missedScratch=true;sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);}
+     if(!hit){hit=true;const a=(window.__fc?._ac||fbAc);if(!a||a.state!=='running')missedScratch=scratchT;missedHaptic=sfx.scratch(()=>!finished&&!revealed,fromDown,overlay)===false||missedHaptic;}
      const local=p=>({x:(p.x-r.x)*180/r.width,y:(p.y-r.y)*180/r.height}),from=local(last),to=local(point);
      ctx.globalCompositeOperation='destination-out';ctx.lineWidth=34;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
+     touched.add(cell);
+    }
+    last=point;
+    if(!coverageFrame)coverageFrame=requestAnimationFrame(checkCoverage);
+   }
+   const touched=new Set();let coverageFrame=0;
+   function checkCoverage(){
+    cancelAnimationFrame(coverageFrame);coverageFrame=0;
+    if(revealed||finished){touched.clear();return;}
+    // Draw every input sample; read each touched canvas only once per frame.
+    for(const {cell,ctx}of surfaces)if(touched.has(cell)&&!cell.classList.contains('is-revealed')){
      const data=ctx.getImageData(0,0,180,180).data;let clear=0,total=0;
      for(let i=3;i<data.length;i+=64){total++;if(data[i]<128)clear++;}
      if(clear/total>=.60)revealCell(cell);
     }
-    last=point;
+    touched.clear();
     const found=cells.filter(c=>c.dataset.prize==='true'&&c.classList.contains('is-revealed')).length;
     if(found===3)reveal();else status.textContent=`${found} de 3 prêmios encontrados`;
    }
@@ -263,7 +283,7 @@ export async function openDailyReward(Cloud) {
     else scratchPoint(e,false);
    }
    grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
-   grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{last=null;};
+   grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{checkCoverage();last=null;};
   }catch{reveal();}
   // Another tab may collect while this card is open. Never offer a second credit.
   unwatch=Cloud.watch(p=>{if(!busy&&p.bonus.day===gift.today)close();});
