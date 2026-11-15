@@ -25,6 +25,10 @@ with sync_playwright() as p:
   page.locator('[data-spin-btn]').click();page.wait_for_function(f'(__fc._parkMotionLog||[]).filter(x=>x.type==="charge:done").length>={i+1}',timeout=15000)
   page.wait_for_function('!__fc.state.spinning&&!__fc.cloudBusy()&&!__fc.state.showWin',timeout=15000)
   levels.append(page.evaluate('__fc._parkShown'))
+  if i==0:
+   page.wait_for_timeout(1200) # Must survive the background refresh, after the pour ends.
+   assert page.evaluate('__fc._parkShown>=.65')
+   assert page.locator('.park-meter-fill').first.evaluate('e=>e.getBoundingClientRect().height')>=15
   if i in [0,2,5]:page.screenshot(path=f'work/refined-bar-{i+1}.png')
  assert all(a<b for a,b in zip(levels,levels[1:])),levels
  assert page.evaluate('KingRicoPark.state.spins')==0

@@ -38,7 +38,10 @@ exigindo **no mínimo 25 giros** no ciclo (média ~88 giros) para chegar ao topo
 A exibição mantém um pequeno depósito visual entre níveis reais: em giros sem
 avanço, aproxima-se gradualmente do próximo nível (sem atingir `10` nem disparar
 Good Luck por animação). O jato e a superfície usam a mesma paleta do líquido;
-o jato é liso, sem faixas brancas rolando. Não alterar o sorteio para corrigir tinta.
+o jato é liso, sem faixas brancas rolando. A primeira dose tem mínimo visual de
+0,65 de nível para aparecer acima do pé da moldura, inclusive após reiniciar o
+ciclo. Roxo/azul saturados, filtro 1,45 e brilho 1,18; não reduzir a vivacidade
+para corrigir a tinta. Não alterar o sorteio para corrigir tinta.
 Quando chega ao topo (`10`), a nuvem pisca e ativa os **5 giros Good Luck**
 (`featureBet = floor(cycleWagerUnits / 10) / 100`), travando símbolos pagantes reais na grade.
 

@@ -1,3 +1,17 @@
+## Correção da primeira tinta e volta da saturação — 15/11/2026 (Codex)
+
+Feedback do dono: primeiro giro ainda parecia vazio e cores ficaram menos vivas.
+Primeira dose visual agora tem mínimo de 0,65 de nível para ultrapassar o pé da
+moldura; isso também vale para o primeiro giro de um novo ciclo (antes: estado
+anterior 10 → novo 0 deixava tudo zerado). Demais doses continuam suaves, sem
+ativar Good Luck por animação. Voltaram roxo/azul saturados e filtro de cor
+1,45 / brilho 1,18, iguais no líquido, jato e menisco. Sorteio/pagamento intactos.
+
+Teste Node inclui início vazio e reinício de ciclo. Regressão de navegador passa
+a esperar após a primeira queda e após o refresh, verificando tinta retida e
+altura visível mínima de 15px em 390×844. Próximo passo: avaliar primeiro giro
+e cores na prévia única; confirmar Actions desta revisão antes de enviar o link.
+
 ## Revisão dos ajustes recentes — 15/11/2026 (Codex)
 
 Base: `fc77f2d`, preservando trevo (não cedro), Ray sem defesa, roletas guardadas

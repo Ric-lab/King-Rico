@@ -8,5 +8,6 @@ test('successive pours continue after the old two-pour ceiling, without completi
  assert.deepEqual(nextPourLevel(3,4,shown),{from:shown,show:4});
  assert.equal(nextPourLevel(9,9,9.95).show<10,true);
  assert.deepEqual(nextPourLevel(9,10,9.95),{from:9.95,show:10});
- assert.deepEqual(nextPourLevel(10,0,10),{from:0,show:0});
+ assert.deepEqual(nextPourLevel(10,0,10),{from:0,show:.65});
+ assert.deepEqual(nextPourLevel(0,0),{from:0,show:.65});
 });

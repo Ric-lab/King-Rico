@@ -11,7 +11,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Base fc77f2d preservada. Sem mudar economia: tinta sem teto após duas doses; jato/menisco coerentes; vibração recuperada independentemente do áudio, sem duplicar som; cobertura do canvas medida uma vez por quadro. Testes focados e navegador passaram."
+      "notes": "Correção após feedback: primeira dose mínima visível (inclusive novo ciclo após Good Luck), roxo/azul saturados e brilho restaurados. Sorteio e pagamentos intactos. Regressão espera tinta persistir após primeira queda e refresh."
     },
     {
       "id": "t-o-super-win-nao-e-um-a-31",
