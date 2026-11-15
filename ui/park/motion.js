@@ -29,7 +29,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   commitSpinColor(fc._parkMeterLevel);
   fc._parkPreparePulseColor();
  };
- const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0);});};syncColor(fc._parkMeterLevel);
+ const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0&&!(fc._parkShown>0));});};syncColor(fc._parkMeterLevel);
  fc._parkFlashRim=(delay=0)=>{
   try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only. */}
  };
@@ -44,8 +44,8 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkChargeConfirmed=(before,response,actual)=>{
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
-  { const lvl=response.park.spins,shownBefore=Math.max(before>=10?0:before,Math.min((fc._parkShown??before),(before>=10?0:before)+.67));
-   const show=lvl>before||lvl<before||before>=10?lvl:Math.min(lvl+.67,shownBefore+.34);
+  { const lvl=response.park.spins,shownBefore=Math.max(before>=10?0:before,Math.min((fc._parkShown??before),(before>=10?0:before)+.9));
+   const show=lvl>before||lvl<before||before>=10?lvl:Math.min(lvl+.9,shownBefore+.5);
    queuedCharge={before,target:lvl,show,from:before>=10?0:shownBefore}; }fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
   // Keep the circular cover until the confirmed color becomes the new base.
   spinButton?.setAttribute('data-color-pending','1');
@@ -67,7 +67,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
    const delay=Math.max(0,arrival-performance.now()),pourLead=Math.min(150,delay),startDelay=Math.max(0,delay-pourLead);
    record(fc,'charge:scheduled',{side,arrival,level:charge.target,pulse:cue.at,pulseDelay:cue.delay,surfaceY:y});
    const color=colorAt(Math.min(1,charge.target/10));tube.style.setProperty('--park-pour-color',color);
-   tube.classList.toggle('is-empty',charge.target===0);
+   tube.classList.toggle('is-empty',(charge.show??charge.target)===0);
    stream.style.height=Math.max(4,h-from)+'px';drops.forEach(d=>d.style.top=(h-from-2)+'px');
    const calm=reduced();
    try{
