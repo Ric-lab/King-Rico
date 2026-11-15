@@ -46,5 +46,14 @@ with sync_playwright() as p:
   assert page.locator('[data-tickets]').inner_text()=='0/5'
   assert page.locator('.park-tony-scene').count()==0
   print('clover defense: center replacement, real prize, one paid spin PASS',flush=True)
+ if stage in ['all','scatter']:
+  for demo,count in [('villain-one',1),('villain-pair',2)]:
+   ready(demo);page.locator('[data-spin-btn]').click()
+   page.wait_for_function('__fc._cloudSpin&&!__fc.state.spinning',timeout=15000)
+   x=page.evaluate('__fc._cloudSpin.outcome')
+   assert sum(12<=n<=14 for n in x['grid'])==count,x['grid']
+   assert not x.get('tony') and not x.get('tucker') and not x.get('ray')
+   page.screenshot(path='work/special-'+demo+'.png')
+  print('villain singles/pairs without unbacked attacks PASS',flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()

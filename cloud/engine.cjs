@@ -188,6 +188,16 @@ function slot(bet, peaches = 0, rng = random, bank = null, version=1, onGrid = n
       for (const i of line) grid[i] = 10; // Minimum current prize: ticket, 0.4x.
       res = evaluate(grid, bet, version);
     }
+    // Suspense-only villains occupy losing cash cells. Preserve every paying
+    // cell and all clovers, wheels and controller symbols; never fabricate an attack.
+    const protectedCells = new Set(res.cells);
+    const available = grid.flatMap((s,i) => !protectedCells.has(i) && [0,2,6,7,8,10].includes(s) ? [i] : []);
+    if (available.length && rng() < .35) {
+      const villain = 12 + Math.min(2, Math.floor(rng() * 3));
+      const count = Math.min(available.length, rng() < .3 ? 2 : 1);
+      for (let n=0;n<count;n++) { const at=Math.min(available.length-1,Math.floor(rng()*available.length));grid[available.splice(at,1)[0]]=villain; }
+      res = evaluate(grid,bet,version);
+    }
     const featureBet = barUnits > 0 ? Math.max(1, Math.floor(barUnits / 10)) / 100 : bet;
     const bonus = barUnits > 0 ? { ...feature(featureBet, rng, version), bet: featureBet } : null;
     return { grid, res, feature: bonus, peaches: remaining, peachBank, slotVersion: version, wheelUnits,

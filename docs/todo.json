@@ -26,12 +26,12 @@
     {
       "id": "p-villain-scatter",
       "title": "4/6 Suspense: vilões avulsos e pares em giros comuns",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": ""
+      "notes": "Testes locais de 5.000 grades e navegador passaram: avulsos/pares, sem ataque falso, sem perder prêmio/especiais. Presets 🎯 adicionados. Auditoria da versão final pendente; checkpoint sem deploy."
     },
     {
       "id": "p-special-defense",

@@ -1,3 +1,14 @@
+## Etapa 4 local conferida — 15/11/2026 (Codex)
+
+Grades comuns agora podem terminar com 1/2 vilões em casas que não participam
+de prêmio. Nunca substitui células pagantes, trevos, roletas ou controle; não
+produz trinca de vilão sem evento de ataque e não causa roubo. Chances dos ataques
+reais preservadas. Seletor 🎯 inclui Vilão avulso / Par de vilões, forçando o
+sorteio por RNG do motor, não editando a grade depois. Testes de 5.000 grades
+confirmaram avulsos/pares, recibo/prêmio consistente e preservação de especiais.
+Checkpoint sem deploy. Próxima etapa: Good Luck entrar diretamente no giro
+confirmado, retirar nuvens e consumir a barra em cinco raios automáticos.
+
 ## Etapa 3 local conferida — 15/11/2026 (Codex)
 
 Defesa passa a ter recibo final: defense.beforeGrid (ameaça de três vilões),
