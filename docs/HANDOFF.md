@@ -1,3 +1,18 @@
+## Etapa 5 local conferida — 15/11/2026 (Codex)
+
+Good Luck é identificado no recibo antes de girar a rodada base: entra direto
+com a chamada/háptico do bônus, sem um giro normal anterior. O prêmio em moedas
+da grade inicial continua no crédito confirmado e é somado à apresentação final
+do Good Luck. Uma aposta apenas; cinco rodadas usam o plano já confirmado.
+Saiu a nuvem de cima dos tubos. Cada carga envia dois raios ao botão e consome
+2 dos 10 níveis (5 cargas: 8/6/4/2/0), na cor do topo do líquido gasto; sem clique
+mecânico simulado. UI deriva a apresentação da energia separadamente do ledger.
+Teste local verificou zero início de rolo normal antes do bônus, cinco cores,
+uma requisição paga e prêmio final igual ao recibo completo. Seletor Good Luck
+corrigido para não inserir o draw de vilão quando o contador já está em 9.
+Checkpoint sem deploy. Próximo passo: empilhar asset/quantidade dos contadores,
+conferir o conjunto, concluir auditorias e publicar uma única prévia.
+
 ## Etapa 4 local conferida — 15/11/2026 (Codex)
 
 Grades comuns agora podem terminar com 1/2 vilões em casas que não participam

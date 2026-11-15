@@ -55,5 +55,22 @@ with sync_playwright() as p:
    assert not x.get('tony') and not x.get('tucker') and not x.get('ray')
    page.screenshot(path='work/special-'+demo+'.png')
   print('villain singles/pairs without unbacked attacks PASS',flush=True)
+ if stage in ['all','goodluck']:
+  ready()
+  page.evaluate("""()=>{window.baseSpinCalls=0;window.reelStarts=[];const r=__fc.reelsStart.bind(__fc);__fc.reelsStart=(...a)=>{reelStarts.push({feature:!!__fc.state.feature});return r(...a)};const fetch=window.fetch;window.fetch=(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action==='spin')baseSpinCalls++;return fetch(u,o)};Math.random=()=>.99;KingRicoPreviewPicker();}""")
+  page.locator('#kr-preview-picker').get_by_role('button',name='Good Luck (barra cheia)').click()
+  page.locator('[data-spin-btn]').click()
+  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="goodluck:entry")',timeout=15000)
+  assert page.evaluate('reelStarts.length')==0
+  assert page.locator('.park-goal-cloud').count()==0
+  page.wait_for_function('__fc._goodLuckEnergyLog?.length>=1',timeout=15000)
+  page.wait_for_timeout(180);page.screenshot(path='work/special-goodluck-first-bolt.png')
+  page.wait_for_function('__fc._goodLuckEnergyLog?.length===5',timeout=45000)
+  energy=page.evaluate('__fc._goodLuckEnergyLog');assert [r['to'] for r in energy]==[8,6,4,2,0],energy
+  assert len(set(r['color'] for r in energy))==5,energy
+  assert page.evaluate('reelStarts.every(r=>r.feature)&&baseSpinCalls===1')
+  page.wait_for_function('!__fc.state.feature',timeout=20000)
+  assert abs(page.evaluate('__fc.state.winAmount')-page.evaluate('__fc._cloudSpin.outcome.winUnits/100'))<.005
+  print(json.dumps({'directGoodLuck':True,'charges':energy,'paidSpinCalls':1}),flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()

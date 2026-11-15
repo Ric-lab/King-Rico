@@ -1204,6 +1204,8 @@ class Component extends DCLogic {
     }
     if (!fr && bet > bal) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
 
+    if(cloudResult?.outcome?.feature&&this._parkBeginGoodLuck){this._parkBeginGoodLuck(cloudResult,bet);return;}
+
     const target = cloudResult ? (cloudResult.outcome.defense?.beforeGrid || cloudResult.outcome.grid) : Array.from({ length: 9 }, () => this.pick());
     { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
@@ -1671,7 +1673,9 @@ class Component extends DCLogic {
     const grid = this.state.grid;
     const plan = window.KingRicoCloud && window.KingRicoCloud.enabled && this._cloudSpin && this._cloudSpin.outcome.feature;
     bet=plan?.bet ?? bet;
-    const res = plan ? plan.res : this.evaluate(grid, bet);
+    const raw = plan ? plan.res : this.evaluate(grid, bet);
+    const opening=this._goodLuckOpeningWin||0;this._goodLuckOpeningWin=0;
+    const res=opening?{...raw,win:Math.round((raw.win+opening)*100)/100}:raw;
     if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
     const big = res.win >= bet * 20;
     this._parkMeterLevel = 0;

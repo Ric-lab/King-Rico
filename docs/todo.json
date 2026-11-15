@@ -16,12 +16,12 @@
     {
       "id": "p-goodluck-energy",
       "title": "5/6 Good Luck direto no giro, raios coloridos e consumo da barra em cinco cargas; sem nuvem",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": ""
+      "notes": "Conferido localmente: entra antes dos rolos normais, háptico de entrada, 5 raios com cores distintas, barra 8/6/4/2/0, uma requisição paga, prêmio final inclui prêmio da rodada. Nuvens removidas. Checkpoint sem deploy."
     },
     {
       "id": "p-villain-scatter",

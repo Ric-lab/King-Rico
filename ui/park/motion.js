@@ -7,7 +7,7 @@ function openControllerGame(fc){if(document.getElementById('kr-controller-game')
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
-function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
+export function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
 // Cosmetic sub-level only: repeated pours approach the next real level smoothly.
 // A real level change or a new cycle always owns the boundary and completion.
 export function nextPourLevel(before,target,shown=before){

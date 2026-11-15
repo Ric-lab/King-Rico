@@ -38,7 +38,7 @@ async function execute(data){
  const mode=forced||demoMode,demo=(forced||demoSpin)&&data.action==='spin'&&data.game==='circus';
  const symbols=engine.slotSymbols(6);
  const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(forced||mode==='villain-one'||mode==='villain-pair'?gridFor(mode):mode==='ticket'?[10,10,10,0,2,6,7,8,5]:mode==='cedar'?[5,5,5,0,2,6,7,8,10]:mode==='wheel'?[11,0,2,6,7,8,10,2,6]:mode==='goodluck'?[0,2,6,7,8,10,2,6,0]:mode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:symbol===11?[.001]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
- if(demo&&mode!=='tony')draws.unshift(.99);
+ if(demo&&mode!=='tony'&&mode!=='goodluck')draws.unshift(.99);
  if(demo&&mode==='tony'){data.previewTony=true;draws.splice(0,draws.length,0,.5);}
  if(demo&&mode==='tucker')data.previewTucker=true;
  if(demo&&mode==='ray')data.previewRay=true;

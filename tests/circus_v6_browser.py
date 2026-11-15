@@ -15,7 +15,7 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoCloud.slotVersion')==6
  assert page.locator('.kr-hud-park').count()==0
  page.locator('.park-pocket').click();page.get_by_role('dialog',name='Trevos de proteção').wait_for();page.get_by_role('button',name='ENTENDI').click()
- assert page.locator('.park-meter-goal .park-goal-cloud').count()==2
+ assert page.locator('.park-meter-goal .park-goal-cloud').count()==0
  assert page.locator('.park-basket [data-wheels]').inner_text()=='0/5'
  page.evaluate('KingRicoPreviewPicker()')
  picker=page.locator('#kr-preview-picker')
