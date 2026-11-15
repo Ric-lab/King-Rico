@@ -37,6 +37,9 @@ for(const route of [...routes,{path:'/home',file:'Fortune Circus.dc.html'}]){
  const dir=path.join('dist',route.path.slice(1));await mkdir(dir,{recursive:true});
  await writeFile(path.join(dir,'index.html'),'<script>location.replace('+JSON.stringify('/'+encodeURIComponent(route.file))+'+location.search+location.hash)</script>');
 }
+// Link ÚNICO de teste do dono: /Preview (sempre o Circus, sempre a versão mais nova, sem ?v=).
+await mkdir('dist/Preview',{recursive:true});
+await writeFile('dist/Preview/index.html','<!doctype html><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-store"><title>Prévia</title><script>location.replace('+JSON.stringify('/'+encodeURIComponent('Fortune Circus.dc.html'))+'+"?fresh="+Date.now()+location.hash)</script>');
 await mkdir('dist/todo',{recursive:true});
 await writeFile('dist/todo/index.html',await readFile('site/todo/index.html','utf8'));
 await writeFile('dist/todo/todo.json',await readFile('docs/todo.json','utf8'));

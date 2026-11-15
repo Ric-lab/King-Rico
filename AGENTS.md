@@ -92,3 +92,5 @@ links e diff, sem repetir partidas nem publicar outro build do jogo.
   comunicar marcos úteis; evitar mensagens repetitivas só para dizer que aguarda.
 
 **Painel e lista de tarefas única: `docs/todo.json` + `docs/TODO.md` (site: https://ric-lab.github.io/King-Rico/todo/)** — compartilhada pelo dono, Claude, GPT/Codex e Gemini. Usar `node scripts/todo.mjs` (`list` / `add` / `move` / `sync`) para ler antes de começar e atualizar ao parar. Nada é de um modelo só.
+
+**Link de teste do dono (único, definitivo): https://ric-lab.github.io/King-Rico/Preview** — ver docs/skills/00-sempre.md.

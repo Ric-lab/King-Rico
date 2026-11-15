@@ -20,3 +20,11 @@
 ## Lista de tarefas (Painel Web + JSON/MD)
 - Site compartilhado: **https://ric-lab.github.io/King-Rico/todo/** (3 colunas: **A Fazer**, **Na Prévia (Testar)**, **Feito**).
 - Fonte estruturada única dos 3 modelos (Claude, GPT/Codex, Gemini): `docs/todo.json` + CLI `node scripts/todo.mjs` (que atualiza `docs/todo.json` e regenera `docs/TODO.md` automaticamente). Toda resposta ao dono inclui o link do painel.
+
+
+## Link de teste da prévia — SEMPRE este, sem nada depois
+**https://ric-lab.github.io/King-Rico/Preview**
+- É o único link que se manda ao dono. Nunca `/circus`, `?v=`, `?demo=` nem outro caminho.
+- Ele sempre abre o Circus na versão mais nova (cache furado automaticamente).
+- Eventos a testar: dono usa ⚙ → 🎯 (escolher próximos giros). Se faltar uma opção, acrescentar no 🎯.
+- Antes de mandar o link: confirmar que o workflow "Prévia no GitHub Pages" terminou com SUCESSO e que a mudança está nos arquivos publicados.
