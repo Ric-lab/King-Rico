@@ -105,7 +105,7 @@ function bootCircus(){
  window.addEventListener('pagehide',()=>clearInterval(timer),{once:true});
 }
 function renderRails(){const el=document.querySelector('.park-circus-rails');if(!el||!displayState)return;
- const fc=window.__fc;if(!fc?._parkMeterBusy){const level=fc?._parkMeterLevel??displayState.spins;el.style.setProperty('--park-fill',Math.min(100,level/displayState.meterSpins*100)+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',level===0));}
+ const fc=window.__fc;if(!fc?._parkMeterBusy){const real=fc?._parkMeterLevel??displayState.spins,level=(fc?._parkShown!=null&&fc._parkShown>=real&&fc._parkShown<real+1)?fc._parkShown:real;el.style.setProperty('--park-fill',Math.min(100,level/displayState.meterSpins*100)+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',level===0));}
  el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',displayState.spins);
  el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${displayState.spins} de ${displayState.meterSpins} no Good Luck`);
  const tickets=fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';el.querySelector('[data-tickets]').textContent=count;
