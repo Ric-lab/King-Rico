@@ -104,25 +104,25 @@ function playScratchSound(isActive,force){
    const ac=fc.ac?.();if(!ac)return;
    fc.out?.();fc.noise?.(ac);
    if(ac.state==='running'){scratchT=n;scratchQueued=false;fire(fc);return;}
-   if(!scratchQueued){
+   if(!scratchQueued||force){
     scratchQueued=true;
     ac.resume?.().then(()=>{
      if(!scratchQueued)return;
      scratchQueued=false;
      if(isActive()&&fc.state?.sound&&ac.state==='running'){scratchT=performance.now();fire(fc);}
-    }).catch(()=>{scratchQueued=false;});
+    }).catch(()=>{/* Keep the cue for the next trusted end/click in this gesture. */});
    }
    return;
   }
   const ac=fbAudio();if(!ac)return;
   if(ac.state==='running'){scratchT=n;scratchQueued=false;fireFb();return;}
-  if(!scratchQueued){
+  if(!scratchQueued||force){
    scratchQueued=true;
    ac.resume?.().then(()=>{
     if(!scratchQueued)return;
     scratchQueued=false;
     if(isActive()&&ac.state==='running'){scratchT=performance.now();fireFb();}
-   }).catch(()=>{scratchQueued=false;});
+   }).catch(()=>{/* Keep the cue for the next trusted end/click in this gesture. */});
   }
  }catch{}
 }
@@ -173,7 +173,11 @@ export async function openDailyReward(Cloud) {
    if(!e||!['touchend','click','pointerup'].includes(e.type))return;
    // Vibration can be blocked independently of audio on the first mobile gesture.
    if(missedHaptic)missedHaptic=playScratchHaptic(true,overlay)===false;
-   if(missedScratch!==null){const silent=scratchT===missedScratch;missedScratch=null;if(silent)playScratchSound(()=>!finished&&!revealed,true);}
+   if(missedScratch!==null){
+    if(scratchT===missedScratch)playScratchSound(()=>!finished&&!revealed,true);
+    // A resume attempt may still be blocked. Keep the cue for touchend/click.
+    if(scratchT!==missedScratch)missedScratch=null;
+   }
   };
   overlay.addEventListener('pointerup',unlock,{capture:true,passive:true});
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
@@ -282,7 +286,8 @@ export async function openDailyReward(Cloud) {
     if(pts&&pts.length){for(const pt of pts){if(revealed)break;scratchPoint(pt,false);}}
     else scratchPoint(e,false);
    }
-   grid.onpointerdown=e=>{e.preventDefault();warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
+   // touch-action:none already blocks scrolling. Do not cancel the trusted tap/click.
+   grid.onpointerdown=e=>{warmAudio(true);last={x:e.clientX,y:e.clientY};try{grid.setPointerCapture(e.pointerId);}catch{}scratchPoint(e,true);};
    grid.onpointermove=scratch;grid.onpointerup=grid.onpointercancel=()=>{checkCoverage();last=null;};
   }catch{reveal();}
   // Another tab may collect while this card is open. Never offer a second credit.

@@ -100,10 +100,10 @@
       "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
       "status": "preview",
       "category": "Sons",
-      "agent": "Antigravity",
+      "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "AudioContext/noise pré-alocados ao abrir o modal, véu esbranquiçado interativo (sem botão TOQUE PARA RASPAR) para destravar Android Chrome e iOS Safari no 1º toque, sfx antes de getImageData, pincel 34px e limiar 60%."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Correção do primeiro gesto Android: cue não é descartado antes de tocar; retentativa em touchend/click mesmo após resume bloqueado, sem som duplicado. Regressão falha no código anterior e passa na correção, sem autoplay bypass e contando ruído real; teste diário passou. Validar no aparelho do dono."
     },
     {
       "id": "t-sfx-levanta",

@@ -1,3 +1,24 @@
+## Primeiro gesto da raspadinha no Chrome Android — 15/11/2026 (Codex)
+
+Dono confirmou Android: primeiro toque sem som/háptico. Corrigida perda do som
+pendente quando `resume()` ainda é bloqueado no pointerup: o cue só é descartado
+quando o som realmente é agendado; touchend/click podem repetir a tentativa
+mesmo havendo outra pendente, sem tocar em dobro. O grid usa touch-action:none
+para não rolar, sem cancelar o tap/click do navegador via preventDefault.
+
+Regressão nova `scratch_first_touch_browser.py`: toque CDP confiável, contexto
+mobile novo, sem liberar autoplay nem chamar evaluate/resume antes do gesto;
+nega resumes até touchend ou click. Conta buffers de ruído com contexto rodando,
+excluindo buffers silenciosos de desbloqueio. Código anterior falhou (som zero),
+correção passou nos dois casos: uma raspagem (duas bandas) e vibração aceita no
+mesmo primeiro gesto. Regressão diária também passou, incluindo gesto, acesso
+por teclado, retry, crédito único e recarga. Teste é em Chromium/emulação; motor
+háptico e comportamento do aparelho Android do dono precisam de validação real.
+
+Próximo passo: dono testar o primeiro gesto em
+https://ric-lab.github.io/King-Rico/Preview após Actions deste commit passar.
+Nenhuma alteração em barras, assets, pagamentos, identidade ou carteira.
+
 ## Correção da primeira tinta e volta da saturação — 15/11/2026 (Codex)
 
 Feedback do dono: primeiro giro ainda parecia vazio e cores ficaram menos vivas.

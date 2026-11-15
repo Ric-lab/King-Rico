@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Primeiro toque da raspadinha sem som/háptico no Android: não descartar cue antes de resume realmente liberar. Testar gesto confiável sem desbloquear áudio por evaluate e excluir buffers silenciosos das contagens de som.
 - Reduzir saturação/brilho da tinta deixou as cores menos vivas (feedback 15/11). A primeira dose precisa aparecer acima do pé da moldura, inclusive após reiniciar o ciclo.
 - Ajustes isolados de tinta com teto visual atingido após duas doses e jato/menisco de outra paleta: conferir vários giros seguidos, além do primeiro print.
 - Tony com grande área creme no queixo/tronco e T desenhado como letra: dono prefere queixo/peito alaranjados e T integrado às listras escuras, com haste suficientemente longa para ser reconhecido. Dentes discretos, mas visíveis.
