@@ -2,9 +2,9 @@
 (function(root){
  const PITCH=128,HEIGHT=382,ORDER=[10,2,0,6,8,7,5,11,12,13,14];
  function plan({column,from,target,stop,seed=0,ticket=false,wasTicket=false}){
-  const anchor=-Math.round(stop/PITCH),items=[];
+  const anchor=-Math.round(stop/PITCH),items=[],order=root.KING_RICO_PREVIEW_CONTROLLER?[...ORDER,15]:ORDER;
   for(let index=anchor-4;index<=5;index++){
-   let symbol=ORDER[((index+column*5+(seed|0))%ORDER.length+ORDER.length)%ORDER.length],isTicket;
+   let symbol=order[((index+column*5+(seed|0))%order.length+order.length)%order.length],isTicket;
    if(index>=0&&index<3){symbol=from[column+index*3];isTicket=symbol===10;}
    if(index>=anchor&&index<anchor+3){symbol=target[column+(index-anchor)*3];isTicket=symbol===10;}
    isTicket=symbol===10;
@@ -26,6 +26,7 @@
      const art=document.createElement('div');art.className='park-tape-symbol';art.dataset.tapeIndex=item.index;art.dataset.symbol=item.symbol;art.dataset.ticket=item.ticket;
      art.style.top=(item.index*PITCH+2)+'px';
      if(item.symbol<0)art.style.visibility='hidden';
+     else if(item.symbol===15)art.classList.add('is-controller');
      else if(item.symbol===14)art.classList.add('is-ray');
      else if(item.symbol===13)art.classList.add('is-tucker');
      else if(item.symbol===12)art.classList.add('is-tony');

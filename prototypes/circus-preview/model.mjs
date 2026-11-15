@@ -1,4 +1,5 @@
 import {randomUUID} from 'node:crypto';
+import {withControllerDraw} from './controller-symbol.mjs';
 import {Timestamp} from 'firebase/firestore';
 import {createGameStore,publicPlayer} from '../../cloud/store.mjs';
 import engine from '../../cloud/engine.cjs';
@@ -53,7 +54,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
-   if(data.previewWheel&&!park.wheel){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}const outcome=data.previewRay?rayDemo(p,park,data.bet,data.slotVersion||6):data.previewTucker?tuckerDemo(p,park,data.bet,data.slotVersion||6):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6);
+   if(data.previewWheel&&!park.wheel){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;}const outcome=data.previewRay?rayDemo(p,park,data.bet,data.slotVersion||6):data.previewTucker?tuckerDemo(p,park,data.bet,data.slotVersion||6):(data.previewControllerEnabled?withControllerDraw(()=>parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6)):parkRules.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||6));
    p.balanceUnits=before-cost+outcome.winUnits-(outcome.tony?.stolenUnits||0);p.peaches=outcome.peaches;p.peachBank=outcome.peachBank;
    p.settings.slotBetIdx=engine.BETS.indexOf(data.bet);p.revision++;
    result={game:'circus',bet:data.bet,balanceBefore:before/100,balanceDebited:(before-cost)/100,

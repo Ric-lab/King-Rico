@@ -244,3 +244,5 @@
 
 /* Prize lines must sit above the physical tape, static symbols and drum shading. */
 .park-reels [data-payline]{z-index:6}
+
+.park-tape-symbol.is-controller,[data-park-controller="true"]{background-image:url("/assets/machine/controller-symbol-v1.webp")!important;background-size:90% auto!important;background-position:50% 50%!important;background-repeat:no-repeat}

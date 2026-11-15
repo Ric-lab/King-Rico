@@ -23,8 +23,11 @@ uma defesa e preserva o resto: não há segundo desconto. A apresentação de de
 é informativa e nunca altera a carteira. Ingressos antigos não viram cedros nem
 moedas. O contador antigo de entradas deixa a interface.
 
-Happeach mantém coleta e rodada especial. O controle de videogame está reservado
-em `ui/park/controller-reserved.svg`, ID 15 inativo, sem peso/sorteio ou jogo.
+Happeach mantém coleta e rodada especial. O controle de videogame usa `assets/machine/controller-symbol-v1.webp`, ID 15.
+Na prévia ele sai avulso e em trincas (peso 6, só carteira de teste). Ainda
+não paga moedas nem abre minijogo; a integração Penalty é tarefa separada.
+No perfil de produção continua inativo, peso zero. A economia da prévia
+com controle é experimental e não autoriza promoção ao oficial.
 As três fitas contínuas usam a sequência dos seis pagamentos e dos especiais;
 Tony/Tucker/Ray passam visualmente durante o giro, sem antecipar o sorteio.
 A roda continua a cada 10 giros: base de 4% de todas as apostas reais do ciclo,

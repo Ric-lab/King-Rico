@@ -1,17 +1,19 @@
 import {createPreview} from './model.mjs';
-import engine from '../../cloud/engine.cjs';
+import {previewSymbols} from './controller-symbol.mjs';
 const KEY='kingRico.parque.mobile-preview.v1',networkFetch=globalThis.fetch.bind(globalThis);
+globalThis.KING_RICO_PREVIEW_CONTROLLER=true;
 let tail=Promise.resolve();
 // Prévia engatilhada: sem ?demo= o 1º giro de cada carregamento já mostra a última mudança. ?demo=off = jogo normal.
-const DEFAULT_DEMO='ticket';
+const DEFAULT_DEMO='controller';
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
-let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller'].includes(demoMode);
 async function execute(data){
  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
+ if(data.action==='spin'&&data.game==='circus')data.previewControllerEnabled=true;
  const demo=demoSpin&&data.action==='spin'&&data.game==='circus';
- const symbols=engine.slotSymbols(6);
- const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='ticket'?[10,10,10,0,2,6,7,8,5]:demoMode==='cedar'?[5,5,5,0,2,6,7,8,10]:demoMode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
+ const symbols=previewSymbols();
+ const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(demoMode==='controller'?[15,15,15,0,2,6,7,8,10]:demoMode==='ticket'?[10,10,10,0,2,6,7,8,5]:demoMode==='cedar'?[5,5,5,0,2,6,7,8,10]:demoMode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
  if(demo&&demoMode!=='tony')draws.unshift(.99);
  if(demo&&demoMode==='tony'){data.previewTony=true;draws.splice(0,draws.length,0,.5);}
  if(demo&&demoMode==='tucker')data.previewTucker=true;

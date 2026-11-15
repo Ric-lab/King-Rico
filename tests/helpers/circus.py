@@ -4,7 +4,8 @@ PAYS=json.loads(subprocess.check_output(['node','-p','JSON.stringify(require("./
 def br_money(value):
     return f'{value:,.2f}'.replace(',','_').replace('.',',').replace('_','.')
 
-WEIGHTS=[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,0]
+# Browser tests use the test-wallet table, including its preview-only controller.
+WEIGHTS=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {previewSymbols} from './prototypes/circus-preview/controller-symbol.mjs'; console.log(JSON.stringify(previewSymbols().map(s=>s.w)))"],text=True))
 def draws_for_grid(grid):
     result=[.99] # Skip the v6 villain draw.
     for symbol in grid:

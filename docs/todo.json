@@ -10,8 +10,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=off",
-      "notes": "Arte aprovada pelo dono e aplicada na tabela do Circus e pré-carga. Navegador 390x844 sem erros/assets faltantes; ativação do evento é tarefa separada."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?demo=controller",
+      "notes": "Aprovado e aplicado. Agora sorteável só na prévia (peso 6), avulso ou trinca; demo=controller no primeiro giro. Sem pagamento ou minijogo nesta etapa; oficial inativo."
     },
     {
       "id": "t-cedro-todos",
@@ -51,7 +51,7 @@
       "agent": "",
       "commit": "",
       "demoUrl": "",
-      "notes": "Ativar o símbolo do controle nos rolos abrindo o Fortune Penalty temporariamente."
+      "notes": "Controle já tem arte aprovada e participa do sorteio da prévia. Falta integrar abertura do Penalty; não feito no pedido atual, que foi apenas tornar o símbolo sorteável."
     },
     {
       "id": "t-raspadinha-rapida",

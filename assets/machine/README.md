@@ -4,7 +4,8 @@
 
 `controller-symbol-v1.png` é a fonte transparente; `.webp` é a exportação
 lossless 560×560. Controle azul royal e dourado com botões coloridos, aprovado pelo dono. Substitui o placeholder na tabela do menu e entra na
-pré-carga. Ainda não entra no sorteio/fitas; ativação é tarefa separada.
+pré-carga. Nas fitas/sorteio apenas da prévia, ID 15 e peso 6. Evento de minijogo
+ainda não ativado. Oficial mantém peso zero.
 
 
 ## Altura do ingresso nos rolos — 13/11/2026
@@ -40,8 +41,9 @@ coroa (7), cedro (5), Happeach (11), Tony (12), Tucker (13), Ray (14).
 Os seis primeiros pagam; os demais são especiais. Cabeças dos vilões e o
 ingresso usam seus assets separados, sem recortar uma casa errada do atlas.
 A placa à esquerda agora exibe cedros **n/5**, com `sym-scepter.png`; o antigo
-`ticket-wallet-v2.webp` fica guardado. O controle está reservado em
-`ui/park/controller-reserved.svg` e não entra nas fitas nem no sorteio.
+`ticket-wallet-v2.webp` fica guardado. O controle usa `controller-symbol-v1.webp`; o SVG provisório está guardado.
+O ID 15 participa das fitas/sorteio apenas na carteira de teste, peso 6.
+Não paga moedas nem abre um minijogo nesta etapa; produção continua inativa.
 Nenhum aro, formato, posição, cor ou clique do spin foi redesenhado nesta fase.
 
 

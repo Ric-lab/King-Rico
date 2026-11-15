@@ -1,3 +1,21 @@
+## Controle sorteável somente na prévia — 13/11/2026 (Codex)
+
+`?demo=controller` (também padrão sem parâmetro) entrega três controles no
+primeiro giro. `?demo=off` permite sorteio normal incluindo controles avulsos,
+peso 6. Renderização nas três fitas e casas finais com asset aprovado; sem
+mudança de geometria. Tabela oficial, Firestore e probabilidades de produção
+intactos: o wrapper síncrono de sorteio da carteira de teste restaura os pesos
+em finally. O controle ainda não paga nem abre minijogo; abertura do Penalty
+continua separada, não foi pedida nesta etapa. Não tratar esta amostra como
+economia recalibrada para publicar no oficial.
+
+Testes focados: sorteio aleatório/avulso, restauração mesmo em erro, recibo de
+trinca sem prêmio indefinido, repetição sem débito extra; regressões v6/carteira
+passaram. Navegador 390×844: três controles finais, débito 10, prêmio zero,
+sem JS/404. Build de prévia passou; regressão ampliada de navegador v6
+inclui agora o controle. Workflow desta revisão é a confirmação da prévia.
+Próximo passo: avaliar frequência/encaixe e definir o evento do controle.
+
 ## Controle aprovado aplicado à interface — 13/11/2026 (Codex)
 
 Asset `controller-symbol-v1.webp` substitui o SVG provisório no bloco de

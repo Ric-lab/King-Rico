@@ -36,6 +36,12 @@ with sync_playwright() as p:
  for route in ['park','fingo','penalty','flying-clown','bounce']:
   page.goto(BASE+'/'+route);ready();assert 'Fortune%20Circus.dc.html' in page.url
   assert page.locator('[data-ticket],.kr-hud-park').count()==0
+ page.goto(BASE+'/circus?demo=controller');ready()
+ page.locator('[data-spin-btn]').click()
+ page.wait_for_function('__fc._cloudSpin?.outcome?.grid?.slice(0,3).every(s=>s===15)',timeout=15000)
+ page.wait_for_function("""document.querySelectorAll('[data-park-controller="true"]').length===3&&!document.querySelector('.park-physical-reel')""",timeout=20000)
+ assert page.evaluate('__fc._cloudSpin.outcome.winUnits')==0
+ page.screenshot(path='work/preview-controller.png')
  page.goto(BASE+'/circus?demo=cedar');ready()
  previous=page.evaluate('KingRicoPark.state.cedros||0');page.locator('[data-spin-btn]').click()
  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
