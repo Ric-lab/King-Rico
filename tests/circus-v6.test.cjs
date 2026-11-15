@@ -13,11 +13,11 @@ test('Ray ignores cedar defense and steals 1 to 4 cedars (bounded by stock)',()=
  for(const have of[0,1,2,5]){const p=player(),s={...park.fresh(),cedros:have,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>.54,6);assert.ok(x.ray);assert.ok(!x.defense);assert.equal(x.ray.before,have);if(have){assert.ok(x.ray.stolen>=1&&x.ray.stolen<=Math.min(4,have));}else assert.equal(x.ray.stolen,0);assert.equal(s.cedros,have-x.ray.stolen);assert.equal(x.ray.remaining,s.cedros);assert.equal(x.peaches,p.peaches);}
 });
 test('one cedar blocks the entire attack of Tony and Tucker',()=>{
- for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),cedros:2,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(x[kind]);assert.deepEqual(x.defense,{against:kind});assert.equal(s.cedros,1);assert.equal(x.peaches,p.peaches);assert.deepEqual(x.peachBank,p.peachBank);assert.equal(x.tony?.stolenUnits||x[kind].stolen||0,0);}
+ for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),cedros:2,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(x[kind]);assert.equal(x.defense.against,kind);assert.equal(x.grid[x.defense.cell],x.defense.replacement);assert.deepEqual(x.res,e.evaluate(x.grid,10,6));assert.equal(x.winUnits,e.units(x.res.win));assert.equal(s.cedros,1);assert.equal(x.peaches,p.peaches);assert.deepEqual(x.peachBank,p.peachBank);assert.equal(x.tony?.stolenUnits||x[kind].stolen||0,0);}
 });
 test('without defenses, Tony and Tucker keep aggressive bounded losses; zero target is valid',()=>{
  for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(!x.defense);if(kind==='tony')assert.ok(x.tony.stolenUnits>=1000&&x.tony.stolenUnits<=25000);else {assert.ok(x.tucker.stolen>=1&&x.tucker.stolen<=3);assert.equal(x.peachBank.units,751-Math.round(751*x.tucker.stolen/3));}}
- const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};assert.deepEqual(park.spin(p,s,10,'a',()=>.01,6).defense,{against:'tucker'});assert.equal(s.cedros,2);
+ const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};assert.equal(park.spin(p,s,10,'a',()=>.01,6).defense.against,'tucker');assert.equal(s.cedros,2);
  const s0={...park.fresh(),cedros:0};assert.ok(!park.spin(p,s0,10,'b',()=>.01,6).defense);
 });
 test('5 stored Roletas open the bonus wheel and full random sidebar triggers Good Luck',()=>{

@@ -1204,7 +1204,7 @@ class Component extends DCLogic {
     }
     if (!fr && bet > bal) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
 
-    const target = cloudResult ? cloudResult.outcome.grid : Array.from({ length: 9 }, () => this.pick());
+    const target = cloudResult ? (cloudResult.outcome.defense?.beforeGrid || cloudResult.outcome.grid) : Array.from({ length: 9 }, () => this.pick());
     { let pc = 0; for (let i = 0; i < 9; i++) if (target[i] === PEACH && ++pc > 2) { let v; do { v = this.pick(); } while (v === PEACH); target[i] = v; } } // no máximo 2 Happeach por giro
     const sp = this.speed();
     const near = (a, b) => a === b || a === WILD || b === WILD;

@@ -22,7 +22,16 @@ function candidate(p,s,bet,rng){
  // Trevo defende Tony e Tucker (nunca o Ray: ele existe para roubar trevos).
  const protect=before>0&&kind!=='ray';
  const x={grid,res:{win:0,cells,lines:[engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))],full:false,peach:[]},feature:null,peaches:p.peaches,peachBank:bank,slotVersion:6,parkVersion:1,ticketAward:0,cedarAward:0,winUnits:0};
- if(protect){s.cedros=before-1;x.defense={against:kind};}
+ if(protect){
+  s.cedros=before-1;
+  const cell=cells[1],cash=[10,2,0,6,8,7],pair=cash[Math.min(2,Math.floor(rng()*3))];
+  const crossing=engine.ALL_LINES.find(l=>l.includes(cell)&&l.every(i=>i===cell||!cells.includes(i)));
+  const spare=cash.filter(v=>v!==pair);let next=0;
+  const beforeGrid=Array.from({length:9},(_,i)=>cells.includes(i)?symbol:crossing.includes(i)?pair:spare[next++]);
+  const replacement=cash[Math.min(cash.length-1,Math.floor(rng()*cash.length))];
+  x.grid=beforeGrid.slice();x.grid[cell]=replacement;x.res=engine.evaluate(x.grid,bet,6);x.winUnits=engine.units(x.res.win);
+  x.defense={against:kind,beforeGrid,cell,replacement,line:engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))};
+ }
  if(kind==='tony'){
   const amount=protect?0:boundedNormalInt(c.stake,c.maxTiger,rng);
   x.tony={version:3,minUnits:c.stake,maxUnits:protect?0:c.maxTiger,stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};

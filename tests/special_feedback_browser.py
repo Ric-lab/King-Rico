@@ -29,5 +29,22 @@ with sync_playwright() as p:
   assert page.evaluate('cashJingles')==0
   page.wait_for_function('document.querySelector("[data-wheels]").textContent==="2/5"',timeout=10000)
   print(json.dumps({'wheels':2,'spacing':starts[1]['start']-starts[0]['start'],'cashJingles':0}),flush=True)
+ if stage in ['all','defense']:
+  ready();page.evaluate("""()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=1;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));}""")
+  ready()
+  page.evaluate("""()=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>0;try{return await fetch(u,o)}finally{Math.random=random}};}""")
+  before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
+  page.locator('.park-defense-scene[data-phase=warning]').wait_for(timeout=15000)
+  assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==3
+  page.locator('.park-defense-scene[data-phase=impact]').wait_for()
+  assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==2
+  assert page.evaluate('KingRicoCloud.player.balance')==before-10+page.evaluate('__fc._cloudSpin.outcome.res.win')
+  assert page.evaluate('__fc._cloudSpin.outcome.res.win')>0
+  page.screenshot(path='work/special-clover-defense-replacement.png')
+  page.locator('.park-defense-scene').wait_for(state='detached')
+  assert page.evaluate('KingRicoPark.state.economyV6.rounds')==1
+  assert page.locator('[data-tickets]').inner_text()=='0/5'
+  assert page.locator('.park-tony-scene').count()==0
+  print('clover defense: center replacement, real prize, one paid spin PASS',flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()

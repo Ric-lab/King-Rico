@@ -36,12 +36,12 @@
     {
       "id": "p-special-defense",
       "title": "3/6 Defesa: trevo atinge o vilão central, quebra a trinca e pode formar prêmio",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": ""
+      "notes": "Testado localmente: trevo voa no centro, troca só a cabeça central, permite uma linha pagante; uma aposta/um trevo, sem roubo. Recibo final controla o crédito. Auditoria financeira final pendente; só prévia."
     },
     {
       "id": "p-special-wheel-audio",

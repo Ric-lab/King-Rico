@@ -10,7 +10,7 @@ export function installTony(fc){
  fc.renderVals=(...args)=>{const values=render(...args);if(fc._tonyHitValue!=null){values.winText='−'+fc.money(fc._tonyHitValue/100);values.winAnim='none';}return values;};
  fc.payout=(res,...args)=>{
   const receipt=fc._cloudSpin,event=receipt?.outcome?.tony;
-  if(!event)return payout(res,...args);
+  if(!event||receipt.outcome.defense)return payout(res,...args);
   if(fc._tonyPlaying)return;
   fc._tonyPlaying=true;fc._celebHold=true;
   fc.setState({spinning:false,auto:false,winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'TONY TIGER!'});

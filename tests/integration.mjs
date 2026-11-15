@@ -1231,7 +1231,7 @@ for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',
   }
   const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
   const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
-  if(cedros&&kind!=='ray'){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990);}
+  if(cedros&&kind!=='ray'){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990+r.outcome.winUnits/100);}
   if(kind==='ray'&&cedros){assert.ok(!r.outcome.defense);assert.equal(r.park.cedros,cedros-r.outcome.ray.stolen);assert.equal(r.player.peaches,peaches);}
   if(kind==='cedar'){assert.equal(r.outcome.cedarAward,5);assert.equal(r.park.cedros,5);}
   if(kind==='wheel-prize'||kind==='bar-prize'){assert.ok(r.outcome.res.win>0);assert.deepEqual(r.outcome.res,engine.evaluate(r.outcome.grid,10,6));assert.ok(kind==='wheel-prize'?r.park.wheel:r.outcome.feature);}

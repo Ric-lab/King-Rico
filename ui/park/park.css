@@ -238,3 +238,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @keyframes parkCloverBurst{0%{opacity:0;transform:scale(.5) rotate(0)}35%{opacity:1;transform:scale(1.15) rotate(20deg)}100%{opacity:0;transform:scale(1.45) rotate(45deg)}}
 
 @media(prefers-reduced-motion:reduce){.park-clover-burst{animation:none}}
+.park-defense-scene.is-replacement{display:block;background:transparent;backdrop-filter:none}
+.park-defense-line{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#ff3c50;stroke-width:4;filter:drop-shadow(0 0 6px #ff223388);transition:opacity .18s}
+.park-defense-flying{position:absolute;left:0;top:0;width:64px;height:64px;object-fit:contain;opacity:0;filter:drop-shadow(0 0 12px #ffd257)}
+.park-defense-caption{position:absolute;left:50%;top:16%;transform:translateX(-50%);padding:8px 14px;background:#fff4cd;border:2px solid #eab744;border-radius:18px;color:#663114;white-space:nowrap;font:800 clamp(16px,4.6vw,20px)/1.2 Baloo,'Baloo 2',sans-serif;box-shadow:0 3px #9d652a}

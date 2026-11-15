@@ -42,7 +42,7 @@ with sync_playwright() as p:
   page.locator('.park-defense-scene').wait_for(timeout=15000)
   assert 'Trevo da sorte te protegeu!' in page.locator('.park-defense-scene').inner_text()
   assert page.evaluate('__fc._cloudSpin.outcome.defense.against')==kind
-  assert page.evaluate('KingRicoCloud.player.balance')==before-10
+  assert page.evaluate('KingRicoCloud.player.balance')==before-10+page.evaluate('__fc._cloudSpin.outcome.winUnits')/100
   assert page.evaluate('KingRicoCloud.player.peaches')==3
   page.screenshot(path='work/preview-cedar-defense-'+kind+'.png')
   page.locator('.park-defense-scene').wait_for(state='detached')

@@ -5,7 +5,7 @@ export function installTucker(fc){
  const payout=fc.payout.bind(fc),busy=fc.cloudBusy.bind(fc);
  fc.cloudBusy=(...args)=>!!fc._tuckerPlaying||busy(...args);
  fc.payout=(res,...args)=>{
-  const event=fc._cloudSpin?.outcome?.tucker;if(!event)return payout(res,...args);
+  const event=fc._cloudSpin?.outcome?.tucker;if(!event||fc._cloudSpin.outcome.defense)return payout(res,...args);
   if(fc._tuckerPlaying)return;
   fc._tuckerPlaying=true;fc._celebHold=true;
   fc.setState({spinning:false,auto:false,winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'TUCKER TOUCAN!'});

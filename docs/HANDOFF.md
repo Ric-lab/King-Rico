@@ -1,3 +1,17 @@
+## Etapa 3 local conferida — 15/11/2026 (Codex)
+
+Defesa passa a ter recibo final: defense.beforeGrid (ameaça de três vilões),
+cell/replacement e grid/res/winUnits finais. Um trevo impede roubo de Tony ou
+Tucker, voa ao vilão central e o substitui; a troca pode completar uma linha
+pagante transversal. Debita uma aposta e uma defesa; não cria segundo giro.
+Renderer mostra beforeGrid até o impacto, depois usa o grid final e o payout
+normal. Teste local confirmou 3→2 cabeças, uma defesa consumida e prêmio real,
+sem cena de roubo; testes de 400 defesas cobrem ganhos e trocas sem prêmio.
+Checkpoint sem deploy; auditorias da economia serão refeitas após etapa 4.
+A forma nova do recibo ainda depende da tarefa Firestore: não promover main.
+Próximo passo: avulsos/pares de vilões em células sem prêmio, preservando tudo
+que paga e os símbolos especiais; depois Good Luck/contadores.
+
 ## Etapa 2 local conferida — 15/11/2026 (Codex)
 
 Música original sfxDance preservada. Roleta dá duas voltas em 2,3s e chega ao
