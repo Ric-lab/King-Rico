@@ -43,11 +43,11 @@ with sync_playwright() as p:
     page.mouse.move(*points[0]);page.mouse.down()
     for x,y in points:page.mouse.move(x,y,steps=6)
     page.mouse.up()
-  assert gift.get_by_role('button',name='TOQUE PARA RASPAR').count()==0
+  assert gift.get_by_role('button',name='TOQUE PARA RASPAR',exact=True).is_visible()
   if width in [390,430]:
    unlock=gift.locator('.park-daily-unlock')
    if unlock.count():
-    assert unlock.is_visible() and unlock.inner_text().strip()==''
+    assert unlock.is_visible() and unlock.inner_text().strip()=='TOQUE PARA RASPAR'
     unlock.click() if width==390 else unlock.tap()
     unlock.wait_for(state='detached')
    page.evaluate('window.__vibs=[];window.__audioStarts=0')
@@ -73,6 +73,8 @@ with sync_playwright() as p:
    gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).wait_for()
   else:
    # Same reward without requiring a gesture, including keyboard-only input.
+   page.keyboard.press('Tab');page.keyboard.press('Enter')
+   gift.locator('.park-daily-unlock').wait_for(state='detached')
    page.keyboard.press('Tab');page.keyboard.press('Enter')
   gift.get_by_role('button',name='PEGAR MOEDAS',exact=True).wait_for()
   page.wait_for_function('document.querySelector(".park-daily")?.dataset.phase==="prize"')

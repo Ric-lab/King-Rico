@@ -7,7 +7,9 @@
 .park-daily-instruction{font-size:clamp(25px,7.2vw,30px);line-height:1.12;font-weight:800;color:#632d26;margin:0 0 14px}
 .park-daily-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;touch-action:none}
 .park-daily-reveal-space{position:relative}.park-daily-grid[hidden],.park-daily-summary[hidden],.park-daily-instruction[hidden]{display:none}
-.park-daily-unlock{position:absolute;inset:0;z-index:3;width:100%;height:100%;border:0;padding:0;border-radius:16px;background:rgba(255,255,255,.46);backdrop-filter:blur(2px);touch-action:none;cursor:pointer;transition:opacity .16s ease,background .12s ease}
+.park-daily-unlock{display:grid;place-items:center;position:absolute;inset:0;z-index:3;width:100%;height:100%;border:0;padding:0;border-radius:16px;background:rgba(255,255,255,.46);backdrop-filter:blur(2px);touch-action:none;cursor:pointer;transition:opacity .16s ease,background .12s ease}
+.park-daily-unlock>span{display:block;width:min(90%,260px);padding:16px 14px;border:2px solid #8cd5ff;border-radius:18px;background:#1274ed;box-shadow:0 5px 0 #104fa4;color:#fff;font:800 clamp(17px,5vw,21px)/1.2 Baloo,'Baloo 2',sans-serif;letter-spacing:.5px}
+.park-daily-unlock.is-pressing>span{transform:translateY(3px);box-shadow:0 2px 0 #104fa4}
 .park-daily-unlock.is-pressing{background:rgba(255,255,255,.28)}
 .park-daily-unlock.is-clear{opacity:0;pointer-events:none}
 .park-daily-hap{position:fixed;left:0;top:0;width:1px;height:1px;opacity:.01;pointer-events:none}

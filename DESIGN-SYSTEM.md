@@ -90,7 +90,10 @@ não pode perder ou duplicar crédito. Ao retomar, mostrar o valor salvo. O pres
 Na prévia de 07/11, `ui/park/daily-reward.js` apresenta esse presente como
 raspadinha compartilhada, com King Rico/moeda existentes, cartão creme/dourado
 e botão azul. Grade 3×3: seis X vermelhos e três valores iguais, com destaque
-verde nas casas premiadas reveladas. REVELAR permite jogar sem gesto;
+verde nas casas premiadas reveladas. Desde a decisão de 15/11/2026, as casas
+começam sob véu esbranquiçado com botão azul **TOQUE PARA RASPAR**: um toque
+real libera áudio/vibração e retira a camada antes da primeira raspagem.
+O toque de abertura não raspa casas. REVELAR permite jogar sem gesto;
 PEGAR MOEDAS confirma um único crédito diário.
 Depois dos três acertos, recolher a grade ao centro e apresentar apenas moeda,
 valor grande e ação de receber, com tempo para reconhecer a combinação antes.

@@ -7,6 +7,7 @@
 5. Contraste e legibilidade para idosos acima de efeito.
 
 Rejeitado:
+- Raspagem direta continuou muda no primeiro arrasto do Android do dono. Decisão de 15/11: restaurar véu esbranquiçado e botão TOQUE PARA RASPAR para liberar feedback antes da raspagem; não voltar a remover esse passo sem pedido.
 - Testar só ativação durante touchend/click não cobre o Android do dono: reproduzir arrasto sem click com ativação disponível apenas após terminar o evento, sem depender de um segundo toque.
 - Primeiro toque da raspadinha sem som/háptico no Android: não descartar cue antes de resume realmente liberar. Testar gesto confiável sem desbloquear áudio por evaluate e excluir buffers silenciosos das contagens de som.
 - Reduzir saturação/brilho da tinta deixou as cores menos vivas (feedback 15/11). A primeira dose precisa aparecer acima do pé da moldura, inclusive após reiniciar o ciclo.

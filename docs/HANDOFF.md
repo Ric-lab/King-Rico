@@ -1,3 +1,22 @@
+## Véu e botão inicial da raspadinha restaurados — 15/11/2026 (Codex)
+
+**Decisão nova do dono:** voltar com o esbranquiçado e o botão que libera o
+feedback antes de raspar. Substitui a orientação anterior de começar sem esse
+toque. O cartão agora exibe véu branco/blur sobre as nove casas e botão azul
+**TOQUE PARA RASPAR**. O toque real aquece áudio/vibração, retira o véu em 160 ms
+e não raspa nenhuma casa; a primeira raspagem acontece depois, já com feedback.
+REVELAR continua disponível como alternativa acessível; Tab/Enter alcançam
+primeiro o desbloqueio, depois REVELAR. Aparência conferida em 390×844.
+
+Teste atualizado cobre contexto mobile novo sem autoplay bypass, desbloqueio no
+touchend, click e após touchend; verifica revestimento intacto após abrir e
+som/vibração durante a primeira raspagem ANTES de levantar o dedo. Três cenários
+passaram. Regressão diária (320/390/430 px, teclado, coleta/retry/reabertura e
+crédito único) passou. Build de prévia passou. Mudança limitada à abertura da
+raspadinha; barras e pagamentos intactos. Próximo passo: confirmar Actions desta
+revisão e avaliar o fluxo na prévia única:
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Primeiro arrasto sem click: ativação depois do touchend — 15/11/2026 (Codex)
 
 Dono relatou que a primeira raspagem inteira fica muda, inclusive ao levantar,

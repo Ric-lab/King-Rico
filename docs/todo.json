@@ -103,7 +103,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Novo relato: primeiro arrasto completo mudo, segundo funciona. Reproduzido com ativação após touchend sem click (a3b0565 falha). Retomada do cue na tarefa seguinte ao fim do toque, sem segundo gesto e sem som repetido. Teste passa nos três modos; Android físico ainda não validado."
+      "notes": "Dono pediu restaurar o véu esbranquiçado e botão TOQUE PARA RASPAR. Toque inicial não raspa casas e libera áudio/háptico antes da primeira raspagem. Teste confirma feedback ANTES de levantar o dedo na primeira raspagem, nos 3 modos de desbloqueio. Fluxo diário/teclado/crédito passou."
     },
     {
       "id": "t-sfx-levanta",

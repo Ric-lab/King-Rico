@@ -149,16 +149,15 @@ export async function openDailyReward(Cloud) {
   const fcPre=window.__fc;
   if(fcPre?.state?.sound){try{const a=fcPre.ac?.();if(a){fcPre.out?.();fcPre.noise?.(a);}}catch{}}
   else fbAudio();
-  const acReady=(fcPre?._ac||fbAc)?.state==='running';
-  // Sem véu: o 1º toque já raspa (o áudio destrava pelos listeners de captura do overlay). Pedido do dono.
-  const needsTap=false;void acReady;
+  // The real opening tap primes audio/haptics BEFORE the first scratch gesture.
+  const needsTap=true;
   const overlay=document.createElement('div');overlay.className='park-daily';overlay.dataset.phase='scratch';
   overlay.innerHTML=`<section class="park-daily-panel" tabindex="-1" role="dialog" aria-modal="true" aria-label="Presente do dia" aria-labelledby="daily-title">
    <p class="park-daily-eyebrow">Dia ${gift.day} de 7</p>
    <img class="park-daily-king" src="/assets/symbols/sym-wild-s.webp" alt="">
    <h2 id="daily-title">Presente do dia</h2>
    <p class="park-daily-instruction">Raspe e ganhe!</p>
-   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<button type="button" class="park-daily-unlock" aria-label="Toque para liberar a raspadinha"></button>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
+   <div class="park-daily-reveal-space"><div class="park-daily-grid">${scratchGrid().map((win,i)=>`<div class="park-daily-cell" data-prize="${win}"><div class="park-daily-result" aria-hidden="true">${win?`<img src="/assets/symbols/sym-coin.webp" alt=""><strong>${gift.amount.toLocaleString('pt-BR')}</strong>`:'<span class="park-daily-x">×</span>'}</div><canvas width="180" height="180" aria-label="Raspe a casa ${i+1}"></canvas></div>`).join('')}</div>${needsTap?'<button type="button" class="park-daily-unlock" aria-label="TOQUE PARA RASPAR"><span>TOQUE PARA RASPAR</span></button>':''}<div class="park-daily-summary" hidden><img src="/assets/symbols/sym-coin.webp" alt=""><strong>+${gift.amount.toLocaleString('pt-BR')}</strong><span>moedas</span></div></div>
    <p class="park-daily-status" role="status" aria-live="polite">0 de 3 prêmios encontrados</p>
    <button type="button" class="park-daily-button">REVELAR</button>
   </section>`;
@@ -197,6 +196,8 @@ export async function openDailyReward(Cloud) {
     if(!unlockVeil.isConnected||unlockVeil.dataset.done)return;
     unlockVeil.dataset.done='1';unlockVeil.style.pointerEvents='none';
     warmAudio(true);hapT=0;scratchT=0;
+    sfx.button();playScratchHaptic(true,overlay);
+    if(document.activeElement===unlockVeil)button.focus({preventScroll:true});
     unlockVeil.classList.add('is-clear');
     setTimeout(()=>unlockVeil.remove(),160);
    };
@@ -219,7 +220,7 @@ export async function openDailyReward(Cloud) {
    }
    if(previous?.isConnected)previous.focus({preventScroll:true});resolve();
   }
-  function trap(e){if(e.key==='Tab'){e.preventDefault();button.focus();}if(e.key==='Escape')e.preventDefault();}
+  function trap(e){if(e.key==='Tab'){e.preventDefault();(unlockVeil?.isConnected&&!unlockVeil.dataset.done?unlockVeil:button).focus();}if(e.key==='Escape')e.preventDefault();}
   document.addEventListener('keydown',trap);panel.focus({preventScroll:true});
   async function reveal(){
    if(revealed)return;revealed=true;last=null;unlockVeil?.remove();cells.forEach(c=>revealCell(c,true));sfx.three();

@@ -5,7 +5,10 @@ Somente Circus permanece ativo. `site/routes.json` marca as atrações como
 `archived`; seus HTML publicados redirecionam para Circus. Fontes, modelos,
 assets e recibos antigos continuam no Git. Não há novas entradas no catálogo.
 O botão do anúncio de 30s / +1.000 moedas fica no cabeçalho do Circus, reutilizando
-anúncio simulado, recibo e voo de moedas existentes. A raspadinha diária permanece.
+anúncio simulado, recibo e voo de moedas existentes. A raspadinha diária permanece. Por decisão de 15/11, abre com véu
+esbranquiçado e botão **TOQUE PARA RASPAR**, para o gesto real liberar feedback
+antes de começar a raspar. Essa abertura substitui a tentativa anterior sem
+botão; REVELAR continua como alternativa acessível.
 
 Seis símbolos pagam moedas, sem coringa: **ingresso 0,4×, circo 0,8×, capa 1,2×,
 moeda 2,5×, diamante 5×, coroa 10×**. São as mesmas oito linhas (inclusive colunas).

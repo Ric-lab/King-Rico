@@ -1,4 +1,4 @@
-"""Trusted Android-style touch: retry blocked audio until touchend/click really unlocks it.
+"""Opening tap primes feedback before the first real scratch stroke on mobile.
 No autoplay bypass, evaluate() gesture, or manual resume before the first touch.
 """
 import json,os
@@ -22,22 +22,27 @@ with sync_playwright() as p:
   c.add_init_script("""for(const type of ['pointerdown','pointerup','touchend','click'])document.addEventListener(type,e=>{firstTouch.events.push(type);if(!e.isTrusted)return;if('"""+unlock+"""'==='after-touchend'&&type==='touchend')setTimeout(()=>firstTouch.allowed=true,0);else if(type==='"""+unlock+"""')firstTouch.allowed=true;},true);""")
   page=c.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(BASE+'/circus/')
   page.locator('.park-daily-cell').first.wait_for();page.wait_for_function('window.__fc?._parkHook&&firstTouch.hooked')
-  r=page.locator('.park-daily-cell').first.bounding_box();cdp=c.new_cdp_session(page)
-  point={'x':r['x']+r['width']*.4,'y':r['y']+r['height']*.5}
+  gate=page.get_by_role('button',name='TOQUE PARA RASPAR',exact=True)
+  gate.wait_for();r=gate.bounding_box();cdp=c.new_cdp_session(page)
+  point={'x':r['x']+r['width']/2,'y':r['y']+r['height']/2}
+  if unlock=='touchend':page.screenshot(path='work/scratch-unlock-gate.png')
   cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
-  # Let denied resume promises settle before the same gesture ends.
   page.wait_for_timeout(40)
-  if unlock=='after-touchend':
-   for dx in [10,20,30]:cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':point['x']+dx,'y':point['y']}]})
   cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
-  page.wait_for_timeout(350)
-  # evaluate is safe only AFTER the first gesture has finished; it must not
-  # accidentally unlock the audio before this assertion's recorded cues.
+  gate.wait_for(state='detached')
+  page.wait_for_function('firstTouch.allowed&&__fc._ac?.state==="running"')
+  assert page.evaluate("""[...document.querySelectorAll('.park-daily-cell canvas')].every(c=>{const d=c.getContext('2d').getImageData(0,0,180,180).data;for(let i=3;i<d.length;i+=4)if(d[i]!==255)return false;return true;})""")
+  page.evaluate('firstTouch.cues=[];firstTouch.haptics=[]')
+  r=page.locator('.park-daily-cell').first.bounding_box()
+  point={'x':r['x']+r['width']*.25,'y':r['y']+r['height']*.5}
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
+  for dx in [10,20,30]:cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':point['x']+dx,'y':point['y']}]})
+  # The first scratch must already have sound/haptics BEFORE lifting this finger.
   result=page.evaluate('JSON.parse(JSON.stringify(firstTouch))')
-  assert result['allowed'] and result['haptics'] and result['cues'],result
-  if unlock=='after-touchend':assert 'click' not in result['events'],result
+  assert result['cues'] and result['haptics'],result
+  assert len(result['cues'])>=2 and len(result['cues'])%2==0,result
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
   assert not errors,errors
-  assert len(result['cues'])==2,result # One scratch, consisting of two noise bands.
-  print(json.dumps({'unlockAt':unlock,'firstGestureSound':True,'firstGestureHaptic':True,'audibleNoiseBands':len(result['cues']),'events':result['events']}),flush=True)
+  print(json.dumps({'unlockAt':unlock,'primingTapLeavesCoatingIntact':True,'firstScratchSoundBeforeLift':True,'firstScratchHapticBeforeLift':True}),flush=True)
   c.close()
  b.close()
