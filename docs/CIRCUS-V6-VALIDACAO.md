@@ -1,4 +1,4 @@
-# Circus v6 — validação da prévia (12/11/2026)
+# Circus v6 — validação da prévia (15/11/2026)
 
 **Não liberar em live: integração Firestore ainda bloqueada.** A carteira da
 prévia Pages é fictícia. Fontes e decisões compartilhadas em HANDOFF/TODO.
@@ -9,27 +9,46 @@ prévia Pages é fictícia. Fontes e decisões compartilhadas em HANDOFF/TODO.
 mesmo motor da carteira. Retorno = moedas normais + Good Luck (barra lateral aleatória) + roleta (5 símbolos guardados) − Tony.
 Ingressos antigos não entram no cálculo. Trevo não é dinheiro nem entrada.
 
-| Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto (sem Tony) | Tony | Retorno Líquido |
+| Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto | Tony | Retorno Líquido |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 | 5.000.000 | 83,31% | 8,86% | 92,18% | -2,18% | **89,9965%** |
-| 10 | 5.000.000 | 83,30% | 8,88% | 92,18% | -2,19% | **89,9962%** |
-| 100 | 5.000.000 | 83,34% | 8,88% | 92,22% | -2,22% | **89,9974%** |
-| 1.000 | 5.000.000 | 83,34% | 8,88% | 92,22% | -2,22% | **89,9974%** |
+| 1 | 5.000.000 | 84.2336% | 8.8749% | 93.1085% | -3.1101% | **89.9984%** |
+| 10 | 5.000.000 | 84.2666% | 8.8770% | 93.1436% | -3.1453% | **89.9983%** |
+| 100 | 5.000.000 | 84.2800% | 8.8707% | 93.1507% | -3.1525% | **89.9981%** |
+| 1000 | 5.000.000 | 84.2800% | 8.8707% | 93.1507% | -3.1525% | **89.9981%** |
 
-*(Demais apostas de 2,5 a 500 simuladas com 1.000.000 giros cada: retorno líquido **~90,00%** em todas, bruto sem Tony **≤ 92,22%**, nunca acima de 93%.)*
+**Garantia nova:** o giro que guarda a 5ª roleta e o giro que completa a barra
+Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
+é preservado; se não, forma-se uma linha de ingressos (0,4×), escolhida entre
+as oito combinações sem substituir nenhum símbolo de roleta. Prêmio, linhas,
+células e crédito são recalculados juntos antes de animar o resultado.
+Não muda a tabela de pagamentos, a base acumulada da roleta ou as chances dos
+vilões. O adicional está incluído no ledger/RTP; o bruto agora chega a 93,1507%,
+compensado pelo controle existente do Tony, com líquido ~89,998%.
+
+Nos 20 milhões de giros: **650.474 aberturas** de roleta/Good Luck e **zero**
+aberturas sem prêmio em moedas. Os relatórios JSON registram as contagens.
 
 PAYS por ID estável: `[1.2,0,0.8,0,0,0,2.5,10,5,0,0.4,0,0,0,0,0]`.
 Pagantes na fita/tabela: ingresso, circo, capa, moeda, diamante, coroa.
 Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]`, trevo (`CEDAR_P`) `0,12`, símbolo de roleta (`PEACH_P_V6`) `0,015`, `WHEEL_SHARE_V6 = 0,36`, barra Good Luck aleatória (`BAR_P1_V6 = 0,12`, `BAR_P2_V6 = 0`, trava mínima de **25 giros**, média **~88 giros**).
 Os arquivos JSON incluem componentes e hashes das fontes da simulação.
 
-Um milhão por cenário adicional: décimo giro alto **90,1044%**, cultivar trevos
-com aposta baixa **90,0494%**, alternar 1/1.000 **89,9837%**, estoque artificial
-sempre cheio **89,9987%**. Todos em 88,5–91,5%, nenhum acima de 93%.
-As simulações históricas v4/v5 também foram reexecutadas (5 milhões por aposta)
-e seus hashes de módulos comuns atualizados, com retorno na faixa original.
+Um milhão por cenário adicional: décimo giro alto **90,0043%**, cultivar trevos
+com aposta baixa **89,9849%**, alternar 1/1.000 **89,9987%**, estoque artificial
+sempre cheio **89,9981%**. Todos em 88,5–91,5%, zero aberturas vazias.
+Comando reproduzível: `node scripts/circus-v6-stress.mjs`.
+As auditorias v4/v5 também foram reexecutadas (5 milhões por aposta) para
+conferir que os caminhos históricos não mudaram; hashes atualizados nos JSON.
 
-## Publicação da prévia confirmada
+### Estado das regras
+
+`npm run test:rules`: **67/80 passaram; 13 falharam**, incluindo casos v5/v6,
+por atingir o limite Firestore de 1.000 expressões. Bloqueio já existente na
+integração real; regras/dispatcher não foram modificados nesta tarefa. Novos
+casos wheel-prize/bar-prize ficam registrados para validar após destravar a
+integração. A publicação desta mudança é exclusivamente na prévia Pages.
+
+## Histórico de publicação da prévia (anterior a esta revisão)
 
 Código `c6bdb3c`, [Actions 43312770870](https://github.com/Ric-lab/King-Rico/actions/runs/43312770870), **success**.
 Todos os 12 navegadores e o teste do subdiretório passaram; deploy e HEAD públicos
@@ -38,15 +57,15 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 
 ## Testes
 
-- `npm test`: passou nos 47 arquivos. Casos novos cobrem seis pagamentos,
+- `npm test`: 268 testes passaram. Casos novos cobrem seis pagamentos,
   oito combinações, especiais sem prêmio em moedas, estoque até 5, defesa dos
-  três vilões, perdas sem proteção, banco Happeach proporcional, roleta por
+  do Tony/Tucker, Ray sem defesa, perdas sem proteção, banco de roletas proporcional, roleta por
   contribuição, replay e recarga da carteira fictícia. Equivalência de contagem
   de linhas validada em 100.000 grids. Teste adicional de centavos confirma que
   a tela cheia é multiplicada antes do arredondamento da feature.
 - Navegadores: linhas/voos de moedas, três fitas, líquido, roda/colorido/som,
   patadas, Tucker, Ray, voo céu/espaço, raspadinha diária, coleta e defesa de
-  cedros, redirecionamentos arquivados. Recarga pelo menu: cancelar não credita;
+  trevos, redirecionamentos arquivados. Recarga no cabeçalho: cancelar não credita;
   concluir 30s credita uma vez, mostra recibo, voo e saldo atualizado.
 - Testes antigos de catálogo/entrada (`park_preview_browser.py` e
   `park_repeat_browser.py`) permanecem como histórico, substituídos no runner por
@@ -56,27 +75,15 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 
 ## Bloqueio financeiro — ação necessária antes de main
 
-Última suíte `npm run test:rules`: **71 de 78** passaram. A revisão automática
-impediu refatorar o dispatcher/validador central de Firestore, alegando risco de
-alterar a fronteira de segurança financeira legada sem autorização específica.
-As propostas rejeitadas não foram aplicadas. Não contornar esse bloqueio.
+Última suíte `npm run test:rules`: **67 de 80** passaram; os 13 casos positivos
+pendentes atingem o limite de 1.000 expressões (v5 normal/bônus e casos v6,
+incluindo wheel-prize/bar-prize). Recibos forjados continuam rejeitados; os testes
+negativos não substituem os positivos ainda falhando. Nenhuma regra foi alterada
+ou publicada nesta revisão.
 
-Falhas por limite de 1.000 expressões:
-
-- normal v5 com bônus/replay e ledger existente (regressão a resolver);
-- v6 Tucker sem cedro;
-- v6 giro normal;
-- v6 ganho de cedros;
-- v6 Tony sem cedro;
-- v6 Happeach/feature;
-- v6 décimo giro.
-
-As transações v6 protegidas dos três vilões e Ray sem estoque passaram.
-Casos de recibo forjado foram rejeitados; isso **não** substitui os controles
-positivos ainda falhando. Nenhuma dessas regras foi publicada.
-
-Próximo passo: obter autorização explícita para refatorar a validação central
-mantendo todas as proteções; reduzir custo sem retirar forma, vínculo atômico,
-limites, cálculo exato, banco, ledger ou prevenção de replay. Rodar novamente
-suite completa de regras e integração, incluindo v5 legado, até **78/78**; só
-então considerar publicação oficial. Não mudar pagamentos para fazer testes passar.
+Registro histórico: uma revisão automática anterior impediu refatorar o
+validador/dispatcher financeiro central por risco de alterar a segurança legada
+sem autorização específica; aquela proposta não foi aplicada. O bloqueio permanece
+uma tarefa separada. Preservar cálculo exato, vínculo atômico, limites, banco,
+ledger e prevenção de replay ao resolver o custo de avaliação; depois rodar os
+80 casos de regras e a integração completa antes de considerar o oficial.

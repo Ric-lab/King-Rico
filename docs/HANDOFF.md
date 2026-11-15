@@ -1,3 +1,42 @@
+## Prêmio no giro da 5ª roleta e da barra cheia — 15/11/2026 (Codex)
+
+Pedido do dono aplicado em cloud/engine.cjs (somente perfil v6): o giro que
+completa cinco roletas guardadas e o que ativa Good Luck também têm prêmio
+em moedas na grade inicial. Preserva prêmio já existente; caso zero, escolhe
+uma das oito linhas que não contém roletas e completa trinca de ingresso
+(0,4×). Recalcula prêmio/linhas/células juntos, antes da animação. Roletas
+coletadas, saldo residual do banco, tabela, base acumulada dos bônus e chances
+dos vilões preservados. Isso não troca a base acumulada da roleta pelo valor
+da última aposta. Fontes prontas para a prévia; não promover a main enquanto
+persistir o bloqueio das regras abaixo.
+
+**Verificações:** npm test **268/268**, navegador circus_v6_browser passou
+(inclui os dois gatilhos com res.win>0); produção gerada após a integração.
+Teste novo cobre todas as apostas, posições de 1/2 roletas, prêmio existente,
+rodada comum sem prêmio e replay após recarregar sem crédito/débito duplo.
+Teste de build atualizado para a rota Penalty já aprovada na branch; teste de
+integração Ray passa a esperar corretamente ausência de defesa de trevos.
+
+**Economia:** 5M giros por aposta (1/10/100/1000), 20M total: retornos
+89,9983632% / 89,9983033% / 89,9981313% / 89,9981313%. **650.474 aberturas**,
+zero sem prêmio em moedas. Stress 1M por cenário: décimo alto 90,0043%,
+cultivo de trevos 89,9849%, alternância 89,9987%, estoque cheio 89,9981%.
+Bruto sem Tony agora ~93,11–93,15%; líquido ~90% pelo controle existente,
+sem reduzir os multiplicadores. V4/v5 também reexecutados (5M/aposta) porque
+compartilham o arquivo do motor; relatórios/hashes atuais no Git. Comandos:
+node scripts/circus-v6-audit.mjs; node scripts/circus-v6-stress.mjs.
+
+**Firestore:** suíte executada: 67/80 passaram, 13 falharam por atingir o
+limite de 1.000 expressões, inclusive testes preexistentes v5/v6. Dois casos
+novos wheel-prize/bar-prize registrados para a futura integração. Nenhuma
+regra/dispatcher alterado; oficial/main permanecem intactos. Esta publicação
+é só GitHub Pages com carteira de teste, conforme o dono confirmou.
+
+Próximo passo: validar os dois gatilhos usando ⚙ → 🎯 (Good Luck / Roleta)
+na prévia única https://ric-lab.github.io/King-Rico/Preview; confirmar Actions
+deste commit antes de anunciar a publicação. Desbloquear Firestore é tarefa
+separada t-firestore-v6.
+
 ## Véu e botão inicial da raspadinha restaurados — 15/11/2026 (Codex)
 
 **Decisão nova do dono:** voltar com o esbranquiçado e o botão que libera o

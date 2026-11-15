@@ -77,13 +77,13 @@
     },
     {
       "id": "t-roleta-min",
-      "title": "Roleta nunca abre com prêmio da slot zerado: o 10º giro tem que pagar pelo menos o mínimo para o ×1 sempre devolver alguma coisa (ajustar economia junto)",
-      "status": "todo",
+      "title": "Giro da 5ª roleta e giro da barra cheia sempre pagam prêmio em moedas",
+      "status": "preview",
       "category": "Economia & Regras",
-      "agent": "",
+      "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Garantir retorno mínimo no giro que abre a roleta mantendo RTP ~90%."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia."
     },
     {
       "id": "t-controle-penalty",

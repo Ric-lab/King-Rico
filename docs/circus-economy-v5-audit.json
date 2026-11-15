@@ -1,12 +1,13 @@
 {
-  "date": "2026-11-14T16:47:57.043Z",
+  "date": "2026-11-15T21:33:23.566Z",
   "command": [
-    "--circus-v5"
+    "--circus-v5",
+    "--spins=5000000"
   ],
   "sourceHashes": {
     "cloud/circus-profile.cjs": "fd4493790cfa5395482342c94929dcb7e7b59780cbf00408f617b2b571e89b2f",
     "cloud/park.cjs": "7febc2de03e2214ed4ea03a68ee67c6949ee2bab6f20bb50107ee7456d52a47e",
-    "cloud/engine.cjs": "426ca2e0c0fb9110a88faa5989c0d2ea04a928aeebe1a3b74f2ffb550ad3d92c",
+    "cloud/engine.cjs": "4f4879295dc86b1a4a684f3ee8aede34c3739d1b65c7ccf800cc27e99f8782c3",
     "cloud/circus-control-v5.cjs": "00103107b4e88da579a67cd370efff42bf6b83095d68483791f7544b1a79fecd",
     "cloud/truncated-normal.cjs": "05dbbdee3b1866bc64b7cbdbed74de6d3f9735951bcf6fd1b6aa14c83dd05aeb",
     "scripts/economy-audit.mjs": "1494f9cb8d94dd56f0118db4092b531eea35668c10ac2314f3113b3edd08d8fc"

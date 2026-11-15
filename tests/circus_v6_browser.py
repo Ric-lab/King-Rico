@@ -72,6 +72,7 @@ with sync_playwright() as p:
  page.locator('[data-spin-btn]').click()
  page.wait_for_function('Boolean(__fc.state.feature)',timeout=15000)
  assert page.evaluate('document.querySelectorAll("[style*=fcHalo]").length')==0
+ assert page.evaluate('__fc._cloudSpin.outcome.res.win')>0,'Full bar must also have a cash prize in its opening spin'
  feat=page.evaluate('__fc._cloudSpin.outcome.feature')
  assert feat['sym'] in [0,2,6,7,8,10] and feat['grid'].count(feat['sym'])>=3,feat
  page.wait_for_function('document.querySelectorAll(\'.park-reel-cell[data-held="true"]\').length>=1',timeout=15000)
@@ -81,6 +82,7 @@ with sync_playwright() as p:
  page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Roleta (5 guardadas)').click()
  page.locator('[data-spin-btn]').click()
  page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=20000)
+ assert page.evaluate('__fc._cloudSpin.outcome.res.win')>0,'Fifth wheel must also have a cash prize in its opening spin'
  basket_translate=page.locator('.park-basket').evaluate('e=>getComputedStyle(e).translate')
  assert '-920px' in basket_translate,basket_translate
  page.screenshot(path='work/preview-wheel-hoist.png')

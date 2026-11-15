@@ -45,6 +45,11 @@ o jato é liso, sem faixas brancas rolando. A primeira dose tem mínimo visual d
 0,65 de nível para aparecer acima do pé da moldura, inclusive após reiniciar o
 ciclo. Roxo/azul saturados, filtro 1,45 e brilho 1,18; não reduzir a vivacidade
 para corrigir a tinta. Não alterar o sorteio para corrigir tinta.
+O giro que guarda a **5ª roleta** e o que chega ao topo da barra sempre
+pagam moedas também na grade inicial. Prêmio existente é mantido; uma grade
+sem prêmio recebe uma linha pagante de ingresso (mínimo 0,4×), sem substituir
+as roletas coletadas. A garantia não altera os multiplicadores nem as bases
+acumuladas dos bônus e está incluída na auditoria de retorno de ~90%.
 Quando chega ao topo (`10`), a nuvem pisca e ativa os **5 giros Good Luck**
 (`featureBet = floor(cycleWagerUnits / 10) / 100`), travando símbolos pagantes reais na grade.
 

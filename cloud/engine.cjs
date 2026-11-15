@@ -171,13 +171,23 @@ function slot(bet, peaches = 0, rng = random, bank = null, version=1, onGrid = n
   for (let i = 0; i < 9; i++) if (grid[i] === PEACH && ++pc > 2) {
     do { grid[i] = pick(rng,version); } while (grid[i] === PEACH);
   }
-  const res = evaluate(grid, bet, version), total = peaches + res.peach.length;
+  let res = evaluate(grid, bet, version);
+  const total = peaches + res.peach.length;
   const stake = units(bet), saved = bank?.count===peaches ? bank.units : peaches*stake;
   if (version >= 6) {
     const wheelTrigger = total >= PEACH_GOAL, remaining = wheelTrigger ? total - PEACH_GOAL : total;
     const wheelUnits = wheelTrigger ? saved + (PEACH_GOAL - peaches) * stake : 0;
     const peachBank = { count: remaining, units: wheelTrigger ? remaining * stake : saved + res.peach.length * stake };
     const barUnits = typeof onGrid === 'function' ? onGrid(wheelTrigger) : 0;
+    if ((wheelTrigger || barUnits > 0) && res.win <= 0) {
+      // Bonus-opening spins always pay a real visible cash line as well.
+      // Keep every wheel symbol: its collection/bank was already determined.
+      // At most two wheel symbols occur, so at least one of eight lines is free.
+      const lines = ALL_LINES.filter(line => line.every(i => grid[i] !== PEACH));
+      const line = lines[Math.min(lines.length - 1, Math.floor(rng() * lines.length))];
+      for (const i of line) grid[i] = 10; // Minimum current prize: ticket, 0.4x.
+      res = evaluate(grid, bet, version);
+    }
     const featureBet = barUnits > 0 ? Math.max(1, Math.floor(barUnits / 10)) / 100 : bet;
     const bonus = barUnits > 0 ? { ...feature(featureBet, rng, version), bet: featureBet } : null;
     return { grid, res, feature: bonus, peaches: remaining, peachBank, slotVersion: version, wheelUnits,

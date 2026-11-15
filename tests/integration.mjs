@@ -1218,17 +1218,23 @@ test('Circus v5 normal spin, tenth bonus, replay and old v4 client preserve the 
  const legacy=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:4}));assert.equal(legacy.park.economy.rounds,3);
  assert.equal((await getDoc(parkRef)).data().economy.rounds,3);
 });
-for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0],['tony-bare',0,0,3],['feature',0,0,4],['tenth',.99,0,0]])test('Circus v6 rules/replay '+kind+' stock '+cedros,async()=>{
+for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0],['tony-bare',0,0,3],['feature',0,0,4],['tenth',.99,0,0],['wheel-prize',.99,0,4],['bar-prize',.99,0,0]])test('Circus v6 rules/replay '+kind+' stock '+cedros,async()=>{
  const {default:park}=await import('../cloud/park.cjs');const {default:controller}=await import('../cloud/circus-control-v6.cjs');
   let sequence=[];const c=await client('v6-'+kind+'-'+randomUUID(),undefined,{rng:()=>sequence.length?sequence.shift():.99});await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
   await environment.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),'players',c.uid),{peaches,peachBank:{count:peaches,units:peaches*251}});await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),tickets:100,cedros,economyV6:{...controller.freshEconomy(),paidUnits:kind.startsWith('tony')||draw>.5&&draw<.55?100000:0}});});
-  if(kind==='tenth')await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid,'park','state'),{spins:9,cycleWagerUnits:9000}));
+  if(kind==='tenth'||kind==='bar-prize')await environment.withSecurityRulesDisabled(context=>updateDoc(doc(context.firestore(),'players',c.uid,'park','state'),{spins:9,cycleWagerUnits:9000}));
   sequence=kind==='feature'?[.99,0,...Array.from({length:8},()=>[.99,.4]).flat()]:kind==='tenth'?Array(30).fill(.99):kind==='cedar'?[.99,...Array(9).fill(.1)]:kind==='normal'?Array(30).fill(.99):Array(30).fill(draw);
+  if(kind==='wheel-prize'||kind==='bar-prize'){
+   const sy=engine.slotSymbols(6),total=sy.reduce((n,x)=>n+x.w,0),grid=[11,0,2,6,7,8,10,2,6];
+   sequence=[...(kind==='wheel-prize'?[.99]:[]),...grid.flatMap(i=>i===11?[0]:[.99,(sy.slice(0,i).reduce((n,x)=>n+x.w,0)+sy[i].w/2)/total])];
+  }
   const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
   const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
-  if(cedros){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990);}
+  if(cedros&&kind!=='ray'){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990);}
+  if(kind==='ray'&&cedros){assert.ok(!r.outcome.defense);assert.equal(r.park.cedros,cedros-r.outcome.ray.stolen);assert.equal(r.player.peaches,peaches);}
   if(kind==='cedar'){assert.equal(r.outcome.cedarAward,5);assert.equal(r.park.cedros,5);}
+  if(kind==='wheel-prize'||kind==='bar-prize'){assert.ok(r.outcome.res.win>0);assert.deepEqual(r.outcome.res,engine.evaluate(r.outcome.grid,10,6));assert.ok(kind==='wheel-prize'?r.park.wheel:r.outcome.feature);}
   assert.deepEqual((await c.call(req)).park,r.park);
   // Same client's retry validates the immutable operation; refresh reads persisted stock.
   assert.equal((await getDoc(parkRef)).data().cedros,r.park.cedros);
