@@ -1,3 +1,16 @@
+## Lista de especiais — execução sequencial, 15/11/2026 (Codex)
+
+Pedido novo em seis etapas, registrado no painel p-special-clover,
+p-special-wheel-audio, p-special-defense, p-villain-scatter,
+p-goodluck-energy, p-powerup-columns. Etapa 1 pronta localmente: trincas de
+trevo entram nas linhas/células douradas sem alterar prêmio em moedas;
+símbolos giram com halo dourado e pequena fanfarra antes da coleta. Teste em
+390×844 confirmou uma defesa creditada, linha dourada e celebração. Fonte
+compartilhada neste checkpoint; ainda não é publicação da prévia.
+Próximo passo desta sessão: sincronizar a música original da roleta com uma
+dança/voo mais longa e serializar várias roletas, depois defesa/suspense,
+Good Luck e contadores. Não mexer no Firestore/main: bloqueio conhecido segue.
+
 ## Prêmio no giro da 5ª roleta e da barra cheia — 15/11/2026 (Codex)
 
 Pedido do dono aplicado em cloud/engine.cjs (somente perfil v6): o giro que

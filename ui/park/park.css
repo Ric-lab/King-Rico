@@ -233,3 +233,8 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @media(prefers-reduced-motion:reduce){.park-defense-villain,.park-defense-shield{animation:none}}
 
 [data-park-controller="true"],.park-tape-symbol.is-controller{background-image:url('/assets/machine/controller-symbol-v1.webp')!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
+
+.park-clover-burst{position:fixed;z-index:2147483639;pointer-events:none;border-radius:50%;background:radial-gradient(circle,#ffd85500 24%,#ffe08188 45%,#ffc13200 70%);animation:parkCloverBurst 1.2s ease-out both}
+@keyframes parkCloverBurst{0%{opacity:0;transform:scale(.5) rotate(0)}35%{opacity:1;transform:scale(1.15) rotate(20deg)}100%{opacity:0;transform:scale(1.45) rotate(45deg)}}
+
+@media(prefers-reduced-motion:reduce){.park-clover-burst{animation:none}}

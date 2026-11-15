@@ -27,6 +27,9 @@ with sync_playwright() as p:
  picker.get_by_role('button',name='FECHAR').click()
  page.evaluate('''values=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin'||!values)return fetch(u,o);const q=values;values=null;const random=Math.random;let i=0;Math.random=()=>q[i++]??.99;try{return await fetch(u,o)}finally{Math.random=random}}}''',draws_for_grid([5,5,5,0,2,6,7,8,10]))
  page.locator('[data-spin-btn]').click()
+ page.wait_for_function('__fc._parkCloverCelebrating&&__fc.state.winDim&&__fc.state.winCells.length>=3&&__fc.state.winLines.length>0',timeout=15000)
+ page.wait_for_timeout(300)
+ page.screenshot(path='work/preview-clover-gold-party.png')
  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
  assert page.evaluate('KingRicoPark.state.cedros')==1
  assert page.locator('[data-tickets]').inner_text()=='1/5'

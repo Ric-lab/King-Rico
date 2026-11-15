@@ -47,9 +47,14 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   if(!fc._parkRimTouch)fc._parkFlashRim(delay);
   fc._parkRimTouch=false;
   schedule();};
- const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkWheelVisible)||nativeBusy(...args);
+ const nativeBusy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!(fc._parkTicketsPlaying||fc._parkCloverCelebrating||fc._parkWheelVisible)||nativeBusy(...args);
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
- const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
+ const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{
+  const cloverLines=fc._cloudSpin?.outcome?.cedarLines||[];
+  if(cloverLines.length){const cells=cloverLines.flatMap(i=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][i]);res={...res,cells:[...new Set([...res.cells,...cells])],lines:[...new Set([...res.lines,...cloverLines])]};}
+  nativePayout(res,...args);
+  if(cloverLines.length){fc.setState({winDim:true,winCalm:false});celebrateClover(fc,cloverLines);}
+if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
@@ -140,9 +145,9 @@ function flyTickets(fc,refresh,done=()=>{}){
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
  const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],cues=[],arrived=new Set();let ended=false,ticker;
  const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
- const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(ticker);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?400:620,stagger=duration,contact=.8;
- const safety=setTimeout(finish,duration+stagger*2+600);
+ const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(ticker);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
+ const calm=reduced(),duration=calm?400:620,stagger=duration,contact=.8,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
+ const safety=setTimeout(finish,lead+duration+stagger*2+600);
  try{fc.ac?.();}catch{} // Warm audio before the first impact, without playing a note.
  if(!end?.width){finish();return;}
  try{
@@ -154,8 +159,8 @@ function flyTickets(fc,refresh,done=()=>{}){
    const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
    const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
    const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};
-   const a=node.animate([...(calm?simple:frames),absorption],{duration,delay:i*stagger,easing:'linear',fill:'both'});anims.push(a);
-   cues.push({animation:a,index:i,contactAt:i*stagger+duration*contact});
+   const a=node.animate([...(calm?simple:frames),absorption],{duration,delay:lead+i*stagger,easing:'linear',fill:'both'});anims.push(a);
+   cues.push({animation:a,index:i,contactAt:lead+i*stagger+duration*contact});
    return a.finished.then(()=>land(i)).catch(()=>{});
   });
   // Contact belongs to the animation clock, before the ticket fades into the
@@ -168,4 +173,16 @@ function flyTickets(fc,refresh,done=()=>{}){
   ticker=requestAnimationFrame(tick);
   Promise.allSettled(flights).then(finish);
  }catch{finish();}
+}
+
+function celebrateClover(fc,lines){
+ const cells=[...new Set(lines.flatMap(i=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][i]))],nodes=[];
+ const duration=reduced()?500:1200;fc._parkCloverCelebrating=true;fc._parkCloverUntil=performance.now()+duration;
+ record(fc,'clover:celebrate',{cells});
+ for(const cell of cells){const sym=document.querySelector('[data-sym="'+cell+'"]');if(!sym)continue;const r=sym.getBoundingClientRect();
+  const glow=document.createElement('i');glow.className='park-clover-burst';glow.style.cssText=`left:${r.x-10}px;top:${r.y-10}px;width:${r.width+20}px;height:${r.height+20}px`;document.body.append(glow);nodes.push(glow);
+  sym.animate(reduced()?[{filter:'brightness(1)'},{filter:'brightness(1.5)'},{filter:'brightness(1)'}]:[{transform:'scale(1) rotate(0deg)'},{transform:'scale(1.2) rotate(160deg)',offset:.4},{transform:'scale(1.06) rotate(360deg)',offset:.82},{transform:'scale(1) rotate(360deg)'}],{duration,easing:'cubic-bezier(.2,.7,.3,1)'});
+ }
+ try{[523.25,659.25,783.99].forEach((f,i)=>fc.bell(f,.5,.07,i*.16));fc.buzz?.([35,45,70]);}catch{}
+ setTimeout(()=>{nodes.forEach(n=>n.remove());fc._parkCloverCelebrating=false;if(!(fc._cloudSpin?.outcome?.res.win>0)&&!fc._parkTicketsPlaying)fc.setState({winCalm:true,winDim:false});},duration);
 }

@@ -4,6 +4,66 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-powerup-columns",
+      "title": "6/6 Contadores de power-ups: asset acima e quantidade abaixo",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "p-goodluck-energy",
+      "title": "5/6 Good Luck direto no giro, raios coloridos e consumo da barra em cinco cargas; sem nuvem",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "p-villain-scatter",
+      "title": "4/6 Suspense: vilões avulsos e pares em giros comuns",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "p-special-defense",
+      "title": "3/6 Defesa: trevo atinge o vilão central, quebra a trinca e pode formar prêmio",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "p-special-wheel-audio",
+      "title": "2/6 Roletas: música completa sincronizada à dança/voo, sem sobreposição",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "p-special-clover",
+      "title": "1/6 Trevo: linha e fundo dourados, celebração especial antes da coleta",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Em trabalho sequencial nesta sessão; publicar junto das etapas seguintes depois dos testes."
+    },
+    {
       "id": "p-refino-barra-raspa",
       "title": "Revisão dos commits recentes: tinta contínua, paleta coerente e primeira raspagem sem perder vibração",
       "status": "preview",
