@@ -151,7 +151,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-wheel-result-'+mode+'.png')
   page.wait_for_function('window.wheelTiming.headerAt',timeout=10000)
   timing=page.evaluate('wheelTiming')
-  assert timing['headerAt']-timing['resultAt']>=3500,timing
+  assert 1200<=timing['headerAt']-timing['resultAt']<=2500,timing  # dono: valor da roleta pisca 1x e viaja logo (~1,5 s)
   cabinet=page.locator('[data-spin-btn]');x1=cabinet.evaluate('e=>e.getBoundingClientRect().left')
   page.wait_for_timeout(550 if mode=='no-preference' else 260)
   x2=cabinet.evaluate('e=>e.getBoundingClientRect().left')
