@@ -164,7 +164,9 @@ export async function openDailyReward(Cloud) {
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
   const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockVeil=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
-  const unlock=()=>{warmAudio(true);};
+  let missedScratch=false;
+  const unlock=e=>{warmAudio(true);if(missedScratch&&e&&(e.type==='touchend'||e.type==='click'||e.type==='pointerup')){missedScratch=false;playScratchHaptic(true,overlay);setTimeout(()=>playScratchSound(()=>!finished&&!revealed,true),20);}};
+  overlay.addEventListener('pointerup',unlock,{capture:true,passive:true});
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchstart',unlock,{capture:true,passive:true});
   overlay.addEventListener('touchend',unlock,{capture:true,passive:true});
@@ -244,7 +246,7 @@ export async function openDailyReward(Cloud) {
      if(cell.classList.contains('is-revealed'))continue;
      const r=canvas.getBoundingClientRect(),radius=r.width*.1;
      if(Math.max(last.x,point.x)<r.left-radius||Math.min(last.x,point.x)>r.right+radius||Math.max(last.y,point.y)<r.top-radius||Math.min(last.y,point.y)>r.bottom+radius)continue;
-     if(!hit){hit=true;sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);}
+     if(!hit){hit=true;const a=(window.__fc?._ac||fbAc);if(!a||a.state!=='running')missedScratch=true;sfx.scratch(()=>!finished&&!revealed,fromDown,overlay);}
      const local=p=>({x:(p.x-r.x)*180/r.width,y:(p.y-r.y)*180/r.height}),from=local(last),to=local(point);
      ctx.globalCompositeOperation='destination-out';ctx.lineWidth=34;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();
      const data=ctx.getImageData(0,0,180,180).data;let clear=0,total=0;

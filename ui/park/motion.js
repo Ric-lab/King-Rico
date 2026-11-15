@@ -42,9 +42,11 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  const nativeSpin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(fc._parkTicketsPlaying){fc._parkAutoAfterTickets=!!fc.state.auto;return;}return nativeSpin(...args);};
  const nativePayout=fc.payout.bind(fc);fc.payout=(res,...args)=>{nativePayout(res,...args);if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
-  if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
+  if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
-  queuedCharge={before,target:response.park.spins};fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
+  { const lvl=response.park.spins,shownBefore=Math.max(before>=10?0:before,Math.min((fc._parkShown??before),(before>=10?0:before)+.67));
+   const show=lvl>before||lvl<before||before>=10?lvl:Math.min(lvl+.67,shownBefore+.34);
+   queuedCharge={before,target:lvl,show,from:before>=10?0:shownBefore}; }fc._parkMeterBusy=true;fc._parkPreparePulseColor(response.park.spins);
   // Keep the circular cover until the confirmed color becomes the new base.
   spinButton?.setAttribute('data-color-pending','1');
   const pending=queuedCharge;pending.fallback=setTimeout(()=>{if(queuedCharge===pending){fc._parkPulse={at:performance.now(),delay:0,seq:++pulseNo};schedule();}},450);
@@ -55,11 +57,11 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   if(!queuedCharge||!cue||cue.seq<=lastPulse)return;
   const charge=queuedCharge;queuedCharge=null;clearTimeout(charge.fallback);lastPulse=cue.seq;
   const tubes=[...rails.querySelectorAll('.park-meter')],animations=[],timers=[];let done=false,finished=0;
-  const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));commitSpinColor(charge.target);spinButton?.removeAttribute('data-color-pending');fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;rails.style.setProperty('--park-fill',charge.target*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
-  const baseBefore=charge.before>=10?0:charge.before;
+  const finish=()=>{if(done)return;done=true;timers.forEach(clearTimeout);animations.forEach(a=>a.cancel());tubes.forEach(t=>t.classList.remove('is-pouring'));commitSpinColor(charge.target);spinButton?.removeAttribute('data-color-pending');fc._parkMeterBusy=false;fc._parkMeterLevel=charge.target;fc._parkShown=charge.show??charge.target;rails.style.setProperty('--park-fill',(charge.show??charge.target)*10+'%');refresh();record(fc,'charge:done',{level:charge.target});if(charge.target===10)celebrateFull();};
+  const baseBefore=charge.before>=10?0:(charge.from??charge.before);
   for(const [side,tube]of tubes.entries()){
    const fill=tube.querySelector('.park-meter-fill'),stream=tube.querySelector('.park-liquid-stream'),drops=[...tube.querySelectorAll('.park-liquid-drop')];
-   const track=tube.querySelector('.park-meter-track'),h=track.clientHeight,from=h*baseBefore/10,to=h*charge.target/10,x=tube.offsetLeft+track.offsetLeft+track.clientWidth/2,y=tube.offsetTop+track.offsetTop+h-from,originY=722-(fc.machineCut?.()||0);
+   const track=tube.querySelector('.park-meter-track'),h=track.clientHeight,from=h*baseBefore/10,to=h*(charge.show??charge.target)/10,x=tube.offsetLeft+track.offsetLeft+track.clientWidth/2,y=tube.offsetTop+track.offsetTop+h-from,originY=722-(fc.machineCut?.()||0);
    // The exact origin, distance and propagation speed used by Circus.lightsPulse.
    const arrival=cue.at+Number(cue.delay||0)+Math.hypot(x-223.5,y-originY)/2.2;
    const delay=Math.max(0,arrival-performance.now()),pourLead=Math.min(150,delay),startDelay=Math.max(0,delay-pourLead);
@@ -85,7 +87,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   }
   // Final state never depends on Web Animations, image loading or a visible tab.
   timers.push(setTimeout(finish,Math.max(0,cue.at+Number(cue.delay||0)+450-performance.now())+1500));
-  rails.style.setProperty('--park-fill',charge.target*10+'%');
+  rails.style.setProperty('--park-fill',(charge.show??charge.target)*10+'%');
  }
  function celebrateFull(){
   if(fc._parkFillCelebrating)return;fc._parkFillCelebrating=true;rails.classList.add('is-overflowing');record(fc,'reservoir:full');
