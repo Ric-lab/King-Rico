@@ -1,3 +1,25 @@
+## Primeiro arrasto sem click: ativação depois do touchend — 15/11/2026 (Codex)
+
+Dono relatou que a primeira raspagem inteira fica muda, inclusive ao levantar,
+e só a segunda responde. Novo cenário reproduz o buraco deixado por a3b0565:
+arrasto real CDP, sem click de compatibilidade, áudio/vibração disponíveis só
+na tarefa seguinte ao touchend. A versão anterior passou nos casos de ativação
+durante evento, mas falhou nesse novo: zero som e zero vibração no primeiro gesto.
+
+Correção restrita ao desbloqueio: preserva a tentativa dentro do gesto e faz
+uma única retomada na tarefa seguinte ao fim do toque, para enxergar a ativação
+concluída. Timers são deduplicados e cancelados quando o cartão fecha; som já
+tocado não repete. Não requer iniciar outra raspagem. Se a política do aparelho
+só libera no fim do primeiro gesto, o retorno acontece ao levantar, não antes
+da permissão existir. Isso não garante som desde o primeiro milímetro em todos
+os aparelhos; não anunciar como validado em Android físico.
+
+Teste scratch_first_touch_browser.py: código anterior falhou no novo cenário,
+correção passou nos três (touchend, click, depois do touchend sem click), com
+uma raspagem e vibração antes de qualquer segundo toque. Build passou.
+Próximo passo: confirmar Actions e disponibilizar a mesma prévia única:
+https://ric-lab.github.io/King-Rico/Preview. Nenhuma outra área alterada.
+
 ## Primeiro gesto da raspadinha no Chrome Android — 15/11/2026 (Codex)
 
 Dono confirmou Android: primeiro toque sem som/háptico. Corrigida perda do som

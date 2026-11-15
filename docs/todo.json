@@ -103,7 +103,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Correção do primeiro gesto Android: cue não é descartado antes de tocar; retentativa em touchend/click mesmo após resume bloqueado, sem som duplicado. Regressão falha no código anterior e passa na correção, sem autoplay bypass e contando ruído real; teste diário passou. Validar no aparelho do dono."
+      "notes": "Novo relato: primeiro arrasto completo mudo, segundo funciona. Reproduzido com ativação após touchend sem click (a3b0565 falha). Retomada do cue na tarefa seguinte ao fim do toque, sem segundo gesto e sem som repetido. Teste passa nos três modos; Android físico ainda não validado."
     },
     {
       "id": "t-sfx-levanta",

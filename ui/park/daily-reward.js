@@ -167,17 +167,23 @@ export async function openDailyReward(Cloud) {
   const inert=background.map(e=>[e,e.inert]);inert.forEach(([e])=>e.inert=true);
   document.body.append(overlay);document.body.style.overflow='hidden';
   const panel=overlay.querySelector('.park-daily-panel'),button=overlay.querySelector('.park-daily-button'),unlockVeil=overlay.querySelector('.park-daily-unlock'),grid=overlay.querySelector('.park-daily-grid'),status=overlay.querySelector('[role=status]'),instruction=overlay.querySelector('.park-daily-instruction');
-  let missedScratch=null,missedHaptic=false;
-  const unlock=e=>{
-   warmAudio(true);
-   if(!e||!['touchend','click','pointerup'].includes(e.type))return;
-   // Vibration can be blocked independently of audio on the first mobile gesture.
+  let missedScratch=null,missedHaptic=false,unlockRetry;
+  const flushFeedback=()=>{
+   if(finished||revealed)return;
    if(missedHaptic)missedHaptic=playScratchHaptic(true,overlay)===false;
    if(missedScratch!==null){
     if(scratchT===missedScratch)playScratchSound(()=>!finished&&!revealed,true);
-    // A resume attempt may still be blocked. Keep the cue for touchend/click.
     if(scratchT!==missedScratch)missedScratch=null;
    }
+  };
+  const unlock=e=>{
+   warmAudio(true);
+   if(!e||!['touchend','click','pointerup'].includes(e.type))return;
+   flushFeedback();
+   // Android may expose activation only after the trusted touchend dispatch.
+   // Retry the same cue in the next task, without requiring another gesture.
+   clearTimeout(unlockRetry);
+   unlockRetry=setTimeout(()=>{if(finished||revealed)return;warmAudio(true);flushFeedback();},0);
   };
   overlay.addEventListener('pointerup',unlock,{capture:true,passive:true});
   overlay.addEventListener('pointerdown',unlock,{capture:true,passive:true});
@@ -202,7 +208,7 @@ export async function openDailyReward(Cloud) {
   let revealed=false,busy=false,finished=false,last=null,unwatch=()=>{};
   const cells=[...overlay.querySelectorAll('.park-daily-cell')];
   function close(){
-   if(finished)return;finished=true;unwatch();document.removeEventListener('keydown',trap);
+   if(finished)return;finished=true;clearTimeout(unlockRetry);unwatch();document.removeEventListener('keydown',trap);
    const rect=overlay.querySelector('.park-daily-summary').getBoundingClientRect();overlay.remove();Cloud.dailyRewardActive=false;
    document.body.style.overflow=overflow;inert.forEach(([e,v])=>e.inert=v);
    // Release every wallet presentation from its hold. Credit has already been saved;
