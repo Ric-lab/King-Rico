@@ -6,12 +6,12 @@
     {
       "id": "p-powerup-columns",
       "title": "6/6 Contadores de power-ups: asset acima e quantidade abaixo",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": ""
+      "notes": "Conferido localmente em 390x844: contadores 86x90, ícone 44x44 acima e número abaixo, base alinhada ao prêmio; clones de roubo preservam o layout. Checkpoint sem deploy."
     },
     {
       "id": "p-goodluck-energy",

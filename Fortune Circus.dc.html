@@ -1269,8 +1269,10 @@ class Component extends DCLogic {
     this.save();
     // all reels have stopped: each Roleta symbol spins and flies to the counter
     const dStart = 250, STAG = 3300, LAND = 3210;
+    this._wheelAudioUntil=got?performance.now()+dStart+LAND+STAG*(got-1):0;
+    const cloverHold=this._cloudSpin?.outcome?.cedarLines?.length?1350:0;
     res.peach.forEach((c, k) => this.later(() => this.dance(c), dStart + k * STAG));
-    const wait = got ? dStart + LAND + STAG * (got - 1) + 450 : 950; // plain win: show the line first, then the modal
+    const wait = (got ? dStart + LAND + STAG * (got - 1) + 450 : 950)+cloverHold; // plain win: show the line first, then the modal
     if (goodLuck) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
     const next = () => {
       if (v6 && peach && this._wheelTriggerV6) {
@@ -1293,7 +1295,7 @@ class Component extends DCLogic {
     // modal only for big prizes; regular prizes count up inside the message bar
     const lbls = res.win > 0 ? this.lineLabels(res, bet, this.state.grid) : null, modal = res.win >= bet * 20;
     if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, goodLuck || !!fr, bet), wait); }
-    else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250);
+    else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250+cloverHold);
     else this.later(next, got ? wait + 200 : 800);
   }
   lineLabels(res, bet, grid) {

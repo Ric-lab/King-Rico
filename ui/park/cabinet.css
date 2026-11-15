@@ -238,3 +238,11 @@
 
 /* Prize lines must sit above the physical tape, static symbols and drum shading. */
 .park-reels [data-payline]{z-index:6}
+
+/* Power-ups: icon above, quantity below; bases align with the round-prize panel. */
+.park-circus-stage .park-pocket,.park-circus-stage .park-basket,.park-circus-stage .park-basket[data-park-side="true"]{width:86px!important;height:90px!important;top:calc(var(--park-prize-top) + 56px - 90px)!important}
+.park-circus-stage .park-pocket{left:8px}
+.park-circus-stage .park-basket,.park-circus-stage .park-basket[data-park-side="true"]{right:8px!important}
+.park-pocket .park-ticket-wallet-face,.park-basket .park-ticket-wallet-face,.park-tucker-carried-basket .park-ticket-wallet-face{transform:none;border-radius:18px}
+.park-pocket .park-ticket-wallet-art,.park-basket .park-ticket-wallet-art,.park-tucker-carried-basket .park-ticket-wallet-art{left:50%;top:5px;width:44px;height:44px;transform:translateX(-50%)}
+.park-pocket [data-tickets],.park-basket [data-wheels],.park-tucker-carried-basket [data-wheels]{left:0;right:0;top:auto;bottom:5px;width:100%;height:22px;font-size:22px!important;line-height:1}

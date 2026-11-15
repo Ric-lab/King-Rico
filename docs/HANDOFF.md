@@ -1,3 +1,15 @@
+## Etapa 6 local conferida — 15/11/2026 (Codex)
+
+Power-ups do topo agora usam contador vertical de 86×90: ícone 44×44 acima,
+quantidade abaixo e respiro entre eles. Base alinhada ao mostrador do prêmio;
+clones carregados por Tucker/Ray mantêm o mesmo arranjo. Teste de geometria em
+390×844 confirmou alinhamento e espaço livre, captura inspecionada. Também
+encadeadas as celebrações de roleta e trevo quando coincidem; o trevo espera a
+música da roleta acabar antes da sua festa, e a contagem em moedas vem depois.
+Checkpoint sem deploy. As seis etapas estão implementadas; próximo passo:
+importar relatórios de auditoria concluídos, rodar testes finais em sequência
+(sem build durante navegador), ajustar guias e publicar uma única prévia Pages.
+
 ## Etapa 5 local conferida — 15/11/2026 (Codex)
 
 Good Luck é identificado no recibo antes de girar a rodada base: entra direto

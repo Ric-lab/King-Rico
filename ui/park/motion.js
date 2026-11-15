@@ -176,6 +176,8 @@ function flyTickets(fc,refresh,done=()=>{}){
 }
 
 function celebrateClover(fc,lines){
+ const delay=Math.max(0,(fc._wheelAudioUntil||0)-performance.now());
+ if(delay>0){fc._parkCloverCelebrating=true;fc._parkCloverUntil=performance.now()+delay+(reduced()?500:1200);setTimeout(()=>celebrateClover(fc,lines),delay);return;}
  const cells=[...new Set(lines.flatMap(i=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][i]))],nodes=[];
  const duration=reduced()?500:1200;fc._parkCloverCelebrating=true;fc._parkCloverUntil=performance.now()+duration;
  record(fc,'clover:celebrate',{cells});

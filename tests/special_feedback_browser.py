@@ -72,5 +72,13 @@ with sync_playwright() as p:
   page.wait_for_function('!__fc.state.feature',timeout=20000)
   assert abs(page.evaluate('__fc.state.winAmount')-page.evaluate('__fc._cloudSpin.outcome.winUnits/100'))<.005
   print(json.dumps({'directGoodLuck':True,'charges':energy,'paidSpinCalls':1}),flush=True)
+ if stage in ['all','counters']:
+  ready()
+  for selector,number in [('.park-pocket','[data-tickets]'),('.park-basket','[data-wheels]')]:
+   icon=page.locator(selector+' .park-ticket-wallet-art').bounding_box();count=page.locator(selector+' '+number).bounding_box()
+   assert icon['y']+icon['height']+2<count['y'],(icon,count)
+   assert abs(icon['x']+icon['width']/2-count['x']-count['width']/2)<2,(icon,count)
+  page.screenshot(path='work/special-stacked-powerups.png')
+  print('power-ups icon/quantity vertical with whitespace PASS',flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()
