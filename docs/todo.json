@@ -46,12 +46,12 @@
     {
       "id": "p-special-wheel-audio",
       "title": "2/6 Roletas: música completa sincronizada à dança/voo, sem sobreposição",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": ""
+      "notes": "Conferido localmente: duas roletas com 3,3s entre músicas, zero jingle de linha simultâneo. Música original intacta; dança e voo ajustados para o fim em 2,77s. Checkpoint, ainda sem deploy."
     },
     {
       "id": "p-special-clover",

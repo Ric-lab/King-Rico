@@ -1,3 +1,13 @@
+## Etapa 2 local conferida — 15/11/2026 (Codex)
+
+Música original sfxDance preservada. Roleta dá duas voltas em 2,3s e chega ao
+contador em 2,77s, junto ao fim da música; jingle da linha é suprimido se a
+rodada tem roletas. Duas roletas começam com intervalo de 3,3s, sem empilhar
+as músicas. Teste local special_feedback_browser.py mediu 3299,6ms e zero
+jingles de linha. Checkpoint de fonte, sem deploy. Próxima etapa: defesa do
+trevo substituir a cabeça central com recibo final consistente e possível
+prêmio; depois vilões avulsos, Good Luck e contadores conforme a lista.
+
 ## Lista de especiais — execução sequencial, 15/11/2026 (Codex)
 
 Pedido novo em seis etapas, registrado no painel p-special-clover,
