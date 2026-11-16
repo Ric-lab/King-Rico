@@ -78,7 +78,7 @@ with sync_playwright() as p:
   assert page.evaluate('reelStarts.length')==0
   assert page.locator('.park-goal-cloud').count()==0
   page.wait_for_function('__fc._goodLuckEnergyLog?.length>=1',timeout=15000)
-  page.locator('.park-goodluck-falling-bolt').wait_for()
+  page.locator('.park-gl-bolt').wait_for(state='attached')
   page.wait_for_timeout(350);page.screenshot(path='work/special-goodluck-bolt.png')
   page.wait_for_function('document.querySelector("[data-spin-btn]").hasAttribute("data-tactile-held")')
   page.screenshot(path='work/special-goodluck-click.png')
