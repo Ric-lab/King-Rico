@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-reel-highlight-current",
+      "title": "Primeira linha: impedir brilho/piscada de resultado antigo sem combinação na grade atual",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Halos e linhas conferem símbolos atuais; clique/confirmação limpam destaques antigos. Testado com estado de vitória antiga sobre grade perdedora e com linha válida."
+    },
+    {
       "id": "p-clover-free-spin",
       "title": "Trevos cheios dão giro grátis persistente, sem nova cobrança",
       "status": "preview",
@@ -11,7 +21,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Estoque já em 5 e nova trinca: salva um giro da mesma aposta; dispara automaticamente após as celebrações. Recibo/token impedem consumo duplicado entre aparelhos. Apenas carteira fictícia até validar regras."
+      "notes": "16/11: trevo da trinca viaja até o spin; impacto chama o clique nativo e só então pede o giro gratuito. Sem balão +1. Testado: nenhuma requisição antes do contato; token e débito zero preservados."
     },
     {
       "id": "p-powerup-columns",
@@ -51,7 +61,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "16/11: voo com arco contínuo de 1,1s, giro suave, pausa de antecipação e anel de impacto; substituição ganha pulso. Uma defesa/uma aposta; prêmio calculado no recibo."
+      "notes": "16/11: mantém arco suave e impacto na cabeça central; balão Trevo da sorte te protegeu e hint removidos. Defesa e possível prêmio seguem o recibo."
     },
     {
       "id": "p-special-wheel-audio",

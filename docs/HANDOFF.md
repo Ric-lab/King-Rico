@@ -1,3 +1,29 @@
+## Trevo no spin e destaque sem fantasma — 16/11/2026 (Codex)
+
+Base puxada: `fa8bc46`, já publicada com sucesso por Actions43784606880.
+Pedido atual atendido só na apresentação, sem alterar matemática/recibos/regras:
+- Giro grátis: trevo da trinca faz arco de1,05s até o centro do botão. Só no
+  contato chama pressSpin/spin/pressUp nativos; antes disso não há nova
+  requisição. Sem balão +1. Origem na retomada: contador, se faltar a grade.
+- Defesa: retirados balão, CSS e hint “Trevo da sorte te protegeu”. Mantidos
+  aviso sonoro, voo, contato e troca confirmada no recibo.
+- Destaque: linhas/células precisam combinar com a grade atual (pagante ou
+  trevo especial confirmado); não aceitar só winCells/winLines antigos.
+  Queue/confirmação limpam imediatamente o destaque, inclusive no auto.
+
+Testes focados de navegador passaram: grátis espera impacto e mantém débito0;
+defesa sem legenda; estado antigo da primeira linha sobre grade perdedora não
+produz halo/pulso, enquanto combinação válida continua dourada. Capturas do
+voo e da grade perdedora inspecionadas. Node: colunas, grátis/replay e tinta
+passaram. Suíte completa fica no workflow da prévia; não repetir auditoria
+financeira para esta alteração visual. Build de produção passou após integração.
+
+Próximo passo: commit/push do lote na branch compartilhada
+e conferir sucesso do Pages antes de anunciar atualizado. Não promover main
+(novo saldo v6 segue com bloqueio de regras descrito abaixo).
+URL única: https://ric-lab.github.io/King-Rico/Preview
+Painel: https://ric-lab.github.io/King-Rico/todo/
+
 ## Revisão de trevos/controles — 16/11/2026 (Codex) — só prévia
 
 Pedido atual, quatro pontos:

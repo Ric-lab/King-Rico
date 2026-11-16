@@ -7,9 +7,9 @@ export function installDefense(fc,rails){
   if(fc._cedarDefending)return;fc._cedarDefending=true;fc._celebHold=true;
   const wasAuto=fc.state.auto,before=event.beforeGrid||fc.state.grid,cell=event.cell??res.cells[1]??4;
   fc._parkVisibleTickets=(window.KingRicoPark.state.cedros??0)+1;
-  fc.setState({spinning:false,auto:false,grid:before.slice(),winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:'Trevo da sorte te protegeu!'});
+  fc.setState({spinning:false,auto:false,grid:before.slice(),winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:''});
   const scene=document.createElement('div');scene.className='park-defense-scene is-replacement';scene.dataset.phase='warning';
-  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/sym-clover.png" alt=""><i class="park-defense-impact"></i><strong class="park-defense-caption">Trevo da sorte te protegeu!</strong>';
+  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/sym-clover.png" alt=""><i class="park-defense-impact"></i>';
   document.body.append(scene);
   const svg=scene.querySelector('svg'),fly=scene.querySelector('img'),cells=before.flatMap((v,i)=>v===({tony:12,tucker:13,ray:14}[event.against])?[i]:[]);
   const box=i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect(),boxes=cells.map(box).filter(Boolean),target=box(cell),source=rails.querySelector('.park-pocket .park-ticket-wallet-art')?.getBoundingClientRect();

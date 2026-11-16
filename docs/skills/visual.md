@@ -82,3 +82,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 - Rejeitado em16/11: raios durante Good Luck. Manter drenagem em cinco partes
   e clique automático do botão. Contadores86×90 grandes demais: usar68×64 e
   aproximar do prêmio; trevo da defesa deve seguir arco suave, sem rodar720°.
+
+- Rejeitado em16/11: balão “Trevo da sorte te protegeu”. Defesa apenas visual
+  e sonora. Giro grátis é o trevo batendo no spin, não um aviso +1 seguido de
+  giro sem causa visual. Destaque da primeira linha precisa validar a grade
+  atual e sumir ao iniciar outra jogada.

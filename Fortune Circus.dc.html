@@ -1185,7 +1185,7 @@ class Component extends DCLogic {
     if (this.state.showWin) { const manual = !this.state.auto && !this.state.free && !this._afterWinChains; this._spinAfterFly = manual; this.dismissWin(); return; }
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
     if (!this._pressed && !this._autoSpin && performance.now() - (this._spinTouchAt ?? -Infinity) > 300) { this.hap('spinPress'); this.click(true, 'spin'); this._spinTouchDown?.(); setTimeout(() => { this._spinTouchUp?.(); this.click(false, 'spin'); }, 65); }
-    this._spinQueued = true; this.setState({ queued: true });
+    this._spinQueued = true; this.setState({ queued: true, winCells: [], winLines: [], winDim: false, winCalm: true });
     if (!this.state.free) { this.spinFx(false); this._fxFired = true; }
     setTimeout(() => { this._spinQueued = false; this.setState({ queued: false }); this.doSpin(); }, 280);
   };
@@ -1197,7 +1197,7 @@ class Component extends DCLogic {
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) {
       if (this._cloudRequest) return;
-      this._cloudRequest = true; this.setState({ spinning: true, hint: 'Confirmando giro…' });
+      this._cloudRequest = true; this.setState({ spinning: true, winCells: [], winLines: [], winDim: false, winCalm: true, hint: 'Confirmando giro…' });
       try { cloudResult = await cloud.spin('circus', bet); this._cloudSpin = cloudResult; bal = cloudResult.balanceBefore; }
       catch (e) { this.setState({ spinning: false, auto: false, hint: 'Não foi possível confirmar o giro' }); cloud.error(e); return; }
       finally { this._cloudRequest = false; }
@@ -1744,7 +1744,7 @@ class Component extends DCLogic {
     if (!this._pressed) this.click(true);
     this.setState({ auto: on, hint: on ? 'Giro automático' : 'Automático parado' });
     if (on && this.isCeleb()) { this._autoPending = true; return; }
-    if (on && !this.state.spinning && !this.state.feature) { this._spinQueued = true; this.setState({ queued: true }); this.later(() => { this._spinQueued = false; this.setState({ queued: false }); if (this.state.auto) this.doSpin(); }, 280); }
+    if (on && !this.state.spinning && !this.state.feature) { this._spinQueued = true; this.setState({ queued: true, winCells: [], winLines: [], winDim: false, winCalm: true }); this.later(() => { this._spinQueued = false; this.setState({ queued: false }); if (this.state.auto) this.doSpin(); }, 280); }
   };
   setSfx = (lvl) => {
     const on = lvl > 0;
@@ -1887,10 +1887,19 @@ class Component extends DCLogic {
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu, openPays: this.openPays,
       toggleVibe: this.toggleVibe, soon: this.soon
     };
-    LINES.forEach((l, i) => { vals['l' + i] = !s.winCalm && !s.lineGone && s.winLines.indexOf(i) >= 0; });
+    // A retained highlight must still describe the visible result, never an old row.
+    const shownLines = (s.winLines || []).filter(i => {
+      const line=LINES[i];if(!line)return false;
+      const symbol=this.lineSymbol(s.grid,line);
+      return symbol>=0&&this.payoutSymbols()[symbol]?.pay>0 ||
+        this._cloudSpin?.outcome?.cedarLines?.includes(i)&&line.every(c=>s.grid[c]===5);
+    });
+    const shownCells=new Set(shownLines.flatMap(i=>LINES[i]));
+    for(const i of this._cloudSpin?.outcome?.res.peach||[])if(s.grid[i]===PEACH)shownCells.add(i);
+    LINES.forEach((l, i) => { vals['l' + i] = !s.spinning && !s.queued && !s.winCalm && !s.lineGone && shownLines.includes(i); });
     s.grid.forEach((v, i) => {
       const spinning = s.spinCells.indexOf(i) >= 0;
-      const win = s.winCells.indexOf(i) >= 0;
+      const win = !s.spinning && !s.queued && s.winCells.indexOf(i) >= 0 && shownCells.has(i);
       const lock = feat && s.locked.indexOf(i) >= 0;
       vals['c' + i] = {
         dimmed: s.winDim&&!win?'true':'false',ticket: v === 10 ? 'true' : 'false',tony:v===12?'true':'false',tucker:v===13?'true':'false',ray:v===14?'true':'false',controller:v===15?'true':'false', pos: (v < 0 ? 10 : v) * 100 / 11 + '%',
@@ -1900,7 +1909,7 @@ class Component extends DCLogic {
         spin: spinning,
         anim: spinning || s.stopped.indexOf(i) >= 0 ? 'none'
           : win && !s.winCalm ? 'fcBeat .5s ease-in-out infinite' : 'none',
-        winFx: s.winCalm ? 'none' : 'parkReelWin .7s ease-in-out infinite'
+        winFx: win && !s.winCalm ? 'parkReelWin .7s ease-in-out infinite' : 'none'
       };
     });
     return vals;

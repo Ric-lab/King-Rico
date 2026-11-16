@@ -23,7 +23,7 @@ evento inteiro de **Tony ou Tucker — nunca de Ray**, sendo consumido na mesma
 transação do giro; Tony não consome três defesas pelas três patadas. Mesmo com `0/5`
 roletas guardadas, o trevo ainda protege contra o Tucker. Ray rouba de **1 a 4 trevos**
 (limitado ao estoque); sem estoque, Ray aparece sem perda (`"Sem trevos!"`).
-A mensagem da defesa é **"Trevo da sorte te protegeu!"**. Um aviso curto precede
+A defesa não exibe balão de texto. Um aviso sonoro curto precede
 o voo do trevo até a cabeça central da trinca. O recibo contém `defense.beforeGrid`,
 `cell` e `replacement`; após o impacto, mostra a grade final. A troca pode completar
 uma linha pagante transversal, calculada no motor na mesma aposta. A animação não
@@ -566,7 +566,8 @@ Não converte a defesa excedente em moedas. Se o estoque era4, apenas completa5.
 Várias linhas no mesmo giro concedem um único giro grátis. Uma nova trinca com
 estoque cheio durante o grátis pode renová-lo.
 
-O giro acontece automaticamente depois das celebrações/roleta/modal, inclusive
+O giro começa quando um trevo da trinca voa e bate no botão de spin, usando
+os handlers normais de clique/som/háptico. A viagem espera as celebrações/roleta/modal, inclusive
 após recarregar; não exige saldo para pagar a aposta. É uma operação própria
 com débito zero e token vinculado ao recibo que concedeu o benefício. Repetição
 do mesmo request devolve o recibo; token já consumido em outro aparelho é
@@ -581,3 +582,16 @@ automático do botão e drena o líquido, sem SVGs de raio.
 
 Somente carteira fictícia da prévia. Além dos bloqueios Firestore anteriores,
 validar os campos de benefício/token e o débito zero antes de promover main.
+
+### Sincronia visual — 16/11/2026
+
+O voo do grátis dura1,05s (350ms com movimento reduzido), sai do trevo central
+da linha premiada e aterrissa no centro do spin. Só depois do impacto o clique
+inicia a requisição gratuita. Na retomada, sem grade original, usa o contador
+como origem. Token salvo continua dono da gratuidade; falha na animação não
+perde o benefício. Não há balão +1 nem balão de defesa.
+
+Linhas/halos só aparecem se a combinação ainda confere com a grade visível
+(pagante ou trevo especial confirmado). Clique/confirmando limpam o destaque
+anterior, incluindo modo automático. Estado antigo não deve fazer a primeira
+linha piscar sobre uma grade sem prêmio.

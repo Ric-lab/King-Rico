@@ -294,3 +294,10 @@ Power-ups menores (68×64) aproximam-se do painel de prêmio; mantêm o arranjo
 vertical e a mesma base, tom marfim e contorno dourado. A defesa não gira como
 um adesivo: segue arco contínuo com rotação leve, contato dourado e pulso da
 troca. Good Luck usa clique mecânico e consumo de líquido, sem raios.
+
+### Trevo aciona o spin — 16/11/2026
+
+Giro grátis: o próprio trevo viaja ao botão; no impacto, usa o clique nativo do
+spin, sem balão +1. Defesa sem legenda flutuante. Efeitos de prêmio precisam
+conferir com a grade atual; limpar na fila/confirmação do próximo giro e não
+reaproveitar halo/linha de um resultado anterior sobre símbolos diferentes.

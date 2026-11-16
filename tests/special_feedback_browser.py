@@ -46,6 +46,7 @@ with sync_playwright() as p:
   page.evaluate("""()=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>0;try{return await fetch(u,o)}finally{Math.random=random}};}""")
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-defense-scene[data-phase=warning]').wait_for(timeout=15000)
+  assert page.locator('.park-defense-caption').count()==0
   assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==3
   page.wait_for_timeout(1050);page.screenshot(path='work/special-clover-defense-flight.png')
   page.locator('.park-defense-scene[data-phase=impact]').wait_for()
@@ -93,7 +94,14 @@ with sync_playwright() as p:
   ready(reset=False)
   page.evaluate("""queues=>{window.freeCalls=[];const fetch=window.fetch;window.fetch=async(u,o)=>{if(o?.body&&JSON.parse(o.body).action==='spin'){const old=Math.random;let values=queues.shift()||[],i=0;Math.random=()=>values[i++]??.99;try{const r=await fetch(u,o);freeCalls.push(await r.clone().json());return r;}finally{Math.random=old}}return fetch(u,o)}}""",[draws_for_grid([5,5,5,0,2,6,7,8,10]),draws_for_grid([10,10,10,0,2,6,7,8,10])])
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
+  page.locator('.park-free-clover-flight').wait_for(timeout=15000)
+  assert page.evaluate('freeCalls.length')==1,'Free request must wait for the clover to land'
+  page.wait_for_timeout(500);page.screenshot(path='work/special-free-clover-flight.png')
   page.wait_for_function('freeCalls.length===2',timeout=25000)
+  flight=page.evaluate('__fc._parkMotionLog.filter(x=>x.type.startsWith("free-clover:"))')
+  assert [x['type'] for x in flight]==['free-clover:start','free-clover:impact']
+  assert flight[1]['at']-flight[0]['at']>=900,flight
+  assert page.locator('.park-free-spin-caption').count()==0
   calls=page.evaluate('freeCalls');assert calls[0]['outcome']['freeSpinAward'] and calls[1].get('outcome',{}).get('freeSpin'),calls
   assert calls[1]['balanceBefore']==calls[1]['balanceDebited']
   assert page.evaluate('KingRicoCloud.player.balance')==before-10+4
@@ -107,6 +115,23 @@ with sync_playwright() as p:
   page.wait_for_function('__fc._cloudSpin?.outcome?.freeSpin',timeout=15000)
   assert page.evaluate('KingRicoPark.state.economyV6.wageredUnits')==1000
   print('full-clover preview picker preset PASS',flush=True)
+ if stage in ['all','highlights']:
+  ready('ticket');page.locator('[data-spin-btn]').click()
+  page.wait_for_function('!__fc.state.spinning&&__fc.state.winLines.includes(0)',timeout=15000)
+  assert page.locator('[data-payline="0"]').count()==1
+  page.wait_for_function('!__fc.cloudBusy()',timeout=20000)
+  # Reproduce retained previous-win fields with a different, losing visible grid.
+  page.evaluate('__fc.setState({grid:[0,2,6,7,8,10,2,6,0],winCells:[0,1,2],winLines:[0],winCalm:false,lineGone:false})')
+  for n in range(3):
+   page.wait_for_timeout(200)
+   assert page.locator('.park-part-reel-top .park-win-fx,[data-payline="0"]').count()==0
+   assert page.locator('.park-part-reel-top').evaluate_all('es=>es.every(e=>e.getAnimations({subtree:true}).length===0)')
+  page.screenshot(path='work/special-no-false-first-row.png')
+  page.evaluate('__fc.setState({grid:[10,10,10,0,2,6,7,8,0],winCells:[0,1,2],winLines:[0],winCalm:false,lineGone:false})')
+  page.wait_for_function('document.querySelectorAll(".park-part-reel-top .park-win-fx").length===3')
+  page.evaluate('__fc.setState({queued:true})')
+  page.wait_for_function('document.querySelectorAll(".park-part-reel-top .park-win-fx").length===0')
+  print('first-row highlight requires a matching paid/special line and stops on next spin PASS',flush=True)
  if stage in ['all','counters']:
   ready()
   for selector,number in [('.park-pocket','[data-tickets]'),('.park-basket','[data-wheels]')]:

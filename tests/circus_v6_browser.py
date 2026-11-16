@@ -40,7 +40,7 @@ with sync_playwright() as p:
   page.evaluate('''r=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>r;try{return await fetch(u,o)}finally{Math.random=random}}}''',draw)
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-defense-scene').wait_for(timeout=15000)
-  assert 'Trevo da sorte te protegeu!' in page.locator('.park-defense-scene').inner_text()
+  assert page.locator('.park-defense-caption').count()==0
   assert page.evaluate('__fc._cloudSpin.outcome.defense.against')==kind
   assert page.evaluate('KingRicoCloud.player.balance')==before-10+page.evaluate('__fc._cloudSpin.outcome.winUnits')/100
   assert page.evaluate('KingRicoCloud.player.peaches')==3
