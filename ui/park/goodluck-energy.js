@@ -22,22 +22,10 @@ export function installGoodLuckEnergy(fc,rails,{refresh}){
    try{const a=fill.animate([{height:h*from/10+'px'},{height:h*to/10+'px'}],{duration,easing:'ease-in-out',fill:'both'});animations.push(a);a.finished.then(()=>a.cancel()).catch(()=>{});}catch{}
   }
   refresh();
-  const button=document.querySelector('[data-spin-btn]'),r=button?.getBoundingClientRect();
-  if(r){
-   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('park-goodluck-bolt');svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);svg.style.setProperty('--bolt-color',color);
-   const tx=r.x+r.width/2,ty=r.y+r.height/2;
-   for(const tube of rails.querySelectorAll('.park-meter-track')){
-    const b=tube.getBoundingClientRect(),sx=b.x+b.width/2,sy=b.y+b.height*(1-from/10),dx=tx-sx,dy=ty-sy;
-    const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',`M${sx} ${sy} L${sx+dx*.38} ${sy+dy*.22} L${sx+dx*.22} ${sy+dy*.43} L${sx+dx*.73} ${sy+dy*.65} L${tx} ${ty}`);svg.append(path);
-   }
-   document.body.append(svg);nodes.push(svg);
-   for(const path of svg.children)try{const length=path.getTotalLength();path.style.strokeDasharray=length;animations.push(path.animate([{strokeDashoffset:length,opacity:0},{strokeDashoffset:0,opacity:1,offset:.4},{strokeDashoffset:-length,opacity:0}],{duration:reduced?280:650,easing:'ease-out',fill:'both'}));}catch{}
-  }
-  fc.later(()=>{
-   try{fc.buzz?.([75]);fc.burst(850,1,.045,.18);fc.bell(784,.25,.045);fc._parkFlashRim?.();}catch{}
-   if(button)try{animations.push(button.animate([{filter:'brightness(1)'},{filter:'brightness(1.65) drop-shadow(0 0 12px '+color+')',offset:.25},{filter:'brightness(1)'}],{duration:350,easing:'ease-out'}));}catch{}
-   go();
-  },reduced?160:350);
+  fc.setState({pressed:'spin'});fc._spinTouchDown?.();
+  try{fc.click(true);fc.hap('impact');}catch{}
+  fc.later(()=>{fc.click(false);fc._spinTouchUp?.();fc.setState({pressed:null});go();},220);
+
  };
  const end=fc.endFeature.bind(fc);fc.endFeature=(...args)=>{clean();fc._parkFeatureFill=null;fc._parkShown=0;fc.setState({auto:!!fc._goodLuckWasAuto});const result=end(...args);refresh();return result;};
  window.addEventListener('pagehide',clean,{once:true});

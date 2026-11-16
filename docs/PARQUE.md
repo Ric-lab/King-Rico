@@ -56,7 +56,7 @@ acumuladas dos bônus e está incluída na auditoria de retorno de ~90%.
 Quando chega ao topo (`10`), entra diretamente nos **5 giros Good Luck**, com
 a chamada e o háptico do bônus, antes de qualquer giro base visual. O prêmio da
 grade inicial permanece no recibo e na soma final. Cada rodada automática gasta
-1/5 do líquido e envia raios da cor consumida ao botão, sem simular clique manual.
+1/5 do líquido e aciona o clique visual/sonoro do botão, sem raios.
 `featureBet = floor(cycleWagerUnits / 10) / 100`; símbolos pagantes reais ficam
 travados na grade. Mantida a conclusão antecipada quando a grade já está cheia.
 
@@ -557,3 +557,27 @@ na grade final sem roubo. Contadores usam asset acima da quantidade, com respiro
 
 Essas mudanças estão na carteira fictícia da prévia. O formato novo da defesa e
 a decoração avulsa precisam de validação Firestore antes de integrar ao oficial.
+
+## Trevos cheios — prévia de 16/11/2026
+
+Se o estoque **já era 5** e sai nova trinca, a rodada preserva seus prêmios e
+salva **um giro grátis**, da mesma aposta, em `cloverFreeBetUnits/cloverFreeSpinId`.
+Não converte a defesa excedente em moedas. Se o estoque era4, apenas completa5.
+Várias linhas no mesmo giro concedem um único giro grátis. Uma nova trinca com
+estoque cheio durante o grátis pode renová-lo.
+
+O giro acontece automaticamente depois das celebrações/roleta/modal, inclusive
+após recarregar; não exige saldo para pagar a aposta. É uma operação própria
+com débito zero e token vinculado ao recibo que concedeu o benefício. Repetição
+do mesmo request devolve o recibo; token já consumido em outro aparelho é
+rejeitado, sem virar aposta paga. Uma tentativa antiga não recria o benefício.
+A aposta fica travada no valor que gerou o grátis. O ledger soma zero em apostas
+nesse giro, mas contabiliza todos os prêmios e roubos.
+
+Contadores agora68×64, asset30px acima e número18px abaixo, próximos do prêmio
+e com a mesma base/paleta. Defesa: arco contínuo de1,1s e giro suave, antecipação
+de0,5s, anel de impacto e pulso do símbolo substituto. Good Luck volta ao clique
+automático do botão e drena o líquido, sem SVGs de raio.
+
+Somente carteira fictícia da prévia. Além dos bloqueios Firestore anteriores,
+validar os campos de benefício/token e o débito zero antes de promover main.

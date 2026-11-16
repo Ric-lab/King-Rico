@@ -47,7 +47,9 @@ with sync_playwright() as p:
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-defense-scene[data-phase=warning]').wait_for(timeout=15000)
   assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==3
+  page.wait_for_timeout(1050);page.screenshot(path='work/special-clover-defense-flight.png')
   page.locator('.park-defense-scene[data-phase=impact]').wait_for()
+  page.wait_for_timeout(140)
   assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==2
   assert page.evaluate('KingRicoCloud.player.balance')==before-10+page.evaluate('__fc._cloudSpin.outcome.res.win')
   assert page.evaluate('__fc._cloudSpin.outcome.res.win')>0
@@ -75,14 +77,36 @@ with sync_playwright() as p:
   assert page.evaluate('reelStarts.length')==0
   assert page.locator('.park-goal-cloud').count()==0
   page.wait_for_function('__fc._goodLuckEnergyLog?.length>=1',timeout=15000)
-  page.wait_for_timeout(180);page.screenshot(path='work/special-goodluck-first-bolt.png')
+  page.wait_for_timeout(80);assert page.locator('[data-spin-btn]').get_attribute('data-tactile-held')=='1'
+  page.screenshot(path='work/special-goodluck-click.png')
   page.wait_for_function('__fc._goodLuckEnergyLog?.length===5',timeout=45000)
   energy=page.evaluate('__fc._goodLuckEnergyLog');assert [r['to'] for r in energy]==[8,6,4,2,0],energy
   assert len(set(r['color'] for r in energy))==5,energy
+  assert page.locator('.park-goodluck-bolt').count()==0
   assert page.evaluate('reelStarts.every(r=>r.feature)&&baseSpinCalls===1')
   page.wait_for_function('!__fc.state.feature',timeout=20000)
   assert abs(page.evaluate('__fc.state.winAmount')-page.evaluate('__fc._cloudSpin.outcome.winUnits/100'))<.005
   print(json.dumps({'directGoodLuck':True,'charges':energy,'paidSpinCalls':1}),flush=True)
+ if stage in ['all','free']:
+  ready()
+  page.evaluate("""()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=5;localStorage.setItem(k,JSON.stringify(s));}""")
+  ready(reset=False)
+  page.evaluate("""queues=>{window.freeCalls=[];const fetch=window.fetch;window.fetch=async(u,o)=>{if(o?.body&&JSON.parse(o.body).action==='spin'){const old=Math.random;let values=queues.shift()||[],i=0;Math.random=()=>values[i++]??.99;try{const r=await fetch(u,o);freeCalls.push(await r.clone().json());return r;}finally{Math.random=old}}return fetch(u,o)}}""",[draws_for_grid([5,5,5,0,2,6,7,8,10]),draws_for_grid([10,10,10,0,2,6,7,8,10])])
+  before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
+  page.wait_for_function('freeCalls.length===2',timeout=25000)
+  calls=page.evaluate('freeCalls');assert calls[0]['outcome']['freeSpinAward'] and calls[1].get('outcome',{}).get('freeSpin'),calls
+  assert calls[1]['balanceBefore']==calls[1]['balanceDebited']
+  assert page.evaluate('KingRicoCloud.player.balance')==before-10+4
+  assert page.evaluate('KingRicoPark.state.economyV6.wageredUnits')==1000
+  page.wait_for_timeout(3500);assert page.evaluate('freeCalls.length')==2
+  print('full clovers: automatic bet-locked spin without second debit PASS',flush=True)
+ if stage in ['all','preset']:
+  ready('full-clover');page.locator('[data-spin-btn]').click()
+  page.wait_for_function('__fc._cloudSpin?.outcome?.freeSpinAward',timeout=15000)
+  page.evaluate('Math.random=()=>.99')
+  page.wait_for_function('__fc._cloudSpin?.outcome?.freeSpin',timeout=15000)
+  assert page.evaluate('KingRicoPark.state.economyV6.wageredUnits')==1000
+  print('full-clover preview picker preset PASS',flush=True)
  if stage in ['all','counters']:
   ready()
   for selector,number in [('.park-pocket','[data-tickets]'),('.park-basket','[data-wheels]')]:

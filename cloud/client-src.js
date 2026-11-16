@@ -119,7 +119,7 @@ else {
       throw error;
     }
   }
-  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true,slotVersion:6}) });
+  Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true,slotVersion:6,...(Cloud.park?.cloverFreeSpinId?{freeSpinId:Cloud.park.cloverFreeSpinId}:{})}) });
   Cloud.parkEntry=(game,method)=>mutate({action:'parkEntry',game,method});
   Cloud.parkBonus=wheelId=>mutate({action:'parkBonus',wheelId});
   Cloud.parkBonusClose=wheelId=>mutate({action:'parkBonusClose',wheelId});

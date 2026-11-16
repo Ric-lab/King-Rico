@@ -21,7 +21,7 @@ export function createGameStore(db, uid, dependencies={}) {
   const playerRef = reference(['players',uid]);
   const parkRef=reference(['players',uid,'park','state']);
   return async data => {
-    const allowed={parkEntry:['action','requestId','game','method'],parkBonus:['action','requestId','wheelId'],parkBonusClose:['action','requestId','wheelId'],bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected','park','slotVersion'],
+    const allowed={parkEntry:['action','requestId','game','method'],parkBonus:['action','requestId','wheelId'],parkBonusClose:['action','requestId','wheelId'],bootstrap:['action','requestId','analyticsConsent'],spin:['action','requestId','game','bet','selected','park','slotVersion','freeSpinId'],
       bridge:['action','requestId','game','bet','move','roundId','step','selected'],
       neck:['action','requestId','game','bet','move','roundId','floor'],
       fingo:['action','requestId','game','bet','move','roundId','used','selected','park'],
@@ -36,6 +36,7 @@ export function createGameStore(db, uid, dependencies={}) {
     if (!data || !allowed[data.action] || Object.keys(data).some(k=>!allowed[data.action].includes(k)) ||
       !requestIdPattern.test(data.requestId || '')) fail('king-rico/invalid-argument','Pedido inválido.');
     if(data.slotVersion!==undefined&&(![2,3,4,5,6].includes(data.slotVersion)||data.action!=='spin'||data.game!=='circus'||data.park!==true))fail('king-rico/invalid-argument','Versão do giro inválida.');
+    if(data.freeSpinId!==undefined&&(!requestIdPattern.test(data.freeSpinId)||data.game!=='circus'||data.slotVersion!==6||data.park!==true))fail('king-rico/invalid-argument','Giro grátis inválido.');
     if(data.park!==undefined&&data.park!==true)fail('king-rico/invalid-argument','Entrada inválida.');
     if(['parkBonus','parkBonusClose'].includes(data.action)&&!requestIdPattern.test(data.wheelId||''))fail('king-rico/invalid-argument','Roleta inválida.');
     if(data.action==='recharge' && data.source!==undefined && data.source!=='home')fail('king-rico/invalid-argument','Origem de recarga inválida.');
@@ -114,7 +115,8 @@ export function createGameStore(db, uid, dependencies={}) {
       }else if(data.action==='parkBonusClose'){if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('king-rico/round-conflict','Essa roleta já foi encerrada.');const v6=park.wheel.economyVersion===6;park.wheel=null;if(!v6){park.spins=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;}parkDirty=true;
       }else if (data.action==='spin') {
         if (p.lastSpinAt && time-p.lastSpinAt.toMillis()<700) fail('king-rico/resource-exhausted','Aguarde antes de girar.');
-        betUnits=engine.units(data.bet);
+        if(data.game==='circus'&&data.park&&(data.freeSpinId||park.cloverFreeSpinId)&&data.freeSpinId!==park.cloverFreeSpinId)fail('king-rico/round-conflict','Esse giro grátis já foi utilizado em outro aparelho.');
+        betUnits=data.game==='circus'&&data.park?parkEngine.spinCost(park,data.bet,data.slotVersion||1):engine.units(data.bet);
         if (p.balanceUnits<betUnits) fail('king-rico/failed-precondition','Saldo insuficiente.');
         const outcome=data.game==='circus' ? (data.park?parkEngine.spin(p,park,data.bet,data.requestId,rng,data.slotVersion||1):engine.slot(data.bet,p.peaches,rng,p.peachBank)) : engine.wheel(data.bet,data.selected,rng);
         const before=p.balanceUnits;

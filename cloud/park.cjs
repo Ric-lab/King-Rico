@@ -71,7 +71,16 @@ function spinLegacy(p,s,bet,id,rng,version=1){
  s.spins++;if(filling)s.wheel={id,roundId:id,prizeVersion:version>=5?4:3,baseUnits:version>=5?Math.max(1,Math.round(s.cycleWagerUnits*4/100)):engine.units(x.res.win),pockets:[...POCKETS],result:null};
  return {...x,...(version>=2?{slotVersion:version}:{}),parkVersion:1,ticketAward:award};
 }
+function spinCost(s,bet,version=6){
+ const stake=engine.units(bet);
+ if(version>=6&&s.cloverFreeBetUnits){
+  if(s.cloverFreeBetUnits!==stake)fail('round-conflict','O giro grátis mantém a aposta que o gerou.');
+  return 0;
+ }
+ return stake;
+}
 function spinV6(p,s,bet,id,rng){
+ const freeSpin=spinCost(s,bet,6)===0;
  s.cedros??=0;
  if(s.spins>=10){s.spins=0;s.cycleWagerUnits=0;Object.defineProperty(s,'_barSpins',{value:0,writable:true,configurable:true});}
  s.cycleWagerUnits??=0;
@@ -92,9 +101,13 @@ function spinV6(p,s,bet,id,rng){
   const cedarLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===5)?[i]:[]);
   const controllerLines=engine.ALL_LINES.flatMap((line,i)=>line.every(c=>x.grid[c]===15)?[i]:[]);
   const award=Math.min(5-s.cedros,cedarLines.length);
-  x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};s.cedros+=award;
+  x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};
+  if(s.cedros===5&&cedarLines.length){s.cloverFreeBetUnits=engine.units(bet);s.cloverFreeSpinId=id;x.freeSpinAward=true;}
+  s.cedros+=award;
   if(wheelUnits>0)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(wheelUnits*prof.WHEEL_SHARE_V6)),pockets:[...POCKETS],result:null};
  }
+ if(freeSpin)x.freeSpin=true;
+ if(!x.freeSpinAward){delete s.cloverFreeBetUnits;delete s.cloverFreeSpinId;}
  controllerV6.recordSpin(s,x,bet);return x;
 }
 function spin(p,s,bet,id,rng,version=1){
@@ -136,4 +149,4 @@ function bonus(s,wheelId,rng){
  if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:w.prizeVersion===4?winUnits:winUnits-w.baseUnits};if(w.economyVersion===6)controllerV6.recordBonus(s,w.result.extraUnits);else controller.recordBonus(s,w.result.extraUnits);return w.result.extraUnits;}
  return 0;
 }
-module.exports={TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,scatterTickets,spin,entry,payment,settle,bonus};
+module.exports={TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,fresh,publicState,placeTickets,scatterTickets,spinCost,spin,entry,payment,settle,bonus};

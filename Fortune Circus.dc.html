@@ -1202,7 +1202,7 @@ class Component extends DCLogic {
       catch (e) { this.setState({ spinning: false, auto: false, hint: 'Não foi possível confirmar o giro' }); cloud.error(e); return; }
       finally { this._cloudRequest = false; }
     }
-    if (!fr && bet > bal) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
+    if (!fr && bet > bal && !cloudResult?.outcome?.freeSpin) { this.hap('error'); this.setState({ auto: false, hint: 'Saldo insuficiente — recarregue ou diminua a aposta' }); return; }
 
     if(cloudResult?.outcome?.feature&&this._parkBeginGoodLuck){this._parkBeginGoodLuck(cloudResult,bet);return;}
 
@@ -1215,7 +1215,7 @@ class Component extends DCLogic {
 
     this.danceClear();
     this.setState({
-      balance: fr ? bal : Math.round((bal - bet) * 100) / 100, free: fr ? Object.assign({}, fr, { left: fr.left - 1 }) : null, betIdx: this.state.betIdx ?? this.startIdx(),
+      balance: cloudResult?.balanceDebited ?? (fr ? bal : Math.round((bal - bet) * 100) / 100), free: fr ? Object.assign({}, fr, { left: fr.left - 1 }) : null, betIdx: this.state.betIdx ?? this.startIdx(),
       spinning: true, winCalm: false, lineGone: false, featReady: false, spinCells: STOP_ORDER.slice(), stopped: [], locked: [], winCells: [], winLines: [], antic: false,
       kingMood: 'root', kingKey: Date.now(),
       winAmount: 0, displayWin: 0, showWin: false, coins: false, shake: 'none', hint: fr ? 'Giro grátis ' + (fr.total - fr.left + 1) + ' de ' + fr.total : 'Girando…', barWin: 0, lineLbl: null, winDim: false

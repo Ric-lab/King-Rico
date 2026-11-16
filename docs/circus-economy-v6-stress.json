@@ -44,30 +44,31 @@
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 58631311,
-      "paid": 52759111.6,
-      "wheel": 4903174.12,
-      "theft": 4901615.06
+      "wagered": 57031908,
+      "paid": 51808023.3,
+      "wheel": 4683384.94,
+      "theft": 5124623.49
     },
-    "return": 0.8998719244057156,
-    "defenses": 6040,
-    "awards": 7669,
+    "return": 0.9006674781071676,
+    "freeSpins": 4,
+    "defenses": 6116,
+    "awards": 7469,
     "villains": {
-      "tony": 382092,
-      "tucker": 23379,
-      "ray": 23281
+      "tony": 399444,
+      "tucker": 23438,
+      "ray": 23427
     },
     "triggerPrizes": {
-      "wheelRounds": 10242,
-      "barRounds": 6801,
+      "wheelRounds": 9745,
+      "barRounds": 6601,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 141218,
-      "pairs": 53860
+      "singles": 137228,
+      "pairs": 52107
     },
-    "prizeRate": 0.369505,
-    "features": 6801,
+    "prizeRate": 0.35818,
+    "features": 6601,
     "inRange": true
   },
   {
@@ -115,30 +116,31 @@
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 123864013,
-      "paid": 103350487.2,
-      "wheel": 11845838.74,
-      "theft": 3685921.9
+      "wagered": 128197664,
+      "paid": 106569023.1,
+      "wheel": 12390083.56,
+      "theft": 3571856.55
     },
-    "return": 0.9002647446922295,
-    "defenses": 5921,
-    "awards": 9022,
+    "return": 0.9000729538254301,
+    "freeSpins": 11,
+    "defenses": 5937,
+    "awards": 9106,
     "villains": {
-      "tony": 286979,
-      "tucker": 23321,
-      "ray": 23004
+      "tony": 278221,
+      "tucker": 23278,
+      "ray": 23090
     },
     "triggerPrizes": {
-      "wheelRounds": 13016,
-      "barRounds": 7913,
+      "wheelRounds": 13329,
+      "barRounds": 8025,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 164418,
-      "pairs": 63021
+      "singles": 167088,
+      "pairs": 63900
     },
-    "prizeRate": 0.431228,
-    "features": 7913,
+    "prizeRate": 0.436536,
+    "features": 8025,
     "inRange": true
   },
   {
@@ -186,30 +188,31 @@
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 500500000,
-      "paid": 423308246.5,
-      "wheel": 44514728.57,
-      "theft": 17451407.34
+      "wagered": 500489983,
+      "paid": 422961508.4,
+      "wheel": 44896260.32,
+      "theft": 17487962.74
     },
-    "return": 0.8998432921678322,
-    "defenses": 6364,
-    "awards": 12917,
+    "return": 0.8998577819288743,
+    "freeSpins": 27,
+    "defenses": 6333,
+    "awards": 12869,
     "villains": {
-      "tony": 12819,
-      "tucker": 22659,
-      "ray": 22568
+      "tony": 13208,
+      "tucker": 22509,
+      "ray": 22543
     },
     "triggerPrizes": {
-      "wheelRounds": 21132,
-      "barRounds": 11182,
+      "wheelRounds": 21113,
+      "barRounds": 11194,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 232805,
-      "pairs": 88564
+      "singles": 232095,
+      "pairs": 88878
     },
-    "prizeRate": 0.61053,
-    "features": 11182,
+    "prizeRate": 0.610195,
+    "features": 11194,
     "inRange": true
   },
   {
@@ -257,30 +260,31 @@
     ],
     "cedarProbability": 0.12,
     "components": {
-      "wagered": 10000000,
-      "paid": 7992281,
-      "wheel": 1007370,
+      "wagered": 9884430,
+      "paid": 7904903,
+      "wheel": 990522,
       "theft": 0
     },
-    "return": 0.8999651,
-    "defenses": 85387,
+    "return": 0.8999431429025245,
+    "freeSpins": 11557,
+    "defenses": 99934,
     "awards": 0,
     "villains": {
-      "tony": 62707,
-      "tucker": 22680,
-      "ray": 22717
+      "tony": 77388,
+      "tucker": 22546,
+      "ray": 22736
     },
     "triggerPrizes": {
-      "wheelRounds": 24113,
-      "barRounds": 10577,
+      "wheelRounds": 23695,
+      "barRounds": 10445,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 220130,
-      "pairs": 83811
+      "singles": 216900,
+      "pairs": 82537
     },
-    "prizeRate": 0.593172,
-    "features": 10577,
+    "prizeRate": 0.586276,
+    "features": 10445,
     "inRange": true
   }
 ]

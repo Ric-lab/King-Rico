@@ -13,6 +13,7 @@ import {installMotion} from './motion.js';
 import {installSpinTactility} from './spin-tactility.js';
 import {installRecharge} from './recharge.js';
 import {installDefense} from './defense.js';
+import {installCloverFreeSpin} from './clover-free-spin.js';
 import {installGoodLuckEnergy} from './goodluck-energy.js';
 import {createWheelScene,enterWheel,enterGameRight} from './wheel-transition.js';
 import {holdMultiplier,applyMultiplier,flyMultipliedPrize} from './wheel-award.js';
@@ -89,7 +90,7 @@ function bootCircus(){
   installTony(fc);
   installTucker(fc);
   installRay(fc);
-  installDefense(fc,rails);installGoodLuckEnergy(fc,rails,{refresh:renderRails});installRecharge(fc);
+  installDefense(fc,rails);installGoodLuckEnergy(fc,rails,{refresh:renderRails});installCloverFreeSpin(fc);installRecharge(fc);
   rails.querySelector('.park-pocket').onclick=e=>{e.preventDefault();const m=modal('<img class="park-defense-art" src="/assets/symbols/sym-clover.png" alt=""><h2>Seus trevos</h2><p>Três trevos alinhados dão 1 defesa. Guarde até 5.</p><p>Cada defesa impede um ataque do Tony ou do Tucker.</p><button class="park-action park-action-blue">ENTENDI</button>','Trevos de proteção');m.querySelector('button').onclick=m.close;};
   const original=fc.spin;fc.spin=()=>{if(state.wheel&&!fc.cloudBusy()&&!fc.state.showWin){showWheel();return;}original();};
   // Native save keeps sound, vibration and stake preferences in the shared account.

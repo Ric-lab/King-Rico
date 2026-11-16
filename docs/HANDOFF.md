@@ -1,3 +1,45 @@
+## Revisão de trevos/controles — 16/11/2026 (Codex) — só prévia
+
+Pedido atual, quatro pontos:
+1. Nova trinca quando já havia5 trevos salva um giro grátis da mesma aposta.
+   `cloverFreeBetUnits/cloverFreeSpinId` persistem na carteira. Grátis é outra
+   operação com débito zero; o token impede que uma tentativa em outro aparelho
+   vire aposta paga. Replay antigo não recria o benefício. Pode renovar caso
+   saia outra trinca com estoque cheio. Se havia4, apenas completa5.
+   Prêmios da rodada inicial preservados. Ledger/RTP contam o custo real zero.
+2. Defesa: antecipação0,5s, voo por arco contínuo1,1s, rotação suave; anel de
+   contato e pulso na substituição, mantendo cálculo confirmado no recibo.
+3. Power-ups68×64, asset30px acima e número18px abaixo, próximos do prêmio e
+   alinhados na mesma base. Captura inspecionada em390×844.
+4. Good Luck sem raios (código/SVG/CSS removidos); cinco consumos de líquido
+   mantidos, com clique físico/sonoro do botão a cada giro.
+
+Seletor 🎯 ganhou **Trevos cheios**, de uso único, para testar o bônus sem esperar
+acumular. Grátis automático respeita celebrações, menu/modal e visibilidade.
+Se recarregar, retoma a pendência salva; se a animação falhar, custo continua zero.
+
+Verificado: testes específicos de motor/carteira/transação (32 testes store),
+regressão special_feedback completa e circus_v6_browser; nova conferência de
+free/token após atualizar ambos os clientes; preset também passou.
+Auditorias v4/v5/v6 refeitas com hashes atuais. V6:5M por aposta, retornos:
+- 1: **89.9993416%**, 84 grátis incluídos.
+- 10: **89.9995217%**, 78 grátis incluídos.
+- 100: **89.9994857%**, 81 grátis incluídos.
+- 1000: **89.9994857%**, 81 grátis incluídos.
+Quatro estresses de1M passaram: 90.0667%, 90.0073%, 89.9858%, 89.9943%.
+
+Bloqueio oficial anterior preservado (última rules67/80;13 falhas de expressão).
+Não alteradas regras/dispatcher; nova pendência de validar token/débito zero
+registrada em CIRCUS-V6-VALIDACAO. Mudança mínima no store usa spinCost e valida
+o token; preserva whitelist, aposta, replay/fingerprint e limites legados.
+Nada deste lote deve ir à main sem os testes positivos de regras e integração.
+
+Suíte Node final:52 arquivos passaram; build de produção gerado após integração.
+Voo/contato da defesa reconferidos no navegador, com captura do arco inspecionada.
+Próximo passo: publicar o lote na prévia Pages e
+conferir Actions pelo SHA. Link único: https://ric-lab.github.io/King-Rico/Preview
+Painel compartilhado: https://ric-lab.github.io/King-Rico/todo/
+
 ## Lista de especiais concluída — 16/11/2026 (Codex) — somente prévia
 
 Seis etapas feitas uma por vez, com checkpoints compartilhados: `af64a3c`

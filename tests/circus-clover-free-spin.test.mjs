@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createPreview} from '../prototypes/circus-preview/model.mjs';
+import engine from '../cloud/engine.cjs';
+import park from '../cloud/park.cjs';
+const sy=engine.slotSymbols(6),total=sy.reduce((n,s)=>n+s.w,0);
+const draws=grid=>[.99,...grid.flatMap(s=>s===5?[.1]:[.99,(sy.slice(0,s).reduce((n,v)=>n+v.w,0)+sy[s].w/2)/total]),.5,.99];
+test('full clover stock grants a persisted bet-locked free spin, paid only once and replay-safe',async()=>{
+ let values=draws([5,5,5,0,2,6,7,8,10]);const rng=()=>values.shift()??.99;
+ let m=createPreview({},rng);await m.run({action:'state'});let saved=m.exportState();saved.park.cedros=5;m=createPreview(saved,rng);
+ const request={action:'spin',game:'circus',bet:10,slotVersion:6,requestId:randomUUID()};
+ const first=await m.run(request);assert.ok(first.outcome.freeSpinAward);assert.equal(first.park.cedros,5);assert.equal(first.park.cloverFreeBetUnits,1000);
+ const replay=await m.run(request);assert.ok(replay.replayed);assert.equal(replay.player.balance,first.player.balance);
+ saved=m.exportState();saved.records.find(([k])=>k==='players/preview')[1].balanceUnits=0;
+ m=createPreview(saved,rng);
+ await assert.rejects(m.run({...request,requestId:randomUUID(),bet:100,freeSpinId:first.park.cloverFreeSpinId}),/aposta/);
+ values=draws([10,10,10,0,2,6,7,8,10]);const freeRequest={...request,requestId:randomUUID(),freeSpinId:first.park.cloverFreeSpinId};
+ const free=await m.run(freeRequest);assert.ok(free.outcome.freeSpin);assert.equal(free.balanceDebited,0);assert.equal(free.player.balance,4);assert.equal(free.park.cloverFreeBetUnits,undefined);
+ assert.equal(free.park.economyV6.wageredUnits,1000);assert.equal(free.park.economyV6.rounds,2);
+ assert.equal((await m.run(freeRequest)).player.balance,4);
+ await assert.rejects(m.run({...freeRequest,requestId:randomUUID()}),/outro aparelho/);
+ assert.equal((await m.run(request)).park.cloverFreeBetUnits,undefined,'old receipt cannot recreate consumed free spin');
+ assert.equal(park.spinCost(free.park,10,6),1000);
+});
+test('a fresh full-stock trinca in a free spin renews one entitlement; stock 4 only fills',()=>{
+ const p={balanceUnits:500000,peaches:0},s={...park.fresh(),cedros:5,cloverFreeBetUnits:1000};let v=draws([5,5,5,0,2,6,7,8,10]);
+ const x=park.spin(p,s,10,'free',()=>v.shift()??.99,6);assert.ok(x.freeSpin&&x.freeSpinAward);assert.equal(s.cloverFreeBetUnits,1000);assert.equal(s.economyV6.wageredUnits,0);
+ const t={...park.fresh(),cedros:4};v=draws([5,5,5,0,2,6,7,8,10]);const y=park.spin(p,t,10,'paid',()=>v.shift()??.99,6);assert.equal(y.cedarAward,1);assert.ok(!y.freeSpinAward);assert.equal(t.cedros,5);
+});

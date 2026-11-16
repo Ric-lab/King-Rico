@@ -5,8 +5,9 @@ const freshEconomy=()=>({version:1,rounds:0,wageredUnits:0,paidUnits:0,tigerUnit
 const returned=e=>e.paidUnits-e.tigerUnits;
 function control(p,s,bet){
  const stake=engine.units(bet),e=s.economyV6||freshEconomy();
- const budget=Math.max(0,returned(e)-Math.ceil((e.wageredUnits+stake)*.9));
- const maxTiger=Math.min(stake*25,Math.max(0,p.balanceUnits-stake),budget);
+ const charged=s.cloverFreeBetUnits?0:stake;
+ const budget=Math.max(0,returned(e)-Math.ceil((e.wageredUnits+charged)*.9));
+ const maxTiger=Math.min(stake*25,Math.max(0,p.balanceUnits-charged),budget);
  return {stake,budget,maxTiger};
 }
 function candidate(p,s,bet,rng){
@@ -46,6 +47,6 @@ function candidate(p,s,bet,rng){
  }
  return x;
 }
-function recordSpin(s,x,bet){const e=s.economyV6||freshEconomy();s.economyV6={...e,rounds:e.rounds+1,wageredUnits:e.wageredUnits+engine.units(bet),paidUnits:e.paidUnits+x.winUnits,tigerUnits:e.tigerUnits+(x.tony?.stolenUnits||0)};}
+function recordSpin(s,x,bet){const e=s.economyV6||freshEconomy();s.economyV6={...e,rounds:e.rounds+1,wageredUnits:e.wageredUnits+(x.freeSpin?0:engine.units(bet)),paidUnits:e.paidUnits+x.winUnits,tigerUnits:e.tigerUnits+(x.tony?.stolenUnits||0)};}
 function recordBonus(s,extra){if(s.economyV6)s.economyV6={...s.economyV6,paidUnits:s.economyV6.paidUnits+extra};}
 module.exports={freshEconomy,returned,control,candidate,recordSpin,recordBonus};

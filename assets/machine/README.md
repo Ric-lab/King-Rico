@@ -647,8 +647,15 @@ de `sym-crown.png`, `sym-drum.png` e `sym-tent.png`.
 
 ## Contadores e energia — prévia 15/11/2026
 
-Contadores do topo:86×90px, asset44×44 centralizado acima, quantidade22px abaixo;8px
-de margem lateral. Tucker/Ray carregam clones com o mesmo layout. Nuvens dos tubos
-removidas. Durante Good Luck, a apresentação do líquido usa níveis10→8→6→4→2→0; cada
-queda envia raios ao spin na cor do líquido gasto. Esse nível é visual, separado do
-ledger. Nenhum asset novo foi gerado nesta revisão.
+Contadores atuais68×64px, asset30×30 centralizado acima, quantidade18px abaixo;
+42px de margem lateral. Tucker/Ray carregam clones com o mesmo layout. Nuvens dos
+tubos removidas. Durante Good Luck, o líquido usa níveis10→8→6→4→2→0 e o botão
+clica a cada giro, sem raios. Esse nível é visual, separado do ledger. Nenhum
+asset novo foi gerado nesta revisão.
+
+## Revisão de 16/11/2026 — apresentação atual
+
+Contadores do topo reduzidos de86×90 para68×64: asset30×30 e quantidade18px,
+margens laterais42px para ficarem próximos do prêmio. Mesma base/paleta; os
+clones carregados mantêm o arranjo. Em Good Luck, ficam apenas a drenagem dos
+tubos e o clique do botão; os raios foram removidos. Arte existente preservada.

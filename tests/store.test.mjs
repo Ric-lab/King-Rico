@@ -468,3 +468,17 @@ test('Park Flying consumes one ticket without charging coins and a later coin ro
   m.advance(350);
  }
 });
+
+test('Circus clover free spin persists across devices with zero debit and rejects a consumed entitlement',async()=>{
+ const e=(await import('../cloud/engine.cjs')).default,sy=e.slotSymbols(6),total=sy.reduce((n,s)=>n+s.w,0);
+ const draws=g=>[.99,...g.flatMap(s=>s===5?[.1]:[.99,(sy.slice(0,s).reduce((n,v)=>n+v.w,0)+sy[s].w/2)/total]),.5,.99];
+ let queue=draws([5,5,5,0,2,6,7,8,10]);const m=memory(()=>queue.shift()??.99),call=m.client('clover-free');await call(request({action:'bootstrap'}));
+ m.records.set('players/clover-free/park/state',{version:1,revision:0,tickets:0,spins:0,wheel:null,passes:{},cedros:5});
+ const paidReq=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10}),paid=await call(paidReq);
+ assert.ok(paid.outcome.freeSpinAward);const token=paid.park.cloverFreeSpinId;
+ m.advance(1000);m.records.get('players/clover-free').balanceUnits=0;queue=draws([10,10,10,0,2,6,7,8,10]);
+ const other=m.client('clover-free'),freeReq=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10,freeSpinId:token});
+ const [a,b]=await Promise.all([call(freeReq),other(freeReq)]);assert.ok(a.outcome.freeSpin);assert.equal(a.balanceDebited,0);assert.equal(a.player.balance,4);assert.ok(b.replayed);
+ m.advance(1000);await assert.rejects(other({...freeReq,requestId:randomUUID()}),{code:'king-rico/round-conflict'});
+ const before=(await other(request({action:'bootstrap'}))).player.balance;await call(paidReq);assert.equal((await other(request({action:'bootstrap'}))).player.balance,before);
+});

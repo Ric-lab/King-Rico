@@ -284,6 +284,13 @@ Trevo premiado usa o dourado nativo da linha mais halo e pulso próprios. Serial
 áudio: roletas (duas voltas/2,3s, chegada em2,77s, intervalo3,3s), festa do trevo e
 contagem. Não sobrepor jingle de linha às roletas. Defesa deve atingir a cabeça
 central real, revelar a grade final e manter um único débito. Good Luck entra antes
-do giro base visual e gasta cinco cargas com raios coloridos. Contadores verticais:
-ícone44×44 acima e número22px abaixo em86×90; mesma base do prêmio e arranjo nos
+do giro base visual e gasta cinco cargas com clique do botão, sem raios. Contadores verticais:
+ícone30×30 acima e número18px abaixo em68×64; mesma base do prêmio e arranjo nos
 clones carregados.
+
+### Ajustes aprovados em 16/11/2026
+
+Power-ups menores (68×64) aproximam-se do painel de prêmio; mantêm o arranjo
+vertical e a mesma base, tom marfim e contorno dourado. A defesa não gira como
+um adesivo: segue arco contínuo com rotação leve, contato dourado e pulso da
+troca. Good Luck usa clique mecânico e consumo de líquido, sem raios.

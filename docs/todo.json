@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-15",
+  "updatedAt": "2026-11-16",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "p-clover-free-spin",
+      "title": "Trevos cheios dão giro grátis persistente, sem nova cobrança",
+      "status": "preview",
+      "category": "Economia & Regras",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Estoque já em 5 e nova trinca: salva um giro da mesma aposta; dispara automaticamente após as celebrações. Recibo/token impedem consumo duplicado entre aparelhos. Apenas carteira fictícia até validar regras."
+    },
     {
       "id": "p-powerup-columns",
       "title": "6/6 Contadores de power-ups: asset acima e quantidade abaixo",
@@ -11,17 +21,17 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Contadores 86x90, asset 44x44 acima e quantidade abaixo com respiro. Mesma base do prêmio; clones de Tucker/Ray preservam layout. Geometria e captura conferidas."
+      "notes": "16/11: reduzidos para 68x64 e aproximados do prêmio; asset 30px acima e número18px abaixo, mesma paleta, base e profundidade do mostrador."
     },
     {
       "id": "p-goodluck-energy",
-      "title": "5/6 Good Luck direto no giro, raios coloridos e consumo da barra em cinco cargas; sem nuvem",
+      "title": "Good Luck direto, cinco consumos de líquido e clique; sem raios ou nuvens",
       "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Entra direto no giro confirmado, sem giro base anterior. Cinco cargas coloridas drenam 8/6/4/2/0 com raios ao botão. Uma requisição paga; prêmio da grade inicial preservado."
+      "notes": "Revisão do dono 16/11: remove raios, mantém drenagem 8/6/4/2/0 com clique físico/sonoro do botão em cada giro."
     },
     {
       "id": "p-villain-scatter",
@@ -41,7 +51,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Trevo atinge e substitui cabeça central: pode completar linha pagante. Uma aposta e uma defesa, zero roubo. 400 defesas testadas. Somente carteira fictícia; recibo novo precisa de regras antes de main."
+      "notes": "16/11: voo com arco contínuo de 1,1s, giro suave, pausa de antecipação e anel de impacto; substituição ganha pulso. Uma defesa/uma aposta; prêmio calculado no recibo."
     },
     {
       "id": "p-special-wheel-audio",

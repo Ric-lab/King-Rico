@@ -78,3 +78,7 @@ e sincronizando a chegada com seu fim. Não empilhar melodias quando há mais de
 uma roleta. Good Luck começa na confirmação do giro, sem mostrar um giro comum
 antes; a barra vira combustível para cinco cargas automáticas com raios.
 Contadores de power-up: asset acima, quantidade abaixo, com respiro.
+
+- Rejeitado em16/11: raios durante Good Luck. Manter drenagem em cinco partes
+  e clique automático do botão. Contadores86×90 grandes demais: usar68×64 e
+  aproximar do prêmio; trevo da defesa deve seguir arco suave, sem rodar720°.

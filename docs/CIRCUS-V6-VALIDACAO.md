@@ -1,4 +1,4 @@
-# Circus v6 — validação da prévia (15/11/2026)
+# Circus v6 — validação da prévia (16/11/2026)
 
 **Não liberar em live: integração Firestore ainda bloqueada.** A carteira da
 prévia Pages é fictícia. Fontes e decisões compartilhadas em HANDOFF/TODO.
@@ -11,10 +11,10 @@ Ingressos antigos não entram no cálculo. Trevo não é dinheiro nem entrada.
 
 | Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto | Tony | Retorno Líquido |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 | 5.000.000 | 84.1118% | 8.8822% | 92.9941% | -2.9953% | **89.9988%** |
-| 10 | 5.000.000 | 84.1398% | 8.8833% | 93.0231% | -3.0242% | **89.9990%** |
-| 100 | 5.000.000 | 84.1559% | 8.8774% | 93.0333% | -3.0344% | **89.9989%** |
-| 1000 | 5.000.000 | 84.1559% | 8.8774% | 93.0333% | -3.0344% | **89.9989%** |
+| 1 | 5.000.000 | 84.2046% | 8.8748% | 93.0793% | -3.0800% | **89.9993%** |
+| 10 | 5.000.000 | 84.1738% | 8.8866% | 93.0604% | -3.0609% | **89.9995%** |
+| 100 | 5.000.000 | 84.1948% | 8.8818% | 93.0766% | -3.0771% | **89.9995%** |
+| 1000 | 5.000.000 | 84.1948% | 8.8818% | 93.0766% | -3.0771% | **89.9995%** |
 
 **Garantia nova:** o giro que guarda a 5ª roleta e o giro que completa a barra
 Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
@@ -22,20 +22,22 @@ Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
 as oito combinações sem substituir nenhum símbolo de roleta. Prêmio, linhas,
 células e crédito são recalculados juntos antes de animar o resultado.
 Não muda a tabela de pagamentos, a base acumulada da roleta ou as chances dos
-vilões. O adicional está incluído no ledger/RTP; o bruto agora chega a 93,0333%,
-compensado pelo controle existente do Tony, com líquido ~89,998%.
+vilões. O adicional está incluído no ledger/RTP; o bruto é o da tabela acima,
+compensado pelo controle existente do Tony, com líquido ~90%.
 
-Nos 20 milhões de giros: **650.901 aberturas** de roleta/Good Luck e **zero**
-aberturas sem prêmio em moedas. Os relatórios JSON registram as contagens.
+Nos 20 milhões de giros: **651.068 aberturas** de roleta/Good Luck,
+**zero** sem prêmio em moedas e **324 giros grátis** por trevos cheios.
+O denominador é o valor efetivamente apostado: grátis soma zero, mas seus prêmios
+e roubos entram no retorno.
+
 
 PAYS por ID estável: `[1.2,0,0.8,0,0,0,2.5,10,5,0,0.4,0,0,0,0,0]`.
 Pagantes na fita/tabela: ingresso, circo, capa, moeda, diamante, coroa.
 Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]`, trevo (`CEDAR_P`) `0,12`, símbolo de roleta (`PEACH_P_V6`) `0,015`, `WHEEL_SHARE_V6 = 0,36`, barra Good Luck aleatória (`BAR_P1_V6 = 0,12`, `BAR_P2_V6 = 0`, trava mínima de **25 giros**, média **~88 giros**).
 Os arquivos JSON incluem componentes e hashes das fontes da simulação.
 
-Um milhão por cenário adicional: décimo giro alto **89,9872%**, cultivar trevos
-com aposta baixa **90,0265%**, alternar 1/1.000 **89,9843%**, estoque artificial
-sempre cheio **89,9965%**. Todos em 88,5–91,5%, zero aberturas vazias.
+Um milhão por cenário adicional: décimo-alto **90.0667%**, cultivar trevos **90.0073%**,
+alternar apostas **89.9858%**, estoque cheio **89.9943%**. Todos passaram, zero bônus vazio.
 Comando reproduzível: `node scripts/circus-v6-stress.mjs`.
 As auditorias v4/v5 também foram reexecutadas (5 milhões por aposta) para
 conferir que os caminhos históricos não mudaram; hashes atualizados nos JSON.
@@ -57,7 +59,7 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 
 ## Testes
 
-- `npm test`: 51 arquivos passaram na revisão de especiais. Casos novos cobrem seis pagamentos,
+- `npm test`: 52 arquivos passaram na revisão de especiais. Casos novos cobrem seis pagamentos,
   oito combinações, especiais sem prêmio em moedas, estoque até 5, defesa dos
   do Tony/Tucker, Ray sem defesa, perdas sem proteção, banco de roletas proporcional, roleta por
   contribuição, replay e recarga da carteira fictícia. Equivalência de contagem
@@ -96,9 +98,22 @@ linha transversal no mesmo recibo. Vilões avulsos/pares são decoração de cas
 sem prêmio, sem ataques novos. As auditorias acima foram reexecutadas depois
 dessas mudanças, com hashes atuais: todas as apostas e quatro estresses passaram.
 Nenhuma alteração em PAYS, probabilidades de ataque, banco da roleta ou barra.
-Nos 20 milhões de giros, o relatório registra 4.686.203 avulsos e 1.794.094 pares,
-além de zero bônus vazio.
+Nos 20 milhões de giros, os relatórios também registram avulsos/pares e giros grátis.
+Essa revisão preserva os parâmetros e contabiliza grátis pelo custo real.
 
 Além do limite de expressões já existente, a integração Firestore precisa
 validar a nova forma de `defense` e os avulsos. Esta revisão não modifica regras
 e não deve ir à main até a validação financeira completa.
+
+## Trevos cheios — 16/11/2026
+
+Testes novos: custo zero, aposta fixa, saldo zerado, persistência/reabertura,
+renovação de um grátis, replay de ambos os recibos e token consumido rejeitado
+entre aparelhos. `store.test.mjs` cobre a transação real em memória, duas
+instâncias e replays concorrentes. Isso não substitui Security Rules: os campos
+`cloverFreeBetUnits/cloverFreeSpinId` e o pedido `freeSpinId` precisam ser aceitos
+e vinculados atomicamente pelas regras antes de main. Preview continua fictícia.
+
+Navegador: grátis automático com uma única aposta debitada; preset 🎯 Trevos
+cheios; defesa com arco/contato; contadores compactos; cinco cliques Good Luck
+e nenhum raio. Testes alterados não reduzem verificações de crédito/replay.

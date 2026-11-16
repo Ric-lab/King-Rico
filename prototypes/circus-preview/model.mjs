@@ -51,7 +51,9 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
   }else if(data.action==='spin'&&data.game==='circus'){
    if(!engine.BETS.includes(data.bet))fail('Aposta inválida.');
    if(park.wheel)fail('Gire a roleta que está pronta antes de continuar.');
-   const cost=engine.units(data.bet),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
+   if((data.freeSpinId||park.cloverFreeSpinId)&&data.freeSpinId!==park.cloverFreeSpinId)fail('Esse giro grátis já foi utilizado em outro aparelho.');
+   const cost=parkRules.spinCost(park,data.bet,data.slotVersion||6),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
+   if(data.previewFullClover)park.cedros=5;
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
    if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;Object.defineProperty(park,'_barSpins',{value:25,writable:true,configurable:true});}
