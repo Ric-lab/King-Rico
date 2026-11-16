@@ -93,7 +93,7 @@ export function installGoodLuckEnergy(fc,rails,{refresh}){
   const hit=()=>{if(landed)return;landed=true;
    record(fc,'goodluck:impact',{index});
    fc.setState({pressed:'spin'});fc._spinTouchDown?.();
-   try{fc.click(true);fc.hap('impact');}catch{}
+   try{fc.hap('impact');}catch{}
    fc.later(()=>{fc.click(false);fc._spinTouchUp?.();fc.setState({pressed:null});go();},220);
   };
   try{fc.sfxLightning?.(flight/1000);}catch{}
