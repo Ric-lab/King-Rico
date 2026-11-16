@@ -256,11 +256,10 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 
 .park-meter.is-empty .park-meter-fill{box-shadow:none}
 .park-meter.is-empty .park-liquid-cap,.park-meter.is-empty .park-liquid-bubble{visibility:hidden}
-/* Raio do Good Luck: tempestade, raio na cor do líquido, clarão e onda no botão. */
-.park-gl-storm{position:fixed;inset:0;z-index:8480;pointer-events:none;background:radial-gradient(ellipse 150px 120% at var(--gl-x) 0,rgba(16,4,34,.1),rgba(16,4,34,.66) 72%)}
-.park-gl-cloud{position:absolute;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--gl-c) 26%,#3a1660) 0%,rgba(40,14,66,.9) 55%,rgba(40,14,66,0) 100%);filter:blur(5px);transition:filter .08s}
-.park-gl-storm.is-lit .park-gl-cloud{filter:blur(5px) brightness(2.6) saturate(1.4)}
-.park-gl-bolt{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:8500;pointer-events:none;overflow:visible;opacity:0;mix-blend-mode:screen}
+/* Raio do Good Luck: céu elétrico colorido (sem preto), nuvens vivas, raio e faíscas no impacto. */
+.park-gl-storm{position:fixed;inset:0;z-index:8480;pointer-events:none;background:radial-gradient(ellipse 170px 115% at var(--gl-x) 0,color-mix(in srgb,var(--gl-c) 20%,rgba(62,28,150,.14)),color-mix(in srgb,var(--gl-c) 34%,rgba(44,18,108,.62)) 76%)}
+.park-gl-cloud{position:absolute;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--gl-c) 44%,#5e28b8) 0%,color-mix(in srgb,var(--gl-c) 24%,rgba(64,24,136,.88)) 58%,rgba(64,24,136,0) 100%);filter:blur(5px);transition:filter .08s}
+.park-gl-storm.is-lit .park-gl-cloud{filter:blur(5px) brightness(2.4) saturate(1.35)}
+.park-gl-bolt{position:fixed;left:0;top:0;z-index:8500;pointer-events:none;overflow:visible;opacity:0;mix-blend-mode:screen}
 .park-gl-flash{position:fixed;inset:0;z-index:8510;pointer-events:none;opacity:0}
-.park-gl-ring{position:fixed;width:130px;height:130px;margin:-65px 0 0 -65px;border-radius:50%;border:5px solid var(--gl-c);box-shadow:0 0 26px var(--gl-c),inset 0 0 18px var(--gl-c);z-index:8505;pointer-events:none;opacity:0}
 .park-gl-spark{position:fixed;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#fff;box-shadow:0 0 10px 2px var(--gl-c);z-index:8506;pointer-events:none;opacity:0}

@@ -7,14 +7,18 @@ clarão, onda, faíscas, som, vibração, tempo do impacto ou matemática/regras
   galhos, brilho largo e faíscas na ponta central inferior), pré-carregados no
   grupo `circus` em `ui/art-manifest.json` e registrados em
   `guidelines/asset-pipeline.md`.
-- `ui/park/goodluck-energy.js` (`strike()`) + `ui/park/park.css`
-  (`.park-gl-bolt` com `mix-blend-mode: screen`): alterna entre os 3 sprites nas
-  piscadas, estica do topo até o botão de giro centrado em X, pinta o halo na
-  cor do líquido (`color`) sem caixa preta e desenha o núcleo branco alinhado
-  mais fino por cima em modo `'lighter'`. Classe `.park-gl-bolt` preservada.
-- Testes e inspeção visual: `npm test` (suíte Node completa) e navegador
-  `tests/special_feedback_browser.py` passaram, com capturas `work/special-goodluck-bolt.png`
-  e `work/special-goodluck-click.png` conferidas em 390×844.
+- `ui/park/goodluck-energy.js` (`strike()` / `peachPress()`) + `ui/park/park.css`
+  (`.park-gl-bolt` com dimensões exatas de `innerWidth × innerHeight` sem
+  esticar `100vh` no celular e `mix-blend-mode: screen`): alterna entre os 3
+  sprites nas piscadas, mira a ponta no centro visual de `.park-spin-face`
+  (meio do botão **KING RICO**), remove o círculo colorido (`.park-gl-ring`) e
+  o ponto parado antes do impacto (`fill: 'forwards'` nas 14 faíscas), troca o
+  fundo escurecido quase preto por céu violeta-índigo colorido com `--gl-c` e
+  dispara `fc.sfxLightning` sincronizado ao raio (`ui/park/circus-sfx.js`).
+  Classe `.park-gl-bolt` preservada.
+- Testes e inspeção visual: `npm test` (`276/276`) e navegador
+  `tests/special_feedback_browser.py` passaram, com capturas
+  `work/special-goodluck-bolt.png` e `work/special-goodluck-click.png` conferidas em `390×844`.
 Painel: https://ric-lab.github.io/King-Rico/todo/
 Prévia: https://ric-lab.github.io/King-Rico/Preview
 

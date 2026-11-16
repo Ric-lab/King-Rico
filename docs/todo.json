@@ -11,7 +11,7 @@
       "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Substitui raio em canvas em strike() por assets/machine/goodluck-bolt-1..3.webp (540x960, fundo #000000 removido via screen/lighter), alternando nas piscadas com halo na cor do líquido e núcleo branco alinhado. Testar em ⚙ -> 🎯 -> Good Luck."
+      "notes": "Sprites 9:16 goodluck-bolt-1..3.webp com fundo #000 removido via screen/lighter. Ajustes finais: ponta acertando o meio visual de KING RICO (fix de 100vh no mobile), remoção do círculo colorido, céu elétrico violeta-índigo colorido no lugar do preto e sfxLightning no impacto. Testar em ⚙ -> 🎯 -> Good Luck."
     },
     {
       "id": "p-goodluck-small-win",

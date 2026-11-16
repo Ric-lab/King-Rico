@@ -45,4 +45,12 @@ export function installCircusSfx(fc){
    stop(){if(done)return;done=true;try{const n=ac.currentTime;g.gain.cancelScheduledValues(n);g.gain.setValueAtTime(Math.max(g.gain.value,.0002),n);g.gain.exponentialRampToValueAtTime(.0001,n+.45);o.stop(n+.5);lfo.stop(n+.5);}catch{}}};
  }catch{return null;}};
  fc.sfxBank=play(1.4,()=>{for(let i=0;i<12;i++)B(1300+i*90,.18,.045,i*.07);[1046.5,1318.5,1568,2093].forEach((f,i)=>B(f,.6,.1,.9+i*.06));});
+ // Good Luck: faísca elétrica na descida e estalo/trovão sincronizados ao impacto no botão.
+ fc.sfxLightning=play(1.7,(delaySec=.64)=>{const d=Math.max(.12,Number(delaySec)||.64),pre=Math.max(0,d-.28);
+  hiss(4200,1.6,.045,.07,pre,'bandpass',1800);
+  sweep(1500,520,.12,'sawtooth',.025,pre+.03);
+  hiss(2600,.9,.15,.14,d,'bandpass',620);
+  hiss(340,.7,.13,.44,d+.015,'lowpass',95);
+  sweep(165,42,.26,'triangle',.12,d);
+ });
 }
