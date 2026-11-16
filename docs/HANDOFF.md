@@ -1,3 +1,15 @@
+## Complemento: automático também espera o trevo — 16/11/2026
+
+`cc96f86` passou no Pages (Actions43792305548) e publicou as três correções.
+Complemento do mesmo pedido: spin/doSpin agora exigem autorização do contato
+do trevo quando há giro grátis pendente. Isso cobre chamadas diretas do auto,
+não só o intervalo que inicia o voo. Token trocado/consumido durante o caminho
+não vira aposta paga. A retomada espera a raspadinha terminar antes de voar.
+Teste novo desliga o intervalo de250ms e chama doSpin diretamente: só pede o
+grátis após o impacto, com aposta efetivamente debitada0. Grátis normal também
+passou; sem alteração financeira. Próximo: commit/push desse complemento e
+confirmar Pages no SHA final; manter link único /Preview.
+
 ## Trevo no spin e destaque sem fantasma — 16/11/2026 (Codex)
 
 Base puxada: `fa8bc46`, já publicada com sucesso por Actions43784606880.

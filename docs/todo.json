@@ -21,7 +21,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "16/11: trevo da trinca viaja até o spin; impacto chama o clique nativo e só então pede o giro gratuito. Sem balão +1. Testado: nenhuma requisição antes do contato; token e débito zero preservados."
+      "notes": "16/11: trevo viaja ao spin; só o impacto autoriza o grátis, inclusive se chamado diretamente pelo auto. Teste com intervalo desligado confirma. Espera raspadinha/modal; token alterado no caminho não vira aposta paga. Sem balão +1."
     },
     {
       "id": "p-powerup-columns",

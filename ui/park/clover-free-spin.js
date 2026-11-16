@@ -4,8 +4,19 @@ const LINES=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
 export function installCloverFreeSpin(fc){
  const bet=fc.bet.bind(fc);fc.bet=()=>window.KingRicoPark.state.cloverFreeBetUnits/100||bet();
  const busy=fc.isCeleb.bind(fc);fc.isCeleb=(...args)=>!!fc._parkFreeCloverFlying||busy(...args);
- const spin=fc.doSpin.bind(fc);fc.doSpin=(...args)=>{if(!fc._parkFreeCloverFlying)return spin(...args);};
- const blocked=()=>document.hidden||fc.state.menu||fc.state.pays||fc.state.showWin||[...document.querySelectorAll('[role=dialog]')].some(e=>e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden');
+ const spin=fc.doSpin.bind(fc),press=fc.spin.bind(fc);
+ let approvedToken=null;
+ const pendingToken=()=>window.KingRicoPark.state.cloverFreeSpinId;
+ fc.spin=(...args)=>{if(pendingToken()&&pendingToken()!==approvedToken){requestFlight();return;}return press(...args);};
+ fc.doSpin=(...args)=>{
+  if(fc._parkFreeCloverFlying)return;
+  if(approvedToken&&pendingToken()!==approvedToken){approvedToken=null;return;}
+  if(pendingToken()&&pendingToken()!==approvedToken){requestFlight();return;}
+  const result=spin(...args);approvedToken=null;return result;
+ };
+ let giftReady=false;
+ const giftPending=()=>{const cloud=window.KingRicoCloud;if(!cloud.player||cloud.dailyRewardActive)return true;if(giftReady)return false;const day=cloud.dayKey?.(),waiting=day!=null&&cloud.player.bonus?.day!==String(day).replace(/^(....)(..)(..)$/,'$1-$2-$3');if(!waiting)giftReady=true;return waiting;};
+ const blocked=()=>giftPending()||document.hidden||fc.state.menu||fc.state.pays||fc.state.showWin||[...document.querySelectorAll('[role=dialog]')].some(e=>e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden');
  let nextAttempt=0,cleanup=()=>{};
  function fly(){
   const token=window.KingRicoPark.state.cloverFreeSpinId;if(!token)return;
@@ -24,7 +35,7 @@ export function installCloverFreeSpin(fc){
    record(fc,'free-clover:impact',{token,x:target?.x+target?.width/2,y:target?.y+target?.height/2});
    el.dataset.phase='impact';try{el.animate?.([{opacity:1,scale:1},{opacity:0,scale:.35}],{duration:180,fill:'forwards'});}catch{}
    // Use the actual spin handlers: one tactile press and one saved free operation.
-   fc.pressSpin();fc.spin();setTimeout(()=>fc.pressUp(),100);
+   approvedToken=token;fc.pressSpin();fc.spin();setTimeout(()=>fc.pressUp(),100);
    removeTimer=setTimeout(()=>{try{animation?.cancel();}catch{}el.remove();},220);
   };
   if(source&&target)try{
@@ -35,9 +46,10 @@ export function installCloverFreeSpin(fc){
   // A failed or paused animation can never lose the persisted free wager.
   safety=setTimeout(impact,duration+150);
  }
- const tick=setInterval(()=>{
+ function requestFlight(){
   if(blocked()||performance.now()<nextAttempt||!window.KingRicoPark.state.cloverFreeBetUnits||fc.cloudBusy())return;
   nextAttempt=performance.now()+3000;fly();
- },250);
+ }
+ const tick=setInterval(requestFlight,250);
  window.addEventListener('pagehide',()=>{clearInterval(tick);cleanup();},{once:true});
 }

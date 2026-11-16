@@ -108,6 +108,18 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoPark.state.economyV6.wageredUnits')==1000
   page.wait_for_timeout(3500);assert page.evaluate('freeCalls.length')==2
   print('full clovers: automatic bet-locked spin without second debit PASS',flush=True)
+ if stage in ['all','auto-flight']:
+  page.add_init_script("""if(new URLSearchParams(location.search).has('directFreeTest')){const si=window.setInterval;window.setInterval=(f,t,...a)=>t===250?0:si(f,t,...a);}""")
+  ready('off&directFreeTest=1')
+  page.evaluate("""()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cloverFreeBetUnits=1000;s.park.cloverFreeSpinId=crypto.randomUUID();localStorage.setItem(k,JSON.stringify(s));}""")
+  ready('off&directFreeTest=1',reset=False)
+  page.evaluate('Math.random=()=>.99;__fc.doSpin()')
+  page.wait_for_function('__fc._parkFreeCloverFlying||__fc._parkMotionLog?.some(x=>x.type==="free-clover:impact")',timeout=10000)
+  page.wait_for_function('__fc._cloudSpin?.outcome?.freeSpin',timeout=15000)
+  events=page.evaluate('__fc._parkMotionLog.filter(x=>x.type.startsWith("free-clover:"))')
+  assert [e['type'] for e in events]==['free-clover:start','free-clover:impact'],events
+  assert page.evaluate('KingRicoPark.state.economyV6.wageredUnits')==0
+  print('automatic doSpin entry waits for the clover contact PASS',flush=True)
  if stage in ['all','preset']:
   ready('full-clover');page.locator('[data-spin-btn]').click()
   page.wait_for_function('__fc._cloudSpin?.outcome?.freeSpinAward',timeout=15000)

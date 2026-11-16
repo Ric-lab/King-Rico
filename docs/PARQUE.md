@@ -595,3 +595,8 @@ Linhas/halos só aparecem se a combinação ainda confere com a grade visível
 (pagante ou trevo especial confirmado). Clique/confirmando limpam o destaque
 anterior, incluindo modo automático. Estado antigo não deve fazer a primeira
 linha piscar sobre uma grade sem prêmio.
+
+Tanto o intervalo do grátis quanto chamadas diretas de spin/doSpin do automático
+passam pela autorização do impacto. Ao retomar a página, terminar o presente
+diário antes do voo; não iniciar por trás da raspadinha. Se o token mudar no
+caminho, abortar a apresentação sem iniciar aposta paga.
