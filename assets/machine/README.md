@@ -644,3 +644,11 @@ do dono para eliminar múltiplos pontos de brilho especular e adotar iluminaçã
 única superior suave, azul royal acetinado/fosco e ouro quente no mesmo padrão
 de `sym-crown.png`, `sym-drum.png` e `sym-tent.png`.
 
+
+## Contadores e energia — prévia 15/11/2026
+
+Contadores do topo:86×90px, asset44×44 centralizado acima, quantidade22px abaixo;8px
+de margem lateral. Tucker/Ray carregam clones com o mesmo layout. Nuvens dos tubos
+removidas. Durante Good Luck, a apresentação do líquido usa níveis10→8→6→4→2→0; cada
+queda envia raios ao spin na cor do líquido gasto. Esse nível é visual, separado do
+ledger. Nenhum asset novo foi gerado nesta revisão.

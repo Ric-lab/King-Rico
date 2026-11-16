@@ -1,3 +1,58 @@
+## Lista de especiais concluída — 16/11/2026 (Codex) — somente prévia
+
+Seis etapas feitas uma por vez, com checkpoints compartilhados: `af64a3c`
+(trevo dourado/festa), `58292a3` (música/voo de roletas), `4c6d904` (defesa com
+troca central e possível prêmio), `2e5a945` (vilões avulsos/pares), `220f879`
+(Good Luck direto/combustível/raios), `42a90f8` (contadores verticais).
+O commit final reúne auditorias, guias e testes e dispara uma única prévia Pages.
+URL única: https://ric-lab.github.io/King-Rico/Preview
+Painel: https://ric-lab.github.io/King-Rico/todo/
+
+- Trevo usa a linha/fundo dourados nativos e festa antes de viajar ao estoque.
+- Música original de roleta intacta: dança 2,3s/duas voltas, chegada 2,77s;
+  intervalo 3,3s entre roletas. Sem jingle de linha simultâneo. Se vier trevo,
+  sua festa espera as roletas. Teste combinado passou sem sons sobrepostos.
+- Defesa consome um trevo, avisa, voa à cabeça central e revela a troca do
+  recibo; pode completar linha transversal. Uma aposta/um recibo, sem respin
+  cobrado e sem roubo. Não é uma troca puramente cosmética.
+- Avulsos/pares usam apenas casas sem prêmio; preservam linhas e especiais.
+  Não geram ataque e não alteram as chances dos eventos reais. Seletor 🎯
+  permite testar os dois casos.
+- Good Luck entra antes do giro base visual; mantém o prêmio inicial na soma
+  final. Cinco cargas gastam 8/6/4/2/0 com raios de cores distintas, sem clique
+  manual. Nuvens dos tubos removidas. Mantida a saída antecipada por grade cheia.
+- Contadores 86×90: asset44×44 acima e quantidade22px abaixo, com respiro.
+  Tucker/Ray carregam o mesmo arranjo.
+
+**Auditorias refeitas:** v6 5M por aposta (20M): 1 =89,9988316%;
+10 =89,99897166%; 100 =89,99892966%; 1000 =89,9989296606%.
+Quatro estresses de1M: décimo-alto89,9872%, cultivar-trevos90,0265%,
+alternar-apostas89,9843%, estoque-cheio89,9965%. Zero gatilho sem prêmio.
+V4/v5 históricos também refeitos (20M cada); hashes atuais nos relatórios.
+PAYS/pesos/chances de ataque/banco da roleta preservados.
+
+**Verificação:** npm test passou (51 arquivos); navegador novo passou todas as
+seis etapas, incluindo roletas+trevo juntos, troca pagante e Good Luck com uma
+requisição paga/cinco cores. A regressão antiga da transição foi atualizada
+para exigir ausência das nuvens, em vez de tentar medir o brilho de um asset
+removido. Os 15 arquivos de navegador passaram (14 na execução completa e
+a regressão de transição após atualizar a expectativa obsoleta). Regressões de
+som de roleta, Tucker/Ray com contadores e prêmio/voo de moedas passaram.
+Teste sob `/King-Rico` passou: rotas/assets, giro/replay/recarga, Firebase
+desabilitado, zero erro/404/fuga de prefixo. Build de produção passou após
+a integração; dist não é fonte e não foi commitado.
+
+**Bloqueio oficial preservado:** test:rules novamente67/80, as mesmas13 falhas
+positivas no limite de1.000 expressões. Nenhuma regra alterada. Além disso,
+validar `defense.beforeGrid/cell/replacement` e vilões avulsos no Firestore antes
+de integrar. Main/oficial continuam em `9808d53`; esta entrega usa carteira
+fictícia Pages. Não promover nem publicar regras a partir deste lote.
+
+**Próximo passo exato:** conferir Actions da prévia pelo SHA do commit final
+(sem `[skip ci]`), validar visualmente no link único e recolher feedback do dono.
+Para levar ao oficial: tarefa separada de regras/recibo com todos os positivos,
+negativos, replay e recarga passando antes de qualquer publicação main.
+
 ## Etapa 6 local conferida — 15/11/2026 (Codex)
 
 Power-ups do topo agora usam contador vertical de 86×90: ícone 44×44 acima,

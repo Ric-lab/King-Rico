@@ -10,7 +10,9 @@ with sync_playwright() as p:
  page=b.new_page(viewport={'width':390,'height':844});errors=[];missing=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
- def ready(demo='off'):
+ def ready(demo='off',reset=True):
+  if reset:
+   page.goto(BASE+'/circus?demo=off');page.evaluate('localStorage.clear()')
   page.goto(BASE+'/circus?demo='+demo);page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
  if stage in ['all','clover']:
   ready('cedar');page.locator('[data-spin-btn]').click()
@@ -29,9 +31,18 @@ with sync_playwright() as p:
   assert page.evaluate('cashJingles')==0
   page.wait_for_function('document.querySelector("[data-wheels]").textContent==="2/5"',timeout=10000)
   print(json.dumps({'wheels':2,'spacing':starts[1]['start']-starts[0]['start'],'cashJingles':0}),flush=True)
+  ready()
+  page.evaluate("""values=>{const fetch=window.fetch;window.fetch=async(u,o)=>{if(o?.body&&JSON.parse(o.body).action==='spin'){const r=Math.random;let i=0;Math.random=()=>values[i++]??.99;try{return await fetch(u,o)}finally{Math.random=r}}return fetch(u,o)}}""",draws_for_grid([5,5,5,11,0,11,10,10,10]))
+  page.locator('[data-spin-btn]').click()
+  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="clover:celebrate")',timeout=20000)
+  assert page.evaluate('performance.now()>=__fc._wheelAudioUntil')
+  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
+  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  print('combined wheel/clover celebrations serialized PASS',flush=True)
+
  if stage in ['all','defense']:
   ready();page.evaluate("""()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=1;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));}""")
-  ready()
+  ready(reset=False)
   page.evaluate("""()=>{const fetch=window.fetch;window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>0;try{return await fetch(u,o)}finally{Math.random=random}};}""")
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-defense-scene[data-phase=warning]').wait_for(timeout=15000)

@@ -23,8 +23,11 @@ evento inteiro de **Tony ou Tucker — nunca de Ray**, sendo consumido na mesma
 transação do giro; Tony não consome três defesas pelas três patadas. Mesmo com `0/5`
 roletas guardadas, o trevo ainda protege contra o Tucker. Ray rouba de **1 a 4 trevos**
 (limitado ao estoque); sem estoque, Ray aparece sem perda (`"Sem trevos!"`).
-A mensagem da defesa é **"Trevo da sorte te protegeu!"**. A apresentação de defesa
-é informativa e nunca altera a carteira. Ingressos antigos não viram trevos nem
+A mensagem da defesa é **"Trevo da sorte te protegeu!"**. Um aviso curto precede
+o voo do trevo até a cabeça central da trinca. O recibo contém `defense.beforeGrid`,
+`cell` e `replacement`; após o impacto, mostra a grade final. A troca pode completar
+uma linha pagante transversal, calculada no motor na mesma aposta. A animação não
+credita nem faz outra requisição. Ingressos antigos não viram trevos nem
 moedas. O contador antigo de entradas deixa a interface.
 
 O **Happeach** deixa de ser sorteado e saem seu contador e cesta (arquivos
@@ -34,8 +37,8 @@ célula 11 de `symbols-v7.webp`, chance `0,015` por célula). O contador `0/5` s
 com as cordas quando a máquina é içada. Quando juntar **5**, abre a tela da roleta bônus
 (`baseUnits = round(wheelUnits * 0.36)`, onde `wheelUnits` soma as 5 apostas em que cada roleta foi guardada).
 
-As **barras laterais** viram o **Good Luck**: no topo de cada barra entra o asset
-da nuvem (`assets/symbols/sym-candy.webp`). A barra deixa de encher nos 10 giros
+As **barras laterais** alimentam o **Good Luck**, sem nuvens sobre os tubos.
+A barra deixa de encher nos 10 giros
 fixos e passa a encher de forma aleatória (`BAR_P1_V6 = 0,12`, máximo de 1 nível por giro),
 exigindo **no mínimo 25 giros** no ciclo (média ~88 giros) para chegar ao topo (`10`).
 A exibição mantém um pequeno depósito visual entre níveis reais: em giros sem
@@ -50,8 +53,12 @@ pagam moedas também na grade inicial. Prêmio existente é mantido; uma grade
 sem prêmio recebe uma linha pagante de ingresso (mínimo 0,4×), sem substituir
 as roletas coletadas. A garantia não altera os multiplicadores nem as bases
 acumuladas dos bônus e está incluída na auditoria de retorno de ~90%.
-Quando chega ao topo (`10`), a nuvem pisca e ativa os **5 giros Good Luck**
-(`featureBet = floor(cycleWagerUnits / 10) / 100`), travando símbolos pagantes reais na grade.
+Quando chega ao topo (`10`), entra diretamente nos **5 giros Good Luck**, com
+a chamada e o háptico do bônus, antes de qualquer giro base visual. O prêmio da
+grade inicial permanece no recibo e na soma final. Cada rodada automática gasta
+1/5 do líquido e envia raios da cor consumida ao botão, sem simular clique manual.
+`featureBet = floor(cycleWagerUnits / 10) / 100`; símbolos pagantes reais ficam
+travados na grade. Mantida a conclusão antecipada quando a grade já está cheia.
 
 O controle de videogame (`assets/machine/controller-symbol-v1.webp`, arte v2
 aprovada, ID 15, peso 4) já está ativo nesta prévia. Uma trinca abre o convite
@@ -534,3 +541,19 @@ Som da roleta de bônus (10/11): ui/park/wheel-sound.js usa o timbre de Wheel.ti
 Passagens de casas no ângulo renderizado acionam os cliques, com limite de 35 ms.
 Botão e swipe usam o mesmo caminho; som termina ao parar/errar/sair. Não é um
 arquivo MP3. Alterações visuais não devem retirar esse feedback aprovado.
+
+## Celebrações e suspense — prévia de 15/11/2026
+
+Trincas de trevo recebem fundo/linha dourados e festa própria. Havendo roletas,
+suas músicas/voos vêm primeiro; a festa do trevo e a contagem em moedas esperam.
+Cada roleta dá duas voltas em 2,3s e chega ao contador em 2,77s, junto do fim da
+melodia original. Intervalo de 3,3s entre roletas; sem jingle de linha sobreposto.
+
+Grades comuns podem mostrar 1/2 vilões, sem ataque nem roubo. A decoração usa
+apenas casas de símbolos pagantes que não participam de prêmio: jamais substitui
+linhas vencedoras, trevos, roletas ou controles. Chances de ataque preservadas;
+trinca real ainda depende do evento financeiro. A defesa pode deixar dois vilões
+na grade final sem roubo. Contadores usam asset acima da quantidade, com respiro.
+
+Essas mudanças estão na carteira fictícia da prévia. O formato novo da defesa e
+a decoração avulsa precisam de validação Firestore antes de integrar ao oficial.

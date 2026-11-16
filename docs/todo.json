@@ -10,8 +10,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Conferido localmente em 390x844: contadores 86x90, ícone 44x44 acima e número abaixo, base alinhada ao prêmio; clones de roubo preservam o layout. Checkpoint sem deploy."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Contadores 86x90, asset 44x44 acima e quantidade abaixo com respiro. Mesma base do prêmio; clones de Tucker/Ray preservam layout. Geometria e captura conferidas."
     },
     {
       "id": "p-goodluck-energy",
@@ -20,8 +20,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Conferido localmente: entra antes dos rolos normais, háptico de entrada, 5 raios com cores distintas, barra 8/6/4/2/0, uma requisição paga, prêmio final inclui prêmio da rodada. Nuvens removidas. Checkpoint sem deploy."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Entra direto no giro confirmado, sem giro base anterior. Cinco cargas coloridas drenam 8/6/4/2/0 com raios ao botão. Uma requisição paga; prêmio da grade inicial preservado."
     },
     {
       "id": "p-villain-scatter",
@@ -30,8 +30,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Testes locais de 5.000 grades e navegador passaram: avulsos/pares, sem ataque falso, sem perder prêmio/especiais. Presets 🎯 adicionados. Auditoria da versão final pendente; checkpoint sem deploy."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Vilões avulsos/pares em casas sem prêmio, preservando todas as linhas/especiais; chances de ataque intactas. 5.000 grades testadas. Auditoria 20M: retorno 89,9988–89,9990%."
     },
     {
       "id": "p-special-defense",
@@ -40,8 +40,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Testado localmente: trevo voa no centro, troca só a cabeça central, permite uma linha pagante; uma aposta/um trevo, sem roubo. Recibo final controla o crédito. Auditoria financeira final pendente; só prévia."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Trevo atinge e substitui cabeça central: pode completar linha pagante. Uma aposta e uma defesa, zero roubo. 400 defesas testadas. Somente carteira fictícia; recibo novo precisa de regras antes de main."
     },
     {
       "id": "p-special-wheel-audio",
@@ -50,8 +50,8 @@
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Conferido localmente: duas roletas com 3,3s entre músicas, zero jingle de linha simultâneo. Música original intacta; dança e voo ajustados para o fim em 2,77s. Checkpoint, ainda sem deploy."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Música original preservada, duas voltas em 2,3s, chegada em 2,77s. Intervalo de 3,3s entre roletas e sem jingle de linha sobreposto."
     },
     {
       "id": "p-special-clover",
@@ -61,7 +61,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Em trabalho sequencial nesta sessão; publicar junto das etapas seguintes depois dos testes."
+      "notes": "Fundo/linha dourados, halo e festa do trevo antes da coleta; espera a música das roletas se coincidirem. Conferido visualmente e no navegador."
     },
     {
       "id": "p-refino-barra-raspa",

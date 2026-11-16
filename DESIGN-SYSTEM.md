@@ -277,3 +277,13 @@ Gramado sem caminhos, tendas laterais, vegetação e céu azul, acabamento
 ilustrado com profundidade. A tentativa de gramado chapado foi rejeitada.
 Aplicado só ao cenário normal do Circus; componentes/posição da máquina,
 roleta e cenário do parque não mudam nesta revisão.
+
+## Especiais do Circus — prévia 15/11/2026
+
+Trevo premiado usa o dourado nativo da linha mais halo e pulso próprios. Serializar
+áudio: roletas (duas voltas/2,3s, chegada em2,77s, intervalo3,3s), festa do trevo e
+contagem. Não sobrepor jingle de linha às roletas. Defesa deve atingir a cabeça
+central real, revelar a grade final e manter um único débito. Good Luck entra antes
+do giro base visual e gasta cinco cargas com raios coloridos. Contadores verticais:
+ícone44×44 acima e número22px abaixo em86×90; mesma base do prêmio e arranjo nos
+clones carregados.

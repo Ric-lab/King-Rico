@@ -110,13 +110,7 @@ with sync_playwright() as p:
    page.wait_for_timeout(300)
    assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='rigging'
    page.screenshot(path='work/preview-ropes-arrival.png')
-   page.evaluate('KingRicoPark.state.spins=10;__fc._parkMeterLevel=10;document.querySelector(".park-circus-rails")?.classList.add("has-lit-goals")')
-   goal=page.locator('.park-meter-goal').first
-   assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
-   assert goal.evaluate('e=>getComputedStyle(e).animationIterationCount')=='infinite'
-   page.wait_for_timeout(600)
-   assert goal.evaluate('e=>getComputedStyle(e).filter')=='brightness(1.22)'
-   page.evaluate('KingRicoPark.state.spins=0;__fc._parkMeterLevel=0;document.querySelector(".park-circus-rails")?.classList.remove("has-lit-goals")')
+   assert page.locator('.park-meter-goal,.park-goal-cloud').count()==0,'Good Luck tubes no longer have cloud goals'
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
    page.wait_for_timeout(350);page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1

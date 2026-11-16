@@ -11,10 +11,10 @@ Ingressos antigos não entram no cálculo. Trevo não é dinheiro nem entrada.
 
 | Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto | Tony | Retorno Líquido |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 | 5.000.000 | 84.2336% | 8.8749% | 93.1085% | -3.1101% | **89.9984%** |
-| 10 | 5.000.000 | 84.2666% | 8.8770% | 93.1436% | -3.1453% | **89.9983%** |
-| 100 | 5.000.000 | 84.2800% | 8.8707% | 93.1507% | -3.1525% | **89.9981%** |
-| 1000 | 5.000.000 | 84.2800% | 8.8707% | 93.1507% | -3.1525% | **89.9981%** |
+| 1 | 5.000.000 | 84.1118% | 8.8822% | 92.9941% | -2.9953% | **89.9988%** |
+| 10 | 5.000.000 | 84.1398% | 8.8833% | 93.0231% | -3.0242% | **89.9990%** |
+| 100 | 5.000.000 | 84.1559% | 8.8774% | 93.0333% | -3.0344% | **89.9989%** |
+| 1000 | 5.000.000 | 84.1559% | 8.8774% | 93.0333% | -3.0344% | **89.9989%** |
 
 **Garantia nova:** o giro que guarda a 5ª roleta e o giro que completa a barra
 Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
@@ -22,10 +22,10 @@ Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
 as oito combinações sem substituir nenhum símbolo de roleta. Prêmio, linhas,
 células e crédito são recalculados juntos antes de animar o resultado.
 Não muda a tabela de pagamentos, a base acumulada da roleta ou as chances dos
-vilões. O adicional está incluído no ledger/RTP; o bruto agora chega a 93,1507%,
+vilões. O adicional está incluído no ledger/RTP; o bruto agora chega a 93,0333%,
 compensado pelo controle existente do Tony, com líquido ~89,998%.
 
-Nos 20 milhões de giros: **650.474 aberturas** de roleta/Good Luck e **zero**
+Nos 20 milhões de giros: **650.901 aberturas** de roleta/Good Luck e **zero**
 aberturas sem prêmio em moedas. Os relatórios JSON registram as contagens.
 
 PAYS por ID estável: `[1.2,0,0.8,0,0,0,2.5,10,5,0,0.4,0,0,0,0,0]`.
@@ -33,9 +33,9 @@ Pagantes na fita/tabela: ingresso, circo, capa, moeda, diamante, coroa.
 Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]`, trevo (`CEDAR_P`) `0,12`, símbolo de roleta (`PEACH_P_V6`) `0,015`, `WHEEL_SHARE_V6 = 0,36`, barra Good Luck aleatória (`BAR_P1_V6 = 0,12`, `BAR_P2_V6 = 0`, trava mínima de **25 giros**, média **~88 giros**).
 Os arquivos JSON incluem componentes e hashes das fontes da simulação.
 
-Um milhão por cenário adicional: décimo giro alto **90,0043%**, cultivar trevos
-com aposta baixa **89,9849%**, alternar 1/1.000 **89,9987%**, estoque artificial
-sempre cheio **89,9981%**. Todos em 88,5–91,5%, zero aberturas vazias.
+Um milhão por cenário adicional: décimo giro alto **89,9872%**, cultivar trevos
+com aposta baixa **90,0265%**, alternar 1/1.000 **89,9843%**, estoque artificial
+sempre cheio **89,9965%**. Todos em 88,5–91,5%, zero aberturas vazias.
 Comando reproduzível: `node scripts/circus-v6-stress.mjs`.
 As auditorias v4/v5 também foram reexecutadas (5 milhões por aposta) para
 conferir que os caminhos históricos não mudaram; hashes atualizados nos JSON.
@@ -57,13 +57,14 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 
 ## Testes
 
-- `npm test`: 268 testes passaram. Casos novos cobrem seis pagamentos,
+- `npm test`: 51 arquivos passaram na revisão de especiais. Casos novos cobrem seis pagamentos,
   oito combinações, especiais sem prêmio em moedas, estoque até 5, defesa dos
   do Tony/Tucker, Ray sem defesa, perdas sem proteção, banco de roletas proporcional, roleta por
   contribuição, replay e recarga da carteira fictícia. Equivalência de contagem
   de linhas validada em 100.000 grids. Teste adicional de centavos confirma que
   a tela cheia é multiplicada antes do arredondamento da feature.
-- Navegadores: linhas/voos de moedas, três fitas, líquido, roda/colorido/som,
+- Navegadores: 15 arquivos passaram (transição repetida após corrigir a expectativa
+  antiga da nuvem removida); linhas/voos de moedas, três fitas, líquido, roda/colorido/som,
   patadas, Tucker, Ray, voo céu/espaço, raspadinha diária, coleta e defesa de
   trevos, redirecionamentos arquivados. Recarga no cabeçalho: cancelar não credita;
   concluir 30s credita uma vez, mostra recibo, voo e saldo atualizado.
@@ -87,3 +88,17 @@ sem autorização específica; aquela proposta não foi aplicada. O bloqueio per
 uma tarefa separada. Preservar cálculo exato, vínculo atômico, limites, banco,
 ledger e prevenção de replay ao resolver o custo de avaliação; depois rodar os
 80 casos de regras e a integração completa antes de considerar o oficial.
+
+## Revisão de especiais — 15/11/2026
+
+Defesa Tony/Tucker agora troca a cabeça central por símbolo pagante, com possível
+linha transversal no mesmo recibo. Vilões avulsos/pares são decoração de casas
+sem prêmio, sem ataques novos. As auditorias acima foram reexecutadas depois
+dessas mudanças, com hashes atuais: todas as apostas e quatro estresses passaram.
+Nenhuma alteração em PAYS, probabilidades de ataque, banco da roleta ou barra.
+Nos 20 milhões de giros, o relatório registra 4.686.203 avulsos e 1.794.094 pares,
+além de zero bônus vazio.
+
+Além do limite de expressões já existente, a integração Firestore precisa
+validar a nova forma de `defense` e os avulsos. Esta revisão não modifica regras
+e não deve ir à main até a validação financeira completa.

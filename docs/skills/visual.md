@@ -69,3 +69,12 @@ Rejeitado:
 - Fundo: numeração no chat levou à opção errada. A imagem enviada 151169.jpg determina a escolha: 01-jardim.webp. Não insistir em números quando o dono aponta outra imagem; verificar a referência visual exata.
 
 Rejeitado (10/11/2026): alterar ou retirar sons aprovados durante ajustes visuais não relacionados. Preservar e conferir o áudio do elemento alterado.
+
+## Especiais do Circus — conferência de 15/11/2026
+
+Trinca de trevo também merece linha/fundo dourados; não basta voar o ícone.
+Serializar celebrações de roleta/trevo/moedas, mantendo a música original inteira
+e sincronizando a chegada com seu fim. Não empilhar melodias quando há mais de
+uma roleta. Good Luck começa na confirmação do giro, sem mostrar um giro comum
+antes; a barra vira combustível para cinco cargas automáticas com raios.
+Contadores de power-up: asset acima, quantidade abaixo, com respiro.
