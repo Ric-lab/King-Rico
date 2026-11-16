@@ -483,3 +483,20 @@ avaliação do dono.
 autoral via código, gradiente iridescente e contorno dourado claro; render80×200.
 Sem geração de imagem/3D ou chamada paga; custo de geração externo0. Inspecionado
 na tela390×844 durante a queda e com os tubos vazios após os cinco giros.
+
+### 2026-11-16 — raio do Good Luck em 3 sprites 9:16 (v2)
+
+Pedido do dono: substituir o raio desenhado em código em `strike()` por
+3 imagens verticais 9:16 no padrão cartoon premium (Royal Match), só branco e
+cinza claro sobre fundo preto chapado (`#000000`), sem nuvens nem texto, para
+pintar na cor do líquido em execução. Geradas via `generate_image` (Gemini) em
+3 variações de zigue-zague com núcleo branco grosso, 3–4 galhos pequenos, brilho
+largo e faíscas na ponta inferior central; normalizadas com Pillow (tons de
+cinza puros em `#000000` com bordas zeradas e bloom suave) para 540×960 em
+`assets/machine/goodluck-bolt-1.webp`, `assets/machine/goodluck-bolt-2.webp` e
+`assets/machine/goodluck-bolt-3.webp` (12–15 KB cada). Sem Meshy; custo da
+ferramenta não informado. Em `ui/park/goodluck-energy.js` e `.park-gl-bolt`
+(`mix-blend-mode: screen`), os sprites alternam nas piscadas, pintando o halo
+largo na cor do líquido e sobrepondo o núcleo branco alinhado por cima.
+Inspecionado em `390×844` (`work/special-goodluck-bolt.png` e `click`).
+

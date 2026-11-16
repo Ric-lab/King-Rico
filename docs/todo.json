@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-goodluck-bolt-sprites",
+      "title": "Good Luck: raio em 3 sprites 9:16 com núcleo branco e cor do líquido",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Substitui raio em canvas em strike() por assets/machine/goodluck-bolt-1..3.webp (540x960, fundo #000000 removido via screen/lighter), alternando nas piscadas com halo na cor do líquido e núcleo branco alinhado. Testar em ⚙ -> 🎯 -> Good Luck."
+    },
+    {
       "id": "p-goodluck-small-win",
       "title": "Good Luck: prêmios pequenos reais, sem piso de Big Win",
       "status": "preview",

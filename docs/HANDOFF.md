@@ -1,3 +1,23 @@
+## Good Luck: raio em 3 sprites 9:16 — 16/11/2026 (Antigravity)
+
+Pedido na prévia (`codex/penalty-clown-preview`), sem mexer em tempestade,
+clarão, onda, faíscas, som, vibração, tempo do impacto ou matemática/regras:
+- Novos sprites `assets/machine/goodluck-bolt-1.webp`, `-2.webp` e `-3.webp`
+  (540×960 em 9:16, branco e cinza claro sobre fundo `#000000`, zigue-zague com
+  galhos, brilho largo e faíscas na ponta central inferior), pré-carregados no
+  grupo `circus` em `ui/art-manifest.json` e registrados em
+  `guidelines/asset-pipeline.md`.
+- `ui/park/goodluck-energy.js` (`strike()`) + `ui/park/park.css`
+  (`.park-gl-bolt` com `mix-blend-mode: screen`): alterna entre os 3 sprites nas
+  piscadas, estica do topo até o botão de giro centrado em X, pinta o halo na
+  cor do líquido (`color`) sem caixa preta e desenha o núcleo branco alinhado
+  mais fino por cima em modo `'lighter'`. Classe `.park-gl-bolt` preservada.
+- Testes e inspeção visual: `npm test` (suíte Node completa) e navegador
+  `tests/special_feedback_browser.py` passaram, com capturas `work/special-goodluck-bolt.png`
+  e `work/special-goodluck-click.png` conferidas em 390×844.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Good Luck: nem sempre Big Win, barra vazia e raio vertical —16/11/2026
 
 Pedido atual executado na prévia, base719d5a5 puxada antes de editar.
