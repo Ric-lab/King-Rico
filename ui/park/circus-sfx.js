@@ -46,11 +46,22 @@ export function installCircusSfx(fc){
  }catch{return null;}};
  fc.sfxBank=play(1.4,()=>{for(let i=0;i<12;i++)B(1300+i*90,.18,.045,i*.07);[1046.5,1318.5,1568,2093].forEach((f,i)=>B(f,.6,.1,.9+i*.06));});
  // Good Luck: faísca elétrica na descida e estalo/trovão sincronizados ao impacto no botão.
- fc.sfxLightning=play(1.7,(delaySec=.64)=>{const d=Math.max(.12,Number(delaySec)||.64),pre=Math.max(0,d-.28);
-  hiss(4200,1.6,.045,.07,pre,'bandpass',1800);
-  sweep(1500,520,.12,'sawtooth',.025,pre+.03);
-  hiss(2600,.9,.15,.14,d,'bandpass',620);
-  hiss(340,.7,.13,.44,d+.015,'lowpass',95);
-  sweep(165,42,.26,'triangle',.12,d);
+ // Raio do Good Luck (refeito, Claude): carga elétrica crepitando → estalo seco no impacto → trovão rolando.
+ fc.sfxLightning=play(1.5,(delaySec=.64)=>{const ac=fc.ac(),out=fc.out(),d=Math.max(.12,Number(delaySec)||.64),t0=ac.currentTime,T=t0+d;
+  const env=(g,at,peak,hold,rel)=>{g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(peak*K,at+hold);g.gain.exponentialRampToValueAtTime(.0001,at+hold+rel);};
+  // 1) carga: chiado elétrico que sobe + estalinhos aleatórios (o raio "procurando")
+  { const n=ac.createBufferSource();n.buffer=fc.noise(ac);const f=ac.createBiquadFilter();f.type='bandpass';f.Q.value=2.2;f.frequency.setValueAtTime(900,t0);f.frequency.exponentialRampToValueAtTime(5200,T);
+    const g=ac.createGain();g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.05*K,T-.02);g.gain.exponentialRampToValueAtTime(.0001,T+.03);n.connect(f);f.connect(g);g.connect(out);n.start(t0);n.stop(T+.06);
+    for(let i=0;i<7;i++){const w=d*(.25+.7*Math.random());hiss(3000+Math.random()*4000,4,.05+.05*(w/d),.018,w,'bandpass');} }
+  // 2) estalo: transiente branco curtíssimo + corpo médio (o "CRACK")
+  { const n=ac.createBufferSource();n.buffer=fc.noise(ac);const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=1200;const g=ac.createGain();env(g,T,.42,.002,.09);n.connect(hp);hp.connect(g);g.connect(out);n.start(T);n.stop(T+.12);
+    hiss(1800,.8,.32,.16,.0+d,'bandpass',500); }
+  // 3) soco grave no botão
+  { const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(130,T);o.frequency.exponentialRampToValueAtTime(38,T+.3);env(g,T,.5,.006,.3);o.connect(g);g.connect(out);o.start(T);o.stop(T+.35); }
+  // 4) trovão rolando: ruído grave com tremor de amplitude, ~1,3 s
+  { const n=ac.createBufferSource();n.buffer=fc.noise(ac);n.loop=true;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.Q.value=.6;lp.frequency.setValueAtTime(900,T);lp.frequency.exponentialRampToValueAtTime(140,T+1.3);
+    const g=ac.createGain(),R=1.3;g.gain.setValueAtTime(.0001,T);g.gain.exponentialRampToValueAtTime(.34*K,T+.06);
+    for(let i=1;i<=9;i++){const tt=T+.06+i*(R/10),v=.34*K*Math.pow(1-i/10,1.4)*(.55+.45*Math.random());g.gain.linearRampToValueAtTime(Math.max(.0002,v),tt);}
+    g.gain.exponentialRampToValueAtTime(.0001,T+R+.05);n.connect(lp);lp.connect(g);g.connect(out);n.start(T);n.stop(T+R+.1); }
  });
 }
