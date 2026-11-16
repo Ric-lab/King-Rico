@@ -11,10 +11,10 @@ Ingressos antigos não entram no cálculo. Trevo não é dinheiro nem entrada.
 
 | Aposta | Giros | Rolos + Good Luck | Roleta Bônus | Bruto | Tony | Retorno Líquido |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 | 5.000.000 | 84.2046% | 8.8748% | 93.0793% | -3.0800% | **89.9993%** |
-| 10 | 5.000.000 | 84.1738% | 8.8866% | 93.0604% | -3.0609% | **89.9995%** |
-| 100 | 5.000.000 | 84.1948% | 8.8818% | 93.0766% | -3.0771% | **89.9995%** |
-| 1000 | 5.000.000 | 84.1948% | 8.8818% | 93.0766% | -3.0771% | **89.9995%** |
+| 1 | 5.000.000 | 85.0293% | 8.9183% | 93.9475% | -3.9574% | **89.9902%** |
+| 10 | 5.000.000 | 84.8753% | 8.9162% | 93.7915% | -3.8022% | **89.9893%** |
+| 100 | 5.000.000 | 84.8753% | 8.9162% | 93.7915% | -3.8022% | **89.9893%** |
+| 1000 | 5.000.000 | 84.8753% | 8.9162% | 93.7915% | -3.8022% | **89.9893%** |
 
 **Garantia nova:** o giro que guarda a 5ª roleta e o giro que completa a barra
 Good Luck sempre têm prêmio em moedas na grade inicial. Se já houver prêmio,
@@ -25,10 +25,10 @@ Não muda a tabela de pagamentos, a base acumulada da roleta ou as chances dos
 vilões. O adicional está incluído no ledger/RTP; o bruto é o da tabela acima,
 compensado pelo controle existente do Tony, com líquido ~90%.
 
-Nos 20 milhões de giros: **651.068 aberturas** de roleta/Good Luck,
-**zero** sem prêmio em moedas e **324 giros grátis** por trevos cheios.
-O denominador é o valor efetivamente apostado: grátis soma zero, mas seus prêmios
-e roubos entram no retorno.
+Nos20 milhões: 652646 aberturas, zero sem prêmio inicial.
+O denominador conta só apostas debitadas; prêmios/roubos dos grátis entram.
+Há 175121 Good Lucks com cinco giros e retorno menor20×
+entre 226894 bônus. Os relatórios registram cada categoria.
 
 
 PAYS por ID estável: `[1.2,0,0.8,0,0,0,2.5,10,5,0,0.4,0,0,0,0,0]`.
@@ -36,8 +36,7 @@ Pagantes na fita/tabela: ingresso, circo, capa, moeda, diamante, coroa.
 Pesos `[9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]`, trevo (`CEDAR_P`) `0,12`, símbolo de roleta (`PEACH_P_V6`) `0,015`, `WHEEL_SHARE_V6 = 0,36`, barra Good Luck aleatória (`BAR_P1_V6 = 0,12`, `BAR_P2_V6 = 0`, trava mínima de **25 giros**, média **~88 giros**).
 Os arquivos JSON incluem componentes e hashes das fontes da simulação.
 
-Um milhão por cenário adicional: décimo-alto **90.0667%**, cultivar trevos **90.0073%**,
-alternar apostas **89.9858%**, estoque cheio **89.9943%**. Todos passaram, zero bônus vazio.
+Um milhão por cenário: tenth-high=90.0693%, armor-farm=89.8868%, alternating=89.9792%, fixed/armor=90.0038%. Todos passaram.
 Comando reproduzível: `node scripts/circus-v6-stress.mjs`.
 As auditorias v4/v5 também foram reexecutadas (5 milhões por aposta) para
 conferir que os caminhos históricos não mudaram; hashes atualizados nos JSON.
@@ -46,7 +45,7 @@ conferir que os caminhos históricos não mudaram; hashes atualizados nos JSON.
 
 `npm run test:rules`: **67/80 passaram; 13 falharam**, incluindo casos v5/v6,
 por atingir o limite Firestore de 1.000 expressões. Bloqueio já existente na
-integração real; regras/dispatcher não foram modificados nesta tarefa. Novos
+integração real; `v6Feature` agora exige o prêmio exato da grade, sem piso20×; dispatcher preservado. Novos
 casos wheel-prize/bar-prize ficam registrados para validar após destravar a
 integração. A publicação desta mudança é exclusivamente na prévia Pages.
 
@@ -59,7 +58,7 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 
 ## Testes
 
-- `npm test`: 52 arquivos passaram na revisão de especiais. Casos novos cobrem seis pagamentos,
+- `npm test`: 53 arquivos passaram na revisão de especiais. Casos novos cobrem seis pagamentos,
   oito combinações, especiais sem prêmio em moedas, estoque até 5, defesa dos
   do Tony/Tucker, Ray sem defesa, perdas sem proteção, banco de roletas proporcional, roleta por
   contribuição, replay e recarga da carteira fictícia. Equivalência de contagem
@@ -81,8 +80,8 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 Última suíte `npm run test:rules`: **67 de 80** passaram; os 13 casos positivos
 pendentes atingem o limite de 1.000 expressões (v5 normal/bônus e casos v6,
 incluindo wheel-prize/bar-prize). Recibos forjados continuam rejeitados; os testes
-negativos não substituem os positivos ainda falhando. Nenhuma regra foi alterada
-ou publicada nesta revisão.
+negativos não substituem os positivos ainda falhando. Somente v6Feature foi ajustada ao pagamento exato; nenhuma regra foi
+publicada nesta revisão.
 
 Registro histórico: uma revisão automática anterior impediu refatorar o
 validador/dispatcher financeiro central por risco de alterar a segurança legada
@@ -117,3 +116,12 @@ e vinculados atomicamente pelas regras antes de main. Preview continua fictícia
 Navegador: grátis automático com uma única aposta debitada; preset 🎯 Trevos
 cheios; defesa com arco/contato; contadores compactos; cinco cliques Good Luck
 e nenhum raio. Testes alterados não reduzem verificações de crédito/replay.
+
+## Bônus baixo e estado visual gasto —16/11/2026
+
+FEATURE_HIT_V6=0,29; removido só o piso20× da v6. Auditorias acima refeitas após
+a mudança; v4/v5 seguem preservadas. Unitário força cinco rodadas por0,4× e
+confere a grade/res exatos; também encontra Big/Super legítimos. Navegador
+confere crédito final, ausência de Big Win no bônus pequeno, queda do asset,
+cinco consumos e barra vazia através de snapshot/recarga e até o próximo spin.
+Regras novamente67/80, mesmos13 bloqueios de expressão; não promover main.

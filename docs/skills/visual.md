@@ -87,3 +87,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   e sonora. Giro grátis é o trevo batendo no spin, não um aviso +1 seguido de
   giro sem causa visual. Destaque da primeira linha precisa validar a grade
   atual e sumir ao iniciar outra jogada.
+
+- Direção atual16/11: o dono pediu um NOVO raio em asset caindo de cima no spin,
+  iridescente, mantendo a drenagem. A rejeição anterior continua valendo para
+  os feixes em zigue-zague saindo das barras. Barra consumida fica vazia até
+  outro giro; nunca adotar novamente10 do ledger como nível visual após bônus.

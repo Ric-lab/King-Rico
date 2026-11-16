@@ -248,3 +248,11 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 @keyframes parkCloverContact{0%{opacity:1;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.3)}}
 
 .park-free-clover-flight{position:fixed;left:0;top:0;width:56px;height:56px;object-fit:contain;opacity:0;pointer-events:none;z-index:8001;filter:drop-shadow(0 0 9px #ffd85d);will-change:transform,opacity}
+
+.park-goodluck-falling-bolt{position:fixed;left:0;top:0;width:80px;height:200px;object-fit:contain;opacity:0;z-index:8500;pointer-events:none;filter:drop-shadow(0 0 7px #d9caff99);will-change:transform,opacity}
+.park-goodluck-contact{position:fixed;width:190px;height:65px;border:3px solid #fff0ac;border-radius:50%;pointer-events:none;z-index:8499;box-shadow:0 0 15px #8be9ff,0 0 25px #ffb5c766;animation:parkGoodLuckContact .45s ease-out both}
+@keyframes parkGoodLuckContact{from{opacity:1;transform:translate(-50%,-50%) scale(.55)}to{opacity:0;transform:translate(-50%,-50%) scale(1.2)}}
+@media(prefers-reduced-motion:reduce){.park-goodluck-contact{animation-duration:.25s}}
+
+.park-meter.is-empty .park-meter-fill{box-shadow:none}
+.park-meter.is-empty .park-liquid-cap,.park-meter.is-empty .park-liquid-bubble{visibility:hidden}

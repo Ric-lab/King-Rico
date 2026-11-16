@@ -19,6 +19,7 @@ export function nextPourLevel(before,target,shown=before){
 }
 export function installMotion(fc,rails,{refresh,showWheel}){
  fc._parkMeterLevel=window.KingRicoPark.state.spins;fc._parkVisibleTickets=window.KingRicoPark.state.cedros;
+ if(fc._parkMeterLevel>=10){fc._parkMeterLevel=0;fc._parkShown=0;fc._parkFeatureFill=0;fc._parkAfterGoodLuck=true;}
  const spinButton=document.querySelector('[data-spin-btn]');
  const spinSurface=spinButton?.querySelector('.park-spin-aperture');
  const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=rim?.querySelector('.park-spin-rim-pulse');let rimFlash;
@@ -56,6 +57,8 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   if(cloverLines.length){fc.setState({winDim:true,winCalm:false});celebrateClover(fc,cloverLines);}
 if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
+  if(actual&&fc._parkAfterGoodLuck){fc._parkFeatureFill=null;fc._parkAfterGoodLuck=false;fc._parkMeterLevel=0;fc._parkShown=0;before=10;}
+  if(!actual&&fc._parkAfterGoodLuck){fc._parkVisibleTickets=response.park.cedros;refresh();return;}
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}
   if(response.outcome.cedarAward){const count=response.outcome.cedarAward;fc._parkTicketAward={before:response.park.cedros-count,after:response.park.cedros,count,cells:response.outcome.cedarLines.map(li=>[0,1,2,3,4,5,6,7][li]).flatMap(li=>[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]][li].slice(1,2)).slice(0,count)};fc._parkVisibleTickets=response.park.cedros-count;}
   {const target=response.park.spins,visual=nextPourLevel(before,target,fc._parkShown);

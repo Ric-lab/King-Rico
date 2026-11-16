@@ -1234,6 +1234,7 @@ for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',
   if(cedros&&kind!=='ray'){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990+r.outcome.winUnits/100);}
   if(kind==='ray'&&cedros){assert.ok(!r.outcome.defense);assert.equal(r.park.cedros,cedros-r.outcome.ray.stolen);assert.equal(r.player.peaches,peaches);}
   if(kind==='cedar'){assert.equal(r.outcome.cedarAward,5);assert.equal(r.park.cedros,5);}
+  if(kind==='tenth'){assert.equal(r.outcome.feature.rounds.length,5);assert.equal(r.outcome.feature.res.win,4);}
   if(kind==='wheel-prize'||kind==='bar-prize'){assert.ok(r.outcome.res.win>0);assert.deepEqual(r.outcome.res,engine.evaluate(r.outcome.grid,10,6));assert.ok(kind==='wheel-prize'?r.park.wheel:r.outcome.feature);}
   assert.deepEqual((await c.call(req)).park,r.park);
   // Same client's retry validates the immutable operation; refresh reads persisted stock.

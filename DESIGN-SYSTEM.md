@@ -301,3 +301,11 @@ Giro grátis: o próprio trevo viaja ao botão; no impacto, usa o clique nativo 
 spin, sem balão +1. Defesa sem legenda flutuante. Efeitos de prêmio precisam
 conferir com a grade atual; limpar na fila/confirmação do próximo giro e não
 reaproveitar halo/linha de um resultado anterior sobre símbolos diferentes.
+
+### Good Luck — revisão de16/11/2026
+
+O resultado pode ser pequeno: contagem normal no mostrador abaixo20×, sem
+encenação de grande vitória garantida. Não aumentar o prêmio visualmente.
+A energia é o asset `goodluck-bolt-v1.svg`, com queda vertical e contato no
+spin; preservar a drenagem, sem feixes saindo dos tubos ou flash de viewport.
+Depois de gastar, os tubos ficam vazios até o próximo giro confirmado.

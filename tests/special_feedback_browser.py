@@ -78,7 +78,9 @@ with sync_playwright() as p:
   assert page.evaluate('reelStarts.length')==0
   assert page.locator('.park-goal-cloud').count()==0
   page.wait_for_function('__fc._goodLuckEnergyLog?.length>=1',timeout=15000)
-  page.wait_for_timeout(80);assert page.locator('[data-spin-btn]').get_attribute('data-tactile-held')=='1'
+  page.locator('.park-goodluck-falling-bolt').wait_for()
+  page.wait_for_timeout(350);page.screenshot(path='work/special-goodluck-bolt.png')
+  page.wait_for_function('document.querySelector("[data-spin-btn]").hasAttribute("data-tactile-held")')
   page.screenshot(path='work/special-goodluck-click.png')
   page.wait_for_function('__fc._goodLuckEnergyLog?.length===5',timeout=45000)
   energy=page.evaluate('__fc._goodLuckEnergyLog');assert [r['to'] for r in energy]==[8,6,4,2,0],energy
@@ -87,6 +89,25 @@ with sync_playwright() as p:
   assert page.evaluate('reelStarts.every(r=>r.feature)&&baseSpinCalls===1')
   page.wait_for_function('!__fc.state.feature',timeout=20000)
   assert abs(page.evaluate('__fc.state.winAmount')-page.evaluate('__fc._cloudSpin.outcome.winUnits/100'))<.005
+  assert page.evaluate('__fc._cloudSpin.outcome.feature.res.win')==4
+  assert page.locator('.park-bigwin-flight').count()==0
+  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending&&!__fc._cfRun',timeout=25000)
+  assert abs(page.evaluate('__fc.shownBalance()-KingRicoCloud.player.balance'))<.005
+  # Persisted ledger still says 10 until the next spin. Settings/snapshots must not refill it.
+  page.evaluate('KingRicoPark.state.spins=10;__fc.setState({})')
+  for _ in range(4):
+   page.wait_for_timeout(300)
+   assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height<1)')
+  assert page.locator('[role=progressbar]').get_attribute('aria-valuenow')=='0'
+  page.screenshot(path='work/special-goodluck-spent-empty.png')
+  page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
+  assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height<1)')
+  page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Sem trinca',exact=False).click()
+  page.locator('[data-spin-btn]').click()
+  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="charge:done")',timeout=15000)
+  assert page.evaluate('__fc._parkFeatureFill==null&&__fc._parkShown<2')
+  assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height>0&&e.getBoundingClientRect().height<60)')
+
   print(json.dumps({'directGoodLuck':True,'charges':energy,'paidSpinCalls':1}),flush=True)
  if stage in ['all','free']:
   ready()

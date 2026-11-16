@@ -14,4 +14,5 @@ const {tier}=require('./prize-tier.cjs');
 const PAYS_V6=Object.freeze([1.2,0,.8,0,0,0,2.5,10,5,0,.4,0,0,0,0,0]);
 const WEIGHTS_V6=Object.freeze([9,0,12,0,0,0,7,5,6,0,70,0,0,0,0,4]); // 15 = controle (3 em linha abre um jogo)
 const CEDAR_P=.12,PEACH_P_V6=.015,WHEEL_SHARE_V6=.36,BAR_P1_V6=.12,BAR_P2_V6=0;
-module.exports={PAYS_V6,WEIGHTS_V6,CEDAR_P,PEACH_P_V6,WHEEL_SHARE_V6,BAR_P1_V6,BAR_P2_V6,VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};
+const FEATURE_HIT_V6=.29; // Low wins are real; full grids carry the feature mean, not a 20x floor.
+module.exports={FEATURE_HIT_V6,PAYS_V6,WEIGHTS_V6,CEDAR_P,PEACH_P_V6,WHEEL_SHARE_V6,BAR_P1_V6,BAR_P2_V6,VERSION,TARGET_COIN_RTP,PEACH_P,FEATURE_MIN,PAYS,PAYS_V5,tier};

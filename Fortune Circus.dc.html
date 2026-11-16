@@ -1678,10 +1678,10 @@ class Component extends DCLogic {
     const raw = plan ? plan.res : this.evaluate(grid, bet);
     const opening=this._goodLuckOpeningWin||0;this._goodLuckOpeningWin=0;
     const res=opening?{...raw,win:Math.round((raw.win+opening)*100)/100}:raw;
-    if (res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // climax never pays nothing
+    if (!plan && res.win < bet * FEAT_MIN) res.win = Math.round(bet * FEAT_MIN * 100) / 100; // Legacy offline fallback; confirmed receipts keep their exact prize.
     const big = res.win >= bet * 20;
+    this._celebHold=res.win>0;this._holdWin=res.win>0;this.syncCeleb();
     this._parkMeterLevel = 0;
-    if (window.KingRicoPark?.state) window.KingRicoPark.state.spins = 0;
     const rails = typeof document !== 'undefined' && document.querySelector('.park-circus-rails');
     if (rails) {
       rails.classList.remove('has-lit-goals', 'is-overflowing');
@@ -1697,10 +1697,10 @@ class Component extends DCLogic {
     if (res.win > 0) {
       this.sfxWin(big);
       if (big) this.sfxCoins();
-      this.hap(res.full ? 'jackpot' : big ? 'winBig' : 'winMid');
+      this.hap(res.full ? 'jackpot' : big ? 'winBig' : res.win>=bet?'winMid':'win');
     }
-    this.lightsLevel(false); this.later(() => this.lightsFlash(true), 120);
-    this.kingSet('cheer');
+    this.lightsLevel(false); this.later(() => this.lightsFlash(big), 120);
+    this.kingSet(res.win>=bet?'cheer':'happy');
     const lbls = this.lineLabels(res, bet, grid);
     const after = () => {
       this._celebHold = true; this.syncCeleb();
@@ -1713,7 +1713,8 @@ class Component extends DCLogic {
         if (this.state.auto) this.later(() => this.doSpin(), 400);
       }, 1800);
     };
-    if (res.win > 0) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : 'GOOD LUCK', after, false, bet), 950);
+    if (big) this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : 'GOOD LUCK', after, false, bet), 950);
+    else if(res.win>0)this.later(()=>this.barPrize(res.win,bet,after,lbls),650);
     else this.later(after, 900);
   }
 

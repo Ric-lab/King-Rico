@@ -80,7 +80,7 @@ with sync_playwright() as p:
  assert feat['sym'] in [0,2,6,7,8,10] and feat['grid'].count(feat['sym'])>=3,feat
  page.wait_for_function('document.querySelectorAll(\'.park-reel-cell[data-held="true"]\').length>=1',timeout=15000)
  page.screenshot(path='work/preview-goodluck-held.png')
- page.wait_for_function('!__fc.state.feature&&!__fc._cfRun&&!__fc.cloudBusy()&&!document.querySelector(".park-bigwin-flight")&&(!document.querySelector("[data-bigwin-modal]")||getComputedStyle(document.querySelector("[data-bigwin-modal]")).visibility==="hidden")',timeout=45000)
+ page.wait_for_function('!__fc.state.feature&&!__fc._cfRun&&!__fc.cloudBusy()&&!document.querySelector(".park-bigwin-flight")&&(!document.querySelector("[data-bigwin-modal]")||getComputedStyle(document.querySelector("[data-bigwin-modal]")).visibility==="hidden")',timeout=60000)
  # Roleta (5 guardadas): o contador .park-basket deve subir junto com as cordas
  page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Roleta (5 guardadas)').click()
  page.locator('[data-spin-btn]').click()

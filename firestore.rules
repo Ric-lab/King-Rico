@@ -901,8 +901,8 @@ service cloud.firestore {
     }
 
     function v6Feature(f,units) {
-      let stake=int(f.bet*100+0.5); let actual=v6Prize(f.grid,stake); let min=stake*20;
-      return f.res.win==(actual>min?actual:min) / 100.0 && units==(actual>min?actual:min);
+      let stake=int(f.bet*100+0.5); let actual=v6Prize(f.grid,stake);
+      return f.res.win==actual / 100.0 && units==actual;
     }
     function v6Maximum(old,o,b) {
       let e=b.get('economyV6',{});

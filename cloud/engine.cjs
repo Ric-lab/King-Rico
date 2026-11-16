@@ -144,7 +144,7 @@ function feature(bet, rng = random, version=1) {
   for (let round = 0; round < FEAT_SPINS && grid.some(v => v < 0); round++) {
     const result = [];
     for (const i of [6,3,0,7,4,1,8,5,2]) if (grid[i] < 0) {
-      const r = rng(), v = version>=6?(r<FEAT_P_SYM+FEAT_P_WILD?sym:-1):r < FEAT_P_SYM ? sym : r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1;
+      const r = rng(), v = version>=6?(r<circusProfile.FEATURE_HIT_V6?sym:-1):r < FEAT_P_SYM ? sym : r < FEAT_P_SYM + FEAT_P_WILD ? WILD : -1;
       grid[i] = v; result.push({ i, v });
     }
     if (version >= 6 && round === 0 && grid.every(v => v < 0)) {
@@ -162,7 +162,8 @@ function feature(bet, rng = random, version=1) {
     // Firestore cannot store an array directly inside another array.
     rounds.push({ result });
   }
-  const res = evaluate(grid, bet, version); res.win = Math.max(res.win, coins(units(bet * (version>=3?circusProfile.FEATURE_MIN:FEAT_MIN))));
+  const res = evaluate(grid, bet, version);
+  if(version<6)res.win = Math.max(res.win, coins(units(bet * (version>=3?circusProfile.FEATURE_MIN:FEAT_MIN))));
   return { sym, rounds, grid, res };
 }
 function slot(bet, peaches = 0, rng = random, bank = null, version=1, onGrid = null) {

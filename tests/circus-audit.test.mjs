@@ -46,6 +46,8 @@ test('v6 five million spins at every stake plus changing stakes and armor farmin
  for(const row of [...report.results,...JSON.parse(readFileSync('docs/circus-economy-v6-stress.json'))]){
   assert.ok(row.spins>=1000000);assert.deepEqual(row.pays,profile.PAYS_V6);assert.deepEqual(row.weights,profile.WEIGHTS_V6);
   assert.equal(row.cedarProbability,profile.CEDAR_P);
+  assert.equal(row.featureHitProbability,profile.FEATURE_HIT_V6);
+  assert.ok(row.featureResults.regular>0&&row.featureResults.super>0&&row.featureResults.fiveSmall>0);
   assert.equal(row.triggerPrizes.zeroCash,0);assert.ok(row.triggerPrizes.wheelRounds>0&&row.triggerPrizes.barRounds>0);
   const c=row.components,r=(c.paid+c.wheel-c.theft)/c.wagered;
   assert.ok(Math.abs(r-row.return)<1e-10);assert.ok(r>=.885&&r<=.915&&r<1);

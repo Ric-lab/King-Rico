@@ -99,7 +99,7 @@ function bootCircus(){
   fc._parkDismissAt ||= performance.now()+1500;
   if(performance.now()>=fc._parkDismissAt){fc._spinAfterFly=false;fc.dismissWin();fc._parkDismissAt=0;}
  }
- if(!fc.state.spinning&&!fc.state.queued){displayState=state;if(!fc._parkMeterBusy)fc._parkMeterLevel=state.spins;renderRails();}
+ if(!fc.state.spinning&&!fc.state.queued){displayState=state;if(!fc._parkMeterBusy&&fc._parkFeatureFill==null)fc._parkMeterLevel=state.spins;renderRails();}
  if(fc.cloudBusy()||fc.isCeleb()||fc.state.showWin||fc.state.homeOpen||Cloud.dailyRewardActive)return;
 
  if(state.wheel){fc.setState({auto:false});showWheel();}
@@ -108,8 +108,8 @@ function bootCircus(){
 }
 function renderRails(){const el=document.querySelector('.park-circus-rails');if(!el||!displayState)return;
  const fc=window.__fc;if(fc?._parkFeatureFill!=null){el.style.setProperty('--park-fill',fc._parkFeatureFill*10+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',fc._parkFeatureFill===0));}else if(!fc?._parkMeterBusy){const real=fc?._parkMeterLevel??displayState.spins,level=(fc?._parkShown!=null&&fc._parkShown>=real&&fc._parkShown<real+1)?fc._parkShown:real;el.style.setProperty('--park-fill',Math.min(100,level/displayState.meterSpins*100)+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',level===0));}
- el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',displayState.spins);
- el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${displayState.spins} de ${displayState.meterSpins} no Good Luck`);
+ el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',fc?._parkFeatureFill??displayState.spins);
+ el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${fc?._parkFeatureFill??displayState.spins} de ${displayState.meterSpins} no Good Luck`);
  const tickets=fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';el.querySelector('[data-tickets]').textContent=count;
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  el.querySelector('.park-pocket').setAttribute('aria-label',`${tickets} de 5 trevos de proteção`);

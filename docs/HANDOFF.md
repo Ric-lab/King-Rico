@@ -1,3 +1,44 @@
+## Good Luck: nem sempre Big Win, barra vazia e raio vertical —16/11/2026
+
+Pedido atual executado na prévia, base719d5a5 puxada antes de editar.
+- Motor v6: retirado piso20×; valor agora é exatamente o da grade.
+  FEATURE_HIT_V6=0,29 mantém média com telas cheias ocasionais e muitos
+  bônus pequenos de cinco giros. PAYS e demais chances preservados.
+- Interface: não elevar recibo para mínimo10×. Bônus abaixo20× usa contagem
+  normal/voo de moedas; hold até a coleta, sem modal Big Win ou crédito falso.
+- Tubos gastos: hold visual0 persiste no fim e na recarga; ledger10 não
+  repinta a barra. Somente próximo giro confirmado libera e recebe roxo.
+- Novo asset geométrico `goodluck-bolt-v1.svg`: raio iridescente vertical,
+  contato dispara clique e depois giro. Mantida drenagem, sem feixes laterais.
+
+Auditoria5M por aposta (20M):
+- 1: 89.990156%.
+- 10: 89.989296%.
+- 100: 89.989296%.
+- 1000: 89.989296%.
+175121/226894 bônus terminam cinco rodadas abaixo20×.
+Quatro estresses1M passaram; relatórios/hashes atualizados. V4/v5 refeitas para
+conferir caminhos históricos. Unitários de bônus pequeno e legado passaram.
+
+Navegador focado já passou: cinco giros, bônus4 moedas para aposta10, sem
+Big Win; barra continua0 em snapshots, recarga e só cresce no giro seguinte.
+Raio e tubos gastos capturados/inspecionados. Navegador final passou após o
+hold da contagem: saldo mostrado exatamente igual ao confirmado, oito moedas
+no total (quatro iniciais + quatro de bônus), sem prêmio inventado.
+Suíte npm test:53 arquivos passaram.
+
+Regras: ajustada somente v6Feature para prêmio exato; rodada antiga continua
+pelo recibo salvo. `test:rules` novamente67/80,13 falhas de expressão; não
+publicar regras nem main. Legado/deploy REST preservados. Documentação atual
+em PARQUE, DESIGN-SYSTEM, assets/machine/README e log do asset.
+
+Fechado: npm test53 arquivos, navegadores special_feedback/Good Luck e
+circus_v6 passaram; saldo mostrado confere com o confirmado. Build de produção
+gerado após a integração. Próximo passo: commit/push compartilhado e conferir
+Pages antes de entregar /Preview atualizado.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Complemento: automático também espera o trevo — 16/11/2026
 
 `cc96f86` passou no Pages (Actions43792305548) e publicou as três correções.

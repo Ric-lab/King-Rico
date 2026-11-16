@@ -56,7 +56,8 @@ acumuladas dos bônus e está incluída na auditoria de retorno de ~90%.
 Quando chega ao topo (`10`), entra diretamente nos **5 giros Good Luck**, com
 a chamada e o háptico do bônus, antes de qualquer giro base visual. O prêmio da
 grade inicial permanece no recibo e na soma final. Cada rodada automática gasta
-1/5 do líquido e aciona o clique visual/sonoro do botão, sem raios.
+1/5 do líquido enquanto um raio iridescente cai de cima e aciona o clique
+visual/sonoro do botão no contato (não são os antigos feixes laterais).
 `featureBet = floor(cycleWagerUnits / 10) / 100`; símbolos pagantes reais ficam
 travados na grade. Mantida a conclusão antecipada quando a grade já está cheia.
 
@@ -600,3 +601,27 @@ Tanto o intervalo do grátis quanto chamadas diretas de spin/doSpin do automáti
 passam pela autorização do impacto. Ao retomar a página, terminar o presente
 diário antes do voo; não iniciar por trás da raspadinha. Se o token mudar no
 caminho, abortar a apresentação sem iniciar aposta paga.
+
+## Good Luck com resultados pequenos — 16/11/2026
+
+V6 não tem mais piso artificial de20×. Paga exatamente as linhas da grade
+final; a linha mínima assegurada no quinto giro continua0,4×. Chance de travar
+um símbolo por casa aberta passa de0,18 para0,29 na v6, mantendo média auditada
+próxima90% e permitindo tanto cinco giros com prêmio baixo quanto tela cheia.
+PAYS, vilões, contribuição da roleta e barra aleatória preservados. Versões
+anteriores mantêm o piso contratado; recibos confirmados não são recalculados.
+
+Prêmios abaixo20× contam no painel da máquina e voam normalmente ao saldo, sem
+Big Win/modal de grande vitória. A interface não aplica seu antigo mínimo10×
+a recibos confirmados; soma o prêmio inicial e o bônus exatos. Mantém a rodada
+bloqueada até completar a contagem/viagem, evitando sobrepor outro giro.
+
+No fim, o líquido **fica vazio**. `_parkFeatureFill=0` segura a apresentação
+mesmo que o ledger ainda marque10 até o próximo giro. Não mudar `park.spins`
+para corrigir visual. Só `_parkChargeConfirmed` do giro seguinte libera a
+retenção e começa a dose roxa do novo ciclo. Recarregar preserva o vazio.
+
+Asset `/assets/machine/goodluck-bolt-v1.svg`: vetor iridescente com contorno
+dourado claro, caindo verticalmente sobre o spin; contato sincroniza clique e
+início do giro. A drenagem permanece650ms; sem flash de tela inteira e sem os
+feixes antigos que saíam dos tubos.

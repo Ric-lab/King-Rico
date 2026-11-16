@@ -476,3 +476,10 @@ Recorte alpha com descontaminação de borda conferido sobre fundo escuro e em
 Sem Meshy; custo monetário não exposto pela ferramenta. Publicado na prévia para
 avaliação do dono.
 
+
+### 2026-11-16 — raio vertical Good Luck v1
+
+`assets/machine/goodluck-bolt-v1.svg`,160×400 RGBA vetorial. Forma geométrica
+autoral via código, gradiente iridescente e contorno dourado claro; render80×200.
+Sem geração de imagem/3D ou chamada paga; custo de geração externo0. Inspecionado
+na tela390×844 durante a queda e com os tubos vazios após os cinco giros.

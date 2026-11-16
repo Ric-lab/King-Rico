@@ -659,3 +659,12 @@ Contadores do topo reduzidos de86×90 para68×64: asset30×30 e quantidade18px,
 margens laterais42px para ficarem próximos do prêmio. Mesma base/paleta; os
 clones carregados mantêm o arranjo. Em Good Luck, ficam apenas a drenagem dos
 tubos e o clique do botão; os raios foram removidos. Arte existente preservada.
+
+## Good Luck: raio vertical e barra gasta —16/11/2026
+
+`goodluck-bolt-v1.svg`: vetor160×400, exibido80×200. A ponta cai no centro
+geométrico do spin e o contato aciona seu clique. Gradiente iridescente com
+contorno dourado claro; sem tipografia e sem novas fontes de imagem externas.
+O efeito substitui a ausência de estímulo visual por giro; não restaura os
+feixes laterais antigos. Líquido gasto permanece invisível, inclusive brilho
+da superfície, até o próximo giro; não desenhar a barra cheia de novo.
