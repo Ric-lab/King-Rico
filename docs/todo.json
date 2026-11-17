@@ -348,7 +348,7 @@
     {
       "id": "p-tony-veu-tela-toda",
       "title": "Tony Tiger: efeito alaranjado/avermelhado na tela toda (preservando faixa de anúncio) durante as patadas",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Antigravity / Claude",
       "commit": "4bc80fa",
