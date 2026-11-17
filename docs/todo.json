@@ -338,7 +338,7 @@
     {
       "id": "p-tony-patada-som",
       "title": "Patada do Tony = um som só, contínuo (zuum que desce até o grave com impacto) e moedas saindo ao tocar CONTINUAR",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "f23d8d7",
