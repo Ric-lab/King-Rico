@@ -110,7 +110,9 @@ with sync_playwright() as p:
    page.wait_for_timeout(300)
    assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='rigging'
    page.screenshot(path='work/preview-ropes-arrival.png')
-   assert page.locator('.park-meter-goal,.park-goal-cloud').count()==0,'Good Luck tubes no longer have cloud goals'
+   assert page.locator('.park-goal-cloud').count()==0,'Old cloud goals stay removed'
+   assert page.locator('.park-meter-goal .park-goal-bolt').count()==2,'Each tube has its approved lightning emblem'
+   assert page.locator('.park-goal-bolt').evaluate_all('nodes=>nodes.every(n=>n.complete&&n.naturalWidth>0)'),'Both lightning assets loaded'
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
    page.wait_for_timeout(350);page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1

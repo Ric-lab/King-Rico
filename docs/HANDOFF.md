@@ -7,6 +7,8 @@ iluminação existentes. Sprites novos em WebP separados; atlas antigo preservad
 Sons, energia Good Luck, pagamentos, Firestore e main não alterados.
 Teste focado: reel-tape passou; special_feedback_browser (clover) passou,
 com inspeção da captura móvel 390×844. Build de prévia concluído.
+Teste preview_motion atualizado: antigas nuvens ausentes; dois raios carregados
+no topo dos tubos, conforme o novo pedido aprovado.
 Próximo passo: dono validar em /Preview. Não promover v6 ao oficial enquanto
 persistir o bloqueio de regras registrado abaixo.
 Prévia: https://ric-lab.github.io/King-Rico/Preview
