@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-17",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "t-trevo-e-raio-arco-iris-d",
+      "title": "Trevo e raio arco-íris dourados aprovados",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": ""
+    },
     {
       "id": "p-goodluck-bolt-sprites",
       "title": "Good Luck: raio em 3 sprites 9:16 com núcleo branco e cor do líquido",

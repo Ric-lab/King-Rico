@@ -309,3 +309,11 @@ encenação de grande vitória garantida. Não aumentar o prêmio visualmente.
 A energia é o asset `goodluck-bolt-v1.svg`, com queda vertical e contato no
 spin; preservar a drenagem, sem feixes saindo dos tubos ou flash de viewport.
 Depois de gastar, os tubos ficam vazios até o próximo giro confirmado.
+
+### Arte aprovada — 17/11/2026
+Trevo: `assets/symbols/clover-rainbow-gold-v1.webp`, gradiente contínuo
+arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
+`assets/machine/meter-bolt-rainbow-v1.webp`, silhueta larga aprovada,
+mesmo material. Não confundir com os sprites animados do raio Good Luck,
+que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
+a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.

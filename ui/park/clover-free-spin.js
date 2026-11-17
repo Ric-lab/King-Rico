@@ -24,7 +24,7 @@ export function installCloverFreeSpin(fc){
   const line=fc._cloudSpin?.outcome?.cedarLines?.[0],cell=LINES[line]?.[1];
   const source=(document.querySelector('[data-sym="'+cell+'"]')||document.querySelector('.park-pocket .park-ticket-wallet-art'))?.getBoundingClientRect();
   const button=document.querySelector('[data-spin-btn]'),target=button?.getBoundingClientRect();
-  const el=document.createElement('img');el.className='park-free-clover-flight';el.src='/assets/symbols/sym-clover.png';el.alt='';document.body.append(el);
+  const el=document.createElement('img');el.className='park-free-clover-flight';el.src='/assets/symbols/clover-rainbow-gold-v1.webp';el.alt='';document.body.append(el);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?350:1050;
   let ended=false,animation,safety,removeTimer;
   cleanup=()=>{ended=true;clearTimeout(safety);clearTimeout(removeTimer);try{animation?.cancel();}catch{}el.remove();fc._parkFreeCloverFlying=false;};

@@ -1,3 +1,16 @@
+## Trevo e raio arco-íris aprovados — 17/11/2026 (Codex)
+
+Artes aprovadas pelo dono aplicadas somente à prévia: trevo dourado/arco-íris
+nos rolos parados e em movimento, tabela POWER-UPS, contador, defesa e voo do
+giro grátis. Dois raios dourados/arco-íris no topo das barras, com pulso e
+iluminação existentes. Sprites novos em WebP separados; atlas antigo preservado.
+Sons, energia Good Luck, pagamentos, Firestore e main não alterados.
+Teste focado: reel-tape passou; special_feedback_browser (clover) passou,
+com inspeção da captura móvel 390×844. Build de prévia concluído.
+Próximo passo: dono validar em /Preview. Não promover v6 ao oficial enquanto
+persistir o bloqueio de regras registrado abaixo.
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Good Luck: raio em 3 sprites 9:16 — 16/11/2026 (Antigravity)
 
 Pedido na prévia (`codex/penalty-clown-preview`), sem mexer em tempestade,

@@ -500,3 +500,11 @@ ferramenta não informado. Em `ui/park/goodluck-energy.js` e `.park-gl-bolt`
 largo na cor do líquido e sobrepondo o núcleo branco alinhado por cima.
 Inspecionado em `390×844` (`work/special-goodluck-bolt.png` e `click`).
 
+
+### Arte aprovada — 17/11/2026
+Trevo: `assets/symbols/clover-rainbow-gold-v1.webp`, gradiente contínuo
+arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
+`assets/machine/meter-bolt-rainbow-v1.webp`, silhueta larga aprovada,
+mesmo material. Não confundir com os sprites animados do raio Good Luck,
+que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
+a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.

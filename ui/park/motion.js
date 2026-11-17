@@ -158,7 +158,7 @@ function flyTickets(fc,refresh,done=()=>{}){
   const flights=award.cells.slice(0,award.count||3).map((cell,i)=>{
    const source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/sym-clover.png';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
+   const node=document.createElement('img');node.src='/assets/symbols/clover-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
    const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
    const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
    const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};

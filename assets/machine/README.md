@@ -668,3 +668,11 @@ contorno dourado claro; sem tipografia e sem novas fontes de imagem externas.
 O efeito substitui a ausência de estímulo visual por giro; não restaura os
 feixes laterais antigos. Líquido gasto permanece invisível, inclusive brilho
 da superfície, até o próximo giro; não desenhar a barra cheia de novo.
+
+### Arte aprovada — 17/11/2026
+Trevo: `assets/symbols/clover-rainbow-gold-v1.webp`, gradiente contínuo
+arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
+`assets/machine/meter-bolt-rainbow-v1.webp`, silhueta larga aprovada,
+mesmo material. Não confundir com os sprites animados do raio Good Luck,
+que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
+a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
