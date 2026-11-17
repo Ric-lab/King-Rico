@@ -49,12 +49,11 @@ export function installCircusSfx(fc){
  // Raio do Good Luck (feliz, Claude): subida mágica de sininhos durante a queda → no impacto, "plim!" brilhante
  // em acorde maior + estalinho curto. Tudo agendado a partir do MESMO instante do impacto (T = agora + delay).
  // Raio do Good Luck — FELIZ (Claude): sininhos subindo na queda, "plim-zap" brilhante cravado no impacto e acorde maior cintilante. Sem trovão.
- fc.sfxLightning=play(1.4,(delaySec=.64)=>{const d=Math.max(.12,Number(delaySec)||.64),pre=Math.max(0,d-.32);
-  [1047,1319,1568,2093].forEach((f,i)=>fc.bell(f,.18,(.03+i*.008)*K,pre+i*.075));
-  hiss(5200,3,.03,Math.min(.3,d),Math.max(0,d-.3),'bandpass',9000);
-  hiss(7000,1.2,.14,.05,d,'bandpass');
-  sweep(700,2100,.09,'triangle',.12,d);
-  [1047,1319,1568,2093,2637].forEach((f,i)=>fc.bell(f,.7,(.07-i*.008)*K,d+.01+i*.035));
-  fc.pluck(523,.09*K,.35,d);
+ // Raio do Good Luck FELIZ: sininhos subindo na queda, "zap" brilhante cravado no impacto (relógio do áudio) e acorde maior cintilante.
+ fc.sfxLightning=play(1.5,(delaySec=.64)=>{const d=Math.max(.12,Number(delaySec)||.64);
+  [784,880,988,1175,1319,1568].forEach((f,i)=>B(f,.18,.035+i*.006,d*(.12+i*.14)));
+  hiss(5200,3,.09,.05,d-.005,'bandpass');sweep(2400,4200,.08,'triangle',.12,d);
+  [1047,1319,1568,2093].forEach((f,i)=>B(f,.9,.1-i*.012,d+i*.035));
+  [2637,3136,3520].forEach((f,i)=>B(f,.35,.03,d+.18+i*.08));
  });
 }
