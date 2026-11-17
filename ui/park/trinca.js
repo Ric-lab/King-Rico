@@ -2,19 +2,16 @@
 // O resultado (ganhar/perder) é decidido ANTES de jogar; a barra é conduzida para terminar no limite (suspense).
 // Ganhar = 1 cedro (máx. 3). Com 3 cheios, o cedro vira 2,5× a aposta do giro em moedas.
 const PIECES=[
- {id:'circo',src:'/assets/symbols/sym-tent-lossless.webp',w:1},
- {id:'capa',src:'/assets/symbols/sym-curtain.png',w:1},
- {id:'moeda',src:'/assets/symbols/sym-coin.webp',w:1},
- {id:'coroa',src:'/assets/symbols/sym-crown-lossless.webp',w:1},
+ {id:'roleta',src:'/assets/wheel/wheel-symbol-v1.webp',w:1},
  {id:'diamante',src:'/assets/symbols/sym-gem.png',w:1},
- {id:'roleta',src:'/assets/wheel/wheel-symbol-v1.webp',w:.6},
- {id:'king',src:'/assets/symbols/sym-wild-s.webp',w:.6},
- {id:'tiger',src:'/assets/tony/head.webp',w:.45}];
-const TIGER=7,N=8,KEY='kingRico.preview.cedros',MAX=3;
+ {id:'circo',src:'/assets/symbols/sym-tent-lossless.webp',w:1},
+ {id:'moeda',src:'/assets/symbols/sym-coin.webp',w:1},
+ {id:'tiger',src:'/assets/tony/head.webp',w:.75}];
+const TIGER=4,N=8,KEY='kingRico.preview.cedros',MAX=3;
 const A=p=>p; // o build já prefixa '/assets/' para o GitHub Pages
 export const cedros={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));mountCedroDots();}};
 export function mountCedroDots(){let el=document.getElementById('kr-cedro-dots');const stage=document.querySelector('.park-circus-stage');if(!stage)return;
- if(!el){el=document.createElement('div');el.id='kr-cedro-dots';el.setAttribute('aria-label','Cedros guardados');el.style.cssText='position:absolute;z-index:30;left:var(--kr-cedro-x,14px);top:var(--kr-cedro-y,150px);display:flex;flex-direction:column;gap:4px;pointer-events:none';stage.append(el);}
+ if(!el){el=document.createElement('div');el.id='kr-cedro-dots';el.setAttribute('aria-label','Cedros guardados');el.style.cssText='position:absolute;z-index:30;left:227.8px;top:211px;transform:translateX(-50%);display:flex;gap:6px;padding:2px 6px;border-radius:8px;background:rgba(40,10,60,.55);pointer-events:none';stage.append(el);}
  const n=cedros.get();el.innerHTML=Array.from({length:MAX},(_,i)=>`<i style="width:9px;height:9px;border-radius:50%;background:${i<MAX-n?'rgba(40,10,60,.35)':'radial-gradient(circle at 35% 30%,#d8ffb0,#3fcf5a 60%,#1c7a32)'};box-shadow:0 0 0 1.5px rgba(255,255,255,.7)${i>=MAX-n?',0 0 6px #6cf096':''}"></i>`).join('');}
 
 export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
@@ -28,7 +25,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const fill=()=>{do{for(let r=0;r<N;r++)for(let c=0;c<N;c++){do g[r][c]=pick();while((c>1&&g[r][c-1]===g[r][c]&&g[r][c-2]===g[r][c])||(r>1&&g[r-1][c]===g[r][c]&&g[r-2][c]===g[r][c]));}}while(!hasMove());};fill();
  const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');
  o.innerHTML=`<style>
- #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(120% 90% at 50% 20%,#7a2bb8,#2a0848 70%);font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
+ #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,rgba(40,10,70,.35),rgba(20,4,40,.7)),radial-gradient(120% 90% at 50% 20%,#7a2bb8,#2a0848 70%);backdrop-filter:blur(6px);font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
  #kr-controller-game .tr-top{width:min(92vw,420px);display:flex;align-items:center;gap:12px}
  #kr-controller-game .tr-bar{flex:1;height:26px;border-radius:13px;background:rgba(10,2,24,.55);box-shadow:inset 0 2px 5px #0008,0 0 0 2.5px #f0b41f;overflow:hidden;position:relative}
  #kr-controller-game .tr-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:13px;background:linear-gradient(90deg,#8f6bff,#00cfff,#00f27b,#ffda24,#ff9400);box-shadow:inset 0 3px 0 rgba(255,255,255,.45);transition:width .45s cubic-bezier(.3,1.4,.5,1),filter .2s}
@@ -36,9 +33,13 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  #kr-controller-game .tr-goal{width:34px;height:34px;flex:0 0 auto;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 2px 2px #0007)}
  #kr-controller-game .tr-moves{min-width:62px;height:44px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff6df;box-shadow:0 3px 0 #b88a2e,0 0 0 2.5px #f0b41f;color:#6b2e05;font-weight:800;line-height:1}
  #kr-controller-game .tr-moves b{font-size:24px}#kr-controller-game .tr-moves small{font-size:11px;letter-spacing:1px}
- #kr-controller-game .tr-board{position:relative;width:min(92vw,420px);aspect-ratio:1;border-radius:18px;background:linear-gradient(180deg,#fffaf0,#f1e4c6);box-shadow:0 0 0 4px #f0b41f,0 0 0 8px #6b2e05,0 16px 30px #0008}
- #kr-controller-game .tr-p{position:absolute;width:12.5%;height:12.5%;padding:5px;box-sizing:border-box;transition:transform .2s ease,opacity .2s}
- #kr-controller-game .tr-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 3px 2px #4a1e0055)}
+ #kr-controller-game .tr-board{position:relative;width:min(94vw,430px);aspect-ratio:1;border-radius:16px;padding:0;background:rgba(18,4,40,.55);box-shadow:0 0 0 3px rgba(255,236,170,.9),0 0 0 6px #b8780c,0 14px 30px #0009;overflow:hidden}
+ #kr-controller-game .tr-cell{position:absolute;width:12.5%;height:12.5%;box-sizing:border-box;padding:2px}
+ #kr-controller-game .tr-cell b{display:block;width:100%;height:100%;border-radius:9px;background:rgba(150,110,220,.28)}
+ #kr-controller-game .tr-cell.alt b{background:rgba(150,110,220,.16)}
+ #kr-controller-game .tr-p{position:absolute;width:12.5%;height:12.5%;padding:3px;box-sizing:border-box;transition:transform .22s cubic-bezier(.3,1.25,.5,1),opacity .2s;z-index:1}
+ #kr-controller-game .tr-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 3px 2px #0007)}
+ #kr-controller-game .tr-p.is-sel i{transform:scale(1.12);filter:drop-shadow(0 0 6px #fff6c0) drop-shadow(0 3px 2px #0007)}
  #kr-controller-game .tr-p.is-pop i{animation:trPop .22s ease-in forwards}
  @keyframes trPop{50%{transform:scale(1.3)}to{transform:scale(0);opacity:0}}
  #kr-controller-game .tr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(20,4,40,.82);animation:trIn .3s ease-out}
@@ -51,6 +52,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const el=Array.from({length:N},()=>Array(N).fill(null));
  const place=(d,r,c)=>{d.style.transform=`translate(${c*100}%,${r*100}%)`;};
  const make=(r,c,from)=>{const d=document.createElement('div');d.className='tr-p';d.innerHTML=`<i style="background-image:url(${A(PIECES[g[r][c]].src)})"></i>`;place(d,from??r,c);board.append(d);el[r][c]=d;if(from!=null)requestAnimationFrame(()=>requestAnimationFrame(()=>place(d,r,c)));return d;};
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){const k=document.createElement('div');k.className='tr-cell'+((r+c)%2?' alt':'');k.innerHTML='<b></b>';k.style.transform=`translate(${c*100}%,${r*100}%)`;board.append(k);}
  for(let r=0;r<N;r++)for(let c=0;c<N;c++)make(r,c);
  let used=0,bar=0,busy=false,over=false;const wait=ms=>new Promise(r=>setTimeout(r,ms));
  const setBar=v=>{bar=Math.max(0,Math.min(100,v));fillEl.style.width=bar+'%';};
@@ -78,8 +80,8 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
   if(!hasMove()){fill();for(let a=0;a<N;a++)for(let b=0;b<N;b++){el[a][b]?.remove();make(a,b,-N);}await wait(300);}
   busy=false;if(bar>=100)return finish(true);if(used>=moves)return finish(false);};
  let start=null;
- board.addEventListener('pointerdown',e=>{if(busy||over)return;const b=board.getBoundingClientRect(),c=Math.floor((e.clientX-b.left)/(b.width/N)),r=Math.floor((e.clientY-b.top)/(b.height/N));if(r<0||c<0||r>=N||c>=N)return;start={x:e.clientX,y:e.clientY,r,c};try{board.setPointerCapture(e.pointerId);}catch{}});
- board.addEventListener('pointermove',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.hypot(dx,dy)<16)return;const s=start;start=null;Math.abs(dx)>Math.abs(dy)?trySwap(s.r,s.c,s.r,s.c+Math.sign(dx)):trySwap(s.r,s.c,s.r+Math.sign(dy),s.c);});
- board.addEventListener('pointerup',()=>start=null);board.addEventListener('pointercancel',()=>start=null);
+ board.addEventListener('pointerdown',e=>{if(busy||over)return;const b=board.getBoundingClientRect(),c=Math.floor((e.clientX-b.left)/(b.width/N)),r=Math.floor((e.clientY-b.top)/(b.height/N));if(r<0||c<0||r>=N||c>=N)return;start={x:e.clientX,y:e.clientY,r,c};el[r][c]?.classList.add('is-sel');try{board.setPointerCapture(e.pointerId);}catch{}});
+ board.addEventListener('pointermove',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.hypot(dx,dy)<16)return;const s=start;start=null;el[s.r][s.c]?.classList.remove('is-sel');Math.abs(dx)>Math.abs(dy)?trySwap(s.r,s.c,s.r,s.c+Math.sign(dx)):trySwap(s.r,s.c,s.r+Math.sign(dy),s.c);});
+ const clr=()=>{if(start)el[start.r][start.c]?.classList.remove('is-sel');start=null;};board.addEventListener('pointerup',clr);board.addEventListener('pointercancel',clr);
  try{fc.sfxWin?.(false);}catch{}vib([40,40,80]);
 });}
