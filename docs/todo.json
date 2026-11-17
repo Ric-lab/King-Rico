@@ -193,7 +193,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia."
+      "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia. Atualização colocado apenas na roleta"
     },
     {
       "id": "t-controle-penalty",
