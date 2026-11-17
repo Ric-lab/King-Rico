@@ -4,7 +4,7 @@
 const PIECES=[
  {id:'roleta',src:'/assets/wheel/wheel-symbol-v1.webp',w:1},
  {id:'diamante',src:'/assets/symbols/sym-gem.png',w:1},
- {id:'trevo',src:'/assets/symbols/sym-clover.png',w:1},
+ {id:'trevo',src:'/assets/symbols/clover-green-bonus-v1.webp',w:1},
  {id:'coroa',src:'/assets/symbols/sym-crown-lossless.webp',w:1},
  {id:'tiger',src:'/assets/tony/head.webp',w:.7}];
 const TIGER=4,N=7,KEY='kingRico.preview.cedros',MAX=3;
@@ -27,29 +27,30 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const fill=()=>{do{for(let r=0;r<N;r++)for(let c=0;c<N;c++){do g[r][c]=pick();while((c>1&&g[r][c-1]===g[r][c]&&g[r][c-2]===g[r][c])||(r>1&&g[r-1][c]===g[r][c]&&g[r-2][c]===g[r][c]));}}while(!hasMove());};fill();
  const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');
  o.innerHTML=`<style>
- #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,rgba(40,10,70,.35),rgba(20,4,40,.7)),radial-gradient(120% 90% at 50% 20%,#7a2bb8,#2a0848 70%);backdrop-filter:blur(6px);font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
- #kr-controller-game .tr-top{width:min(92vw,420px);display:flex;align-items:center;gap:12px}
- #kr-controller-game .tr-bar{flex:1;height:26px;border-radius:13px;background:rgba(10,2,24,.55);box-shadow:inset 0 2px 5px #0008,0 0 0 2.5px #f0b41f;overflow:hidden;position:relative}
- #kr-controller-game .tr-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:13px;background:linear-gradient(90deg,#8f6bff,#00cfff,#00f27b,#ffda24,#ff9400);box-shadow:inset 0 3px 0 rgba(255,255,255,.45);transition:width .45s cubic-bezier(.3,1.4,.5,1),filter .2s}
- #kr-controller-game .tr-fill.is-hurt{filter:brightness(.7) sepia(1) hue-rotate(-40deg) saturate(4)}
- #kr-controller-game .tr-goal{width:34px;height:34px;flex:0 0 auto;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 2px 2px #0007)}
- #kr-controller-game .tr-moves{min-width:62px;height:44px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff6df;box-shadow:0 3px 0 #b88a2e,0 0 0 2.5px #f0b41f;color:#6b2e05;font-weight:800;line-height:1}
- #kr-controller-game .tr-moves b{font-size:24px}#kr-controller-game .tr-moves small{font-size:11px;letter-spacing:1px}
- #kr-controller-game .tr-board{position:relative;width:min(96vw,460px);aspect-ratio:1;border-radius:16px;padding:0;background:rgba(18,4,40,.55);box-shadow:0 0 0 3px rgba(255,236,170,.9),0 0 0 6px #b8780c,0 14px 30px #0009;overflow:hidden}
+ #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px 0;box-sizing:border-box;background:#52c9ef url(${A('/assets/scenes/circus-garden-lawn-v1.webp')}) center 60%/cover no-repeat;font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
+ #kr-controller-game::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 40%,rgba(30,80,40,.25));pointer-events:none}
+ #kr-controller-game .tr-top{position:relative;width:min(96vw,460px);box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:22px;background:linear-gradient(180deg,#fffdf6,#f6e7c4);box-shadow:0 0 0 3px #f0b41f,0 0 0 6px #b86e0a,0 8px 16px rgba(60,20,0,.3)}
+ #kr-controller-game .tr-moves{flex:0 0 auto;width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 30%,#8a4fd8,#5a1f9a 70%);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 0 0 3px #fff3c4,0 0 0 5px #d18a0c;color:#fff;font-weight:800;line-height:1}
+ #kr-controller-game .tr-moves b{font-size:34px;text-shadow:0 2px 0 rgba(0,0,0,.3)}#kr-controller-game .tr-moves small{font-size:10px;letter-spacing:1px;opacity:.9}
+ #kr-controller-game .tr-bar{flex:1;height:30px;border-radius:15px;background:#5a2a12;box-shadow:inset 0 3px 6px rgba(0,0,0,.5),0 0 0 2px #fff3c4;overflow:hidden;position:relative}
+ #kr-controller-game .tr-fill{position:absolute;inset:3px auto 3px 3px;width:0;max-width:calc(100% - 6px);border-radius:12px;background:linear-gradient(180deg,#9dff7a,#2ec962 55%,#1f9a48);box-shadow:inset 0 4px 0 rgba(255,255,255,.5);transition:width .45s cubic-bezier(.3,1.4,.5,1),filter .2s}
+ #kr-controller-game .tr-fill.is-hurt{filter:hue-rotate(-110deg) saturate(2.2)}
+ #kr-controller-game .tr-goal{flex:0 0 auto;width:60px;height:60px;margin-left:-26px;position:relative;z-index:1;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 3px 3px rgba(60,20,0,.45))}
+ #kr-controller-game .tr-board{position:relative;width:min(96vw,460px);aspect-ratio:1;border-radius:20px;padding:0;background:rgba(40,120,200,.38);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 0 0 4px #fff,0 0 0 7px #f0b41f,0 14px 26px rgba(20,40,80,.4);overflow:hidden}
  #kr-controller-game .tr-cell{position:absolute;width:14.2857%;height:14.2857%;box-sizing:border-box;padding:2px}
- #kr-controller-game .tr-cell b{display:block;width:100%;height:100%;border-radius:9px;background:rgba(150,110,220,.28)}
- #kr-controller-game .tr-cell.alt b{background:rgba(150,110,220,.16)}
- #kr-controller-game .tr-p{position:absolute;width:14.2857%;height:14.2857%;padding:1px;box-sizing:border-box;transition:transform .22s cubic-bezier(.3,1.25,.5,1),opacity .2s;z-index:1}
- #kr-controller-game .tr-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 3px 2px #0007)}
- #kr-controller-game .tr-p i.is-tiger{background-size:86%;border-radius:50%;background-color:#ff5a3c;background-image:var(--tiger),radial-gradient(circle at 35% 30%,#ffb08a,#ff5a3c 55%,#b8241a)!important;background-image:var(--tiger)!important;box-shadow:inset 0 -5px 0 #0003,0 0 0 3px #fff8;background-blend-mode:normal}
- #kr-controller-game .tr-p.is-sel i{transform:scale(1.12);filter:drop-shadow(0 0 6px #fff6c0) drop-shadow(0 3px 2px #0007)}
+ #kr-controller-game .tr-cell b{display:block;width:100%;height:100%;border-radius:10px;background:rgba(255,255,255,.55)}
+ #kr-controller-game .tr-cell.alt b{background:rgba(255,255,255,.35)}
+ #kr-controller-game .tr-p{position:absolute;width:14.2857%;height:14.2857%;padding:2px;box-sizing:border-box;transition:transform .22s cubic-bezier(.3,1.25,.5,1),opacity .2s;z-index:1}
+ #kr-controller-game .tr-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 3px 2px rgba(20,30,60,.45))}
+ #kr-controller-game .tr-p i.is-tiger{width:76%;height:76%;margin:12%;border-radius:50%;background:var(--tiger) center/92% no-repeat,radial-gradient(circle at 35% 30%,#ff9a7a,#ff4a30 55%,#c0241a);box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),0 0 0 2.5px #fff}
+ #kr-controller-game .tr-p.is-sel i{transform:scale(1.12);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 3px 2px rgba(20,30,60,.45))}
  #kr-controller-game .tr-p.is-pop i{animation:trPop .22s ease-in forwards}
  @keyframes trPop{50%{transform:scale(1.3)}to{transform:scale(0);opacity:0}}
- #kr-controller-game .tr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(20,4,40,.82);animation:trIn .3s ease-out}
+ #kr-controller-game .tr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(255,252,240,.9);animation:trIn .3s ease-out}
  @keyframes trIn{from{opacity:0;transform:scale(.9)}}
- #kr-controller-game .tr-end b{font-family:'Rammetto One','Baloo 2',sans-serif;font-size:34px;color:#ffd257;text-shadow:0 3px 0 #6b2e05}
+ #kr-controller-game .tr-end b{font-family:'Rammetto One','Baloo 2',sans-serif;font-size:34px;color:#ffb21a;text-shadow:0 3px 0 #8a4a05}
  #kr-controller-game .tr-end button{padding:14px 56px;border:0;border-radius:999px;font:800 26px/1 'Baloo 2',sans-serif;color:#fff;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36;cursor:pointer}
- </style><div class="tr-top"><div class="tr-goal"></div><div class="tr-bar"><div class="tr-fill"></div></div><div class="tr-moves"><b>${moves}</b><small>JOGADAS</small></div></div><div class="tr-board"></div>`;
+ </style><div class="tr-top"><div class="tr-moves"><b>${moves}</b><small>JOGADAS</small></div><div class="tr-bar"><div class="tr-fill"></div></div><div class="tr-goal"></div></div><div class="tr-board"></div>`;
  document.body.append(o);
  const board=o.querySelector('.tr-board'),fillEl=o.querySelector('.tr-fill'),movesEl=o.querySelector('.tr-moves b');
  const el=Array.from({length:N},()=>Array(N).fill(null));
