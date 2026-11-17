@@ -448,7 +448,7 @@
     {
       "id": "t-meter-cor",
       "title": "Barra lateral: cor do giro não fica armazenada (após mudanças da v6)",
-      "status": "preview",
+      "status": "done",
       "agent": "Claude",
       "notes": "Causa: véu escuro dos tubos (.park-meter-dimmer, 76%) cobria a tinta depois que a luz passava. Véu baixou para 30% e a tinta ficou mais viva.",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?v=9"
