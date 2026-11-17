@@ -508,7 +508,7 @@ class Component extends DCLogic {
     this._reelSwipe = { down: e => { const r = document.querySelector('.park-reels'); if (!r || e.target.closest('button,a,[role=button],[data-spin-btn],[data-overlay],.kr-menu,[role=dialog]')) return; const b = r.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) return; this._swipe = { y: e.clientY, fired: false }; },
       move: e => { const s = this._swipe; if (!s || s.fired || !e.buttons && e.pointerType === 'mouse' || Math.abs(e.clientY - s.y) < 10) return; s.fired = true; if (this.state.menu || this.state.pays) return; this.spin(); },
       up: () => { this._swipe = null; } };
-    window.addEventListener('pointerdown', this._reelSwipe.down, { passive: true }); window.addEventListener('pointermove', this._reelSwipe.move, { passive: true }); window.addEventListener('pointerup', this._reelSwipe.up); window.addEventListener('pointercancel', this._reelSwipe.up);
+    /* swipe-para-girar desligado (dono, 17/11): o toque nos rolos fica para usar o cedro */
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
       this._cloudDeferred = p;

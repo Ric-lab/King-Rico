@@ -1,11 +1,8 @@
-// Controle: 3 em linha abre o jogo (por enquanto o antigo Fortune Penalty).
-function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;try{fc.sfxWin?.(false);navigator.vibrate?.([40,40,80]);}catch{}
- const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');o.style.cssText='position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(12,2,24,.8)';
- const go=location.pathname.startsWith('/King-Rico/')?'/King-Rico/penalty/':'/penalty';
- o.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 30px;border-radius:26px;background:linear-gradient(180deg,#7a2bb8,#3a0d62);box-shadow:0 0 0 4px #f0b41f,0 0 0 8px #6b2e05,0 20px 40px #0009"><img src="/assets/machine/controller-symbol-v1.webp" alt="" style="width:140px;height:140px;object-fit:contain"><a href="'+go+'" style="padding:14px 54px;border-radius:999px;font:800 26px/1 Baloo\\ 2,system-ui,sans-serif;color:#fff;text-decoration:none;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36">JOGAR</a><button type="button" aria-label="Fechar" style="border:0;background:none;color:#e8d4ff;font:800 18px/1 inherit;cursor:pointer">agora não</button></div>';
- o.querySelector('button').onclick=()=>o.remove();document.body.append(o);}
+// Controle: 3 em linha abre a Trinca (minijogo). Ganhar = 1 cedro (máx. 3); cheio = 2,5× a aposta.
+function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;import('./trinca.js').then(m=>m.openTrinca(fc,{bet:fc.state?.bet??fc._cloudSpin?.bet??1})).catch(()=>{});}
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+setTimeout(()=>import('./trinca.js').then(m=>m.mountCedroDots()).catch(()=>{}),1200);
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
 export function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
 // Cosmetic sub-level only: repeated pours approach the next real level smoothly.
