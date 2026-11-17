@@ -208,7 +208,7 @@
     {
       "id": "t-raspadinha-rapida",
       "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Codex",
       "commit": "",
