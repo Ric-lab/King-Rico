@@ -368,7 +368,7 @@
     {
       "id": "p-roleta-sfx-voo",
       "title": "Roleta: tique original em arquivo WAV, sfx na parada e na ficha batendo no prêmio, e moedas voando uma única vez",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "6e00ec6",
