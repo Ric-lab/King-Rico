@@ -2,7 +2,14 @@
 
 ## Ambiente local
 
-Raspadinha e big win: com Auth/Firestore/Hosting emulados em execução,
+Circus v6 oficial: `npm run test:integration` executa as 81 verificações das
+regras e `tests/circus_live_browser.py`, usando Auth/Firestore/Hosting emulados,
+cliente nativo e conta fictícia Google (sem carteira da prévia). O teste abre o
+menu, gira, recarrega e confere saldo/sessão, ausência de presets e assets.
+`npm run build:production` remove fisicamente o seletor do menu; a prévia o
+injeta somente pelo build separado. Gerar produção depois da integração.
+
+Registro anterior (parque arquivado), raspadinha e big win: com emuladores,
 `python3 tests/prize_release_browser.py` confere recebimento diário único,
 giro real pela carteira/regras emuladas, piloto, saldo e recarga. Esse teste
 recusa configuração de produção; usa sorteio determinístico apenas na conta

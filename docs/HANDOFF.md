@@ -1,3 +1,35 @@
+## Publicação oficial autorizada — 17/11/2026 (Codex)
+
+Candidato baseado na prévia `dddc82b` inteira e nos três commits exclusivos
+da main incorporados por merge sem regressão de código, preservando os assets,
+sons, economia v6, personagens, Good Luck, roleta, trevo e raios aprovados.
+Pedido do dono: levar ao oficial e retirar ferramentas de teste.
+
+- Build de produção remove fisicamente o seletor de resultados do menu.
+  Não carrega carteira fictícia, saldo local ou presets; config é king-rico.
+  Acionador legado testFill removido. A prévia mantém seu seletor exclusivo.
+- Bloqueio Firestore resolvido: as mesmas verificações atômicas ficam divididas
+  entre carteira, estado e recibo, dentro do limite por avaliação. Histórico
+  v1–v5 preservado; v6 valida avulsos, substituição da cabeça na defesa,
+  prêmio exato, bônus e token de giro grátis. Ledgers conferidos na criação
+  imutável do recibo; continuam obrigatórios no mesmo batch.
+- Corrigida inicialização do ledger v5 quando ainda não existia. Nenhuma mudança
+  em chances, PAYS, RNG, banco, roleta ou pagamentos do motor.
+- Regras: 81/81, incluindo legado, falsificações e grátis concorrente/replay.
+  Navegador real emulado: giro, ausência de presets, Google persistente,
+  saldo/roletas após refresh, assets carregados, nenhum erro JS/404.
+- `npm test`: 53/53 arquivos também na repetição final. Build de produção
+  gerado após integração; pacote inspecionado sem seletor, testFill ou wallet
+  fictícia. Giro grátis premiado adicional passou com saldo zero e dois aparelhos.
+  O workflow de main deve confirmar a entrega.
+- `npm run test:integration` agora usa circus_live_browser.py; o navegador
+  antigo do parque permanece guardado, porque as atrações estão arquivadas.
+
+Próximo passo: acompanhar Publicar King Rico no Firebase do commit desta
+entrega e confirmar regras + Hosting. Não confundir commit com deploy concluído.
+Oficial: https://king-rico.web.app
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Trevo e raio arco-íris aprovados — 17/11/2026 (Codex)
 
 Artes aprovadas pelo dono aplicadas somente à prévia: trevo dourado/arco-íris
@@ -9,8 +41,8 @@ Teste focado: reel-tape passou; special_feedback_browser (clover) passou,
 com inspeção da captura móvel 390×844. Build de prévia concluído.
 Teste preview_motion atualizado: antigas nuvens ausentes; dois raios carregados
 no topo dos tubos, conforme o novo pedido aprovado.
-Próximo passo: dono validar em /Preview. Não promover v6 ao oficial enquanto
-persistir o bloqueio de regras registrado abaixo.
+Registro da etapa anterior: arte validada; bloqueio de regras resolvido na
+entrega de 17/11 acima.
 Prévia: https://ric-lab.github.io/King-Rico/Preview
 
 ## Good Luck: raio em 3 sprites 9:16 — 16/11/2026 (Antigravity)
@@ -687,6 +719,31 @@ atrase. Não houve alteração de timbre. Teste unitário do som da roleta ganho
 - Spin: tirado o sfxWhoosh do doSpin; o botão de spin agora soa igual ao turbo (só o clique) + chiado dos rolos.
 - Volume equalizado por medição offline (RMS ≈ 0,04 = vitória comum). Ingresso estava 2,3× mais alto: picos 0,48/0,30/0,055 → 0,21/0,13/0,024.
 - Próximo passo: dono ouvir na prévia; publicar na main só com aprovação.
+
+## Regra permanente do dono: equipe com conhecimento compartilhado
+
+- Claude, Gemini/Antigravity e Codex têm a mesma hierarquia, autonomia e responsabilidade; o dono decide a direção/aprovação. Nenhum agente é chefe dos outros.
+- AGENTS.md e a skill 00-sempre agora obrigam a consultar o fluxo da equipe e o trabalho dos colegas. `docs/FLUXO-CLAUDE-CODEX.md` detalha o dever RECÍPROCO de compartilhar código, assets, decisões, descobertas e ferramentas no GitHub/documentos, coordenar tarefas sobrepostas e preservar mudanças alheias.
+- Não basta prometer na conversa nem deixar algo na própria VM. Cada agente deve consumir e produzir o conhecimento compartilhado, enviar as fontes e deixar o próximo passo exato no HANDOFF. Não presumir comunicação direta ou leitura automática por outro agente.
+- Regra sincronizada em main e na branch de prévia com checkpoints somente de documentação `[skip ci]`. Nenhum build, teste de jogo ou deploy é necessário para esta alteração. Próximo passo: todos os agentes aplicarem o acordo na próxima tarefa; prévia padrão permanece GitHub Pages.
+
+## Prévia padrão fixada no GitHub Pages — decisão do dono
+
+- Link de teste SEMPRE: **https://ric-lab.github.io/King-Rico/circus/**. Jogo normal com `?demo=off`; exemplos engatilhados com `?demo=tony/tucker/ray/bigwin/spacewin`. Oficial continua https://king-rico.web.app. Não substituir o link de teste por Firebase quando o Pages falhar.
+- Pages está configurado e já publicou de verdade: workflow 43121737708, commit 32086d4, build/deploy e cinco HEAD aprovados. O Antigravity destravou a configuração Pages e a branch no ambiente; o bloqueio HTTP 403 anterior está resolvido.
+- Último commit dd789c1 não chegou ao host: workflow 43123394485 reprovou preview_motion/circus_columns/circus_payout porque o novo DEFAULT_DEMO=tucker interferia nos cenários naturais. Corrigidos somente os URLs desses testes e do smoke do subdiretório para `?demo=off`; demonstração padrão do dono preservada.
+- README, guia de prévia, fluxo entre agentes e skills apontam ao Pages. Infra Pages e política também sincronizadas à main sem levar mudanças visuais/áudio ainda em avaliação ao oficial; checkpoint de main usa `[skip ci]`.
+- Próximo passo: conferir o workflow Pages desta correção, entregar o link confirmado e manter essa política em toda próxima mudança. Não anunciar uma revisão cujo workflow falhou.
+
+## Limite de transferência da prévia — 11/11/2026
+
+- O dono recebeu aviso de 10/10 GB de download mensal no projeto Spark **king-rico-previa-1408805633**, separado de **king-rico** (oficial). O oficial respondeu HTTP 200 em verificação HEAD; não foi modificado nem recebeu plano pago.
+- O workflow executava todos os 12 navegadores DEPOIS do deploy, com `KING_RICO_TEST_URL` apontando para o Firebase. Cada novo contexto recarrega assets, consumindo transferência repetidamente. Esse fluxo contribuiu para o consumo; não temos a divisão completa da fatura por origem e não atribuímos todo o tráfego aos testes.
+- Correção: a MESMA suíte completa agora roda ANTES da autenticação/deploy, com `dist/` servido no próprio runner. Após publicar, somente seis requisições HEAD verificam rotas, cliente, runtime/Three e imagem; não baixam os corpos dos assets. Nenhum teste foi retirado. Produção e publicador REST inalterados.
+- Verificação proporcional: build de prévia; teste de navegador `circus_columns_browser.py` contra servidor local passou, sem erros JS/assets. Medição local sem compressão: 150 respostas, 15.537.852 bytes (~15,54 MB) nesse único teste; isso NÃO é o valor faturado pelo CDN. YAML validado, isolamento e guarda de orçamento do workflow testados. Não repetir a suíte completa contra o Hosting para validar esta correção.
+- Os 10 GB já consumidos NÃO são recuperados com esse patch, novo deploy ou exclusão de releases. No Spark, o site de prévia pode ficar suspenso até renovar a franquia. Não criar projetos Firebase descartáveis para contornar o limite e não ativar Blaze sem decisão expressa do dono.
+- Entrega de fontes com `[skip ci]` para não disparar outra publicação durante o incidente. Correção do workflow sincronizada nas branches main/prévia sem promover os ajustes de áudio do Claude ao oficial. Prévia hospedada NÃO foi reativada por este checkpoint.
+- Próximo passo: dono decide aguardar a renovação ou conectar uma hospedagem estática gratuita para a prévia (por exemplo, Cloudflare Pages). Se usar Pages: branch `codex/penalty-clown-preview`, build `npm run build:preview`, saída `dist`, Node conforme `.nvmrc`; carteira fictícia, sem credenciais Firebase de produção. Confirmar limites atuais do plano e validar o novo endereço antes de anunciá-lo. Oficial continua https://king-rico.web.app.
 
 ## Publicação oficial autorizada e concluída — Circus v5
 

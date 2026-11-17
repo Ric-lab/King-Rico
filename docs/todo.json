@@ -6,11 +6,11 @@
     {
       "id": "t-trevo-e-raio-arco-iris-d",
       "title": "Trevo e raio arco-íris dourados aprovados",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "demoUrl": "https://king-rico.web.app",
       "notes": ""
     },
     {
@@ -298,12 +298,12 @@
     {
       "id": "t-firestore-v6",
       "title": "Concluir regras Firestore v6 / persistência real (limite de 1.000 expressões) e conferir snapshot concorrente de cedros antes de publicar no oficial",
-      "status": "todo",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Bloqueio técnico para promover a v6 ao site oficial."
+      "demoUrl": "https://king-rico.web.app",
+      "notes": "17/11: 81/81 regras, defesa completa e giro grátis concorrente/replay, navegador com carteira Firestore real emulada aprovado. Verificações distribuídas no batch sem alterar matemática. Publicação oficial autorizada, aguardar workflow main."
     },
     {
       "id": "t-ideia-king-nuvem",

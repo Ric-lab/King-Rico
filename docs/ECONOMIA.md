@@ -1,4 +1,4 @@
-## Circus v6 — em integração na prévia (12/11/2026)
+## Circus v6 — integração oficial validada (17/11/2026)
 
 Tabela literal e defesa aprovadas pelo dono: [PARQUE.md](PARQUE.md).
 Simulação completa: cinco milhões de giros em cada aposta 1/10/100/1000,
@@ -9,7 +9,9 @@ Mudança de aposta no décimo giro, alternância, cultivar defesas com aposta ba
 e teste artificial de estoque sempre cheio: um milhão cada, 88,5–91,5%.
 As versões v4/v5 também foram reexecutadas após alterar módulos compartilhados.
 Os resultados são estimativas de longo prazo, não promessa de saldo individual.
-Não liberar no oficial sem as regras Firestore e testes de persistência passarem.
+Regras e persistência passaram em 17/11: 81 casos, mais navegador real
+emulado. Pagamentos e probabilidades continuam idênticos à auditoria.
+A entrega oficial segue o workflow de main; prévia continua com carteira fictícia.
 
 # Circus v5 — publicado (b394d9f)
 

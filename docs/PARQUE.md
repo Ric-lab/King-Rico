@@ -1,4 +1,4 @@
-# Nova fase do Circus v6 — prévia em integração, 12/11/2026
+# Nova fase do Circus v6 — integração oficial validada, 17/11/2026
 
 A decisão nova substitui o parque publicado descrito no histórico abaixo.
 Somente Circus permanece ativo. `site/routes.json` marca as atrações como
@@ -16,7 +16,7 @@ Tela cheia mantém ×10. IDs históricos do atlas não são renumerados. Bumbo,
 nuvem, trevo e King deixam os sorteios novos; seus assets e pagamentos antigos
 continuam disponíveis para recibos históricos. O King continua como personagem.
 
-Três **trevos** (`assets/symbols/sym-clover.png`, célula 5 do atlas `symbols-v7.webp`)
+Três **trevos** (`assets/symbols/clover-rainbow-gold-v1.webp`, sobre a célula 5 dos rolos)
 numa linha dão **1 defesa**, com estoque máximo **5**, indicado à esquerda do
 prêmio como **n/5**. Cada linha completa conta uma vez. Um trevo bloqueia um
 evento inteiro de **Tony ou Tucker — nunca de Ray**, sendo consumido na mesma
@@ -501,7 +501,7 @@ zero. Modal informa que nenhum Happeach foi perdido. Pose de preensão v2 usa
 ambos os pés juntos e ancora o centro das garras no topo da alça, sem deslocar
 o personagem para a esquerda apenas para enquadrar a ponta da asa.
 
-## Ray Raccoon — demonstração visual (09/11/2026)
+## Ray Raccoon — histórico da demonstração (09/11/2026)
 
 `/circus?demo=ray`, primeiro giro por toque. Trinca diagonal com sinalização
 vermelha; guaxinim de máscara aparece diretamente atrás do contador e foge
@@ -510,7 +510,8 @@ O lugar fica vazio até o modal/Continuar; a placa volta com até 1 ingresso a
 menos. A contagem anterior acompanha a placa durante a fuga. Zero ingressos não bloqueia a cena.
 Arte e quantidade em avaliação. Recibo salvo/deduplicado só na carteira
 fictícia; sem alteração de Firestore/cliente real ou sorteio natural. Ver
-[RAY-RACCOON.md](RAY-RACCOON.md). Não promover ao oficial por conta própria.
+[RAY-RACCOON.md](RAY-RACCOON.md). Registro histórico substituído pela v6
+validada e autorizada em 17/11: Ray rouba trevos; recibos também no Firestore real.
 
 ## Fundo do Circus — imagem enviada 151169 (09/11/2026)
 

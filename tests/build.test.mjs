@@ -15,7 +15,12 @@ test('production publishes Circus, the controller Penalty route and safe archive
  }
  for(const file of ['runtime/three.module.js','runtime/three.core.js','assets/symbols/sym-scepter.png','ui/park/controller-reserved.svg','assets/tony/head.webp','assets/tucker/head.webp','assets/ray/head-v1.webp'])await access('dist/'+file);
  assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
- assert.doesNotMatch(await readFile('dist/ui/park/client.js','utf8'),/mobile-preview|mock-wallet|test-wallet/);
+ for(const file of ['dist/ui/park/client.js','dist/cloud/client.js','dist/Fortune Circus.dc.html']) {
+  assert.doesNotMatch(await readFile(file,'utf8'),/mobile-preview|mock-wallet|test-wallet|data-preview-preset|Trevos cheios|PRÉVIA · MOEDAS DE TESTE|testFill/,'Production must never include preview controls or local balance');
+ }
+ await assert.rejects(access('dist/prototypes/circus-preview/browser-wallet.mjs'));
+ assert.doesNotMatch(await readFile('dist/ui/menu.js','utf8'),/KingRicoPreviewPicker|Prévia: escolher próximos giros/);
+ assert.doesNotMatch(await readFile('dist/cloud/firebase-config.js','utf8'),/emulators|demo-king-rico/);
  const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));assert.equal(manifest.start_url.split('?')[0],'/circus');for(const icon of manifest.icons)await access(path.join('dist',icon.src));
  const hosting=JSON.parse(await readFile('firebase.json','utf8')).hosting;
  for(const route of routes)assert.ok(hosting.rewrites.some(r=>r.source===route.path&&r.destination==='/'+route.file));

@@ -18,8 +18,10 @@ https://king-rico.web.app, com login e carteira reais. A prévia usa moedas fict
   não devem ser usados como links atuais para o dono.
 
 **V6:** pagamentos novos, cedros até 5 e atrações arquivadas. Ver
-[CIRCUS-V6-VALIDACAO.md](CIRCUS-V6-VALIDACAO.md). Regras reais ainda bloqueadas;
-esta publicação é apenas a prévia fictícia, sem mudança no oficial.
+[CIRCUS-V6-VALIDACAO.md](CIRCUS-V6-VALIDACAO.md). Integração Firestore
+validada em 17/11 (81 casos); publicação oficial autorizada. Esta prévia
+continua isolada, com carteira fictícia e seletor de resultados. O build de
+produção retira fisicamente esse seletor e usa a carteira Google/Firestore.
 
 ---
 

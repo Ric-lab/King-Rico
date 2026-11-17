@@ -71,6 +71,12 @@ catch(error) {
 await copyFile('cloud/client.js',path.join(destination,'cloud/client.js'));
 await cp('runtime',path.join(destination,'runtime'),{recursive:true});
 await cp('ui',path.join(destination,'ui'),{recursive:true});
+if(production) {
+  const menuFile=path.join(destination,'ui/menu.js');
+  const menu=(await readFile(menuFile,'utf8')).replace(/^\s*window\.KingRicoPreviewPicker && h\('button'.*\n/m,'');
+  if(menu.includes('KingRicoPreviewPicker')) throw new Error('Preview selector must not ship in production');
+  await writeFile(menuFile,menu);
+}
 await build({entryPoints:['ui/park/index.js'],outfile:path.join(destination,'ui/park/client.js'),bundle:true,format:'iife',target:'es2022',minify:true});
 await build({entryPoints:['ui/park/home.js'],outfile:path.join(destination,'ui/park/home.js'),bundle:true,format:'iife',target:'es2022',minify:true});
 // The DC loader has no CommonJS dependency resolver; bundle the preview's shared components.

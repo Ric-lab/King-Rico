@@ -699,15 +699,6 @@ class Component extends DCLogic {
     this.sfxDance();
   }
   // TEST: fill the counter one by one, then open the Special Round
-  testFill = () => {
-    if (window.KingRicoCloud && window.KingRicoCloud.enabled) return;
-    const s = this.state;
-    if (s.spinning || s.feature || s.free || s.showWin || this._testing) return;
-    this._testing = true; this.click(true);
-    const start = s.peaches || 0;
-    for (let i = start + 1; i <= PEACH_GOAL; i++) this.later(() => { this.setState({ peaches: i, peachShownBase: null, peachShownAdd: 0, peachBump: Date.now() }); try { this.bell(1318 + i * 160, 0.3, 0.05); } catch (e) {} }, (i - start) * 220);
-    this.later(() => { this._testing = false; this.startPeachFeature(this.bet()); }, (PEACH_GOAL - start) * 220 + 500);
-  };
   // Good Luck Special Round: pulse the spin button and launch the next respin without Happeach.
   peachPress(go) {
     const layer = this.fxRef.current;
@@ -1830,9 +1821,7 @@ class Component extends DCLogic {
           o[k + 'C' + i] = on ? '#fff' : '#b98fd6'; }); }); return o; })(),
       feature: feat,
       featurePos: (feat ? s.feature.sym : 10) * 100 / 11 + '%',
-      fxRef: this.fxRef, lightsRef: this.lightsRef, lightsBleedRef: this.lightsBleedRef, lightsTopRef: this.lightsTopRef, testFill: this.testFill,
-      testOpacity: s.spinning || s.feature || s.free || s.showWin ? 0.35 : 1,
-      testEvents: s.spinning || s.feature || s.free || s.showWin ? 'none' : 'auto',
+      fxRef: this.fxRef, lightsRef: this.lightsRef, lightsBleedRef: this.lightsBleedRef, lightsTopRef: this.lightsTopRef,
       spinZ: s.showWin && !s.auto && !s.free && !s.feature && !s.featLock ? 31 : 'auto',
       pageDim: !!(s.showWin || s.menu || s.pays),
       msgText: s.barWin ? (s.barGreen ? 'VOCÊ GANHOU R$ ' : 'GANHOU R$ ') + this.money(s.displayWin || 0) : (s.hint || ''),

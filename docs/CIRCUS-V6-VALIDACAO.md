@@ -1,7 +1,9 @@
 # Circus v6 — validação da prévia (16/11/2026)
 
-**Não liberar em live: integração Firestore ainda bloqueada.** A carteira da
-prévia Pages é fictícia. Fontes e decisões compartilhadas em HANDOFF/TODO.
+**Integração Firestore concluída em 17/11/2026: 81/81 casos passaram.**
+Publicação oficial autorizada pelo dono. A prévia Pages continua fictícia e
+separada; o build oficial usa a conta Google e o saldo do projeto king-rico.
+Fontes e decisões compartilhadas em HANDOFF/TODO.
 
 ## Economia
 
@@ -75,9 +77,9 @@ https://ric-lab.github.io/King-Rico/circus/. Oficial/main permanecem em `9808d53
 - Pages: conferência do mesmo build sob `/King-Rico`, sem Firebase habilitado.
   O build da prévia versiona JS e módulos DC pelo hash para evitar cache antigo.
 
-## Bloqueio financeiro — ação necessária antes de main
+## Bloqueio financeiro anterior — resolvido em 17/11/2026
 
-Última suíte `npm run test:rules`: **67 de 80** passaram; os 13 casos positivos
+Registro histórico de 16/11: **67 de 80** passaram; os 13 casos positivos
 pendentes atingem o limite de 1.000 expressões (v5 normal/bônus e casos v6,
 incluindo wheel-prize/bar-prize). Recibos forjados continuam rejeitados; os testes
 negativos não substituem os positivos ainda falhando. Somente v6Feature foi ajustada ao pagamento exato; nenhuma regra foi
@@ -125,3 +127,15 @@ confere a grade/res exatos; também encontra Big/Super legítimos. Navegador
 confere crédito final, ausência de Big Win no bônus pequeno, queda do asset,
 cinco consumos e barra vazia através de snapshot/recarga e até o próximo spin.
 Regras novamente67/80, mesmos13 bloqueios de expressão; não promover main.
+
+## Validação oficial — 17/11/2026
+As regras distribuem verificações equivalentes entre os três documentos
+obrigatórios do batch: carteira (débito, recursos, aposta, envelope), estado
+(transição e defesa) e recibo imutável (ledgers, prêmio da feature/roleta e
+geometria da defesa). Não foi removida nenhuma validação de pagamentos.
+Entraram validação do token grátis, consumo único entre aparelhos e preservação
+do token durante outras ações. 81/81 casos de integração passaram; giros
+normais/legados, defesa Tony/Tucker, Ray, 5ª roleta e barra cheia confirmados.
+Navegador com Auth/Firestore reais emulados: saldo único e sessão persistente,
+sem wallet local, seletor de resultados, erros JS ou assets ausentes.
+RTP e arquivos do motor permanecem iguais aos da auditoria acima.

@@ -1256,4 +1256,34 @@ test('Circus v6 rejects forged coin awards, defense stock, conversion of old tic
  await forge((x,p,s)=>{s.tickets=1;s.cedros=1;});
  await forge((x,p,s)=>{s.economyV6.paidUnits++;});
  await forge((x,p,s)=>{x.defense={against:'tony'};});
+ await forge((x,p,s)=>{x.freeSpin=true;});
+ await forge((x,p,s)=>{x.freeSpinAward=true;s.cloverFreeBetUnits=1000;s.cloverFreeSpinId=s.lastOperationId;});
+});
+
+test('Circus v6 full clovers persist a single free spin across refresh and simultaneous replay',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');
+ const identity='v6-free-'+randomUUID();let queue=[],fallback=.99;
+ const rng=()=>queue.shift()??fallback;
+ const c=await client(identity,identity,{rng});await c.call(request({action:'bootstrap'}));
+ const playerRef=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
+ await environment.withSecurityRulesDisabled(async ctx=>setDoc(doc(ctx.firestore(),'players',c.uid,'park','state'),{...park.fresh(),cedros:5}));
+ queue=[.99,...Array(9).fill(.1)];
+ const paidRequest=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10});
+ const paid=await c.call(paidRequest);assert.equal(paid.player.balance,990);assert.equal(paid.park.cloverFreeSpinId,paidRequest.requestId);
+ assert.equal(paid.park.cloverFreeBetUnits,1000);assert.equal(paid.outcome.freeSpinAward,true);
+ fallback=.4;
+ const other=await client(identity+'-other',identity,{rng});
+ const restored=await other.call(request({action:'bootstrap'}));assert.equal(restored.park.cloverFreeSpinId,paid.park.cloverFreeSpinId);
+ await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{balanceUnits:0,lastSpinAt:null}));
+ await assert.rejects(other.call(request({action:'spin',game:'circus',park:true,slotVersion:6,bet:100,freeSpinId:paid.park.cloverFreeSpinId})),/aposta/);
+ const freeRequest=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10,freeSpinId:paid.park.cloverFreeSpinId});
+ const [a,b]=await Promise.all([c.call(freeRequest),other.call(freeRequest)]);
+ assert.equal(a.outcome.freeSpin,true);assert.ok(a.outcome.winUnits>0);assert.equal(a.balanceDebited,0);assert.equal(a.player.balance,a.outcome.winUnits/100);assert.equal(a.player.balance,b.player.balance);
+ assert.equal(a.park.cloverFreeSpinId,undefined);assert.equal(a.park.economyV6.wageredUnits,1000);
+ assert.deepEqual(park.publicState((await getDoc(parkRef)).data()),a.park);
+ assert.equal((await getDoc(doc(c.db,'players',c.uid,'operations',freeRequest.requestId))).data().betUnits,0);
+ assert.equal((await getDoc(playerRef)).data().balanceUnits,a.player.balance*100);
+ assert.equal((await other.call(freeRequest)).replayed,true);
+ await new Promise(r=>setTimeout(r,750));
+ await assert.rejects(other.call({...freeRequest,requestId:randomUUID()}),/outro aparelho/);
 });
