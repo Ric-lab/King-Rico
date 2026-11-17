@@ -378,7 +378,7 @@
     {
       "id": "p-tucker-asas",
       "title": "Tucker com duas batidas de asa no roubo da cesta",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": "fbe911d",
