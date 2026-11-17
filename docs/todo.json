@@ -286,16 +286,6 @@
       "notes": "V3 dourado claro e proporção mais alta aprovados pelo dono: Okay. Largura preservada."
     },
     {
-      "id": "t-happeach-raio",
-      "title": "Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin",
-      "status": "todo",
-      "category": "Visual & Ritmo",
-      "agent": "",
-      "commit": "",
-      "demoUrl": "",
-      "notes": "Substituir cesta por placa com contador e ícone de raio pêssego."
-    },
-    {
       "id": "t-firestore-v6",
       "title": "Concluir regras Firestore v6 / persistência real (limite de 1.000 expressões) e conferir snapshot concorrente de cedros antes de publicar no oficial",
       "status": "done",
