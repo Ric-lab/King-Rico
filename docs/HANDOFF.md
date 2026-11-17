@@ -1,3 +1,18 @@
+## Artes para Claude — 17/11/2026 (Codex)
+
+- Logo aprovado: `assets/brand/king-rico-wordmark-color-crown-v1.png`.
+  KING sobre RICO, letras coloridas, losango no K e coroa padrão com pedra azul,
+  sem tecido roxo. Guardado, sem aplicar à interface.
+- Trevo para o bônus de trinca: `assets/symbols/clover-green-bonus-v1.webp`
+  (512×512, transparente). Fonte: mesmo nome em PNG (1254×1254).
+  TUDO verde: folhas, contornos e caule. A proposta verde com dourado foi
+  rejeitada. Não substituir o trevo arco-íris normal sem pedido do dono.
+- Apenas assets/documentação compartilhados; sem publicar prévia ou oficial,
+  sem alterar regras, matemática ou animações.
+
+Próximo passo: Claude pode usar o WebP verde no bônus de trinca; o logo aprovado
+fica reservado até o dono indicar a aplicação. Catálogo: assets/brand/APPROVED-ART.md.
+
 ## Publicação oficial autorizada — 17/11/2026 (Codex)
 
 Candidato baseado na prévia `dddc82b` inteira e nos três commits exclusivos
