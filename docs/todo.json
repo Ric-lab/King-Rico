@@ -56,7 +56,7 @@
     {
       "id": "p-powerup-columns",
       "title": "6/6 Contadores de power-ups: asset acima e quantidade abaixo",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
