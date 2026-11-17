@@ -116,7 +116,7 @@
     {
       "id": "p-refino-barra-raspa",
       "title": "Revisão dos commits recentes: tinta contínua, paleta coerente e primeira raspagem sem perder vibração",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
