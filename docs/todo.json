@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "t-colocar-o-mesmo-quadra-58",
+      "title": "Colocar o mesmo quadrado que esta atras da roleta e do trevo atras do raio para ele não ficar voando (mas tem que dimensionar bem para que o topo do quadrado fique alinhado ao topo da slot machine E a barra lateral não pode ser mexida e o raio ocupa mais do espaço do quadrado do a roleta e o trevo",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
       "id": "t-se-tiver-0-roletas-o-t-69",
       "title": "Se tiver 0 roletas o trevo não entra em ação pq não precisa\nO trevo ja não defende do ray e \nSe a pessoa tiver 0 moedas nem vai jogar então tbm não faz sentido\nA unica coisa é o trevo defender do roubo de roletas sem precisar... Isso precisa arrumar",
       "status": "todo",
