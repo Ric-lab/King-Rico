@@ -6,7 +6,7 @@
     {
       "id": "t-colocar-o-mesmo-quadra-58",
       "title": "Colocar o mesmo quadrado que esta atras da roleta e do trevo atras do raio para ele não ficar voando (mas tem que dimensionar bem para que o topo do quadrado fique alinhado ao topo da slot machine E a barra lateral não pode ser mexida e o raio ocupa mais do espaço do quadrado do a roleta e o trevo",
-      "status": "preview",
+      "status": "todo",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
