@@ -27,8 +27,8 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const fill=()=>{do{for(let r=0;r<N;r++)for(let c=0;c<N;c++){do g[r][c]=pick();while((c>1&&g[r][c-1]===g[r][c]&&g[r][c-2]===g[r][c])||(r>1&&g[r-1][c]===g[r][c]&&g[r-2][c]===g[r][c]));}}while(!hasMove());};fill();
  const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');
  o.innerHTML=`<style>
- #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px 0;box-sizing:border-box;background:#52c9ef url(${A('/assets/scenes/circus-garden-lawn-v1.webp')}) center 60%/cover no-repeat;font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
- #kr-controller-game::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 40%,rgba(30,80,40,.25));pointer-events:none}
+ #kr-controller-game{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px 0;box-sizing:border-box;background:#2a0a4a url(${A('/assets/bleed/stage-bleed.webp')}) center 100%/cover no-repeat;font-family:'Baloo 2',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
+ #kr-controller-game::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,6,50,.15),rgba(30,6,50,.45));pointer-events:none}
  #kr-controller-game .tr-top{position:relative;width:min(96vw,460px);box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:22px;background:linear-gradient(180deg,#fffdf6,#f6e7c4);box-shadow:0 0 0 3px #f0b41f,0 0 0 6px #b86e0a,0 8px 16px rgba(60,20,0,.3)}
  #kr-controller-game .tr-moves{flex:0 0 auto;width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 30%,#8a4fd8,#5a1f9a 70%);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 0 0 3px #fff3c4,0 0 0 5px #d18a0c;color:#fff;font-weight:800;line-height:1}
  #kr-controller-game .tr-moves b{font-size:34px;text-shadow:0 2px 0 rgba(0,0,0,.3)}#kr-controller-game .tr-moves small{font-size:10px;letter-spacing:1px;opacity:.9}
@@ -36,7 +36,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  #kr-controller-game .tr-fill{position:absolute;inset:3px auto 3px 3px;width:0;max-width:calc(100% - 6px);border-radius:12px;background:linear-gradient(180deg,#9dff7a,#2ec962 55%,#1f9a48);box-shadow:inset 0 4px 0 rgba(255,255,255,.5);transition:width .45s cubic-bezier(.3,1.4,.5,1),filter .2s}
  #kr-controller-game .tr-fill.is-hurt{filter:hue-rotate(-110deg) saturate(2.2)}
  #kr-controller-game .tr-goal{flex:0 0 auto;width:60px;height:60px;margin-left:-26px;position:relative;z-index:1;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 3px 3px rgba(60,20,0,.45))}
- #kr-controller-game .tr-board{position:relative;width:min(96vw,460px);aspect-ratio:1;border-radius:20px;padding:0;background:rgba(40,120,200,.38);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 0 0 4px #fff,0 0 0 7px #f0b41f,0 14px 26px rgba(20,40,80,.4);overflow:hidden}
+ #kr-controller-game .tr-board{position:relative;width:min(96vw,460px);aspect-ratio:1;border-radius:20px;padding:0;background:rgba(70,20,110,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 0 0 4px #fff,0 0 0 7px #f0b41f,0 14px 26px rgba(20,40,80,.4);overflow:hidden}
  #kr-controller-game .tr-cell{position:absolute;width:14.2857%;height:14.2857%;box-sizing:border-box;padding:2px}
  #kr-controller-game .tr-cell b{display:block;width:100%;height:100%;border-radius:10px;background:rgba(255,255,255,.55)}
  #kr-controller-game .tr-cell.alt b{background:rgba(255,255,255,.35)}
