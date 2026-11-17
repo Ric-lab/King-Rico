@@ -188,7 +188,7 @@
     {
       "id": "t-roleta-min",
       "title": "Giro da 5ª roleta e giro da barra cheia sempre pagam prêmio em moedas",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "",
