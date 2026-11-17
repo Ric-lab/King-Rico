@@ -4,10 +4,10 @@
 const PIECES=[
  {id:'roleta',src:'/assets/wheel/wheel-symbol-v1.webp',w:1},
  {id:'diamante',src:'/assets/symbols/sym-gem.png',w:1},
- {id:'circo',src:'/assets/symbols/sym-tent-lossless.webp',w:1},
- {id:'moeda',src:'/assets/symbols/sym-coin.webp',w:1},
- {id:'tiger',src:'/assets/tony/head.webp',w:.75}];
-const TIGER=4,N=8,KEY='kingRico.preview.cedros',MAX=3;
+ {id:'trevo',src:'/assets/symbols/sym-clover.png',w:1},
+ {id:'coroa',src:'/assets/symbols/sym-crown-lossless.webp',w:1},
+ {id:'tiger',src:'/assets/tony/head.webp',w:.7}];
+const TIGER=4,N=7,KEY='kingRico.preview.cedros',MAX=3;
 const A=p=>p; // o build já prefixa '/assets/' para o GitHub Pages
 export const cedros={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));mountCedroDots();}};
 export function mountCedroDots(){const plaque=document.querySelector('.park-prize-value');if(!plaque)return;let el=document.getElementById('kr-cedro-dots');
@@ -35,12 +35,13 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  #kr-controller-game .tr-goal{width:34px;height:34px;flex:0 0 auto;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 2px 2px #0007)}
  #kr-controller-game .tr-moves{min-width:62px;height:44px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff6df;box-shadow:0 3px 0 #b88a2e,0 0 0 2.5px #f0b41f;color:#6b2e05;font-weight:800;line-height:1}
  #kr-controller-game .tr-moves b{font-size:24px}#kr-controller-game .tr-moves small{font-size:11px;letter-spacing:1px}
- #kr-controller-game .tr-board{position:relative;width:min(94vw,430px);aspect-ratio:1;border-radius:16px;padding:0;background:rgba(18,4,40,.55);box-shadow:0 0 0 3px rgba(255,236,170,.9),0 0 0 6px #b8780c,0 14px 30px #0009;overflow:hidden}
- #kr-controller-game .tr-cell{position:absolute;width:12.5%;height:12.5%;box-sizing:border-box;padding:2px}
+ #kr-controller-game .tr-board{position:relative;width:min(96vw,460px);aspect-ratio:1;border-radius:16px;padding:0;background:rgba(18,4,40,.55);box-shadow:0 0 0 3px rgba(255,236,170,.9),0 0 0 6px #b8780c,0 14px 30px #0009;overflow:hidden}
+ #kr-controller-game .tr-cell{position:absolute;width:14.2857%;height:14.2857%;box-sizing:border-box;padding:2px}
  #kr-controller-game .tr-cell b{display:block;width:100%;height:100%;border-radius:9px;background:rgba(150,110,220,.28)}
  #kr-controller-game .tr-cell.alt b{background:rgba(150,110,220,.16)}
- #kr-controller-game .tr-p{position:absolute;width:12.5%;height:12.5%;padding:3px;box-sizing:border-box;transition:transform .22s cubic-bezier(.3,1.25,.5,1),opacity .2s;z-index:1}
+ #kr-controller-game .tr-p{position:absolute;width:14.2857%;height:14.2857%;padding:1px;box-sizing:border-box;transition:transform .22s cubic-bezier(.3,1.25,.5,1),opacity .2s;z-index:1}
  #kr-controller-game .tr-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 3px 2px #0007)}
+ #kr-controller-game .tr-p i.is-tiger{background-size:86%;border-radius:50%;background-color:#ff5a3c;background-image:var(--tiger),radial-gradient(circle at 35% 30%,#ffb08a,#ff5a3c 55%,#b8241a)!important;background-image:var(--tiger)!important;box-shadow:inset 0 -5px 0 #0003,0 0 0 3px #fff8;background-blend-mode:normal}
  #kr-controller-game .tr-p.is-sel i{transform:scale(1.12);filter:drop-shadow(0 0 6px #fff6c0) drop-shadow(0 3px 2px #0007)}
  #kr-controller-game .tr-p.is-pop i{animation:trPop .22s ease-in forwards}
  @keyframes trPop{50%{transform:scale(1.3)}to{transform:scale(0);opacity:0}}
@@ -53,7 +54,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const board=o.querySelector('.tr-board'),fillEl=o.querySelector('.tr-fill'),movesEl=o.querySelector('.tr-moves b');
  const el=Array.from({length:N},()=>Array(N).fill(null));
  const place=(d,r,c)=>{d.style.transform=`translate(${c*100}%,${r*100}%)`;};
- const make=(r,c,from)=>{const d=document.createElement('div');d.className='tr-p';d.innerHTML=`<i style="background-image:url(${A(PIECES[g[r][c]].src)})"></i>`;place(d,from??r,c);board.append(d);el[r][c]=d;if(from!=null)requestAnimationFrame(()=>requestAnimationFrame(()=>place(d,r,c)));return d;};
+ const make=(r,c,from)=>{const d=document.createElement('div');d.className='tr-p';d.innerHTML=g[r][c]===TIGER?`<i class="is-tiger" style="--tiger:url(${A(PIECES[TIGER].src)})"></i>`:`<i style="background-image:url(${A(PIECES[g[r][c]].src)})"></i>`;place(d,from??r,c);board.append(d);el[r][c]=d;if(from!=null)requestAnimationFrame(()=>requestAnimationFrame(()=>place(d,r,c)));return d;};
  for(let r=0;r<N;r++)for(let c=0;c<N;c++){const k=document.createElement('div');k.className='tr-cell'+((r+c)%2?' alt':'');k.innerHTML='<b></b>';k.style.transform=`translate(${c*100}%,${r*100}%)`;board.append(k);}
  for(let r=0;r<N;r++)for(let c=0;c<N;c++)make(r,c);
  let used=0,bar=0,busy=false,over=false;const wait=ms=>new Promise(r=>setTimeout(r,ms));
