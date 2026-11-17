@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "t-se-tiver-0-roletas-o-t-69",
+      "title": "Se tiver 0 roletas o trevo não entra em ação pq não precisa\nO trevo ja não defende do ray e \nSe a pessoa tiver 0 moedas nem vai jogar então tbm não faz sentido\nA unica coisa é o trevo defender do roubo de roletas sem precisar... Isso precisa arrumar",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
       "id": "t-trevo-e-raio-arco-iris-d",
       "title": "Trevo e raio arco-íris dourados aprovados",
       "status": "done",
