@@ -48,16 +48,13 @@ export function installCircusSfx(fc){
  // Good Luck: faísca elétrica na descida e estalo/trovão sincronizados ao impacto no botão.
  // Raio do Good Luck (feliz, Claude): subida mágica de sininhos durante a queda → no impacto, "plim!" brilhante
  // em acorde maior + estalinho curto. Tudo agendado a partir do MESMO instante do impacto (T = agora + delay).
- fc.sfxLightning=play(1.4,(delaySec=.64)=>{const ac=fc.ac(),d=Math.max(.12,Number(delaySec)||.64),T=ac.currentTime+d;
-  // 1) subida: 6 notas da escala maior acelerando até o impacto (expectativa alegre)
-  const rise=[784,880,988,1175,1319,1568],n=rise.length;
-  rise.forEach((f,i)=>{const at=d*Math.pow(i/n,.7)*.92;B(f,.12,.022+.012*i/n,at);});
-  hiss(5200,1.2,.03,Math.max(.08,d*.9),0,'bandpass',8000);
-  // 2) impacto (exatamente em T): estalinho agudo e curto + "plim!" em Dó maior com oitava
-  hiss(6500,1.5,.2,.045,d,'highpass');
-  [1047,1319,1568,2093].forEach((f,i)=>B(f,.5-.06*i,.11-.015*i,d+i*.012));
-  sweep(523,1047,.12,'triangle',.06,d);
-  // 3) brilho que sobe e some (faíscas)
-  for(let i=0;i<5;i++)B(2093+i*262,.18,.03,d+.08+i*.05);
+ // Raio do Good Luck — FELIZ (Claude): sininhos subindo na queda, "plim-zap" brilhante cravado no impacto e acorde maior cintilante. Sem trovão.
+ fc.sfxLightning=play(1.4,(delaySec=.64)=>{const d=Math.max(.12,Number(delaySec)||.64),pre=Math.max(0,d-.32);
+  [1047,1319,1568,2093].forEach((f,i)=>fc.bell(f,.18,(.03+i*.008)*K,pre+i*.075));
+  hiss(5200,3,.03,Math.min(.3,d),Math.max(0,d-.3),'bandpass',9000);
+  hiss(7000,1.2,.14,.05,d,'bandpass');
+  sweep(700,2100,.09,'triangle',.12,d);
+  [1047,1319,1568,2093,2637].forEach((f,i)=>fc.bell(f,.7,(.07-i*.008)*K,d+.01+i*.035));
+  fc.pluck(523,.09*K,.35,d);
  });
 }
