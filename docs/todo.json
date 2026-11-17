@@ -36,7 +36,7 @@
     {
       "id": "p-reel-highlight-current",
       "title": "Primeira linha: impedir brilho/piscada de resultado antigo sem combinação na grade atual",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
