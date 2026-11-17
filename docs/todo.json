@@ -388,7 +388,7 @@
     {
       "id": "p-viloes-bigwin-sfx",
       "title": "Sons dos vilões, big win, spin igual ao turbo e volumes equalizados",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "10f23cc",
