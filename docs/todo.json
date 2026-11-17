@@ -318,7 +318,7 @@
     {
       "id": "p-menu-tabela-3blocos",
       "title": "Tabela em 3 blocos (Prêmios, Power-ups, Vilões), só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 no header (fora do menu)",
-      "status": "preview",
+      "status": "done",
       "category": "Menu & Topo",
       "agent": "Claude",
       "commit": "1a7f198",
