@@ -358,7 +358,7 @@
     {
       "id": "p-raspadinha-sfx",
       "title": "Sfx da raspadinha: raspar cada casa (mais alto), abrir casa (plim/toque grave), 3 iguais (fanfarra) e moedas subindo com tique do voo",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "b61619a",
@@ -368,7 +368,7 @@
     {
       "id": "p-roleta-sfx-voo",
       "title": "Roleta: tique original em arquivo WAV, sfx na parada e na ficha batendo no prêmio, e moedas voando uma única vez",
-      "status": "done",
+      "status": "preview",
       "category": "Sons",
       "agent": "Claude",
       "commit": "6e00ec6",
