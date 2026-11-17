@@ -10,9 +10,11 @@ const PIECES=[
 const TIGER=4,N=8,KEY='kingRico.preview.cedros',MAX=3;
 const A=p=>p; // o build já prefixa '/assets/' para o GitHub Pages
 export const cedros={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));mountCedroDots();}};
-export function mountCedroDots(){let el=document.getElementById('kr-cedro-dots');const stage=document.querySelector('.park-circus-stage');if(!stage)return;
- if(!el){el=document.createElement('div');el.id='kr-cedro-dots';el.setAttribute('aria-label','Cedros guardados');el.style.cssText='position:absolute;z-index:30;left:227.8px;top:211px;transform:translateX(-50%);display:flex;gap:6px;padding:2px 6px;border-radius:8px;background:rgba(40,10,60,.55);pointer-events:none';stage.append(el);}
- const n=cedros.get();el.innerHTML=Array.from({length:MAX},(_,i)=>`<i style="width:9px;height:9px;border-radius:50%;background:${i<MAX-n?'rgba(40,10,60,.35)':'radial-gradient(circle at 35% 30%,#d8ffb0,#3fcf5a 60%,#1c7a32)'};box-shadow:0 0 0 1.5px rgba(255,255,255,.7)${i>=MAX-n?',0 0 6px #6cf096':''}"></i>`).join('');}
+export function mountCedroDots(){const plaque=document.querySelector('.park-prize-value');if(!plaque)return;let el=document.getElementById('kr-cedro-dots');
+ // 3 bolinhas na borda dourada de baixo do marcador de WIN (dono, 17/11)
+ if(!el){el=document.createElement('div');el.id='kr-cedro-dots';el.setAttribute('aria-label','Cedros guardados');plaque.parentElement.append(el);}
+ el.style.cssText='position:absolute;z-index:30;left:'+(plaque.offsetLeft+plaque.offsetWidth/2-20)+'px;top:'+(plaque.offsetTop+plaque.offsetHeight-2)+'px;width:40px;display:flex;justify-content:center;gap:4px;pointer-events:none';
+ const n=cedros.get();el.innerHTML=Array.from({length:MAX},(_,i)=>`<i style="width:8px;height:8px;border-radius:50%;background:${i<n?'radial-gradient(circle at 35% 30%,#d8ffb0,#3fcf5a 60%,#1c7a32)':'#4a1a3a'};box-shadow:0 0 0 1.5px #ffd257${i<n?',0 0 5px #6cf096':''}"></i>`).join('');}
 
 export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const rnd=Math.random,win=rnd()<.9,moves=15+Math.floor(rnd()*16),endAt=win?moves-(rnd()<.55?0:1):moves+1;
