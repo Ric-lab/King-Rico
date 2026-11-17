@@ -326,16 +326,6 @@
       "notes": "Pronto na prévia para avaliação do dono."
     },
     {
-      "id": "p-circus-v6",
-      "title": "Circus v6 na prévia: 6 pagantes (ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10), trinca de cedro (até 5) e atrações arquivadas",
-      "status": "preview",
-      "category": "Economia & Regras",
-      "agent": "Codex",
-      "commit": "c6bdb3c",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Auditoria RTP ~90% concluída na prévia."
-    },
-    {
       "id": "p-tony-patada-som",
       "title": "Patada do Tony = um som só, contínuo (zuum que desce até o grave com impacto) e moedas saindo ao tocar CONTINUAR",
       "status": "done",
