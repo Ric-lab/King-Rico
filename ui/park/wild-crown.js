@@ -1,8 +1,8 @@
-// Coroa coringa do Rei (só prévia). Prêmio do Royal Rico: 3 (ou 4) giros com a coroa fixa na casa do meio.
+// King Rico coringa (só prévia). Prêmio do Royal Rico: 3 (ou 4) giros com o King Rico fixo na casa do meio.
 // A coroa vale por qualquer símbolo pagante: linhas que passam pelo meio e têm as outras 2 casas iguais pagam.
 // Sem decisão do jogador: é só girar. Contador = coroinhas embaixo do WIN.
 let engine=null;import('../../cloud/engine.cjs').then(m=>{engine=m.default||m;}).catch(()=>{});
-const KEY='kingRico.preview.wildSpins',CROWN='/assets/symbols/sym-crown-lossless.webp';
+const KEY='kingRico.preview.wildSpins',CROWN='/assets/king-rico/fw6/happy.webp',FACE='/assets/king-rico/fw6/wave.webp';
 export const wild={get:()=>Math.max(0,Math.min(4,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(4,n))));paint();}};
 const post=async body=>{const r=await fetch(location.origin+'/api/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:crypto.randomUUID(),...body})});return r.json();};
 window.KingRicoPreviewCredit=async coins=>{try{const j=await post({action:'preview-credit',units:Math.round(coins*100)});const fc=window.__fc;if(fc&&j.player){fc._cloudDeferred=j.player;fc.applyCloudPlayer?.();}}catch{}};
@@ -14,12 +14,12 @@ function paint(){const n=wild.get();let c=document.getElementById('kr-wild-crown
  const cell=center();if(!cell)return;const r=cell.getBoundingClientRect();
  if(!c){c=document.createElement('div');c.id='kr-wild-crown';c.innerHTML=`<i></i><b>CORINGA</b>`;document.body.append(c);c.animate([{transform:'scale(2.2)',opacity:0},{transform:'scale(1)',opacity:1}],{duration:500,easing:'cubic-bezier(.2,1.3,.4,1)'});}
  c.style.cssText=`position:fixed;z-index:40;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;border-radius:12px;pointer-events:none;background:radial-gradient(circle,#fff6c8 0,#ffd257 55%,#f0a018 100%);box-shadow:0 0 0 3px #fff3b0,0 0 22px 6px #ffd257aa;animation:krWildGlow 1.6s ease-in-out infinite`;
- c.querySelector('i').style.cssText=`position:absolute;inset:8% 12% 22%;background:url(${CROWN}) center/contain no-repeat;filter:drop-shadow(0 4px 3px #6b2e0599)`;
+ c.querySelector('i').style.cssText=`position:absolute;inset:2% 6% 18%;background:url(${CROWN}) center/contain no-repeat;filter:drop-shadow(0 4px 3px #6b2e0599)`;
  c.querySelector('b').style.cssText="position:absolute;left:0;right:0;bottom:5%;text-align:center;font:800 13px/1 'Baloo 2',sans-serif;letter-spacing:1px;color:#6b2e05";
  const plaque=document.querySelector('.park-prize-value');if(!plaque)return;
  if(!d){d=document.createElement('div');d.id='kr-wild-count';d.setAttribute('aria-label','Giros com coringa');plaque.parentElement.append(d);}
  d.style.cssText=`position:absolute;z-index:30;left:${plaque.offsetLeft+plaque.offsetWidth/2-40}px;top:${plaque.offsetTop+plaque.offsetHeight-6}px;width:80px;display:flex;justify-content:center;gap:3px;pointer-events:none`;
- d.innerHTML=Array.from({length:n},()=>`<i style="width:16px;height:16px;background:url(${CROWN}) center/contain no-repeat;filter:drop-shadow(0 1px 1px #0008)"></i>`).join('');}
+ d.innerHTML=Array.from({length:n},()=>`<i style="width:16px;height:16px;background:url(${FACE}) center 20%/170% no-repeat;border-radius:50%;box-shadow:0 0 0 1.5px #ffd257;filter:drop-shadow(0 1px 1px #0008)"></i>`).join('');}
 const reelsStopped=()=>new Promise(res=>{const t0=Date.now(),k=setInterval(()=>{if(!document.querySelector('.park-reel-cell[data-reel-spinning="true"]')||Date.now()-t0>9000){clearInterval(k);setTimeout(res,300);}},120);});
 async function onSpin(fc,res){const n=wild.get();if(!n)return;const g=res?.outcome?.grid;holding=true;wild.set(n-1);try{await score(fc,res,g);}finally{holding=false;setTimeout(paint,900);}}
 async function score(fc,res,g){

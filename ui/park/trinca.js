@@ -90,7 +90,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
   p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.25)',opacity:1,offset:.2},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.45},{transform:`translate(calc(-50% + ${tx-x}px),calc(-50% + ${ty-y}px)) scale(.5)`,opacity:.9}],{duration:900,easing:'cubic-bezier(.4,0,.6,1)'}).onfinish=()=>{p.remove();fillEl.animate([{filter:'brightness(1.8)'},{filter:'none'}],{duration:260});};};
  const finish=async won=>{over=true;await wait(350);const end=document.createElement('div');end.className='tr-end';
   // Prêmio: giros com a coroa coringa no meio da slot. Mais de 6 pontos = 4 giros (dono, 18/11).
-  let prize='';if(won){const n=total>6?4:3;wild.set(Math.min(4,wild.get()+n));prize=`<div style="width:110px;height:110px;background:url(${A('/assets/symbols/sym-crown-lossless.webp')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div><span style="font-size:24px;font-weight:800;color:#8a4a05">${n} GIROS COM CORINGA</span>`;
+  let prize='';if(won){const n=total>6?4:3;wild.set(Math.min(4,wild.get()+n));prize=`<div style="width:110px;height:110px;background:url(${A('/assets/king-rico/fw6/happy.webp')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div><span style="font-size:24px;font-weight:800;color:#8a4a05">${n} GIROS COM CORINGA</span>`;
    try{fc.sfxWin?.(true);}catch{}vib([40,40,90]);}
   else{snd(330,.4,.07);snd(262,.5,.07,.18);vib([60,60,60]);}
   end.innerHTML=`<b>${won?'VOCÊ CONSEGUIU!':'QUASE!'}</b>${prize}<button type="button">OK</button>`;board.append(end);
