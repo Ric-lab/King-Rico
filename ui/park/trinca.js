@@ -61,13 +61,16 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  let used=0,bar=0,busy=false,over=false;const wait=ms=>new Promise(r=>setTimeout(r,ms));
  const setBar=v=>{bar=Math.max(0,Math.min(100,v));fillEl.style.width=bar+'%';};
  const plan=k=>win?(k>=endAt?100:Math.min(97,100*Math.pow(k/endAt,.85)+(rnd()*4-2))):Math.min(94,96*Math.pow(Math.min(k,moves)/moves,.85)+(rnd()*3-1.5));
- const resolve=async()=>{let level=0,tiger=false;for(;;){const rs=runs();if(!rs.length)break;level++;const kill=new Set();for(const r of rs){if(r.type===TIGER)tiger=true;r.cells.forEach(([a,b])=>kill.add(a*N+b));}
+ const resolve=async()=>{let level=0,tiger=false,score=0;for(;;){const rs=runs();if(!rs.length)break;level++;const kill=new Set();for(const r of rs){if(r.type===TIGER)tiger=true;r.cells.forEach(([a,b])=>kill.add(a*N+b));}
+   // Valor: trinca 1 · quadra 1,5 · quina reta 2 · quina em L/T 1,75 (dono, 18/11). Tiger não soma.
+   const done=new Set();for(let i=0;i<rs.length;i++)for(let j=i+1;j<rs.length;j++){const a=rs[i],b=rs[j];if(done.has(i)||done.has(j)||a.type!==b.type||a.type===TIGER)continue;if(a.cells.some(([x,y])=>b.cells.some(([p,q])=>p===x&&q===y))){score+=1.75;done.add(i);done.add(j);}}
+   rs.forEach((r,i)=>{if(!done.has(i)&&r.type!==TIGER)score+=r.cells.length>=5?2:r.cells.length===4?1.5:1;});
    snd([523,659,784,988,1175,1319][Math.min(5,level-1)],.2,.07);vib(level>1?[18,30,18]:22);
    kill.forEach(k=>el[Math.floor(k/N)][k%N].classList.add('is-pop'));await wait(230);kill.forEach(k=>{const r=Math.floor(k/N),c=k%N;el[r][c].remove();el[r][c]=null;g[r][c]=-1;});
    for(let c=0;c<N;c++){let w=N-1;for(let r=N-1;r>=0;r--)if(g[r][c]>=0){if(w!==r){g[w][c]=g[r][c];el[w][c]=el[r][c];g[r][c]=-1;el[r][c]=null;place(el[w][c],w,c);}w--;}
     for(let r=w,k=1;r>=0;r--,k++){g[r][c]=pick();make(r,c,-k);}}
    await wait(260);}
-  return tiger;};
+  return {tiger,score};};
  const finish=async won=>{over=true;await wait(350);const end=document.createElement('div');end.className='tr-end';
   let prize='';if(won){const n=cedros.get();if(n<MAX){cedros.set(n+1);prize=`<div style="width:110px;height:110px;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div>`;}
    else{const coins=Math.round(bet*2.5*100)/100;try{fc.sfxCoins?.();}catch{}prize=`<span style="font-size:40px;font-weight:800;color:#fff3c4">+${coins.toLocaleString('pt-BR')}</span>`;try{window.KingRicoPreviewCredit?.(coins);}catch{}}
@@ -78,9 +81,9 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const trySwap=async(r,c,R,C)=>{if(busy||over||R<0||C<0||R>=N||C>=N)return;busy=true;
   [g[r][c],g[R][C]]=[g[R][C],g[r][c]];[el[r][c],el[R][C]]=[el[R][C],el[r][c]];place(el[r][c],r,c);place(el[R][C],R,C);snd(880,.06,.03);vib(15);await wait(210);
   if(!runs().length){[g[r][c],g[R][C]]=[g[R][C],g[r][c]];[el[r][c],el[R][C]]=[el[R][C],el[r][c]];place(el[r][c],r,c);place(el[R][C],R,C);await wait(210);busy=false;return;}
-  used++;movesEl.textContent=String(moves-used);const tiger=await resolve();
+  used++;movesEl.textContent=String(moves-used);const {tiger,score}=await resolve();
   if(tiger){setBar(bar-9);fillEl.classList.add('is-hurt');snd(196,.3,.08);vib([50,40,50]);await wait(420);fillEl.classList.remove('is-hurt');}
-  setBar(plan(used));
+  setBar(Math.min(win?100:94,Math.max(plan(used),bar+6*Math.max(0,score-1))));
   if(!hasMove()){fill();for(let a=0;a<N;a++)for(let b=0;b<N;b++){el[a][b]?.remove();make(a,b,-N);}await wait(300);}
   busy=false;if(bar>=100)return finish(true);if(used>=moves)return finish(false);};
  let start=null;
