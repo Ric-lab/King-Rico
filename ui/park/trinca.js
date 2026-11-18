@@ -7,10 +7,11 @@ const PIECES=[
  {id:'trevo',src:'/assets/symbols/clover-green-bonus-v1.webp',w:1},
  {id:'coroa',src:'/assets/symbols/sym-crown-lossless.webp',w:1},
  {id:'tiger',src:'/assets/tony/head.webp',w:.7}];
+import {wild} from './wild-crown.js';
 const TIGER=4,N=7,KEY='kingRico.preview.cedros',MAX=3;
 const A=p=>p; // o build já prefixa '/assets/' para o GitHub Pages
 export const cedros={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));mountCedroDots();}};
-export function mountCedroDots(){const plaque=document.querySelector('.park-prize-value');if(!plaque)return;let el=document.getElementById('kr-cedro-dots');
+export function mountCedroDots(){return;const plaque=document.querySelector('.park-prize-value');if(!plaque)return;let el=document.getElementById('kr-cedro-dots');
  // 3 bolinhas na borda dourada de baixo do marcador de WIN (dono, 17/11)
  if(!el){el=document.createElement('div');el.id='kr-cedro-dots';el.setAttribute('aria-label','Cedros guardados');plaque.parentElement.append(el);}
  el.style.cssText='position:absolute;z-index:30;left:'+(plaque.offsetLeft+plaque.offsetWidth/2-20)+'px;top:'+(plaque.offsetTop+plaque.offsetHeight-2)+'px;width:40px;display:flex;justify-content:center;gap:4px;pointer-events:none';
@@ -63,7 +64,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const make=(r,c,from)=>{const d=document.createElement('div');d.className='tr-p';d.innerHTML=g[r][c]===TIGER?`<i class="is-tiger" style="--tiger:url(${A(PIECES[TIGER].src)})"></i>`:`<i style="background-image:url(${A(PIECES[g[r][c]].src)})"></i>`;place(d,from??r,c);board.append(d);el[r][c]=d;if(from!=null)requestAnimationFrame(()=>requestAnimationFrame(()=>place(d,r,c)));return d;};
  for(let r=0;r<N;r++)for(let c=0;c<N;c++){const k=document.createElement('div');k.className='tr-cell'+((r+c)%2?' alt':'');k.innerHTML='<b></b>';k.style.transform=`translate(${c*100}%,${r*100}%)`;board.append(k);}
  for(let r=0;r<N;r++)for(let c=0;c<N;c++)make(r,c);
- let used=0,bar=0,busy=false,over=false;const wait=ms=>new Promise(r=>setTimeout(r,ms));
+ let used=0,bar=0,busy=false,over=false,total=0;const wait=ms=>new Promise(r=>setTimeout(r,ms));
  const setBar=v=>{bar=Math.max(0,Math.min(100,v));fillEl.style.width=bar+'%';};
  const plan=k=>win?(k>=endAt?100:Math.min(97,100*Math.pow(k/endAt,.85)+(rnd()*4-2))):Math.min(94,96*Math.pow(Math.min(k,moves)/moves,.85)+(rnd()*3-1.5));
  const resolve=async()=>{let level=0,tiger=false,score=0;for(;;){const rs=runs();if(!rs.length)break;level++;const kill=new Set();for(const r of rs){if(r.type===TIGER)tiger=true;r.cells.forEach(([a,b])=>kill.add(a*N+b));}
@@ -88,8 +89,8 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
   const f=fillEl.getBoundingClientRect(),tx=f.left+Math.max(12,f.width),ty=f.top+f.height/2;
   p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.25)',opacity:1,offset:.2},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.45},{transform:`translate(calc(-50% + ${tx-x}px),calc(-50% + ${ty-y}px)) scale(.5)`,opacity:.9}],{duration:900,easing:'cubic-bezier(.4,0,.6,1)'}).onfinish=()=>{p.remove();fillEl.animate([{filter:'brightness(1.8)'},{filter:'none'}],{duration:260});};};
  const finish=async won=>{over=true;await wait(350);const end=document.createElement('div');end.className='tr-end';
-  let prize='';if(won){const n=cedros.get();if(n<MAX){cedros.set(n+1);prize=`<div style="width:110px;height:110px;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div>`;}
-   else{const coins=Math.round(bet*2.5*100)/100;try{fc.sfxCoins?.();}catch{}prize=`<span style="font-size:40px;font-weight:800;color:#fff3c4">+${coins.toLocaleString('pt-BR')}</span>`;try{window.KingRicoPreviewCredit?.(coins);}catch{}}
+  // Prêmio: giros com a coroa coringa no meio da slot. Mais de 6 pontos = 4 giros (dono, 18/11).
+  let prize='';if(won){const n=total>6?4:3;wild.set(Math.min(4,wild.get()+n));prize=`<div style="width:110px;height:110px;background:url(${A('/assets/symbols/sym-crown-lossless.webp')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div><span style="font-size:24px;font-weight:800;color:#8a4a05">${n} GIROS COM CORINGA</span>`;
    try{fc.sfxWin?.(true);}catch{}vib([40,40,90]);}
   else{snd(330,.4,.07);snd(262,.5,.07,.18);vib([60,60,60]);}
   end.innerHTML=`<b>${won?'VOCÊ CONSEGUIU!':'QUASE!'}</b>${prize}<button type="button">OK</button>`;board.append(end);
@@ -97,7 +98,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const trySwap=async(r,c,R,C)=>{if(busy||over||R<0||C<0||R>=N||C>=N)return;busy=true;
   [g[r][c],g[R][C]]=[g[R][C],g[r][c]];[el[r][c],el[R][C]]=[el[R][C],el[r][c]];place(el[r][c],r,c);place(el[R][C],R,C);snd(880,.06,.03);vib(15);await wait(210);
   if(!runs().length){[g[r][c],g[R][C]]=[g[R][C],g[r][c]];[el[r][c],el[R][C]]=[el[R][C],el[r][c]];place(el[r][c],r,c);place(el[R][C],R,C);await wait(210);busy=false;return;}
-  used++;movesEl.textContent=String(moves-used);const {tiger,score}=await resolve();
+  used++;movesEl.textContent=String(moves-used);const {tiger,score}=await resolve();total+=score;
   if(tiger){setBar(bar-9);fillEl.classList.add('is-hurt');snd(196,.3,.08);vib([50,40,50]);await wait(420);fillEl.classList.remove('is-hurt');}
   await wait(520);setBar(Math.min(win?100:94,Math.max(plan(used),bar+6*Math.max(0,score-1))));
   if(!hasMove()){fill();for(let a=0;a<N;a++)for(let b=0;b<N;b++){el[a][b]?.remove();make(a,b,-N);}await wait(300);}
