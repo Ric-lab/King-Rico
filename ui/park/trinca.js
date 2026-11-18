@@ -46,8 +46,13 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  #kr-controller-game .tr-p.is-sel i{transform:scale(1.12);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 3px 2px rgba(20,30,60,.45))}
  #kr-controller-game .tr-p.is-pop i{animation:trPop .22s ease-in forwards}
  @keyframes trPop{50%{transform:scale(1.3)}to{transform:scale(0);opacity:0}}
- #kr-controller-game .tr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(255,252,240,.9);animation:trIn .3s ease-out}
+ #kr-controller-game .tr-end{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(255,252,240,.9);animation:trIn .3s ease-out}
  @keyframes trIn{from{opacity:0;transform:scale(.9)}}
+ #kr-controller-game .tr-pts{position:fixed;z-index:9100;pointer-events:none;font:800 var(--fs,30px)/1 'Rammetto One','Baloo 2',sans-serif;color:var(--c,#fff);-webkit-text-stroke:3px #4a1a00;paint-order:stroke;text-shadow:0 3px 0 #4a1a00,0 0 14px var(--c,#fff);transform:translate(-50%,-50%)}
+ #kr-controller-game .tr-ring{position:absolute;z-index:3;border-radius:50%;border:5px solid var(--c);box-shadow:0 0 20px var(--c);pointer-events:none}
+ #kr-controller-game .tr-flash{position:absolute;inset:0;z-index:4;border-radius:20px;background:var(--c);pointer-events:none;opacity:0}
+ #kr-controller-game .tr-board.is-shake{animation:trShake .32s}
+ @keyframes trShake{20%{translate:-5px 2px}40%{translate:5px -2px}60%{translate:-3px 1px}80%{translate:3px -1px}}
  #kr-controller-game .tr-end b{font-family:'Rammetto One','Baloo 2',sans-serif;font-size:34px;color:#ffb21a;text-shadow:0 3px 0 #8a4a05}
  #kr-controller-game .tr-end button{padding:14px 56px;border:0;border-radius:999px;font:800 26px/1 'Baloo 2',sans-serif;color:#fff;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36;cursor:pointer}
  </style><div class="tr-top"><div class="tr-moves"><b>${moves}</b><small>JOGADAS</small></div><div class="tr-bar"><div class="tr-fill"></div></div><div class="tr-goal"></div></div><div class="tr-board"></div>`;
@@ -64,13 +69,24 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  const resolve=async()=>{let level=0,tiger=false,score=0;for(;;){const rs=runs();if(!rs.length)break;level++;const kill=new Set();for(const r of rs){if(r.type===TIGER)tiger=true;r.cells.forEach(([a,b])=>kill.add(a*N+b));}
    // Valor: trinca 1 · quadra 1,5 · quina reta 2 · quina em L/T 1,75 (dono, 18/11). Tiger não soma.
    const done=new Set();for(let i=0;i<rs.length;i++)for(let j=i+1;j<rs.length;j++){const a=rs[i],b=rs[j];if(done.has(i)||done.has(j)||a.type!==b.type||a.type===TIGER)continue;if(a.cells.some(([x,y])=>b.cells.some(([p,q])=>p===x&&q===y))){score+=1.75;done.add(i);done.add(j);}}
-   rs.forEach((r,i)=>{if(!done.has(i)&&r.type!==TIGER)score+=r.cells.length>=5?2:r.cells.length===4?1.5:1;});
+   const groups=[];for(let i=0;i<rs.length;i++)for(let j=i+1;j<rs.length;j++)if(done.has(i)&&done.has(j)&&rs[i].type===rs[j].type&&rs[i].cells.some(([x,y])=>rs[j].cells.some(([p,q])=>p===x&&q===y))&&!groups.some(gp=>gp.ids.includes(i)))groups.push({ids:[i,j],v:1.75,cells:[...rs[i].cells,...rs[j].cells]});
+   rs.forEach((r,i)=>{if(!done.has(i)&&r.type!==TIGER){const v=r.cells.length>=5?2:r.cells.length===4?1.5:1;score+=v;groups.push({v,cells:r.cells});}});
+   groups.forEach(gp=>celebrate(gp.v,gp.cells));
    snd([523,659,784,988,1175,1319][Math.min(5,level-1)],.2,.07);vib(level>1?[18,30,18]:22);
    kill.forEach(k=>el[Math.floor(k/N)][k%N].classList.add('is-pop'));await wait(230);kill.forEach(k=>{const r=Math.floor(k/N),c=k%N;el[r][c].remove();el[r][c]=null;g[r][c]=-1;});
    for(let c=0;c<N;c++){let w=N-1;for(let r=N-1;r>=0;r--)if(g[r][c]>=0){if(w!==r){g[w][c]=g[r][c];el[w][c]=el[r][c];g[r][c]=-1;el[r][c]=null;place(el[w][c],w,c);}w--;}
     for(let r=w,k=1;r>=0;r--,k++){g[r][c]=pick();make(r,c,-k);}}
    await wait(260);}
   return {tiger,score};};
+ // Cada combinação tem seu efeito e seu valor voa até a barra (dono, 18/11).
+ const STY={1:{c:'#ffffff',fs:26,txt:'+1'},1.5:{c:'#7fe3ff',fs:32,txt:'+1,5'},1.75:{c:'#ff9ae6',fs:36,txt:'+1,75'},2:{c:'#ffd257',fs:42,txt:'+2'}};
+ const celebrate=(v,cells)=>{const st=STY[v]||STY[1],b=board.getBoundingClientRect(),cw=b.width/N;let x=0,y=0;cells.forEach(([r,c])=>{x+=c;y+=r;});x=b.left+(x/cells.length+.5)*cw;y=b.top+(y/cells.length+.5)*cw;
+  if(v>1){const ring=document.createElement('i');ring.className='tr-ring';ring.style.cssText=`--c:${st.c};left:${x-b.left-cw}px;top:${y-b.top-cw}px;width:${cw*2}px;height:${cw*2}px`;board.append(ring);ring.animate([{transform:'scale(.3)',opacity:1},{transform:'scale('+(v>=1.75?2.6:1.8)+')',opacity:0}],{duration:520,easing:'ease-out'}).onfinish=()=>ring.remove();}
+  if(v>=1.75){const fl=document.createElement('i');fl.className='tr-flash';fl.style.setProperty('--c',st.c);board.append(fl);fl.animate([{opacity:0},{opacity:.5},{opacity:0}],{duration:360}).onfinish=()=>fl.remove();board.classList.remove('is-shake');void board.offsetWidth;board.classList.add('is-shake');}
+  if(v>=1.5){[0,1,2].forEach(k=>snd([784,988,1319][k]*(v>=2?1.25:1),.22,.06,k*.06));vib(v>=2?[30,30,30,30,70]:[25,25,45]);}
+  const p=document.createElement('span');p.className='tr-pts';p.textContent=st.txt;p.style.cssText=`--c:${st.c};--fs:${st.fs}px;left:${x}px;top:${y}px`;o.append(p);
+  const f=fillEl.getBoundingClientRect(),tx=f.left+Math.max(12,f.width),ty=f.top+f.height/2;
+  p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.25)',opacity:1,offset:.2},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.45},{transform:`translate(calc(-50% + ${tx-x}px),calc(-50% + ${ty-y}px)) scale(.5)`,opacity:.9}],{duration:900,easing:'cubic-bezier(.4,0,.6,1)'}).onfinish=()=>{p.remove();fillEl.animate([{filter:'brightness(1.8)'},{filter:'none'}],{duration:260});};};
  const finish=async won=>{over=true;await wait(350);const end=document.createElement('div');end.className='tr-end';
   let prize='';if(won){const n=cedros.get();if(n<MAX){cedros.set(n+1);prize=`<div style="width:110px;height:110px;background:url(${A('/assets/symbols/sym-scepter.png')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div>`;}
    else{const coins=Math.round(bet*2.5*100)/100;try{fc.sfxCoins?.();}catch{}prize=`<span style="font-size:40px;font-weight:800;color:#fff3c4">+${coins.toLocaleString('pt-BR')}</span>`;try{window.KingRicoPreviewCredit?.(coins);}catch{}}
@@ -83,7 +99,7 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
   if(!runs().length){[g[r][c],g[R][C]]=[g[R][C],g[r][c]];[el[r][c],el[R][C]]=[el[R][C],el[r][c]];place(el[r][c],r,c);place(el[R][C],R,C);await wait(210);busy=false;return;}
   used++;movesEl.textContent=String(moves-used);const {tiger,score}=await resolve();
   if(tiger){setBar(bar-9);fillEl.classList.add('is-hurt');snd(196,.3,.08);vib([50,40,50]);await wait(420);fillEl.classList.remove('is-hurt');}
-  setBar(Math.min(win?100:94,Math.max(plan(used),bar+6*Math.max(0,score-1))));
+  await wait(520);setBar(Math.min(win?100:94,Math.max(plan(used),bar+6*Math.max(0,score-1))));
   if(!hasMove()){fill();for(let a=0;a<N;a++)for(let b=0;b<N;b++){el[a][b]?.remove();make(a,b,-N);}await wait(300);}
   busy=false;if(bar>=100)return finish(true);if(used>=moves)return finish(false);};
  let start=null;
