@@ -10,7 +10,12 @@ let layer=null,token=0;const clear=()=>{token++;layer?.remove();layer=null;};
 const reelsStopped=()=>new Promise(res=>{const t0=Date.now(),k=setInterval(()=>{const busy=document.querySelector('.park-reel-cell[data-reel-spinning="true"]')||window.__fc?.state?.spinning;if(!busy||Date.now()-t0>9000){clearInterval(k);setTimeout(res,450);}},120);});
 function best(res){const g=res?.outcome?.grid;if(!engine||!Array.isArray(g)||g.length!==9)return null;const syms=engine.slotSymbols?.(6)||engine.SYMBOLS,won=new Set((res.outcome.lines||[]).map(String));let b=null;
  engine.ALL_LINES.forEach((L,li)=>{if(won.has(String(li)))return;const v=L.map(i=>g[i]);for(let k=0;k<3;k++){const a=v[(k+1)%3],c=v[(k+2)%3];if(a===c&&a!==v[k]&&(syms[a]?.pay||0)>0&&(!b||syms[a].pay>b.pay))b={line:L,cell:L[k],from:L[(k+1)%3],pay:syms[a].pay};}});return b;}
-async function offer(fc,res){clear();if(cedros.get()<1)return;const my=++token;await reelsStopped();if(my!==token)return;const b=best(res);if(!b||cedros.get()<1)return;
+let pending=null;
+const dotsEl=()=>document.getElementById('kr-cedro-dots');
+const hint=on=>{const d=dotsEl();if(!d)return;d.style.pointerEvents=on?'auto':'none';d.style.cursor=on?'pointer':'';d.style.animation=on?'krCedroDots 1s ease-in-out infinite':'';d.style.padding=on?'6px 8px':'';d.style.borderRadius='12px';d.onclick=on?()=>{const p=pending;pending=null;hint(false);if(p)show(p.fc,p.res,p.b);}:null;};
+async function offer(fc,res){clear();pending=null;hint(false);if(cedros.get()<1)return;const my=++token;await reelsStopped();if(my!==token)return;const b=best(res);if(!b||cedros.get()<1)return;
+ pending={fc,res,b};hint(true);}
+function show(fc,res,b){clear();
  const cells=[...document.querySelectorAll('.park-reel-cell')];if(cells.length<9)return;const R=i=>cells[i].getBoundingClientRect(),t=R(b.cell);
  layer=document.createElement('div');layer.id='kr-cedro-offer';layer.style.cssText='position:fixed;inset:0;z-index:60;pointer-events:none';
  const holes=b.line.map(i=>{const r=R(i);return `<rect x="${r.left}" y="${r.top}" width="${r.width}" height="${r.height}" rx="12"/>`;}).join('');
@@ -25,14 +30,15 @@ async function offer(fc,res){clear();if(cedros.get()<1)return;const my=++token;a
   const x0=(dots?dots.left+dots.width/2:innerWidth/2)-30,y0=(dots?dots.top:innerHeight/2)-30,x1=t.left+t.width/2-30,y1=t.top+t.height/2-30;try{fc.sfxWhoosh?.();}catch{}
   await fly.animate([{transform:`translate(${x0}px,${y0}px) scale(.5)`},{transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-80}px) scale(1.2)`,offset:.5},{transform:`translate(${x1}px,${y1}px) scale(1)`}],{duration:520,easing:'cubic-bezier(.4,0,.5,1)'}).finished.catch(()=>{});fly.remove();
   btn.innerHTML='';try{navigator.vibrate?.([30,30,60]);}catch{}
-  await el.animate([{transform:'rotateY(0)'},{transform:'rotateY(90deg)'}],{duration:160,easing:'ease-in'}).finished.catch(()=>{});el.innerHTML=src.innerHTML;
-  await el.animate([{transform:'rotateY(-90deg) scale(1.15)',filter:'brightness(2)'},{transform:'rotateY(0) scale(1)',filter:'none'}],{duration:260,easing:'ease-out'}).finished.catch(()=>{});
+  const cover=document.createElement('div');cover.style.cssText=`position:fixed;z-index:61;left:${t.left}px;top:${t.top}px;width:${t.width}px;height:${t.height}px;overflow:hidden;border-radius:10px;pointer-events:none;background:#fffdf6`;cover.innerHTML=src.innerHTML;document.body.append(cover);layer.append(cover);
+  await cover.animate([{transform:'rotateY(90deg) scale(1.15)',filter:'brightness(2)'},{transform:'rotateY(0) scale(1)',filter:'none'}],{duration:300,easing:'ease-out'}).finished.catch(()=>{});
   layer.querySelectorAll('i').forEach(i=>i.style.boxShadow='0 0 0 4px #fff3b0,0 0 26px #ffd257');btn.style.boxShadow='0 0 0 4px #fff3b0,0 0 26px #ffd257';btn.style.background='transparent';
   try{fc.sfxWin?.(b.pay>=5);}catch{}const bet=fc.state?.bet??res.outcome.bet??1,coins=Math.round(bet*b.pay*100)/100;
   const tag=document.createElement('b');tag.textContent='+'+coins.toLocaleString('pt-BR');tag.style.cssText=`position:fixed;z-index:62;left:${t.left+t.width/2}px;top:${t.top}px;transform:translate(-50%,-50%);font:800 34px/1 'Baloo 2',sans-serif;color:#fff3c4;-webkit-text-stroke:3px #4a1a00;paint-order:stroke;text-shadow:0 3px 0 #4a1a00`;document.body.append(tag);
   tag.animate([{transform:'translate(-50%,-20%) scale(.5)',opacity:0},{transform:'translate(-50%,-80%) scale(1.15)',opacity:1,offset:.3},{transform:'translate(-50%,-140%) scale(1)',opacity:0}],{duration:1300}).onfinish=()=>tag.remove();
-  await window.KingRicoPreviewCredit(coins);try{fc.sfxCoins?.();}catch{}setTimeout(clear,1100);};}
+  await window.KingRicoPreviewCredit(coins);try{fc.sfxCoins?.();}catch{}
+  setTimeout(()=>{const svg=layer?.querySelector('svg');svg?.animate([{opacity:1},{opacity:0}],{duration:300,fill:'forwards'});layer?.querySelectorAll(':scope>i,:scope>button').forEach(x=>x.remove());},1100);};}
 export function installCedroUse(){const fc=window.__fc;if(!fc||fc._cedroUse)return;fc._cedroUse=true;
- if(!document.getElementById('kr-cedro-kf')){const s=document.createElement('style');s.id='kr-cedro-kf';s.textContent='@keyframes krCedroPulse{50%{box-shadow:0 0 0 6px #b4ffc8,0 0 36px 12px #6cf096}}@keyframes krCedroBob{50%{transform:translateY(-6px) rotate(-6deg)}}@keyframes krCedroTap{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.8);opacity:.6}}';document.head.append(s);}
+ if(!document.getElementById('kr-cedro-kf')){const s=document.createElement('style');s.id='kr-cedro-kf';s.textContent='@keyframes krCedroPulse{50%{box-shadow:0 0 0 6px #b4ffc8,0 0 36px 12px #6cf096}}@keyframes krCedroBob{50%{transform:translateY(-6px) rotate(-6deg)}}@keyframes krCedroDots{50%{box-shadow:0 0 0 3px #6cf096,0 0 14px #6cf096;transform:scale(1.15)}}@keyframes krCedroTap{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.8);opacity:.6}}';document.head.append(s);}
  const orig=fc._parkChargeConfirmed;fc._parkChargeConfirmed=(b,res,a)=>{const v=orig?.(b,res,a);offer(fc,res).catch(()=>{});return v;};
- document.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-spin-btn]'))clear();},true);addEventListener('resize',clear);}
+ document.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-spin-btn]')){clear();pending=null;hint(false);}},true);addEventListener('resize',clear);}
