@@ -15,8 +15,8 @@ function art(sym){const a=document.querySelector('.park-reels [data-symbol]'),cs
 function paint(){const n=spell.get();let d=document.getElementById('kr-cedro-count');const plaque=document.querySelector('.park-prize-value');
  if(!plaque){d?.remove();return;}
  if(!d){d=document.createElement('div');d.id='kr-cedro-count';d.setAttribute('aria-label','Cedros');plaque.parentElement.append(d);}
- d.style.cssText=`position:absolute;z-index:30;left:${plaque.offsetLeft+plaque.offsetWidth/2-36}px;top:${plaque.offsetTop+plaque.offsetHeight-4}px;width:72px;height:22px;display:flex;align-items:center;justify-content:center;gap:5px;pointer-events:none`;
- d.innerHTML=`<i style="width:22px;height:24px;background:url(/assets/symbols/sym-scepter.png) center/contain no-repeat;filter:drop-shadow(0 1px 1px #0008)"></i>`+[0,1,2].map(i=>`<i style="width:9px;height:9px;border-radius:50%;background:${i<n?'radial-gradient(circle at 35% 30%,#fffbe0,#ffd257 50%,#c27a0a)':'rgba(40,10,50,.55)'};box-shadow:0 0 0 1.5px ${i<n?'#8a4a05':'rgba(255,210,87,.5)'}"></i>`).join('');}
+ d.style.cssText=`position:absolute;z-index:30;left:${plaque.offsetLeft+plaque.offsetWidth/2-24}px;top:${plaque.offsetTop+plaque.offsetHeight-4}px;width:48px;height:22px;display:flex;align-items:center;justify-content:center;gap:5px;pointer-events:none`;
+ d.innerHTML=[0,1,2].map(i=>`<i style="width:9px;height:9px;border-radius:50%;background:${i<n?'radial-gradient(circle at 35% 30%,#fffbe0,#ffd257 50%,#c27a0a)':'rgba(40,10,50,.55)'};box-shadow:0 0 0 1.5px ${i<n?'#8a4a05':'rgba(255,210,87,.5)'}"></i>`).join('');}
 const reelsStopped=()=>new Promise(res=>{const t0=Date.now(),k=setInterval(()=>{if(!document.querySelector('.park-reel-cell[data-reel-spinning="true"]')||Date.now()-t0>9000){clearInterval(k);setTimeout(res,250);}},100);});
 function findNearMiss(res){const g=res?.outcome?.grid;if(!engine||!Array.isArray(g)||g.length!==9)return null;
  const syms=engine.slotSymbols?.(6)||engine.SYMBOLS,won=new Set((res.outcome.lines||[]).map(String));let best=null;
