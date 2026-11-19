@@ -1,8 +1,44 @@
 {
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-19T19:16:39.179Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "i-cedro-sai",
+      "title": "Decidir: tirar o cedro do jogo",
+      "status": "todo",
+      "category": null,
+      "agent": "",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia (19/11): o feitiço automático é bonito, mas acontece sozinho e não encaixa. Proposta: tirar o cedro; o prêmio do Royal Rico passa a ser o cofrinho/Plinko.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
+    {
+      "id": "i-royal-rico-v2",
+      "title": "Royal Rico v2: capturar o tigre → canhão no cofrinho → Plinko",
+      "status": "todo",
+      "category": null,
+      "agent": "",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia do dono (19/11): estilo fase do ovo do Royal Match — levar o tigre até o fundo do tabuleiro; ao chegar vira moeda e voa para o cofrinho. Fim: transição para um canhão; 3 a 10 tiros (só tocar) no cofrinho, que cresce e racha; no último estoura. As moedas caem num Plinko com multiplicadores (dono sugeriu 1,5·2,5·5·10·50·10·5·2,5·1,5). Cuidado: no Plinko a maioria cai no meio — 50× no centro paga demais; inverter (pontas altas) ou controlar a queda. Fases curtas (~15 movimentos, 3–6 tiros, Plinko automático). Reaproveitar o Plinko do Fingo. Dentro do RTP 90%.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
+    {
+      "id": "i-aposta-fixa",
+      "title": "Decidir: aposta fixa em 100 moedas (sem energia)",
+      "status": "todo",
+      "category": null,
+      "agent": "",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia (19/11): influência do Coin Master. A favor: tira decisão e botão confuso para a 3ª idade; conta do RTP mais simples. Sem energia (seria cópia e cria espera; anúncio de 1000 = 10 giros já faz esse papel). Talvez depois: “×2 por 1 giro” liberado por nível/evento.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
     {
       "id": "t-colocar-o-mesmo-quadra-58",
       "title": "Colocar o mesmo quadrado que esta atras da roleta e do trevo atras do raio para ele não ficar voando (mas tem que dimensionar bem para que o topo do quadrado fique alinhado ao topo da slot machine E a barra lateral não pode ser mexida e o raio ocupa mais do espaço do quadrado do a roleta e o trevo",
