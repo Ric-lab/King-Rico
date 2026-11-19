@@ -7,7 +7,7 @@ const PIECES=[
  {id:'trevo',src:'/assets/symbols/clover-green-bonus-v1.webp',w:1},
  {id:'coroa',src:'/assets/symbols/sym-crown-lossless.webp',w:1},
  {id:'tiger',src:'/assets/tony/head.webp',w:.7}];
-import {wild} from './wild-crown.js';
+import {spell} from './cedro-spell.js';
 const TIGER=4,N=7,KEY='kingRico.preview.cedros',MAX=3;
 const A=p=>p; // o build já prefixa '/assets/' para o GitHub Pages
 export const cedros={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));mountCedroDots();}};
@@ -58,6 +58,9 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
  #kr-controller-game .tr-end button{padding:14px 56px;border:0;border-radius:999px;font:800 26px/1 'Baloo 2',sans-serif;color:#fff;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36;cursor:pointer}
  </style><div class="tr-top"><div class="tr-moves"><b>${moves}</b><small>JOGADAS</small></div><div class="tr-bar"><div class="tr-fill"></div></div><div class="tr-goal"></div></div><div class="tr-board"></div>`;
  document.body.append(o);
+ // X para sair e voltar à slot (sem prêmio).
+ {const x=document.createElement('button');x.type='button';x.setAttribute('aria-label','Fechar e voltar');x.textContent='✕';x.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:50;width:46px;height:46px;border-radius:50%;border:0;font:800 22px/1 'Baloo 2',sans-serif;color:#fff;background:rgba(40,8,60,.8);box-shadow:0 0 0 2.5px #ffd257,0 4px 8px #0006;cursor:pointer";
+  x.onclick=()=>{if(!o.isConnected)return;over=true;try{fc.sfxClick?.();}catch{}o.remove();done({won:false,quit:true});};o.append(x);}
  const board=o.querySelector('.tr-board'),fillEl=o.querySelector('.tr-fill'),movesEl=o.querySelector('.tr-moves b');
  const el=Array.from({length:N},()=>Array(N).fill(null));
  const place=(d,r,c)=>{d.style.transform=`translate(${c*100}%,${r*100}%)`;};
@@ -90,7 +93,9 @@ export function openTrinca(fc,{bet=1}={}){return new Promise(done=>{
   p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.25)',opacity:1,offset:.2},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.45},{transform:`translate(calc(-50% + ${tx-x}px),calc(-50% + ${ty-y}px)) scale(.5)`,opacity:.9}],{duration:900,easing:'cubic-bezier(.4,0,.6,1)'}).onfinish=()=>{p.remove();fillEl.animate([{filter:'brightness(1.8)'},{filter:'none'}],{duration:260});};};
  const finish=async won=>{over=true;await wait(350);const end=document.createElement('div');end.className='tr-end';
   // Prêmio: giros com a coroa coringa no meio da slot. Mais de 6 pontos = 4 giros (dono, 18/11).
-  let prize='';if(won){const n=total>6?4:3;wild.set(Math.min(4,wild.get()+n));prize=`<div style="width:110px;height:110px;background:url(${A('/assets/king-rico/fw6/happy.webp')}) center/contain no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div><span style="font-size:24px;font-weight:800;color:#8a4a05">${n} GIROS COM CORINGA</span>`;
+  // Prêmio: +1 cedro (máx. 3). Com 3 guardados, vale 2,5× a aposta em moedas.
+  let prize='';if(won){const full=spell.get()>=3,coins=Math.round(bet*2.5*100)/100;if(full)await window.KingRicoPreviewCredit?.(coins);else spell.set(spell.get()+1);
+   prize=`<div style="width:96px;height:110px;background:url(${A('/assets/symbols-v7.webp')}) ${5/11*100}% 50%/1200% 100% no-repeat;filter:drop-shadow(0 6px 6px #0008)"></div><span style="font-size:24px;font-weight:800;color:#8a4a05">${full?'+'+coins.toLocaleString('pt-BR')+' MOEDAS':'+1 CEDRO'}</span>`;
    try{fc.sfxWin?.(true);}catch{}vib([40,40,90]);}
   else{snd(330,.4,.07);snd(262,.5,.07,.18);vib([60,60,60]);}
   end.innerHTML=`<b>${won?'VOCÊ CONSEGUIU!':'QUASE!'}</b>${prize}<button type="button">OK</button>`;board.append(end);
