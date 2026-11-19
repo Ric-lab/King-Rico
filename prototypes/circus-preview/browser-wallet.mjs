@@ -30,6 +30,11 @@ function openPicker(){document.getElementById('kr-preview-picker')?.remove();con
   else{const i=document.createElement('div');i.style.cssText='width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:26px';i.textContent=id==='lose'?'✕':id==='wheel'?'◎':id==='random'?'🎲':'★';b.append(i);}
   b.append(document.createTextNode(label+(off?' (em breve)':'')));b.onclick=()=>{forced=id==='random'?null:id;o.remove();badge();};g.append(b);};
  mk('random','Aleatório','');PICKS.forEach(p=>mk(...p));card.append(g);
+ // Cedros sempre cheios (só prévia): o feitiço nunca acaba enquanto estiver ligado.
+ {const ck='kingRico.preview.cedrosFull',on=localStorage.getItem(ck)==='1',t=document.createElement('button');t.type='button';
+  t.style.cssText='display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border:0;border-radius:14px;cursor:pointer;font-family:inherit;font-weight:800;font-size:16px;'+(on?'color:#0e3a1e;background:linear-gradient(180deg,#a6ffc4,#2ec962);box-shadow:inset 0 0 0 2px #fff':'color:#fff3c4;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,210,87,.35)');
+  t.textContent=(on?'✓ ':'')+'CEDROS SEMPRE CHEIOS'+(on?' (ligado)':'');
+  t.onclick=()=>{if(on)localStorage.removeItem(ck);else{localStorage.setItem(ck,'1');localStorage.setItem('kingRico.preview.cedros','3');}globalThis.KingRicoCedroPaint?.();openPicker();};card.append(t);}
  const ok=document.createElement('button');ok.type='button';ok.textContent='FECHAR';ok.style.cssText='align-self:center;padding:10px 40px;border:0;border-radius:999px;font-weight:800;font-size:18px;font-family:inherit;color:#4a1a00;background:linear-gradient(180deg,#ffe27a,#f0a018);box-shadow:0 4px 0 #8a4a05;cursor:pointer';ok.onclick=()=>o.remove();card.append(ok);
  o.onclick=e=>{if(e.target===o)o.remove();};o.append(card);document.body.append(o);}
 globalThis.KingRicoPreviewPicker=openPicker;

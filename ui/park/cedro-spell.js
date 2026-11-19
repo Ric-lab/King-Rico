@@ -3,7 +3,8 @@
 // Automático: o jogador não toca em nada. A casa nova é uma camada temporária: some sozinha e some no próximo giro.
 let engine=null;import('../../cloud/engine.cjs').then(m=>{engine=m.default||m;}).catch(()=>{});
 const KEY='kingRico.preview.cedros',MAX=3;
-export const spell={get:()=>Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));paint();}};
+const full=()=>localStorage.getItem('kingRico.preview.cedrosFull')==='1';
+export const spell={get:()=>full()?MAX:Math.max(0,Math.min(MAX,+localStorage.getItem(KEY)||0)),set:n=>{if(!full())localStorage.setItem(KEY,String(Math.max(0,Math.min(MAX,n))));paint();}};
 const post=async body=>{const r=await fetch(location.origin+'/api/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:crypto.randomUUID(),...body})});return r.json();};
 window.KingRicoPreviewCredit=async coins=>{try{const j=await post({action:'preview-credit',units:Math.round(coins*100)});const fc=window.__fc;if(fc&&j.player){fc._cloudDeferred=j.player;fc.applyCloudPlayer?.();}}catch{}};
 const temp=new Set(),wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -62,4 +63,4 @@ export function installCedroSpell(){const fc=window.__fc;if(!fc||fc._cedroSpell)
  const orig=fc._parkChargeConfirmed;fc._parkChargeConfirmed=(b,res,a)=>{const v=orig?.(b,res,a);onSpin(fc,res).catch(()=>{});return v;};
  // Garantia contra a casa "travada": qualquer novo giro apaga as camadas do feitiço.
  document.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-spin-btn],.park-spin-button,.park-reels'))clearAll();},true);
- addEventListener('resize',paint);paint();setTimeout(paint,800);}
+ globalThis.KingRicoCedroPaint=paint;addEventListener('resize',paint);paint();setTimeout(paint,800);}
