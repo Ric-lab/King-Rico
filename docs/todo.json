@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T04:15:45.127Z",
+  "updatedAt": "2026-11-20",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -114,12 +114,12 @@
     {
       "id": "i-escudo",
       "title": "Escudo = defesa contra os vilões (até 5, guardados perto do saldo)",
-      "status": "todo",
+      "status": "preview",
       "category": "Ideias",
-      "agent": "Claude",
+      "agent": "Codex",
       "commit": null,
-      "demoUrl": null,
-      "notes": "Novo formato de asset (dono achou um que não confunde com a roleta). Defesa contra os vilões, até 5, guardados perto do saldo. Definir regra com o Ray.",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Etapa2 visual: asset aprovado, contador no cabeçalho e defesa/coleta no estoque salvo v6. Layout do Claude preservado. Regra Ray ainda aberta; até decisão mantém roubo de estoque v6. Royal Rico pagando escudos e economia v7 são etapas seguintes.",
       "createdAt": "2026-11-20T03:24:02.198Z",
       "updatedAt": "2026-11-20T04:07:27.180Z"
     },

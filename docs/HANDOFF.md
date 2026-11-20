@@ -1,3 +1,25 @@
+## Continuação do Claude — escudo v7, etapa 2 (20/11/2026, Codex)
+
+Base puxada: `86e1f66` (máquina 10% maior, giro/auto/botões v7). Preservado o
+layout de Claude. Plano atual: docs/PLANO-V7.md; o topo antigo estava desatualizado.
+- Arte do escudo aprovada guardada em PNG e WebP: assets/symbols/shield-defense-green-crown-v1.*
+- Contador 0/5 no cabeçalho, abaixo do saldo, com botão de toque mínimo44px.
+  Mesmo estoque/recibos salvos v6; sem novo saldo local de defesa.
+- Defesa/coleta usam o escudo; origem e destino dos voos acompanham o novo lugar.
+  Ray carrega a placa real e ela retorna com o estoque confirmado. Popup atualizado.
+- Verificação: defesa Tony e consumo único, v6/coleta/defesas, Ray/reload;
+  quatro larguras móveis e saldo100.000.000,65, com fonte preservada.
+  Unitários de defesa e giro grátis passaram. Capturas em work/, sem erros JS/404.
+- Só interface/arte: motor, chances, pagamentos e regras não alterados. Não publicar main.
+- A regra nova do Ray está pendente do dono; enquanto isso, conserva o comportamento
+  v6 (rouba o estoque). Royal Rico ainda paga cedros locais: não declarar a migração
+  dos prêmios concluída. Bubble Rico e economia v7 continuam pendentes.
+
+Próximo passo exato: dono validar escudo/contador e decidir Ray; seguir a etapa3
+(tirar Happeach/Tucker/feitiço) do PLANO-V7, depois trevo na barriga e prêmios dos
+minigames. O plano pede uma etapa de cada vez, sem promover o pacote incompleto.
+Prévia compartilhada: https://ric-lab.github.io/King-Rico/Preview
+
 ## Artes para Claude — 17/11/2026 (Codex)
 
 - Logo aprovado: `assets/brand/king-rico-wordmark-color-crown-v1.png`.

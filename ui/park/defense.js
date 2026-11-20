@@ -1,4 +1,4 @@
-// The receipt consumes one clover and owns the replacement/prize. This is presentation only.
+// The receipt consumes one saved defense and owns the replacement/prize. This is presentation only.
 export function installDefense(fc,rails){
  const payout=fc.payout.bind(fc),busy=fc.cloudBusy.bind(fc);
  fc.cloudBusy=(...args)=>!!fc._cedarDefending||busy(...args);
@@ -9,15 +9,15 @@ export function installDefense(fc,rails){
   fc._parkVisibleTickets=(window.KingRicoPark.state.cedros??0)+1;
   fc.setState({spinning:false,auto:false,grid:before.slice(),winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:''});
   const scene=document.createElement('div');scene.className='park-defense-scene is-replacement';scene.dataset.phase='warning';
-  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/clover-rainbow-gold-v1.webp" alt=""><i class="park-defense-impact"></i>';
+  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/shield-defense-green-crown-v1.webp" alt=""><i class="park-defense-impact"></i>';
   document.body.append(scene);
   const svg=scene.querySelector('svg'),fly=scene.querySelector('img'),cells=before.flatMap((v,i)=>v===({tony:12,tucker:13,ray:14}[event.against])?[i]:[]);
-  const box=i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect(),boxes=cells.map(box).filter(Boolean),target=box(cell),source=rails.querySelector('.park-pocket .park-ticket-wallet-art')?.getBoundingClientRect();
+  const box=i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect(),boxes=cells.map(box).filter(Boolean),target=box(cell),source=document.querySelector('.park-shield-wallet .park-ticket-wallet-art')?.getBoundingClientRect();
   svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);
   if(boxes.length)svg.innerHTML=`<polyline points="${boxes.map(r=>`${r.x+r.width/2},${r.y+r.height/2}`).join(' ')}"/>`+boxes.map(r=>`<ellipse cx="${r.x+r.width/2}" cy="${r.y+r.height/2}" rx="${r.width*.44}" ry="${r.height*.43}"/>`).join('');
   try{fc.pluck(196,.13,.35);fc.buzz?.([45]);}catch{}
   let ended=false,hit=false;const timers=[],animations=[];const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
-  const impact=()=>{if(hit||ended)return;hit=true;scene.dataset.phase='impact';svg.style.opacity='0';if(target){const spark=scene.querySelector('.park-defense-impact');spark.style.left=(target.x+target.width/2)+'px';spark.style.top=(target.y+target.height/2)+'px';} fc._parkVisibleTickets=window.KingRicoPark.state.cedros??0;rails.querySelector('[data-tickets]').textContent=fc._parkVisibleTickets+'/5';
+  const impact=()=>{if(hit||ended)return;hit=true;scene.dataset.phase='impact';svg.style.opacity='0';if(target){const spark=scene.querySelector('.park-defense-impact');spark.style.left=(target.x+target.width/2)+'px';spark.style.top=(target.y+target.height/2)+'px';} fc._parkVisibleTickets=window.KingRicoPark.state.cedros??0;document.querySelector('.park-shield-wallet [data-tickets]').textContent=fc._parkVisibleTickets+'/5';
    fc.setState({grid:o.grid.slice(),winCells:res.cells,winLines:res.lines,winDim:res.win>0});
    try{fc.bell(1046.5,.4,.09);fc.buzz?.([65]);animations.push(fly.animate([{opacity:1,scale:1},{opacity:0,scale:1.35}],{duration:420,fill:'forwards'}));const sym=document.querySelector('[data-sym="'+cell+'"]');if(sym)animations.push(sym.animate([{filter:'brightness(2)',transform:'scale(.65)'},{filter:'brightness(1.2)',transform:'scale(1.08)',offset:.65},{filter:'brightness(1)',transform:'scale(1)'}],{duration:460,easing:'ease-out'}));}catch{}
   };

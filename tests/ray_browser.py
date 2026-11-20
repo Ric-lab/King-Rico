@@ -10,7 +10,7 @@ with sync_playwright() as p:
   page.goto(BASE+'/circus?demo=ray');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   assert page.evaluate('KingRicoCloud.uid')=='park-preview'
   if count==0:page.evaluate('''async()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));s.park.tickets=0;localStorage.setItem(key,JSON.stringify(s));await KingRicoPark.call({action:'state'});}''')
-  original=page.locator('.park-circus-rails .park-pocket');original_box=original.bounding_box()
+  original=page.locator('.kr-hud-row .park-shield-wallet');original_box=original.bounding_box()
   before=page.evaluate('KingRicoCloud.player.balance');peaches=page.evaluate('KingRicoCloud.player.peaches');page.locator('[data-spin-btn]').click()
   scene=page.locator('.park-ray-scene');scene.wait_for(timeout=15000)
   page.wait_for_function('document.querySelector(".park-ray-scene")?.dataset.phase==="peeking"');page.wait_for_timeout(800)

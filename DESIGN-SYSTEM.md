@@ -317,3 +317,10 @@ arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
 mesmo material. Não confundir com os sprites animados do raio Good Luck,
 que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
 a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
+
+### Prévia v7 — escudos (20/11/2026)
+A defesa usa `assets/symbols/shield-defense-green-crown-v1.webp`, topo pontudo,
+borda dourada lisa, verde claro à esquerda e escuro à direita, coroa em relevo
+verde. Estoque até5 fica abaixo do saldo no mesmo cabeçalho, com respiro e
+área de toque44px. Nunca reduzir a fonte do saldo longo. Animações procuram
+o contador real no cabeçalho; ele não sobe junto com a máquina na roleta.

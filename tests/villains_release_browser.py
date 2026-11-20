@@ -49,7 +49,7 @@ with sync_playwright() as p:
    else:tickets=event['remaining']
    phase='flying' if kind=='tucker' else 'leaving'
    page.wait_for_function('(args)=>document.querySelector(".park-"+args[0]+"-scene")?.dataset.phase===args[1]',arg=[kind,phase]);page.wait_for_timeout(250)
-   assert page.locator('.park-basket' if kind=='tucker' else '.park-circus-rails > .park-pocket').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
+   assert page.locator('.park-basket' if kind=='tucker' else '.kr-hud-row .park-shield-wallet').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   page.screenshot(path='work/release-'+kind+'-action.png')
   dialog=page.get_by_role('dialog',name=label,exact=True);dialog.wait_for(timeout=15000)
   page.screenshot(path='work/release-'+kind+'-result.png')

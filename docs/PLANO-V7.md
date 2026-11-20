@@ -48,3 +48,15 @@ Feito por: dono + Claude. Vale para Claude, GPT/Codex e Gemini.
 6. **Bubble Rico** (minigame novo)
 7. **Economia v7:** refazer o RTP (~90%, nunca >100%) com todas as mudanças
 8. Dono testa tudo na prévia → só então publicar na main
+
+## Andamento compartilhado — 20/11/2026
+
+- Claude levou o layout até `86e1f66`: giro com aposta, auto ao segurar, turbo
+  fixo, anúncio no saldo/banner inferior e máquina10% maior. Preservar.
+- Codex continuou a etapa2 com a arte aprovada: escudo em PNG/WebP, contador
+  junto ao saldo e apresentação de defesa/coleta. Compatibilidade v6: estoque
+  salvo continua no campo cedros e os recibos existentes continuam válidos.
+- Ray mantém a regra v6 até decisão do dono. A escolha permanece aberta.
+- Não confundir apresentação da etapa2 com economia v7 concluída: Royal Rico
+  ainda tem o estoque local antigo; pagamentos em escudos são a etapa5.
+- Próxima implementação após validar: etapa3, antes de construir outro minigame.
