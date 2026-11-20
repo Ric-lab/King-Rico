@@ -30,7 +30,7 @@ with sync_playwright() as p:
   if i==0:
    page.wait_for_timeout(1200) # Must survive the background refresh, after the pour ends.
    assert page.evaluate('__fc._parkShown>=.65')
-   assert page.locator('.park-meter-fill').first.evaluate('e=>e.getBoundingClientRect().height')>=15
+   pass  # barras laterais saíram no layout v7 (dono, 20/11)
   if i in [0,2,5]:page.screenshot(path=f'work/refined-bar-{i+1}.png')
  assert all(a<b for a,b in zip(levels,levels[1:])),levels
  assert page.evaluate('KingRicoPark.state.spins')==0
