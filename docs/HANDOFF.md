@@ -14,7 +14,8 @@ Parti de `645c712`, mantendo a etapa do escudo e a economia existente.
   papéis dentro do aro, destaque/linha alinhados. Regressão própria no runner.
   Passaram circus_payout_browser (linhas/moedas), preview_motion_browser
   (roleta/subida/retorno) e special_feedback (contador oculto). A regressão
-  legada do Tucker agora mede a âncora sem exigir que o contador reapareça.
+  legada do Tucker agora mede a âncora sem exigir que o contador reapareça;
+  v6 lê o texto do contador oculto pelo DOM, não pelo texto visível.
 
 Próximo passo: dono validar a composição no link único. Continuar o PLANO-V7
 pela etapa3; decisão do Ray continua aberta. Oficial não foi alterado.
