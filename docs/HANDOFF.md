@@ -9,7 +9,8 @@ layout de Claude. Plano atual: docs/PLANO-V7.md; o topo antigo estava desatualiz
   Ray carrega a placa real e ela retorna com o estoque confirmado. Popup atualizado.
 - Verificação: defesa Tony e consumo único, v6/coleta/defesas, Ray/reload;
   quatro larguras móveis e saldo100.000.000,65, com fonte preservada.
-  Unitários de defesa e giro grátis passaram. Capturas em work/, sem erros JS/404.
+  Unitários de defesa e giro grátis passaram. A regressão dos contadores agora
+  distingue o escudo horizontal no HUD da cesta vertical. Capturas em work/, sem erros JS/404.
 - Só interface/arte: motor, chances, pagamentos e regras não alterados. Não publicar main.
 - A regra nova do Ray está pendente do dono; enquanto isso, conserva o comportamento
   v6 (rouba o estoque). Royal Rico ainda paga cedros locais: não declarar a migração

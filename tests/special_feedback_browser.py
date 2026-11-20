@@ -167,11 +167,16 @@ with sync_playwright() as p:
   print('first-row highlight requires a matching paid/special line and stops on next spin PASS',flush=True)
  if stage in ['all','counters']:
   ready()
-  for selector,number in [('.park-pocket','[data-tickets]'),('.park-basket','[data-wheels]')]:
+  # Shield stock moved into the v7 HUD; the basket retains its stacked layout.
+  shield=page.locator('.kr-hud-row .park-shield-wallet')
+  icon=shield.locator('img').bounding_box();count=shield.locator('[data-tickets]').bounding_box()
+  assert icon['x']+icon['width']+3<count['x'],(icon,count)
+  assert abs(icon['y']+icon['height']/2-count['y']-count['height']/2)<3,(icon,count)
+  for selector,number in [('.park-basket','[data-wheels]')]:
    icon=page.locator(selector+' .park-ticket-wallet-art').bounding_box();count=page.locator(selector+' '+number).bounding_box()
    assert icon['y']+icon['height']+2<count['y'],(icon,count)
    assert abs(icon['x']+icon['width']/2-count['x']-count['width']/2)<2,(icon,count)
   page.screenshot(path='work/special-stacked-powerups.png')
-  print('power-ups icon/quantity vertical with whitespace PASS',flush=True)
+  print('v7 shield dock and stacked basket with whitespace PASS',flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()
