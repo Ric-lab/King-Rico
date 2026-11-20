@@ -430,7 +430,7 @@ const SKEY = 'fortuneCircus.slot.v3';
 const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).split('?')[0].replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
 // Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
-// Faixa do banner de anúncio no topo (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
+// Faixa do banner de anúncio EMBAIXO (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
 // (window.__fcAdBanner = true, a ser ligado pela integração do AdMob); sem anúncio, o HUD encosta na barra de status.
 const FC_AD_BAND = 60;
 // Áreas seguras (barra de status / navegação). No app Android o Capacitor injeta --safe-area-inset-*; no navegador vale env().
@@ -547,7 +547,7 @@ class Component extends DCLogic {
     // Quadro (máquina + botão) centralizado no espaço livre, um pouco acima do meio; o HUD sobe de volta hudD unidades
     // e fica preso logo abaixo da barra de status / faixa do anúncio.
     const hudD = inset ? 0 : Math.round(Math.max(0, avail / sc - 802) * 0.42);
-    const top = inset ? Math.round((h - 802 * sc) / 2) : safe.top + band + hudD * sc; // sem arredondar: o HUD (top − hudD) cai no mesmo pixel do saldo da Home
+    const top = inset ? Math.round((h - 802 * sc) / 2) : safe.top + hudD * sc; // banner fica embaixo (dono, 20/11): não empurra o topo // sem arredondar: o HUD (top − hudD) cai no mesmo pixel do saldo da Home
     const st = this.state;
     if (sc === st.scale && inset === st.inset && top === st.stageTop && w === st.vw && h === st.vh) return; // avoid resize↔render feedback loop
     window.__fcLayout = { sc, safeTopU: safe.top / sc }; // a Home embutida usa a mesma escala/área segura

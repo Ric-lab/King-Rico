@@ -6,7 +6,7 @@
     frame=0;
     const width=document.documentElement.clientWidth,height=window.KingRicoViewport?.height??innerHeight;
     const scale=Math.max(.25,Math.min(width/453,height/802));
-    const banner=document.getElementById('kr-ad-banner')?.getBoundingClientRect().bottom||0;
+    const bb=document.getElementById('kr-ad-banner')?.getBoundingClientRect(),banner=bb&&bb.top<innerHeight/2?bb.bottom:0; // banner embaixo: HUD encosta no topo
     for(const row of document.querySelectorAll('.kr-hud-row')){
       row.querySelector('.kr-hud-park')?.remove();
       row.querySelector('.kr-hud-tickets')?.remove();
