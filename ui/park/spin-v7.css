@@ -44,7 +44,6 @@
 
 /* Layout v7 – passo 2 (dono, 20/11): King Rico sobe, botões descem, sem as 3 bolinhas do cedro. */
 .park-circus-stage .park-mascot{top:-14px!important}
-.park-circus-stage .park-prize-value[class]{top:132px!important;margin-top:0!important;transform:none!important}
 #kr-cedro-count{display:none!important}
 .park-circus-stage [data-spin-btn][data-spin-btn]{top:calc(568px + var(--park-machine-drop,0px))!important}
 .park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(617px + var(--park-machine-drop,0px))!important}
@@ -55,6 +54,12 @@
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rim{transition:box-shadow .12s}
 .park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-rim,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-rim{box-shadow:0 3px 6px #0008,inset 0 2px #fffb,inset 0 -2px #4a2200}
 
-/* v7: máquina 10% maior (machine-scale.js) → botões descem para não encostar. */
-.park-circus-stage [data-spin-btn][data-spin-btn]{top:calc(640px + var(--park-machine-drop,0px))!important}
-.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(689px + var(--park-machine-drop,0px))!important}
+/* Wireframe do dono (20/11): prêmio unido, máquina reta e spin na zona do polegar.
+   Uma única escala no grupo preserva a origem nativa dos três rolos e dos efeitos. */
+.park-cabinet-body{position:absolute;inset:0;transform:translateY(-30px) scale(1.08);transform-origin:226.5px 267.5px;pointer-events:none}
+.park-prize-block{position:absolute;left:117.833px;top:158px;width:220px;height:56px;z-index:4;pointer-events:none}
+.park-prize-block>.park-part-prize,.park-circus-stage .park-prize-block>.park-prize-value[class]{left:0!important;top:0!important;width:100%!important;height:100%!important;box-sizing:border-box;margin:0!important;transform:none!important}
+/* Oculta somente o contador: estado e recibos da roleta continuam intactos. */
+.park-circus-stage .park-basket{visibility:hidden!important;pointer-events:none!important}
+.park-circus-stage [data-spin-btn][data-spin-btn]{top:620px!important}
+.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:652.5px!important}

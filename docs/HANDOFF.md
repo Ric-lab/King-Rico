@@ -1,3 +1,24 @@
+## Wireframe do dono — alinhamento Circus v7 (20/11/2026, Codex)
+
+Parti de `645c712`, mantendo a etapa do escudo e a economia existente.
+- Mostrador branco e valor estão juntos em `.park-prize-block`, com posição única
+  (158px no palco nativo); o número não pode subir separado da placa.
+- Máquina em `.park-cabinet-body`: fundo, rolos, efeitos e aro recebem uma única
+  transformação. Removida a chamada de `machine-scale.js`, que trocava a origem
+  dos rolos por peça e deixava o papel sair por baixo do aro. Não reativar.
+- Spin começa em620px nativos (antes694px). −/+ centralizados na mesma altura.
+  Em390×844, o botão começa em573px: sobe64px e sobra cenário antes do banner.
+- Contador de roleta oculto. Estado/recibos antigos continuam disponíveis até
+  a migração de economia v7; nenhuma chance, pagamento ou som foi alterado.
+- Conferência visual em320/390/412px e giro premiado real: valor cabe na placa,
+  papéis dentro do aro, destaque/linha alinhados. Regressão própria no runner.
+  Passaram circus_payout_browser (linhas/moedas), preview_motion_browser
+  (roleta/subida/retorno) e special_feedback (contador oculto).
+
+Próximo passo: dono validar a composição no link único. Continuar o PLANO-V7
+pela etapa3; decisão do Ray continua aberta. Oficial não foi alterado.
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Continuação do Claude — escudo v7, etapa 2 (20/11/2026, Codex)
 
 Base puxada: `86e1f66` (máquina 10% maior, giro/auto/botões v7). Preservado o

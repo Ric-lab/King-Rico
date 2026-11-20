@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "i-wireframe-v7",
+      "title": "Composição do Circus conforme wireframe: prêmio unido, máquina alinhada e spin alto",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": ""
+    },
+    {
       "id": "i-bubble-rico",
       "title": "Bubble Rico: minigame novo (bubble shooter) pagando em escudos",
       "status": "todo",

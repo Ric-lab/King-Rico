@@ -60,3 +60,7 @@ Feito por: dono + Claude. Vale para Claude, GPT/Codex e Gemini.
 - Não confundir apresentação da etapa2 com economia v7 concluída: Royal Rico
   ainda tem o estoque local antigo; pagamentos em escudos são a etapa5.
 - Próxima implementação após validar: etapa3, antes de construir outro minigame.
+
+- Refinamento do dono20/11: wireframe prioriza spin alto ao segurar o celular.
+  Prêmio/placa unidos, rolos alinhados por grupo e contador de roleta oculto.
+  Não retomar a ampliação por peça do commit86e1f66.

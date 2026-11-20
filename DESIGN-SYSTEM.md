@@ -324,3 +324,11 @@ borda dourada lisa, verde claro à esquerda e escuro à direita, coroa em relevo
 verde. Estoque até5 fica abaixo do saldo no mesmo cabeçalho, com respiro e
 área de toque44px. Nunca reduzir a fonte do saldo longo. Animações procuram
 o contador real no cabeçalho; ele não sobe junto com a máquina na roleta.
+
+### Composição Circus v7 — wireframe do dono,20/11/2026 (prévia)
+Máquina e spin em sequência central, com respiro antes do banner. Spin começa
+em620px no palco453×802, com −/+ centralizados nas laterais. Prêmio é um bloco
+único220×56 em117.833/158px: placa e valor compartilham os limites. Não aplicar
+posição ou escala separada ao número. Máquina usa um grupo `.park-cabinet-body`
+com escala1.08 e deslocamento−30px; a origem interna dos rolos permanece nativa.
+Contador de roleta não aparece nessa composição. Escudos seguem junto ao saldo.

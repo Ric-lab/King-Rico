@@ -92,3 +92,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   iridescente, mantendo a drenagem. A rejeição anterior continua valendo para
   os feixes em zigue-zague saindo das barras. Barra consumida fica vazia até
   outro giro; nunca adotar novamente10 do ledger como nível visual após bônus.
+
+- Rejeitado em20/11: número do prêmio separado da placa branca e ampliação da
+  máquina por peça, alterando a origem do rolo. Usar blocos únicos para prêmio
+  e gabinete; conferir o papel dentro do aro. O wireframe prioriza spin mais
+  alto na área do polegar, sem contador de roleta ao lado do prêmio.

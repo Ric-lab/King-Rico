@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="./ui/home.css">
 <link rel="stylesheet" href="./ui/controls.css">
 <link rel="stylesheet" href="./ui/park/spin-v7.css">
-<script type="module" src="./ui/park/machine-scale.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./cloud/firebase-config.js"></script>
@@ -88,7 +87,13 @@ a:hover { color: #fff3c4; }
   </div>
   <div class="park-machine-lights" ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
 
-  <div class="park-part-prize" aria-hidden="true"></div>
+  <div class="park-prize-block">
+    <div class="park-part-prize" aria-hidden="true"></div>
+    <div class="park-prize-value" style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
+    <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
+  </div>
+  </div>
+  <div class="park-cabinet-body">
   <div class="park-reel-window-back" aria-hidden="true"></div>
   <div class="park-reels" data-reel-moving="{{ reelMoving }}">
     <div class="park-reel-shell park-reel-shell-0" aria-hidden="true"></div>
@@ -165,6 +170,7 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l7 }}" hint-placeholder-val="{{ false }}"><div data-payline="7" style="position: absolute; left: 354.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   </div>
   <div class="park-reel-frame" aria-hidden="true"></div>
+  </div>
   <div class="kr-hud-row">
 <div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
   <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
@@ -175,9 +181,6 @@ a:hover { color: #fff3c4; }
 <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 </div>
 
-  <div class="park-prize-value" style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
-  </div>
 
   <!-- Spin vinho com aro/letras dourados; face sólida preserva o clique e o pulso. -->
   <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" data-spin-active="{{ spinPulseActive }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" data-auto="{{ auto }}" aria-label="Girar" title="Segure para automático" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
