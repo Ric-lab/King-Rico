@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T04:07:27.180Z",
+  "updatedAt": "2026-11-20T04:10:07.257Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -113,15 +113,15 @@
     },
     {
       "id": "i-roleta-jogos",
-      "title": "Roleta passa a sortear o minigame (trinca de controles)",
+      "title": "Controles alternam os minigames (A → B → A…)",
       "status": "todo",
       "category": "Ideias",
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "PENDENTE: a roleta continua nas barras como multiplicador. Falta decidir como a trinca de controles escolhe entre os 3 minigames (outra roleta? sorteio simples? escolha do jogador?).",
+      "notes": "Decidido em 20/11: por enquanto são 2 minigames (Royal Rico + 1 novo). A cada trinca de controles abre o próximo da fila, alternando. Sem roleta de sorteio. Guardar no estado do jogador qual foi o último.",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T04:07:27.180Z"
+      "updatedAt": "2026-11-20T04:10:07.257Z"
     },
     {
       "id": "i-pagam-escudos",
