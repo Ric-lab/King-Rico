@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T04:02:23.538Z",
+  "updatedAt": "2026-11-20T04:07:27.180Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
@@ -11,9 +11,9 @@
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Com os dados vindo das barras, o Tucker (que roubava Happeach) fica desnecessário. Vilões restantes: Tony e Ray.",
+      "notes": "O Tucker roubava Happeach; com o Good Luck no trevo da barriga, ele fica sem função. Vilões restantes: Tony e Ray.",
       "createdAt": "2026-11-20T04:02:23.538Z",
-      "updatedAt": "2026-11-20T04:02:23.538Z"
+      "updatedAt": "2026-11-20T04:07:27.180Z"
     },
     {
       "id": "i-turbo-fixo",
@@ -89,15 +89,15 @@
     },
     {
       "id": "i-dados",
-      "title": "Barras laterais carregam DADOS — a \"nova roleta\"",
-      "status": "todo",
+      "title": "(Cancelado) Dados nas barras",
+      "status": "cancelled",
       "category": "Ideias",
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Barras cheias → joga 2 dados. Faces: 2×, 4×, 6×, 8×, 10×. Iguais = multiplica por aquele valor; diferentes = perdeu (raro, mas acontece). Motivo: o ícone da roleta é igual ao do escudo. Economia: definir peso das faces (com 5 faces uniformes, iguais = 20% — \"raro\" exige faces viciadas).",
+      "notes": "Cancelado em 20/11: o escudo ganha um asset de formato diferente, que não confunde com a roleta. A roleta continua sendo o multiplicador das barras (sem animação nova).",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T04:02:23.538Z"
+      "updatedAt": "2026-11-20T04:07:27.180Z"
     },
     {
       "id": "i-escudo",
@@ -107,9 +107,9 @@
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Substitui o cedro/trevo como defesa. Definir regra com o Ray (hoje ele rouba a defesa; o trevo/cedro não defende dele).",
+      "notes": "Novo formato de asset (dono achou um que não confunde com a roleta). Defesa contra os vilões, até 5, guardados perto do saldo. Definir regra com o Ray.",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T03:24:02.198Z"
+      "updatedAt": "2026-11-20T04:07:27.180Z"
     },
     {
       "id": "i-roleta-jogos",
@@ -119,9 +119,9 @@
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "3 controles → abre a roleta, que sorteia entre 3 jogos: Royal Rico + 2 que ainda vão existir. O asset do raio fica guardado.",
+      "notes": "PENDENTE: a roleta continua nas barras como multiplicador. Falta decidir como a trinca de controles escolhe entre os 3 minigames (outra roleta? sorteio simples? escolha do jogador?).",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T03:24:02.198Z"
+      "updatedAt": "2026-11-20T04:07:27.180Z"
     },
     {
       "id": "i-pagam-escudos",
