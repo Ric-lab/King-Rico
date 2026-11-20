@@ -23,3 +23,17 @@
 /* Barra antiga (base com aposta/turbo/auto) sai de vez; −/+ vencem a regra antiga de posição (cabinet.css). */
 .park-circus-stage .park-part-base,.park-circus-stage .park-bet-well,.park-circus-stage .park-bet-value,.park-circus-stage .park-mode-label,.park-circus-stage .park-panel-control{display:none!important}
 .park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(601px + var(--park-machine-drop,0px))!important}
+
+/* Layout do dono (20/11, esboço sobre print do celular): sem barras laterais; spin mais estreito e alto no centro;
+   − e + em botões próprios nas laterais; anúncio vira um + verde discreto ao lado do saldo. */
+.park-circus-stage .park-meter{display:none!important}
+.park-circus-stage [data-spin-btn][data-spin-btn]{left:88px!important;width:277px!important;height:165px!important}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label{font-size:46px!important}
+.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(584px + var(--park-machine-drop,0px))!important;width:61px!important;height:100px!important;border-radius:22px!important;background:linear-gradient(180deg,#7a1c3e,#3a0a1e)!important;box-shadow:inset 0 0 0 3px #e9ad39,inset 0 2px #ffffff40,0 6px 0 #22040f,0 8px 12px #0007!important}
+.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"]{left:14px!important}
+.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{left:378px!important}
+.park-circus-stage .park-bet-step:active{transform:translateY(5px)!important;box-shadow:inset 0 0 0 3px #ffd257,0 1px 0 #22040f!important}
+.park-circus-stage .park-bet-step svg{width:30px;height:30px}
+.kr-hud-ad{left:168px!important;top:22px!important;width:34px!important;height:34px!important;padding:0!important;border-radius:50%!important;font-size:0!important;color:transparent!important;display:flex!important;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#6cf096,#22a650)!important;box-shadow:inset 0 0 0 2px #e8fff0,0 3px 0 #147a36!important;overflow:hidden}
+.kr-hud-ad>*{display:none!important}
+.kr-hud-ad::before{content:'+';font:900 26px/1 'Baloo 2',system-ui,sans-serif;color:#fff;text-shadow:0 2px 0 #147a36;margin-top:-2px}
