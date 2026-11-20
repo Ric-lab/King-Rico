@@ -41,3 +41,16 @@
 
 /* Layout v7 (dono, 21/11): barras laterais saem (só visual; a roleta continua pela economia). */
 .park-circus-stage [class*="park-meter"]{display:none!important}
+
+/* Layout v7 – passo 2 (dono, 20/11): King Rico sobe, botões descem, sem as 3 bolinhas do cedro. */
+.park-circus-stage .park-mascot{top:-14px!important}
+.park-circus-stage .park-prize-value{top:166px!important}
+#kr-cedro-count{display:none!important}
+.park-circus-stage [data-spin-btn][data-spin-btn]{top:calc(568px + var(--park-machine-drop,0px))!important}
+.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(617px + var(--park-machine-drop,0px))!important}
+/* Afundar estilo Coin Master: lábio grosso e colorido embaixo; a tampa desce e cobre o lábio rápido, volta com mola. */
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{filter:brightness(.62) saturate(1.3)!important}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:9px 10px 34px!important;transition:transform .22s cubic-bezier(.3,1.7,.5,1)!important}
+.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(22px)!important;transition-duration:.06s!important;transition-timing-function:ease-out!important}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rim{transition:box-shadow .12s}
+.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-rim,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-rim{box-shadow:0 3px 6px #0008,inset 0 2px #fffb,inset 0 -2px #4a2200}
