@@ -26,7 +26,8 @@
 
 /* Layout do dono (20/11, esboço sobre print do celular): sem barras laterais; spin mais estreito e alto no centro;
    − e + em botões próprios nas laterais; anúncio vira um + verde discreto ao lado do saldo. */
-.park-circus-stage .park-meter{display:none!important}
+/* invisível, mas mantém a medida (a lógica da roleta e os testes ainda leem o nível) */
+.park-circus-stage .park-meter,.park-circus-stage .park-meter *{visibility:hidden!important;pointer-events:none!important}
 .park-circus-stage [data-spin-btn][data-spin-btn]{left:88px!important;width:277px!important;height:165px!important}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label{font-size:46px!important}
 .park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(584px + var(--park-machine-drop,0px))!important;width:61px!important;height:100px!important;border-radius:22px!important;background:linear-gradient(180deg,#7a1c3e,#3a0a1e)!important;box-shadow:inset 0 0 0 3px #e9ad39,inset 0 2px #ffffff40,0 6px 0 #22040f,0 8px 12px #0007!important}
