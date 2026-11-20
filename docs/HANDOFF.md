@@ -13,7 +13,8 @@ Parti de `645c712`, mantendo a etapa do escudo e a economia existente.
 - Conferência visual em320/390/412px e giro premiado real: valor cabe na placa,
   papéis dentro do aro, destaque/linha alinhados. Regressão própria no runner.
   Passaram circus_payout_browser (linhas/moedas), preview_motion_browser
-  (roleta/subida/retorno) e special_feedback (contador oculto).
+  (roleta/subida/retorno) e special_feedback (contador oculto). A regressão
+  legada do Tucker agora mede a âncora sem exigir que o contador reapareça.
 
 Próximo passo: dono validar a composição no link único. Continuar o PLANO-V7
 pela etapa3; decisão do Ray continua aberta. Oficial não foi alterado.
