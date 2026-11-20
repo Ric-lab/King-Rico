@@ -1,8 +1,68 @@
 {
-  "updatedAt": "2026-11-20T03:24:02.198Z",
+  "updatedAt": "2026-11-20T04:02:23.538Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "i-sem-tucker",
+      "title": "Tirar o Tucker",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Com os dados vindo das barras, o Tucker (que roubava Happeach) fica desnecessário. Vilões restantes: Tony e Ray.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-turbo-fixo",
+      "title": "Velocidade do spin sempre no turbo; linha dourada pisca 40% menos",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Remove o botão de turbo. Tempo da linha vencedora × 0,6.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-auto-segurar",
+      "title": "Auto = segurar o botão de spin",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Toque = 1 giro; apertar e segurar ~0,6 s liga o auto (com feedback de carga no botão). Tocar de novo desliga. Remove o botão de auto.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-spin-coinmaster",
+      "title": "Botão de spin no estilo do Coin Master",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Grande, redondo e chamativo, com a referência do Coin Master (sem copiar).",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-aposta-menor",
+      "title": "Seletor de aposta menor, abaixo do spin",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Mais discreto; o spin vira o protagonista.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
     {
       "id": "i-reorg-v7",
       "title": "Reorganização v7 (ideia do dono, 20/11) — limpeza visual",
@@ -35,9 +95,9 @@
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Cheias, a pessoa joga dados e o resultado é o multiplicador. Motivo: o ícone da roleta é igual ao do escudo. Definir faixa de multiplicadores e a economia.",
+      "notes": "Barras cheias → joga 2 dados. Faces: 2×, 4×, 6×, 8×, 10×. Iguais = multiplica por aquele valor; diferentes = perdeu (raro, mas acontece). Motivo: o ícone da roleta é igual ao do escudo. Economia: definir peso das faces (com 5 faces uniformes, iguais = 20% — \"raro\" exige faces viciadas).",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T03:24:02.198Z"
+      "updatedAt": "2026-11-20T04:02:23.538Z"
     },
     {
       "id": "i-escudo",
