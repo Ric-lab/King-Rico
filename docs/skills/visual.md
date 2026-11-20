@@ -106,3 +106,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   tampa não resolveu o conjunto; autorizou repensar cores/formato. Diagnóstico
   do Codex: cavidade traseira grande e ação com pouco contraste. Proposta coral
   com ação explícita e cavidade menor aguarda avaliação, sem aprovação presumida.
+
+-20/11: dono rejeitou a releitura coral/GIRAR e pediu copiar a forma do botão
+  Coin Master. Só aposta na tampa, contorno luminoso para hold/auto. Não voltar
+  ao retângulo arredondado nem inserir textos/ícones extras. Escudos são cinco
+  posições verticais, não um ícone com fração numérica.

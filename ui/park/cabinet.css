@@ -257,3 +257,12 @@
 .park-shield-wallet [data-tickets]{position:static!important;inset:auto!important;width:auto!important;height:auto!important;flex:1;display:block;font:800 23px/1 'Baloo 2',Baloo,sans-serif!important;color:#662c2c;font-variant-numeric:tabular-nums;white-space:nowrap}
 .park-shield-wallet:active .park-ticket-wallet-face{translate:0 2px;box-shadow:inset 0 1px #fff}
 .park-shield-wallet:focus-visible{outline:3px solid #fff0b0;outline-offset:4px;border-radius:18px}
+
+/* Five actual shields, vertically, instead of one icon and a number. */
+.kr-hud-row .park-shield-wallet{width:64px!important;height:190px!important;min-width:calc(44px / var(--kr-hud-px-scale,1))!important}
+.park-shield-wallet .park-ticket-wallet-face{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;background:none;border:0;border-radius:0;box-shadow:none}
+.park-shield-wallet [data-shield-slot]{width:40px;height:34px;display:grid;place-items:center;flex:none}
+.park-shield-wallet [data-shield-slot] .park-ticket-wallet-art{width:36px!important;height:36px!important;filter:grayscale(1);opacity:.22;transition:opacity .15s}
+.park-shield-wallet [data-shield-slot].is-filled .park-ticket-wallet-art{filter:none;opacity:1}
+.park-shield-wallet [data-tickets]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block;font-size:0!important;text-indent:-9999px;overflow:hidden;pointer-events:none}
+.park-shield-wallet:active .park-ticket-wallet-face{box-shadow:none}

@@ -51,3 +51,9 @@ A versão vinho ainda não convenceu. A proposta seguinte na prévia usa coral e
 texto claro, base dourada quente, GIRAR maior e aposta secundária. Reduz o vazio
 traseiro e faz a tampa parecer elevada sobre a base. Conserva a referência de
 curso/retorno; não altera som nem lógica. Aguarda avaliação estética do dono.
+
+### Pedido definitivo da iteração —20/11/2026
+Dono rejeitou a releitura coral/GIRAR: copiar a FORMA do vídeo, mantendo apenas
+aposta na tampa e luz no contorno para ativar auto. A prévia agora usa três SVGs
+em assets/machine/spin-cm-*.svg; ver spin-cm-v1.md para dimensões e sincronismo.
+A arte é vetorial reconstruída das medidas, sem recortar o bitmap comercial.

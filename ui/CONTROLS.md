@@ -181,3 +181,10 @@ parada usam essas rotinas. Não criar outro clique/som/háptico na animação.
 Refinamento20/11: a tampa mostra GIRAR como ação principal e moeda+aposta abaixo.
 Os seletores laterais continuam atualizando a aposta exibida. A paleta do pulso
 usa --park-spin-paint do botão para não restaurar a cor antiga ao voltar do bônus.
+
+### Substituição autorizada20/11 — botão da referência
+A tampa mostra SOMENTE a aposta. Hold650ms desenha o contorno SVG; ao completar,
+liga o auto nativo. _spinHoldMs e --park-hold-duration compartilham o tempo.
+O percurso permanece aceso em data-auto=true. Cancelar retira data-hold; parar
+retira auto. Flash do contato separado do percurso evita esconder o progresso.
+SVG do + usa dois traços centrados; um toque sobe exatamente um índice da aposta.

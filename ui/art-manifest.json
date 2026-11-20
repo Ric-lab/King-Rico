@@ -71,7 +71,10 @@
     "assets/machine/goodluck-bolt-3.webp",
     "assets/symbols/clover-rainbow-gold-v1.webp",
     "assets/machine/meter-bolt-rainbow-v1.webp",
-    "assets/symbols/shield-defense-green-crown-v1.webp"
+    "assets/symbols/shield-defense-green-crown-v1.webp",
+    "assets/machine/spin-cm-base-v1.svg",
+    "assets/machine/spin-cm-side-v1.svg",
+    "assets/machine/spin-cm-cap-v1.svg"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

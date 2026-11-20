@@ -1,3 +1,27 @@
+## Botão da referência + cinco escudos —20/11/2026, Codex
+
+Base `e841597`. Pedido atual substitui a proposta coral/GIRAR: copiar a FORMA
+Coin Master, só aposta na tampa, luz percorre a borda para ligar auto.
+- Três SVGs editáveis spin-cm-{base,side,cap}-v1 em assets/machine, medidos pela
+  gravação. Tampa achatada/arqueada, laterais inclinadas e base azul-cinza fixa.
+  Sem GIRAR, moeda ou dica dentro do botão. Mesma posição/alvo na tela.
+- Flash100ms no contato; path SVG percorre650ms e o auto usa o mesmo tempo.
+  Percurso completo fica aceso no auto; cancelar/parar limpa. Native wager intact.
+- + com duas linhas SVG centradas, espessura igual ao −; teste confere1 incremento.
+- Cinco escudos em coluna abaixo do saldo, preenchidos de cima para baixo; vazios
+  ficam apagados. Mesmo estoque salvo, sem contador numérico visível.
+- Coleta voa ao slot que será preenchido; defesa sai do último cheio. O voo
+  segura a chegada opaca antes da nota/contagem e só depois desaparece: evita
+  nota após sumir quando o navegador atrasa quadros. Cadência nominal620/400ms.
+  Ray copia e
+  devolve o conjunto atualizado. paintShields concentra a apresentação do estoque.
+Verificação local: shield_wallet, spin_press, special_feedback, Ray, Circus v6
+e preview_motion passaram. Máscaras/voos chegam ao slot correto; notas individuais
+antes do fade. A tolerância de relógio de parede admite quadros do compositor,
+mas o teste mantém620/400ms nominais, um item visível e contato opaco.
+Próximo passo: dono conferir a FORMA/clique na prévia; não levar à main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Spin coral — refinamento livre pedido pelo dono,20/11/2026 (Codex)
 
 Base `a1cbd43`. Proposta na prévia, ainda aguardando avaliação estética do dono.

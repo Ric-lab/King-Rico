@@ -208,15 +208,14 @@ a:hover { color: #fff3c4; }
     <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"><i class="park-spin-side-wash"></i></i><i class="park-spin-rear" aria-hidden="true"><i class="park-spin-rear-wash"></i></i>
       <div class="park-spin-face">
       <i class="park-spin-wash" aria-hidden="true"></i>
-      <span class="park-spin-verb" aria-hidden="true">GIRAR</span>
       <span class="park-spin-label">{{ betText }}</span>
       <span class="park-spin-label park-spin-label-lit" aria-hidden="true">{{ betText }}</span>
-      <span class="park-spin-sub">SEGURE PARA AUTO</span>
+      <svg class="park-spin-outline" viewBox="0 0 277 107" aria-hidden="true"><path class="park-spin-rim-pulse" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z"/><path class="park-spin-hold-line" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z" pathLength="100"/></svg>
     </div></div>
-    <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-rim-gold-contour-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i><i class="park-spin-rim-pulse"></i></span>
+    <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-cm-base-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i></span>
   </div>
-  <div class="park-bet-step park-bet-minus" onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></svg></div>
-  <div class="park-bet-step park-bet-plus" onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19M12 5V19" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></svg></div>
+  <div class="park-bet-step park-bet-minus" onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></div>
+  <div class="park-bet-step park-bet-plus" onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></div>
 
 
 
@@ -940,7 +939,7 @@ class Component extends DCLogic {
   pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); this.holdStart(); };
   // Segurar o spin ~0,65 s liga o automático; tocar com o automático ligado desliga.
   holdStart = () => { clearTimeout(this._holdT); this._holdFired = false; const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) b.dataset.hold = '1';
-    this._holdT = setTimeout(() => { if (b) delete b.dataset.hold; this._holdFired = true; if (!this.state.auto) { this.hap('winMid'); this.toggleAuto(); } }, 650); };
+    this._holdT = setTimeout(() => { if (b) delete b.dataset.hold; this._holdFired = true; if (!this.state.auto) { this.hap('winMid'); this.toggleAuto(); } }, this._spinHoldMs || 650); };
   holdEnd = () => { clearTimeout(this._holdT); const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) delete b.dataset.hold; };
   pressTurbo = () => { this.setState({ pressed: 'turbo' }); this.pressDown(); };
   pressAuto = () => { this.setState({ pressed: 'auto' }); this.pressDown(); };

@@ -337,14 +337,18 @@ Refinamento20/11: gap do prêmio à máquina11,75 unidades; da máquina ao spin1
 As camadas `.park-reel-effects` de dourado/apagado pertencem ao mesmo grupo
 do gabinete e mantêm a transformação interna dos rolos, sem escala independente.
 
-### Spin coral — proposta na prévia,20/11/2026
-O dono autorizou rever cores/formato após considerar a versão vinho insuficiente.
-Base dourada quente fixa, tampa coral (#f14b32) e lateral vinho (#9a1e2d).
-GIRAR claro (#fff6e3) é a ação principal; moeda+valor ficam abaixo, sem perder os
-controles −/+. Auto continua por segurar; a dica fica na tampa.
-A face começa no topo do botão e esconde a borda traseira em repouso; cavidade
-curta e quente ao pressionar, evitando o efeito de tampa dentro de um buraco.
-Curso23px com rotateX(10deg), lateral26→3px, perspectiva900px. Mantidos65ms para
-descer, contato mínimo140ms e retorno160ms. Não alterar posição/tamanho do alvo.
-Paleta de cada ciclo vem de --park-spin-paint, definida junto à pele do botão.
-Direção proposta pelo Codex, aguardando avaliação do dono; não é aprovação final.
+### Botão da gravação Coin Master — prévia20/11/2026
+Pedido do dono: copiar a forma da gravação, sem reinterpretar como cartão.
+SVGs separados para base azul-cinza277×165, lateral vermelha e tampa achatada
+277×107 com topo arqueado/laterais inclinadas. Tampa só com aposta clara, sem
+GIRAR, moeda ou dica. Base fixa; tampa percorre27px e projeta24° ao entrar.
+Lateral é ocultada junto do curso, descobrindo a base sem pontas vermelhas.
+Flash curto no contato; contorno SVG progride650ms para auto. Perímetro completo
+fica aceso no automático, sem barra linear. Política de toque/cancelar preservada.
+Fontes e técnicas: assets/machine/spin-cm-v1.md. Forma aguardando avaliação do dono.
+
+### Inventário de defesa — cinco posições verticais,20/11/2026
+Cinco escudos abaixo do saldo, de cima para baixo; cheios verdes e vazios
+apagados. Sem ícone único+fração numérica, sem nova carteira. Coluna com alvo
+mínimo44px de largura, na linha do saldo. Coleta chega ao próximo slot; consumo
+parte do último preenchido. Texto de estoque continua disponível no rótulo acessível.

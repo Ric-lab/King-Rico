@@ -1,3 +1,4 @@
+import {shieldTarget} from './shield-wallet.js';
 // Controle: 3 em linha abre a Trinca (Royal Rico). Ganhar = 3 ou 4 giros com a coroa coringa no meio.
 function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;import('./trinca.js').then(m=>m.openTrinca(fc,{bet:fc.state?.bet??fc._cloudSpin?.bet??1})).catch(()=>{});}
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
@@ -19,7 +20,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  if(fc._parkMeterLevel>=10){fc._parkMeterLevel=0;fc._parkShown=0;fc._parkFeatureFill=0;fc._parkAfterGoodLuck=true;}
  const spinButton=document.querySelector('[data-spin-btn]');
  const spinSurface=spinButton?.querySelector('.park-spin-aperture');
- const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=rim?.querySelector('.park-spin-rim-pulse');let rimFlash;
+ const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=spinButton?.querySelector('.park-spin-rim-pulse');let rimFlash;
  const spinPaint=()=>(spinButton&&getComputedStyle(spinButton).getPropertyValue('--park-spin-paint').trim())||'rgb(100,12,36)';
  const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color',spinPaint());
  commitSpinColor(fc._parkMeterLevel);
@@ -39,7 +40,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0&&!(fc._parkShown>0));});};syncColor(fc._parkMeterLevel);
  fc._parkFlashRim=(delay=0)=>{
-  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only. */}
+  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?80:100,easing:'ease-out'});}catch{/* Decorative only. */}
  };
  const nativePulse=fc.lightsPulse.bind(fc);let pulseNo=0,lastPulse=0,queuedCharge;
  fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);
@@ -144,36 +145,29 @@ function flyTickets(fc,refresh,done=()=>{}){
  const award=fc._parkTicketAward;
  if(!award||fc._parkTicketsPlaying){done();return;}
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
- const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],cues=[],arrived=new Set();let ended=false,ticker;
- const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
- const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(ticker);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?400:620,stagger=duration,contact=.8,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
- const safety=setTimeout(finish,lead+duration+stagger*2+600);
- try{fc.ac?.();}catch{} // Warm audio before the first impact, without playing a note.
- if(!end?.width){finish();return;}
- try{
-  const tx=end.x+end.width/2,ty=end.y+end.height/2;
-  const flights=award.cells.slice(0,award.count||3).map((cell,i)=>{
-   const source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
-   const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-green-crown-v1.webp';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
-   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
-   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
-   const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};
-   const a=node.animate([...(calm?simple:frames),absorption],{duration,delay:lead+i*stagger,easing:'linear',fill:'both'});anims.push(a);
-   cues.push({animation:a,index:i,contactAt:lead+i*stagger+duration*contact});
-   return a.finished.then(()=>land(i)).catch(()=>{});
-  });
-  // Contact belongs to the animation clock, before the ticket fades into the
-  // counter. One cue owns the increment, note and impact; completion is fallback.
-  const tick=()=>{
+ const targetFor=i=>shieldTarget(award.before+i),nodes=[],anims=[],arrived=new Set();let ended=false;
+ const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}targetFor(i)?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
+ const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
+ const calm=reduced(),duration=calm?400:620,contact=.8,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
+ const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+duration*cells.length+1200);
+ try{fc.ac?.();}catch{}
+ (async()=>{
+  if(lead)await new Promise(r=>setTimeout(r,lead));
+  for(const [i,cell]of cells.entries()){
    if(ended)return;
-   for(const cue of cues)if(cue.animation.currentTime!==null&&cue.animation.currentTime>=cue.contactAt)land(cue.index);
-   if(arrived.size<cues.length)ticker=requestAnimationFrame(tick);
-  };
-  ticker=requestAnimationFrame(tick);
-  Promise.allSettled(flights).then(finish);
- }catch{finish();}
+   const end=targetFor(i)?.getBoundingClientRect();if(!end?.width){finish();return;}
+   const tx=end.x+end.width/2,ty=end.y+end.height/2,source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
+   const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
+   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-green-crown-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.opacity='0';document.body.append(node);nodes.push(node);
+   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t};});
+   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.125},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:1}];
+   const keys=calm?simple:frames,arrival=node.animate(keys,{duration:duration*contact,easing:'linear',fill:'both'});anims.push(arrival);
+   // The opaque endpoint is held until its note/count cue has run, even on a late frame.
+   await arrival.finished;if(ended)return;land(i);
+   const fade=node.animate([keys.at(-1),{transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0}],{duration:duration*(1-contact),easing:'linear',fill:'both'});anims.push(fade);await fade.finished;
+  }
+  finish();
+ })().catch(finish);
 }
 
 function celebrateClover(fc,lines){

@@ -20,7 +20,7 @@ with sync_playwright() as p:
   page.wait_for_timeout(300);assert page.locator('[data-payline]').count()>0
   page.screenshot(path='work/special-clover-gold.png')
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=15000)
-  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  assert page.locator('[data-tickets]').text_content()=='1/5'
   print('clover gold/celebration/count PASS',flush=True)
  if stage in ['all','wheel']:
   ready()
@@ -37,7 +37,7 @@ with sync_playwright() as p:
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="clover:celebrate")',timeout=20000)
   assert page.evaluate('performance.now()>=__fc._wheelAudioUntil')
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
-  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  assert page.locator('[data-tickets]').text_content()=='1/5'
   print('combined wheel/clover celebrations serialized PASS',flush=True)
 
  if stage in ['all','defense']:
@@ -57,7 +57,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/special-clover-defense-replacement.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
   assert page.evaluate('KingRicoPark.state.economyV6.rounds')==1
-  assert page.locator('[data-tickets]').inner_text()=='0/5'
+  assert page.locator('[data-tickets]').text_content()=='0/5'
   assert page.locator('.park-tony-scene').count()==0
   print('clover defense: center replacement, real prize, one paid spin PASS',flush=True)
  if stage in ['all','scatter']:
@@ -169,9 +169,8 @@ with sync_playwright() as p:
   ready()
   # V7: shield stock by balance; the old wheel counter is no longer shown.
   shield=page.locator('.kr-hud-row .park-shield-wallet')
-  icon=shield.locator('img').bounding_box();count=shield.locator('[data-tickets]').bounding_box()
-  assert icon['x']+icon['width']+3<count['x'],(icon,count)
-  assert abs(icon['y']+icon['height']/2-count['y']-count['height']/2)<3,(icon,count)
+  slots=[n.bounding_box() for n in shield.locator('[data-shield-slot]').all()]
+  assert len(slots)==5 and all(a['y']+a['height']<b['y'] for a,b in zip(slots,slots[1:]))
   assert not page.locator('.park-basket').is_visible()
   page.screenshot(path='work/special-stacked-powerups.png')
   print('v7 shield dock and removed wheel counter PASS',flush=True)

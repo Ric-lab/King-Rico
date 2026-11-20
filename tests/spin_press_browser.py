@@ -11,9 +11,12 @@ with sync_playwright() as p:
   ctx=b.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,reduced_motion=mode)
   page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  assert page.locator('.park-spin-verb').inner_text()=='GIRAR'
+  assert page.locator('.park-spin-verb,.park-spin-sub').count()==0
+  assert page.locator('.park-spin-label').first.inner_text().replace('.','').isdigit()
   wager=page.locator('.park-spin-label').first.inner_text()
+  bet_index=page.evaluate('__fc.state.betIdx')
   page.get_by_role('button',name='Aumentar aposta',exact=True).click()
+  assert page.evaluate('__fc.state.betIdx')==bet_index+1
   assert page.locator('.park-spin-label').first.inner_text()!=wager
   page.get_by_role('button',name='Diminuir aposta',exact=True).click()
   assert page.locator('.park-spin-label').first.inner_text()==wager
@@ -29,19 +32,25 @@ with sync_playwright() as p:
   page.touchscreen.tap(x,y)
   page.wait_for_timeout(450)
   samples=page.evaluate('capSamples');down=min(samples,key=lambda v:v['front'])
-  assert down['front']<5 and 10<down['rear']<25,(rest,down)
+  assert down['front']<5 and 30<down['rear']<55,(rest,down)
   assert all(max(abs(a-b) for a,b in zip(r['rim'],rest['rim']))<.2 for r in samples),samples
   assert all(r['labelInside'] for r in samples),samples
   assert abs(page.evaluate('capGeometry().front')-rest['front'])<.5
   assert page.evaluate('spinCalls')==1
   page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending',timeout=20000)
   # Holding still enables native auto; stopping it never creates an extra wager.
-  page.mouse.move(x,y);page.mouse.down();page.wait_for_timeout(720)
+  page.mouse.move(x,y);page.mouse.down();page.wait_for_timeout(200)
+  progress=page.locator('.park-spin-hold-line').evaluate('e=>parseFloat(getComputedStyle(e).strokeDashoffset)')
+  assert 40<progress<90,progress
+  page.wait_for_timeout(520)
   assert page.evaluate('__fc.state.auto')
+  assert page.locator('.park-spin-hold-line').evaluate('e=>parseFloat(getComputedStyle(e).strokeDashoffset)')<1
+  assert page.locator('.park-spin-hold-line').evaluate('e=>Number(getComputedStyle(e).opacity)')==1
   page.mouse.up()
   page.wait_for_function('spinCalls>=2',timeout=10000)  # the authorized first auto spin has started
   calls=page.evaluate('spinCalls');button.click()
   assert not page.evaluate('__fc.state.auto')
+  assert page.locator('.park-spin-hold-line').evaluate('e=>Number(getComputedStyle(e).opacity)')==0
   page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending',timeout=20000)
   assert page.evaluate('spinCalls')==calls
   # Sliding off cancels the gesture and restores the cap without charging.

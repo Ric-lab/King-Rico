@@ -13,12 +13,17 @@ with sync_playwright() as p:
   page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=3;localStorage.setItem(k,JSON.stringify(s));}''')
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   wallet=page.locator('.park-shield-wallet');wallet.wait_for()
-  assert wallet.locator('[data-tickets]').inner_text()=='3/5'
-  assert wallet.locator('img').evaluate("n=>n.complete&&n.naturalWidth>0&&n.src.includes('shield-defense-green-crown-v1.webp')")
+  assert wallet.locator('[data-tickets]').text_content()=='3/5'
+  assert wallet.locator('img').count()==5
+  assert wallet.locator('img').evaluate_all("es=>es.every(n=>n.complete&&n.naturalWidth>0&&n.src.includes('shield-defense-green-crown-v1.webp'))")
+  assert wallet.locator('[data-shield-slot].is-filled').count()==3
+  slots=[n.bounding_box() for n in wallet.locator('[data-shield-slot]').all()]
+  assert all(a['y']+a['height']<b['y'] for a,b in zip(slots,slots[1:]))
+  assert max(r['x'] for r in slots)-min(r['x'] for r in slots)<1
   box=wallet.bounding_box();balance=page.locator('.kr-hud-balance').bounding_box()
   assert box['y']>=balance['y']+balance['height']+3,(box,balance)
   assert abs(box['x']-balance['x'])<5,(box,balance)
-  assert box['width']>=75 and box['height']>=43.9,box
+  assert box['width']>=43.9 and box['height']>120,box
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
   wallet.click();page.get_by_role('dialog',name='Escudos de defesa',exact=True).wait_for()
   page.get_by_role('button',name='ENTENDI',exact=True).click()
@@ -29,7 +34,7 @@ with sync_playwright() as p:
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   page.wait_for_function('KingRicoCloud.player.balance>=100000000.65')
   assert page.locator('[data-kr-wallet-value]').evaluate('n=>getComputedStyle(n).fontSize')==font
-  assert wallet.locator('[data-tickets]').inner_text()=='3/5'
+  assert wallet.locator('[data-tickets]').text_content()=='3/5'
   assert not errors,errors
   print(json.dumps({'width':width,'stock':3,'layout':box,'longBalance':True,'errors':errors}),flush=True)
   page.close()
