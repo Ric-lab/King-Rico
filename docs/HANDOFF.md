@@ -1,3 +1,12 @@
+## Referência do botão Coin Master —20/11/2026, Codex
+
+Vídeo do upload `38a9f0b` movido intacto de assets/ para
+`guidelines/references/coin-master/spin-button.mp4` (6,83 s). Análise quadro a
+quadro e folha do primeiro clique no README da mesma pasta. Referência de estudo,
+fora do runtime; nenhuma interface ou economia alterada. Commit de fontes apenas.
+Próximo passo: usar a referência ao receber o pedido de ajustar o clique;
+preservar a geometria atual até essa iteração, sem copiar a arte comercial.
+
 ## Publicação oficial autorizada — 17/11/2026 (Codex)
 
 Candidato baseado na prévia `dddc82b` inteira e nos três commits exclusivos
