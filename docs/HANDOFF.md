@@ -1,3 +1,11 @@
+## Vídeo do botão Coin Master compartilhado —20/11/2026, Codex
+
+Referência organizada na main em `28510d0` e copiada integralmente nesta branch:
+`guidelines/references/coin-master/` contém MP4 original de6,83 s, folha do clique
+e README com análise visual/timings. SHA-256 preservado; fora de assets/runtime.
+Próximo passo: usar a referência na próxima iteração do clique. O botão atual,
+layout, sons e economia não foram modificados. Checkpoint de fontes, sem deploy.
+
 ## Ajuste de espaços e máscaras —20/11/2026, Codex
 
 Base `716d60e`. Gap prêmio→máquina reduzido de23,5 para11,75 unidades (50%).
