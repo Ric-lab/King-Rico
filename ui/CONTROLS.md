@@ -169,3 +169,11 @@ Contador de ingressos: placa de no mínimo 142 × 44 px nas coordenadas da cena,
 16 px de padding horizontal, 12 px entre ícone/valor, número 24 px e ingresso
 40 × 26 px. Pequenos ajustes verticais na faixa das bolas do Clown, multiplicadores
 do Pênalti e proteção do Flying deixam espaço abaixo da placa, sem alterar jogos.
+
+### Spin Circus v7 —20/11/2026, prévia
+A tampa e seu texto afundam juntos; aro e alvo de toque ficam imóveis.
+installSpinTactility mantém a pose de contato por no mínimo140ms (80ms em
+movimento reduzido), sem temporizar envio da aposta nem o começo dos rolos.
+Nova pressão cancela a soltura visual anterior; pagehide limpa o timer.
+Segurar650ms continua ativando auto pelas rotinas nativas; cancelamento e
+parada usam essas rotinas. Não criar outro clique/som/háptico na animação.

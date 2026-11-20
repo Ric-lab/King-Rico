@@ -29,7 +29,7 @@ presa esperando o botão voltar: feedback do clique e começo dos rolos se
 sobrepõem. Há novos cliques/giro perto de 3,63 s e 6,00 s; moedas cruzando o botão
 em outros momentos podem enganar uma análise baseada só em diferença de pixels.
 
-## Aplicação possível ao King Rico — ainda não implementada
+## Leitura inicial para o King Rico — estudo anterior à implementação
 
 Reaproveitar a separação entre base fixa, lateral e tampa com o texto. Conferir
 primeiro a geometria dos estados alto/baixo e só depois o retorno. O exemplo
@@ -39,3 +39,9 @@ nesta organização da referência.
 
 Esta pasta não pertence aos assets de runtime. Não copiar o MP4 para dist/ nem
 incluí-lo no preload do jogo. Preservar o original para Claude, Gemini e Codex.
+
+## Aplicado na prévia —20/11/2026
+Depois do pedido do dono, spin-v7.css e spin-tactility.js passaram a usar base
+fixa, cavidade escura e tampa projetada ao afundar. Foram preservados o formato,
+vinho/dourado, texto de aposta, som e háptico do King Rico. A proporção e o tempo
+foram adaptados ao botão existente, sem reutilizar a arte do Coin Master.

@@ -6,8 +6,7 @@
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-well{inset:7px!important;border-radius:30px!important;background:#1a0712!important}
 .park-circus-stage [data-spin-btn][data-spin-btn] :is(.park-spin-edge,.park-spin-rear,.park-spin-contact){inset:9px 10px 9px!important;border-radius:28px!important}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{filter:brightness(.42)!important}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:9px 10px 30px!important;border-radius:28px!important;transform:translateY(0)!important;box-shadow:inset 0 3px #ffffff40,inset 0 -3px #0005}
-.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(17px)!important}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:9px 10px 30px!important;border-radius:28px!important;transform:translateY(0) rotateX(0deg)!important;box-shadow:inset 0 2px #ffffff25,inset 0 -1px #0005}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label{inset:0 0 18px!important;font-size:50px!important;letter-spacing:.02em!important;padding-left:0!important}
 .park-spin-sub{position:absolute;left:0;right:0;bottom:12px;text-align:center;pointer-events:none;font:800 12px/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.14em;color:#f4c951;opacity:.8;z-index:2}
 [data-spin-btn][data-auto="true"] .park-spin-sub{font-size:0;opacity:1}
@@ -47,12 +46,16 @@
 #kr-cedro-count{display:none!important}
 .park-circus-stage [data-spin-btn][data-spin-btn]{top:calc(568px + var(--park-machine-drop,0px))!important}
 .park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(617px + var(--park-machine-drop,0px))!important}
-/* Afundar estilo Coin Master: lábio grosso e colorido embaixo; a tampa desce e cobre o lábio rápido, volta com mola. */
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{filter:brightness(.62) saturate(1.3)!important}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:9px 10px 34px!important;transition:transform .22s cubic-bezier(.3,1.7,.5,1)!important}
-.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(22px)!important;transition-duration:.06s!important;transition-timing-function:ease-out!important}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rim{transition:box-shadow .12s}
-.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-rim,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-rim{box-shadow:0 3px 6px #0008,inset 0 2px #fffb,inset 0 -2px #4a2200}
+/* Referência real: guidelines/references/coin-master/spin-button.mp4.
+   Base imóvel; tampa rígida se projeta para dentro, quase cobrindo a lateral. */
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-aperture{z-index:3!important;perspective:900px;perspective-origin:50% 100%}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-well{z-index:2;box-shadow:inset 0 7px 10px #000a!important}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-contact{background:none;filter:none;box-shadow:inset 0 5px 7px #0008;transform:none!important;opacity:1;transition:none}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{filter:brightness(.62) saturate(1.3)!important;clip-path:inset(110px 0 0);border-top:0}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rear{visibility:hidden}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:9px 10px 34px!important;transform-origin:50% 100%;transition:transform 160ms cubic-bezier(.2,.8,.2,1)!important;backface-visibility:hidden}
+.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(22px) rotateX(22deg)!important;transition-duration:65ms!important;transition-timing-function:cubic-bezier(.2,.65,.25,1)!important}
+@media(prefers-reduced-motion:reduce){.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{transition:none!important}}
 
 /* Wireframe do dono (20/11): prêmio unido, máquina reta e spin na zona do polegar.
    Uma única escala no grupo preserva a origem nativa dos três rolos e dos efeitos. */

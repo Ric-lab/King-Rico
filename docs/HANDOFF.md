@@ -1,3 +1,19 @@
+## Clique mecânico do spin —20/11/2026, Codex
+
+Base `d2f4e32`; aplicada a referência real em guidelines/references/coin-master/.
+Aro/base imóveis. Tampa e texto descem22px, com projeção rígida22° que encurta
+sua superfície; a lateral frontal cai de25 para3px. A cavidade atrás é escura,
+não um preenchimento dourado. Botão mantém vinho/dourado e geometria do layout.
+
+Descida65ms; toque curto completa140ms de contato visual; retorno160ms.
+Movimento reduzido usa pose imediata e mínimo80ms. Isso não atrasa aposta/rolos:
+só a remoção de data-tactile-held é temporizada. Sons/hápticos preservados.
+Regressão spin_press_browser cobre toque real, aro imóvel, texto na tampa,
+automático, cancelamento e ausência de giro extra. Passaram localmente os testes
+do clique e preview_motion_browser (inclui sons/pulso/bônus). Screenshots no CI.
+Próximo passo: dono avaliar a sensação na prévia; não promover à main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Vídeo do botão Coin Master compartilhado —20/11/2026, Codex
 
 Referência organizada na main em `28510d0` e copiada integralmente nesta branch:

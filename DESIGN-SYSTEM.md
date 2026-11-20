@@ -336,3 +336,11 @@ Contador de roleta não aparece nessa composição. Escudos seguem junto ao sald
 Refinamento20/11: gap do prêmio à máquina11,75 unidades; da máquina ao spin15,62.
 As camadas `.park-reel-effects` de dourado/apagado pertencem ao mesmo grupo
 do gabinete e mantêm a transformação interna dos rolos, sem escala independente.
+
+### Clique do spin — referência real,20/11/2026 (prévia)
+Aro dourado imóvel, cavidade escura e tampa vinho rígida. Tampa/texto descem22px
+com rotateX(22deg) em perspectiva900px; isso projeta a face sem deformar os
+cantos individualmente. Lateral aparece25px solta e3px pressionada. Descida65ms,
+contato visual mínimo140ms, retorno160ms sem grande rebote. Preservar cor, fonte,
+posição e tamanho do botão. Não escalar/mover a base inteira nem revelar ouro
+preenchendo a cavidade. Movimento reduzido troca poses sem transição.
