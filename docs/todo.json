@@ -1,8 +1,20 @@
 {
-  "updatedAt": "2026-11-20T04:10:07.257Z",
+  "updatedAt": "2026-11-20T04:15:45.127Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "i-bubble-rico",
+      "title": "Bubble Rico: minigame novo (bubble shooter) pagando em escudos",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Mesmo formato do Royal Rico. Detalhar regras antes de construir. Ver docs/PLANO-V7.md.",
+      "createdAt": "2026-11-20T04:15:45.127Z",
+      "updatedAt": "2026-11-20T04:15:45.127Z"
+    },
     {
       "id": "i-sem-tucker",
       "title": "Tirar o Tucker",
@@ -65,15 +77,15 @@
     },
     {
       "id": "i-reorg-v7",
-      "title": "Reorganização v7 (ideia do dono, 20/11) — limpeza visual",
+      "title": "Plano v7 — ver docs/PLANO-V7.md (fonte única do rumo)",
       "status": "todo",
       "category": "Ideias",
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Plano geral. Itens abaixo detalham. Antes de executar: confirmar com o dono e refazer a economia (RTP ~90%).",
+      "notes": "Tudo o que sai, fica, muda e a ordem de execução está em docs/PLANO-V7.md.",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T03:24:02.198Z"
+      "updatedAt": "2026-11-20T04:15:45.127Z"
     },
     {
       "id": "i-trevo-barriga",
@@ -113,7 +125,7 @@
     },
     {
       "id": "i-roleta-jogos",
-      "title": "Controles alternam os minigames (A → B → A…)",
+      "title": "Controles alternam: Royal Rico → Bubble Rico → Royal Rico…",
       "status": "todo",
       "category": "Ideias",
       "agent": "Claude",
@@ -121,7 +133,7 @@
       "demoUrl": null,
       "notes": "Decidido em 20/11: por enquanto são 2 minigames (Royal Rico + 1 novo). A cada trinca de controles abre o próximo da fila, alternando. Sem roleta de sorteio. Guardar no estado do jogador qual foi o último.",
       "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T04:10:07.257Z"
+      "updatedAt": "2026-11-20T04:15:45.127Z"
     },
     {
       "id": "i-pagam-escudos",
