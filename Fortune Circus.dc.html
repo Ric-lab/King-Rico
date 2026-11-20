@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="./ui/header.css">
 <link rel="stylesheet" href="./ui/home.css">
 <link rel="stylesheet" href="./ui/controls.css">
+<link rel="stylesheet" href="./ui/park/spin-v7.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./cloud/firebase-config.js"></script>
@@ -177,48 +178,22 @@ a:hover { color: #fff3c4; }
     <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
   </div>
 
-  <div class="park-bet-well" aria-hidden="true"></div>
-  <div class="park-bet-value" style="position: absolute; left: 151.333px; top: 614.5px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: {{ betSize }}; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); letter-spacing: 1.5px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ betText }}</span>
-  </div>
-
-  <div onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
-  </div>
-  <div onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19M12 5V19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
-  </div>
-
   <!-- Spin vinho com aro/letras dourados; face sólida preserva o clique e o pulso. -->
-  <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" data-spin-active="{{ spinPulseActive }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
+  <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" data-spin-active="{{ spinPulseActive }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" data-auto="{{ auto }}" aria-label="Girar (segure para automático)" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
     <div class="park-button-well park-spin-well"></div>
     <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"><i class="park-spin-side-wash"></i></i><i class="park-spin-rear" aria-hidden="true"><i class="park-spin-rear-wash"></i></i>
       <div class="park-spin-face">
       <i class="park-spin-wash" aria-hidden="true"></i>
-      <span class="park-spin-label">KING RICO</span>
-      <span class="park-spin-label park-spin-label-lit" aria-hidden="true">KING RICO</span>
+      <span class="park-spin-label">{{ betText }}</span>
+      <span class="park-spin-label park-spin-label-lit" aria-hidden="true">{{ betText }}</span>
+      <span class="park-spin-sub">SEGURE PARA AUTO</span>
     </div></div>
     <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-rim-gold-contour-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i><i class="park-spin-rim-pulse"></i></span>
   </div>
+  <div class="park-bet-step park-bet-minus" onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></svg></div>
+  <div class="park-bet-step park-bet-plus" onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19M12 5V19" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></svg></div>
 
-  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar mais rápido" aria-pressed="{{ turbo }}" data-kr-hit="" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
-  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/turbo-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/turbo-socket-rim-v3.svg" alt="" draggable="false"></div>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
-  <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
-    <div class="park-mode-label" style="position: absolute; left: 26px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
-      <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">TURBO</span>
-    </div>
-  </sc-if>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar automático" aria-pressed="{{ auto }}" data-kr-hit="" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
-  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/auto-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/auto-socket-rim-v3.svg" alt="" draggable="false"></div>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
-  <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
-    <div class="park-mode-label" style="position: absolute; left: 379px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
-      <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">AUTO</span>
-    </div>
-  </sc-if>
+
 
 
 
@@ -498,7 +473,7 @@ class Component extends DCLogic {
     locked: [], spinCells: [], stopped: [], winCells: [], winLines: [],
     winAmount: 0, displayWin: 0, showWin: false, winTitle: 'VOCÊ GANHOU',
     coins: false, shake: 'none', antic: false,
-    spinning: false, feature: null, turbo: false, auto: false,
+    spinning: false, feature: null, turbo: true, auto: false,
     sound: true, vibrate: true, sfxLvl: 2, vibLvl: 2, menu: false, pays: false, scale: 1, inset: false, ready: false, hint: 'Boa sorte!'
   };
   timers = [];
@@ -956,8 +931,12 @@ class Component extends DCLogic {
     }
   }
   pressDown = (kind) => { this._pressed = true; this._spinTouchHeld = kind === 'spin'; if (this._spinTouchHeld) this._spinTouchAt = performance.now(); this.hap(this._spinTouchHeld ? 'spinPress' : 'press'); this.click(true, kind); };
-  pressUp = () => { if (this._pressed) { const spin = this._spinTouchHeld; this._pressed = false; if (spin) { this._spinTouchAt = performance.now(); this._spinTouchUp?.(); this.hap('spinRelease'); } this.click(false, spin ? 'spin' : null); this._spinTouchHeld = false; } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
-  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); };
+  pressUp = () => { this.holdEnd(); if (this._pressed) { const spin = this._spinTouchHeld; this._pressed = false; if (spin) { this._spinTouchAt = performance.now(); this._spinTouchUp?.(); this.hap('spinRelease'); } this.click(false, spin ? 'spin' : null); this._spinTouchHeld = false; } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
+  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); this.holdStart(); };
+  // Segurar o spin ~0,65 s liga o automático; tocar com o automático ligado desliga.
+  holdStart = () => { clearTimeout(this._holdT); this._holdFired = false; const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) b.dataset.hold = '1';
+    this._holdT = setTimeout(() => { if (b) delete b.dataset.hold; this._holdFired = true; if (!this.state.auto) { this.hap('winMid'); this.toggleAuto(); } }, 650); };
+  holdEnd = () => { clearTimeout(this._holdT); const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) delete b.dataset.hold; };
   pressTurbo = () => { this.setState({ pressed: 'turbo' }); this.pressDown(); };
   pressAuto = () => { this.setState({ pressed: 'auto' }); this.pressDown(); };
   pressHome = () => { this.setState({ pressed: 'home' }); this.pressDown(); };
@@ -1172,6 +1151,8 @@ class Component extends DCLogic {
 
   /* ---------- base spin ---------- */
   spin = () => {
+    if (this._holdFired) { this._holdFired = false; return; }
+    if (this.state.auto) { this.setState({ auto: false, hint: 'Automático parado' }); this.click(true); return; }
     if (this._featPending || this.state.featLock) { if (this.state.showWin) { this._spinAfterFly = false; this.dismissWin(); } return; }
     if (this.state.showWin) { const manual = !this.state.auto && !this.state.free && !this._afterWinChains; this._spinAfterFly = manual; this.dismissWin(); return; }
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
@@ -1263,7 +1244,7 @@ class Component extends DCLogic {
     this._wheelAudioUntil=got?performance.now()+dStart+LAND+STAG*(got-1):0;
     const cloverHold=this._cloudSpin?.outcome?.cedarLines?.length?1350:0;
     res.peach.forEach((c, k) => this.later(() => this.dance(c), dStart + k * STAG));
-    const wait = (got ? dStart + LAND + STAG * (got - 1) + 450 : 950)+cloverHold; // plain win: show the line first, then the modal
+    const wait = (got ? dStart + LAND + STAG * (got - 1) + 450 : 570)+cloverHold; // plain win: show the line first, then the modal
     if (goodLuck) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
     const next = () => {
       if (v6 && peach && this._wheelTriggerV6) {
@@ -1281,13 +1262,13 @@ class Component extends DCLogic {
       const f2 = this.state.free;
       if (f2) return f2.left > 0 ? this.later(() => this.doSpin(), 500) : this.endFree();
       if (trigger) { this.setState({ featLock: true }); return this.later(() => this.startFeature(bet), 300); }
-      if (this.state.auto) this.later(() => { if (this.state.auto && !this.state.feature) this.doSpin(); }, 500);
+      if (this.state.auto) this.later(() => { if (this.state.auto && !this.state.feature) this.doSpin(); }, 300);
     };
     // modal only for big prizes; regular prizes count up inside the message bar
     const lbls = res.win > 0 ? this.lineLabels(res, bet, this.state.grid) : null, modal = res.win >= bet * 20;
     if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, goodLuck || !!fr, bet), wait); }
     else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250+cloverHold);
-    else this.later(next, got ? wait + 200 : 800);
+    else this.later(next, got ? wait + 200 : 480);
   }
   lineLabels(res, bet, grid) {
     const sum = {};
@@ -1297,11 +1278,11 @@ class Component extends DCLogic {
   barPrize(amount, bet, then, lbls) {
     this.setState({ barWin: amount, barGreen: amount >= bet });
     this.countUp(amount, '', false);
-    if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 1350);
+    if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 810);
     this.later(() => {
       const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ barWin: 0, lineLbl: null, winDim: false }); if (then) then(); };
       const calm = () => { if (this.state.winCells.length) this.setState({ winCalm: true }); }; const pend = this.state.balPending || 0; if (pend > 0) { this.setState({ lineGone: true }); this.coinFly(pend, () => { calm(); finish(); }); } else { calm(); finish(); }
-    }, 2700);
+    }, 1620);
   }
   layoutMetric(name) {
     const node = this.lightsRef.current;
