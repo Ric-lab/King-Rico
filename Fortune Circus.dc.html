@@ -169,6 +169,26 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l6 }}" hint-placeholder-val="{{ false }}"><div data-payline="6" style="position: absolute; left: 224.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l7 }}" hint-placeholder-val="{{ false }}"><div data-payline="7" style="position: absolute; left: 354.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   </div>
+  <div class="park-reel-effects" aria-hidden="true">
+    <div class="park-reel-fx-column park-reel-shell-0">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
+    </div>
+    <div class="park-reel-fx-column park-reel-shell-1">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
+    </div>
+    <div class="park-reel-fx-column park-reel-shell-2">
+  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
+  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
+    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
+  </sc-if>
+    </div>
+  </div>
   <div class="park-reel-frame" aria-hidden="true"></div>
   </div>
   <div class="kr-hud-row">
@@ -203,26 +223,6 @@ a:hover { color: #fff3c4; }
 
 
 
-  <div class="park-reel-effects" aria-hidden="true">
-    <div class="park-reel-fx-column park-reel-shell-0">
-  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
-  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
-    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
-  </sc-if>
-    </div>
-    <div class="park-reel-fx-column park-reel-shell-1">
-  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
-  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
-    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
-  </sc-if>
-    </div>
-    <div class="park-reel-fx-column park-reel-shell-2">
-  <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
-  <sc-if value="{{ goldGrid }}" hint-placeholder-val="{{ false }}">
-    <div class="park-grid-gold" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(255,226,120,.4), rgba(255,180,40,.22)); box-shadow: inset 0 0 30px rgba(255,210,90,.9), 0 0 30px rgba(255,200,80,.7); animation: fcShimmer 1s ease-in-out infinite;"></div>
-  </sc-if>
-    </div>
-  </div>
   <sc-if value="{{ peachShow }}" hint-placeholder-val="{{ true }}">
     <div class="park-basket" data-park-side="{{ peachSide }}" title="Junte 5 roletas para abrir a Roleta Bônus" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 112px; height: 52px; pointer-events: none;">
       <div class="park-basket-content" style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 50%;">

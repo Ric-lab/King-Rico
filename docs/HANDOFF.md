@@ -1,3 +1,15 @@
+## Ajuste de espaços e máscaras —20/11/2026, Codex
+
+Base `716d60e`. Gap prêmio→máquina reduzido de23,5 para11,75 unidades (50%).
+Gabinete sobe11,75; spin e −/+ sobem18,5. Gap máquina→spin passa de22,32 para
+15,62 unidades (−30%). Valores nativos do palco453×802, escalados juntos.
+Pulso dourado e apagado foram movidos para dentro de `.park-cabinet-body`:
+antes ficavam fora do grupo e conservavam a geometria anterior. A regressão
+confere os limites de cada máscara contra cada rolo em320/390/412px.
+Passaram layout móvel e as oito linhas premiadas com voo de moedas.
+Próximo passo: dono conferir a prévia. Continua sem alteração da economia/oficial.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Wireframe do dono — alinhamento Circus v7 (20/11/2026, Codex)
 
 Parti de `645c712`, mantendo a etapa do escudo e a economia existente.

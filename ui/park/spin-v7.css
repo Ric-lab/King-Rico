@@ -56,10 +56,10 @@
 
 /* Wireframe do dono (20/11): prêmio unido, máquina reta e spin na zona do polegar.
    Uma única escala no grupo preserva a origem nativa dos três rolos e dos efeitos. */
-.park-cabinet-body{position:absolute;inset:0;transform:translateY(-30px) scale(1.08);transform-origin:226.5px 267.5px;pointer-events:none}
+.park-cabinet-body{position:absolute;inset:0;transform:translateY(-41.75px) scale(1.08);transform-origin:226.5px 267.5px;pointer-events:none}
 .park-prize-block{position:absolute;left:117.833px;top:158px;width:220px;height:56px;z-index:4;pointer-events:none}
 .park-prize-block>.park-part-prize,.park-circus-stage .park-prize-block>.park-prize-value[class]{left:0!important;top:0!important;width:100%!important;height:100%!important;box-sizing:border-box;margin:0!important;transform:none!important}
 /* Oculta somente o contador: estado e recibos da roleta continuam intactos. */
 .park-circus-stage .park-basket{visibility:hidden!important;pointer-events:none!important}
-.park-circus-stage [data-spin-btn][data-spin-btn]{top:620px!important}
-.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:652.5px!important}
+.park-circus-stage [data-spin-btn][data-spin-btn]{top:601.5px!important}
+.park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:634px!important}

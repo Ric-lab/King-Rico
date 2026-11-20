@@ -97,3 +97,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   máquina por peça, alterando a origem do rolo. Usar blocos únicos para prêmio
   e gabinete; conferir o papel dentro do aro. O wireframe prioriza spin mais
   alto na área do polegar, sem contador de roleta ao lado do prêmio.
+
+- Ajuste20/11: mudar o gabinete exige mover também pulso dourado e apagado;
+  estavam fora do grupo e ficaram com geometria antiga. Conferir cada máscara
+  sobre o respectivo rolo, não só a moldura.

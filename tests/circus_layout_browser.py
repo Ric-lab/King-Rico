@@ -15,8 +15,11 @@ with sync_playwright() as p:
   prize=rect('.park-part-prize');value=rect('.park-prize-value')
   for key in ['x','y','width','height']:assert abs(prize[key]-value[key])<1,(prize,value)
   frame=rect('.park-reel-frame');spin=rect('[data-spin-btn]')
-  assert frame['y']>prize['y']+prize['height']+10,(prize,frame)
-  assert spin['y']>frame['y']+frame['height']+10,(frame,spin)
+  scale=rect('.park-circus-stage')['width']/453
+  prize_gap=(frame['y']-prize['y']-prize['height'])/scale
+  button_gap=(spin['y']-frame['y']-frame['height'])/scale
+  assert abs(prize_gap-11.75)<1,prize_gap  # half the original 23.5-unit gap
+  assert abs(button_gap-15.62)<1,button_gap  # 70% of the original 22.32-unit gap
   assert .63*h<spin['y']<.70*h,(h,spin)
   assert spin['y']+spin['height']<.89*h,(h,spin)
   shells=page.locator('.park-reel-shell').all()
@@ -24,6 +27,16 @@ with sync_playwright() as p:
    r=shell.bounding_box()
    assert r['x']>=frame['x']+2 and r['x']+r['width']<=frame['x']+frame['width']-2,(frame,r)
    assert r['y']>=frame['y'] and r['y']+r['height']<=frame['y']+frame['height']+1,(frame,r)
+  # Both pulse states must follow each actual drum, through the same cabinet transform.
+  page.evaluate('__fc.setState({goldGrid:true})')
+  for i,shell in enumerate(shells):
+   paper=shell.bounding_box();fx=rect('.park-reel-fx-column.park-reel-shell-'+str(i))
+   for key in ['x','y','width','height']:assert abs(paper[key]-fx[key])<1,(paper,fx)
+   for overlay in ['.park-grid-shade','.park-grid-gold']:
+    mask=rect('.park-reel-fx-column.park-reel-shell-'+str(i)+' '+overlay)
+    for key in ['x','y','width','height']:assert abs(mask[key]-paper[key])<1,(paper,mask)
+  page.screenshot(path=f'work/preview-layout-gold-{w}.png')
+  page.evaluate('__fc.setState({goldGrid:false})')
   assert not page.locator('.park-basket').is_visible()
   page.screenshot(path=f'work/preview-layout-idle-{w}.png')
   if w==390:
