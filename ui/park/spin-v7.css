@@ -44,7 +44,7 @@
 
 /* Layout v7 – passo 2 (dono, 20/11): King Rico sobe, botões descem, sem as 3 bolinhas do cedro. */
 .park-circus-stage .park-mascot{top:-14px!important}
-.park-circus-stage .park-prize-value{top:166px!important}
+.park-circus-stage .park-prize-value[class]{top:132px!important;margin-top:0!important;transform:none!important}
 #kr-cedro-count{display:none!important}
 .park-circus-stage [data-spin-btn][data-spin-btn]{top:calc(568px + var(--park-machine-drop,0px))!important}
 .park-circus-stage .park-bet-step[aria-label="Diminuir aposta"],.park-circus-stage .park-bet-step[aria-label="Aumentar aposta"]{top:calc(617px + var(--park-machine-drop,0px))!important}
