@@ -1,8 +1,80 @@
 {
-  "updatedAt": "2026-11-19T19:16:39.179Z",
+  "updatedAt": "2026-11-20T03:24:02.198Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "i-reorg-v7",
+      "title": "Reorganização v7 (ideia do dono, 20/11) — limpeza visual",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Plano geral. Itens abaixo detalham. Antes de executar: confirmar com o dono e refazer a economia (RTP ~90%).",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-trevo-barriga",
+      "title": "Good Luck = trevo de 4 folhas na barriga do King Rico",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Conforme joga, as folhas acendem. Com as 4 acesas, ele solta 4 feitiços (reaproveitar os efeitos do prêmio do Royal Rico, que ficaram bons). Substitui a barra lateral como gatilho do Good Luck.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-dados",
+      "title": "Barras laterais carregam DADOS — a \"nova roleta\"",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Cheias, a pessoa joga dados e o resultado é o multiplicador. Motivo: o ícone da roleta é igual ao do escudo. Definir faixa de multiplicadores e a economia.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-escudo",
+      "title": "Escudo = defesa contra os vilões (até 5, guardados perto do saldo)",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Substitui o cedro/trevo como defesa. Definir regra com o Ray (hoje ele rouba a defesa; o trevo/cedro não defende dele).",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-roleta-jogos",
+      "title": "Roleta passa a sortear o minigame (trinca de controles)",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "3 controles → abre a roleta, que sorteia entre 3 jogos: Royal Rico + 2 que ainda vão existir. O asset do raio fica guardado.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-pagam-escudos",
+      "title": "Royal Rico e os outros 2 minigames pagam em escudos",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Liga os minigames à defesa contra vilões.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
     {
       "id": "i-cedro-sai",
       "title": "Decidir: tirar o cedro do jogo",
