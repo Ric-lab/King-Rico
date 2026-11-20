@@ -166,19 +166,15 @@ with sync_playwright() as p:
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
   assert paint['level']==0 and paint['colors']==['rgb(100, 12, 36)']*3,paint
+  # Spin v7 (20/11): tampa alta sobre lateral grossa; apertar afunda a tampa ~17px e ela volta.
   def geometry():
-   return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
-  # The gold rim's inner top is 7/78 of the SVG height; rear must stay below it.
-  clearance=page.locator('[data-spin-btn]').evaluate("e=>{const b=e.getBoundingClientRect(),r=e.querySelector('.park-spin-rear').getBoundingClientRect();return (r.top-b.top)/b.height-7/78}")
-  assert clearance>0,clearance
-  sides=page.locator('[data-spin-btn]').evaluate("""e=>{const b=e.getBoundingClientRect(),body=e.querySelector('.park-spin-edge').getBoundingClientRect(),face=e.querySelector('.park-spin-face').getBoundingClientRect(),scale=b.width/373;return {body:(body.left-b.left)/scale,lip:(face.left-body.left)/scale}}""")
-  assert sides['body']<=8.1 and 1.8<sides['lip']<2.2,sides
+   return page.locator('[data-spin-btn]').evaluate("""e=>{const s=e.getBoundingClientRect().height/150,r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {front:(r('edge').bottom-r('face').bottom)/s,top:(r('face').top-r('edge').top)/s}}""")
   rest=geometry()
-  assert rest['rear']<-2 and rest['front']>5 and 1.8<rest['front']/-rest['rear']<2.2,rest
+  assert rest['front']>15 and abs(rest['top'])<1,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
   page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
   down=geometry()
-  assert abs(down['rear'])<.5 and abs(down['front'])<.5,down
+  assert down['front']<rest['front']-12,(rest,down)
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-down-'+mode+'.png')
   page.evaluate('__fc._spinTouchUp()');page.wait_for_timeout(250)
   assert abs(geometry()['front']-rest['front'])<.5
