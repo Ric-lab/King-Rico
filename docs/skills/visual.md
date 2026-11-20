@@ -101,3 +101,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 - Ajuste20/11: mudar o gabinete exige mover também pulso dourado e apagado;
   estavam fora do grupo e ficaram com geometria antiga. Conferir cada máscara
   sobre o respectivo rolo, não só a moldura.
+
+-20/11: o dono ainda considerou insuficiente o clique vinho. Apenas afundar a
+  tampa não resolveu o conjunto; autorizou repensar cores/formato. Diagnóstico
+  do Codex: cavidade traseira grande e ação com pouco contraste. Proposta coral
+  com ação explícita e cavidade menor aguarda avaliação, sem aprovação presumida.

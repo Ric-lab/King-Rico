@@ -337,10 +337,14 @@ Refinamento20/11: gap do prêmio à máquina11,75 unidades; da máquina ao spin1
 As camadas `.park-reel-effects` de dourado/apagado pertencem ao mesmo grupo
 do gabinete e mantêm a transformação interna dos rolos, sem escala independente.
 
-### Clique do spin — referência real,20/11/2026 (prévia)
-Aro dourado imóvel, cavidade escura e tampa vinho rígida. Tampa/texto descem22px
-com rotateX(22deg) em perspectiva900px; isso projeta a face sem deformar os
-cantos individualmente. Lateral aparece25px solta e3px pressionada. Descida65ms,
-contato visual mínimo140ms, retorno160ms sem grande rebote. Preservar cor, fonte,
-posição e tamanho do botão. Não escalar/mover a base inteira nem revelar ouro
-preenchendo a cavidade. Movimento reduzido troca poses sem transição.
+### Spin coral — proposta na prévia,20/11/2026
+O dono autorizou rever cores/formato após considerar a versão vinho insuficiente.
+Base dourada quente fixa, tampa coral (#f14b32) e lateral vinho (#9a1e2d).
+GIRAR claro (#fff6e3) é a ação principal; moeda+valor ficam abaixo, sem perder os
+controles −/+. Auto continua por segurar; a dica fica na tampa.
+A face começa no topo do botão e esconde a borda traseira em repouso; cavidade
+curta e quente ao pressionar, evitando o efeito de tampa dentro de um buraco.
+Curso23px com rotateX(10deg), lateral26→3px, perspectiva900px. Mantidos65ms para
+descer, contato mínimo140ms e retorno160ms. Não alterar posição/tamanho do alvo.
+Paleta de cada ciclo vem de --park-spin-paint, definida junto à pele do botão.
+Direção proposta pelo Codex, aguardando avaliação do dono; não é aprovação final.

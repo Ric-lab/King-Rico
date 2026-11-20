@@ -25,8 +25,8 @@ with sync_playwright() as p:
   rim=page.locator('.park-spin-iridescence')
   assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
   assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-gold-contour-v1.svg')
-  assert page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(100, 12, 36)'
-  assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(244, 201, 81)'
+  assert page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(241, 75, 50)'
+  assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(255, 246, 227)'
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')
   spin_box=page.locator('[data-spin-btn]').bounding_box()
   page.mouse.move(spin_box['x']+spin_box['width']/2,spin_box['y']+spin_box['height']/2);page.mouse.down()
@@ -165,12 +165,12 @@ with sync_playwright() as p:
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
-  assert paint['level']==0 and paint['colors']==['rgb(100, 12, 36)']*3,paint
-  # Spin v7 (20/11): tampa alta sobre lateral grossa; apertar afunda a tampa ~17px e ela volta.
+  assert paint['level']==0 and paint['colors']==['rgb(241, 75, 50)','rgb(154, 30, 45)','rgb(154, 30, 45)'],paint
+  # Spin coral: raised rigid cap, fixed socket, 23-unit stroke and quick return.
   def geometry():
-   return page.locator('[data-spin-btn]').evaluate("""e=>{const s=e.getBoundingClientRect().height/150,r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {front:(r('edge').bottom-r('face').bottom)/s,top:(r('face').top-r('edge').top)/s}}""")
+   return page.locator('[data-spin-btn]').evaluate("""e=>{const s=e.getBoundingClientRect().width/277,r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {front:(r('edge').bottom-r('face').bottom)/s,top:(r('face').top-r('edge').top)/s}}""")
   rest=geometry()
-  assert rest['front']>15 and abs(rest['top'])<1,rest
+  assert rest['front']>20 and rest['top']<-7,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
   page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
   down=geometry()

@@ -20,10 +20,11 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  const spinButton=document.querySelector('[data-spin-btn]');
  const spinSurface=spinButton?.querySelector('.park-spin-aperture');
  const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=rim?.querySelector('.park-spin-rim-pulse');let rimFlash;
- const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color','#640c24');
+ const spinPaint=()=>(spinButton&&getComputedStyle(spinButton).getPropertyValue('--park-spin-paint').trim())||'rgb(100,12,36)';
+ const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color',spinPaint());
  commitSpinColor(fc._parkMeterLevel);
  fc._parkPreparePulseColor=(level=Math.min(10,fc._parkMeterLevel+1))=>{
-  const color='rgb(100,12,36)';
+  const color=spinPaint();
   // This static layer keeps its paint when the native button updates its inline style.
   spinSurface?.style.setProperty('--park-spin-pulse-color',color);
   rim?.style.setProperty('--park-rim-pulse-color','#ffdf70');

@@ -11,6 +11,12 @@ with sync_playwright() as p:
   ctx=b.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,reduced_motion=mode)
   page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
+  assert page.locator('.park-spin-verb').inner_text()=='GIRAR'
+  wager=page.locator('.park-spin-label').first.inner_text()
+  page.get_by_role('button',name='Aumentar aposta',exact=True).click()
+  assert page.locator('.park-spin-label').first.inner_text()!=wager
+  page.get_by_role('button',name='Diminuir aposta',exact=True).click()
+  assert page.locator('.park-spin-label').first.inner_text()==wager
   page.evaluate('''draws=>{
    const fetch=window.fetch;window.spinCalls=0;
    window.fetch=async(u,o)=>{const d=o?.body&&JSON.parse(o.body);if(d?.action!=='spin')return fetch(u,o);spinCalls++;const r=Math.random;let i=0;Math.random=()=>draws[i++]??.99;try{return await fetch(u,o);}finally{Math.random=r}};
@@ -23,7 +29,7 @@ with sync_playwright() as p:
   page.touchscreen.tap(x,y)
   page.wait_for_timeout(450)
   samples=page.evaluate('capSamples');down=min(samples,key=lambda v:v['front'])
-  assert down['front']<5 and down['rear']>25,(rest,down)
+  assert down['front']<5 and 10<down['rear']<25,(rest,down)
   assert all(max(abs(a-b) for a,b in zip(r['rim'],rest['rim']))<.2 for r in samples),samples
   assert all(r['labelInside'] for r in samples),samples
   assert abs(page.evaluate('capGeometry().front')-rest['front'])<.5
@@ -45,6 +51,8 @@ with sync_playwright() as p:
   assert page.evaluate('spinCalls')==calls
   assert not page.locator('[data-spin-btn]').get_attribute('data-tactile-held')
   button.screenshot(path=f'work/preview-spin-mechanical-rest-{mode}.png')
+  assert page.locator('.park-circus-scene').evaluate('e=>e.scrollLeft')==0
+  assert page.locator('.park-circus-stage').bounding_box()['x']>=-1
   page.screenshot(path=f'work/preview-spin-mechanical-screen-{mode}.png')
   assert not errors,errors
   print(json.dumps({'mode':mode,'quickTap':True,'fixedRim':True,'frontBefore':rest['front'],'frontPressed':down['front'],'nativeAuto':True,'cancelWithoutWager':True,'errors':errors}),flush=True)

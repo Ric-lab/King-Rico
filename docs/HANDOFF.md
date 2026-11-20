@@ -1,3 +1,20 @@
+## Spin coral — refinamento livre pedido pelo dono,20/11/2026 (Codex)
+
+Base `a1cbd43`. Proposta na prévia, ainda aguardando avaliação estética do dono.
+Tampa vermelho-coral elevada sobre base dourada quente; lateral vinho conecta
+os botões −/+. GIRAR é o destaque claro, com moeda+aposta em segunda linha.
+A tampa começa no topo do botão, lateral26px; desce23px e inclina10° ao apertar,
+deixando3px de lateral e uma cavidade menor. Mantém65/140/160ms e alvo original.
+
+A paleta do pulso vem agora da variável CSS --park-spin-paint, inclusive ao
+recomeçar o ciclo. Não pode retornar ao vinho antigo no primeiro giro.
+Corrigido scroll horizontal interno da cena ao focar/capturar o controle3D:
+container fixo usa overflow:clip; teste confere que a tela não desloca32px.
+Passaram toque/auto/cancelamento e preview_motion (sons/pulso/bônus). Testes da
+paleta e poses foram atualizados para a direção autorizada, sem mexer em regras.
+Próximo passo: dono testar a aparência/sensação na prévia; oficial não alterado.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Clique mecânico do spin —20/11/2026, Codex
 
 Base `d2f4e32`; aplicada a referência real em guidelines/references/coin-master/.

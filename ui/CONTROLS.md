@@ -177,3 +177,7 @@ movimento reduzido), sem temporizar envio da aposta nem o começo dos rolos.
 Nova pressão cancela a soltura visual anterior; pagehide limpa o timer.
 Segurar650ms continua ativando auto pelas rotinas nativas; cancelamento e
 parada usam essas rotinas. Não criar outro clique/som/háptico na animação.
+
+Refinamento20/11: a tampa mostra GIRAR como ação principal e moeda+aposta abaixo.
+Os seletores laterais continuam atualizando a aposta exibida. A paleta do pulso
+usa --park-spin-paint do botão para não restaurar a cor antiga ao voltar do bônus.

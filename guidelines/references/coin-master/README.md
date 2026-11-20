@@ -45,3 +45,9 @@ Depois do pedido do dono, spin-v7.css e spin-tactility.js passaram a usar base
 fixa, cavidade escura e tampa projetada ao afundar. Foram preservados o formato,
 vinho/dourado, texto de aposta, som e háptico do King Rico. A proporção e o tempo
 foram adaptados ao botão existente, sem reutilizar a arte do Coin Master.
+
+### Refinamento posterior autorizado pelo dono —20/11/2026
+A versão vinho ainda não convenceu. A proposta seguinte na prévia usa coral e
+texto claro, base dourada quente, GIRAR maior e aposta secundária. Reduz o vazio
+traseiro e faz a tampa parecer elevada sobre a base. Conserva a referência de
+curso/retorno; não altera som nem lógica. Aguarda avaliação estética do dono.
