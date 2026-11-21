@@ -146,10 +146,10 @@ function flyTickets(fc,refresh,done=()=>{}){
  if(!award||fc._parkTicketsPlaying){done();return;}
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
  const targetFor=i=>shieldTarget(award.before+i),nodes=[],anims=[],arrived=new Set();let ended=false;
- const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}(document.querySelector('.park-key-count-shield')||targetFor(i))?.animate?.([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
+ const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.bell?.(1760,0.4,0.07,0.04);fc.pluck?.(880,0.06,0.25);}catch{}try{fc.hap?.('basketIn');}catch{}(document.querySelector('.park-key-count-shield')||targetFor(i))?.animate?.([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
  const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?400:620,contact=.8,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
- const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+duration*cells.length+1200);
+ const calm=reduced(),duration=calm?400:520,contact=1,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
+ const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+(duration+420)*cells.length+1200);
  try{fc.ac?.();}catch{}
  (async()=>{
   if(lead)await new Promise(r=>setTimeout(r,lead));
@@ -158,13 +158,16 @@ function flyTickets(fc,refresh,done=()=>{}){
    const end=targetFor(i)?.getBoundingClientRect();if(!end?.width){finish();return;}
    const tx=end.x+end.width/2,ty=end.y+end.height/2,source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.opacity='0';document.body.append(node);nodes.push(node);
-   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t};});
-   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.125},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:1}];
-   const keys=calm?simple:frames,arrival=node.animate(keys,{duration:duration*contact,easing:'linear',fill:'both'});anims.push(arrival);
+   // Voo e impacto IGUAIS aos da roleta (Fortune Circus: arco que sobe 65, gira 360°, encolhe 1.15→0.6, 520ms, brilho no destino).
+   const stg=document.querySelector('.park-circus-stage')?.getBoundingClientRect(),sc=stg?.width?stg.width/453:1,S=64*sc,H=S/2,dx=tx-sx,dy=ty-sy;
+   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.cssText='position:fixed;left:0;top:0;width:'+S+'px;height:'+S+'px;object-fit:contain;pointer-events:none;z-index:9999;opacity:0;will-change:transform,opacity';document.body.append(node);nodes.push(node);
+   const pop=document.createElement('i');pop.style.cssText='position:fixed;left:'+(tx-H)+'px;top:'+(ty-H)+'px;width:'+S+'px;height:'+S+'px;border-radius:50%;pointer-events:none;z-index:9999;opacity:0;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,190,60,0) 70%)';document.body.append(pop);nodes.push(pop);
+   const frames=Array.from({length:11},(_,k)=>{const u=k/10,e=u*u*(3-2*u),lift=-65*sc*Math.sin(Math.PI*u);return {offset:u,opacity:u<.05?u*20:1,transform:`translate(${(sx-H+dx*e).toFixed(1)}px,${(sy-H+dy*e+lift).toFixed(1)}px) rotate(${(360*e).toFixed(0)}deg) scale(${(1.15-.55*e).toFixed(2)})`};});
+   const simple=[{transform:`translate(${sx-H}px,${sy-H}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-H}px,${sy-H}px) scale(.8)`,opacity:1,offset:.125},{transform:`translate(${tx-H}px,${ty-H}px) scale(.6)`,opacity:1,offset:1}];
+   const keys=calm?simple:frames,arrival=node.animate(keys,{duration:duration*contact,easing:calm?'linear':'cubic-bezier(.5,0,.6,1)',fill:'both'});anims.push(arrival);
    // The opaque endpoint is held until its note/count cue has run, even on a late frame.
    await arrival.finished;if(ended)return;land(i);
-   const fade=node.animate([keys.at(-1),{transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0}],{duration:duration*(1-contact),easing:'linear',fill:'both'});anims.push(fade);await fade.finished;
+   node.animate([{opacity:1},{opacity:0}],{duration:100,fill:'forwards'});const fade=pop.animate([{transform:'scale(.3)',opacity:0},{transform:'scale(1.2)',opacity:1,offset:.3},{transform:'scale(1.8)',opacity:0}],{duration:420,fill:'forwards'});anims.push(fade);await fade.finished;
   }
   finish();
  })().catch(finish);
