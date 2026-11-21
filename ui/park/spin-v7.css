@@ -113,3 +113,10 @@
 .park-circus-stage .park-key-count-shield,.park-circus-stage .park-shield-wallet{left:14px!important}
 .park-circus-stage .park-key-count-wheel{left:385px!important}
 .park-circus-stage .park-shield-wallet{top:748px!important}
+/* Contadores maiores, mais baixos (centro onde antes ficava a base) e um pouco para dentro, alinhados à base das teclas. */
+.park-circus-stage .park-key-count{top:764px!important;width:62px!important;height:50px!important}
+.park-circus-stage .park-key-count img{width:22px!important;height:22px!important}
+.park-circus-stage .park-key-count b{font-size:15px!important}
+.park-circus-stage .park-key-count-shield,.park-circus-stage .park-shield-wallet{left:19px!important}
+.park-circus-stage .park-key-count-wheel{left:372px!important}
+.park-circus-stage .park-shield-wallet{top:764px!important}

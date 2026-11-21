@@ -22,7 +22,7 @@ with sync_playwright() as p:
   assert counter.locator('b').text_content()=='3/5'
   box=counter.bounding_box();minus=page.locator('.park-bet-minus').bounding_box()
   assert box['y']>=minus['y']+minus['height']-2,(box,minus)
-  assert abs(box['x']-minus['x'])<4,(box,minus)  # borda externa alinhada à tecla
+  assert 0<=box['x']-minus['x']<8,(box,minus)  # borda externa alinhada à tecla
   assert box['width']>box['height']>30,box  # face oval (perspectiva no gramado)
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
   counter.click();page.get_by_role('dialog',name='Escudos de defesa',exact=True).wait_for()
