@@ -65,8 +65,8 @@ with sync_playwright() as p:
     assert note['attackRms']>note['decayRms']*2,audio
   ticket_cells=[0,1,2,3,4,6]
   page.evaluate('''values=>{
-   const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
-   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=(document.querySelector('.park-key-count-shield img')||document.querySelector('.kr-hud-row .park-shield-wallet [data-shield-slot="'+Math.max(0,Math.min(4,fc._parkVisibleTickets-1))+'"] img')).getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
+   const fc=__fc,chime=fc.hap.bind(fc);window.ticketSounds=[];
+   fc.hap=(kind,...rest)=>{if(kind==='basketIn'&&fc._parkTicketsPlaying){const i=fc._parkVisibleTickets-1-(window.__shBefore??0),node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=(document.querySelector('.park-key-count-shield img')||document.querySelector('.kr-hud-row .park-shield-wallet [data-shield-slot="'+Math.max(0,Math.min(4,fc._parkVisibleTickets-1))+'"] img')).getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(kind,...rest);};window.__shBefore=fc._parkVisibleTickets||0;
    const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin'||!values)return fetch(u,o);const list=values;values=null;const random=Math.random;let i=0;Math.random=()=>list[i++]??.99;try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',draws_for_grid([5,5,5,5,5,6,5,7,8]))
   before=page.evaluate('(KingRicoCloud.park.cedros||0)')
@@ -91,12 +91,13 @@ with sync_playwright() as p:
   assert [int(x['shown'].split('/')[0]) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
   arrivals=[x['at'] for x in first['sounds']]
-  expected=620 if mode=='no-preference' else 400
+  expected=620 if mode=='no-preference' else 400  # voo + apagar (100ms), igual à roleta
+  step=expected+320  # + brilho do impacto (420ms) antes do próximo escudo
   # Flight and absorption are serialized: the endpoint stays visible through the cue.
   # Two compositor completions and the instrumented audio/layout read can add frames.
   flights=[x['duration'] for x in first['anims'] if x['cls']=='park-flying-ticket']
   assert len(flights)==6 and all(abs(a+b-expected)<.01 for a,b in zip(flights[::2],flights[1::2])),first
-  assert all(expected-65<b-a<expected+160 for a,b in zip(arrivals,arrivals[1:])),first
+  assert all(step-65<b-a<step+160 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''values=>{
    const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));

@@ -148,8 +148,8 @@ function flyTickets(fc,refresh,done=()=>{}){
  const targetFor=i=>shieldTarget(award.before+i),nodes=[],anims=[],arrived=new Set();let ended=false;
  const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.bell?.(1760,0.4,0.07,0.04);fc.pluck?.(880,0.06,0.25);}catch{}try{fc.hap?.('basketIn');}catch{}(document.querySelector('.park-key-count-shield')||targetFor(i))?.animate?.([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
  const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?400:520,contact=1,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
- const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+(duration+420)*cells.length+1200);
+ const calm=reduced(),duration=calm?300:520,contact=1,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
+ const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+duration*cells.length+1200);
  try{fc.ac?.();}catch{}
  (async()=>{
   if(lead)await new Promise(r=>setTimeout(r,lead));
