@@ -17,15 +17,15 @@ with sync_playwright() as p:
   assert wallet.locator('img').count()==5
   assert wallet.locator('img').evaluate_all("es=>es.every(n=>n.complete&&n.naturalWidth>0&&n.src.includes('shield-defense-green-crown-v1.webp'))")
   assert wallet.locator('[data-shield-slot].is-filled').count()==3
-  slots=[n.bounding_box() for n in wallet.locator('[data-shield-slot]').all()]
-  assert all(a['y']+a['height']<b['y'] for a,b in zip(slots,slots[1:]))
-  assert max(r['x'] for r in slots)-min(r['x'] for r in slots)<1
-  box=wallet.bounding_box();balance=page.locator('.kr-hud-balance').bounding_box()
-  assert box['y']>=balance['y']+balance['height']+3,(box,balance)
-  assert abs(box['x']-balance['x'])<5,(box,balance)
-  assert box['width']>=43.9 and box['height']>120,box
+  # Coluna do header saiu (dono, 21/11): estoque visível no contador redondo sob o −, que abre o modal.
+  counter=page.locator('.park-key-count-shield');counter.wait_for()
+  assert counter.locator('b').text_content()=='3/5'
+  box=counter.bounding_box();minus=page.locator('.park-bet-minus').bounding_box()
+  assert box['y']>=minus['y']+minus['height']-2,(box,minus)
+  assert abs((box['x']+box['width']/2)-(minus['x']+minus['width']/2))<8,(box,minus)
+  assert abs(box['width']-box['height'])<1,box
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
-  wallet.click();page.get_by_role('dialog',name='Escudos de defesa',exact=True).wait_for()
+  counter.click();page.get_by_role('dialog',name='Escudos de defesa',exact=True).wait_for()
   page.get_by_role('button',name='ENTENDI',exact=True).click()
   page.screenshot(path=f'work/shield-wallet-{width}.png')
   # Long balance never shrinks the digits or collides with the shields.
@@ -34,7 +34,7 @@ with sync_playwright() as p:
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   page.wait_for_function('KingRicoCloud.player.balance>=100000000.65')
   assert page.locator('[data-kr-wallet-value]').evaluate('n=>getComputedStyle(n).fontSize')==font
-  assert wallet.locator('[data-tickets]').text_content()=='3/5'
+  assert counter.locator('b').text_content()=='3/5'
   assert not errors,errors
   print(json.dumps({'width':width,'stock':3,'layout':box,'longBalance':True,'errors':errors}),flush=True)
   page.close()
