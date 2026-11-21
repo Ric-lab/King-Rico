@@ -1,3 +1,10 @@
+## Junção tampa/lateral — Codex,21/11
+Base `94a6d34`. Corrigida a lateral azul: agora deriva exatamente do path da
+tampa, deslocado14px para baixo, em ambos os lados. A extrusão inclui a aresta
+inclinada inteira; antes havia somente a frente, deixando o encontro truncado.
+Teste focado spin_press_browser e inspeção visual. Checkpoint sem deploy.
+Próximo passo: validar a amostra e agrupar publicação; URL pública ainda anterior.
+
 ## Contorno externo das teclas — Codex,21/11
 Base `72f41cf`. Nova crítica do dono: ainda parece estranho. Corrigido o
 paralelogramo: bordas externas verticais, somente a borda interna segue o spin.
