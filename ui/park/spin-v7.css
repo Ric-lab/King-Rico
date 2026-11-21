@@ -61,8 +61,8 @@
 
 /* Profiled keys follow the spin contour, with level plinths and upright symbols. */
 .park-circus-stage .park-bet-step,.park-circus-stage .park-bet-step:active{width:90px!important;transform:none!important;background-image:var(--park-key-base)}
-.park-circus-stage .park-bet-minus{left:14px!important;--park-key-base:url('/assets/machine/bet-key-left-base-v2.svg');--park-key-cap:url('/assets/machine/bet-key-left-cap-v2.svg');--park-key-side:url('/assets/machine/bet-key-left-side-v2.svg')}
-.park-circus-stage .park-bet-plus{left:349px!important;--park-key-base:url('/assets/machine/bet-key-right-base-v2.svg');--park-key-cap:url('/assets/machine/bet-key-right-cap-v2.svg');--park-key-side:url('/assets/machine/bet-key-right-side-v2.svg')}
+.park-circus-stage .park-bet-minus{left:14px!important;--park-key-base:url('/assets/machine/bet-key-left-base-v3.svg');--park-key-cap:url('/assets/machine/bet-key-left-cap-v3.svg');--park-key-side:url('/assets/machine/bet-key-left-side-v3.svg')}
+.park-circus-stage .park-bet-plus{left:349px!important;--park-key-base:url('/assets/machine/bet-key-right-base-v3.svg');--park-key-cap:url('/assets/machine/bet-key-right-cap-v3.svg');--park-key-side:url('/assets/machine/bet-key-right-side-v3.svg')}
 .park-bet-key-edge{width:90px;background-image:var(--park-key-side)}
 .park-bet-key-face{width:90px;background-image:var(--park-key-cap)}
 .park-bet-minus .park-bet-key-face>svg{left:24px;transform:none}
