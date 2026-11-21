@@ -69,7 +69,7 @@
       "agent": "Codex",
       "commit": null,
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Forma/clique e identidade aprovados. Contornos próprios das teclas acompanham as laterais do spin; bases niveladas, símbolos retos, sem rotação/skew do conjunto. SVGs v2 separados por lado. Aguardando validação visual do dono.",
+      "notes": "Corrigidos tampa azul torcida e vão desigual: frente/base com arestas horizontais, extrusão vertical e contorno paralelo ao spin. Cores e posições preservadas; aguarda validação visual.",
       "createdAt": "2026-11-20T04:02:23.538Z",
       "updatedAt": "2026-11-20T04:02:23.538Z"
     },

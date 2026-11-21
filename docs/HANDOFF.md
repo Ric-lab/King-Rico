@@ -1,3 +1,10 @@
+## Correção do encaixe azul — Codex,21/11
+Base `b6fc55c`. Dono rejeitou a tampa torcida e o vão desigual entre frente e
+fundo. Redesenhados os seis SVGs v2: arestas superiores/inferiores horizontais,
+extrusão azul vertical (sem deslocamento lateral), perfil interno paralelo ao
+spin na frente e atrás. Cores, posições, símbolos e mecânica preservados.
+Teste focado: spin_press_browser. Próximo passo: validar o encaixe na prévia.
+
 ## Teclas laterais desenhadas para acompanhar o spin — Codex
 
 Base `175697b`. O dono esclareceu que girar/inclinar o conjunto não resolve.

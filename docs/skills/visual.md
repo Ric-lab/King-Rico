@@ -115,3 +115,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 - Ajuste das teclas: dono rejeitou soluções apenas de ângulo. O contorno de
   cada peça deve acompanhar a lateral do spin; bases niveladas e símbolos retos.
   SVGs v2 próprios por lado substituem rotação/skew do conjunto.
+
+- Teclas v2: rejeitados azul torcido e vão desigual. Tampa, lateral e base
+  devem compartilhar o contorno; extrusão vertical, arestas horizontais e
+  distância coerente ao spin da frente ao fundo.
