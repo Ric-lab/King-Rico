@@ -1,4 +1,4 @@
-"""The archived park cannot hide the existing 30s refill: access it from the current Circus header."""
+"""The 30s refill flow keeps working (cancel = no credit, 30s = +1000) even without the header + button."""
 from helpers.daily_reward import collect_daily
 from playwright.sync_api import sync_playwright
 import os,json
@@ -9,7 +9,8 @@ with sync_playwright() as p:
  page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
  page.wait_for_function('!__fc.cloudBusy()');before=page.evaluate('KingRicoCloud.player.balance')
  def open_ad():
-  page.get_by_role('button',name='Ver anúncio e ganhar 1000 moedas',exact=True).click()
+  # O + do header saiu (dono, 21/11); o fluxo de 30s continua (saldo esgotado chama o mesmo KingRicoCircusRecharge).
+  page.evaluate('window.KingRicoCircusRecharge()')
   page.get_by_role('dialog',name='Simulação de anúncio de 30 segundos',exact=True).wait_for()
  open_ad();page.get_by_role('button',name='Fechar anúncio sem ganhar moedas',exact=True).click()
  assert page.evaluate('KingRicoCloud.player.balance')==before
@@ -23,5 +24,5 @@ with sync_playwright() as p:
  assert page.evaluate('KingRicoCloud.player.balance')==before+1000
  page.screenshot(path='work/preview-circus-recharge-collected.png')
  assert not errors,errors
- print(json.dumps({'circusHeader':True,'cancelNoCredit':True,'oneCreditAfter30s':True,'flightThenWallet':True}))
+ print(json.dumps({'refillFlow':True,'cancelNoCredit':True,'oneCreditAfter30s':True,'flightThenWallet':True}))
  b.close()
