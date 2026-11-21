@@ -14,7 +14,7 @@ with sync_playwright() as p:
  page.goto(BASE+'/circus?demo=off');ready()
  assert page.evaluate('KingRicoCloud.slotVersion')==6
  assert page.locator('.kr-hud-park').count()==0
- page.locator('.park-pocket').click();page.get_by_role('dialog',name='Escudos de defesa').wait_for();page.get_by_role('button',name='ENTENDI').click()
+ page.locator('.park-key-count-shield').click();page.get_by_role('dialog',name='Escudos de defesa').wait_for();page.get_by_role('button',name='ENTENDI').click()
  assert page.locator('.park-meter-goal .park-goal-cloud').count()==0
  assert not page.locator('.park-basket').is_visible()
  assert page.locator('.park-basket [data-wheels]').text_content()=='0/5'

@@ -101,3 +101,4 @@
 .park-circus-stage .park-key-count b{font-size:15px;line-height:1}
 .park-circus-stage .park-key-count-shield{left:32px}
 .park-circus-stage .park-key-count-wheel{left:367px}
+.park-circus-stage .park-key-count-shield{pointer-events:auto;cursor:pointer}
