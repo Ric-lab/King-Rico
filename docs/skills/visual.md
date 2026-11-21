@@ -119,3 +119,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 - Teclas v2: rejeitados azul torcido e vão desigual. Tampa, lateral e base
   devem compartilhar o contorno; extrusão vertical, arestas horizontais e
   distância coerente ao spin da frente ao fundo.
+
+- Teclas ao lado do spin: paralelogramos inteiros ainda pareceram tortos.
+  Tentar borda externa vertical e somente contorno interno seguindo o spin;
+  preservar tampa/base coerentes. Amostra em validação, não aprovação estética.

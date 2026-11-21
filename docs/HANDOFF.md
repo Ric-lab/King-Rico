@@ -1,3 +1,12 @@
+## Contorno externo das teclas — Codex,21/11
+Base `72f41cf`. Nova crítica do dono: ainda parece estranho. Corrigido o
+paralelogramo: bordas externas verticais, somente a borda interna segue o spin.
+Tampa e base redesenhadas juntas, extrusão vertical; símbolos recentralizados.
+Teste local focado spin_press_browser e conferência visual. Checkpoint de fontes
+com [skip ci] para evitar outro ciclo completo de deploy durante a iteração.
+Próximo passo: dono validar a amostra; agrupar aprovação para atualizar a prévia.
+A URL pública ainda não representa este checkpoint.
+
 ## Correção do encaixe azul — Codex,21/11
 Base `b6fc55c`. Dono rejeitou a tampa torcida e o vão desigual entre frente e
 fundo. Redesenhados os seis SVGs v2: arestas superiores/inferiores horizontais,

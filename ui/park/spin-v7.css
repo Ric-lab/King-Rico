@@ -65,5 +65,5 @@
 .park-circus-stage .park-bet-plus{left:349px!important;--park-key-base:url('/assets/machine/bet-key-right-base-v2.svg');--park-key-cap:url('/assets/machine/bet-key-right-cap-v2.svg');--park-key-side:url('/assets/machine/bet-key-right-side-v2.svg')}
 .park-bet-key-edge{width:90px;background-image:var(--park-key-side)}
 .park-bet-key-face{width:90px;background-image:var(--park-key-cap)}
-.park-bet-minus .park-bet-key-face>svg{left:35px;transform:none}
-.park-bet-plus .park-bet-key-face>svg{left:25px;transform:none}
+.park-bet-minus .park-bet-key-face>svg{left:24px;transform:none}
+.park-bet-plus .park-bet-key-face>svg{left:36px;transform:none}

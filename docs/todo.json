@@ -69,7 +69,7 @@
       "agent": "Codex",
       "commit": null,
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Corrigidos tampa azul torcida e vão desigual: frente/base com arestas horizontais, extrusão vertical e contorno paralelo ao spin. Cores e posições preservadas; aguarda validação visual.",
+      "notes": "Amostra em validação: bordas externas verticais, contorno interno acompanha spin, tampa/base coerentes e símbolos recentralizados. Checkpoint sem deploy; URL pública ainda anterior.",
       "createdAt": "2026-11-20T04:02:23.538Z",
       "updatedAt": "2026-11-20T04:02:23.538Z"
     },
