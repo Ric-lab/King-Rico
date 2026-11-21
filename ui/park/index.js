@@ -115,6 +115,9 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',fc?._parkFeatureFill??displayState.spins);
  el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${fc?._parkFeatureFill??displayState.spins} de ${displayState.meterSpins} no Good Luck`);
  const tickets=fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';paintShields(document.querySelector('.kr-hud-row .park-shield-wallet'),tickets);
+ {const st=document.querySelector('.park-circus-stage');if(st){const mk=(cls,src)=>{let n=st.querySelector('.'+cls);if(!n){n=document.createElement('div');n.className='park-key-count '+cls;n.setAttribute('aria-hidden','true');n.innerHTML='<img alt="" src="'+new URL(src,import.meta.url).href+'"><b></b>';st.appendChild(n);}return n.querySelector('b');};
+  mk('park-key-count-shield','../../assets/symbols/shield-defense-green-crown-v1.webp').textContent=tickets+'/5';
+  mk('park-key-count-wheel','../../assets/wheel/wheel-symbol-v1.webp').textContent=Math.min(5,fc?.state?.peaches||0)+'/5';}}
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  document.querySelector('.park-shield-wallet').setAttribute('aria-label',`${tickets} de 5 escudos de defesa`);
  el.classList.toggle('is-ready',!!displayState.wheel);

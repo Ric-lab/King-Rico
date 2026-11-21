@@ -80,3 +80,10 @@
 .park-bet-key-face{top:-4px!important}
 .park-bet-step:active .park-bet-key-face{transform:translateY(12px)}
 .park-bet-step:active .park-bet-key-edge{clip-path:inset(88px 0 0)}
+
+/* Contadores discretos sob as teclas: escudos (sob o −) e roleta (sob o +). */
+.park-circus-stage .park-key-count{position:absolute;z-index:61;top:744px;width:90px;height:30px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:5px;border-radius:15px;background:linear-gradient(#fffdef,#fff0c8 65%,#f7d894);border:2px solid #e8a72f;box-shadow:inset 0 1px #fff,0 2px #ad6e26;pointer-events:none}
+.park-circus-stage .park-key-count img{width:22px;height:22px;object-fit:contain}
+.park-circus-stage .park-key-count b{font:800 18px/1 'Baloo 2',system-ui,sans-serif;color:#662c2c;font-variant-numeric:tabular-nums}
+.park-circus-stage .park-key-count-shield{left:14px}
+.park-circus-stage .park-key-count-wheel{left:349px}
