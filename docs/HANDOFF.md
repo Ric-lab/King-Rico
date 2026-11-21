@@ -3,8 +3,10 @@ Base `64b11f2`. Refeito o encaixe como um corpo: tampa, extrusão e aro derivam
 do MESMO contorno. Base dourada contorna o pé da extrusão com espessura uniforme,
 sem a plataforma antiga maior e desencaixada. Altura azul9px, curso8px, sem
 rotateX no clique. Formato externo reto/interno inclinado e posições preservados.
-Teste focado e conferência visual. Checkpoint sem deploy; prévia pública anterior.
-Próximo passo: validar a amostra antes de agrupar publicação.
+Teste focado e conferência visual passaram. Publicação na prévia solicitada pelo
+dono após o checkpoint `af7f767`; este commit dispara o workflow Pages existente.
+Próximo passo: dono validar na https://ric-lab.github.io/King-Rico/Preview
+Oficial preservado.
 
 ## Junção tampa/lateral — Codex,21/11
 Base `94a6d34`. Corrigida a lateral azul: agora deriva exatamente do path da
