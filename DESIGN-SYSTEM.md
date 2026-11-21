@@ -318,12 +318,15 @@ mesmo material. Não confundir com os sprites animados do raio Good Luck,
 que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
 a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
 
-### Prévia v7 — escudos (21/11/2026)
-A defesa usa `assets/symbols/shield-defense-rainbow-gold-v1.webp`, topo pontudo,
-borda dourada lisa, preenchimento arco-íris contínuo no padrão do trevo/roleta
-e coroa dourada central com joia hexagonal azul-safira (estilo `sym-crown.png`).
-Estoque até5 aparece no contador oval sob a tecla `−` (que abre o modal dos
-escudos), sincronizado à carteira compartilhada sem reduzir a fonte do saldo longo.
+### Prévia v7 — escudos nos rolos e voos aos contadores ovais (21/11/2026)
+A célula5 da slot machine (fitas giratórias, casas fixas e tabela POWER-UPS) e
+a defesa usam `assets/symbols/shield-defense-rainbow-gold-v1.webp`, topo pontudo,
+borda dourada lisa, preenchimento arco-íris contínuo no padrão da roleta e coroa
+dourada central com joia hexagonal azul-safira (`sym-crown.png`). Estoque até5
+aparece no contador oval sob a tecla `−` (`.park-key-count-shield`, que abre o
+modal dos escudos). Os voos de coleta/defesa/giro grátis do escudo partem e
+pousam diretamente no contador oval sob `−`, e o voo da roleta (`dance`) pousa
+no contador oval sob `+` (`.park-key-count-wheel`), com pulso na chegada.
 
 ### Composição Circus v7 — wireframe do dono,20/11/2026 (prévia)
 Máquina e spin em sequência central, com respiro antes do banner. Spin começa

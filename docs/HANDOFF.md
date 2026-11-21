@@ -1,3 +1,24 @@
+## Escudo nos rolos + voos do escudo e da roleta aos contadores ovais — Antigravity, 21/11
+Base `96d9960` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
+- Célula 5 da slot machine trocada do trevo para `assets/symbols/shield-defense-rainbow-gold-v1.webp`:
+  `ui/park/cabinet.css` (casas fixas e fitas giratórias), tabela `POWER-UPS` em
+  `Fortune Circus.dc.html`, voo grátis em `ui/park/clover-free-spin.js` e
+  miniaturas do seletor `🎯` em `prototypes/circus-preview/browser-wallet.mjs`.
+- Voo do escudo (`ui/park/shield-wallet.js`, `ui/park/motion.js`, `ui/park/defense.js`,
+  `ui/park/clover-free-spin.js`): `shieldTarget()` agora aponta para o contador
+  oval visível sob `−` (`.park-key-count-shield img`), corrigindo o desvio de ~39px
+  para cima da carteira oculta no HUD e pulsando o contador na chegada.
+- Voo da roleta (`dance()` em `Fortune Circus.dc.html`): deixa de mirar a antiga
+  `.park-basket` no topo direito (oculta) e voa em camada `z-index: 70` direto ao
+  contador oval visível sob `+` (`.park-key-count-wheel img`) com brilho e pulso.
+- Testes: `preview_motion_browser.py` e `special_feedback_browser.py`
+  (`clover`, `wheel`, `defense`, `free`) passaram após `build:preview`; capturas
+  conferidas visualmente (`work/special-clover-gold.png`,
+  `work/preview-tickets-no-preference.png`, `work/special-clover-defense-flight.png`,
+  `work/special-free-clover-flight.png`, `work/wheel-flight-{mid,land}.png`).
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Escudo arco-íris com coroa dourada e joia azul — Antigravity, 21/11
 Base `a69d719` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
 - Gerado `assets/symbols/shield-defense-rainbow-gold-v1.{png,webp}` (1254×1254 /

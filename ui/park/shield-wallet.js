@@ -7,5 +7,5 @@ export function paintShields(wallet,count){
  if(wallet.getAttribute('aria-hidden')!=='true')wallet.setAttribute('aria-label',`${n} de 5 escudos de defesa`);
 }
 export function shieldTarget(index){
- return document.querySelector(`.kr-hud-row .park-shield-wallet [data-shield-slot="${Math.max(0,Math.min(4,index))}"] img`);
+ return document.querySelector('.park-key-count-shield img')||document.querySelector('.park-key-count-shield')||document.querySelector(`.kr-hud-row .park-shield-wallet [data-shield-slot="${Math.max(0,Math.min(4,index))}"] img`);
 }

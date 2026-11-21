@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-escudo-rolos-voos",
+      "title": "Escudo na slot machine e voos do escudo e da roleta aos contadores ovais",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Troca o trevo na célula 5 (fitas, casas fixas, tabela POWER-UPS, giro grátis e picker) pelo escudo shield-defense-rainbow-gold-v1.webp; voo do escudo mira o contador oval sob − (.park-key-count-shield) e voo da roleta desce ao contador oval sob + (.park-key-count-wheel) acima do z-index 61."
+    },
+    {
       "id": "p-escudo-arco-iris",
       "title": "Escudo: interior arco-íris (padrão roleta/trevo) e coroa dourada com joia azul",
       "status": "preview",

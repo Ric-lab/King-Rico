@@ -247,8 +247,8 @@
 .park-pocket .park-ticket-wallet-art,.park-basket .park-ticket-wallet-art,.park-tucker-carried-basket .park-ticket-wallet-art{left:50%;top:3px;width:30px;height:30px;transform:translateX(-50%)}
 .park-pocket [data-tickets],.park-basket [data-wheels],.park-tucker-carried-basket [data-wheels]{left:0;right:0;top:auto;bottom:4px;width:100%;height:18px;font-size:18px!important;line-height:1}
 
-/* Same approved clover for static cells and the continuous moving tapes. */
-[data-park-clover="true"],.park-tape-symbol[data-symbol="5"]{background-image:url('/assets/symbols/clover-rainbow-gold-v1.webp')!important;background-size:contain!important;background-position:50% 50%!important}
+/* Same approved shield for static cells and the continuous moving tapes. */
+[data-park-clover="true"],.park-tape-symbol[data-symbol="5"]{background-image:url('/assets/symbols/shield-defense-rainbow-gold-v1.webp')!important;background-size:contain!important;background-position:50% 50%!important}
 
 /* v7 step 2: approved shields dock below the shared account balance. */
 .kr-hud-row .park-shield-wallet{position:absolute;left:18px!important;right:auto!important;top:70px!important;width:108px!important;height:54px!important;min-height:calc(44px / var(--kr-hud-px-scale,1))!important;text-decoration:none;cursor:pointer;z-index:2;pointer-events:auto}
