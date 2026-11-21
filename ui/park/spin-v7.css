@@ -73,3 +73,11 @@
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{top:-6px!important}
 .park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(33px)!important}
 .park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-edge{clip-path:inset(125px 0 0)}
+
+/* Press depth: the cap sinks into a dark well with its own silhouette, so the gold rim keeps its width
+   (before, the gold plinth showed through where the cap left and looked like it widened). Slightly taller key. */
+.park-circus-stage .park-bet-step,.park-circus-stage .park-bet-step:active{height:104px!important}
+.park-circus-stage .park-bet-step::before{content:'';position:absolute;left:0;top:0;width:90px;height:78px;pointer-events:none;background:linear-gradient(#081a2f,#15385c);-webkit-mask:var(--park-key-cap) center/100% 100% no-repeat;mask:var(--park-key-cap) center/100% 100% no-repeat}
+.park-bet-key-edge{height:97px}
+.park-bet-step:active .park-bet-key-face{transform:translateY(12px)}
+.park-bet-step:active .park-bet-key-edge{clip-path:inset(84px 0 0)}
