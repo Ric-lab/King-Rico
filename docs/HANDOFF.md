@@ -1,3 +1,20 @@
+## Escudo arco-íris com coroa dourada e joia azul — Antigravity, 21/11
+Base `a69d719` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
+- Gerado `assets/symbols/shield-defense-rainbow-gold-v1.{png,webp}` (1254×1254 /
+  512×512 RGBA) mantendo silhueta e borda dourada originais, trocando o fundo
+  verde por arco-íris contínuo no padrão da roleta/trevo e a coroa interna para
+  ouro 3D com joia hexagonal azul-safira (`sym-crown.png`).
+- Aplicado em `ui/park/index.js` (carteira oculta, contador redondo e modal
+  *Seus escudos*), `ui/park/defense.js`, `ui/park/motion.js` e `ui/art-manifest.json`;
+  testes `tests/shield_wallet_browser.py`, `tests/build.test.mjs` e
+  `guidelines/asset-pipeline.md` / `DESIGN-SYSTEM.md` atualizados. Arquivo
+  anterior `-green-crown-v1.*` preservado como histórico.
+- Conferência visual nos prints `work/shield-wallet-{320,390}.png` e
+  `work/special-clover-defense-flight.png`; `shield_wallet_browser.py`,
+  `special_feedback_browser.py` (`defense`) e `tests/build.test.mjs` passaram.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Construção única da tecla azul — Codex,21/11
 Base `64b11f2`. Refeito o encaixe como um corpo: tampa, extrusão e aro derivam
 do MESMO contorno. Base dourada contorna o pé da extrusão com espessura uniforme,

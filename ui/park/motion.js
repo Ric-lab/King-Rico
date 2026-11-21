@@ -158,7 +158,7 @@ function flyTickets(fc,refresh,done=()=>{}){
    const end=targetFor(i)?.getBoundingClientRect();if(!end?.width){finish();return;}
    const tx=end.x+end.width/2,ty=end.y+end.height/2,source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
    const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-green-crown-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.opacity='0';document.body.append(node);nodes.push(node);
+   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.opacity='0';document.body.append(node);nodes.push(node);
    const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t};});
    const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.125},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:1}];
    const keys=calm?simple:frames,arrival=node.animate(keys,{duration:duration*contact,easing:'linear',fill:'both'});anims.push(arrival);

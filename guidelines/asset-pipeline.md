@@ -508,3 +508,16 @@ arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
 mesmo material. Não confundir com os sprites animados do raio Good Luck,
 que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
 a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
+
+### Escudo arco-íris e coroa dourada com joia azul — 21/11/2026
+Pedido do dono: substituir o verde interno de `shield-defense-green-crown-v1` por
+arco-íris contínuo no padrão de `clover-rainbow-gold-v1.webp` e
+`wheel-symbol-v1.webp`, com coroa central dourada e joia central azul-safira
+facetada como `sym-crown.png`. Duas gerações via `generate_image` (Gemini) em
+fundo `#FFFFFF` com recorte RGBA descontaminado e preservação do formato/moldura:
+PNG fonte `assets/symbols/shield-defense-rainbow-gold-v1.png` (1254×1254) e
+WebP `assets/symbols/shield-defense-rainbow-gold-v1.webp` (512×512). Arquivo
+anterior `-green-crown-v1.*` preservado como histórico. Sem Meshy; custo da
+ferramenta não exposto. Conferido em `320×740`–`412×915` no contador e no voo
+de defesa.
+

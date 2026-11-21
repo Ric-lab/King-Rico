@@ -10,7 +10,7 @@ export function installDefense(fc,rails){
   fc._parkVisibleTickets=(window.KingRicoPark.state.cedros??0)+1;
   fc.setState({spinning:false,auto:false,grid:before.slice(),winCells:[],winLines:[],barWin:0,balPending:0,winDim:false,hint:''});
   const scene=document.createElement('div');scene.className='park-defense-scene is-replacement';scene.dataset.phase='warning';
-  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/shield-defense-green-crown-v1.webp" alt=""><i class="park-defense-impact"></i>';
+  scene.innerHTML='<svg class="park-defense-line" aria-hidden="true"></svg><img class="park-defense-flying" src="/assets/symbols/shield-defense-rainbow-gold-v1.webp" alt=""><i class="park-defense-impact"></i>';
   document.body.append(scene);
   const svg=scene.querySelector('svg'),fly=scene.querySelector('img'),cells=before.flatMap((v,i)=>v===({tony:12,tucker:13,ray:14}[event.against])?[i]:[]);
   const box=i=>document.querySelector('[data-sym="'+i+'"]')?.getBoundingClientRect(),boxes=cells.map(box).filter(Boolean),target=box(cell),source=shieldTarget(fc._parkVisibleTickets-1)?.getBoundingClientRect();

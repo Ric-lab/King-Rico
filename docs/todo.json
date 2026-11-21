@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-escudo-arco-iris",
+      "title": "Escudo: interior arco-íris (padrão roleta/trevo) e coroa dourada com joia azul",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Novo sprite assets/symbols/shield-defense-rainbow-gold-v1.{png,webp} com preenchimento arco-íris contínuo e coroa dourada com diamante azul (sym-crown.png) no contador, voo, modal e defesa."
+    },
+    {
       "id": "i-wireframe-v7",
       "title": "Composição do Circus conforme wireframe: prêmio unido, máquina alinhada e spin alto",
       "status": "preview",

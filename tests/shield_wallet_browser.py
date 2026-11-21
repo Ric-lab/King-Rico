@@ -15,7 +15,7 @@ with sync_playwright() as p:
   wallet=page.locator('.park-shield-wallet');wallet.wait_for()
   assert wallet.locator('[data-tickets]').text_content()=='3/5'
   assert wallet.locator('img').count()==5
-  assert wallet.locator('img').evaluate_all("es=>es.every(n=>n.complete&&n.naturalWidth>0&&n.src.includes('shield-defense-green-crown-v1.webp'))")
+  assert wallet.locator('img').evaluate_all("es=>es.every(n=>n.complete&&n.naturalWidth>0&&n.src.includes('shield-defense-rainbow-gold-v1.webp'))")
   assert wallet.locator('[data-shield-slot].is-filled').count()==3
   # Coluna do header saiu (dono, 21/11): estoque visível no contador redondo sob o −, que abre o modal.
   counter=page.locator('.park-key-count-shield');counter.wait_for()
