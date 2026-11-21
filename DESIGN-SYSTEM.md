@@ -337,15 +337,15 @@ Refinamento20/11: gap do prêmio à máquina11,75 unidades; da máquina ao spin1
 As camadas `.park-reel-effects` de dourado/apagado pertencem ao mesmo grupo
 do gabinete e mantêm a transformação interna dos rolos, sem escala independente.
 
-### Botão da gravação Coin Master — prévia20/11/2026
-Pedido do dono: copiar a forma da gravação, sem reinterpretar como cartão.
-SVGs separados para base azul-cinza277×165, lateral vermelha e tampa achatada
-277×107 com topo arqueado/laterais inclinadas. Tampa só com aposta clara, sem
-GIRAR, moeda ou dica. Base fixa; tampa percorre27px e projeta24° ao entrar.
-Lateral é ocultada junto do curso, descobrindo a base sem pontas vermelhas.
-Flash curto no contato; contorno SVG progride650ms para auto. Perímetro completo
-fica aceso no automático, sem barra linear. Política de toque/cancelar preservada.
-Fontes e técnicas: assets/machine/spin-cm-v1.md. Forma aguardando avaliação do dono.
+### Spin King Rico — forma aprovada, identidade20/11/2026 (prévia)
+O dono aprovou a forma/clique de2eaead6 e pediu a própria identidade: base dourada,
+tampa roxa e Baloo 2 em pé, peso800. Só valor da aposta; sem GIRAR/moeda/dica.
+Os paths principais permanecem idênticos à forma da gravação, inclusive contorno
+luminoso e curso27px. Fontes SVG atuais: spin-king-base-gold-v1,
+spin-king-cap-purple-v1 e spin-king-side-purple-v1. Originais CM preservados.
+Os +/− seguem o material: base dourada fixa, tampa azul-clara e lateral azul,
+com símbolos azul-escuros legíveis. Alvos61×100 e posições mantidos; tampa afunda
+12px sem transladar a base. Luz650ms, automático, sons e escudos continuam iguais.
 
 ### Inventário de defesa — cinco posições verticais,20/11/2026
 Cinco escudos abaixo do saldo, de cima para baixo; cheios verdes e vazios

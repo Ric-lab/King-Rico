@@ -1,3 +1,17 @@
+## Identidade King Rico na forma aprovada —20/11/2026 (Codex)
+
+Base `2eaead6`. Dono aprovou FORMA/clique e pediu: ouro, roxo, fonte própria e
++/− azuis claros no mesmo estilo. Os paths do botão principal são idênticos aos
+SVGs aprovados; somente as cores mudaram, com novos nomes para evitar cache.
+- spin-king-base-gold-v1, cap-purple-v1 e side-purple-v1: base dourada/tampa roxa.
+- Baloo 2, peso800, normal, só aposta. Sem itálico nem textos novos.
+- Teclas laterais têm base dourada fixa, lateral azul e tampa azul-clara separada;
+  afundam sem mover a base. Mesmo alvo/posição, símbolos e ação de aposta.
+- Contorno de hold/auto, sons, escudos e regras mantidos. Passaram o teste focado
+  de clique/auto/cancelamento/+/− e a conferência da paleta nos dois modos de movimento.
+Próximo passo: dono conferir o acabamento na prévia; não publicar main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Botão da referência + cinco escudos —20/11/2026, Codex
 
 Base `e841597`. Pedido atual substitui a proposta coral/GIRAR: copiar a FORMA

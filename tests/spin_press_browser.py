@@ -12,10 +12,17 @@ with sync_playwright() as p:
   page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   assert page.locator('.park-spin-verb,.park-spin-sub').count()==0
+  font=page.locator('.park-spin-label').first.evaluate('e=>({family:getComputedStyle(e).fontFamily,style:getComputedStyle(e).fontStyle})')
+  assert 'Baloo 2' in font['family'] and font['style']=='normal',font
   assert page.locator('.park-spin-label').first.inner_text().replace('.','').isdigit()
   wager=page.locator('.park-spin-label').first.inner_text()
   bet_index=page.evaluate('__fc.state.betIdx')
-  page.get_by_role('button',name='Aumentar aposta',exact=True).click()
+  plus=page.get_by_role('button',name='Aumentar aposta',exact=True);key=plus.bounding_box();cap=plus.locator('.park-bet-key-face').bounding_box()
+  page.mouse.move(key['x']+key['width']/2,key['y']+key['height']/2);page.mouse.down();page.wait_for_timeout(75)
+  assert abs(plus.bounding_box()['y']-key['y'])<.2
+  assert plus.locator('.park-bet-key-face').bounding_box()['y']>cap['y']+6
+  page.screenshot(path=f'work/preview-king-key-down-{mode}.png')
+  page.mouse.up()
   assert page.evaluate('__fc.state.betIdx')==bet_index+1
   assert page.locator('.park-spin-label').first.inner_text()!=wager
   page.get_by_role('button',name='Diminuir aposta',exact=True).click()

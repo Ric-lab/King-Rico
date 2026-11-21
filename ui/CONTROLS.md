@@ -188,3 +188,7 @@ liga o auto nativo. _spinHoldMs e --park-hold-duration compartilham o tempo.
 O percurso permanece aceso em data-auto=true. Cancelar retira data-hold; parar
 retira auto. Flash do contato separado do percurso evita esconder o progresso.
 SVG do + usa dois traços centrados; um toque sobe exatamente um índice da aposta.
+
+Identidade20/11: preço em Baloo 2 normal; corpo roxo/base ouro no spin.
++/− têm tampas azuis claras que descem12px sobre bases douradas imóveis.
+Os símbolos continuam centralizados e cada toque altera um índice da aposta.

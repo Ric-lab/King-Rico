@@ -676,3 +676,10 @@ arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
 mesmo material. Não confundir com os sprites animados do raio Good Luck,
 que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
 a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
+
+### Pele King Rico do botão aprovado —20/11/2026, prévia
+spin-king-base-gold-v1.svg, spin-king-cap-purple-v1.svg e
+spin-king-side-purple-v1.svg são recolorações, sem alterar os paths CM aprovados.
+Teclas laterais: bet-key-base-gold-v1.svg, bet-key-cap-blue-v1.svg e
+bet-key-side-blue-v1.svg. Usar layers separados; não mover a base no clique.
+Fonte do preço é Baloo 2 normal. Ver spin-cm-v1.md e ui/park/spin-v7.css.

@@ -9,20 +9,20 @@
 /* Legacy wheel stock still exists in receipts while its counter stays offscreen. */
 .park-circus-stage .park-basket{visibility:hidden!important;pointer-events:none!important}
 
-.park-circus-stage [data-spin-btn][data-spin-btn]{top:601.5px!important;left:88px!important;width:277px!important;height:165px!important;--park-spin-paint:rgb(245,78,47)}
+.park-circus-stage [data-spin-btn][data-spin-btn]{top:601.5px!important;left:88px!important;width:277px!important;height:165px!important;--park-spin-paint:rgb(130,67,211)}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rim{position:absolute;inset:0;border-radius:0;background:none;box-shadow:none;filter:drop-shadow(0 5px 3px #24394d33)!important;z-index:1!important}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-rim>img{display:block;width:100%;height:100%}
 .park-circus-stage [data-spin-btn][data-spin-btn] :is(.park-spin-well,.park-spin-contact,.park-spin-rear){display:none}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-aperture{z-index:3!important;perspective:900px;perspective-origin:50% 100%}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{inset:0 auto auto 0!important;width:277px;height:137px;border:0;border-radius:0;clip-path:none;background:url('/assets/machine/spin-cm-side-v1.svg') center/100% 100% no-repeat;background-color:transparent;filter:none!important;mask:url('/assets/machine/spin-cm-side-v1.svg') center/100% 100% no-repeat}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:0 auto auto 0!important;width:277px;height:107px;transform:translateY(0) rotateX(0deg)!important;transform-origin:50% 100%;border:0;border-radius:0;overflow:visible;background:url('/assets/machine/spin-cm-cap-v1.svg') center/100% 100% no-repeat;background-color:transparent;box-shadow:none;transition:transform 160ms cubic-bezier(.2,.8,.2,1)!important;backface-visibility:hidden}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{inset:0 auto auto 0!important;width:277px;height:137px;border:0;border-radius:0;clip-path:none;background:url('/assets/machine/spin-king-side-purple-v1.svg') center/100% 100% no-repeat;background-color:transparent;filter:none!important;mask:url('/assets/machine/spin-king-side-purple-v1.svg') center/100% 100% no-repeat}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{inset:0 auto auto 0!important;width:277px;height:107px;transform:translateY(0) rotateX(0deg)!important;transform-origin:50% 100%;border:0;border-radius:0;overflow:visible;background:url('/assets/machine/spin-king-cap-purple-v1.svg') center/100% 100% no-repeat;background-color:transparent;box-shadow:none;transition:transform 160ms cubic-bezier(.2,.8,.2,1)!important;backface-visibility:hidden}
 .park-circus-stage [data-spin-btn][data-spin-btn] :is(.park-spin-face,.park-spin-edge):before,.park-spin-face:after{display:none}
 .park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(27px) rotateX(24deg)!important;transition-duration:65ms!important;transition-timing-function:cubic-bezier(.2,.65,.25,1)!important}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-wash{background:rgba(255,246,211,.06);mask:url('/assets/machine/spin-cm-cap-v1.svg') center/100% 100% no-repeat}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-wash{background:rgba(255,246,211,.06);mask:url('/assets/machine/spin-king-cap-purple-v1.svg') center/100% 100% no-repeat}
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-side-wash{background:rgba(255,233,215,.04);background-image:none}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label{inset:0!important;height:100%;font-size:46px!important;font-style:italic;letter-spacing:.01em!important;padding:0!important;gap:0;color:#fffaf0;text-shadow:0 2px #b32b25;-webkit-text-stroke:0}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label{inset:0!important;height:100%;font-size:46px!important;font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-style:normal;letter-spacing:.01em!important;padding:0!important;gap:0;color:#fffaf0;text-shadow:0 2px #4a1d75;-webkit-text-stroke:0}
 .park-spin-label:before{content:none}
-.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label-lit{color:#fffef5;text-shadow:0 0 2px #fff6bf88,0 2px #b32b25}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-label-lit{color:#fffef5;text-shadow:0 0 2px #fff6bf88,0 2px #4a1d75}
 
 /* A short flash marks contact. A different path draws one complete650ms circuit. */
 .park-spin-outline{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:5}
@@ -47,3 +47,13 @@
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{clip-path:inset(0);transition:clip-path 160ms cubic-bezier(.2,.8,.2,1)}
 .park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-edge{clip-path:inset(119px 0 0);transition-duration:65ms}
 @media(prefers-reduced-motion:reduce){.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{transition:none}}
+
+/* King Rico keys: fixed gold plinth and a separate light-blue cap. */
+.park-circus-stage .park-bet-step{border-radius:0!important;background:url('/assets/machine/bet-key-base-gold-v1.svg') center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 3px 2px #49301933);perspective:600px}
+.park-bet-key-edge{position:absolute;inset:0;width:61px;height:93px;background:url('/assets/machine/bet-key-side-blue-v1.svg') center/100% 100% no-repeat;pointer-events:none;clip-path:inset(0);transition:clip-path 130ms ease-out}
+.park-bet-key-face{position:absolute;left:0;top:0;width:61px;height:78px;background:url('/assets/machine/bet-key-cap-blue-v1.svg') center/100% 100% no-repeat;transform-origin:50% 100%;transition:transform 130ms ease-out;pointer-events:none}
+.park-circus-stage .park-bet-step:active{transform:none!important;box-shadow:none!important}
+.park-bet-step:active .park-bet-key-face{transform:translateY(12px) rotateX(8deg);transition-duration:45ms}
+.park-bet-step:active .park-bet-key-edge{clip-path:inset(80px 0 0);transition-duration:45ms}
+.park-bet-key-face>svg{position:absolute;left:15.5px;top:23px;width:30px;height:30px;color:#174f86}
+@media(prefers-reduced-motion:reduce){.park-bet-key-face,.park-bet-key-edge{transition:none}}

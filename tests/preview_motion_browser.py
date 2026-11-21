@@ -24,8 +24,8 @@ with sync_playwright() as p:
   page.goto(BASE+'/circus?demo=off');ready()
   rim=page.locator('.park-spin-iridescence')
   assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
-  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-cm-base-v1.svg')
-  assert 'spin-cm-cap-v1.svg' in page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundImage')
+  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-king-base-gold-v1.svg')
+  assert 'spin-king-cap-purple-v1.svg' in page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundImage')
   assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(255, 250, 240)'
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')
   spin_box=page.locator('[data-spin-btn]').bounding_box()
@@ -169,7 +169,7 @@ with sync_playwright() as p:
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,paint:getComputedStyle(e).getPropertyValue('--park-spin-paint').replaceAll(' ',''),face:getComputedStyle(e.querySelector('.park-spin-face')).backgroundImage})""")
-  assert paint['level']==0 and paint['paint']=='rgb(245,78,47)' and 'spin-cm-cap-v1.svg' in paint['face'],paint
+  assert paint['level']==0 and paint['paint']=='rgb(130,67,211)' and 'spin-king-cap-purple-v1.svg' in paint['face'],paint
   # Spin coral: raised rigid cap, fixed socket, 27-unit stroke and quick return.
   def geometry():
    return page.locator('[data-spin-btn]').evaluate("""e=>{const s=e.getBoundingClientRect().width/277,r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {front:(r('edge').bottom-r('face').bottom)/s,top:(r('face').top-r('edge').top)/s}}""")

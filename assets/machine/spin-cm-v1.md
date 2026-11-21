@@ -21,3 +21,10 @@ horizontal nem texto extra na tampa. Não alterar pagamentos junto da apresenta�
 Técnicas consultadas:
 - Base/lateral/tampa separadas: https://www.joshwcomeau.com/animation/3d-button/
 - Progresso SVG normalizado: https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-dashoffset
+
+## Pele King Rico —20/11/2026
+Após aprovar forma/clique, o dono pediu identidade: base ouro, tampa roxa e
+Baloo 2 normal. Variantes spin-king-{base-gold,cap-purple,side-purple}-v1.svg
+preservam todos os paths das fontes acima; só alteram cores. O contorno de luz
+não foi redesenhado. Os +/− usam bet-key-{base-gold,cap-blue,side-blue}-v1.svg,
+com tampa azul-clara independente da base. Originais CM continuam como referência.

@@ -57,3 +57,8 @@ Dono rejeitou a releitura coral/GIRAR: copiar a FORMA do vídeo, mantendo apenas
 aposta na tampa e luz no contorno para ativar auto. A prévia agora usa três SVGs
 em assets/machine/spin-cm-*.svg; ver spin-cm-v1.md para dimensões e sincronismo.
 A arte é vetorial reconstruída das medidas, sem recortar o bitmap comercial.
+
+### Acabamento King Rico após aprovação da forma —20/11/2026
+Forma/clique aprovados pelo dono. A pele atual usa spin-king-*.svg (ouro/roxo),
+Baloo 2 normal e teclas +/− azuis claras. Os SVGs CM acima são a referência
+geométrica preservada. Detalhes atuais em assets/machine/spin-cm-v1.md.
