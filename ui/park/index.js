@@ -118,6 +118,8 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  {const st=document.querySelector('.park-circus-stage');if(st){const mk=(cls,src)=>{let n=st.querySelector('.'+cls);if(!n){n=document.createElement('div');n.className='park-key-count '+cls;n.setAttribute('aria-hidden','true');n.innerHTML='<img alt="" src="'+new URL(src,import.meta.url).href+'"><b></b>';st.appendChild(n);}return n.querySelector('b');};
   mk('park-key-count-shield','../../assets/symbols/shield-defense-green-crown-v1.webp').textContent=tickets+'/5';
   mk('park-key-count-wheel','../../assets/wheel/wheel-symbol-v1.webp').textContent=Math.min(5,fc?.state?.peaches||0)+'/5';}}
+ {const sp=document.querySelector('.park-circus-stage [data-spin-btn]');if(sp){let g=sp.querySelector('.park-spin-luck');if(!g){sp.insertAdjacentHTML('beforeend','<svg class="park-spin-luck" viewBox="0 0 277 165" aria-hidden="true"><path class="park-spin-luck-track" d="M22 146Q138 159 255 146" pathLength="100"/><path class="park-spin-luck-fill" d="M22 146Q138 159 255 146" pathLength="100"/></svg>');g=sp.querySelector('.park-spin-luck');}
+  const pct=Math.max(0,Math.min(100,parseFloat(el.style.getPropertyValue('--park-fill'))||0));g.querySelector('.park-spin-luck-fill').style.strokeDashoffset=String(100-pct);}}
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');
  document.querySelector('.park-shield-wallet').setAttribute('aria-label',`${tickets} de 5 escudos de defesa`);
  el.classList.toggle('is-ready',!!displayState.wheel);

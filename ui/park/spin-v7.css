@@ -87,3 +87,9 @@
 .park-circus-stage .park-key-count b{font:800 18px/1 'Baloo 2',system-ui,sans-serif;color:#662c2c;font-variant-numeric:tabular-nums}
 .park-circus-stage .park-key-count-shield{left:14px}
 .park-circus-stage .park-key-count-wheel{left:349px}
+
+/* Barra do Good Luck na borda dourada inferior do spin (mesmo progresso das antigas barras laterais). */
+.park-circus-stage [data-spin-btn] .park-spin-luck{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
+.park-spin-luck path{fill:none;stroke-width:7;stroke-linecap:round}
+.park-spin-luck-track{stroke:#7a4a12;opacity:.35}
+.park-spin-luck-fill{stroke:var(--park-spin-paint,#8243d3);stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .45s ease-out,stroke .3s;filter:drop-shadow(0 0 2px #fff8)}
