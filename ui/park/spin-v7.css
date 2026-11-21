@@ -90,12 +90,12 @@
 
 /* Barra do Good Luck na borda dourada inferior do spin (mesmo progresso das antigas barras laterais). */
 .park-circus-stage [data-spin-btn] .park-spin-luck{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
-.park-spin-luck path{fill:none;stroke-width:7;stroke-linecap:round}
+.park-spin-luck path{fill:none;stroke-width:6;stroke-linecap:round}
 .park-spin-luck-track{stroke:#7a4a12;opacity:.35}
 .park-spin-luck-fill{stroke:url(#park-luck-rainbow);stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .45s ease-out,stroke .3s;filter:drop-shadow(0 0 2px #fff8)}
 
 /* Coluna de 5 escudos no header saiu (o contador agora fica sob o −). Contadores redondos, centrados sob as teclas. */
-.park-circus-stage .park-shield-wallet{display:none!important}
+.park-circus-stage .park-shield-wallet{position:absolute!important;left:32px!important;top:742px!important;right:auto!important;bottom:auto!important;width:54px!important;height:54px!important;opacity:0!important;pointer-events:none!important}
 .park-circus-stage .park-key-count{top:742px;width:54px;height:54px;border-radius:50%;flex-direction:column;gap:0;padding-top:2px}
 .park-circus-stage .park-key-count img{width:22px;height:22px}
 .park-circus-stage .park-key-count b{font-size:15px;line-height:1}
