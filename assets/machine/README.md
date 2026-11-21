@@ -685,6 +685,7 @@ Contornos próprios seguem o spin, sem rotação do conjunto; símbolos retos.
 Usar layers separados; não mover a base no clique. SVGs v1 preservados como histórico.
 Fonte do preço é Baloo 2 normal. Ver spin-cm-v1.md e ui/park/spin-v7.css.
 
-Encaixe v2: a lateral azul reutiliza integralmente o contorno da tampa com
-translate(0 14); não desenhar somente a face frontal, pois deixa a aresta
-inclinada sem espessura e corta a junção. Base permanece fixa no clique.
+Encaixe v2 atual: tampa, lateral e base usam o MESMO path. Lateral deslocada9px;
+aro dourado deriva do path deslocado11px, stroke7px, pé deslocado14px.
+Assim a borda acompanha a extrusão inteira, sem plataforma desenhada à parte.
+Clique: translação8px sem rotateX; base permanece fixa.

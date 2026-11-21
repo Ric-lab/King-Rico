@@ -190,7 +190,7 @@ retira auto. Flash do contato separado do percurso evita esconder o progresso.
 SVG do + usa dois traços centrados; um toque sobe exatamente um índice da aposta.
 
 Identidade20/11: preço em Baloo 2 normal; corpo roxo/base ouro no spin.
-+/− têm tampas azuis claras que descem12px sobre bases douradas imóveis.
++/− têm tampas azuis claras que descem8px sobre bases douradas imóveis.
 Os símbolos continuam centralizados e cada toque altera um índice da aposta.
 
 Teclas laterais: contornos próprios espelhados, acompanhando o perfil do spin.

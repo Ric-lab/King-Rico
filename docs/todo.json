@@ -69,7 +69,7 @@
       "agent": "Codex",
       "commit": null,
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Amostra: lateral azul gerada pelo mesmo path da tampa deslocado14px, incluindo toda a aresta inclinada. Corrige encontro truncado da frente com os lados. Checkpoint sem deploy; aguarda validação.",
+      "notes": "Refeito corpo da tecla: tampa/lateral/aro compartilham contorno; aro fino acompanha extrusão9px; clique8px sem rotateX. Aguardando validação da amostra; checkpoint sem deploy.",
       "createdAt": "2026-11-20T04:02:23.538Z",
       "updatedAt": "2026-11-20T04:02:23.538Z"
     },
