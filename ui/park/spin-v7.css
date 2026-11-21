@@ -67,3 +67,9 @@
 .park-bet-key-face{width:90px;background-image:var(--park-key-cap)}
 .park-bet-minus .park-bet-key-face>svg{left:24px;transform:none}
 .park-bet-plus .park-bet-key-face>svg{left:36px;transform:none}
+
+/* Spin mais alto (+6px de curso) e afundar reto: só desce, sem inclinar — a tampa mantém a largura e o dourado em volta não alarga. */
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{top:-6px!important;height:143px;background-image:url('/assets/machine/spin-king-side-purple-v2.svg');mask:url('/assets/machine/spin-king-side-purple-v2.svg') center/100% 100% no-repeat;-webkit-mask:url('/assets/machine/spin-king-side-purple-v2.svg') center/100% 100% no-repeat}
+.park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-face{top:-6px!important}
+.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-face,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-face{transform:translateY(33px)!important}
+.park-circus-stage[data-pressed="spin"] [data-spin-btn][data-spin-btn] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn][data-tactile-held] .park-spin-edge,.park-circus-stage [data-spin-btn][data-spin-btn]:active .park-spin-edge{clip-path:inset(125px 0 0)}
