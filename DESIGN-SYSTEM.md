@@ -352,3 +352,7 @@ Cinco escudos abaixo do saldo, de cima para baixo; cheios verdes e vazios
 apagados. Sem ícone único+fração numérica, sem nova carteira. Coluna com alvo
 mínimo44px de largura, na linha do saldo. Coleta chega ao próximo slot; consumo
 parte do último preenchido. Texto de estoque continua disponível no rótulo acessível.
+
+Refinamento das teclas: desenhar contornos internos acompanhando o perfil do
+spin, com bases niveladas e símbolos retos. Usar os SVGs v2 esquerdo/direito;
+girar o conjunto não resolve o encaixe pedido pelo dono.

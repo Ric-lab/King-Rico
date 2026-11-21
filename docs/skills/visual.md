@@ -111,3 +111,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   Coin Master. Só aposta na tampa, contorno luminoso para hold/auto. Não voltar
   ao retângulo arredondado nem inserir textos/ícones extras. Escudos são cinco
   posições verticais, não um ícone com fração numérica.
+
+- Ajuste das teclas: dono rejeitou soluções apenas de ângulo. O contorno de
+  cada peça deve acompanhar a lateral do spin; bases niveladas e símbolos retos.
+  SVGs v2 próprios por lado substituem rotação/skew do conjunto.

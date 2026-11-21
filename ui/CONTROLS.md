@@ -192,3 +192,7 @@ SVG do + usa dois traços centrados; um toque sobe exatamente um índice da apos
 Identidade20/11: preço em Baloo 2 normal; corpo roxo/base ouro no spin.
 +/− têm tampas azuis claras que descem12px sobre bases douradas imóveis.
 Os símbolos continuam centralizados e cada toque altera um índice da aposta.
+
+Teclas laterais: contornos próprios espelhados, acompanhando o perfil do spin.
+Bases niveladas e símbolos retos; sem girar o conjunto. SVGs v2 separados para
+base fixa, lateral e tampa; cada tecla90px, com margens externas14px.

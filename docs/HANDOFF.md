@@ -1,3 +1,15 @@
+## Teclas laterais desenhadas para acompanhar o spin — Codex
+
+Base `175697b`. O dono esclareceu que girar/inclinar o conjunto não resolve.
+Seis SVGs `bet-key-{left,right}-{base,cap,side}-v2.svg` redesenham os contornos
+internos para acompanhar as laterais do spin. Bases niveladas, símbolos retos,
+sem rotação/skew do conjunto. Cada peça tem90px; esquerda14px, direita349px.
+Mantidos ouro, azul claro, movimento de clique e funcionamento das apostas.
+Conferência visual e teste spin_press_browser: toque, base fixa, aposta, auto e
+cancelamento. Build de produção conferido após integração.
+Próximo passo: dono validar o encaixe na prévia. Oficial sem alteração.
+https://ric-lab.github.io/King-Rico/Preview
+
 ## Identidade King Rico na forma aprovada —20/11/2026 (Codex)
 
 Base `2eaead6`. Dono aprovou FORMA/clique e pediu: ouro, roxo, fonte própria e
