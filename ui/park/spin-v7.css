@@ -102,3 +102,14 @@
 .park-circus-stage .park-key-count-shield{left:32px}
 .park-circus-stage .park-key-count-wheel{left:367px}
 .park-circus-stage .park-key-count-shield{pointer-events:auto;cursor:pointer}
+
+/* Contadores como peças assentadas no gramado (mesma perspectiva das teclas): face oval vista de cima,
+   espessura dourada embaixo e sombra no chão. Borda externa alinhada à borda externa das teclas. */
+.park-circus-stage .park-key-count{top:748px!important;width:54px!important;height:44px!important;border-radius:50%!important;padding-top:0!important;
+ background:radial-gradient(120% 90% at 50% 30%,#fffef4,#fff0c8 60%,#f3d08a)!important;border:2px solid #e8a72f!important;
+ box-shadow:inset 0 2px #fff,inset 0 -3px 4px #d9a24a55,0 4px 0 #c98a2e,0 6px 0 #8a5a1c,0 10px 7px #24394d40!important}
+.park-circus-stage .park-key-count img{width:20px!important;height:20px!important;margin-top:-1px}
+.park-circus-stage .park-key-count b{font-size:14px!important}
+.park-circus-stage .park-key-count-shield,.park-circus-stage .park-shield-wallet{left:14px!important}
+.park-circus-stage .park-key-count-wheel{left:385px!important}
+.park-circus-stage .park-shield-wallet{top:748px!important}
