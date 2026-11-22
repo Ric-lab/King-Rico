@@ -52,6 +52,7 @@ export function installRay(fc){
   }
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
-  later(peek,650);later(grab,1750);later(flee,2300);later(empty,3900);later(result,4550);
+  // Sem animação de roubo (dono, 22/11): o Ray aparece na slot, a linha marca a trinca e já abre o modal.
+  later(result,900);
  }
 }

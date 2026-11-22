@@ -51,6 +51,7 @@ export function installTucker(fc){
   }
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
-  later(perch,700);later(take,1900);later(()=>{scene.dataset.phase='empty';carrier.style.visibility='hidden';},4100);later(result,4800);
+  // Sem animação de voo (dono, 22/11): o Tucker aparece na slot, a linha marca a trinca e já abre o modal.
+  carrier.style.visibility='hidden';later(result,900);
  }
 }
