@@ -10,8 +10,11 @@ export function createWheelScene(stage,html){
  const inert=items.map(n=>n.inert);items.forEach(n=>{n.classList.add('park-hoisted-item');n.inert=true;});
  stage.classList.add('park-hoist-deck');stage.append(rig,el);
  // Cordas presas no topo REAL da máquina (o layout v7 mudou a altura): mede a moldura dos rolos na hora.
- try{const s=stage.getBoundingClientRect(),k=s.width/453||1,f=(stage.querySelector('.park-reel-frame')||stage.querySelector('.park-reels'))?.getBoundingClientRect();
-  if(f?.width){const top=(f.top-s.top)/k,left=(f.left-s.left)/k,width=f.width/k;rig.style.left=(left-4)+'px';rig.style.width=(width+8)+'px';rig.style.height=(top+720+6)+'px';}}catch{}
+ // Mede o topo VISÍVEL da máquina: os 3 tambores (sempre visíveis). A moldura antiga pode estar oculta (largura 0)
+ // e .park-reels ocupa o palco inteiro — por isso a corda ficava na altura errada.
+ try{const s=stage.getBoundingClientRect(),k=s.width/453||1,sh=[...stage.querySelectorAll('.park-reel-shell')].map(n=>n.getBoundingClientRect()).filter(r=>r.width>0);
+  if(sh.length){const top=(Math.min(...sh.map(r=>r.top))-s.top)/k,left=(Math.min(...sh.map(r=>r.left))-s.left)/k,right=(Math.max(...sh.map(r=>r.right))-s.left)/k;
+   rig.style.left=(left-10)+'px';rig.style.width=(right-left+20)+'px';rig.style.height=(top+720-6)+'px';}}catch{}
  const state={stage,rig,items,inert,animations:[],observer:null,closed:false};el._hoist=state;
  const cleanup=()=>{if(state.cleaned)return;state.cleaned=true;state.animations.forEach(a=>a.cancel());state.observer?.disconnect();delete stage.dataset.hoist;stage.classList.remove('park-hoist-deck');items.forEach((n,i)=>{n.classList.remove('park-hoisted-item','park-prize-early');n.inert=inert[i];});rig.remove();el.remove();window.removeEventListener('pagehide',cleanup);};
  window.addEventListener('pagehide',cleanup,{once:true});
