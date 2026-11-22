@@ -1,3 +1,4 @@
+import {paintShields} from './shield-wallet.js';
 // Choreography of one saved receipt; no debit or lottery in presentation.
 const BODY='/assets/ray/body-v1.webp',HEAD='/assets/ray/head-v1.webp';
 export function installRay(fc){
@@ -23,7 +24,7 @@ export function installRay(fc){
   let ended=false,modal,copy;const timers=[],animations=[];
   const later=(fn,t)=>timers.push(setTimeout(()=>{if(!ended)fn();},t));
   function animate(el,keys,opts){try{const a=el.animate(keys,opts);animations.push(a);return a;}catch{return null;}}
-  function visibleTickets(n){fc._parkVisibleTickets=n;if(count)count.textContent=n.toLocaleString('pt-BR')+(event.version>=3?'/5':'');pocket?.setAttribute('aria-label',`Parque: ${n} trevos`);}
+  function visibleTickets(n){fc._parkVisibleTickets=n;paintShields(pocket,n);}
   visibleTickets(event.before??window.KingRicoPark.state.cedros??0);
   // Carry the actual counter artwork and its old count, preserving its rendered scale.
   if(pocket){copy=pocket.cloneNode(true);copy.classList.add('park-ray-carried-pocket');copy.removeAttribute('href');copy.removeAttribute('aria-label');copy.setAttribute('aria-hidden','true');

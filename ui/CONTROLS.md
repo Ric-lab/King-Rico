@@ -169,3 +169,30 @@ Contador de ingressos: placa de no mínimo 142 × 44 px nas coordenadas da cena,
 16 px de padding horizontal, 12 px entre ícone/valor, número 24 px e ingresso
 40 × 26 px. Pequenos ajustes verticais na faixa das bolas do Clown, multiplicadores
 do Pênalti e proteção do Flying deixam espaço abaixo da placa, sem alterar jogos.
+
+### Spin Circus v7 —20/11/2026, prévia
+A tampa e seu texto afundam juntos; aro e alvo de toque ficam imóveis.
+installSpinTactility mantém a pose de contato por no mínimo140ms (80ms em
+movimento reduzido), sem temporizar envio da aposta nem o começo dos rolos.
+Nova pressão cancela a soltura visual anterior; pagehide limpa o timer.
+Segurar650ms continua ativando auto pelas rotinas nativas; cancelamento e
+parada usam essas rotinas. Não criar outro clique/som/háptico na animação.
+
+Refinamento20/11: a tampa mostra GIRAR como ação principal e moeda+aposta abaixo.
+Os seletores laterais continuam atualizando a aposta exibida. A paleta do pulso
+usa --park-spin-paint do botão para não restaurar a cor antiga ao voltar do bônus.
+
+### Substituição autorizada20/11 — botão da referência
+A tampa mostra SOMENTE a aposta. Hold650ms desenha o contorno SVG; ao completar,
+liga o auto nativo. _spinHoldMs e --park-hold-duration compartilham o tempo.
+O percurso permanece aceso em data-auto=true. Cancelar retira data-hold; parar
+retira auto. Flash do contato separado do percurso evita esconder o progresso.
+SVG do + usa dois traços centrados; um toque sobe exatamente um índice da aposta.
+
+Identidade20/11: preço em Baloo 2 normal; corpo roxo/base ouro no spin.
++/− têm tampas azuis claras que descem8px sobre bases douradas imóveis.
+Os símbolos continuam centralizados e cada toque altera um índice da aposta.
+
+Teclas laterais: contornos próprios espelhados, acompanhando o perfil do spin.
+Bases niveladas e símbolos retos; sem girar o conjunto. SVGs v2 separados para
+base fixa, lateral e tampa; cada tecla90px, com margens externas14px.

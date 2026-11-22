@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="./ui/header.css">
 <link rel="stylesheet" href="./ui/home.css">
 <link rel="stylesheet" href="./ui/controls.css">
+<link rel="stylesheet" href="./ui/park/spin-v7.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./cloud/firebase-config.js"></script>
@@ -86,7 +87,13 @@ a:hover { color: #fff3c4; }
   </div>
   <div class="park-machine-lights" ref="{{ lightsTopRef }}" style="position: absolute; left: 0; top: 0; width: 453px; height: 802px; pointer-events: none; overflow: visible;"></div>
 
-  <div class="park-part-prize" aria-hidden="true"></div>
+  <div class="park-prize-block">
+    <div class="park-part-prize" aria-hidden="true"></div>
+    <div class="park-prize-value" style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
+    <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
+  </div>
+  </div>
+  <div class="park-cabinet-body">
   <div class="park-reel-window-back" aria-hidden="true"></div>
   <div class="park-reels" data-reel-moving="{{ reelMoving }}">
     <div class="park-reel-shell park-reel-shell-0" aria-hidden="true"></div>
@@ -162,68 +169,6 @@ a:hover { color: #fff3c4; }
   <sc-if value="{{ l6 }}" hint-placeholder-val="{{ false }}"><div data-payline="6" style="position: absolute; left: 224.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   <sc-if value="{{ l7 }}" hint-placeholder-val="{{ false }}"><div data-payline="7" style="position: absolute; left: 354.833px; top: 219.5px; width: 5px; height: 382px; border-radius: 3px; background: linear-gradient(0deg, transparent, #fff3b0, transparent); box-shadow: 0 0 12px 3px rgba(255,200,60,.9); animation: fcLineIn .4s ease-out both; pointer-events: none;"></div></sc-if>
   </div>
-  <div class="park-reel-frame" aria-hidden="true"></div>
-  <div class="kr-hud-row">
-<div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
-  <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
-  </div>
-  </div>
-<div onClick="{{ watchAd }}" role="button" tabindex="0" aria-label="Ver anúncio e ganhar 1000 moedas" class="kr-hud-ad" style="position: absolute; left: 200px; top: 12.5px; height: 44px; box-sizing: border-box; padding: 0 12px 0 6px; display: flex; align-items: center; gap: 6px; border-radius: 20px; cursor: pointer; background: linear-gradient(180deg, #fff3c4 0%, #ffd257 45%, #e8900f 100%); box-shadow: 0 0 0 2px #6b2e05, 0 3px 0 #6b2e05, inset 0 2px 0 rgba(255,255,255,.7); opacity: {{ adOp }};" style-active="transform: translateY(2px); box-shadow: 0 0 0 2px #6b2e05, 0 1px 0 #6b2e05;"><div style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #6b2e05;"><div style="width: 0; height: 0; margin-left: 3px; border-left: 10px solid #ffd257; border-top: 6px solid transparent; border-bottom: 6px solid transparent;"></div></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #4a1a00; font-variant-numeric: tabular-nums;">+1000</span></div>
-<x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
-</div>
-
-  <div class="park-prize-value" style="position: absolute; left: 165.333px; top: 180px; width: 125px; height: 32px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: 25px; font-weight: 800; color: #c1ff72; text-shadow: 0 0 10px rgba(170,255,110,.55), 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.2px; line-height: 1; animation: {{ winAnim }};">{{ winText }}</span>
-  </div>
-
-  <div class="park-bet-well" aria-hidden="true"></div>
-  <div class="park-bet-value" style="position: absolute; left: 151.333px; top: 614.5px; width: 143px; height: 42px; display: flex; align-items: center; justify-content: center;">
-    <span style="font-size: {{ betSize }}; font-weight: 800; color: #e19b34; text-shadow: 0 2px 2px rgba(0,0,0,.45); letter-spacing: 1.5px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ betText }}</span>
-  </div>
-
-  <div onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta" style="position: absolute; left: 99.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
-  </div>
-  <div onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta" style="position: absolute; left: 308.333px; top: 614px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px;" style-active="transform: scale(.88);" style-hover="background: rgba(255,214,107,.14);">
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="pointer-events:none;filter:drop-shadow(0 1px #672b13)"><path d="M5 12H19M12 5V19" fill="none" stroke="#e9ad39" stroke-width="4" stroke-linecap="round"/></svg>
-  </div>
-
-  <!-- Spin vinho com aro/letras dourados; face sólida preserva o clique e o pulso. -->
-  <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" data-spin-active="{{ spinPulseActive }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" aria-label="Girar" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
-    <div class="park-button-well park-spin-well"></div>
-    <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"><i class="park-spin-side-wash"></i></i><i class="park-spin-rear" aria-hidden="true"><i class="park-spin-rear-wash"></i></i>
-      <div class="park-spin-face">
-      <i class="park-spin-wash" aria-hidden="true"></i>
-      <span class="park-spin-label">KING RICO</span>
-      <span class="park-spin-label park-spin-label-lit" aria-hidden="true">KING RICO</span>
-    </div></div>
-    <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-rim-gold-contour-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i><i class="park-spin-rim-pulse"></i></span>
-  </div>
-
-  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleTurbo }}" onPointerDown="{{ pressTurbo }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar mais rápido" aria-pressed="{{ turbo }}" data-kr-hit="" style="position: absolute; left: 24.833px; top: 613.2px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ turboBgPos }}; background-repeat: no-repeat; filter: {{ turboFilter }}; box-shadow: {{ turboShadow }}; transition: {{ turboTrans }};">
-  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/turbo-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/turbo-socket-rim-v3.svg" alt="" draggable="false"></div>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 20.33px; top: 608.70px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -20.33px -608.70px; background-repeat: no-repeat; opacity: {{ turboDim }}; transition: {{ turboDimT }};"></div>
-  <sc-if value="{{ turbo }}" hint-placeholder-val="{{ false }}">
-    <div class="park-mode-label" style="position: absolute; left: 26px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
-      <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">TURBO</span>
-    </div>
-  </sc-if>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat;"></div>
-  <div onClick="{{ toggleAuto }}" onPointerDown="{{ pressAuto }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" class="park-panel-control" tabindex="0" aria-label="Girar automático" aria-pressed="{{ auto }}" data-kr-hit="" style="position: absolute; left: 392.733px; top: 614.1px; width: 37px; height: 37px; cursor: pointer; border-radius: 50%; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: {{ autoBgPos }}; background-repeat: no-repeat; filter: {{ autoFilter }}; box-shadow: {{ autoShadow }}; transition: {{ autoTrans }};">
-  <div class="park-button-well park-round-well"></div><div class="park-button-aperture park-round-aperture"><div class="park-control-depth"></div><img class="park-control-face" src="assets/machine/auto-socket-face-v6.svg" alt="" draggable="false"></div><img class="park-button-rim" src="assets/machine/auto-socket-rim-v3.svg" alt="" draggable="false"></div>
-  <div class="park-legacy-control-rim" style="position: absolute; left: 388.23px; top: 609.60px; width: 46px; height: 46px; border-radius: 50%; pointer-events: none; -webkit-mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); mask-image: radial-gradient(circle, #000 0, #000 21.5px, transparent 23px); background-image: url('assets/stage-off6.webp'); background-size: 453px 802px; background-position: -388.23px -609.60px; background-repeat: no-repeat; opacity: {{ autoDim }}; transition: {{ autoDimT }};"></div>
-  <sc-if value="{{ auto }}" hint-placeholder-val="{{ false }}">
-    <div class="park-mode-label" style="position: absolute; left: 379px; top: 656px; width: 48px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(6,44,20,.85); border: 1px solid #4fd97a; box-shadow: 0 0 8px rgba(60,220,120,.45); pointer-events: none;">
-      <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #8cf49a; line-height: 1;">AUTO</span>
-    </div>
-  </sc-if>
-
-
-
-
-
   <div class="park-reel-effects" aria-hidden="true">
     <div class="park-reel-fx-column park-reel-shell-0">
   <div class="park-grid-shade" style="position: absolute; left: 30px; top: 215px; width: 394px; height: 390px; border-radius: 10px; pointer-events: none; background: rgba(28,8,40,.42); -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); mask-image: linear-gradient(to top, transparent 0%, transparent 42%, #000 58%, #000 100%); -webkit-mask-size: 100% 300%; mask-size: 100% 300%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 {{ frameOff }}; mask-position: 0 {{ frameOff }}; transition: {{ frameOffT }};"></div>
@@ -244,6 +189,40 @@ a:hover { color: #fff3c4; }
   </sc-if>
     </div>
   </div>
+  <div class="park-reel-frame" aria-hidden="true"></div>
+  </div>
+  <div class="kr-hud-row">
+<div class="kr-hud-balance" data-bal="1" style="position: absolute; left: 19.333px; top: 30px; margin-top: {{ hudLift }}; width: 130px; height: 36px; border-radius: 18px; overflow: hidden; background-image: url('assets/stage-lit.webp'); background-size: 453px 802px; background-position: -19.333px -30px; background-repeat: no-repeat; transform: scale(1.25); transform-origin: 17.5px 18px;">
+  <div style="position: absolute; left: 39px; top: -2px; width: 88px; height: 39px; display: flex; align-items: center; justify-content: center;">
+    <span style="font-size: {{ balanceSize }}; font-weight: 800; color: #662c2c; letter-spacing: -.2px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateY(.05em);"><x-import from="./ui/wallet-value.js" component="WalletValue" dc-props="{{ walletProps }}"></x-import></span>
+  </div>
+  </div>
+
+<x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
+</div>
+
+
+  <!-- Spin vinho com aro/letras dourados; face sólida preserva o clique e o pulso. -->
+  <div data-spin-btn="1" data-rim-off="{{ rimOffOp }}" data-spin-active="{{ spinPulseActive }}" onClick="{{ spin }}" onPointerDown="{{ pressSpin }}" onPointerUp="{{ pressUp }}" onPointerLeave="{{ pressUp }}" onPointerCancel="{{ pressUp }}" role="button" tabindex="0" data-auto="{{ auto }}" aria-label="Girar" title="Segure para automático" style="position: absolute; z-index: {{ spinZ }}; left: 40px; top: 667px; width: 373px; height: 88px; cursor: {{ spinCursor }}; pointer-events: {{ spinEvents }};">
+    <div class="park-button-well park-spin-well"></div>
+    <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"><i class="park-spin-side-wash"></i></i><i class="park-spin-rear" aria-hidden="true"><i class="park-spin-rear-wash"></i></i>
+      <div class="park-spin-face">
+      <i class="park-spin-wash" aria-hidden="true"></i>
+      <span class="park-spin-label">{{ betText }}</span>
+      <span class="park-spin-label park-spin-label-lit" aria-hidden="true">{{ betText }}</span>
+      <svg class="park-spin-outline" viewBox="0 0 277 107" aria-hidden="true"><path class="park-spin-rim-pulse" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z"/><path class="park-spin-hold-line" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z" pathLength="100"/></svg>
+    </div></div>
+    <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-king-base-gold-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i></span>
+  </div>
+  <div class="park-bet-step park-bet-minus" onClick="{{ decBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Diminuir aposta"><i class="park-bet-key-edge" aria-hidden="true"></i><span class="park-bet-key-face"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span></div>
+  <div class="park-bet-step park-bet-plus" onClick="{{ incBet }}" role="button" tabindex="0" data-kr-hit="" aria-label="Aumentar aposta"><i class="park-bet-key-edge" aria-hidden="true"></i><span class="park-bet-key-face"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span></div>
+
+
+
+
+
+
+
   <sc-if value="{{ peachShow }}" hint-placeholder-val="{{ true }}">
     <div class="park-basket" data-park-side="{{ peachSide }}" title="Junte 5 roletas para abrir a Roleta Bônus" style="position: absolute; z-index: 6; right: {{ peachRight }}; top: {{ peachTop }}; width: 112px; height: 52px; pointer-events: none;">
       <div class="park-basket-content" style="position: absolute; inset: 0; animation: {{ peachAnim }}; transform-origin: 50% 50%;">
@@ -315,7 +294,7 @@ a:hover { color: #fff3c4; }
       <div style="width: 352px; display: flex; align-items: center; gap: 10px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #7fe3a0);"></div><span style="font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #7fe3a0;">POWER-UPS</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, #7fe3a0, transparent);"></div></div>
       <div style="display: grid; grid-template-columns: repeat(3, 112px); gap: 8px;">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/symbols-v7.webp'); background-size: 1200% 100%; background-repeat: no-repeat; background-position: 100% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #fff3c4; white-space: nowrap;">5 = ★</span></div>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/symbols/clover-rainbow-gold-v1.webp'); background-size: contain; background-repeat: no-repeat; background-position: 50% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #7fe3a0; white-space: nowrap;">+1 🛡</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/symbols/shield-defense-rainbow-gold-v1.webp'); background-size: contain; background-repeat: no-repeat; background-position: 50% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #7fe3a0; white-space: nowrap;">+1 🛡</span></div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px 9px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 0 0 1.5px rgba(255,210,87,.35);"><div style="width: 54px; height: 54px; background-image: url('assets/machine/controller-symbol-v1.webp'); background-size: contain; background-repeat: no-repeat; background-position: 50% 50%;"></div><span style="font-size: 19px; font-weight: 800; line-height: 1; color: #fff3c4; white-space: nowrap;">JOGO</span></div>
       </div>
       <div style="width: 352px; display: flex; align-items: center; gap: 10px;"><div style="flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #ff7a7a);"></div><span style="font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #ff7a7a;">VILÕES</span><div style="flex: 1; height: 2px; background: linear-gradient(90deg, #ff7a7a, transparent);"></div></div>
@@ -455,7 +434,7 @@ const SKEY = 'fortuneCircus.slot.v3';
 const FC_ASSET = p => { try { const el = document.querySelector('img[data-asset="' + String(p).split('?')[0].replace(/\//g, '|') + '"]'); return el ? (el.currentSrc || el.src || p) : p; } catch (e) { return p; } };
 if (typeof window !== 'undefined') window.__fcAsset = FC_ASSET;
 // Vibração nativa do app Android (plugin FcHaptics em app/android); no navegador cai no navigator.vibrate.
-// Faixa do banner de anúncio no topo (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
+// Faixa do banner de anúncio EMBAIXO (AdMob banner = 50 dp + respiro). Só é reservada quando há um anúncio carregado
 // (window.__fcAdBanner = true, a ser ligado pela integração do AdMob); sem anúncio, o HUD encosta na barra de status.
 const FC_AD_BAND = 60;
 // Áreas seguras (barra de status / navegação). No app Android o Capacitor injeta --safe-area-inset-*; no navegador vale env().
@@ -498,7 +477,7 @@ class Component extends DCLogic {
     locked: [], spinCells: [], stopped: [], winCells: [], winLines: [],
     winAmount: 0, displayWin: 0, showWin: false, winTitle: 'VOCÊ GANHOU',
     coins: false, shake: 'none', antic: false,
-    spinning: false, feature: null, turbo: false, auto: false,
+    spinning: false, feature: null, turbo: true, auto: false,
     sound: true, vibrate: true, sfxLvl: 2, vibLvl: 2, menu: false, pays: false, scale: 1, inset: false, ready: false, hint: 'Boa sorte!'
   };
   timers = [];
@@ -508,7 +487,7 @@ class Component extends DCLogic {
     this._reelSwipe = { down: e => { const r = document.querySelector('.park-reels'); if (!r || e.target.closest('button,a,[role=button],[data-spin-btn],[data-overlay],.kr-menu,[role=dialog]')) return; const b = r.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) return; this._swipe = { y: e.clientY, fired: false }; },
       move: e => { const s = this._swipe; if (!s || s.fired || !e.buttons && e.pointerType === 'mouse' || Math.abs(e.clientY - s.y) < 10) return; s.fired = true; if (this.state.menu || this.state.pays) return; this.spin(); },
       up: () => { this._swipe = null; } };
-    window.addEventListener('pointerdown', this._reelSwipe.down, { passive: true }); window.addEventListener('pointermove', this._reelSwipe.move, { passive: true }); window.addEventListener('pointerup', this._reelSwipe.up); window.addEventListener('pointercancel', this._reelSwipe.up);
+    /* swipe-para-girar desligado (dono, 17/11): o toque nos rolos fica para usar o cedro */
     const cloud = window.KingRicoCloud;
     if (cloud && cloud.enabled) this._unwatchCloud = cloud.watch(p => {
       this._cloudDeferred = p;
@@ -572,7 +551,7 @@ class Component extends DCLogic {
     // Quadro (máquina + botão) centralizado no espaço livre, um pouco acima do meio; o HUD sobe de volta hudD unidades
     // e fica preso logo abaixo da barra de status / faixa do anúncio.
     const hudD = inset ? 0 : Math.round(Math.max(0, avail / sc - 802) * 0.42);
-    const top = inset ? Math.round((h - 802 * sc) / 2) : safe.top + band + hudD * sc; // sem arredondar: o HUD (top − hudD) cai no mesmo pixel do saldo da Home
+    const top = inset ? Math.round((h - 802 * sc) / 2) : safe.top + hudD * sc; // banner fica embaixo (dono, 20/11): não empurra o topo // sem arredondar: o HUD (top − hudD) cai no mesmo pixel do saldo da Home
     const st = this.state;
     if (sc === st.scale && inset === st.inset && top === st.stageTop && w === st.vw && h === st.vh) return; // avoid resize↔render feedback loop
     window.__fcLayout = { sc, safeTopU: safe.top / sc }; // a Home embutida usa a mesma escala/área segura
@@ -660,10 +639,10 @@ class Component extends DCLogic {
     (this._wheelDanceLog ||= []).push({cell,start:performance.now()});if(this._wheelDanceLog.length>12)this._wheelDanceLog.shift();
     const layer = this.fxRef.current, sym = document.querySelector('[data-sym="' + cell + '"]');
     if (!layer || !sym || !sym.animate) return;
-    const stage=document.querySelector('.park-circus-stage').getBoundingClientRect(),r=sym.getBoundingClientRect(),sc=stage.width/453;
-    const cx=(r.x+r.width/2-stage.x)/sc,cy=(r.y+r.height/2-stage.y)/sc;
+    const stageEl = document.querySelector('.park-circus-stage'), stage = stageEl.getBoundingClientRect(), r = sym.getBoundingClientRect(), sc = stage.width / 453;
+    const cx = (r.x + r.width / 2 - stage.x) / sc, cy = (r.y + r.height / 2 - stage.y) / sc;
     const S = 108, nodes = [];
-    const el = (css, html) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; layer.appendChild(d); nodes.push(d); return d; };
+    const el = (css, html, host = layer) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;pointer-events:none;' + css; if (html) d.innerHTML = html; host.appendChild(d); nodes.push(d); return d; };
     const T = 2300;
     const glow = el('left:' + (cx - 95) + 'px;top:' + (cy - 95) + 'px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,175,.95) 0%,rgba(255,190,60,.5) 42%,rgba(255,190,60,0) 70%);will-change:transform,opacity;');
     glow.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1.1)', opacity: 1, offset: .28 }, { transform: 'scale(1.3)', opacity: 0 }], { duration: T, easing: 'ease-out', fill: 'forwards' });
@@ -682,17 +661,18 @@ class Component extends DCLogic {
       st.animate([{ transform: 'translate(0,0) scale(.2) rotate(0)', opacity: 0 }, { transform: 'translate(' + Math.cos(a) * rad * .55 + 'px,' + Math.sin(a) * rad * .55 + 'px) scale(1.15) rotate(90deg)', opacity: 1, offset: .35 }, { transform: 'translate(' + Math.cos(a) * rad + 'px,' + (Math.sin(a) * rad + 10) + 'px) scale(0) rotate(180deg)', opacity: 0 }],
         { duration: 540, delay: 80 + i * 15, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
     }
-    const basket = document.querySelector('.park-basket .park-ticket-wallet-art, .park-basket')?.getBoundingClientRect();
-    const tx = basket ? (basket.x + basket.width * .5 - stage.x) / sc : 374, ty = basket ? (basket.y + basket.height * .5 - stage.y) / sc : 222, dx = tx - cx, dy = ty - cy;
-    const fly = el('left:' + (cx - 32) + 'px;top:' + (cy - 32) + 'px;width:64px;height:64px;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/wheel/wheel-symbol-v1.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">');
+    const wheelCounter = document.querySelector('.park-key-count-wheel');
+    const basket = (document.querySelector('.park-key-count-wheel img') || wheelCounter || document.querySelector('.park-basket .park-ticket-wallet-art, .park-basket'))?.getBoundingClientRect();
+    const tx = basket ? (basket.x + basket.width * .5 - stage.x) / sc : 400, ty = basket ? (basket.y + basket.height * .5 - stage.y) / sc : 766, dx = tx - cx, dy = ty - cy;
+    const fly = el('left:' + (cx - 32) + 'px;top:' + (cy - 32) + 'px;width:64px;height:64px;z-index:70;opacity:0;will-change:transform,opacity;', '<img src="' + FC_ASSET('assets/wheel/wheel-symbol-v1.webp') + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">', stageEl);
     const arc = [];
     for (let i = 0; i <= 10; i++) { const u = i / 10, e = u * u * (3 - 2 * u), lift = -65 * Math.sin(Math.PI * u); arc.push({ offset: u, opacity: u < .05 ? u * 20 : 1, transform: 'translate(' + (dx * e).toFixed(1) + 'px,' + (dy * e + lift).toFixed(1) + 'px) rotate(' + (360 * e).toFixed(0) + 'deg) scale(' + (1.15 - 0.55 * e).toFixed(2) + ')' }); }
     const FD = 520, FS = T - 50;
     fly.animate(arc, { duration: FD, delay: FS, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
     w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 100, delay: FS, fill: 'forwards' });
-    const pop = el('left:' + (tx - 32) + 'px;top:' + (ty - 32) + 'px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,190,60,0) 70%);will-change:transform,opacity;opacity:0;');
+    const pop = el('left:' + (tx - 32) + 'px;top:' + (ty - 32) + 'px;width:64px;height:64px;z-index:70;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,190,60,0) 70%);will-change:transform,opacity;opacity:0;', '', stageEl);
     pop.animate([{ transform: 'scale(.3)', opacity: 0 }, { transform: 'scale(1.2)', opacity: 1, offset: .3 }, { transform: 'scale(1.8)', opacity: 0 }], { duration: 420, delay: FS + FD, fill: 'forwards' });
-    this.later(() => { this._peachLand && this._peachLand(cell); try { this.bell(1760, 0.4, 0.07, 0.04); this.pluck(880, 0.06, 0.25); } catch (e) {} this.hap('basketIn'); }, FS + FD);
+    this.later(() => { this._peachLand && this._peachLand(cell); try { wheelCounter?.animate?.([{ transform: 'scale(1)' }, { transform: 'scale(1.22)' }, { transform: 'scale(1)' }], { duration: 230, easing: 'ease-out' }); } catch (e) {} try { this.bell(1760, 0.4, 0.07, 0.04); this.pluck(880, 0.06, 0.25); } catch (e) {} this.hap('basketIn'); }, FS + FD);
     const rec = { nodes, sym, t: 0 };
     rec.t = this.later(() => { nodes.forEach(n => n.remove()); sym.style.visibility = ''; this._dances = (this._dances || []).filter(o => o !== rec); if (!this._dances.length && !this._holdWin) { if (this._wheelTriggerV6) { this._wheelTriggerV6 = false; this.setState({ peaches: this._peachCarry || 0, peachShownBase: null, peachShownAdd: 0 }, this.save); } this._celebHold = false; } this.syncCeleb(); }, FS + FD + 360);
     (this._dances = this._dances || []).push(rec); this.syncCeleb();
@@ -956,8 +936,12 @@ class Component extends DCLogic {
     }
   }
   pressDown = (kind) => { this._pressed = true; this._spinTouchHeld = kind === 'spin'; if (this._spinTouchHeld) this._spinTouchAt = performance.now(); this.hap(this._spinTouchHeld ? 'spinPress' : 'press'); this.click(true, kind); };
-  pressUp = () => { if (this._pressed) { const spin = this._spinTouchHeld; this._pressed = false; if (spin) { this._spinTouchAt = performance.now(); this._spinTouchUp?.(); this.hap('spinRelease'); } this.click(false, spin ? 'spin' : null); this._spinTouchHeld = false; } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
-  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); };
+  pressUp = () => { this.holdEnd(); if (this._pressed) { const spin = this._spinTouchHeld; this._pressed = false; if (spin) { this._spinTouchAt = performance.now(); this._spinTouchUp?.(); this.hap('spinRelease'); } this.click(false, spin ? 'spin' : null); this._spinTouchHeld = false; } if (this.state.pressed) setTimeout(() => this.setState({ pressed: null }), 0); };
+  pressSpin = () => { if (this.state.featReady || this.state.featLock) return; if (this.isCeleb() && !this.state.showWin) return; if (this.state.spinning || this.state.feature || this._spinQueued) return; this.setState({ pressed: 'spin' }); this._spinTouchDown?.(); this.pressDown('spin'); this.holdStart(); };
+  // Segurar o spin ~0,65 s liga o automático; tocar com o automático ligado desliga.
+  holdStart = () => { clearTimeout(this._holdT); this._holdFired = false; const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) b.dataset.hold = '1';
+    this._holdT = setTimeout(() => { if (b) delete b.dataset.hold; this._holdFired = true; if (!this.state.auto) { this.hap('winMid'); this.toggleAuto(); } }, this._spinHoldMs || 650); };
+  holdEnd = () => { clearTimeout(this._holdT); const b = typeof document !== 'undefined' && document.querySelector('[data-spin-btn]'); if (b) delete b.dataset.hold; };
   pressTurbo = () => { this.setState({ pressed: 'turbo' }); this.pressDown(); };
   pressAuto = () => { this.setState({ pressed: 'auto' }); this.pressDown(); };
   pressHome = () => { this.setState({ pressed: 'home' }); this.pressDown(); };
@@ -1172,6 +1156,8 @@ class Component extends DCLogic {
 
   /* ---------- base spin ---------- */
   spin = () => {
+    if (this._holdFired) { this._holdFired = false; return; }
+    if (this.state.auto) { this.setState({ auto: false, hint: 'Automático parado' }); this.click(true); return; }
     if (this._featPending || this.state.featLock) { if (this.state.showWin) { this._spinAfterFly = false; this.dismissWin(); } return; }
     if (this.state.showWin) { const manual = !this.state.auto && !this.state.free && !this._afterWinChains; this._spinAfterFly = manual; this.dismissWin(); return; }
     if (this.state.spinning || this.state.feature || this.state.free || this._spinQueued || this.isCeleb()) return;
@@ -1263,7 +1249,7 @@ class Component extends DCLogic {
     this._wheelAudioUntil=got?performance.now()+dStart+LAND+STAG*(got-1):0;
     const cloverHold=this._cloudSpin?.outcome?.cedarLines?.length?1350:0;
     res.peach.forEach((c, k) => this.later(() => this.dance(c), dStart + k * STAG));
-    const wait = (got ? dStart + LAND + STAG * (got - 1) + 450 : 950)+cloverHold; // plain win: show the line first, then the modal
+    const wait = (got ? dStart + LAND + STAG * (got - 1) + 450 : 570)+cloverHold; // plain win: show the line first, then the modal
     if (goodLuck) { this._featPending = true; this.setState({ featLock: true, auto: this.state.auto }); } // rodada especial a caminho: trava o giro
     const next = () => {
       if (v6 && peach && this._wheelTriggerV6) {
@@ -1281,13 +1267,13 @@ class Component extends DCLogic {
       const f2 = this.state.free;
       if (f2) return f2.left > 0 ? this.later(() => this.doSpin(), 500) : this.endFree();
       if (trigger) { this.setState({ featLock: true }); return this.later(() => this.startFeature(bet), 300); }
-      if (this.state.auto) this.later(() => { if (this.state.auto && !this.state.feature) this.doSpin(); }, 500);
+      if (this.state.auto) this.later(() => { if (this.state.auto && !this.state.feature) this.doSpin(); }, 300);
     };
     // modal only for big prizes; regular prizes count up inside the message bar
     const lbls = res.win > 0 ? this.lineLabels(res, bet, this.state.grid) : null, modal = res.win >= bet * 20;
     if (res.win > 0 && modal) { this.later(() => this.setState({ lineLbl: lbls }), 250); this.later(() => this.showPrize(res.win, res.full ? 'TELA CHEIA x10' : big ? 'GRANDE PRÊMIO' : 'VOCÊ GANHOU', next, goodLuck || !!fr, bet), wait); }
     else if (res.win > 0) this.later(() => this.barPrize(res.win, bet, next, lbls), got ? wait : 250+cloverHold);
-    else this.later(next, got ? wait + 200 : 800);
+    else this.later(next, got ? wait + 200 : 480);
   }
   lineLabels(res, bet, grid) {
     const sum = {};
@@ -1297,11 +1283,11 @@ class Component extends DCLogic {
   barPrize(amount, bet, then, lbls) {
     this.setState({ barWin: amount, barGreen: amount >= bet });
     this.countUp(amount, '', false);
-    if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 1350);
+    if (lbls) this.later(() => this.setState({ lineLbl: lbls }), 810);
     this.later(() => {
       const finish = () => { this._celebHold = false; this._holdWin = false; this.syncCeleb(); this.setState({ barWin: 0, lineLbl: null, winDim: false }); if (then) then(); };
       const calm = () => { if (this.state.winCells.length) this.setState({ winCalm: true }); }; const pend = this.state.balPending || 0; if (pend > 0) { this.setState({ lineGone: true }); this.coinFly(pend, () => { calm(); finish(); }); } else { calm(); finish(); }
-    }, 2700);
+    }, 1620);
   }
   layoutMetric(name) {
     const node = this.lightsRef.current;

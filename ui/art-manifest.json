@@ -70,7 +70,17 @@
     "assets/machine/goodluck-bolt-2.webp",
     "assets/machine/goodluck-bolt-3.webp",
     "assets/symbols/clover-rainbow-gold-v1.webp",
-    "assets/machine/meter-bolt-rainbow-v1.webp"
+    "assets/machine/meter-bolt-rainbow-v1.webp",
+    "assets/symbols/shield-defense-rainbow-gold-v1.webp",
+    "assets/machine/spin-king-base-gold-v1.svg",
+    "assets/machine/spin-king-side-purple-v1.svg",
+    "assets/machine/spin-king-cap-purple-v1.svg",
+    "assets/machine/bet-key-left-base-v2.svg",
+    "assets/machine/bet-key-left-side-v2.svg",
+    "assets/machine/bet-key-left-cap-v2.svg",
+    "assets/machine/bet-key-right-base-v2.svg",
+    "assets/machine/bet-key-right-side-v2.svg",
+    "assets/machine/bet-key-right-cap-v2.svg"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

@@ -20,7 +20,7 @@ with sync_playwright() as p:
   page.wait_for_timeout(300);assert page.locator('[data-payline]').count()>0
   page.screenshot(path='work/special-clover-gold.png')
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=15000)
-  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  assert page.locator('[data-tickets]').text_content()=='1/5'
   print('clover gold/celebration/count PASS',flush=True)
  if stage in ['all','wheel']:
   ready()
@@ -37,7 +37,7 @@ with sync_playwright() as p:
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="clover:celebrate")',timeout=20000)
   assert page.evaluate('performance.now()>=__fc._wheelAudioUntil')
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
-  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  assert page.locator('[data-tickets]').text_content()=='1/5'
   print('combined wheel/clover celebrations serialized PASS',flush=True)
 
  if stage in ['all','defense']:
@@ -57,7 +57,7 @@ with sync_playwright() as p:
   page.screenshot(path='work/special-clover-defense-replacement.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
   assert page.evaluate('KingRicoPark.state.economyV6.rounds')==1
-  assert page.locator('[data-tickets]').inner_text()=='0/5'
+  assert page.locator('[data-tickets]').text_content()=='0/5'
   assert page.locator('.park-tony-scene').count()==0
   print('clover defense: center replacement, real prize, one paid spin PASS',flush=True)
  if stage in ['all','scatter']:
@@ -97,16 +97,16 @@ with sync_playwright() as p:
   page.evaluate('KingRicoPark.state.spins=10;__fc.setState({})')
   for _ in range(4):
    page.wait_for_timeout(300)
-   assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height<1)')
+   pass  # barras laterais saíram no layout v7 (dono, 20/11)
   assert page.locator('[role=progressbar]').get_attribute('aria-valuenow')=='0'
   page.screenshot(path='work/special-goodluck-spent-empty.png')
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height<1)')
+  pass  # barras laterais saíram no layout v7 (dono, 20/11)
   page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Sem trinca',exact=False).click()
   page.locator('[data-spin-btn]').click()
   page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="charge:done")',timeout=15000)
   assert page.evaluate('__fc._parkFeatureFill==null&&__fc._parkShown<2')
-  assert page.locator('.park-meter-fill').evaluate_all('es=>es.every(e=>e.getBoundingClientRect().height>0&&e.getBoundingClientRect().height<60)')
+  pass  # barras laterais saíram no layout v7 (dono, 20/11)
 
   print(json.dumps({'directGoodLuck':True,'charges':energy,'paidSpinCalls':1}),flush=True)
  if stage in ['all','free']:
@@ -167,11 +167,12 @@ with sync_playwright() as p:
   print('first-row highlight requires a matching paid/special line and stops on next spin PASS',flush=True)
  if stage in ['all','counters']:
   ready()
-  for selector,number in [('.park-pocket','[data-tickets]'),('.park-basket','[data-wheels]')]:
-   icon=page.locator(selector+' .park-ticket-wallet-art').bounding_box();count=page.locator(selector+' '+number).bounding_box()
-   assert icon['y']+icon['height']+2<count['y'],(icon,count)
-   assert abs(icon['x']+icon['width']/2-count['x']-count['width']/2)<2,(icon,count)
+  # V7: shield stock by balance; the old wheel counter is no longer shown.
+  shield=page.locator('.kr-hud-row .park-shield-wallet')
+  slots=[n.bounding_box() for n in shield.locator('[data-shield-slot]').all()]
+  assert len(slots)==5 and all(a['y']+a['height']<b['y'] for a,b in zip(slots,slots[1:]))
+  assert not page.locator('.park-basket').is_visible()
   page.screenshot(path='work/special-stacked-powerups.png')
-  print('power-ups icon/quantity vertical with whitespace PASS',flush=True)
+  print('v7 shield dock and removed wheel counter PASS',flush=True)
  assert not errors and not missing,(errors,missing)
  b.close()

@@ -1,3 +1,8 @@
+> Prévia v7,20/11/2026: composição segue o wireframe do dono. Mostrador e valor
+> unidos acima da máquina, contador de roleta oculto e spin mais alto. Geometria
+> compartilhada em ui/park/spin-v7.css; não reativar machine-scale.js. Economia
+> oficial v6 e a migração futura continuam descritas separadamente abaixo.
+
 # Nova fase do Circus v6 — integração oficial validada, 17/11/2026
 
 A decisão nova substitui o parque publicado descrito no histórico abaixo.

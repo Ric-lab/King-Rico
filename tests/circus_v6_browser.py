@@ -14,9 +14,10 @@ with sync_playwright() as p:
  page.goto(BASE+'/circus?demo=off');ready()
  assert page.evaluate('KingRicoCloud.slotVersion')==6
  assert page.locator('.kr-hud-park').count()==0
- page.locator('.park-pocket').click();page.get_by_role('dialog',name='Trevos de proteção').wait_for();page.get_by_role('button',name='ENTENDI').click()
+ page.locator('.park-key-count-shield').click();page.get_by_role('dialog',name='Escudos de defesa').wait_for();page.get_by_role('button',name='ENTENDI').click()
  assert page.locator('.park-meter-goal .park-goal-cloud').count()==0
- assert page.locator('.park-basket [data-wheels]').inner_text()=='0/5'
+ assert not page.locator('.park-basket').is_visible()
+ assert page.locator('.park-basket [data-wheels]').text_content()=='0/5'
  page.evaluate('KingRicoPreviewPicker()')
  picker=page.locator('#kr-preview-picker')
  picker.wait_for()
@@ -32,7 +33,7 @@ with sync_playwright() as p:
  page.screenshot(path='work/preview-clover-gold-party.png')
  page.wait_for_function('__fc._parkMotionLog?.some(x=>x.type==="tickets:done")',timeout=20000)
  assert page.evaluate('KingRicoPark.state.cedros')==1
- assert page.locator('[data-tickets]').inner_text()=='1/5'
+ assert page.locator('[data-tickets]').text_content()=='1/5'
  page.screenshot(path='work/preview-cedar-collected.png')
  for kind,draw in [('tony',0),('tucker',.51)]:  # trevo NÃO defende o Ray (dono, 13/11)
   page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=2;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=3;p.peachBank={count:3,units:3000};localStorage.setItem(k,JSON.stringify(s));}''')
@@ -46,7 +47,7 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.player.peaches')==3
   page.screenshot(path='work/preview-cedar-defense-'+kind+'.png')
   page.locator('.park-defense-scene').wait_for(state='detached')
-  assert page.locator('[data-tickets]').inner_text()=='1/5'
+  assert page.locator('[data-tickets]').text_content()=='1/5'
  # Tucker com 0 roletas guardadas ainda deve ser bloqueado pelo trevo
  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=1;const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=0;p.peachBank={count:0,units:0};localStorage.setItem(k,JSON.stringify(s));}''')
  page.reload();ready()
@@ -55,7 +56,7 @@ with sync_playwright() as p:
  page.locator('.park-defense-scene').wait_for(timeout=15000)
  assert page.evaluate('__fc._cloudSpin.outcome.defense.against')=='tucker'
  page.locator('.park-defense-scene').wait_for(state='detached')
- assert page.locator('[data-tickets]').inner_text()=='0/5'
+ assert page.locator('[data-tickets]').text_content()=='0/5'
  page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Aleatório').click()
  # Ray: sem defesa; leva 1 a 2 dos 2 trevos guardados
  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=2;s.park.economyV6={version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));}''')

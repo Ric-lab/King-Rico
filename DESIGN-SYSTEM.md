@@ -317,3 +317,45 @@ arco-íris com contornos e caule dourados. Raio do topo dos dois tubos:
 mesmo material. Não confundir com os sprites animados do raio Good Luck,
 que permanecem intactos. A aplicação nos rolos usa sprite separado sobre
 a célula5, tanto na fita móvel como nas casas fixas; atlas antigo preservado.
+
+### Prévia v7 — escudos nos rolos e voos aos contadores ovais (21/11/2026)
+A célula5 da slot machine (fitas giratórias, casas fixas e tabela POWER-UPS) e
+a defesa usam `assets/symbols/shield-defense-rainbow-gold-v1.webp`, topo pontudo,
+borda dourada lisa, preenchimento arco-íris contínuo no padrão da roleta e coroa
+dourada central com joia hexagonal azul-safira (`sym-crown.png`). Estoque até5
+aparece no contador oval sob a tecla `−` (`.park-key-count-shield`, que abre o
+modal dos escudos). Os voos de coleta/defesa/giro grátis do escudo partem e
+pousam diretamente no contador oval sob `−`, e o voo da roleta (`dance`) pousa
+no contador oval sob `+` (`.park-key-count-wheel`), com pulso na chegada.
+
+### Composição Circus v7 — wireframe do dono,20/11/2026 (prévia)
+Máquina e spin em sequência central, com respiro antes do banner. Spin começa
+em601,5px no palco453×802, com −/+ centralizados nas laterais. Prêmio é um bloco
+único220×56 em117.833/158px: placa e valor compartilham os limites. Não aplicar
+posição ou escala separada ao número. Máquina usa um grupo `.park-cabinet-body`
+com escala1.08 e deslocamento−41,75px; a origem interna dos rolos permanece nativa.
+Contador de roleta não aparece nessa composição. Escudos seguem junto ao saldo.
+
+Refinamento20/11: gap do prêmio à máquina11,75 unidades; da máquina ao spin15,62.
+As camadas `.park-reel-effects` de dourado/apagado pertencem ao mesmo grupo
+do gabinete e mantêm a transformação interna dos rolos, sem escala independente.
+
+### Spin King Rico — forma aprovada, identidade20/11/2026 (prévia)
+O dono aprovou a forma/clique de2eaead6 e pediu a própria identidade: base dourada,
+tampa roxa e Baloo 2 em pé, peso800. Só valor da aposta; sem GIRAR/moeda/dica.
+Os paths principais permanecem idênticos à forma da gravação, inclusive contorno
+luminoso e curso27px. Fontes SVG atuais: spin-king-base-gold-v1,
+spin-king-cap-purple-v1 e spin-king-side-purple-v1. Originais CM preservados.
+Os +/− seguem o material: base dourada fixa, tampa azul-clara e lateral azul,
+com símbolos azul-escuros legíveis. Alvos61×100 e posições mantidos; tampa afunda
+12px sem transladar a base. Luz650ms, automático, sons e escudos continuam iguais.
+
+### Inventário de defesa — cinco posições verticais,20/11/2026
+Cinco escudos abaixo do saldo, de cima para baixo; cheios verdes e vazios
+apagados. Sem ícone único+fração numérica, sem nova carteira. Coluna com alvo
+mínimo44px de largura, na linha do saldo. Coleta chega ao próximo slot; consumo
+parte do último preenchido. Texto de estoque continua disponível no rótulo acessível.
+
+Refinamento das teclas: desenhar contornos internos acompanhando o perfil do
+spin, com bases niveladas e símbolos retos. Usar os SVGs v2 esquerdo/direito;
+girar o conjunto não resolve o encaixe pedido pelo dono.

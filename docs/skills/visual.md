@@ -92,3 +92,34 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   iridescente, mantendo a drenagem. A rejeição anterior continua valendo para
   os feixes em zigue-zague saindo das barras. Barra consumida fica vazia até
   outro giro; nunca adotar novamente10 do ledger como nível visual após bônus.
+
+- Rejeitado em20/11: número do prêmio separado da placa branca e ampliação da
+  máquina por peça, alterando a origem do rolo. Usar blocos únicos para prêmio
+  e gabinete; conferir o papel dentro do aro. O wireframe prioriza spin mais
+  alto na área do polegar, sem contador de roleta ao lado do prêmio.
+
+- Ajuste20/11: mudar o gabinete exige mover também pulso dourado e apagado;
+  estavam fora do grupo e ficaram com geometria antiga. Conferir cada máscara
+  sobre o respectivo rolo, não só a moldura.
+
+-20/11: o dono ainda considerou insuficiente o clique vinho. Apenas afundar a
+  tampa não resolveu o conjunto; autorizou repensar cores/formato. Diagnóstico
+  do Codex: cavidade traseira grande e ação com pouco contraste. Proposta coral
+  com ação explícita e cavidade menor aguarda avaliação, sem aprovação presumida.
+
+-20/11: dono rejeitou a releitura coral/GIRAR e pediu copiar a forma do botão
+  Coin Master. Só aposta na tampa, contorno luminoso para hold/auto. Não voltar
+  ao retângulo arredondado nem inserir textos/ícones extras. Escudos são cinco
+  posições verticais, não um ícone com fração numérica.
+
+- Ajuste das teclas: dono rejeitou soluções apenas de ângulo. O contorno de
+  cada peça deve acompanhar a lateral do spin; bases niveladas e símbolos retos.
+  SVGs v2 próprios por lado substituem rotação/skew do conjunto.
+
+- Teclas v2: rejeitados azul torcido e vão desigual. Tampa, lateral e base
+  devem compartilhar o contorno; extrusão vertical, arestas horizontais e
+  distância coerente ao spin da frente ao fundo.
+
+- Teclas ao lado do spin: paralelogramos inteiros ainda pareceram tortos.
+  Tentar borda externa vertical e somente contorno interno seguindo o spin;
+  preservar tampa/base coerentes. Amostra em validação, não aprovação estética.

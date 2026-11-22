@@ -73,6 +73,9 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
     park.wheel.result={index,multiplier,winUnits,extraUnits};
     if(park.wheel.economyVersion===6)controllerV6.recordBonus(park,extraUnits);else controller.recordBonus(park,extraUnits);p.balanceUnits+=extraUnits;p.revision++;}
    result={wheel:structuredClone(park.wheel)};
+  }else if(data.action==='preview-credit'){
+   // Só prévia: crédito do cedro (linha completada) e do cedro cheio da Trinca.
+   const pr=records.get(ref);pr.balanceUnits+=Math.max(0,Math.min(10000000,Math.round(Number(data.units)||0)));result={};
   }else if(data.action==='wheel-close'){
    if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('Conclua a roleta primeiro.');
    const v6=park.wheel.economyVersion===6;park.wheel=null;if(!v6){park.spins=0;park.bankUnits=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;}result={};

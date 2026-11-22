@@ -1,11 +1,9 @@
-// Controle: 3 em linha abre o jogo (por enquanto o antigo Fortune Penalty).
-function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;try{fc.sfxWin?.(false);navigator.vibrate?.([40,40,80]);}catch{}
- const o=document.createElement('div');o.id='kr-controller-game';o.setAttribute('role','dialog');o.style.cssText='position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(12,2,24,.8)';
- const go=location.pathname.startsWith('/King-Rico/')?'/King-Rico/penalty/':'/penalty';
- o.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 30px;border-radius:26px;background:linear-gradient(180deg,#7a2bb8,#3a0d62);box-shadow:0 0 0 4px #f0b41f,0 0 0 8px #6b2e05,0 20px 40px #0009"><img src="/assets/machine/controller-symbol-v1.webp" alt="" style="width:140px;height:140px;object-fit:contain"><a href="'+go+'" style="padding:14px 54px;border-radius:999px;font:800 26px/1 Baloo\\ 2,system-ui,sans-serif;color:#fff;text-decoration:none;background:linear-gradient(180deg,#6cf096,#2ec962 60%,#22a650);box-shadow:0 5px 0 #147a36">JOGAR</a><button type="button" aria-label="Fechar" style="border:0;background:none;color:#e8d4ff;font:800 18px/1 inherit;cursor:pointer">agora não</button></div>';
- o.querySelector('button').onclick=()=>o.remove();document.body.append(o);}
+import {shieldTarget} from './shield-wallet.js';
+// Controle: 3 em linha abre a Trinca (Royal Rico). Ganhar = 3 ou 4 giros com a coroa coringa no meio.
+function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;import('./trinca.js').then(m=>m.openTrinca(fc,{bet:fc.state?.bet??fc._cloudSpin?.bet??1})).catch(()=>{});}
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+setTimeout(()=>{import('./trinca.js').then(m=>m.mountCedroDots()).catch(()=>{});import('./cedro-spell.js').then(m=>m.installCedroSpell()).catch(()=>{});},1200);
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
 export function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
 // Cosmetic sub-level only: repeated pours approach the next real level smoothly.
@@ -22,11 +20,12 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  if(fc._parkMeterLevel>=10){fc._parkMeterLevel=0;fc._parkShown=0;fc._parkFeatureFill=0;fc._parkAfterGoodLuck=true;}
  const spinButton=document.querySelector('[data-spin-btn]');
  const spinSurface=spinButton?.querySelector('.park-spin-aperture');
- const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=rim?.querySelector('.park-spin-rim-pulse');let rimFlash;
- const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color','#640c24');
+ const rim=spinButton?.querySelector('.park-spin-rim'),rimLight=spinButton?.querySelector('.park-spin-rim-pulse');let rimFlash;
+ const spinPaint=()=>(spinButton&&getComputedStyle(spinButton).getPropertyValue('--park-spin-paint').trim())||'rgb(100,12,36)';
+ const commitSpinColor=level=>spinSurface?.style.setProperty('--park-spin-base-color',spinPaint());
  commitSpinColor(fc._parkMeterLevel);
  fc._parkPreparePulseColor=(level=Math.min(10,fc._parkMeterLevel+1))=>{
-  const color='rgb(100,12,36)';
+  const color=spinPaint();
   // This static layer keeps its paint when the native button updates its inline style.
   spinSurface?.style.setProperty('--park-spin-pulse-color',color);
   rim?.style.setProperty('--park-rim-pulse-color','#ffdf70');
@@ -41,7 +40,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
  };
  const syncColor=level=>{rails.querySelectorAll('.park-meter').forEach(t=>{t.style.setProperty('--park-pour-color',colorAt(Math.max(.05,level/10)));t.classList.toggle('is-empty',level===0&&!(fc._parkShown>0));});};syncColor(fc._parkMeterLevel);
  fc._parkFlashRim=(delay=0)=>{
-  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?320:520,easing:'ease-out'});}catch{/* Decorative only. */}
+  try{rimFlash?.cancel();rimFlash=rimLight?.animate([{opacity:1},{opacity:1,offset:.48},{opacity:0}],{delay:Math.max(0,Number(delay)||0),duration:reduced()?80:100,easing:'ease-out'});}catch{/* Decorative only. */}
  };
  const nativePulse=fc.lightsPulse.bind(fc);let pulseNo=0,lastPulse=0,queuedCharge;
  fc.lightsPulse=(delay=0)=>{fc._parkPreparePulseColor();fc._parkPulse={at:performance.now(),delay,seq:++pulseNo};nativePulse(delay);
@@ -146,36 +145,32 @@ function flyTickets(fc,refresh,done=()=>{}){
  const award=fc._parkTicketAward;
  if(!award||fc._parkTicketsPlaying){done();return;}
  fc._parkTicketsPlaying=true;fc.setState({});record(fc,'tickets:start');
- const target=document.querySelector('.park-pocket [data-tickets]'),end=target?.getBoundingClientRect(),nodes=[],anims=[],cues=[],arrived=new Set();let ended=false,ticker;
- const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.sfxTicket?.(arrived.size-1);}catch{}target?.animate?.([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
- const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);cancelAnimationFrame(ticker);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
- const calm=reduced(),duration=calm?400:620,stagger=duration,contact=.8,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
- const safety=setTimeout(finish,lead+duration+stagger*2+600);
- try{fc.ac?.();}catch{} // Warm audio before the first impact, without playing a note.
- if(!end?.width){finish();return;}
- try{
-  const tx=end.x+end.width/2,ty=end.y+end.height/2;
-  const flights=award.cells.slice(0,award.count||3).map((cell,i)=>{
-   const source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
-   const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
-   const node=document.createElement('img');node.src='/assets/symbols/clover-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';document.body.append(node);nodes.push(node);
-   const frames=Array.from({length:9},(_,k)=>{const t=k/8,q=1-t,cx=(sx+tx)/2-45,cy=Math.min(sy,ty)-100,x=q*q*sx+2*q*t*cx+t*t*tx,y=q*q*sy+2*q*t*cy+t*t*ty;return {transform:`translate(${x-29}px,${y-29}px) rotate(${-12+45*t}deg) scale(${1-.55*t})`,opacity:t===0?0:1,offset:t*contact};});
-   const simple=[{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-29}px,${sy-29}px) scale(.8)`,opacity:1,offset:.1},{transform:`translate(${tx-29}px,${ty-29}px) scale(.45)`,opacity:1,offset:contact}];
-   const absorption={transform:`translate(${tx-29}px,${ty-29}px) scale(.12)`,opacity:0,offset:1};
-   const a=node.animate([...(calm?simple:frames),absorption],{duration,delay:lead+i*stagger,easing:'linear',fill:'both'});anims.push(a);
-   cues.push({animation:a,index:i,contactAt:lead+i*stagger+duration*contact});
-   return a.finished.then(()=>land(i)).catch(()=>{});
-  });
-  // Contact belongs to the animation clock, before the ticket fades into the
-  // counter. One cue owns the increment, note and impact; completion is fallback.
-  const tick=()=>{
+ const targetFor=i=>shieldTarget(award.before+i),nodes=[],anims=[],arrived=new Set();let ended=false;
+ const land=i=>{if(ended||arrived.has(i))return;arrived.add(i);fc._parkVisibleTickets=award.before+arrived.size;refresh();record(fc,'tickets:arrived',{index:i,count:fc._parkVisibleTickets});try{fc.bell?.(1760,0.4,0.07,0.04);fc.pluck?.(880,0.06,0.25);}catch{}try{fc.hap?.('basketIn');}catch{}(document.querySelector('.park-key-count-shield')||targetFor(i))?.animate?.([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:230,easing:'ease-out'});};
+ const finish=()=>{if(ended)return;ended=true;clearTimeout(safety);anims.forEach(a=>a.cancel());nodes.forEach(n=>n.remove());fc._parkVisibleTickets=award.after;fc._parkTicketAward=null;fc._parkTicketsPlaying=false;if(!(fc._cloudSpin?.outcome?.res.win>0))fc.setState({winCalm:true,winDim:false});refresh();if(!arrived.size&&award.after>award.before)try{fc.sfxTicket?.(0);}catch{}fc.setState({});record(fc,'tickets:done',{count:award.after});done();const resume=fc._parkAutoAfterTickets;fc._parkAutoAfterTickets=false;if(resume&&fc.state.auto)fc.doSpin();};
+ const calm=reduced(),duration=calm?300:520,contact=1,lead=Math.max(0,(fc._parkCloverUntil||0)-performance.now());
+ const cells=award.cells.slice(0,award.count||3),safety=setTimeout(finish,lead+duration*cells.length+1200);
+ try{fc.ac?.();}catch{}
+ (async()=>{
+  if(lead)await new Promise(r=>setTimeout(r,lead));
+  for(const [i,cell]of cells.entries()){
    if(ended)return;
-   for(const cue of cues)if(cue.animation.currentTime!==null&&cue.animation.currentTime>=cue.contactAt)land(cue.index);
-   if(arrived.size<cues.length)ticker=requestAnimationFrame(tick);
-  };
-  ticker=requestAnimationFrame(tick);
-  Promise.allSettled(flights).then(finish);
- }catch{finish();}
+   const end=targetFor(i)?.getBoundingClientRect();if(!end?.width){finish();return;}
+   const tx=end.x+end.width/2,ty=end.y+end.height/2,source=fc.lightsRef.current.parentElement.querySelector(`[data-sym="${cell}"]`)?.getBoundingClientRect();
+   const sx=source?source.x+source.width/2:innerWidth/2,sy=source?source.y+source.height/2:innerHeight*.5;
+   // Voo e impacto IGUAIS aos da roleta (Fortune Circus: arco que sobe 65, gira 360°, encolhe 1.15→0.6, 520ms, brilho no destino).
+   const stg=document.querySelector('.park-circus-stage')?.getBoundingClientRect(),sc=stg?.width?stg.width/453:1,S=64*sc,H=S/2,dx=tx-sx,dy=ty-sy;
+   const node=document.createElement('img');node.src='/assets/symbols/shield-defense-rainbow-gold-v1.webp';node.alt='';node.className='park-flying-ticket';node.style.cssText='position:fixed;left:0;top:0;width:'+S+'px;height:'+S+'px;object-fit:contain;pointer-events:none;z-index:9999;opacity:0;will-change:transform,opacity';document.body.append(node);nodes.push(node);
+   const pop=document.createElement('i');pop.style.cssText='position:fixed;left:'+(tx-H)+'px;top:'+(ty-H)+'px;width:'+S+'px;height:'+S+'px;border-radius:50%;pointer-events:none;z-index:9999;opacity:0;background:radial-gradient(circle,rgba(255,240,180,.95),rgba(255,190,60,0) 70%)';document.body.append(pop);nodes.push(pop);
+   const frames=Array.from({length:11},(_,k)=>{const u=k/10,e=u*u*(3-2*u),lift=-65*sc*Math.sin(Math.PI*u);return {offset:u,opacity:u<.05?u*20:1,transform:`translate(${(sx-H+dx*e).toFixed(1)}px,${(sy-H+dy*e+lift).toFixed(1)}px) rotate(${(360*e).toFixed(0)}deg) scale(${(1.15-.55*e).toFixed(2)})`};});
+   const simple=[{transform:`translate(${sx-H}px,${sy-H}px) scale(.8)`,opacity:0,offset:0},{transform:`translate(${sx-H}px,${sy-H}px) scale(.8)`,opacity:1,offset:.125},{transform:`translate(${tx-H}px,${ty-H}px) scale(.6)`,opacity:1,offset:1}];
+   const keys=calm?simple:frames,arrival=node.animate(keys,{duration:duration*contact,easing:calm?'linear':'cubic-bezier(.5,0,.6,1)',fill:'both'});anims.push(arrival);
+   // The opaque endpoint is held until its note/count cue has run, even on a late frame.
+   await arrival.finished;if(ended)return;land(i);
+   node.animate([{opacity:1},{opacity:0}],{duration:100,fill:'forwards'});const fade=pop.animate([{transform:'scale(.3)',opacity:0},{transform:'scale(1.2)',opacity:1,offset:.3},{transform:'scale(1.8)',opacity:0}],{duration:420,fill:'forwards'});anims.push(fade);await fade.finished;
+  }
+  finish();
+ })().catch(finish);
 }
 
 function celebrateClover(fc,lines){

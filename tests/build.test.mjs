@@ -13,7 +13,7 @@ test('production publishes Circus, the controller Penalty route and safe archive
   assert.equal([...html.matchAll(/src="\.\/cloud\/client.js"/g)].length,1);
   for(const match of html.matchAll(/<(?:script|x-import)\b[^>]*\b(?:src|from)="(\.\/[^"?#]+)"/g))await access(path.join('dist',match[1]));
  }
- for(const file of ['runtime/three.module.js','runtime/three.core.js','assets/symbols/sym-scepter.png','ui/park/controller-reserved.svg','assets/tony/head.webp','assets/tucker/head.webp','assets/ray/head-v1.webp'])await access('dist/'+file);
+ for(const file of ['runtime/three.module.js','runtime/three.core.js','assets/symbols/sym-scepter.png','ui/park/controller-reserved.svg','assets/symbols/shield-defense-rainbow-gold-v1.webp','assets/tony/head.webp','assets/tucker/head.webp','assets/ray/head-v1.webp'])await access('dist/'+file);
  assert.equal(await readFile('dist/cloud/firebase-config.js','utf8'),await readFile('cloud/firebase-config.production.js','utf8'));
  for(const file of ['dist/ui/park/client.js','dist/cloud/client.js','dist/Fortune Circus.dc.html']) {
   assert.doesNotMatch(await readFile(file,'utf8'),/mobile-preview|mock-wallet|test-wallet|data-preview-preset|Trevos cheios|PRÉVIA · MOEDAS DE TESTE|testFill/,'Production must never include preview controls or local balance');

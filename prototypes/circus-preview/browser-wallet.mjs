@@ -12,11 +12,10 @@ const SYM={ticket:10,circus:2,cape:0,coin:6,diamond:8,crown:7,cedar:5,controller
 const trio=s=>{const f=[0,2,6,7,8,10].filter(x=>x!==s);return [s,s,s,f[0],f[1],f[2],f[3],f[4],f[0]];};
 const gridFor=m=>m==='full-clover'?trio(5):m in SYM?trio(SYM[m]):m==='wheel'?[11,0,2,6,7,8,10,2,6]:m==='goodluck'||m==='lose'||m==='villain-one'||m==='villain-pair'?[0,2,6,7,8,10,2,6,0]:m==='spacewin'?Array(9).fill(7):m==='bigwin'?[7,7,7,7,7,7,0,2,6]:[7,7,7,7,7,7,0,2,6];
 const PICKS=[
- ['ticket','Ingresso',"/assets/symbols-v7.webp|1200% 100%|90.909% 50%"],['circus','Circo',"/assets/symbols-v7.webp|1200% 100%|18.182% 50%"],['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
+ ['ticket','Ingresso','/assets/machine/ticket-symbol-v3.webp|contain|50% 50%'],['circus','Circo',"/assets/symbols-v7.webp|1200% 100%|18.182% 50%"],['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
  ['diamond','Diamante',"/assets/symbols-v7.webp|1200% 100%|72.727% 50%"],['crown','Coroa',"/assets/symbols-v7.webp|1200% 100%|63.636% 50%"],['tony','Tiger','/assets/tony/head.webp|contain|50% 50%'],['tucker','Toucan','/assets/tucker/head.webp|contain|50% 50%'],
- ['ray','Ray','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Trevo',"/assets/symbols-v7.webp|1200% 100%|45.455% 50%"],['goodluck','Good Luck (barra cheia)',"/assets/symbols/sym-candy.webp|contain|50% 50%"],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
- ['villain-one','Vilão avulso','/assets/tony/head.webp|contain|50% 50%'],['villain-pair','Par de vilões','/assets/tony/head.webp|contain|50% 50%'],
- ['full-clover','Trevos cheios','/assets/symbols/clover-rainbow-gold-v1.webp|contain|50% 50%'],
+ ['ray','Ray','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Trevo','/assets/symbols/shield-defense-rainbow-gold-v1.webp|contain|50% 50%'],['goodluck','Good Luck (barra cheia)','/assets/machine/meter-bolt-rainbow-v1.webp|contain|50% 50%'],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
+ ['full-clover','Trevos cheios','/assets/symbols/shield-defense-rainbow-gold-v1.webp|contain|50% 50%'],
  ['lose','Sem trinca',''],['bigwin','Big win',''],['spacewin','Super win',''],['wheel','Roleta (5 guardadas)',"/assets/symbols-v7.webp|1200% 100%|100.000% 50%"]];
 function badge(){let b=document.getElementById('kr-preview-pick');if(!forced){b?.remove();return;}if(!b){b=document.createElement('button');b.id='kr-preview-pick';b.type='button';b.onclick=openPicker;b.style.cssText='position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:99998;padding:8px 16px;border:0;border-radius:999px;font:800 15px/1 Baloo\\ 2,system-ui,sans-serif;color:#4a1a00;background:linear-gradient(180deg,#fff1a8,#f0a018);box-shadow:0 3px 0 #8a4a05,0 6px 14px #0006';document.body.append(b);}b.textContent='🎯 '+(PICKS.find(p=>p[0]===forced)?.[1]||forced)+' · trocar';}
 function openPicker(){document.getElementById('kr-preview-picker')?.remove();const o=document.createElement('div');o.id='kr-preview-picker';o.setAttribute('role','dialog');
@@ -30,6 +29,11 @@ function openPicker(){document.getElementById('kr-preview-picker')?.remove();con
   else{const i=document.createElement('div');i.style.cssText='width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:26px';i.textContent=id==='lose'?'✕':id==='wheel'?'◎':id==='random'?'🎲':'★';b.append(i);}
   b.append(document.createTextNode(label+(off?' (em breve)':'')));b.onclick=()=>{forced=id==='random'?null:id;o.remove();badge();};g.append(b);};
  mk('random','Aleatório','');PICKS.forEach(p=>mk(...p));card.append(g);
+ // Cedros sempre cheios (só prévia): o feitiço nunca acaba enquanto estiver ligado.
+ {const ck='kingRico.preview.cedrosFull',on=localStorage.getItem(ck)==='1',t=document.createElement('button');t.type='button';
+  t.style.cssText='display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border:0;border-radius:14px;cursor:pointer;font-family:inherit;font-weight:800;font-size:16px;'+(on?'color:#0e3a1e;background:linear-gradient(180deg,#a6ffc4,#2ec962);box-shadow:inset 0 0 0 2px #fff':'color:#fff3c4;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,210,87,.35)');
+  t.textContent=(on?'✓ ':'')+'CEDROS SEMPRE CHEIOS'+(on?' (ligado)':'');
+  t.onclick=()=>{if(on)localStorage.removeItem(ck);else{localStorage.setItem(ck,'1');localStorage.setItem('kingRico.preview.cedros','3');}globalThis.KingRicoCedroPaint?.();openPicker();};card.append(t);}
  const ok=document.createElement('button');ok.type='button';ok.textContent='FECHAR';ok.style.cssText='align-self:center;padding:10px 40px;border:0;border-radius:999px;font-weight:800;font-size:18px;font-family:inherit;color:#4a1a00;background:linear-gradient(180deg,#ffe27a,#f0a018);box-shadow:0 4px 0 #8a4a05;cursor:pointer';ok.onclick=()=>o.remove();card.append(ok);
  o.onclick=e=>{if(e.target===o)o.remove();};o.append(card);document.body.append(o);}
 globalThis.KingRicoPreviewPicker=openPicker;

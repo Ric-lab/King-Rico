@@ -21,9 +21,10 @@ with sync_playwright() as p:
   page.wait_for_function('document.querySelector(".park-tucker-scene")?.dataset.phase==="perched"');page.wait_for_timeout(520)
   assert page.locator('[data-park-tucker="true"]').count()==3
   assert page.locator('.park-tucker-scene ellipse').count()==3
-  assert page.locator('.park-basket').evaluate('e=>getComputedStyle(e).visibility')=='visible'
+  # V7 wireframe hides the old counter; the legacy theft still uses its anchor.
+  assert page.locator('.park-basket').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   assert page.evaluate('__fc.state.peaches')==expected and page.evaluate('KingRicoCloud.player.peaches')==max(0,expected-stolen)
-  bird=page.locator('.park-tucker-bird').bounding_box();basket=page.locator('.park-basket').bounding_box()
+  bird=page.locator('.park-tucker-bird').bounding_box();basket=page.locator('.park-basket').evaluate('e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}}')
   assert abs(bird['x']+bird['width']*.49-(basket['x']+basket['width']*.5))<1.5
   assert abs(bird['y']+bird['height']*.945-(basket['y']+basket['height']*.12))<1.5
   page.screenshot(path=f'work/preview-tucker-perched-{mode}.png')
@@ -42,7 +43,8 @@ with sync_playwright() as p:
   assert page.evaluate('KingRicoCloud.player.balance')==before-10
   page.screenshot(path=f'work/preview-tucker-result-{mode}.png')
   dialog.get_by_role('button',name='CONTINUAR',exact=True).click();scene.wait_for(state='detached')
-  assert page.locator('.park-basket').evaluate('e=>getComputedStyle(e).visibility')=='visible'
+  # V7 wireframe hides the old counter; the legacy theft still uses its anchor.
+  assert page.locator('.park-basket').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
   assert page.evaluate('__fc.state.peaches')==max(0,expected-stolen)
   page.screenshot(path=f'work/preview-tucker-returned-{mode}.png')
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)

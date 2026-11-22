@@ -1,11 +1,237 @@
-## Referência do botão Coin Master —20/11/2026, Codex
+## Escudo nos rolos + voos do escudo e da roleta aos contadores ovais — Antigravity, 21/11
+Base `96d9960` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
+- Célula 5 da slot machine trocada do trevo para `assets/symbols/shield-defense-rainbow-gold-v1.webp`:
+  `ui/park/cabinet.css` (casas fixas e fitas giratórias), tabela `POWER-UPS` em
+  `Fortune Circus.dc.html`, voo grátis em `ui/park/clover-free-spin.js` e
+  miniaturas do seletor `🎯` em `prototypes/circus-preview/browser-wallet.mjs`.
+- Voo do escudo (`ui/park/shield-wallet.js`, `ui/park/motion.js`, `ui/park/defense.js`,
+  `ui/park/clover-free-spin.js`): `shieldTarget()` agora aponta para o contador
+  oval visível sob `−` (`.park-key-count-shield img`), corrigindo o desvio de ~39px
+  para cima da carteira oculta no HUD e pulsando o contador na chegada.
+- Voo da roleta (`dance()` em `Fortune Circus.dc.html`): deixa de mirar a antiga
+  `.park-basket` no topo direito (oculta) e voa em camada `z-index: 70` direto ao
+  contador oval visível sob `+` (`.park-key-count-wheel img`) com brilho e pulso.
+- Testes: `preview_motion_browser.py` e `special_feedback_browser.py`
+  (`clover`, `wheel`, `defense`, `free`) passaram após `build:preview`; capturas
+  conferidas visualmente (`work/special-clover-gold.png`,
+  `work/preview-tickets-no-preference.png`, `work/special-clover-defense-flight.png`,
+  `work/special-free-clover-flight.png`, `work/wheel-flight-{mid,land}.png`).
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
 
-Vídeo do upload `38a9f0b` movido intacto de assets/ para
-`guidelines/references/coin-master/spin-button.mp4` (6,83 s). Análise quadro a
-quadro e folha do primeiro clique no README da mesma pasta. Referência de estudo,
-fora do runtime; nenhuma interface ou economia alterada. Commit de fontes apenas.
-Próximo passo: usar a referência ao receber o pedido de ajustar o clique;
-preservar a geometria atual até essa iteração, sem copiar a arte comercial.
+## Escudo arco-íris com coroa dourada e joia azul — Antigravity, 21/11
+Base `a69d719` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
+- Gerado `assets/symbols/shield-defense-rainbow-gold-v1.{png,webp}` (1254×1254 /
+  512×512 RGBA) mantendo silhueta e borda dourada originais, trocando o fundo
+  verde por arco-íris contínuo no padrão da roleta/trevo e a coroa interna para
+  ouro 3D com joia hexagonal azul-safira (`sym-crown.png`).
+- Aplicado em `ui/park/index.js` (carteira oculta, contador redondo e modal
+  *Seus escudos*), `ui/park/defense.js`, `ui/park/motion.js` e `ui/art-manifest.json`;
+  testes `tests/shield_wallet_browser.py`, `tests/build.test.mjs` e
+  `guidelines/asset-pipeline.md` / `DESIGN-SYSTEM.md` atualizados. Arquivo
+  anterior `-green-crown-v1.*` preservado como histórico.
+- Conferência visual nos prints `work/shield-wallet-{320,390}.png` e
+  `work/special-clover-defense-flight.png`; `shield_wallet_browser.py`,
+  `special_feedback_browser.py` (`defense`) e `tests/build.test.mjs` passaram.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
+## Construção única da tecla azul — Codex,21/11
+Base `64b11f2`. Refeito o encaixe como um corpo: tampa, extrusão e aro derivam
+do MESMO contorno. Base dourada contorna o pé da extrusão com espessura uniforme,
+sem a plataforma antiga maior e desencaixada. Altura azul9px, curso8px, sem
+rotateX no clique. Formato externo reto/interno inclinado e posições preservados.
+Teste focado e conferência visual passaram. Publicação na prévia solicitada pelo
+dono após o checkpoint `af7f767`; este commit dispara o workflow Pages existente.
+Próximo passo: dono validar na https://ric-lab.github.io/King-Rico/Preview
+Oficial preservado.
+
+## Junção tampa/lateral — Codex,21/11
+Base `94a6d34`. Corrigida a lateral azul: agora deriva exatamente do path da
+tampa, deslocado14px para baixo, em ambos os lados. A extrusão inclui a aresta
+inclinada inteira; antes havia somente a frente, deixando o encontro truncado.
+Teste focado spin_press_browser e inspeção visual. Checkpoint sem deploy.
+Próximo passo: validar a amostra e agrupar publicação; URL pública ainda anterior.
+
+## Contorno externo das teclas — Codex,21/11
+Base `72f41cf`. Nova crítica do dono: ainda parece estranho. Corrigido o
+paralelogramo: bordas externas verticais, somente a borda interna segue o spin.
+Tampa e base redesenhadas juntas, extrusão vertical; símbolos recentralizados.
+Teste local focado spin_press_browser e conferência visual. Checkpoint de fontes
+com [skip ci] para evitar outro ciclo completo de deploy durante a iteração.
+Próximo passo: dono validar a amostra; agrupar aprovação para atualizar a prévia.
+A URL pública ainda não representa este checkpoint.
+
+## Correção do encaixe azul — Codex,21/11
+Base `b6fc55c`. Dono rejeitou a tampa torcida e o vão desigual entre frente e
+fundo. Redesenhados os seis SVGs v2: arestas superiores/inferiores horizontais,
+extrusão azul vertical (sem deslocamento lateral), perfil interno paralelo ao
+spin na frente e atrás. Cores, posições, símbolos e mecânica preservados.
+Teste focado: spin_press_browser. Próximo passo: validar o encaixe na prévia.
+
+## Teclas laterais desenhadas para acompanhar o spin — Codex
+
+Base `175697b`. O dono esclareceu que girar/inclinar o conjunto não resolve.
+Seis SVGs `bet-key-{left,right}-{base,cap,side}-v2.svg` redesenham os contornos
+internos para acompanhar as laterais do spin. Bases niveladas, símbolos retos,
+sem rotação/skew do conjunto. Cada peça tem90px; esquerda14px, direita349px.
+Mantidos ouro, azul claro, movimento de clique e funcionamento das apostas.
+Conferência visual e teste spin_press_browser: toque, base fixa, aposta, auto e
+cancelamento. Build de produção conferido após integração.
+Próximo passo: dono validar o encaixe na prévia. Oficial sem alteração.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Identidade King Rico na forma aprovada —20/11/2026 (Codex)
+
+Base `2eaead6`. Dono aprovou FORMA/clique e pediu: ouro, roxo, fonte própria e
++/− azuis claros no mesmo estilo. Os paths do botão principal são idênticos aos
+SVGs aprovados; somente as cores mudaram, com novos nomes para evitar cache.
+- spin-king-base-gold-v1, cap-purple-v1 e side-purple-v1: base dourada/tampa roxa.
+- Baloo 2, peso800, normal, só aposta. Sem itálico nem textos novos.
+- Teclas laterais têm base dourada fixa, lateral azul e tampa azul-clara separada;
+  afundam sem mover a base. Mesmo alvo/posição, símbolos e ação de aposta.
+- Contorno de hold/auto, sons, escudos e regras mantidos. Passaram o teste focado
+  de clique/auto/cancelamento/+/− e a conferência da paleta nos dois modos de movimento.
+Próximo passo: dono conferir o acabamento na prévia; não publicar main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Botão da referência + cinco escudos —20/11/2026, Codex
+
+Base `e841597`. Pedido atual substitui a proposta coral/GIRAR: copiar a FORMA
+Coin Master, só aposta na tampa, luz percorre a borda para ligar auto.
+- Três SVGs editáveis spin-cm-{base,side,cap}-v1 em assets/machine, medidos pela
+  gravação. Tampa achatada/arqueada, laterais inclinadas e base azul-cinza fixa.
+  Sem GIRAR, moeda ou dica dentro do botão. Mesma posição/alvo na tela.
+- Flash100ms no contato; path SVG percorre650ms e o auto usa o mesmo tempo.
+  Percurso completo fica aceso no auto; cancelar/parar limpa. Native wager intact.
+- + com duas linhas SVG centradas, espessura igual ao −; teste confere1 incremento.
+- Cinco escudos em coluna abaixo do saldo, preenchidos de cima para baixo; vazios
+  ficam apagados. Mesmo estoque salvo, sem contador numérico visível.
+- Coleta voa ao slot que será preenchido; defesa sai do último cheio. O voo
+  segura a chegada opaca antes da nota/contagem e só depois desaparece: evita
+  nota após sumir quando o navegador atrasa quadros. Cadência nominal620/400ms.
+  Ray copia e
+  devolve o conjunto atualizado. paintShields concentra a apresentação do estoque.
+Verificação local: shield_wallet, spin_press, special_feedback, Ray, Circus v6
+e preview_motion passaram. Máscaras/voos chegam ao slot correto; notas individuais
+antes do fade. A tolerância de relógio de parede admite quadros do compositor,
+mas o teste mantém620/400ms nominais, um item visível e contato opaco.
+Próximo passo: dono conferir a FORMA/clique na prévia; não levar à main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Spin coral — refinamento livre pedido pelo dono,20/11/2026 (Codex)
+
+Base `a1cbd43`. Proposta na prévia, ainda aguardando avaliação estética do dono.
+Tampa vermelho-coral elevada sobre base dourada quente; lateral vinho conecta
+os botões −/+. GIRAR é o destaque claro, com moeda+aposta em segunda linha.
+A tampa começa no topo do botão, lateral26px; desce23px e inclina10° ao apertar,
+deixando3px de lateral e uma cavidade menor. Mantém65/140/160ms e alvo original.
+
+A paleta do pulso vem agora da variável CSS --park-spin-paint, inclusive ao
+recomeçar o ciclo. Não pode retornar ao vinho antigo no primeiro giro.
+Corrigido scroll horizontal interno da cena ao focar/capturar o controle3D:
+container fixo usa overflow:clip; teste confere que a tela não desloca32px.
+Passaram toque/auto/cancelamento e preview_motion (sons/pulso/bônus). Testes da
+paleta e poses foram atualizados para a direção autorizada, sem mexer em regras.
+Próximo passo: dono testar a aparência/sensação na prévia; oficial não alterado.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Clique mecânico do spin —20/11/2026, Codex
+
+Base `d2f4e32`; aplicada a referência real em guidelines/references/coin-master/.
+Aro/base imóveis. Tampa e texto descem22px, com projeção rígida22° que encurta
+sua superfície; a lateral frontal cai de25 para3px. A cavidade atrás é escura,
+não um preenchimento dourado. Botão mantém vinho/dourado e geometria do layout.
+
+Descida65ms; toque curto completa140ms de contato visual; retorno160ms.
+Movimento reduzido usa pose imediata e mínimo80ms. Isso não atrasa aposta/rolos:
+só a remoção de data-tactile-held é temporizada. Sons/hápticos preservados.
+Regressão spin_press_browser cobre toque real, aro imóvel, texto na tampa,
+automático, cancelamento e ausência de giro extra. Passaram localmente os testes
+do clique e preview_motion_browser (inclui sons/pulso/bônus). Screenshots no CI.
+Próximo passo: dono avaliar a sensação na prévia; não promover à main sem pedido.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Vídeo do botão Coin Master compartilhado —20/11/2026, Codex
+
+Referência organizada na main em `28510d0` e copiada integralmente nesta branch:
+`guidelines/references/coin-master/` contém MP4 original de6,83 s, folha do clique
+e README com análise visual/timings. SHA-256 preservado; fora de assets/runtime.
+Próximo passo: usar a referência na próxima iteração do clique. O botão atual,
+layout, sons e economia não foram modificados. Checkpoint de fontes, sem deploy.
+
+## Ajuste de espaços e máscaras —20/11/2026, Codex
+
+Base `716d60e`. Gap prêmio→máquina reduzido de23,5 para11,75 unidades (50%).
+Gabinete sobe11,75; spin e −/+ sobem18,5. Gap máquina→spin passa de22,32 para
+15,62 unidades (−30%). Valores nativos do palco453×802, escalados juntos.
+Pulso dourado e apagado foram movidos para dentro de `.park-cabinet-body`:
+antes ficavam fora do grupo e conservavam a geometria anterior. A regressão
+confere os limites de cada máscara contra cada rolo em320/390/412px.
+Passaram layout móvel e as oito linhas premiadas com voo de moedas.
+Próximo passo: dono conferir a prévia. Continua sem alteração da economia/oficial.
+https://ric-lab.github.io/King-Rico/Preview
+
+## Wireframe do dono — alinhamento Circus v7 (20/11/2026, Codex)
+
+Parti de `645c712`, mantendo a etapa do escudo e a economia existente.
+- Mostrador branco e valor estão juntos em `.park-prize-block`, com posição única
+  (158px no palco nativo); o número não pode subir separado da placa.
+- Máquina em `.park-cabinet-body`: fundo, rolos, efeitos e aro recebem uma única
+  transformação. Removida a chamada de `machine-scale.js`, que trocava a origem
+  dos rolos por peça e deixava o papel sair por baixo do aro. Não reativar.
+- Spin começa em620px nativos (antes694px). −/+ centralizados na mesma altura.
+  Em390×844, o botão começa em573px: sobe64px e sobra cenário antes do banner.
+- Contador de roleta oculto. Estado/recibos antigos continuam disponíveis até
+  a migração de economia v7; nenhuma chance, pagamento ou som foi alterado.
+- Conferência visual em320/390/412px e giro premiado real: valor cabe na placa,
+  papéis dentro do aro, destaque/linha alinhados. Regressão própria no runner.
+  Passaram circus_payout_browser (linhas/moedas), preview_motion_browser
+  (roleta/subida/retorno) e special_feedback (contador oculto). A regressão
+  legada do Tucker agora mede a âncora sem exigir que o contador reapareça;
+  v6 lê o texto do contador oculto pelo DOM, não pelo texto visível.
+
+Próximo passo: dono validar a composição no link único. Continuar o PLANO-V7
+pela etapa3; decisão do Ray continua aberta. Oficial não foi alterado.
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
+## Continuação do Claude — escudo v7, etapa 2 (20/11/2026, Codex)
+
+Base puxada: `86e1f66` (máquina 10% maior, giro/auto/botões v7). Preservado o
+layout de Claude. Plano atual: docs/PLANO-V7.md; o topo antigo estava desatualizado.
+- Arte do escudo aprovada guardada em PNG e WebP: assets/symbols/shield-defense-green-crown-v1.*
+- Contador 0/5 no cabeçalho, abaixo do saldo, com botão de toque mínimo44px.
+  Mesmo estoque/recibos salvos v6; sem novo saldo local de defesa.
+- Defesa/coleta usam o escudo; origem e destino dos voos acompanham o novo lugar.
+  Ray carrega a placa real e ela retorna com o estoque confirmado. Popup atualizado.
+- Verificação: defesa Tony e consumo único, v6/coleta/defesas, Ray/reload;
+  quatro larguras móveis e saldo100.000.000,65, com fonte preservada.
+  Unitários de defesa e giro grátis passaram. A regressão dos contadores agora
+  distingue o escudo horizontal no HUD da cesta vertical. Capturas em work/, sem erros JS/404.
+- Só interface/arte: motor, chances, pagamentos e regras não alterados. Não publicar main.
+- A regra nova do Ray está pendente do dono; enquanto isso, conserva o comportamento
+  v6 (rouba o estoque). Royal Rico ainda paga cedros locais: não declarar a migração
+  dos prêmios concluída. Bubble Rico e economia v7 continuam pendentes.
+
+Próximo passo exato: dono validar escudo/contador e decidir Ray; seguir a etapa3
+(tirar Happeach/Tucker/feitiço) do PLANO-V7, depois trevo na barriga e prêmios dos
+minigames. O plano pede uma etapa de cada vez, sem promover o pacote incompleto.
+Prévia compartilhada: https://ric-lab.github.io/King-Rico/Preview
+
+## Artes para Claude — 17/11/2026 (Codex)
+
+- Logo aprovado: `assets/brand/king-rico-wordmark-color-crown-v1.png`.
+  KING sobre RICO, letras coloridas, losango no K e coroa padrão com pedra azul,
+  sem tecido roxo. Guardado, sem aplicar à interface.
+- Trevo para o bônus de trinca: `assets/symbols/clover-green-bonus-v1.webp`
+  (512×512, transparente). Fonte: mesmo nome em PNG (1254×1254).
+  TUDO verde: folhas, contornos e caule. A proposta verde com dourado foi
+  rejeitada. Não substituir o trevo arco-íris normal sem pedido do dono.
+- Apenas assets/documentação compartilhados; sem publicar prévia ou oficial,
+  sem alterar regras, matemática ou animações.
+
+Próximo passo: Claude pode usar o WebP verde no bônus de trinca; o logo aprovado
+fica reservado até o dono indicar a aplicação. Catálogo: assets/brand/APPROVED-ART.md.
 
 ## Publicação oficial autorizada — 17/11/2026 (Codex)
 
@@ -1294,3 +1520,13 @@ Regras gerais ficam em `docs/skills/` — não repetir aqui.
 
 ## Próximo passo
 - Aguardar feedback do dono sobre a versão publicada. Clown permanece guardado; Basquete/Bubble Plinko/Race Horse são apenas cards Em breve. Não implementar os três jogos sem novo pedido. Preservar Bounce, Pênalti, Flying e carteira compartilhada.
+
+## Referência do botão Coin Master —20/11/2026, Codex
+
+Vídeo do upload `38a9f0b` movido intacto de assets/ para
+`guidelines/references/coin-master/spin-button.mp4` (6,83 s). Análise quadro a
+quadro e folha do primeiro clique no README da mesma pasta. Referência de estudo,
+fora do runtime; nenhuma interface ou economia alterada. Commit de fontes apenas.
+Próximo passo: usar a referência ao receber o pedido de ajustar o clique;
+preservar a geometria atual até essa iteração, sem copiar a arte comercial.
+

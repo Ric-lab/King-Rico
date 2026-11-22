@@ -1,8 +1,238 @@
 {
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-21",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "p-escudo-rolos-voos",
+      "title": "Escudo na slot machine e voos do escudo e da roleta aos contadores ovais",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Troca o trevo na célula 5 (fitas, casas fixas, tabela POWER-UPS, giro grátis e picker) pelo escudo shield-defense-rainbow-gold-v1.webp; voo do escudo mira o contador oval sob − (.park-key-count-shield) e voo da roleta desce ao contador oval sob + (.park-key-count-wheel) acima do z-index 61."
+    },
+    {
+      "id": "p-escudo-arco-iris",
+      "title": "Escudo: interior arco-íris (padrão roleta/trevo) e coroa dourada com joia azul",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Novo sprite assets/symbols/shield-defense-rainbow-gold-v1.{png,webp} com preenchimento arco-íris contínuo e coroa dourada com diamante azul (sym-crown.png) no contador, voo, modal e defesa."
+    },
+    {
+      "id": "i-wireframe-v7",
+      "title": "Composição do Circus conforme wireframe: prêmio unido, máquina alinhada e spin alto",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Refinamento: metade do espaço prêmio→máquina e menos30% entre máquina→spin. Dourado e apagado no mesmo grupo dos rolos; máscaras conferidas em três celulares."
+    },
+    {
+      "id": "i-bubble-rico",
+      "title": "Bubble Rico: minigame novo (bubble shooter) pagando em escudos",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Mesmo formato do Royal Rico. Detalhar regras antes de construir. Ver docs/PLANO-V7.md.",
+      "createdAt": "2026-11-20T04:15:45.127Z",
+      "updatedAt": "2026-11-20T04:15:45.127Z"
+    },
+    {
+      "id": "i-sem-tucker",
+      "title": "Tirar o Tucker",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "O Tucker roubava Happeach; com o Good Luck no trevo da barriga, ele fica sem função. Vilões restantes: Tony e Ray.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:07:27.180Z"
+    },
+    {
+      "id": "i-turbo-fixo",
+      "title": "Velocidade do spin sempre no turbo; linha dourada pisca 40% menos",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Remove o botão de turbo. Tempo da linha vencedora × 0,6.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-auto-segurar",
+      "title": "Auto = segurar o botão de spin",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Toque = 1 giro; apertar e segurar ~0,6 s liga o auto (com feedback de carga no botão). Tocar de novo desliga. Remove o botão de auto.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-spin-coinmaster",
+      "title": "Botão de spin no estilo do Coin Master",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": null,
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Refeito corpo da tecla: tampa/lateral/aro compartilham contorno; aro fino acompanha extrusão9px; clique8px sem rotateX. Aguardando validação da amostra; checkpoint sem deploy.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-aposta-menor",
+      "title": "Seletor de aposta menor, abaixo do spin",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Mais discreto; o spin vira o protagonista.",
+      "createdAt": "2026-11-20T04:02:23.538Z",
+      "updatedAt": "2026-11-20T04:02:23.538Z"
+    },
+    {
+      "id": "i-reorg-v7",
+      "title": "Plano v7 — ver docs/PLANO-V7.md (fonte única do rumo)",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Tudo o que sai, fica, muda e a ordem de execução está em docs/PLANO-V7.md.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T04:15:45.127Z"
+    },
+    {
+      "id": "i-trevo-barriga",
+      "title": "Good Luck = trevo de 4 folhas na barriga do King Rico",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Conforme joga, as folhas acendem. Com as 4 acesas, ele solta 4 feitiços (reaproveitar os efeitos do prêmio do Royal Rico, que ficaram bons). Substitui a barra lateral como gatilho do Good Luck.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-dados",
+      "title": "(Cancelado) Dados nas barras",
+      "status": "cancelled",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Cancelado em 20/11: o escudo ganha um asset de formato diferente, que não confunde com a roleta. A roleta continua sendo o multiplicador das barras (sem animação nova).",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T04:07:27.180Z"
+    },
+    {
+      "id": "i-escudo",
+      "title": "Escudo = defesa contra os vilões (até 5, guardados perto do saldo)",
+      "status": "preview",
+      "category": "Ideias",
+      "agent": "Codex",
+      "commit": null,
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Cinco escudos verticais junto ao saldo: slots cheios/apagados, coleta e defesa no slot real, mesmo estoque v6. Ray mantém regra antiga enquanto a decisão v7 está aberta.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T04:07:27.180Z"
+    },
+    {
+      "id": "i-roleta-jogos",
+      "title": "Controles alternam: Royal Rico → Bubble Rico → Royal Rico…",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Decidido em 20/11: por enquanto são 2 minigames (Royal Rico + 1 novo). A cada trinca de controles abre o próximo da fila, alternando. Sem roleta de sorteio. Guardar no estado do jogador qual foi o último.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T04:15:45.127Z"
+    },
+    {
+      "id": "i-pagam-escudos",
+      "title": "Royal Rico e os outros 2 minigames pagam em escudos",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Liga os minigames à defesa contra vilões.",
+      "createdAt": "2026-11-20T03:24:02.198Z",
+      "updatedAt": "2026-11-20T03:24:02.198Z"
+    },
+    {
+      "id": "i-cedro-sai",
+      "title": "Decidir: tirar o cedro do jogo",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia (19/11): o feitiço automático é bonito, mas acontece sozinho e não encaixa. Proposta: tirar o cedro; o prêmio do Royal Rico passa a ser o cofrinho/Plinko.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
+    {
+      "id": "i-royal-rico-v2",
+      "title": "Royal Rico v2: capturar o tigre → canhão no cofrinho → Plinko",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia do dono (19/11): estilo fase do ovo do Royal Match — levar o tigre até o fundo do tabuleiro; ao chegar vira moeda e voa para o cofrinho. Fim: transição para um canhão; 3 a 10 tiros (só tocar) no cofrinho, que cresce e racha; no último estoura. As moedas caem num Plinko com multiplicadores (dono sugeriu 1,5·2,5·5·10·50·10·5·2,5·1,5). Cuidado: no Plinko a maioria cai no meio — 50× no centro paga demais; inverter (pontas altas) ou controlar a queda. Fases curtas (~15 movimentos, 3–6 tiros, Plinko automático). Reaproveitar o Plinko do Fingo. Dentro do RTP 90%.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
+    {
+      "id": "i-aposta-fixa",
+      "title": "Decidir: aposta fixa em 100 moedas (sem energia)",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "Claude",
+      "commit": null,
+      "demoUrl": null,
+      "notes": "Ideia (19/11): influência do Coin Master. A favor: tira decisão e botão confuso para a 3ª idade; conta do RTP mais simples. Sem energia (seria cópia e cria espera; anúncio de 1000 = 10 giros já faz esse papel). Talvez depois: “×2 por 1 giro” liberado por nível/evento.",
+      "createdAt": "2026-11-19T19:16:39.179Z",
+      "updatedAt": "2026-11-19T19:16:39.179Z"
+    },
+    {
+      "id": "t-colocar-o-mesmo-quadra-58",
+      "title": "Colocar o mesmo quadrado que esta atras da roleta e do trevo atras do raio para ele não ficar voando (mas tem que dimensionar bem para que o topo do quadrado fique alinhado ao topo da slot machine E a barra lateral não pode ser mexida e o raio ocupa mais do espaço do quadrado do a roleta e o trevo",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
+    {
+      "id": "t-se-tiver-0-roletas-o-t-69",
+      "title": "Se tiver 0 roletas o trevo não entra em ação pq não precisa\nO trevo ja não defende do ray e \nSe a pessoa tiver 0 moedas nem vai jogar então tbm não faz sentido\nA unica coisa é o trevo defender do roubo de roletas sem precisar... Isso precisa arrumar",
+      "status": "todo",
+      "category": "Economia & Regras",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": ""
+    },
     {
       "id": "t-trevo-e-raio-arco-iris-d",
       "title": "Trevo e raio arco-íris dourados aprovados",
@@ -16,7 +246,7 @@
     {
       "id": "p-goodluck-bolt-sprites",
       "title": "Good Luck: raio em 3 sprites 9:16 com núcleo branco e cor do líquido",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Antigravity",
       "commit": "",
@@ -26,7 +256,7 @@
     {
       "id": "p-goodluck-small-win",
       "title": "Good Luck: prêmios pequenos reais, sem piso de Big Win",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "",
@@ -36,7 +266,7 @@
     {
       "id": "p-reel-highlight-current",
       "title": "Primeira linha: impedir brilho/piscada de resultado antigo sem combinação na grade atual",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -46,7 +276,7 @@
     {
       "id": "p-clover-free-spin",
       "title": "Trevos cheios dão giro grátis persistente, sem nova cobrança",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "",
@@ -56,7 +286,7 @@
     {
       "id": "p-powerup-columns",
       "title": "6/6 Contadores de power-ups: asset acima e quantidade abaixo",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -66,7 +296,7 @@
     {
       "id": "p-goodluck-energy",
       "title": "Good Luck: raio iridescente cai no spin, drenagem e barra gasta fica vazia",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -76,7 +306,7 @@
     {
       "id": "p-villain-scatter",
       "title": "4/6 Suspense: vilões avulsos e pares em giros comuns",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -86,7 +316,7 @@
     {
       "id": "p-special-defense",
       "title": "3/6 Defesa: trevo atinge o vilão central, quebra a trinca e pode formar prêmio",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -96,7 +326,7 @@
     {
       "id": "p-special-wheel-audio",
       "title": "2/6 Roletas: música completa sincronizada à dança/voo, sem sobreposição",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -106,7 +336,7 @@
     {
       "id": "p-special-clover",
       "title": "1/6 Trevo: linha e fundo dourados, celebração especial antes da coleta",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -116,7 +346,7 @@
     {
       "id": "p-refino-barra-raspa",
       "title": "Revisão dos commits recentes: tinta contínua, paleta coerente e primeira raspagem sem perder vibração",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
@@ -136,7 +366,7 @@
     {
       "id": "t-melhorar-modal-da-rasp-29",
       "title": "Melhorar modal da raspadinha nao tem algo tipo \"raspe e ganhe!\"",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Antigravity",
       "commit": "",
@@ -157,7 +387,7 @@
     {
       "id": "p-trevo-roleta-goodluck",
       "title": "Trevo no lugar do cedro, Roleta guardada (0/5) no lugar do Happeach e barra lateral Good Luck aleatória com nuvem no topo",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Antigravity",
       "commit": "",
@@ -168,7 +398,7 @@
     {
       "id": "t-cedro-todos",
       "title": "Trevo defende do Tony e do Tucker — NUNCA do Ray (o Ray existe para roubar trevos; se o trevo o defendesse, perderia o sentido). Com 0 trevos não defende",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Claude / Antigravity",
       "commit": "",
@@ -178,7 +408,7 @@
     {
       "id": "t-ray-1a4",
       "title": "Ray rouba só de 1 a 4 trevos por vez (ajustar)",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Claude / Antigravity",
       "commit": "",
@@ -188,12 +418,12 @@
     {
       "id": "t-roleta-min",
       "title": "Giro da 5ª roleta e giro da barra cheia sempre pagam prêmio em moedas",
-      "status": "preview",
+      "status": "done",
       "category": "Economia & Regras",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia."
+      "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia. Atualização colocado apenas na roleta"
     },
     {
       "id": "t-controle-penalty",
@@ -208,7 +438,7 @@
     {
       "id": "t-raspadinha-rapida",
       "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Codex",
       "commit": "",
@@ -286,16 +516,6 @@
       "notes": "V3 dourado claro e proporção mais alta aprovados pelo dono: Okay. Largura preservada."
     },
     {
-      "id": "t-happeach-raio",
-      "title": "Happeach → raio pêssego (borda laranja, sem texto, rosto menor) + placa igual à do ingresso no lugar da cesta, com contador e raio caindo no spin",
-      "status": "todo",
-      "category": "Visual & Ritmo",
-      "agent": "",
-      "commit": "",
-      "demoUrl": "",
-      "notes": "Substituir cesta por placa com contador e ícone de raio pêssego."
-    },
-    {
       "id": "t-firestore-v6",
       "title": "Concluir regras Firestore v6 / persistência real (limite de 1.000 expressões) e conferir snapshot concorrente de cedros antes de publicar no oficial",
       "status": "done",
@@ -318,7 +538,7 @@
     {
       "id": "p-menu-tabela-3blocos",
       "title": "Tabela em 3 blocos (Prêmios, Power-ups, Vilões), só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 no header (fora do menu)",
-      "status": "preview",
+      "status": "done",
       "category": "Menu & Topo",
       "agent": "Claude",
       "commit": "1a7f198",
@@ -326,19 +546,9 @@
       "notes": "Pronto na prévia para avaliação do dono."
     },
     {
-      "id": "p-circus-v6",
-      "title": "Circus v6 na prévia: 6 pagantes (ingresso 0,4 · circo 0,8 · capa 1,2 · moeda 2,5 · diamante 5 · coroa 10), trinca de cedro (até 5) e atrações arquivadas",
-      "status": "preview",
-      "category": "Economia & Regras",
-      "agent": "Codex",
-      "commit": "c6bdb3c",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/circus/",
-      "notes": "Auditoria RTP ~90% concluída na prévia."
-    },
-    {
       "id": "p-tony-patada-som",
       "title": "Patada do Tony = um som só, contínuo (zuum que desce até o grave com impacto) e moedas saindo ao tocar CONTINUAR",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "f23d8d7",
@@ -348,7 +558,7 @@
     {
       "id": "p-tony-veu-tela-toda",
       "title": "Tony Tiger: efeito alaranjado/avermelhado na tela toda (preservando faixa de anúncio) durante as patadas",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Antigravity / Claude",
       "commit": "4bc80fa",
@@ -358,7 +568,7 @@
     {
       "id": "p-raspadinha-sfx",
       "title": "Sfx da raspadinha: raspar cada casa (mais alto), abrir casa (plim/toque grave), 3 iguais (fanfarra) e moedas subindo com tique do voo",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "b61619a",
@@ -368,7 +578,7 @@
     {
       "id": "p-roleta-sfx-voo",
       "title": "Roleta: tique original em arquivo WAV, sfx na parada e na ficha batendo no prêmio, e moedas voando uma única vez",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "6e00ec6",
@@ -378,7 +588,7 @@
     {
       "id": "p-tucker-asas",
       "title": "Tucker com duas batidas de asa no roubo da cesta",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": "fbe911d",
@@ -388,7 +598,7 @@
     {
       "id": "p-viloes-bigwin-sfx",
       "title": "Sons dos vilões, big win, spin igual ao turbo e volumes equalizados",
-      "status": "preview",
+      "status": "done",
       "category": "Sons",
       "agent": "Claude",
       "commit": "10f23cc",
@@ -448,7 +658,7 @@
     {
       "id": "t-meter-cor",
       "title": "Barra lateral: cor do giro não fica armazenada (após mudanças da v6)",
-      "status": "preview",
+      "status": "done",
       "agent": "Claude",
       "notes": "Causa: véu escuro dos tubos (.park-meter-dimmer, 76%) cobria a tinta depois que a luz passava. Véu baixou para 30% e a tinta ficou mais viva.",
       "demoUrl": "https://ric-lab.github.io/King-Rico/circus/?v=9"

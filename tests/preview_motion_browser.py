@@ -24,9 +24,9 @@ with sync_playwright() as p:
   page.goto(BASE+'/circus?demo=off');ready()
   rim=page.locator('.park-spin-iridescence')
   assert rim.evaluate('e=>getComputedStyle(e).display')=='none','Spin must keep its gold rim, without iridescence'
-  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-rim-gold-contour-v1.svg')
-  assert page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(100, 12, 36)'
-  assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(244, 201, 81)'
+  assert page.locator('.park-spin-rim>img').get_attribute('src').endswith('spin-king-base-gold-v1.svg')
+  assert 'spin-king-cap-purple-v1.svg' in page.locator('.park-spin-face').evaluate('e=>getComputedStyle(e).backgroundImage')
+  assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(255, 250, 240)'
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')
   spin_box=page.locator('[data-spin-btn]').bounding_box()
   page.mouse.move(spin_box['x']+spin_box['width']/2,spin_box['y']+spin_box['height']/2);page.mouse.down()
@@ -65,8 +65,8 @@ with sync_playwright() as p:
     assert note['attackRms']>note['decayRms']*2,audio
   ticket_cells=[0,1,2,3,4,6]
   page.evaluate('''values=>{
-   const fc=__fc,chime=fc.sfxTicket.bind(fc);window.ticketSounds=[];
-   fc.sfxTicket=(i)=>{if(fc._parkTicketsPlaying){const node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=document.querySelector('[data-tickets]').getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(i);};
+   const fc=__fc,chime=fc.hap.bind(fc);window.ticketSounds=[];
+   fc.hap=(kind,...rest)=>{if(kind==='basketIn'&&fc._parkTicketsPlaying){const i=fc._parkVisibleTickets-1-(window.__shBefore??0),node=document.querySelectorAll('.park-flying-ticket')[i],r=node.getBoundingClientRect(),target=(document.querySelector('.park-key-count-shield img')||document.querySelector('.kr-hud-row .park-shield-wallet [data-shield-slot="'+Math.max(0,Math.min(4,fc._parkVisibleTickets-1))+'"] img')).getBoundingClientRect();ticketSounds.push({at:performance.now(),count:fc._parkVisibleTickets,shown:document.querySelector('[data-tickets]').textContent,visibleFlights:[...document.querySelectorAll('.park-flying-ticket')].filter(n=>Number(getComputedStyle(n).opacity)>.1).length,opacity:Number(getComputedStyle(node).opacity),distance:Math.hypot(r.x+r.width/2-target.x-target.width/2,r.y+r.height/2-target.y-target.height/2)});}return chime(kind,...rest);};window.__shBefore=fc._parkVisibleTickets||0;
    const fetch=window.fetch;window.fetch=async(u,o)=>{const data=o?.body&&JSON.parse(o.body);if(data?.action!=='spin'||!values)return fetch(u,o);const list=values;values=null;const random=Math.random;let i=0;Math.random=()=>list[i++]??.99;try{return await fetch(u,o);}finally{Math.random=random;}};
   }''',draws_for_grid([5,5,5,5,5,6,5,7,8]))
   before=page.evaluate('(KingRicoCloud.park.cedros||0)')
@@ -91,8 +91,13 @@ with sync_playwright() as p:
   assert [int(x['shown'].split('/')[0]) for x in first['sounds']]==[before+1,before+2,before+3],first
   assert all(x['opacity']>.5 and x['distance']<3 and x['visibleFlights']==1 for x in first['sounds']),first
   arrivals=[x['at'] for x in first['sounds']]
-  expected=620 if mode=='no-preference' else 400
-  assert all(expected-65<b-a<expected+65 for a,b in zip(arrivals,arrivals[1:])),first
+  expected=620 if mode=='no-preference' else 400  # voo + apagar (100ms), igual à roleta
+  step=expected+320  # + brilho do impacto (420ms) antes do próximo escudo
+  # Flight and absorption are serialized: the endpoint stays visible through the cue.
+  # Two compositor completions and the instrumented audio/layout read can add frames.
+  flights=[x['duration'] for x in first['anims'] if x['cls']=='park-flying-ticket']
+  assert len(flights)==6 and all(abs(a+b-expected)<.01 for a,b in zip(flights[::2],flights[1::2])),first
+  assert all(step-65<b-a<step+160 for a,b in zip(arrivals,arrivals[1:])),first
   assert sum(x['cls']=='park-meter-fill' for x in first['anims'])==2,first
   page.evaluate('''values=>{
    const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key));
@@ -164,21 +169,17 @@ with sync_playwright() as p:
   assert page.locator('.park-flying-multiplier').count()==0
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
-  paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,colors:['face','edge','rear'].map(n=>getComputedStyle(e.querySelector('.park-spin-'+n)).backgroundColor)})""")
-  assert paint['level']==0 and paint['colors']==['rgb(100, 12, 36)']*3,paint
+  paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,paint:getComputedStyle(e).getPropertyValue('--park-spin-paint').replaceAll(' ',''),face:getComputedStyle(e.querySelector('.park-spin-face')).backgroundImage})""")
+  assert paint['level']==0 and paint['paint']=='rgb(130,67,211)' and 'spin-king-cap-purple-v1.svg' in paint['face'],paint
+  # Spin coral: raised rigid cap, fixed socket, 27-unit stroke and quick return.
   def geometry():
-   return page.locator('[data-spin-btn]').evaluate("""e=>{const r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {rear:r('face').top-r('rear').top,front:r('edge').bottom-r('face').bottom}}""")
-  # The gold rim's inner top is 7/78 of the SVG height; rear must stay below it.
-  clearance=page.locator('[data-spin-btn]').evaluate("e=>{const b=e.getBoundingClientRect(),r=e.querySelector('.park-spin-rear').getBoundingClientRect();return (r.top-b.top)/b.height-7/78}")
-  assert clearance>0,clearance
-  sides=page.locator('[data-spin-btn]').evaluate("""e=>{const b=e.getBoundingClientRect(),body=e.querySelector('.park-spin-edge').getBoundingClientRect(),face=e.querySelector('.park-spin-face').getBoundingClientRect(),scale=b.width/373;return {body:(body.left-b.left)/scale,lip:(face.left-body.left)/scale}}""")
-  assert sides['body']<=8.1 and 1.8<sides['lip']<2.2,sides
+   return page.locator('[data-spin-btn]').evaluate("""e=>{const s=e.getBoundingClientRect().width/277,r=n=>e.querySelector('.park-spin-'+n).getBoundingClientRect();return {front:(r('edge').bottom-r('face').bottom)/s,top:(r('face').top-r('edge').top)/s}}""")
   rest=geometry()
-  assert rest['rear']<-2 and rest['front']>5 and 1.8<rest['front']/-rest['rear']<2.2,rest
+  assert rest['front']>20 and abs(rest['top'])<1,rest
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-rest-'+mode+'.png')
   page.evaluate('__fc._spinTouchDown()');page.wait_for_timeout(480)
   down=geometry()
-  assert abs(down['rear'])<.5 and abs(down['front'])<.5,down
+  assert down['front']<rest['front']-12,(rest,down)
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-down-'+mode+'.png')
   page.evaluate('__fc._spinTouchUp()');page.wait_for_timeout(250)
   assert abs(geometry()['front']-rest['front'])<.5
