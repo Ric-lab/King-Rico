@@ -6,10 +6,19 @@ base ausente e execução manual exigem completo. CSS/imagens/docs permitidos
 usam build+JS/HTML check sem Playwright. Ambos publicam e conferem HEAD.
 Testes cobrem push com vários commits, JS anterior ao CSS, renome, marcador,
 base ausente e sintaxe quebrada no build/HTML inline.
-Próximo passo exato: conferir o run completo deste commit (contém JS/workflow),
-depois enviar commit exclusivamente CSS sem efeito visual e medir o run rápido.
-Só anunciar sucesso e tempo após o Actions terminar. Se falhar, corrigir o gate;
-nunca reduzir testes de produção nem tratar erro de comparação como rápido.
+Validação remota concluída: `e2c7b70` (contém JS/workflow) rodou TODA a
+bateria e publicou com sucesso em9min28s: Actions45260092724.
+`c4b4b87` mudou SOMENTE `ui/banner.css` (comentário, sem efeito visual):
+publicou em1min08s, Actions45261867671. Build, ajuste Pages, sintaxe dos66
+JS/MJS/CJS, parse HTML e HEAD passaram; os DOIS passos de navegador foram
+pulados só nesse caminho rápido. Três testes locais do gate passaram.
+Os dois commits foram enviados sem [skip ci]. Nenhuma alteração na main,
+no workflow Firebase ou na lógica dos jogos. Painel `p-previa-ci-rapida`: feito.
+Próximo passo exato: Claude/Gemini/Codex usar CSS para ajustes visuais quando
+possível; conferir o caminho e a lista de arquivos no resumo Actions antes de
+anunciar a prévia atualizada. Usar [full ci] se quiser regressão completa mesmo
+em CSS. URLs dos runs: https://github.com/Ric-lab/King-Rico/actions/runs/45260092724
+https://github.com/Ric-lab/King-Rico/actions/runs/45261867671
 
 ## Ajuste de pegada, feltro e parada do dado — Codex,23/11/2026
 Base `2d097e7`, atualizado sobre `c3d2774` antes de enviar. Preservados raio e

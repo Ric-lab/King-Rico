@@ -6,12 +6,12 @@
     {
       "id": "p-previa-ci-rapida",
       "title": "Prévia rápida para CSS, imagens e documentação",
-      "status": "preview",
+      "status": "done",
       "category": "Infra",
       "agent": "Codex",
-      "commit": "",
+      "commit": "c4b4b87",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Gate conservador before→sha, resumo por arquivos e [full ci]. Build e sintaxe/HTML em ambos; navegadores completos para código. Validar run completo e commit exclusivamente CSS em menos de3min; produção intacta."
+      "notes": "Verificado no Actions: e2c7b70 com JS/workflow executou navegadores completos e publicou em9min28s (run45260092724). c4b4b87 exclusivamente CSS publicou em1min08s (run45261867671), com build, sintaxe/HTML e HEAD; ambos os navegadores pulados só no rápido. Três testes locais passaram. Main/produção intactas; regra compartilhada em docs/skills/publicar.md."
     },
     {
       "id": "t-dado0-5-nos-roubos-dos-v",
