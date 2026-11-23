@@ -54,6 +54,8 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if((data.freeSpinId||park.cloverFreeSpinId)&&data.freeSpinId!==park.cloverFreeSpinId)fail('Esse giro grátis já foi utilizado em outro aparelho.');
    const cost=parkRules.spinCost(park,data.bet,data.slotVersion||6),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    if(data.previewFullClover)park.cedros=5;
+   // Explicit picker fixtures only: let the owner see an actual loss, not an empty stock.
+   if(['tony','tucker','ray'].includes(data.previewDiceKind)){park.cedros=data.previewDiceKind==='ray'?5:0;if(data.previewDiceKind==='tucker'){p.peaches=4;p.peachBank={count:4,units:4*engine.units(data.bet)};}}
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
    if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;Object.defineProperty(park,'_barSpins',{value:25,writable:true,configurable:true});}

@@ -86,3 +86,18 @@ Usa contas fictícias; nunca apontar esse teste para produção.
 Com build emulado e emuladores já abertos: `python3 tests/villains_release_browser.py`
 confere os três vilões pelo cliente real v4, recibos, recursos e retomada. Nunca
 rodar esse teste contra o oficial; ele recusa configuração de produção.
+
+### Cliente da prévia e coreografia do dado (23/11)
+
+`build-preview.mjs` monta o cliente usando os imports de `ui/park/index.js`,
+o prefixo `prototypes/circus-preview/wallet-client.js` e o corpo a partir de
+`function toast`. Mudanças no wrapper Cloud.spin do topo de index.js NÃO chegam
+automaticamente à prévia. A retenção visual de estoques usa funções comuns em
+`ui/park/villain-loss.js`, chamadas em ambos os clientes. Testar a versão de
+prévia, não apenas o build nativo, antes de afirmar que um roubo está integrado.
+
+`villain_dice_browser.py` confere os três vilões, swipe, estoque antes do dado,
+retirada após o resultado, repetição sem débito, teclado e fallback. Para ajuste
+visual focado: `KING_RICO_DICE_SMOKE=1 KING_RICO_DICE_KIND=tucker python3
+scripts/test-preview-browsers.py villain_dice_browser.py`. No seletor 🎯 da
+prévia, usar Dado do Tony/Tucker/Ray para preparar o estoque fictício de teste.

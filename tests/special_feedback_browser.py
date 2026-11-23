@@ -49,7 +49,7 @@ with sync_playwright() as p:
   assert page.locator('.park-defense-caption').count()==0
   assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==3
   page.wait_for_timeout(1050);page.screenshot(path='work/special-clover-defense-flight.png')
-  page.locator('.park-defense-scene[data-phase=impact]').wait_for()
+  page.wait_for_function('__fc.state.grid.filter(s=>s===12).length===2',timeout=10000)
   page.wait_for_timeout(140)
   assert page.evaluate('__fc.state.grid.filter(s=>s===12).length')==2
   assert page.evaluate('KingRicoCloud.player.balance')==before-10+page.evaluate('__fc._cloudSpin.outcome.res.win')

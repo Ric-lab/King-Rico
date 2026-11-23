@@ -1,3 +1,8 @@
+> Atualização23/11: a demonstração isolada foi rejeitada. O dado agora faz parte
+> da prévia normal do Circus, com carteira fictícia. `/Preview` volta a abrir
+> o jogo. Workflow isolado arquivado; nunca usar para sobrescrever a prévia.
+> Não publicar LIVE enquanto o bloqueio de aposta variável persistir.
+
 # Dado dos vilões — amostra em desenvolvimento,23/11/2026
 
 O dado é um objeto Three.js arredondado, com seis faces numeradas de0 a5,
@@ -62,3 +67,12 @@ no último código aprovado (`f7e8d185`, workflow45094186274 bem-sucedido).
 O artefato do dado não importa carteira nem código financeiro. O resultado de
 teste é escolhido explicitamente. Assim o dono testa o gesto sem liberar a
 matemática ainda bloqueada. A fonte dessa demonstração está no mesmo GitHub.
+
+## Apresentação integrada
+
+Vilão identificado por rosto e nome. Face0–5 representada por pontos (zero
+marcado), marfim brilhante e bandeja verde/dourada contínua. O resultado mostra
+explicitamente quantas moedas/escudos/roletas serão levados. Tony apresenta suas
+três patadas; Tucker/Ray retiram itens do contador em sequência. Estoque é
+segurado visualmente desde o pedido de giro até a apresentação do roubo, nos
+clientes normal e de prévia. O desconto confirmado continua único e recuperável.

@@ -359,3 +359,12 @@ parte do último preenchido. Texto de estoque continua disponível no rótulo ac
 Refinamento das teclas: desenhar contornos internos acompanhando o perfil do
 spin, com bases niveladas e símbolos retos. Usar os SVGs v2 esquerdo/direito;
 girar o conjunto não resolve o encaixe pedido pelo dono.
+
+### Dado integrado aos vilões — amostra23/11
+
+Não abrir página de demonstração separada: a avaliação ocorre no Circus com
+personagens, estoque e saldo fictício visíveis. Dado de marfim com pontos e
+zero marcado, bandeja verde de aro dourado contínuo. Cabeçalho mostra o rosto
+do vilão e o recurso ameaçado; resultado enfatiza a quantidade a perder.
+A exibição do estoque espera o resultado e acompanha os itens que saem em
+sequência em direção ao símbolo do vilão. Tony mantém as três patadas.

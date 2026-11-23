@@ -1,3 +1,22 @@
+## Dado no Circus completo — Codex,23/11/2026
+Base `e42e018`. Dono rejeitou página/demonstração separada e pediu avaliar no jogo.
+Workflow isolado arquivado em `archive/workflows/dice-demo.yml`; o fluxo normal
+Pages volta a construir a branch completa e `/Preview` abre o Circus habitual.
+Dado: marfim com pontos, zero marcado, bandeja verde com aro dourado contínuo,
+vilão/asset identificado e perda explícita antes de voltar ao jogo. Swipe real.
+Saldo/estoques permanecem visualmente antes do roubo até a cena correspondente;
+Tony mantém as três patadas. Tucker/Ray mostram os itens saindo do contador e
+a quantidade baixando um a um. Mesmo recibo: nenhum novo débito ou sorteio.
+Hold integrado no cliente real E em `prototypes/circus-preview/wallet-client.js`;
+o build de prévia usa este cliente específico, não a parte superior de index.js.
+Sem alterações novas na matemática. RTP por aposta variável continua bloqueando
+LIVE; usuário autorizou avaliar o conjunto com a carteira fictícia da prévia.
+Todos os testes da prévia passaram entre a rodada completa e as correções
+focadas; o smoke final conferiu Dado do Tucker pelo seletor, zoom e perda no
+contador. Produção conferida após integração. Publicar só o Pages normal.
+Próximo passo: dono validar no jogo em https://ric-lab.github.io/King-Rico/Preview
+(⚙→🎯→Dado do Tony/Tucker/Ray). Não voltar à página separada. Oficial preservado.
+
 ## Link de avaliação do dado — Codex,23/11/2026
 O dono precisa testar no celular, não apenas ler código. Nova demonstração
 isolada em `prototypes/villain-dice-demo/`, usando as fontes reais Three/Cannon,

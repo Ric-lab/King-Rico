@@ -21,7 +21,13 @@ async function request(data){
 }
 function call(data){const op=pending.then(()=>request(data));pending=op.catch(()=>{});return op;}
 const id=()=>crypto.randomUUID();
-Cloud.spin=async(game,bet,selected)=>{const before=state?.spins||0,fc=window.__fc,actual=!!fc?._cloudRequest;const response=await call({action:'spin',requestId:id(),game,bet,...(game==='circus'?{slotVersion:6,...(state?.cloverFreeSpinId?{freeSpinId:state.cloverFreeSpinId}:{})}:{}),...(selected===undefined?{}:{selected})});if(game==='circus')fc?._parkChargeConfirmed?.(before,response,actual);return response;};
+Cloud.spin=async(game,bet,selected)=>{
+ const before=state?.spins||0,fc=window.__fc,actual=!!fc?._cloudRequest;
+ if(game==='circus'&&actual)beginVillainHold(fc,state?.cedros,Cloud.player?.peaches);
+ try{const response=await call({action:'spin',requestId:id(),game,bet,...(game==='circus'?{slotVersion:6,...(state?.cloverFreeSpinId?{freeSpinId:state.cloverFreeSpinId}:{})}:{}),...(selected===undefined?{}:{selected})});
+  if(game==='circus'){confirmVillainHold(fc,response.outcome);fc?._parkChargeConfirmed?.(before,response,actual);}return response;
+ }catch(e){if(fc)delete fc._parkVillainHold;throw e;}
+};
 Cloud.settings=settings=>call({action:'settings',requestId:id(),settings});
 Cloud.recharge=source=>call({action:'recharge',requestId:id(),...(source==='home'?{source:'home'}:{})});
 Cloud.bonus=()=>call({action:'bonus',requestId:id()});

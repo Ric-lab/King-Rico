@@ -1,5 +1,6 @@
 // Receipt owns the face/loss. Swipe controls the 3D launch, never another debit.
 const names={tony:'Tony Tiger',tucker:'Tucker Toucan',ray:'Ray Raccoon'};
+const portraits={tony:'/assets/tony/head.webp',tucker:'/assets/tucker/head.webp',ray:'/assets/ray/head-v1.webp'};
 const sceneUrl='/ui/park/villain-dice-three.js';
 export function playVillainDie(fc,event,kind,signal){
  const value=event?.dice?.value;
@@ -7,7 +8,8 @@ export function playVillainDie(fc,event,kind,signal){
  return new Promise(resolve=>{
   const root=document.createElement('div');root.className='park-villain-dice';root.dataset.kind=kind;root.dataset.phase='loading';
   root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Dado do '+names[kind]);
-  root.innerHTML=`<section class="park-dice-panel"><p>${names[kind]}</p><div class="park-dice-tray" aria-label="Arraste para lançar o dado"><span class="park-dice-fallback" hidden></span></div><strong class="park-dice-caption">Preparando o dado…</strong><span class="park-dice-detail">De 0 a 5${kind==='tony'?' vezes a aposta':''}</span><button class="park-action park-action-blue park-dice-throw" disabled>JOGAR DADO</button></section>`;
+  const resource=kind==='tony'?'MOEDAS':kind==='ray'?'ESCUDOS':'ROLETAS';
+  root.innerHTML=`<section class="park-dice-panel"><header class="park-dice-heading"><img src="${portraits[kind]}" alt=""><div><small>ROUBO DE ${resource}</small><h2>${names[kind]}</h2></div></header><div class="park-dice-tray" aria-label="Arraste para lançar o dado"><span class="park-dice-fallback" hidden></span></div><strong class="park-dice-caption">Preparando o dado…</strong><span class="park-dice-detail">${kind==='tony'?'O dado multiplica sua aposta':'O dado mostra quantos pode levar'}</span><button class="park-action park-action-blue park-dice-throw" disabled>JOGAR DADO</button></section>`;
   document.body.append(root);
   const host=root.querySelector('.park-dice-tray'),button=root.querySelector('button'),caption=root.querySelector('.park-dice-caption'),detail=root.querySelector('.park-dice-detail'),fallback=root.querySelector('.park-dice-fallback');
   let done=false,scene,down,launched=false,revealed=false,mode='loading',importTimer;const timers=[];const previous=document.activeElement;
@@ -17,11 +19,11 @@ export function playVillainDie(fc,event,kind,signal){
    if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;
    caption.textContent=kind==='tony'?`${value}× a aposta`:`${value} no dado`;
    const loss=kind==='tony'?event.stolenUnits/100:event.stolen;
-   detail.textContent=loss?`${kind==='tony'?fc.money(loss):loss} ${kind==='tony'?'moedas':kind==='ray'?'escudos':'roletas'}`:'Nenhuma perda';
-   if(kind!=='tony'&&loss<value)detail.textContent+=' • limitado ao estoque';
+   detail.textContent=loss?`VAI LEVAR ${kind==='tony'?fc.money(loss):loss} ${kind==='tony'?'MOEDAS':kind==='ray'?'ESCUDOS':'ROLETAS'}`:'NÃO LEVOU NADA';
+   if(kind!=='tony'&&loss<value&&loss>0)caption.textContent=`Você tinha ${loss} ${kind==='ray'?'escudos':'roletas'}`;
    root.setAttribute('aria-label',`Dado do ${names[kind]}: ${value}. ${detail.textContent}`);
    try{fc.pluck?.(value===0?1046.5:392,.2,.5);fc.buzz?.([35]);}catch{}
-   timers.push(setTimeout(()=>finish(true),1500));
+   timers.push(setTimeout(()=>finish(true),2100));
   }
   function fallbackReady(){
    if(done||mode==='fallback')return;scene?.dispose();scene=null;mode='fallback';root.dataset.renderer='fallback';

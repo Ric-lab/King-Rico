@@ -123,3 +123,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 - Teclas ao lado do spin: paralelogramos inteiros ainda pareceram tortos.
   Tentar borda externa vertical e somente contorno interno seguindo o spin;
   preservar tampa/base coerentes. Amostra em validação, não aprovação estética.
+
+-23/11: dono rejeitou o dado em página separada. Avaliar no Circus completo,
+  com personagens e contadores reais da carteira fictícia; resultado isolado
+  perde o contexto. O roubo deve ligar face→perda→queda visível no contador.

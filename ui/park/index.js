@@ -1,3 +1,4 @@
+import {beginVillainHold,confirmVillainHold} from './villain-loss.js';
 import {paintShields} from './shield-wallet.js';
 import {createWheelSound} from './wheel-sound.js';
 import circusProfile from '../../cloud/engine.cjs';
@@ -25,7 +26,14 @@ function sync(){state={...(Cloud.park||empty()),passes:{...(Cloud.park?.passes||
 Cloud.watch(sync);
 async function call(data){let r;if(data.action==='entry')r=await Cloud.parkEntry(data.game,data.method);else if(data.action==='wheel')r=await Cloud.parkBonus(data.wheelId);else if(data.action==='wheel-close'){try{r=await Cloud.parkBonusClose(data.wheelId);}catch(e){if(e.code==='king-rico/recovered'&&!Cloud.park.wheel)r={player:Cloud.player,park:Cloud.park};else throw e;}}else throw Error('Ação indisponível.');sync();return r;}
 const nativeSpin=Cloud.spin;
-Cloud.spin=async(...args)=>{const before=state.spins,actual=!!window.__fc?._cloudRequest;const r=await nativeSpin(...args);sync();if(args[0]==='circus'){r.ticket=r.outcome.ticketAward===3;window.__fc?._parkChargeConfirmed?.(before,r,actual);}return r;};
+Cloud.spin=async(...args)=>{
+ const fc=window.__fc,before=state.spins,actual=!!fc?._cloudRequest;
+ if(args[0]==='circus'&&actual)beginVillainHold(fc,state.cedros,Cloud.player?.peaches);
+ try{const r=await nativeSpin(...args);if(args[0]==='circus'){
+  const o=r.outcome;confirmVillainHold(fc,o);
+  r.ticket=o.ticketAward===3;
+ }sync();if(args[0]==='circus')fc?._parkChargeConfirmed?.(before,r,actual);return r;}catch(e){if(fc)delete fc._parkVillainHold;throw e;}
+};
 const game=document.querySelector('meta[name="king-rico-game"]')?.content;
 Cloud.parkMode=['clown','penalty','flying','fingo','bounce'].includes(game);
 for(const [name,betIndex]of [['clown',0],['penalty',1],['flying',1],['fingo',1],['bounce',1]]){const native=Cloud[name];Cloud[name]=async(...args)=>{let round=Cloud.player?.[name+'Round'];if(!round&&!state.passes[name]){if(!await entry(name))throw Object.assign(Error('Escolha uma entrada.'),{code:'king-rico/round-conflict'});round=Cloud.player?.[name+'Round'];}args[betIndex]=round?round.betUnits/100:25;const r=await native(...args);sync();return r;};}
@@ -88,7 +96,7 @@ function bootCircus(){
   const originalVals=fc.renderVals.bind(fc);
   fc.renderVals=(...args)=>{const vals=originalVals(...args);if(fc._parkWheelVisible)vals.winAnim='none';rails.style.setProperty('--park-shade-opacity',vals.frameOff==='100%'?'0':'.28');rails.style.setProperty('--park-goal-brightness',vals.frameOff==='100%'?'1':'.82');rails.style.setProperty('--park-light-y',vals.frameOff);rails.style.setProperty('--park-light-transition',vals.frameOffT);rails.style.setProperty('--park-basket-top',(84-(fc.state.hudD||0))+'px');return vals;};
   fc.renderVals();
-  installMotion(fc,rails,{refresh:renderRails,showWheel});
+  installMotion(fc,rails,{refresh:renderRails,showWheel});fc._parkRefresh=renderRails;
   installSpinTactility(fc);
   installCircusSfx(fc);installBigWinFlight(fc);
   installTony(fc);
@@ -114,10 +122,10 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
  const fc=window.__fc;if(fc?._parkFeatureFill!=null){el.style.setProperty('--park-fill',fc._parkFeatureFill*10+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',fc._parkFeatureFill===0));}else if(!fc?._parkMeterBusy){const real=fc?._parkMeterLevel??displayState.spins,level=(fc?._parkShown!=null&&fc._parkShown>=real&&fc._parkShown<real+1)?fc._parkShown:real;el.style.setProperty('--park-fill',Math.min(100,level/displayState.meterSpins*100)+'%');el.querySelectorAll('.park-meter').forEach(t=>t.classList.toggle('is-empty',level===0));}
  el.querySelector('[role=progressbar]').setAttribute('aria-valuenow',fc?._parkFeatureFill??displayState.spins);
  el.querySelector('[role=progressbar]').setAttribute('aria-valuetext',`${fc?._parkFeatureFill??displayState.spins} de ${displayState.meterSpins} no Good Luck`);
- const tickets=fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';paintShields(document.querySelector('.kr-hud-row .park-shield-wallet'),tickets);
+ const tickets=fc?._parkVillainHold?.shields??fc?._parkVisibleTickets??displayState.cedros??0;const count=tickets+'/5';paintShields(document.querySelector('.kr-hud-row .park-shield-wallet'),tickets);
  {const st=document.querySelector('.park-circus-stage');if(st){const mk=(cls,src)=>{let n=st.querySelector('.'+cls);if(!n){n=document.createElement('div');n.className='park-key-count '+cls;n.setAttribute('aria-hidden','true');n.innerHTML='<img alt="" src="'+src+'"><b></b>';if(cls==='park-key-count-shield'){n.setAttribute('role','button');n.removeAttribute('aria-hidden');n.setAttribute('aria-label','Escudos de defesa');n.onclick=()=>document.querySelector('.park-shield-wallet')?.click();}st.appendChild(n);}return n.querySelector('b');};
   mk('park-key-count-shield','/assets/symbols/shield-defense-rainbow-gold-v1.webp').textContent=tickets+'/5';
-  mk('park-key-count-wheel','/assets/wheel/wheel-symbol-v1.webp').textContent=Math.min(5,fc?.state?.peaches||0)+'/5';}}
+  mk('park-key-count-wheel','/assets/wheel/wheel-symbol-v1.webp').textContent=Math.min(5,fc?._parkVillainHold?.wheels??fc?.state?.peaches??0)+'/5';}}
  {const sp=document.querySelector('.park-circus-stage [data-spin-btn]');if(sp){let g=sp.querySelector('.park-spin-luck');if(!g){sp.insertAdjacentHTML('beforeend','<svg class="park-spin-luck" viewBox="0 0 277 165" aria-hidden="true"><defs><linearGradient id="park-luck-rainbow" gradientUnits="userSpaceOnUse" x1="28" y1="0" x2="249" y2="0"><stop offset="0.000" stop-color="#8e24ff"/><stop offset="0.083" stop-color="#6830ff"/><stop offset="0.167" stop-color="#174fff"/><stop offset="0.250" stop-color="#008dff"/><stop offset="0.333" stop-color="#00cfff"/><stop offset="0.417" stop-color="#00e7bc"/><stop offset="0.500" stop-color="#00c65a"/><stop offset="0.583" stop-color="#91df21"/><stop offset="0.667" stop-color="#ffdf22"/><stop offset="0.750" stop-color="#ffb314"/><stop offset="0.833" stop-color="#ff861c"/><stop offset="0.917" stop-color="#ff4c36"/><stop offset="1.000" stop-color="#f52364"/></linearGradient></defs><path class="park-spin-luck-track" d="M28 137Q138.5 154 249 137" pathLength="100"/><path class="park-spin-luck-fill" d="M28 137Q138.5 154 249 137" pathLength="100"/></svg>');g=sp.querySelector('.park-spin-luck');}
   const pct=Math.max(0,Math.min(100,parseFloat(el.style.getPropertyValue('--park-fill'))||0));g.querySelector('.park-spin-luck-fill').style.strokeDashoffset=String(100-pct);}}
  el.style.setProperty('--park-ticket-font',count.length>5?'17px':count.length>3?'20px':'28px');

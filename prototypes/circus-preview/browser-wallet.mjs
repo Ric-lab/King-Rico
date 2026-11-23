@@ -5,13 +5,14 @@ let tail=Promise.resolve();
 // Prévia padrão: demo normal (aleatório). Para forçar eventos, o dono usa o seletor no jogo (⚙ → 🎯).
 const DEFAULT_DEMO=null;
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
-let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller','goodluck','villain-one','villain-pair','full-clover'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','cedar','ticket','controller','goodluck','villain-one','villain-pair','full-clover','dice-tony','dice-tucker','dice-ray'].includes(demoMode);
 // Seletor da prévia (menu → 🎯): o modo escolhido vale para TODOS os giros até trocar; recarregar zera (aleatório).
 let forced=null;
 const SYM={ticket:10,circus:2,cape:0,coin:6,diamond:8,crown:7,cedar:5,controller:15};
 const trio=s=>{const f=[0,2,6,7,8,10].filter(x=>x!==s);return [s,s,s,f[0],f[1],f[2],f[3],f[4],f[0]];};
 const gridFor=m=>m==='full-clover'?trio(5):m in SYM?trio(SYM[m]):m==='wheel'?[11,0,2,6,7,8,10,2,6]:m==='goodluck'||m==='lose'||m==='villain-one'||m==='villain-pair'?[0,2,6,7,8,10,2,6,0]:m==='spacewin'?Array(9).fill(7):m==='bigwin'?[7,7,7,7,7,7,0,2,6]:[7,7,7,7,7,7,0,2,6];
 const PICKS=[
+ ['dice-tony','Dado do Tony','/assets/tony/head.webp|contain|50% 50%'],['dice-tucker','Dado do Tucker','/assets/tucker/head.webp|contain|50% 50%'],['dice-ray','Dado do Ray','/assets/ray/head-v1.webp|contain|50% 50%'],
  ['ticket','Ingresso','/assets/machine/ticket-symbol-v3.webp|contain|50% 50%'],['circus','Circo',"/assets/symbols-v7.webp|1200% 100%|18.182% 50%"],['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
  ['diamond','Diamante',"/assets/symbols-v7.webp|1200% 100%|72.727% 50%"],['crown','Coroa',"/assets/symbols-v7.webp|1200% 100%|63.636% 50%"],['tony','Tiger','/assets/tony/head.webp|contain|50% 50%'],['tucker','Toucan','/assets/tucker/head.webp|contain|50% 50%'],
  ['ray','Ray','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Trevo','/assets/symbols/shield-defense-rainbow-gold-v1.webp|contain|50% 50%'],['goodluck','Good Luck (barra cheia)','/assets/machine/meter-bolt-rainbow-v1.webp|contain|50% 50%'],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
@@ -40,7 +41,8 @@ globalThis.KingRicoPreviewPicker=openPicker;
 async function execute(data){
  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
  if(demoMode==='tucker'&&data.action==='state')data.previewTuckerSetup=true;
- const mode=forced||demoMode,demo=(forced||demoSpin)&&data.action==='spin'&&data.game==='circus';
+ let mode=forced||demoMode;const demo=(forced||demoSpin)&&data.action==='spin'&&data.game==='circus';
+ if(demo&&['dice-tony','dice-tucker','dice-ray'].includes(mode)){data.previewDiceKind=mode.slice(5);mode=data.previewDiceKind;}
  const symbols=engine.slotSymbols(6);
  const total=symbols.reduce((n,s)=>n+s.w,0),draws=demo?(forced||mode==='villain-one'||mode==='villain-pair'?gridFor(mode):mode==='ticket'?[10,10,10,0,2,6,7,8,5]:(mode==='cedar'||mode==='full-clover')?[5,5,5,0,2,6,7,8,10]:mode==='wheel'?[11,0,2,6,7,8,10,2,6]:mode==='goodluck'?[0,2,6,7,8,10,2,6,0]:mode==='spacewin'?Array(9).fill(7):[7,7,7,7,7,7,0,2,6]).flatMap(symbol=>symbol===5?[.1]:symbol===11?[.001]:[.99,(symbols.slice(0,symbol).reduce((n,s)=>n+s.w,0)+symbols[symbol].w/2)/total]):[];
  if(demo&&mode!=='tony'&&mode!=='goodluck')draws.unshift(.99);

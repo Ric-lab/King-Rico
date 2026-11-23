@@ -6,7 +6,7 @@ import os,json
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178')
 os.makedirs('work',exist_ok=True)
 with sync_playwright() as p:
- b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox'])
+ b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox','--enable-unsafe-swiftshader'])
  page=b.new_page(viewport={'width':390,'height':844});errors=[];missing=[]
  page.on('pageerror',lambda e:errors.append(str(e)));page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
  def ready():
@@ -65,8 +65,9 @@ with sync_playwright() as p:
  page.locator('[data-spin-btn]').click()
  page.wait_for_function('__fc._cloudSpin?.outcome?.ray',timeout=15000)
  ray=page.evaluate('__fc._cloudSpin.outcome')
- assert not ray.get('defense') and ray['ray']['before']==2 and 1<=ray['ray']['stolen']<=2,ray
+ assert not ray.get('defense') and ray['ray']['before']==2 and ray['ray']['stolen']==min(2,ray['ray']['dice']['value']),ray
  assert page.evaluate('KingRicoPark.state.cedros')==2-ray['ray']['stolen']
+ page.get_by_role('button',name='JOGAR DADO',exact=True).click()
  page.locator('.park-tony-result').wait_for(timeout=15000)
  page.screenshot(path='work/preview-ray-steals-cedars.png')
  page.locator('.park-tony-result').get_by_role('button',name='CONTINUAR').click()

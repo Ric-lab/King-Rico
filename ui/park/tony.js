@@ -1,3 +1,4 @@
+import {releaseVillainHold} from './villain-loss.js';
 import {playVillainDie} from './villain-dice.js';
 // A committed debit, presented in three beats. This module never mutates the wallet.
 const HEAD='/assets/tony/head.webp';
@@ -53,7 +54,7 @@ export function installTony(fc){
    }catch{/* Financial result and next beat do not depend on animation APIs. */}
   }
   function clearPrize(){fc._tonyHitValue=null;prize?.classList.remove('is-tony-loss');}
-  function clean(){dieAbort.abort();timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
+  function clean(){dieAbort.abort();releaseVillainHold(fc);timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
   function release(){
    if(finished)return;finished=true;try{fc.sfxClick?.();fc.sfxCoinsLose?.(2);}catch{}clean();modal?.close();
    // The current confirmed snapshot may include a concurrent-device update.

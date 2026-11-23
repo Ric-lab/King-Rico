@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178')
 os.makedirs('work',exist_ok=True)
 with sync_playwright() as p:
- b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox','--autoplay-policy=no-user-gesture-required'])
+ b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required'])
  for mode in ['no-preference','reduce']:
   ctx=b.new_context(viewport={'width':390 if mode=='no-preference' else 320,'height':844},reduced_motion=mode)
   page=ctx.new_page();errors=[];missing=[]
@@ -14,6 +14,7 @@ with sync_playwright() as p:
   page.evaluate('''()=>{window.tonyQA=[];const ss=__fc.setState.bind(__fc);__fc.setState=(s,...a)=>{if(__fc._tonyPlaying&&s&&typeof s==='object'&&'balance'in s)tonyQA.push({at:performance.now(),balance:s.balance});return ss(s,...a)};window.soundQA=[];const claw=__fc.sfxClaw.bind(__fc);__fc.sfxClaw=(...a)=>{if(__fc._tonyPlaying)soundQA.push(performance.now());return claw(...a)};}''')
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-tony-scene').wait_for(timeout=15000)
+  page.get_by_role('button',name='JOGAR DADO',exact=True).click()
   page.wait_for_function('document.querySelector(".park-tony-scene")?.dataset.hit==="1"')
   page.wait_for_timeout(400)
   assert page.locator('[data-park-tony="true"]').count()==3
@@ -52,6 +53,7 @@ with sync_playwright() as p:
   if mode=='reduce':
    page.evaluate('''()=>{const animate=Element.prototype.animate;Element.prototype.animate=function(...args){if(this.classList.contains('park-tony-claws')||this.classList.contains('is-tony-loss'))throw Error('Simulated animation failure');return animate.apply(this,args)}}''')
   page.locator('[data-spin-btn]').click()
+  page.get_by_role('button',name='JOGAR DADO',exact=True).click()
   page.wait_for_function('document.querySelector(".park-tony-scene")?.dataset.hit==="1"',timeout=15000)
   committed=page.evaluate('KingRicoCloud.player.balance')
   assert page.evaluate('__fc.balance()')>committed

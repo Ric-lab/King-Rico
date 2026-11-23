@@ -1,3 +1,4 @@
+import {showResourceLoss,releaseVillainHold} from './villain-loss.js';
 import {playVillainDie} from './villain-dice.js';
 // Stages a committed receipt. No mutation, RNG or live-wallet transaction here.
 const BODY='/assets/tucker/body-grip-v2.webp',HEAD='/assets/tucker/head.webp';
@@ -45,7 +46,7 @@ export function installTucker(fc){
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;
   }
   function settle(){fc.setState({peaches:window.KingRicoCloud.player.peaches,peachShownBase:null,peachShownAdd:0,balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}
-  function clean(){dieAbort.abort();timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});if(basket)basket.style.visibility=previousVisibility;scene.remove();window.removeEventListener('pagehide',hide);}
+  function clean(){dieAbort.abort();releaseVillainHold(fc);timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});if(basket)basket.style.visibility=previousVisibility;scene.remove();window.removeEventListener('pagehide',hide);}
   function done(){if(ended)return;ended=true;clean();fc._tuckerPlaying=false;fc._celebHold=false;fc.syncCeleb();fc.kingSet('idle');}
   function back(){if(scene.dataset.phase==='returning')return;modal?.close();scene.dataset.phase='returning';clone?.remove();settle();
    if(basket){basket.style.visibility=previousVisibility;animate(basket,[{opacity:0,translate:'0 -15px'},{opacity:1,translate:'0 0'}],{duration:reduced?200:650,easing:'ease-out'});}
@@ -54,6 +55,6 @@ export function installTucker(fc){
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
   // Sem animação de voo (dono, 22/11): o Tucker aparece na slot, a linha marca a trinca e já abre o modal.
-  carrier.style.visibility='hidden';playVillainDie(fc,event,'tucker',dieAbort.signal).then(()=>{if(!ended)later(result,event.dice?250:900);});
+  carrier.style.visibility='hidden';playVillainDie(fc,event,'tucker',dieAbort.signal).then(async()=>{if(ended)return;await showResourceLoss(fc,event,'tucker',dieAbort.signal);if(!ended)later(result,300);});
  }
 }

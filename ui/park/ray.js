@@ -1,3 +1,4 @@
+import {showResourceLoss,releaseVillainHold} from './villain-loss.js';
 import {playVillainDie} from './villain-dice.js';
 // Choreography of one saved receipt; no debit or lottery in presentation.
 const BODY='/assets/ray/body-v1.webp',HEAD='/assets/ray/head-v1.webp';
@@ -20,13 +21,13 @@ export function installRay(fc){
    const svg=scene.querySelector('svg');svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);
    svg.innerHTML=`<polyline points="${boxes.map(b=>`${b.x+b.width/2},${b.y+b.height/2}`).join(' ')}"/>`+boxes.map(b=>`<ellipse cx="${b.x+b.width/2}" cy="${b.y+b.height/2}" rx="${b.width*.45}" ry="${b.height*.43}"/>`).join('');});
   function result(){scene.dataset.phase='result';modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Ray Raccoon"><h2>${event.stolen?'Ray levou':'Ray não levou nada!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'escudo':'escudos'):'Nenhum escudo perdido'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Ray e os escudos');modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;}
-  function clean(){dieAbort.abort();timers.forEach(clearTimeout);scene.remove();window.removeEventListener('pagehide',hide);}
+  function clean(){dieAbort.abort();releaseVillainHold(fc);timers.forEach(clearTimeout);scene.remove();window.removeEventListener('pagehide',hide);}
   function done(){if(ended)return;ended=true;clean();fc._rayPlaying=false;fc._celebHold=false;fc.syncCeleb();fc.kingSet('idle');fc.setState({balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}
   function back(){if(scene.dataset.phase==='returning')return;scene.dataset.phase='returning';modal?.close();fc._parkVisibleTickets=window.KingRicoPark.state.cedros??0;try{fc._parkRefresh?.();}catch{}later(done,200);
   }
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
   // Sem animação de roubo (dono, 22/11): o Ray aparece na slot, a linha marca a trinca e já abre o modal.
-  playVillainDie(fc,event,'ray',dieAbort.signal).then(()=>{if(!ended)later(result,event.dice?250:900);});
+  playVillainDie(fc,event,'ray',dieAbort.signal).then(async()=>{if(ended)return;await showResourceLoss(fc,event,'ray',dieAbort.signal);if(!ended)later(result,300);});
  }
 }

@@ -6,12 +6,12 @@
     {
       "id": "t-dado0-5-nos-roubos-dos-v",
       "title": "Dado0–5 nos roubos dos vilões",
-      "status": "todo",
+      "status": "preview",
       "category": "Jogabilidade",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Dado Three.js/Cannon por swipe. Demo isolada sem carteira/apostas em /Preview, publicada por dice-demo.yml preservando o jogo aprovado f7e8d185. Matematica de cfefa81 continua bloqueada pelo estresse95,9524%; não publicar em live. Teste da demo passou."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Integrado ao Circus completo. Dado com pontos, marfim e bandeja contínua; vilão identificado, perda explícita e itens saindo do contador após o dado. Testes da prévia passaram. Para testar: ⚙→🎯→Dado do Tony/Tucker/Ray. Demo separada e workflow arquivados; oficial não publicado."
     },
     {
       "id": "p-escudo-rolos-voos",

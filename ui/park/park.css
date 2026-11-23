@@ -271,15 +271,18 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-goal-bolt{width:78%;height:78%}
 .park-meter-right .park-goal-bolt{transform:scaleX(-1)}
 
-/* Swipe launches a real Three.js/Cannon die; the receipt owns its final face. */
-.park-villain-dice{position:fixed;inset:0;z-index:2147483500;display:grid;place-items:center;background:#132139a8;backdrop-filter:blur(5px);font-family:'Baloo 2',sans-serif;color:#fff5cf;touch-action:none}
-.park-dice-panel{width:min(410px,96vw);box-sizing:border-box;text-align:center;padding:20px 12px 22px;border:2px solid #e9b647;border-radius:30px;background:linear-gradient(#6629a0,#321356);box-shadow:inset 0 1px #ffe79c,0 12px 45px #0007}
-.park-dice-panel>p{margin:0;font-weight:800;font-size:27px;line-height:1.1}
-.park-dice-tray{position:relative;width:100%;height:min(330px,43vh);touch-action:none;cursor:grab}
+/* Integrated villain roll: portrait, die, explicit loss, then the real counter. */
+.park-villain-dice{position:fixed;inset:0;z-index:2147483500;display:grid;place-items:center;background:#10203966;font-family:'Baloo 2',sans-serif;color:#6d2b39;touch-action:none}
+.park-dice-panel{width:min(410px,96vw);box-sizing:border-box;text-align:center;padding:16px 12px 20px;border:3px solid #e9b647;border-radius:28px;background:linear-gradient(#fff9e9,#ffedc6);box-shadow:inset 0 1px #fff,0 12px 45px #0005}
+.park-dice-heading{display:flex;align-items:center;justify-content:center;gap:14px;text-align:left;min-height:72px}.park-dice-heading img{width:74px;height:74px;object-fit:contain}.park-dice-heading small{display:block;color:#ab3140;font:800 16px/1.15 'Baloo 2',sans-serif}.park-dice-heading h2{font:800 28px/1.1 'Baloo 2',sans-serif;margin:4px 0 0;color:#6d2b39}
+.park-dice-tray{position:relative;width:100%;height:min(280px,35vh);touch-action:none;cursor:grab}
 .park-dice-tray:active{cursor:grabbing}.park-dice-tray canvas{display:block;width:100%;height:100%;touch-action:none}
-.park-dice-caption{display:block;font-size:28px;line-height:1.2;min-height:34px}
-.park-dice-detail{display:block;font-size:18px;min-height:26px;margin-top:4px;line-height:1.35;color:#f2dfbf}
-.park-villain-dice[data-phase="result"] .park-dice-caption{color:#ffd967}
+.park-dice-caption{display:block;font-size:25px;line-height:1.2;min-height:30px}
+.park-dice-detail{display:block;font-size:18px;min-height:27px;margin-top:5px;line-height:1.3;color:#793c36}
+.park-villain-dice[data-phase="result"] .park-dice-detail{color:#bd2035;font-weight:800;font-size:clamp(21px,6vw,27px)}
 .park-dice-throw{min-height:48px!important;width:85%;margin:14px auto 0;font-size:20px!important}
 .park-dice-fallback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:105px;height:105px;align-content:center;background:#fff1d2;border:5px solid #d6a647;border-radius:18px;color:#682c9c;font-size:70px;font-weight:800}
 .park-dice-fallback[hidden],.park-dice-throw[hidden]{display:none!important}
+.park-villain-loss{position:fixed;inset:0;z-index:2147483501;pointer-events:none}.park-villain-loss-label{box-sizing:border-box;position:absolute;display:block;width:230px;text-align:center;color:#fff4dc;background:#b5233a;border:2px solid #ffc862;border-radius:16px;padding:8px 5px;box-shadow:0 3px 0 #71162b;font:800 23px/1.1 'Baloo 2',sans-serif}.park-villain-stolen{position:fixed;width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 4px #320e3377)}
+.park-key-count.is-being-robbed{outline:3px solid #e62d48;box-shadow:0 0 22px #e62d48!important}
+.park-villain-dice[data-phase="result"] .park-dice-throw[hidden]{display:block!important;visibility:hidden;pointer-events:none}

@@ -50,3 +50,13 @@ test('Preview v6 matches the production engine, cedar stock and coin-only ledger
  }
  assert.ok(awards>0&&defenses>0);
 });
+
+test('explicit dice presets seed only the test wallet so each villain can show its actual loss',async()=>{
+ for(const kind of ['tony','tucker','ray']){
+  let first=true;const m=createPreview({},()=>first?(first=false,0):.5);await m.run({action:'state'});
+  const x=await m.run({action:'spin',game:'circus',bet:10,slotVersion:6,requestId:randomUUID(),previewDiceKind:kind,...(kind==='tony'?{previewTony:true}:kind==='tucker'?{previewTucker:true}:{previewRay:true})});
+  assert.equal(x.outcome.defense,undefined);assert.ok(x.outcome[kind].dice);
+  if(kind==='tucker')assert.equal(x.player.peaches,4-x.outcome.tucker.stolen);
+  if(kind==='ray'){assert.equal(x.outcome.ray.before,5);assert.equal(x.park.cedros,5-x.outcome.ray.stolen);}
+ }
+});
