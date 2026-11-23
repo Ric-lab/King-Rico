@@ -1,3 +1,13 @@
+> Giro e madeira23/11: corrigido backspin inicial (rotação contrária ao
+> deslocamento), que freava o dado no contato com o feltro. Menos atrito e
+> amortecimento inicial, arrasto progressivo preservado; lançamento padrão
+> medido:1,22→2,35 voltas totais. Pickup inclina/eleva levemente e a mesma pose
+> inicia a simulação, sem reset ao soltar. Hápticos:6ms pegar,16ms lançar,8ms
+> impacto; áudio aprovado preservado. Mesa com quatro bordas reais de nogueira
+> e base, material procedural de veios/polimento. A abertura interna coincide
+> com as paredes físicas; área e textura se ajustam ao tamanho da tela.
+> Fontes: games/villain-dice/table.js, scene.js, roll.mjs; nenhum asset externo.
+
 > Câmera23/11: elevação45°, entre a mesa e a vista superior anterior (~72°).
 > Mostra topo e frente do dado; posição baixa preservada. O mesmo parâmetro
 > calcula câmera, projeção do arrasto e limites físicos, com margem para o

@@ -1,3 +1,17 @@
+## Giro solto, resposta tátil e borda de madeira — Codex,23/11/2026
+Base `8241316`. Encontrado backspin em roll.mjs: sinal do eixoX oposto ao
+rolamento correto, freando no feltro. Corrigido; atrito0,12 e damping inicial
+0,055/0,05 com arrasto progressivo. Lançamento padrão1,22→2,35 voltas totais.
+Dado inclina/eleva no arrasto e conserva pose ao soltar. Hápticos6/16/8ms para
+pegar/lançar/impactar; áudio intacto. Nova table.js gera quatro peças de madeira
+com veios/polimento e base3D, abertura alinhada às paredes, geometria e feltro
+ajustados no resize. Ângulo45° preservado. Sem mexer em resultado/economia.
+Quatro testes físicos (incluindo sentido do giro e continuidade no release),
+smoke integrado e print da mesa conferidos. Fontes completas no GitHub, sem
+novo serviço nem imagem paga. Guia: docs/VILOES-DADO.md.
+Próximo passo: confirmar o Pages deste commit e avaliar ⚙→🎯→Dado dos vilões
+em https://ric-lab.github.io/King-Rico/Preview. Publicar somente prévia.
+
 ## Câmera intermediária do dado — Codex,23/11/2026
 Base `2546b9e`. Pedido: meio-termo entre nível da mesa e vista do segundo andar.
 Elevação45° substitui~72°; parâmetro compartilhado entre câmera, limites da

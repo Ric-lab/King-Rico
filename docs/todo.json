@@ -21,7 +21,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Dado leve com patas/Tony, escudos/Ray e roletas/Tucker; feltro com fibras. Câmera agora45° (antes~72°), vendo topo e frente; projeção do dedo e limites acompanham a inclinação. Testes físicos e lançamento completo passaram, print conferido. Regras/valores intactos, sem troca de face após parar. Somente prévia."
+      "notes": "Giro mais livre: corrigido backspin que freava no feltro; lançamento padrão1,22→2,35 voltas. Pickup inclina e mantém pose ao soltar; hápticos6/16/8ms. Borda e base de nogueira3D alinhadas às colisões, câmera45°. Quatro testes físicos e smoke integrado passaram; print conferido. Áudio e economia intactos. Somente prévia."
     },
     {
       "id": "p-escudo-rolos-voos",

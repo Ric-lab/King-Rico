@@ -21,3 +21,19 @@ test('light flick uses the whole phone table, with real walls and stable final p
   }
  }
 });
+
+test('release rolls forward and a normal flick makes at least two full turns',()=>{
+ for(const dy of [-150,150]){
+  const p=planDiceRoll({dy});assert.ok(p.frames[0].q[0]*p.vz>0,'No braking backspin on release');
+ }
+ const p=planDiceRoll();
+ const angle=p.frames.reduce((sum,f,i,a)=>i?sum+2*Math.acos(Math.min(1,Math.abs(f.q.reduce((s,v,k)=>s+v*a[i-1].q[k],0)))):sum,0);
+ assert.ok(angle>=Math.PI*4,'Normal flick visibly tumbles more than the old single turn');
+});
+
+test('release preserves the picked-up pose before tumbling to a stable face',()=>{
+ const q=[-.12,.03,.04,Math.sqrt(1-.12**2-.03**2-.04**2)];
+ const p=planDiceRoll({start:{x:.4,y:DIE_HALF+.5,z:diceTableBounds().startZ-1,q}});
+ const angle=2*Math.acos(Math.min(1,Math.abs(q.reduce((n,v,i)=>n+v*p.frames[0].q[i],0))));
+ assert.ok(angle<.3,'No pose reset at release');assert.ok(p.flatness>.8);assert.ok(p.restSpeed<.1);
+});

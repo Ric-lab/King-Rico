@@ -34,9 +34,9 @@ export function playVillainDie(fc,event,kind,signal){
   }
   function fallbackReady(){if(done||mode==='fallback')return;scene?.dispose();scene=null;mode='fallback';root.dataset.renderer='fallback';fallback.hidden=false;fallback.textContent=launched?String(value):'?';if(launched){land();return;}ready();button.textContent='REVELAR RESULTADO';}
   function ready(){if(done||!entered)return;clearTimeout(importTimer);root.dataset.phase='ready';button.disabled=false;caption.textContent='Deslize para jogar';button.focus();}
-  function launch(gesture){if(done||launched||!entered||mode==='loading')return;launched=true;root.dataset.phase='rolling';button.hidden=true;caption.textContent='';try{fc.sfxClick?.();fc.buzz?.([25]);if(scene){scene.throwDie(gesture);later(()=>{if(!revealed)fallbackReady();},6000);}else{fallback.textContent=String(value);land();}}catch{fallbackReady();}}
+  function launch(gesture){if(done||launched||!entered||mode==='loading')return;launched=true;root.dataset.phase='rolling';button.hidden=true;caption.textContent='';try{fc.sfxClick?.();fc.buzz?.([16]);if(scene){scene.throwDie(gesture);later(()=>{if(!revealed)fallbackReady();},6000);}else{fallback.textContent=String(value);land();}}catch{fallbackReady();}}
   button.onclick=()=>launch({dy:-150,duration:240});
-  host.onpointerdown=e=>{if(mode==='loading'||!entered||launched||e.isPrimary===false)return;down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId,samples:[{x:e.clientX,y:e.clientY,t:performance.now()}]};try{host.setPointerCapture(e.pointerId);}catch{}};
+  host.onpointerdown=e=>{if(mode==='loading'||!entered||launched||e.isPrimary===false)return;down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId,samples:[{x:e.clientX,y:e.clientY,t:performance.now()}]};try{fc.buzz?.([6]);host.setPointerCapture(e.pointerId);}catch{}};
   host.onpointermove=e=>{if(!down||e.pointerId!==down.id||launched)return;
    const now=performance.now();down.samples.push({x:e.clientX,y:e.clientY,t:now});down.samples=down.samples.filter(p=>now-p.t<110);
    scene?.dragDie?.({dx:e.clientX-down.x,dy:e.clientY-down.y});
@@ -47,6 +47,6 @@ export function playVillainDie(fc,event,kind,signal){
    }else scene?.dragDie?.({dx:0,dy:0});};host.onpointercancel=()=>{down=null;scene?.dragDie?.({dx:0,dy:0});};
   root.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();button.focus();}};
   importTimer=setTimeout(fallbackReady,8000);
-  import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([12]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
+  import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([8]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
  });
 }

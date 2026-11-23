@@ -142,3 +142,9 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 -23/11: vista do dado a~72° foi rejeitada por parecer do segundo andar.
   Direção pedida: intermediária (~45°), vendo topo e frente, sem câmera rente
   à mesa. Compartilhar inclinação entre câmera, área física e projeção do dedo.
+
+-23/11: dado ainda pesado e virando pouco no feltro: verificar sentido do
+  giro, não só aumentar força. Com vZ negativo, omegaX também deve ser negativo
+  (contato sem deslizamento). Corrigido backspin que freava o cubo. Madeira:
+  modelar borda/base de verdade e alinhar abertura com colisões; evitar overlay
+  de tela. Pickup e release precisam compartilhar pose e ter resposta imediata.
