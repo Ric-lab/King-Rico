@@ -126,3 +126,7 @@
 .park-circus-stage .park-key-count b{font-size:16px!important}
 .park-circus-stage .park-key-count-wheel{left:366px!important}
 .park-circus-stage .park-shield-wallet{top:754px!important}
+/* Raio no fim da barra: mostra que ela leva ao Good Luck; acende quando a barra enche. */
+.park-spin-luck-bolt{opacity:.55;filter:saturate(.6) drop-shadow(0 1px 1px #0006);transform-box:fill-box;transform-origin:center;transition:opacity .3s,filter .3s}
+.park-spin-luck.is-full .park-spin-luck-bolt{opacity:1;filter:saturate(1.2) drop-shadow(0 0 4px #fff4b0);animation:parkLuckBolt .9s ease-in-out infinite}
+@keyframes parkLuckBolt{50%{transform:scale(1.18)}}
