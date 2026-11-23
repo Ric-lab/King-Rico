@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-previa-ci-rapida",
+      "title": "Prévia rápida para CSS, imagens e documentação",
+      "status": "preview",
+      "category": "Infra",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Gate conservador before→sha, resumo por arquivos e [full ci]. Build e sintaxe/HTML em ambos; navegadores completos para código. Validar run completo e commit exclusivamente CSS em menos de3min; produção intacta."
+    },
+    {
       "id": "t-dado0-5-nos-roubos-dos-v",
       "title": "Dado0–5 nos roubos dos vilões",
       "status": "preview",

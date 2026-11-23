@@ -1,7 +1,7 @@
 # Commit, prévia, publicação
 
 - `main` publica sozinha no site oficial depois de passar nos testes (workflow "Publicar King Rico no Firebase"). Teste falhou = nada vai ao ar.
-- Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages: https://ric-lab.github.io/King-Rico/circus/ (workflow `preview-pages.yml`). Sempre entregar links de teste nesse endereço. Não usar o canal Firebase como alternativa automática; ele é apenas legado/manual. Nunca usar a carteira de produção para a prévia.
+- Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages: https://ric-lab.github.io/King-Rico/circus/ (workflow `preview-pages.yml`). Link único do dono: https://ric-lab.github.io/King-Rico/Preview. Não usar o canal Firebase como alternativa automática; ele é apenas legado/manual. Nunca usar a carteira de produção para a prévia.
 - Commit: mensagem em português dizendo o que mudou. Confirmar ao dono com o hash curto.
 - Quando o push dispara uma publicação: conferir o resultado no Actions; se falhar, ler o log e corrigir antes de declarar a publicação concluída. Checkpoints `[skip ci]` não exigem aguardar workflow.
 - Ao parar: atualizar docs/HANDOFF.md com "feito" e "próximo passo".
@@ -9,7 +9,7 @@
 - Segredos (tokens, contas de serviço) nunca entram no Git.
 
 - Prévias: testes locais focados na mudança, um build de prévia e um de produção após integração quando exigido; um commit com HANDOFF, sem segundo commit só para copiar status do Actions. Conferir Actions com resumo curto, sem despejar payloads nem repetir diagnóstico.
-- Quando houver publicação, o workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`) contra `dist/` servido localmente no runner, ANTES do deploy; logs separados e screenshots preservados. No host público, só checagens HEAD leves de rotas/assets. Não retirar testes nem apontar a suíte completa para o Hosting: cada contexto baixa os assets novamente e consome a franquia Spark.
+- Quando houver publicação, o caminho completo do workflow de prévia executa as regressões de navegador em pares independentes (`scripts/test-preview-browsers.py`) contra `dist/` servido localmente no runner, ANTES do deploy; logs separados e screenshots preservados. No host público, só checagens HEAD leves de rotas/assets. Não retirar testes nem apontar a suíte completa para o Hosting: cada contexto baixa os assets novamente e consome a franquia Spark.
 
 ## Iterações pequenas
 
@@ -30,3 +30,26 @@ exigindo validação de regras, idempotência e recuperação.
 - Recursos que eram demos precisam de integração real e testes de transação
   antes de chegar ao oficial; copiar só a apresentação não conclui a entrega.
 - Rejeitado: anunciar f4904b7 como publicação completa; era somente a cor do bônus.
+
+## Caminho rápido da prévia — 23/11/2026
+
+Somente Pages, nunca main/produção. Compare `github.event.before` com
+`github.sha`, incluindo TODOS os commits do push e caminhos removidos/renomeados.
+CSS (`.css`), imagens (`.webp`, `.png`, `.svg`, `.jpg`), `.md` e `docs/**`
+permitem caminho rápido se TODOS os arquivos forem permitidos. Código
+`.js/.mjs/.cjs/.html` e qualquer arquivo em `cloud/`, `tests/`, `scripts/` ou
+`.github/` sempre exigem caminho completo, inclusive exemplos em documentação.
+Qualquer outro arquivo também exige o completo. Uma mensagem `[full ci]` em
+qualquer commit do push força o completo. Execução manual, branch nova, base
+indisponível ou comparação inconclusiva usam o completo.
+
+Rápido: npm ci, build de prévia, `node --check` em todos JS/MJS/CJS gerados,
+parse do HTML principal e scripts inline, ajuste Pages e deploy. Completo:
+mesmas verificações mais TODA a bateria de navegadores existente. Os dois
+mantêm as requisições HEAD após publicar. O resumo Actions identifica o caminho,
+o motivo e todos os arquivos. Produção continua com suas verificações intactas.
+
+Para aproveitar o rápido, faça tamanho, posição e outros ajustes visuais em CSS
+sempre que possível. Atributos/estilos alterados dentro de JS continuam no
+completo: não tentar adivinhar se código é “só visual”. Meta de duração do rápido:
+menos de3 minutos; filas e indisponibilidade do GitHub podem excedê-la.

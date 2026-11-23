@@ -1,3 +1,16 @@
+## Caminho rápido do Pages — Codex,23/11/2026
+Base `2b14ea1`. Escopo: workflow Pages, classificador, checagem estática e guias;
+main/produção e jogo intactos. Regra compartilhada em `docs/skills/publicar.md`.
+Comparação integral before→sha, todos os commits e renomes; [full ci], código,
+base ausente e execução manual exigem completo. CSS/imagens/docs permitidos
+usam build+JS/HTML check sem Playwright. Ambos publicam e conferem HEAD.
+Testes cobrem push com vários commits, JS anterior ao CSS, renome, marcador,
+base ausente e sintaxe quebrada no build/HTML inline.
+Próximo passo exato: conferir o run completo deste commit (contém JS/workflow),
+depois enviar commit exclusivamente CSS sem efeito visual e medir o run rápido.
+Só anunciar sucesso e tempo após o Actions terminar. Se falhar, corrigir o gate;
+nunca reduzir testes de produção nem tratar erro de comparação como rápido.
+
 ## Ajuste de pegada, feltro e parada do dado — Codex,23/11/2026
 Base `2d097e7`, atualizado sobre `c3d2774` antes de enviar. Preservados raio e
 novo número de patadas. Corrigido callback Array.from que lia terceiro argumento
