@@ -20,7 +20,8 @@ with sync_playwright() as p:
   assert page.locator('[data-park-tony="true"]').count()==3
   assert page.locator('.park-tony-lines ellipse').count()==3
   assert page.locator('.kr-hud-balance.is-tony-hit').count()==1
-  first_amount=page.evaluate("'−'+__fc.money(__fc._cloudSpin.outcome.tony.hits[0]/100)")
+  strikes=page.evaluate('__fc._tonyStrikes');assert strikes and len(strikes)==page.evaluate('__fc._cloudSpin.outcome.tony.dice.value'),strikes
+  first_amount=page.evaluate("'−'+__fc.money(__fc._tonyStrikes[0]/100)")
   assert page.locator('.park-prize-value').inner_text()==first_amount
   assert page.locator('.park-tony-loss').count()==0,'Do not add a separate loss badge over King Rico'
   assert page.locator('.park-tony-claws g').first.get_attribute('fill')=='#101018'
@@ -33,11 +34,11 @@ with sync_playwright() as p:
   receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome']['tony'];end=receipt['balanceDebited']-event['stolenUnits']/100
   assert receipt['outcome']['winUnits']==0 and receipt['outcome']['ticketAward']==0
   assert page.evaluate('KingRicoCloud.player.balance')==end
-  hits=page.evaluate('tonyQA');assert len(hits)==3,hits
+  hits=page.evaluate('tonyQA');assert len(hits)==len(strikes),(hits,strikes)  # número do dado = número de patadas
   for i,h in enumerate(hits):
-   assert abs(h['balance']-(receipt['balanceDebited']-sum(event['hits'][:i+1])/100))<.001
+   assert abs(h['balance']-(receipt['balanceDebited']-sum(strikes[:i+1])/100))<.001
    if i:assert h['at']-hits[i-1]['at']>=1400
-  assert len(page.evaluate('soundQA'))==3
+  assert len(page.evaluate('soundQA'))==len(strikes)
   page.screenshot(path=f'work/preview-tony-result-{mode}.png')
   page.get_by_role('button',name='CONTINUAR',exact=True).click();assert page.locator('.park-tony-scene').count()==0
   assert page.locator('.park-prize-value.is-tony-loss').count()==0
@@ -63,4 +64,4 @@ with sync_playwright() as p:
   assert not errors and not missing,(errors,missing)
   ctx.close()
  b.close()
-print('Tony: three separated impacts, red line, exact cents, result, replay and reload passed')
+print('Tony: dice face = number of separated impacts, red line, exact cents, result, replay and reload passed')

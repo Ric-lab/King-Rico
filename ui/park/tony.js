@@ -36,12 +36,14 @@ export function installTony(fc){
   }
   requestAnimationFrame(lines);
   const start=Math.round(receipt.balanceDebited*100),total=event.stolenUnits;
+  // O número do dado = número de patadas (cada uma leva uma aposta). Sem dado (recibos antigos): as 3 patadas salvas.
+  const strikes=event.dice?(total?Array.from({length:event.dice.value},(_,i,a)=>i<a.length-1?Math.floor(total/a.length):total-Math.floor(total/a.length)*(a.length-1)):[]):event.hits,count=strikes.length;fc._tonyStrikes=strikes;
   function impact(n){
    hit=n+1;root.dataset.hit=String(hit);
-   const spent=event.hits.slice(0,hit).reduce((a,b)=>a+b,0);
-   fc._tonyHitValue=event.hits[n];prize?.classList.add('is-tony-loss');
+   const spent=strikes.slice(0,hit).reduce((a,b)=>a+b,0);
+   fc._tonyHitValue=strikes[n];prize?.classList.add('is-tony-loss');
    fc.setState({balance:(start-spent)/100,hint:'Tony roubou '+fc.money(spent/100)+' moedas'});
-   root.querySelector('.park-tony-announcement').textContent='Tony roubou '+fc.money(event.hits[n]/100)+' moedas';
+   root.querySelector('.park-tony-announcement').textContent='Patada '+(n+1)+' de '+count+': '+fc.money(strikes[n]/100)+' moedas';
    // Tela toda, menos a faixa do anúncio no topo (quando há anúncio carregado).
    veil.style.top=adBottom()+'px';veil.style.opacity='1';later(()=>{veil.style.opacity='0';},1250);
    wallet?.classList.add('is-tony-hit');sound(n);
@@ -53,7 +55,7 @@ export function installTony(fc){
     if(prize)animations.push(prize.animate([{scale:'.94'},{scale:'1.08',offset:.3},{scale:'1'}],{duration:380,easing:'ease-out'}));
    }catch{/* Financial result and next beat do not depend on animation APIs. */}
   }
-  function clearPrize(){fc._tonyHitValue=null;prize?.classList.remove('is-tony-loss');}
+  function clearPrize(){fc._tonyHitValue=null;delete fc._tonyStrikes;prize?.classList.remove('is-tony-loss');}
   function clean(){dieAbort.abort();releaseVillainHold(fc);timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
   function release(){
    if(finished)return;finished=true;try{fc.sfxClick?.();fc.sfxCoinsLose?.(2);}catch{}clean();modal?.close();
@@ -63,11 +65,11 @@ export function installTony(fc){
   }
   function result(){
    wallet?.classList.remove('is-tony-hit');veil.hidden=true;clearPrize();fc.setState({barWin:0});
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><h2>${total?'Tony roubou':'Tony não levou nada!'}</h2><strong class="park-tony-total">${fc.money(total/100)}</strong><p>moedas</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><h2>${total?'Tony deu '+count+(count===1?' patada':' patadas'):'Tony não levou nada!'}</h2><strong class="park-tony-total">${fc.money(total/100)}</strong><p>moedas</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=release;
   }
   function hide(){if(finished)return;finished=true;clean();modal?.close();}
   window.addEventListener('pagehide',hide,{once:true});
-  playVillainDie(fc,event,'tony',dieAbort.signal).then(ok=>{if(finished)return;if(event.dice&&!ok)return;if(total===0){later(result,300);return;}later(()=>{impact(0);later(()=>{impact(1);later(()=>{impact(2);later(result,1600);},1550);},1550);},700);});
+  playVillainDie(fc,event,'tony',dieAbort.signal).then(ok=>{if(finished)return;if(event.dice&&!ok)return;if(!count){later(result,300);return;}const run=i=>{impact(i);if(i+1<count)later(()=>run(i+1),1550);else later(result,1600);};later(()=>run(0),700);});
  }
 }

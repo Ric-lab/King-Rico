@@ -26,7 +26,7 @@ export function playVillainDie(fc,event,kind,signal){
   animate(table,[{opacity:0},{opacity:1}],{delay:entryDuration*.6,duration:entryDuration*.4,fill:'forwards'});
   later(()=>{entered=true;zoom.remove();table.style.opacity='1';if(mode!=='loading')ready();else root.dataset.phase='loading';},entryDuration);
   function land(){
-   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;caption.textContent='';
+   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;caption.textContent=kind==='tony'?(value?value+(value===1?' patada':' patadas'):'Nenhuma patada!'):'';
    number.style.opacity='1';root.setAttribute('aria-label',`Dado do ${names[kind]}: ${value}`);
    animate(number,[{transform:'translate(-50%,-50%) scale(.2)',opacity:0},{transform:'translate(-50%,-50%) scale(1)',opacity:1}],{duration:350,easing:'ease-out',fill:'forwards'});
    try{fc.pluck?.(value===0?1046.5:392,.2,.5);fc.buzz?.([35]);}catch{}
