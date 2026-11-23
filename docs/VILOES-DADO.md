@@ -1,6 +1,12 @@
-> Refinamento23/11: dado maior/mais baixo; feltro com fibras e relevo. A
-> trajetória física é resolvida antes da reprodução, com identidade das faces
-> fixa durante a rolagem. Não há orientação imposta depois da parada.
+> Refinamento23/11, gesto leve: dado menor (~82px em celular390px), no terço
+> inferior, acompanha o arrasto e recebe o impulso dos últimos110ms do gesto.
+> Gravidade/atrito/amortecimento menores na largada, com arrasto progressivo
+> do feltro para assentar. Paredes acompanham a área visível inteira da tela.
+> Marcas claras monocromáticas: patas/Tony, escudos/Ray, roletas/Tucker; zero
+> continua explícito. Feltro com fibras não tecidas, relevo e sheen de tecido.
+> Gerador versionado `scripts/generate-dice-felt.py`; sem serviço/crédito externo.
+> Trajetória física e identidade das faces resolvidas ANTES da reprodução.
+> Nenhuma troca de textura, resultado ou correção de pose depois de parar.
 
 > Direção visual atual23/11: cabeça central cresce para revelar mesa de feltro
 > na cor do vilão, rosto no centro e dado vermelho. Número gigante vira a
@@ -23,8 +29,8 @@ instalados são servidos localmente; não há CDN ou API paga.
 
 A face final pertence ao recibo confirmado, não ao movimento do dedo.
 O sistema usa a distribuição normal limitada existente; não prometer chances
-iguais nem dizer que um gesto altera o prêmio. A acomodação final apresenta
-o resultado salvo após os quiques. A interface não faz sorteio ou débito.
+iguais nem dizer que um gesto altera o prêmio. Uma simetria fixa definida antes da reprodução apresenta
+o resultado salvo através dos quiques, sem reorientar a parada. A interface não faz sorteio ou débito.
 
 - Tony: resultado inteiro0–5 multiplicado pela aposta; limite adicional pelo
   saldo disponível e orçamento de controle já existentes. Zero não leva nada.
@@ -71,18 +77,15 @@ Implementação e regras de recompensas ficam para outra tarefa.
 
 ## Link para avaliar o gesto
 
-A demonstração isolada é publicada pelo workflow `dice-demo.yml` no Pages já
-existente. `/Preview` aponta para ela durante a avaliação; `/circus/` permanece
-no último código aprovado (`f7e8d185`, workflow45094186274 bem-sucedido).
-O artefato do dado não importa carteira nem código financeiro. O resultado de
-teste é escolhido explicitamente. Assim o dono testa o gesto sem liberar a
-matemática ainda bloqueada. A fonte dessa demonstração está no mesmo GitHub.
+Prévia integrada do Circus: https://ric-lab.github.io/King-Rico/Preview.
+Usar ⚙→🎯→Dado do Tony/Tucker/Ray. A carteira é fictícia; a demonstração
+isolada e seu workflow estão arquivados. Não os reativar.
 
-## Apresentação integrada
+## Apresentação integrada atual
 
-Vilão identificado por rosto e nome. Face0–5 representada por pontos (zero
-marcado), marfim brilhante e bandeja verde/dourada contínua. O resultado mostra
-explicitamente quantas moedas/escudos/roletas serão levados. Tony apresenta suas
-três patadas; Tucker/Ray retiram itens do contador em sequência. Estoque é
-segurado visualmente desde o pedido de giro até a apresentação do roubo, nos
-clientes normal e de prévia. O desconto confirmado continua único e recuperável.
+Trinca→rosto central cresce além da tela→feltro laranja/Tony, verde/Ray,
+azul/Tucker com rosto impresso→dado vermelho por swipe→número gigante como
+transição→Circus/modal da perda; Tony mantém uma patada por unidade sorteada.
+Arrastar e soltar responde em tempo real. Cancelar/toque curto reposiciona
+sem lançar. JOGAR DADO e teclado continuam como alternativas. A face salva e
+a perda são as mesmas em replay; os refinamentos de gesto não alteram economia.

@@ -1,3 +1,21 @@
+## Dado leve e mesa inteira — Codex,23/11/2026
+Base `f003017`. Pedido: gesto tipo Pokébola, posição baixa e feltro realista.
+Alterados só cena/gesto/material/testes do dado. Gravidade18, arrasto inicial
+menor e progressivo no feltro; impulso final do dedo (110ms), arrasto visível,
+retorno se cancelar ou tocar sem swipe. Câmera mais alta, dado menor no terço
+inferior, paredes invisíveis adaptadas à tela inteira, sem sair por cima delas.
+Tony usa patas, Ray escudos e Tucker roletas monocromáticas nas faces0–5.
+Feltro procedural novo com fibras/relevo/sheen, gerador no Git (custo externo0).
+Instrução separada do dado, sombra cobre a mesa inteira. Regras/valores de
+roubo/recibos e produção intactos. Nenhuma correção de face depois da parada.
+Seis testes de física/roubo passaram; navegador com os três vilões passou,
+e repetição final com flick curto desde a posição real do dado também passou.
+Prints conferidos. Guia atual: `docs/VILOES-DADO.md` (limpadas seções obsoletas
+que ainda apontavam para demonstração isolada e dado marfim).
+Próximo passo exato: confirmar sucesso do Pages deste commit e dono avaliar
+⚙→🎯→Dado do Tony/Tucker/Ray em https://ric-lab.github.io/King-Rico/Preview.
+Não levar a main: esta entrega é a prévia, com carteira fictícia.
+
 ## Caminho rápido do Pages — Codex,23/11/2026
 Base `2b14ea1`. Escopo: workflow Pages, classificador, checagem estática e guias;
 main/produção e jogo intactos. Regra compartilhada em `docs/skills/publicar.md`.

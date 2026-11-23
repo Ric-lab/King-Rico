@@ -132,3 +132,9 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   tela→feltro por vilão (Tony laranja, Ray verde, Tucker azul) com rosto central
   →dado vermelho/swipe→valor gigante como transição→Circus/modal; Tony com patadas.
   Dono rejeitou painel creme e pediu não acrescentar passos/efeitos extras.
+
+-23/11, novo pedido do dado: gesto anterior pesado e área de rolamento curta.
+  Dado no terço inferior, acompanha dedo e usa impulso final; área física segue
+  tela inteira. Marcas: patas/Tony, escudos/Ray, roletas/Tucker. Feltro precisa
+  de fibras e relevo; conferir que instrução não cubra o dado e sombra acompanhe
+  toda a mesa. A face nunca troca depois da parada. Guia: VILOES-DADO.md.

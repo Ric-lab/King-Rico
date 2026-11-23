@@ -30,6 +30,9 @@ with sync_playwright() as p:
     page.screenshot(path='work/preview-dice-integration-error.png');raise
    page.wait_for_function('document.querySelector(".park-villain-dice")?.dataset.phase==="ready"')
    assert die.get_attribute('data-renderer')=='three'
+   assert die.locator('.park-dice-tray').get_attribute('data-mark')==kind
+   ready_position=json.loads(die.locator('.park-dice-tray').get_attribute('data-ready-position'))
+   assert ready_position[1]<-.5,ready_position # Lower phone grip, not center of table.
    if kind=='tony':assert abs(page.evaluate('__fc.balance()')-page.evaluate('__fc._cloudSpin.balanceDebited'))<.001
    else:
     counter=page.locator('.park-key-count-'+('shield' if kind=='ray' else 'wheel')+' b')
@@ -38,8 +41,9 @@ with sync_playwright() as p:
    assert die.get_attribute('data-phase')=='ready','Must wait for the player, never throw automatically'
    tray=die.locator('.park-dice-tray');box=tray.bounding_box()
    page.screenshot(path=f'work/preview-die-ready-{kind}-{mode}.png')
-   page.mouse.move(box['x']+box['width']*.5,box['y']+box['height']*.75);page.mouse.down()
-   page.mouse.move(box['x']+box['width']*.65,box['y']+box['height']*.25,steps=10);page.mouse.up()
+   grip_y=box['y']+box['height']*(1-ready_position[1])/2
+   page.mouse.move(box['x']+box['width']*.5,grip_y);page.mouse.down()
+   page.mouse.move(box['x']+box['width']*.65,grip_y-box['height']*.2,steps=10);page.mouse.up()
    page.wait_for_function('document.querySelector(".park-villain-dice")?.dataset.phase==="rolling"')
    assert tray.get_attribute('data-launch')
    page.wait_for_timeout(650);page.screenshot(path=f'work/preview-die-throw-{kind}-{mode}.png')
