@@ -368,3 +368,7 @@ Dado Three.js sempre vermelho, pontos claros, lançado pelo swipe. Valor grande
 cresce até ocupar a tela, fazendo a transição de volta ao Circus. Tony mantém
 as três patadas; os outros vão ao modal da perda. Não usar painel creme,
 cabeçalho, demonstração separada ou adicionar transferências extras de itens.
+
+Refinamento do dado23/11: corpo2,4unidades (antes2,05), mais baixo na mesa.
+Feltro com fibras tileáveis em mapa/relevo; cores e rosto central preservados.
+A face nunca deve trocar depois de o dado já ter parado.

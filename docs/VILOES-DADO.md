@@ -1,3 +1,7 @@
+> Refinamento23/11: dado maior/mais baixo; feltro com fibras e relevo. A
+> trajetória física é resolvida antes da reprodução, com identidade das faces
+> fixa durante a rolagem. Não há orientação imposta depois da parada.
+
 > Direção visual atual23/11: cabeça central cresce para revelar mesa de feltro
 > na cor do vilão, rosto no centro e dado vermelho. Número gigante vira a
 > transição de volta ao Circus/modal. Tony mantém patadas. Painel creme e voos

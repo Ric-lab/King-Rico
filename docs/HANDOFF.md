@@ -1,3 +1,14 @@
+## Ajuste de pegada, feltro e parada do dado — Codex,23/11/2026
+Base `2d097e7`. Dado17% maior, posição inicial mais baixa; swipe aceita12px.
+Feltro ganha textura tileável de fibras (`assets/materials/felt-grain-v1.webp`),
+mapa de cor/relevo partilhado pelos três temas, gerado pelo script versionado.
+Sai a orientação forçada após2,25s: `games/villain-dice/roll.mjs` simula o gesto
+até o repouso e a cena reproduz a trajetória com uma simetria fixa escolhida
+antes da exibição. Não muda textura, número ou orientação após parar.
+Testes verificam gestos, repouso estável e face de cima realmente exibida.
+Resultado, aposta, recibos e economia intactos. Próximo passo: dono conferir
+posição, toque e parada na prévia habitual; publicar só Pages, não oficial.
+
 ## Coreografia literal dos vilões — Codex,23/11/2026
 Base `e1e7785`. Pedido do dono: trinca → rosto central cresce além da tela →
 mesa de feltro laranja/Tony, verde/Ray, azul/Tucker, rosto no centro → dado

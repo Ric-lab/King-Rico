@@ -46,7 +46,8 @@ with sync_playwright() as p:
    page.wait_for_function('document.querySelector(".park-villain-dice")?.dataset.phase==="result"')
    receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];value=event['dice']['value']
    assert die.get_attribute('data-value')==str(value)
-   assert die.locator('.park-dice-tray').get_attribute('data-face')==str(value)
+   assert float(die.locator('.park-dice-tray').get_attribute('data-rest-flatness'))>.8
+   assert die.locator('.park-dice-tray').get_attribute('data-face')==str(value), {'saved':value,'shown':die.locator('.park-dice-tray').get_attribute('data-face'),'errors':errors,'renderer':die.get_attribute('data-renderer')}
    page.wait_for_timeout(400);page.screenshot(path=f'work/preview-die-{kind}-{mode}.png')
    balance=page.evaluate('KingRicoCloud.player.balance')
    dialog=page.get_by_role('dialog',name={'tony':'Tony roubou moedas','tucker':'Tucker levou roletas','ray':'Ray e os escudos'}[kind],exact=True)

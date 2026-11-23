@@ -80,7 +80,8 @@
     "assets/machine/bet-key-left-cap-v2.svg",
     "assets/machine/bet-key-right-base-v2.svg",
     "assets/machine/bet-key-right-side-v2.svg",
-    "assets/machine/bet-key-right-cap-v2.svg"
+    "assets/machine/bet-key-right-cap-v2.svg",
+    "assets/materials/felt-grain-v1.webp"
   ],
   "wheel": [
     "assets/wheel/stage-bg.webp",

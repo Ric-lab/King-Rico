@@ -37,7 +37,7 @@ export function playVillainDie(fc,event,kind,signal){
   function launch(gesture){if(done||launched||!entered||mode==='loading')return;launched=true;root.dataset.phase='rolling';button.hidden=true;caption.textContent='';try{fc.sfxClick?.();fc.buzz?.([25]);if(scene){scene.throwDie(gesture);later(()=>{if(!revealed)fallbackReady();},6000);}else{fallback.textContent=String(value);land();}}catch{fallbackReady();}}
   button.onclick=()=>launch({dy:-150,duration:240});
   host.onpointerdown=e=>{if(mode==='loading'||!entered||launched||e.isPrimary===false)return;down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};try{host.setPointerCapture(e.pointerId);}catch{}};
-  host.onpointerup=e=>{if(!down||e.pointerId!==down.id)return;const d=down;down=null;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>=18)launch({dx,dy,duration:performance.now()-d.t});};host.onpointercancel=()=>{down=null;};
+  host.onpointerup=e=>{if(!down||e.pointerId!==down.id)return;const d=down;down=null;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>=12)launch({dx,dy,duration:performance.now()-d.t});};host.onpointercancel=()=>{down=null;};
   root.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();button.focus();}};
   importTimer=setTimeout(fallbackReady,8000);
   import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([12]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
