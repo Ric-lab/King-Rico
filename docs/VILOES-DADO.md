@@ -1,3 +1,8 @@
+> Câmera23/11: elevação45°, entre a mesa e a vista superior anterior (~72°).
+> Mostra topo e frente do dado; posição baixa preservada. O mesmo parâmetro
+> calcula câmera, projeção do arrasto e limites físicos, com margem para o
+> volume do cubo. Não usar coeficiente antigo0,949 ao mudar a inclinação.
+
 > Refinamento23/11, gesto leve: dado menor (~82px em celular390px), no terço
 > inferior, acompanha o arrasto e recebe o impulso dos últimos110ms do gesto.
 > Gravidade/atrito/amortecimento menores na largada, com arrasto progressivo

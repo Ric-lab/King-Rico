@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
-import {planDiceRoll,DIE_HALF,diceTableBounds} from './roll.mjs';
+import {planDiceRoll,DIE_HALF,diceTableBounds,TABLE_ELEVATION,TABLE_FORESHORTENING} from './roll.mjs';
 import {paintDieMark} from './marks.js';
 // Gesture controls launch velocity and real rigid-body bounces. The receipt owns
 // the final face. A constant cube symmetry is chosen BEFORE playback; it never
@@ -9,7 +9,7 @@ export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0x000000,0);host.append(renderer.domElement);
- const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-4.5,4.5,4.5,-4.5,.1,60);camera.position.set(0,18,6);camera.lookAt(0,0,0);
+ const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-4.5,4.5,4.5,-4.5,.1,60);camera.position.set(0,18*Math.sin(TABLE_ELEVATION),18*Math.cos(TABLE_ELEVATION));camera.lookAt(0,0,0);
  scene.add(new THREE.HemisphereLight(0xffffff,0x6c5682,1.4));
  const key=new THREE.DirectionalLight(0xffffff,1.8);key.position.set(-3,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-15;key.shadow.camera.right=15;key.shadow.camera.top=16;key.shadow.camera.bottom=-16;key.shadow.radius=3;key.shadow.bias=-.0002;key.shadow.normalBias=.025;scene.add(key);
  const fill=new THREE.DirectionalLight(0xb9dfff,.75);fill.position.set(5,3,-3);scene.add(fill);
@@ -55,7 +55,7 @@ export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact
   dragDie({dx=0,dy=0}={}){if(disposed||launched)return;
    const r=host.getBoundingClientRect(),bounds=diceTableBounds(r.width,r.height);
    position.x=THREE.MathUtils.clamp(dx/r.width*9,-bounds.halfX+DIE_HALF+.25,bounds.halfX-DIE_HALF-.25);
-   position.z=THREE.MathUtils.clamp(readyZ+dy/r.height*camera.top*2/.949,-bounds.halfZ+DIE_HALF+.25,bounds.halfZ-DIE_HALF-.25);
+   position.z=THREE.MathUtils.clamp(readyZ+dy/r.height*camera.top*2/TABLE_FORESHORTENING,-bounds.halfZ+DIE_HALF+.25,bounds.halfZ-DIE_HALF-.25);
    draw();
   },
   throwDie({dx=0,dy=-150,duration=240}={}){if(disposed||launched)return false;launched=true;

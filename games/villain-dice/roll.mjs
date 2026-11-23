@@ -1,9 +1,15 @@
 import * as CANNON from 'cannon-es';
-export const DIE_HALF=.95,START_Z=7.2;
+export const DIE_HALF=.95;
+// Shared by camera, table bounds and pointer-to-felt projection.
+export const TABLE_ELEVATION=Math.PI/4,TABLE_FORESHORTENING=Math.sin(TABLE_ELEVATION);
 export function diceTableBounds(width=390,height=844){
- const halfZ=4.5*height/Math.max(1,width)/.949;
- return {halfX:4.45,halfZ,startZ:Math.min(halfZ-DIE_HALF*1.5,halfZ*.7)};
+ const halfHeight=4.5*height/Math.max(1,width);
+ // Leave room for the visible side of the cube above the far edge of the felt.
+ const halfZ=Math.max(DIE_HALF*2.4,(halfHeight-DIE_HALF*1.9)/TABLE_FORESHORTENING);
+ const gripZ=(halfHeight*.64+(DIE_HALF+.22)*Math.cos(TABLE_ELEVATION))/TABLE_FORESHORTENING;
+ return {halfX:4.45,halfZ,startZ:Math.min(halfZ-DIE_HALF*1.5,gripZ)};
 }
+export const START_Z=diceTableBounds().startZ;
 // Simulate the gesture once through genuine rest. Playback preserves the same
 // rigid-body motion; no torque, face change or pose correction after stopping.
 export function planDiceRoll({dx=0,dy=-150,duration=240,width=390,height=844,start}={}){

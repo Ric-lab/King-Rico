@@ -1,3 +1,14 @@
+## Câmera intermediária do dado — Codex,23/11/2026
+Base `2546b9e`. Pedido: meio-termo entre nível da mesa e vista do segundo andar.
+Elevação45° substitui~72°; parâmetro compartilhado entre câmera, limites da
+mesa e projeção do arrasto. Margem para a lateral visível do cubo e posição
+inicial baixa. Só dois arquivos de execução alterados, sem mexer no visual dos
+assets, áudio, resultado ou perdas. Dois testes físicos e smoke de lançamento
+completo passaram; print da câmera conferido. Guia: docs/VILOES-DADO.md.
+Próximo passo: confirmar workflow Pages deste commit e dono avaliar a câmera
+em https://ric-lab.github.io/King-Rico/Preview (⚙→🎯→Dado do Tony/Tucker/Ray).
+Prévia somente, sem integrar à main/oficial.
+
 ## Dado leve e mesa inteira — Codex,23/11/2026
 Base `f003017`. Pedido: gesto tipo Pokébola, posição baixa e feltro realista.
 Alterados só cena/gesto/material/testes do dado. Gravidade18, arrasto inicial

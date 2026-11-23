@@ -138,3 +138,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   tela inteira. Marcas: patas/Tony, escudos/Ray, roletas/Tucker. Feltro precisa
   de fibras e relevo; conferir que instrução não cubra o dado e sombra acompanhe
   toda a mesa. A face nunca troca depois da parada. Guia: VILOES-DADO.md.
+
+-23/11: vista do dado a~72° foi rejeitada por parecer do segundo andar.
+  Direção pedida: intermediária (~45°), vendo topo e frente, sem câmera rente
+  à mesa. Compartilhar inclinação entre câmera, área física e projeção do dedo.

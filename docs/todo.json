@@ -21,7 +21,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Gesto leve tipo Pokébola: dado acompanha dedo, impulso dos últimos110ms e posição inferior. Área física ocupa tela inteira. Feltro novo de fibras/relevo/sheen; marcas de patas/Tony, escudos/Ray e roletas/Tucker. Seis testes e três vilões no navegador passaram; flick curto final conferido. Regras/valores intactos, sem troca de face após parar. Entrega somente na prévia."
+      "notes": "Dado leve com patas/Tony, escudos/Ray e roletas/Tucker; feltro com fibras. Câmera agora45° (antes~72°), vendo topo e frente; projeção do dedo e limites acompanham a inclinação. Testes físicos e lançamento completo passaram, print conferido. Regras/valores intactos, sem troca de face após parar. Somente prévia."
     },
     {
       "id": "p-escudo-rolos-voos",
