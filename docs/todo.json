@@ -11,7 +11,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": "Implementação Three.js/Cannon: swipe lança dado real; face0–5 salva no recibo, sem outro débito. Core/regras/testes integrados.90 regras passaram; economia fixa89,9747%, estresse de aposta variável95,9524% bloqueia publicação financeira. Arte/gesto em avaliação; checkpoint sem deploy."
+      "notes": "Dado Three.js/Cannon por swipe. Demo isolada sem carteira/apostas em /Preview, publicada por dice-demo.yml preservando o jogo aprovado f7e8d185. Matematica de cfefa81 continua bloqueada pelo estresse95,9524%; não publicar em live. Teste da demo passou."
     },
     {
       "id": "p-escudo-rolos-voos",

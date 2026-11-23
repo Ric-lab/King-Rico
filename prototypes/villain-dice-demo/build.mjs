@@ -1,0 +1,12 @@
+import {build} from 'esbuild';import {mkdir,readFile,writeFile,copyFile,rm} from 'node:fs/promises';import path from 'node:path';
+import {relocatePreview} from '../../scripts/preview-base.mjs';
+const root=path.resolve(import.meta.dirname,'../..'),out=path.join(import.meta.dirname,'dist');
+await rm(out,{recursive:true,force:true});await mkdir(path.join(out,'ui/park'),{recursive:true});await mkdir(path.join(out,'runtime'),{recursive:true});await mkdir(path.join(out,'assets'),{recursive:true});
+await build({entryPoints:[path.join(root,'games/villain-dice/scene.js')],outfile:path.join(out,'ui/park/villain-dice-three.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'shared-three',setup(b){b.onResolve({filter:/^three$/},()=>({path:'../../runtime/three.module.js',external:true}));}}]});
+for(const name of ['three.module.js','three.core.js'])await copyFile(path.join(root,'node_modules/three/build',name),path.join(out,'runtime',name));
+await copyFile(path.join(root,'ui/park/villain-dice.js'),path.join(out,'ui/park/villain-dice.js'));
+const css=await readFile(path.join(root,'ui/park/park.css'),'utf8');await writeFile(path.join(out,'ui/park/dice.css'),css.slice(css.indexOf('/* Swipe launches a real Three.js/Cannon die;')));
+await copyFile(path.join(root,'assets/fonts/baloo2-latin.woff2'),path.join(out,'assets/baloo2-latin.woff2'));
+await copyFile(path.join(import.meta.dirname,'index.html'),path.join(out,'index.html'));
+const base=process.argv.find(x=>x.startsWith('--base='))?.slice(7);if(base)await relocatePreview(out,base);
+console.log('Demonstração isolada gerada: sem Firebase, carteira ou apostas.');

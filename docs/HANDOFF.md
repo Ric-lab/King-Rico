@@ -1,3 +1,18 @@
+## Link de avaliação do dado — Codex,23/11/2026
+O dono precisa testar no celular, não apenas ler código. Nova demonstração
+isolada em `prototypes/villain-dice-demo/`, usando as fontes reais Three/Cannon,
+sem Firebase, carteira, apostas ou débitos. Face de teste explicitamente escolhida.
+`tests/dice_demo_browser.py` passou com swipe, Three, face3 e zero chamadas à API.
+Workflow `dice-demo.yml`: recompõe SOMENTE a prévia aprovada em `f7e8d185`
+(run45094186274 bem-sucedido), acrescenta `/dice-demo/` e aponta `/Preview` a ela.
+NÃO leva a matemática `cfefa81` aos jogos; os gates financeiros continuam intactos.
+A prévia normal em `/circus/` e o oficial ficam nas versões aprovadas.
+URL para o dono: https://ric-lab.github.io/King-Rico/Preview
+Próximo passo: conferir workflow Demonstração isolada do dado e colher feedback.
+A tentativa de novo destino Sites foi bloqueada por revisão automática antes
+do envio de código/assets; o Sites criado está sem conteúdo publicado. Solução
+adotada usa exclusivamente o GitHub Pages já autorizado para o projeto.
+
 ## Dado físico por swipe — Codex,23/11/2026
 Base `bf53cd5`. Dono interrompeu o dado CSS e pediu Three.js: nova cena em
 `games/villain-dice/scene.js`, física Cannon, lançamento pelo swipe ou botão,

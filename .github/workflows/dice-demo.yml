@@ -1,0 +1,89 @@
+name: Demonstração isolada do dado
+on:
+  push:
+    branches: ['codex/penalty-clown-preview']
+    paths: ['prototypes/villain-dice-demo/**', 'tests/dice_demo_browser.py', '.github/workflows/dice-demo.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: king-rico-dice-demo
+  cancel-in-progress: false
+jobs:
+  demo:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          path: source
+          persist-credentials: false
+      # Last successful Pages source (run45094186274). Never build the game from
+      # the financial checkpoint: only the standalone die uses current sources.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: f7e8d185829eda76dc426c2dfc2a5469dc380ed2
+          path: approved
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: source/.nvmrc
+          cache: npm
+          cache-dependency-path: source/package-lock.json
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+        id: pages
+      - name: Instalar as dependências fixadas
+        working-directory: source
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Reconstituir somente a prévia aprovada
+        working-directory: approved
+        env:
+          PREVIEW_BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          if cmp -s package-lock.json ../source/package-lock.json; then ln -s ../source/node_modules node_modules; else npm ci --ignore-scripts --no-audit --no-fund; fi
+          npm run build:preview
+          node scripts/preview-base.mjs --base="$PREVIEW_BASE"
+      - name: Construir e conferir o dado sem carteira
+        working-directory: source
+        env:
+          KING_RICO_CHROMIUM: /usr/bin/google-chrome
+          PREVIEW_BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          node prototypes/villain-dice-demo/build.mjs --base="${PREVIEW_BASE%/}/dice-demo/"
+          python3 -m pip install playwright
+          python3 tests/dice_demo_browser.py
+      - name: Acrescentar a demonstração sem modificar os jogos aprovados
+        env:
+          PREVIEW_BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          cp -R source/prototypes/villain-dice-demo/dist approved/dist/dice-demo
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,json
+          target=os.environ['PREVIEW_BASE'].rstrip('/')+'/dice-demo/'
+          Path('approved/dist/Preview/index.html').write_text('<!doctype html><meta charset="utf-8"><title>Teste do dado</title><script>location.replace('+json.dumps(target)+')</script>')
+          PY
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        with:
+          path: approved/dist
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+        id: deployment
+      - name: Conferir o link publicado
+        env:
+          PREVIEW_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          node --input-type=module <<'JS'
+          const root=process.env.PREVIEW_URL.replace(/\/$/,'')+'/';
+          for(const file of ['Preview/','dice-demo/','dice-demo/ui/park/villain-dice-three.js','dice-demo/runtime/three.module.js','circus/']){
+            const r=await fetch(new URL(file,root),{method:'HEAD',signal:AbortSignal.timeout(20000)});
+            if(!r.ok)throw Error(file+': '+r.status);
+          }
+          JS
+          echo "Dado isolado: ${PREVIEW_URL%/}/Preview" >> "$GITHUB_STEP_SUMMARY"

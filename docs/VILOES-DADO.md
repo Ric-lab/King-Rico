@@ -53,3 +53,12 @@ Implementação e regras de recompensas ficam para outra tarefa.
   de aposta variável95,9524%, descrita acima. Não ignorar esse bloqueio.
 - Uma repetição visual focada verifica a câmera/bandeja finais; build de produção
   gerado após a integração. A publicação oficial não foi iniciada.
+
+## Link para avaliar o gesto
+
+A demonstração isolada é publicada pelo workflow `dice-demo.yml` no Pages já
+existente. `/Preview` aponta para ela durante a avaliação; `/circus/` permanece
+no último código aprovado (`f7e8d185`, workflow45094186274 bem-sucedido).
+O artefato do dado não importa carteira nem código financeiro. O resultado de
+teste é escolhido explicitamente. Assim o dono testa o gesto sem liberar a
+matemática ainda bloqueada. A fonte dessa demonstração está no mesmo GitHub.
