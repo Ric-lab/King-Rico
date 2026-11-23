@@ -360,11 +360,11 @@ Refinamento das teclas: desenhar contornos internos acompanhando o perfil do
 spin, com bases niveladas e símbolos retos. Usar os SVGs v2 esquerdo/direito;
 girar o conjunto não resolve o encaixe pedido pelo dono.
 
-### Dado integrado aos vilões — amostra23/11
+### Dado integrado aos vilões — direção atual23/11
 
-Não abrir página de demonstração separada: a avaliação ocorre no Circus com
-personagens, estoque e saldo fictício visíveis. Dado de marfim com pontos e
-zero marcado, bandeja verde de aro dourado contínuo. Cabeçalho mostra o rosto
-do vilão e o recurso ameaçado; resultado enfatiza a quantidade a perder.
-A exibição do estoque espera o resultado e acompanha os itens que saem em
-sequência em direção ao símbolo do vilão. Tony mantém as três patadas.
+Seguir a coreografia do dono: o rosto do vilão central cresce além da tela e
+revela feltro laranja/Tony, verde/Ray ou azul/Tucker, com o rosto no centro.
+Dado Three.js sempre vermelho, pontos claros, lançado pelo swipe. Valor grande
+cresce até ocupar a tela, fazendo a transição de volta ao Circus. Tony mantém
+as três patadas; os outros vão ao modal da perda. Não usar painel creme,
+cabeçalho, demonstração separada ou adicionar transferências extras de itens.

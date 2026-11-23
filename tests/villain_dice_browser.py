@@ -6,10 +6,12 @@ BASE=os.environ.get('KING_RICO_TEST_URL','http://127.0.0.1:4178');os.makedirs('w
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('KING_RICO_CHROMIUM','/usr/bin/chromium'),args=['--no-sandbox','--enable-unsafe-swiftshader'])
  smoke=os.environ.get('KING_RICO_DICE_SMOKE')=='1'
- for mode in (['no-preference'] if smoke else ['no-preference','reduce']):
+ story=os.environ.get('KING_RICO_DICE_STORY')=='1'
+ for mode in (['no-preference'] if smoke or story else ['no-preference','reduce']):
   for kind in ([os.environ.get('KING_RICO_DICE_KIND','tony')] if smoke else ['tony','tucker','ray']):
    ctx=b.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,reduced_motion=mode)
    page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+   page.add_init_script('''window.dicePhases=[];new MutationObserver(rs=>{for(const r of rs){if(r.target.classList?.contains('park-villain-dice'))dicePhases.push(r.target.dataset.phase);for(const n of r.addedNodes||[])if(n.classList?.contains('park-villain-dice'))dicePhases.push(n.dataset.phase);for(const n of r.removedNodes||[])if(n.classList?.contains('park-villain-dice'))dicePhases.push('closed');}}).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:['data-phase']});''')
    page.goto(BASE+'/circus?demo='+('off' if smoke else kind));page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
    if smoke:
     page.evaluate('KingRicoPreviewPicker()');page.get_by_role('button',name='Dado do '+{'tony':'Tony','tucker':'Tucker','ray':'Ray'}[kind],exact=True).click()
@@ -45,19 +47,22 @@ with sync_playwright() as p:
    receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];value=event['dice']['value']
    assert die.get_attribute('data-value')==str(value)
    assert die.locator('.park-dice-tray').get_attribute('data-face')==str(value)
-   page.screenshot(path=f'work/preview-die-{kind}-{mode}.png')
+   page.wait_for_timeout(400);page.screenshot(path=f'work/preview-die-{kind}-{mode}.png')
    balance=page.evaluate('KingRicoCloud.player.balance')
-   if kind!='tony' and event['stolen']:
-    loss=page.locator('.park-villain-loss');loss.wait_for();assert '−'+str(event['stolen']) in loss.inner_text()
-    page.screenshot(path=f'work/preview-dice-{kind}-counter-loss-{mode}.png')
    dialog=page.get_by_role('dialog',name={'tony':'Tony roubou moedas','tucker':'Tucker levou roletas','ray':'Ray e os escudos'}[kind],exact=True)
-   dialog.wait_for(timeout=16000);dialog.get_by_role('button',name='CONTINUAR').click()
+   dialog.wait_for(timeout=16000)
+   assert page.locator('.park-villain-dice').count()==0
+   phases=page.evaluate('dicePhases');assert all(x in phases for x in ['entering','ready','rolling','result','returning','closed']),phases
+   if kind!='tony':
+    expected=(receipt['park']['cedros'] if kind=='ray' else receipt['player']['peaches'])
+    assert page.locator('.park-key-count-'+('shield' if kind=='ray' else 'wheel')+' b').inner_text()==str(expected)+'/5'
+   dialog.get_by_role('button',name='CONTINUAR').click()
    page.wait_for_function('!__fc.cloudBusy()');assert page.evaluate('KingRicoCloud.player.balance')==balance
    if kind=='tony':assert abs(balance-(receipt['balanceDebited']-event['stolenUnits']/100))<.001
    assert not errors,errors
    ctx.close()
- if smoke:
-  b.close();print('Three.js swipe smoke: PASS');raise SystemExit(0)
+ if smoke or story:
+  b.close();print('Three.js villain story: PASS');raise SystemExit(0)
  # Exercise all six faces with keyboard/button launch, plus WebGL failure and abort.
  ctx=b.new_context(viewport={'width':320,'height':740});page=ctx.new_page()
  page.goto(BASE+'/circus?demo=off');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)

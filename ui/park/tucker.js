@@ -1,4 +1,4 @@
-import {showResourceLoss,releaseVillainHold} from './villain-loss.js';
+import {releaseVillainHold} from './villain-loss.js';
 import {playVillainDie} from './villain-dice.js';
 // Stages a committed receipt. No mutation, RNG or live-wallet transaction here.
 const BODY='/assets/tucker/body-grip-v2.webp',HEAD='/assets/tucker/head.webp';
@@ -55,6 +55,6 @@ export function installTucker(fc){
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
   // Sem animação de voo (dono, 22/11): o Tucker aparece na slot, a linha marca a trinca e já abre o modal.
-  carrier.style.visibility='hidden';playVillainDie(fc,event,'tucker',dieAbort.signal).then(async()=>{if(ended)return;await showResourceLoss(fc,event,'tucker',dieAbort.signal);if(!ended)later(result,300);});
+  carrier.style.visibility='hidden';playVillainDie(fc,event,'tucker',dieAbort.signal).then(()=>{if(ended)return;releaseVillainHold(fc);settle();later(result,250);});
  }
 }

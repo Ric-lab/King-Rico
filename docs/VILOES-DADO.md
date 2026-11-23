@@ -1,3 +1,9 @@
+> Direção visual atual23/11: cabeça central cresce para revelar mesa de feltro
+> na cor do vilão, rosto no centro e dado vermelho. Número gigante vira a
+> transição de volta ao Circus/modal. Tony mantém patadas. Painel creme e voos
+> de recursos foram substituídos por esse pedido explícito. Mesma carteira de
+> teste, sem mudança matemática ou publicação em live.
+
 > Atualização23/11: a demonstração isolada foi rejeitada. O dado agora faz parte
 > da prévia normal do Circus, com carteira fictícia. `/Preview` volta a abrir
 > o jogo. Workflow isolado arquivado; nunca usar para sobrescrever a prévia.

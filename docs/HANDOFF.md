@@ -1,3 +1,16 @@
+## Coreografia literal dos vilões — Codex,23/11/2026
+Base `e1e7785`. Pedido do dono: trinca → rosto central cresce além da tela →
+mesa de feltro laranja/Tony, verde/Ray, azul/Tucker, rosto no centro → dado
+SEMPRE vermelho por swipe → número ocupa a tela e cresce como transição →
+Circus/modal da perda. Tony mantém suas três patadas antes do modal.
+Implementado em `ui/park/villain-dice.js`, CSS e cena Three/Cannon existentes.
+Saem o painel creme/cabeçalho e as animações extras de itens saindo do contador.
+Mesma página, mesma rodada, mesmo resultado salvo; matemática não foi alterada.
+Conferidos os três casos e as patadas; teste registra entering/ready/rolling/
+result/returning/closed e a volta ao jogo. Sem refazer auditoria ou outros jogos.
+Próximo passo: dono avaliar em https://ric-lab.github.io/King-Rico/Preview
+(⚙→🎯→Dado do Tony/Tucker/Ray). Publicar somente a prévia normal; nunca isolada.
+
 ## Dado no Circus completo — Codex,23/11/2026
 Base `e42e018`. Dono rejeitou página/demonstração separada e pediu avaliar no jogo.
 Workflow isolado arquivado em `archive/workflows/dice-demo.yml`; o fluxo normal

@@ -1,49 +1,45 @@
-// Receipt owns the face/loss. Swipe controls the 3D launch, never another debit.
+// The saved face is presented once. Swipe controls only launch physics.
 const names={tony:'Tony Tiger',tucker:'Tucker Toucan',ray:'Ray Raccoon'};
 const portraits={tony:'/assets/tony/head.webp',tucker:'/assets/tucker/head.webp',ray:'/assets/ray/head-v1.webp'};
-const sceneUrl='/ui/park/villain-dice-three.js';
+const colors={tony:'#d7772b',ray:'#286e42',tucker:'#226d9b'},sceneUrl='/ui/park/villain-dice-three.js';
 export function playVillainDie(fc,event,kind,signal){
  const value=event?.dice?.value;
  if(!Number.isInteger(value)||value<0||value>5||signal?.aborted)return Promise.resolve(false);
  return new Promise(resolve=>{
-  const root=document.createElement('div');root.className='park-villain-dice';root.dataset.kind=kind;root.dataset.phase='loading';
+  const root=document.createElement('div');root.className='park-villain-dice';root.dataset.kind=kind;root.dataset.phase='entering';root.style.setProperty('--villain-felt',colors[kind]);
   root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Dado do '+names[kind]);
-  const resource=kind==='tony'?'MOEDAS':kind==='ray'?'ESCUDOS':'ROLETAS';
-  root.innerHTML=`<section class="park-dice-panel"><header class="park-dice-heading"><img src="${portraits[kind]}" alt=""><div><small>ROUBO DE ${resource}</small><h2>${names[kind]}</h2></div></header><div class="park-dice-tray" aria-label="Arraste para lançar o dado"><span class="park-dice-fallback" hidden></span></div><strong class="park-dice-caption">Preparando o dado…</strong><span class="park-dice-detail">${kind==='tony'?'O dado multiplica sua aposta':'O dado mostra quantos pode levar'}</span><button class="park-action park-action-blue park-dice-throw" disabled>JOGAR DADO</button></section>`;
+  root.innerHTML=`<div class="park-dice-table"><div class="park-dice-tray" aria-label="Arraste para lançar o dado"><span class="park-dice-fallback" hidden></span></div><div class="park-dice-controls"><strong class="park-dice-caption">Preparando o dado…</strong><button class="park-action park-dice-throw" disabled>JOGAR DADO</button></div></div><strong class="park-dice-screen-value" aria-hidden="true">${value}</strong>`;
   document.body.append(root);
-  const host=root.querySelector('.park-dice-tray'),button=root.querySelector('button'),caption=root.querySelector('.park-dice-caption'),detail=root.querySelector('.park-dice-detail'),fallback=root.querySelector('.park-dice-fallback');
-  let done=false,scene,down,launched=false,revealed=false,mode='loading',importTimer;const timers=[];const previous=document.activeElement;
-  const finish=ok=>{if(done)return;done=true;timers.forEach(clearTimeout);clearTimeout(importTimer);scene?.dispose();root.remove();signal?.removeEventListener('abort',abort);previous?.focus?.();resolve(ok);};
+  const table=root.querySelector('.park-dice-table'),host=root.querySelector('.park-dice-tray'),button=root.querySelector('button'),caption=root.querySelector('.park-dice-caption'),fallback=root.querySelector('.park-dice-fallback'),number=root.querySelector('.park-dice-screen-value');
+  let done=false,scene,down,launched=false,revealed=false,entered=false,mode='loading',importTimer;const timers=[],animations=[],previous=document.activeElement;
+  const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!done)fn();},ms));
+  const animate=(el,frames,options)=>{try{const a=el.animate(frames,options);animations.push(a);return a;}catch{return null;}};
+  const finish=ok=>{if(done)return;done=true;timers.forEach(clearTimeout);clearTimeout(importTimer);animations.forEach(a=>a.cancel());scene?.dispose();root.remove();signal?.removeEventListener('abort',abort);previous?.focus?.();resolve(ok);};
   const abort=()=>finish(false);signal?.addEventListener('abort',abort,{once:true});
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,entryDuration=reduced?180:650;
+  const cell=fc._cloudSpin?.outcome?.res?.cells?.[1],r=document.querySelector('[data-sym="'+cell+'"]')?.getBoundingClientRect();
+  const zoom=document.createElement('img');zoom.className='park-villain-zoom';zoom.src=portraits[kind];zoom.alt='';root.append(zoom);
+  const start=r||{x:innerWidth/2-60,y:innerHeight/2-60,width:120,height:120};
+  zoom.style.cssText=`left:${start.x}px;top:${start.y}px;width:${start.width}px;height:${start.height}px;`;
+  const dx=innerWidth/2-start.x-start.width/2,dy=innerHeight/2-start.y-start.height/2,cover=Math.max(innerWidth/start.width,innerHeight/start.height)*3;
+  animate(zoom,[{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx}px,${dy}px) scale(${cover})`}],{duration:entryDuration,easing:'cubic-bezier(.4,0,.65,1)',fill:'forwards'});
+  animate(table,[{opacity:0},{opacity:1}],{delay:entryDuration*.6,duration:entryDuration*.4,fill:'forwards'});
+  later(()=>{entered=true;zoom.remove();table.style.opacity='1';if(mode!=='loading')ready();else root.dataset.phase='loading';},entryDuration);
   function land(){
-   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;
-   caption.textContent=kind==='tony'?`${value}× a aposta`:`${value} no dado`;
-   const loss=kind==='tony'?event.stolenUnits/100:event.stolen;
-   detail.textContent=loss?`VAI LEVAR ${kind==='tony'?fc.money(loss):loss} ${kind==='tony'?'MOEDAS':kind==='ray'?'ESCUDOS':'ROLETAS'}`:'NÃO LEVOU NADA';
-   if(kind!=='tony'&&loss<value&&loss>0)caption.textContent=`Você tinha ${loss} ${kind==='ray'?'escudos':'roletas'}`;
-   root.setAttribute('aria-label',`Dado do ${names[kind]}: ${value}. ${detail.textContent}`);
+   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;caption.textContent='';
+   number.style.opacity='1';root.setAttribute('aria-label',`Dado do ${names[kind]}: ${value}`);
+   animate(number,[{transform:'translate(-50%,-50%) scale(.2)',opacity:0},{transform:'translate(-50%,-50%) scale(1)',opacity:1}],{duration:350,easing:'ease-out',fill:'forwards'});
    try{fc.pluck?.(value===0?1046.5:392,.2,.5);fc.buzz?.([35]);}catch{}
-   timers.push(setTimeout(()=>finish(true),2100));
+   later(()=>{root.dataset.phase='returning';animate(number,[{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(-50%,-50%) scale(22)',opacity:1}],{duration:550,easing:'ease-in',fill:'forwards'});animate(table,[{opacity:1},{opacity:0}],{delay:300,duration:250,fill:'forwards'});later(()=>finish(true),550);},1150);
   }
-  function fallbackReady(){
-   if(done||mode==='fallback')return;scene?.dispose();scene=null;mode='fallback';root.dataset.renderer='fallback';
-   fallback.hidden=false;fallback.textContent=launched?String(value):'?';
-   if(launched){land();return;}ready();button.textContent='REVELAR RESULTADO';
-  }
-  function ready(){if(done)return;clearTimeout(importTimer);root.dataset.phase='ready';button.disabled=false;caption.textContent='Deslize para jogar';button.focus();}
-  function launch(gesture){
-   if(done||launched||mode==='loading')return;launched=true;root.dataset.phase='rolling';button.disabled=true;caption.textContent='';detail.textContent='';
-   try{fc.sfxClick?.();fc.buzz?.([25]);if(scene){scene.throwDie(gesture);timers.push(setTimeout(()=>{if(!revealed)fallbackReady();},6000));}else{fallback.textContent=String(value);land();}}catch{fallbackReady();}
-  }
+  function fallbackReady(){if(done||mode==='fallback')return;scene?.dispose();scene=null;mode='fallback';root.dataset.renderer='fallback';fallback.hidden=false;fallback.textContent=launched?String(value):'?';if(launched){land();return;}ready();button.textContent='REVELAR RESULTADO';}
+  function ready(){if(done||!entered)return;clearTimeout(importTimer);root.dataset.phase='ready';button.disabled=false;caption.textContent='Deslize para jogar';button.focus();}
+  function launch(gesture){if(done||launched||!entered||mode==='loading')return;launched=true;root.dataset.phase='rolling';button.hidden=true;caption.textContent='';try{fc.sfxClick?.();fc.buzz?.([25]);if(scene){scene.throwDie(gesture);later(()=>{if(!revealed)fallbackReady();},6000);}else{fallback.textContent=String(value);land();}}catch{fallbackReady();}}
   button.onclick=()=>launch({dy:-150,duration:240});
-  host.onpointerdown=e=>{if(mode==='loading'||launched||e.isPrimary===false)return;down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};try{host.setPointerCapture(e.pointerId);}catch{}};
-  host.onpointerup=e=>{if(!down||e.pointerId!==down.id)return;const d=down;down=null;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>=18)launch({dx,dy,duration:performance.now()-d.t});};
-  host.onpointercancel=()=>{down=null;};
+  host.onpointerdown=e=>{if(mode==='loading'||!entered||launched||e.isPrimary===false)return;down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};try{host.setPointerCapture(e.pointerId);}catch{}};
+  host.onpointerup=e=>{if(!down||e.pointerId!==down.id)return;const d=down;down=null;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>=18)launch({dx,dy,duration:performance.now()-d.t});};host.onpointercancel=()=>{down=null;};
   root.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();button.focus();}};
   importTimer=setTimeout(fallbackReady,8000);
-  import(sceneUrl).then(({createDiceScene})=>{
-   if(done||mode==='fallback')return;
-   try{scene=createDiceScene(host,{value,onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([12]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}
-  }).catch(fallbackReady);
+  import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([12]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
  });
 }

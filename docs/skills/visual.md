@@ -127,3 +127,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 -23/11: dono rejeitou o dado em página separada. Avaliar no Circus completo,
   com personagens e contadores reais da carteira fictícia; resultado isolado
   perde o contexto. O roubo deve ligar face→perda→queda visível no contador.
+
+-23/11, direção substitui a tentativa anterior: trinca→rosto central cobre
+  tela→feltro por vilão (Tony laranja, Ray verde, Tucker azul) com rosto central
+  →dado vermelho/swipe→valor gigante como transição→Circus/modal; Tony com patadas.
+  Dono rejeitou painel creme e pediu não acrescentar passos/efeitos extras.

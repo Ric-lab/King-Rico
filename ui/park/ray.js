@@ -1,4 +1,4 @@
-import {showResourceLoss,releaseVillainHold} from './villain-loss.js';
+import {releaseVillainHold} from './villain-loss.js';
 import {playVillainDie} from './villain-dice.js';
 // Choreography of one saved receipt; no debit or lottery in presentation.
 const BODY='/assets/ray/body-v1.webp',HEAD='/assets/ray/head-v1.webp';
@@ -28,6 +28,6 @@ export function installRay(fc){
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
   // Sem animação de roubo (dono, 22/11): o Ray aparece na slot, a linha marca a trinca e já abre o modal.
-  playVillainDie(fc,event,'ray',dieAbort.signal).then(async()=>{if(ended)return;await showResourceLoss(fc,event,'ray',dieAbort.signal);if(!ended)later(result,300);});
+  playVillainDie(fc,event,'ray',dieAbort.signal).then(()=>{if(ended)return;releaseVillainHold(fc);later(result,250);});
  }
 }
