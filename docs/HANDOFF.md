@@ -1,5 +1,9 @@
 ## Ajuste de pegada, feltro e parada do dado — Codex,23/11/2026
-Base `2d097e7`. Dado17% maior, posição inicial mais baixa; swipe aceita12px.
+Base `2d097e7`, atualizado sobre `c3d2774` antes de enviar. Preservados raio e
+novo número de patadas. Corrigido callback Array.from que lia terceiro argumento
+inexistente e travava Tony. Prévia cancela CI antigo quando um novo commit o
+substitui, mantendo todos os testes da versão nova.
+Dado17% maior, posição inicial mais baixa; swipe aceita12px.
 Feltro ganha textura tileável de fibras (`assets/materials/felt-grain-v1.webp`),
 mapa de cor/relevo partilhado pelos três temas, gerado pelo script versionado.
 Sai a orientação forçada após2,25s: `games/villain-dice/roll.mjs` simula o gesto

@@ -37,7 +37,7 @@ export function installTony(fc){
   requestAnimationFrame(lines);
   const start=Math.round(receipt.balanceDebited*100),total=event.stolenUnits;
   // O número do dado = número de patadas (cada uma leva uma aposta). Sem dado (recibos antigos): as 3 patadas salvas.
-  const strikes=event.dice?(total?Array.from({length:event.dice.value},(_,i,a)=>i<a.length-1?Math.floor(total/a.length):total-Math.floor(total/a.length)*(a.length-1)):[]):event.hits,count=strikes.length;fc._tonyStrikes=strikes;
+  const strikes=event.dice?(total?Array.from({length:event.dice.value},(_,i)=>i<event.dice.value-1?Math.floor(total/event.dice.value):total-Math.floor(total/event.dice.value)*(event.dice.value-1)):[]):event.hits,count=strikes.length;fc._tonyStrikes=strikes;
   function impact(n){
    hit=n+1;root.dataset.hit=String(hit);
    const spent=strikes.slice(0,hit).reduce((a,b)=>a+b,0);
