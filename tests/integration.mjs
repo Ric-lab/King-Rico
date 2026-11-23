@@ -1287,3 +1287,35 @@ test('Circus v6 full clovers persist a single free spin across refresh and simul
  await new Promise(r=>setTimeout(r,750));
  await assert.rejects(other.call({...freeRequest,requestId:randomUUID()}),/outro aparelho/);
 });
+
+for(const kind of ['tony','tucker','ray'])for(const face of [0,5])test('villain dice rules save '+kind+' face '+face+' and replay once',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');const {default:ctrl}=await import('../cloud/circus-control-v6.cjs');let draws=[];
+ const c=await client('dice-'+randomUUID(),undefined,{rng:()=>draws.shift()??.5});await c.call(request({action:'bootstrap'}));
+ await environment.withSecurityRulesDisabled(async context=>{
+  await updateDoc(doc(context.firestore(),'players',c.uid),{peaches:4,peachBank:{count:4,units:999}});
+  await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),cycleWagerUnits:0,cedros:kind==='ray'?5:0,economyV6:{...ctrl.freshEconomy(),paidUnits:100000}});
+ });
+ const z=((face===0?.1:4.9)-2.5)/.625;draws=[kind==='tony'?0:kind==='tucker'?.51:.54,.5,Math.exp(-z*z/2),z<0?.5:0];
+ const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6}),a=await c.call(req);
+ assert.equal(a.outcome[kind].dice.value,face);assert.equal(a.outcome[kind].version,4);
+ if(kind==='tony')assert.equal(a.player.balance,990-face*10);
+ else assert.equal(a.outcome[kind].stolen,Math.min(face,kind==='ray'?5:4));
+ const b=await c.call(req);assert.deepEqual(b.outcome,a.outcome);assert.equal(b.player.balance,a.player.balance);
+});
+for(const kind of ['tony','tucker','ray'])test('villain dice rules reject forged '+kind+' face and mismatch',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');const {default:ctrl}=await import('../cloud/circus-control-v6.cjs');
+ const c=await client('dice-forge-'+randomUUID());await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),pr=doc(c.db,'players',c.uid,'park','state');
+ const before={...park.fresh(),cycleWagerUnits:0,cedros:kind==='ray'?5:0,economyV6:{...ctrl.freshEconomy(),paidUnits:100000}};
+ await environment.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),'players',c.uid),{peaches:4,peachBank:{count:4,units:999}});await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),before);});
+ const old=(await getDoc(ref)).data();
+ for(const face of [-1,6,2.5,0]){
+  const id=randomUUID(),s=structuredClone(before);let first=true;
+  const x=park.spin(old,s,10,id,()=>first?(first=false,kind==='tony'?0:kind==='tucker'?.51:.54):.5,6);
+  x[kind].dice.value=face; // Keep the original loss: valid-looking zero must also fail a mismatch.
+  const p={...old,balanceUnits:old.balanceUnits-1000+x.winUnits-(x.tony?.stolenUnits||0),peaches:x.peaches,peachBank:x.peachBank,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp()};
+  s.revision=1;s.playerRevision=p.revision;s.lastOperationId=id;
+  const result={game:'circus',bet:10,balanceBefore:1000,balanceDebited:990,baseBalance:p.balanceUnits/100,outcome:x};
+  const batch=writeBatch(c.db);batch.set(ref,p);batch.set(pr,s);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged-dice',betUnits:1000,winUnits:x.winUnits,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});await assertFails(batch.commit());
+ }
+});

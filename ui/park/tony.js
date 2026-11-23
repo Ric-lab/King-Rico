@@ -1,3 +1,4 @@
+import {playVillainDie} from './villain-dice.js';
 // A committed debit, presented in three beats. This module never mutates the wallet.
 const HEAD='/assets/tony/head.webp';
 function adBottom(){const b=document.querySelector('.park-banner,[data-ad-banner]');if(b)return Math.max(0,b.getBoundingClientRect().bottom);if(!window.__fcAdBanner)return 0;const s=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top'))||0;return s+60;}
@@ -21,6 +22,7 @@ export function installTony(fc){
   const wallet=document.querySelector('.kr-hud-balance'),stage=document.querySelector('.park-circus-scene'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const prize=document.querySelector('.park-prize-value'),veil=root.querySelector('.park-tony-veil');
   const timers=[],animations=[];let modal,finished=false,hit=0;
+  const dieAbort=new AbortController();
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!finished)fn();},ms));
   // Boundaries share one timer: contact, sound, shake, red flash and number decrease.
   function sound(n){try{fc.sfxClaw?.(n);fc.buzz?.([70]);}catch{}}
@@ -51,7 +53,7 @@ export function installTony(fc){
    }catch{/* Financial result and next beat do not depend on animation APIs. */}
   }
   function clearPrize(){fc._tonyHitValue=null;prize?.classList.remove('is-tony-loss');}
-  function clean(){timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
+  function clean(){dieAbort.abort();timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});clearPrize();wallet?.classList.remove('is-tony-hit');root.remove();window.removeEventListener('pagehide',hide);}
   function release(){
    if(finished)return;finished=true;try{fc.sfxClick?.();fc.sfxCoinsLose?.(2);}catch{}clean();modal?.close();
    // The current confirmed snapshot may include a concurrent-device update.
@@ -60,11 +62,11 @@ export function installTony(fc){
   }
   function result(){
    wallet?.classList.remove('is-tony-hit');veil.hidden=true;clearPrize();fc.setState({barWin:0});
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><h2>Tony roubou</h2><strong class="park-tony-total">${fc.money(total/100)}</strong><p>moedas</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><h2>${total?'Tony roubou':'Tony não levou nada!'}</h2><strong class="park-tony-total">${fc.money(total/100)}</strong><p>moedas</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=release;
   }
   function hide(){if(finished)return;finished=true;clean();modal?.close();}
   window.addEventListener('pagehide',hide,{once:true});
-  later(()=>{impact(0);later(()=>{impact(1);later(()=>{impact(2);later(result,1600);},1550);},1550);},700);
+  playVillainDie(fc,event,'tony',dieAbort.signal).then(ok=>{if(finished)return;if(event.dice&&!ok)return;if(total===0){later(result,300);return;}later(()=>{impact(0);later(()=>{impact(1);later(()=>{impact(2);later(result,1600);},1550);},1550);},700);});
  }
 }

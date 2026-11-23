@@ -631,3 +631,8 @@ Asset `/assets/machine/goodluck-bolt-v1.svg`: vetor iridescente com contorno
 dourado claro, caindo verticalmente sobre o spin; contato sincroniza clique e
 início do giro. A drenagem permanece650ms; sem flash de tela inteira e sem os
 feixes antigos que saíam dos tubos.
+
+### Amostra23/11 — dado dos vilões
+
+Dado Three.js/Cannon lançado por swipe, faces0–5; valor pertence ao recibo.
+Ver [VILOES-DADO.md](VILOES-DADO.md) para limites, testes e bloqueio de publicação.

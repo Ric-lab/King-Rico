@@ -270,3 +270,16 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-meter-goal{top:-38px;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff6c8 0,#ffd257 45%,#c27a0a 100%);box-shadow:0 0 0 2px #8a4a05,0 2px 4px #0007}
 .park-goal-bolt{width:78%;height:78%}
 .park-meter-right .park-goal-bolt{transform:scaleX(-1)}
+
+/* Swipe launches a real Three.js/Cannon die; the receipt owns its final face. */
+.park-villain-dice{position:fixed;inset:0;z-index:2147483500;display:grid;place-items:center;background:#132139a8;backdrop-filter:blur(5px);font-family:'Baloo 2',sans-serif;color:#fff5cf;touch-action:none}
+.park-dice-panel{width:min(410px,96vw);box-sizing:border-box;text-align:center;padding:20px 12px 22px;border:2px solid #e9b647;border-radius:30px;background:linear-gradient(#6629a0,#321356);box-shadow:inset 0 1px #ffe79c,0 12px 45px #0007}
+.park-dice-panel>p{margin:0;font-weight:800;font-size:27px;line-height:1.1}
+.park-dice-tray{position:relative;width:100%;height:min(330px,43vh);touch-action:none;cursor:grab}
+.park-dice-tray:active{cursor:grabbing}.park-dice-tray canvas{display:block;width:100%;height:100%;touch-action:none}
+.park-dice-caption{display:block;font-size:28px;line-height:1.2;min-height:34px}
+.park-dice-detail{display:block;font-size:18px;min-height:26px;margin-top:4px;line-height:1.35;color:#f2dfbf}
+.park-villain-dice[data-phase="result"] .park-dice-caption{color:#ffd967}
+.park-dice-throw{min-height:48px!important;width:85%;margin:14px auto 0;font-size:20px!important}
+.park-dice-fallback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:105px;height:105px;align-content:center;background:#fff1d2;border:5px solid #d6a647;border-radius:18px;color:#682c9c;font-size:70px;font-weight:800}
+.park-dice-fallback[hidden],.park-dice-throw[hidden]{display:none!important}

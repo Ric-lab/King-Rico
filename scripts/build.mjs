@@ -77,6 +77,7 @@ if(production) {
   if(menu.includes('KingRicoPreviewPicker')) throw new Error('Preview selector must not ship in production');
   await writeFile(menuFile,menu);
 }
+await build({entryPoints:['games/villain-dice/scene.js'],outfile:path.join(destination,'ui/park/villain-dice-three.js'),bundle:true,format:'esm',target:'es2022',minify:true,plugins:[{name:'dice-shared-three',setup(b){b.onResolve({filter:/^three$/},()=>({path:'../../runtime/three.module.js',external:true}));}}]});
 await build({entryPoints:['ui/park/index.js'],outfile:path.join(destination,'ui/park/client.js'),bundle:true,format:'iife',target:'es2022',minify:true});
 await build({entryPoints:['ui/park/home.js'],outfile:path.join(destination,'ui/park/home.js'),bundle:true,format:'iife',target:'es2022',minify:true});
 // The DC loader has no CommonJS dependency resolver; bundle the preview's shared components.

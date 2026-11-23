@@ -923,7 +923,7 @@ service cloud.firestore {
         && (kind=='ray'?s.cedros==stock-x.ray.stolen:s.cedros==stock-(defended?1:0))
         && r.peach==[] && r.full==false && x.feature==null
         && (defended?x.defense.against==kind:x.get('defense',null)==null && r.win==0 && o.winUnits==0 && villainGrid(x,kind=='tony'?12:kind=='tucker'?13:14))
-        && (kind=='tony'?v6Tony(p,old,o,b,defended):kind=='ray'?v6Ray(p,old,o,stock):defended?v6UntouchedResource(p,old,o,kind):v6Tucker(p,old,o));
+        && (kind=='tony'?(x.tony.version==4?!defended && v6DiceTony(p,old,o,b):v6Tony(p,old,o,b,defended)):kind=='ray'?v6Ray(p,old,o,stock):defended?v6UntouchedResource(p,old,o,kind):v6Tucker(p,old,o));
     }
     function v6Defense(x,kind,o) {
       let d=x.defense; let g=d.beforeGrid; let symbol=kind=='tony'?12:13;
@@ -938,6 +938,16 @@ service cloud.firestore {
           d.cell==6?d.replacement:g[6],d.cell==7?d.replacement:g[7],d.cell==8?d.replacement:g[8]]
         && o.winUnits==prize && x.res.win==prize / 100.0;
     }
+    function validVillainDice(e) {
+      return e.dice=={'version':1,'value':e.dice.value} && e.dice.value is int && e.dice.value>=0 && e.dice.value<=5;
+    }
+    function v6DiceTony(p,old,o,b) {
+      let x=o.result.outcome; let t=x.tony; let stake=int(o.result.bet*100+0.5);
+      let amount=t.dice.value*stake; let third=int(amount / 3);
+      let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*stake});
+      return validVillainDice(t) && t=={'version':4,'dice':t.dice,'stolenUnits':amount,'hits':[third,third,amount-2*third]}
+        && amount<=v6Maximum(old,o,b) && p.peaches==old.peaches && x.peaches==p.peaches && p.peachBank==bank && x.peachBank==bank;
+    }
     function v6Tony(p,old,o,b,defended) {
       let x=o.result.outcome; let t=x.tony; let amount=t.stolenUnits; let third=int(amount / 3);
       let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*int(o.result.bet*100+0.5)});
@@ -948,8 +958,11 @@ service cloud.firestore {
     function v6Ray(p,old,o,stock) {
       let x=o.result.outcome; let stolen=x.ray.stolen;
       let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
-      return x.ray=={'version':3,'before':stock,'stolen':stolen,'remaining':stock-stolen} && stolen is int
-        && (stock>0?stolen>=1 && stolen<=stock && stolen<=4:stolen==0)
+      return (x.ray.get('version',0)==4?
+          validVillainDice(x.ray) && x.ray=={'version':4,'dice':x.ray.dice,'before':stock,'stolen':stolen,'remaining':stock-stolen}
+          && stolen==(stock<x.ray.dice.value?stock:x.ray.dice.value):
+          x.ray=={'version':3,'before':stock,'stolen':stolen,'remaining':stock-stolen} && stolen is int
+          && (stock>0?stolen>=1 && stolen<=stock && stolen<=4:stolen==0))
         && p.peaches==old.peaches && p.peachBank==bank && x.peaches==p.peaches && x.peachBank==p.peachBank;
     }
     // These branches enforce the same resource transition, without computing a
@@ -965,8 +978,11 @@ service cloud.firestore {
       let x=o.result.outcome; let before=old.peaches; let stolen=x.tucker.stolen;
       let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*o.betUnits});
       let remainingUnits=before>0?bank.units-int(bank.units*stolen / (before*1.0)+0.5):0;
-      return x.tucker=={'version':3,'stolen':stolen} && stolen is int
-        && (before>0?stolen>=1 && stolen<=before && stolen<=4:stolen==0)
+      return (x.tucker.get('version',0)==4?
+          validVillainDice(x.tucker) && x.tucker=={'version':4,'dice':x.tucker.dice,'stolen':stolen}
+          && stolen==(before<x.tucker.dice.value?before:x.tucker.dice.value):
+          x.tucker=={'version':3,'stolen':stolen} && stolen is int
+          && (before>0?stolen>=1 && stolen<=before && stolen<=4:stolen==0))
         && p.peaches==before-stolen && p.peachBank=={'count':before-stolen,'units':remainingUnits}
         && x.peaches==p.peaches && x.peachBank==p.peachBank;
     }

@@ -7,7 +7,7 @@ function control(p,s,bet){
  const stake=engine.units(bet),e=s.economyV6||freshEconomy();
  const charged=s.cloverFreeBetUnits?0:stake;
  const budget=Math.max(0,returned(e)-Math.ceil((e.wageredUnits+charged)*.9));
- const maxTiger=Math.min(stake*25,Math.max(0,p.balanceUnits-charged),budget);
+ const maxTiger=Math.min(stake*5,Math.max(0,p.balanceUnits-charged),budget);
  return {stake,budget,maxTiger};
 }
 function candidate(p,s,bet,rng){
@@ -34,16 +34,18 @@ function candidate(p,s,bet,rng){
   x.defense={against:kind,beforeGrid,cell,replacement,line:engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))};
  }
  if(kind==='tony'){
-  const amount=protect?0:boundedNormalInt(c.stake,c.maxTiger,rng);
-  x.tony={version:3,minUnits:c.stake,maxUnits:protect?0:c.maxTiger,stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};
+  const ceiling=Math.min(5,Math.floor(c.maxTiger/c.stake));
+  const value=protect?0:boundedNormalInt(0,ceiling,rng),amount=value*c.stake;
+  x.tony=protect?{version:3,minUnits:c.stake,maxUnits:0,stolenUnits:0,hits:[0,0,0]}:
+   {version:4,dice:{version:1,value},stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};
  }else if(kind==='tucker'){
-  const count=p.peaches,stolen=protect?0:boundedNormalInt(count?1:0,Math.min(4,count),rng),remaining=count-stolen;
+  const count=p.peaches,value=protect?0:boundedNormalInt(0,5,rng),stolen=Math.min(count,value),remaining=count-stolen;
   x.peaches=remaining;x.peachBank={count:remaining,units:count?bank.units-Math.round(bank.units*stolen/count):0};
-  x.tucker={version:3,stolen};
+  x.tucker=protect?{version:3,stolen:0}:{version:4,dice:{version:1,value},stolen};
  }else{
-  // Ray rouba de 1 a 4 trevos (limitado ao estoque); com 0 trevos, não leva nada.
-  const stolen=before?boundedNormalInt(1,Math.min(4,before),rng):0;s.cedros=before-stolen;
-  x.ray={version:3,before,stolen,remaining:before-stolen};
+  // Saved 0–5 die; resource loss is capped at the actual stock.
+  const value=boundedNormalInt(0,5,rng),stolen=Math.min(before,value);s.cedros=before-stolen;
+  x.ray={version:4,dice:{version:1,value},before,stolen,remaining:before-stolen};
  }
  return x;
 }

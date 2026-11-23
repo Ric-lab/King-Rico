@@ -1,3 +1,4 @@
+import {playVillainDie} from './villain-dice.js';
 // Stages a committed receipt. No mutation, RNG or live-wallet transaction here.
 const BODY='/assets/tucker/body-grip-v2.webp',HEAD='/assets/tucker/head.webp';
 export function installTucker(fc){
@@ -22,6 +23,7 @@ export function installTucker(fc){
   bird.style.cssText=`width:${size}px;height:${height}px;left:${r.width*.5-size*.49}px;top:${r.height*.12-height*.945}px;`;
 
   let clone,modal,ended=false;const timers=[],animations=[];
+  const dieAbort=new AbortController();
   const later=(fn,ms)=>timers.push(setTimeout(()=>{if(!ended)fn();},ms));
   const animate=(el,keys,opts)=>{try{const a=el.animate(keys,opts);animations.push(a);return a;}catch{return null;}};
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -39,11 +41,11 @@ export function installTucker(fc){
   }
   function result(){
    scene.dataset.phase='result';carrier.style.visibility='hidden';
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>${event.stolen?'Tucker levou':'Sem roletas!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'roleta':'roletas'):'Nenhuma roleta perdida'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou roletas');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><h2>${event.stolen?'Tucker levou':'Tucker não levou nada!'}</h2><strong class="park-tony-total">${event.stolen}</strong><p>${event.stolen?(event.stolen===1?'roleta':'roletas'):'Nenhuma roleta perdida'}</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou roletas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;
   }
   function settle(){fc.setState({peaches:window.KingRicoCloud.player.peaches,peachShownBase:null,peachShownAdd:0,balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}
-  function clean(){timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});if(basket)basket.style.visibility=previousVisibility;scene.remove();window.removeEventListener('pagehide',hide);}
+  function clean(){dieAbort.abort();timers.forEach(clearTimeout);animations.forEach(a=>{try{a.cancel();}catch{}});if(basket)basket.style.visibility=previousVisibility;scene.remove();window.removeEventListener('pagehide',hide);}
   function done(){if(ended)return;ended=true;clean();fc._tuckerPlaying=false;fc._celebHold=false;fc.syncCeleb();fc.kingSet('idle');}
   function back(){if(scene.dataset.phase==='returning')return;modal?.close();scene.dataset.phase='returning';clone?.remove();settle();
    if(basket){basket.style.visibility=previousVisibility;animate(basket,[{opacity:0,translate:'0 -15px'},{opacity:1,translate:'0 0'}],{duration:reduced?200:650,easing:'ease-out'});}
@@ -52,6 +54,6 @@ export function installTucker(fc){
   function hide(){if(ended)return;ended=true;modal?.close();clean();}
   window.addEventListener('pagehide',hide,{once:true});
   // Sem animação de voo (dono, 22/11): o Tucker aparece na slot, a linha marca a trinca e já abre o modal.
-  carrier.style.visibility='hidden';later(result,900);
+  carrier.style.visibility='hidden';playVillainDie(fc,event,'tucker',dieAbort.signal).then(()=>{if(!ended)later(result,event.dice?250:900);});
  }
 }

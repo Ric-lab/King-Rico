@@ -1,3 +1,19 @@
+## Dado físico por swipe — Codex,23/11/2026
+Base `bf53cd5`. Dono interrompeu o dado CSS e pediu Three.js: nova cena em
+`games/villain-dice/scene.js`, física Cannon, lançamento pelo swipe ou botão,
+quiques e seis faces0–5. Interface comum dos três vilões espera o gesto.
+Face final salva no recibo, sem novo sorteio/débito durante animação.
+Core/regras aceitam eventosv4; antigosv3 continuam compatíveis. Tucker0–5
+roletas, Ray0–5 escudos (limitados ao estoque), Tony0–5 apostas (limitado ao
+saldo/orçamento). Defesas atuais preservadas. Bubble Shooter registrado no TODO.
+Conferidos swipe real, seis faces, teclado, fallback WebGL e cancelamento.
+90 testes Firestore passaram; produção gerada após a integração.
+Detalhes, testes e bloqueio financeiro: [VILOES-DADO.md](VILOES-DADO.md).
+Auditoria:5 milhões por aposta fixa retornam89,9747%, mas estresse de aposta alta
+perto do fim retorna95,9524%; NÃO publicar em live. Checkpoint sem deploy.
+Próximo passo: dono validar gesto/arte; resolver a política de aposta variável
+antes de publicar a matemática. Não foi feito ajuste silencioso na roleta.
+
 ## Escudo nos rolos + voos do escudo e da roleta aos contadores ovais — Antigravity, 21/11
 Base `96d9960` puxada antes de editar; alteração só na prévia (`codex/penalty-clown-preview`).
 - Célula 5 da slot machine trocada do trevo para `assets/symbols/shield-defense-rainbow-gold-v1.webp`:

@@ -482,3 +482,15 @@ test('Circus clover free spin persists across devices with zero debit and reject
  m.advance(1000);await assert.rejects(other({...freeReq,requestId:randomUUID()}),{code:'king-rico/round-conflict'});
  const before=(await other(request({action:'bootstrap'}))).player.balance;await call(paidReq);assert.equal((await other(request({action:'bootstrap'}))).player.balance,before);
 });
+
+test('saved villain die and debit survive concurrent repeat and a new client without reroll',async()=>{
+ const m=memory(()=>.99),call=m.client('die');await call(request({action:'bootstrap'}));
+ const p=m.records.get('players/die');p.balanceUnits=1000000;
+ m.records.set('players/die/park/state',{version:1,revision:0,lastOperationId:null,tickets:0,spins:0,wheel:null,passes:{},cedros:0,cycleWagerUnits:0,economyV6:{version:1,rounds:0,wageredUnits:0,paidUnits:1000000,tigerUnits:0}});
+ const draws=[0,.5,.5,.5];m.setRng(()=>draws.shift()??.5);
+ const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
+ const [a,b]=await Promise.all([call(req),call(req)]);
+ assert.ok(a.outcome.tony.dice);assert.deepEqual(a.outcome,b.outcome);
+ const balance=a.player.balance;m.setRng(()=>{throw Error('Repeat must never draw again');});
+ const reloaded=await m.client('die')(req);assert.deepEqual(reloaded.outcome,a.outcome);assert.equal(reloaded.player.balance,balance);assert.equal(reloaded.replayed,true);
+});

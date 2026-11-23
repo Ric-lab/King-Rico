@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-21",
+  "updatedAt": "2026-11-23",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "t-dado0-5-nos-roubos-dos-v",
+      "title": "Dado0–5 nos roubos dos vilões",
+      "status": "todo",
+      "category": "Jogabilidade",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Implementação Three.js/Cannon: swipe lança dado real; face0–5 salva no recibo, sem outro débito. Core/regras/testes integrados.90 regras passaram; economia fixa89,9747%, estresse de aposta variável95,9524% bloqueia publicação financeira. Arte/gesto em avaliação; checkpoint sem deploy."
+    },
     {
       "id": "p-escudo-rolos-voos",
       "title": "Escudo na slot machine e voos do escudo e da roleta aos contadores ovais",
@@ -35,13 +45,13 @@
     },
     {
       "id": "i-bubble-rico",
-      "title": "Bubble Rico: minigame novo (bubble shooter) pagando em escudos",
+      "title": "Bubble Rico: segundo jogo cozy, junto do Match Three",
       "status": "todo",
       "category": "Ideias",
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "Mesmo formato do Royal Rico. Detalhar regras antes de construir. Ver docs/PLANO-V7.md.",
+      "notes": "Decisão do dono23/11: segundo cozy será Bubble Shooter, referência https://play.google.com/store/apps/details?id=com.matchgame.BubbleDrop&hl=pt_BR . Implementar depois dos dados dos vilões; não criar agora. Recompensas/regras a definir.",
       "createdAt": "2026-11-20T04:15:45.127Z",
       "updatedAt": "2026-11-20T04:15:45.127Z"
     },
@@ -53,7 +63,7 @@
       "agent": "Claude",
       "commit": null,
       "demoUrl": null,
-      "notes": "O Tucker roubava Happeach; com o Good Luck no trevo da barriga, ele fica sem função. Vilões restantes: Tony e Ray.",
+      "notes": "Proposta anterior não executada. Em23/11 o dono pediu dado0–5 também para o Tucker roubar roletas; preservar o personagem nesta tarefa. Reavaliar retirada apenas com nova decisão.",
       "createdAt": "2026-11-20T04:02:23.538Z",
       "updatedAt": "2026-11-20T04:07:27.180Z"
     },
