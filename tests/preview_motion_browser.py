@@ -29,8 +29,11 @@ with sync_playwright() as p:
   assert page.locator('.park-spin-label').first.evaluate('e=>getComputedStyle(e).color')=='rgb(255, 250, 240)'
   page.get_by_role('button',name='Girar',exact=True).screenshot(path='work/preview-spin-wine-rest-'+mode+'.png')
   spin_box=page.locator('[data-spin-btn]').bounding_box()
+  # Sample synchronously in the real press handler. A remote Playwright query
+  # may arrive after the 80–100ms flash has already started fading on a busy runner.
+  page.evaluate('''()=>{const press=__fc._spinTouchDown;__fc._spinTouchDown=(...args)=>{press(...args);const s=getComputedStyle(document.querySelector('.park-spin-rim-pulse'));window.pressPulseQA={opacity:Number(s.opacity),color:s.backgroundColor};};}''')
   page.mouse.move(spin_box['x']+spin_box['width']/2,spin_box['y']+spin_box['height']/2);page.mouse.down()
-  pulse=page.locator('.park-spin-rim-pulse').evaluate('e=>({opacity:Number(getComputedStyle(e).opacity),color:getComputedStyle(e).backgroundColor})')
+  pulse=page.evaluate('window.pressPulseQA')
   assert pulse['opacity']>.95 and pulse['color']=='rgb(255, 223, 112)',pulse
   assert page.evaluate("(()=>{const e=document.querySelector('.park-spin-rim-pulse'),a=e.getAnimations()[0];__fc.lightsPulse();return e.getAnimations()[0]===a})()"),'Do not restart the rim on the later electric pulse'
   page.wait_for_timeout(90)

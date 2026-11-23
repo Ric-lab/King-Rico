@@ -11,6 +11,9 @@ Hold integrado no cliente real E em `prototypes/circus-preview/wallet-client.js`
 o build de prévia usa este cliente específico, não a parte superior de index.js.
 Sem alterações novas na matemática. RTP por aposta variável continua bloqueando
 LIVE; usuário autorizou avaliar o conjunto com a carteira fictícia da prévia.
+CI52b713e: todos os navegadores passaram exceto uma amostra tardia do brilho
+do spin (opacity0,786 em vez de>0,95). Teste ajustado para capturar no próprio
+handler de press, mantendo o limiar e a regra, sem alterar o botão.
 Todos os testes da prévia passaram entre a rodada completa e as correções
 focadas; o smoke final conferiu Dado do Tucker pelo seletor, zoom e perda no
 contador. Produção conferida após integração. Publicar só o Pages normal.
