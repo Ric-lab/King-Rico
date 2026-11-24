@@ -16,12 +16,12 @@
     {
       "id": "p-reward-button",
       "title": "Botão de moedas por vídeo integrado à identidade do Circus",
-      "status": "done",
+      "status": "preview",
       "category": "Menu & Topo",
-      "agent": "Codex / Antigravity",
+      "agent": "Antigravity",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "24/11: movido para a direita da tela, abaixo do botão de configurações (⚙), com moeda +1.000 e play/Vídeo · 30s. Mantém fluxo de anúncio, cancelamento seguro e crédito único; promovido à prévia e ao oficial."
+      "notes": "24/11: ajustado para bolinha circular lateral estilo Royal Smash sob Configurações (⚙), com aro dourado, ícone de vídeo (▶) + moeda e pílula inferior +1.000."
     },
     {
       "id": "p-paytable-clean",

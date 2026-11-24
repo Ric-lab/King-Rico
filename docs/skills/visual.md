@@ -152,3 +152,8 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
 -24/11: botão roxo/dourado de pegar moedas vendo vídeo (+1.000 · Vídeo 30s) à
   esquerda abaixo do saldo foi rejeitado; deve ficar na direita da tela, abaixo
   do botão de configurações.
+
+-24/11: retângulo largo para o botão de vídeo (+1.000) foi substituído a pedido
+  do dono por medalhão circular lateral ("bolinha", referência Royal Smash)
+  centrado sob `⚙`, com arte de play+moeda dentro do círculo e pílula `+1.000`
+  na base.

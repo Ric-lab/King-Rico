@@ -680,8 +680,9 @@ Tabela de pagamentos24/11: controles de aposta e contadores inferiores ficam
 ocultos enquanto a tabela está aberta. Power-ups aparecem só como assets, sem
 legendas. Tucker indica roleta por silhueta; Ray indica escudo por silhueta.
 
-Anúncio24/11: botão nativo roxo/dourado à direita da tela, abaixo do botão de
-configurações (`⚙`), com moeda +1.000 e play/Vídeo30s. Alvo123×64 no palco, sem
-sobrepor o botão de menu nem o saldo; no saldo largo, acompanha a segunda linha.
+Anúncio24/11: medalhão circular lateral ("bolinha") à direita da tela, centrado
+abaixo do botão de configurações (`⚙`), com aro dourado, interior roxo radial,
+ícone de vídeo (`▶`) + moeda e pílula inferior `+1.000` (alvo66×72 no palco, sem
+sobrepor o alvo de44px do menu nem o saldo; acompanha `.has-wide-wallet`).
 Mantém simulação30s, cancelamento, recibo, crédito idempotente e voo já existentes;
 sem serviço novo de anúncios.

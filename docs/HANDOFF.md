@@ -1,3 +1,11 @@
+## Botão de vídeo em bolinha lateral (referência Royal Smash) — Antigravity/Gemini, 24/11/2026
+Base `2d53fd1` puxada antes de editar; entrega somente na prévia (`codex/penalty-clown-preview`) para avaliação do dono.
+- **Formato em bolinha lateral**: `.kr-hud-ad` em `Fortune Circus.dc.html` e `ui/park/spin-v7.css` passa do cartão retangular largo para medalhão circular (`60×60px`, alvo `66×72px`, `right: 7.667px` centrado no mesmo eixo de `⚙` a `40.667px` da borda direita) com aro dourado metálico, fundo roxo radial com raios suaves, ícone 3D de vídeo (`▶`) + moeda (`sym-coin.webp`) no centro e pílula inferior `+1.000`, deixando a nuvem do King Rico livre.
+- **Testes e guias**: atualizado `tests/circus_recharge_browser.py` para conferir alinhamento centralizado sob `Abrir menu`, folga de toque inclusive em 320px (`--kr-hud-px-scale`), disco circular, pílula `+1.000`, cancelamento sem crédito e +1.000 único após 30s com voo; conferidos `circus_layout_browser.py`, `tests/build.test.mjs` e prints em 320/390/412px. Atualizados `docs/PARQUE.md`, `docs/skills/visual.md` e `docs/todo.json`.
+- **Próximo passo**: confirmar sucesso de `Prévia no GitHub Pages` neste commit e aguardar aprovação visual do dono em https://ric-lab.github.io/King-Rico/Preview antes de promover à `main`.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Botão de vídeo à direita (abaixo de Configurações) + promoção prévia e oficial — Antigravity/Gemini, 24/11/2026
 Base: merge de `codex/penalty-clown-preview` (`98ef8de`) + `main` (`4e9c06b`), preservando o fundo v2 oficial e o lote completo da prévia (`a4912f2` paridade/Tony determinístico, `a889747` saldo retido da roleta até o voo final, `d1cf310` tabela de pagamentos limpa/silhuetas, `d5a4742` botão nativo roxo/dourado `+1.000 · Vídeo · 30s`).
 - **Ajuste pedido pelo dono**: `.kr-hud-ad` em `ui/park/spin-v7.css` sai da esquerda sob o saldo e passa para a direita da tela, logo abaixo do botão de configurações (`right: 18px`, `top: max(66px, calc(34.5px + var(--kr-hit-side, 44px)/2 + 4px))`, e `122px` quando `.has-wide-wallet`), sem sobrepor o alvo de toque de 44px de `Abrir menu`, o saldo à esquerda nem a moldura da máquina.

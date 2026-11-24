@@ -40,15 +40,16 @@
 .park-bet-step svg{width:30px;height:30px;overflow:visible}
 .park-circus-stage [data-spin-btn][data-auto="true"]~.park-bet-step{opacity:.45;pointer-events:none}
 
-/* Rewarded video sits on the right below the settings gear, with the game's purple/gold finish. */
-.kr-hud-ad{position:absolute!important;left:auto!important;right:18px!important;top:max(66px,calc(34.5px + var(--kr-hit-side,44px)/2 + 4px))!important;width:123px!important;height:64px!important;box-sizing:border-box;padding:5px 6px!important;border:2px solid #f5c453!important;border-radius:18px!important;font-family:'Baloo 2',system-ui,sans-serif;color:#fff6d6;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;background:#7134b6!important;box-shadow:inset 0 1px #c299ee,0 3px #ac702b!important;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.kr-hud-row.has-wide-wallet .kr-hud-ad{top:max(122px,calc(90px + var(--kr-hit-side,44px)/2 + 4px))!important}
-.kr-hud-ad:active{transform:translateY(3px);box-shadow:inset 0 1px #a27bc7,0 0 #ac702b!important}
-.kr-ad-reward{display:flex;align-items:center;gap:4px;line-height:1}
-.kr-ad-reward img{width:23px;height:23px;object-fit:contain}
-.kr-ad-reward b{font-size:23px;color:#ffe893;font-weight:800}
-.kr-ad-time{display:flex;align-items:center;font-size:13px;font-weight:700;line-height:1.2;color:#fff5dd}
-.kr-ad-time svg{width:13px;height:13px;margin-right:2px}
+/* Lateral circular medallion ("bolinha") below the settings gear, with play+coin icon and bottom +1.000 pill. */
+.kr-hud-ad{position:absolute!important;left:auto!important;right:7.667px!important;top:max(66px,calc(34.5px + 22px / var(--kr-hud-px-scale,1) + 4px))!important;width:66px!important;height:72px!important;box-sizing:border-box;padding:0!important;border:0!important;border-radius:33px!important;font-family:'Baloo 2',system-ui,sans-serif;color:#fff8e2;display:block!important;cursor:pointer;background:none!important;box-shadow:none!important;overflow:visible!important;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.kr-hud-row.has-wide-wallet .kr-hud-ad{top:max(122px,calc(90px + 22px / var(--kr-hud-px-scale,1) + 4px))!important}
+.kr-hud-ad:active{transform:translateY(2.5px) scale(.96)}
+.kr-ad-disc{position:absolute;left:3px;top:0;width:60px;height:60px;box-sizing:border-box;border-radius:50%;border:3.5px solid transparent;background:repeating-conic-gradient(from -8deg at 50% 44%,rgba(255,255,255,.1) 0 12deg,transparent 12deg 24deg) padding-box,radial-gradient(circle at 50% 34%,#b56dff 0%,#782ec9 56%,#461183 100%) padding-box,linear-gradient(180deg,#fff5c0 0%,#ffd257 46%,#c57b0c 100%) border-box;box-shadow:0 0 0 1.5px #6b2e05,0 3px 0 #6b2e05,0 6px 10px rgba(18,4,36,.32),inset 0 2px 1px rgba(255,255,255,.5),inset 0 -3px 5px rgba(34,4,68,.65);pointer-events:none}
+.kr-ad-art{position:absolute;left:3px;top:0;width:60px;height:56px;pointer-events:none}
+.kr-ad-play{position:absolute;left:6px;top:9px;width:36px;height:29px;transform:rotate(-6deg);filter:drop-shadow(0 2px 2px rgba(28,4,52,.55))}
+.kr-ad-coin{position:absolute;right:4px;top:19px;width:27px;height:27px;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 2px 2px rgba(28,4,52,.6))}
+.kr-ad-pill{position:absolute;left:0;bottom:0;width:66px;height:22px;box-sizing:border-box;border-radius:999px;border:2px solid transparent;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#8f43e8 0%,#581ba1 100%) padding-box,linear-gradient(180deg,#fff5c0 0%,#ffd257 52%,#c57b0c 100%) border-box;box-shadow:0 0 0 1px #6b2e05,0 2.5px 0 #6b2e05,inset 0 1px 0 rgba(255,255,255,.45);pointer-events:none}
+.kr-ad-pill b{font-size:14.5px;font-weight:800;line-height:1;letter-spacing:-.2px;color:#fff9e4;text-shadow:0 1.5px 0 #340a63;font-variant-numeric:tabular-nums}
 .kr-hud-ad:focus-visible{outline:3px solid #fff;outline-offset:4px}
 /* The exposed side is occluded as the cap enters the socket; no red ears. */
 .park-circus-stage [data-spin-btn][data-spin-btn] .park-spin-edge{clip-path:inset(0);transition:clip-path 160ms cubic-bezier(.2,.8,.2,1)}
