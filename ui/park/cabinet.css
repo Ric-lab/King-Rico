@@ -248,8 +248,9 @@
 .park-pocket [data-tickets],.park-basket [data-wheels],.park-tucker-carried-basket [data-wheels]{left:0;right:0;top:auto;bottom:4px;width:100%;height:18px;font-size:18px!important;line-height:1}
 
 /* Match the atlas aspect correction: contain would squash the square shield
-   when the reel window compresses vertically. Same sizing while moving/resting. */
-[data-park-clover="true"],.park-tape-symbol[data-symbol="5"]{background-image:url('/assets/symbols/shield-defense-rainbow-gold-v1.webp')!important;background-size:100% 100%!important;background-position:50% 50%!important}
+   when the reel window compresses vertically. Uniform 86% sizing matches the
+   visible height of other symbols without flattening; same while moving/resting. */
+[data-park-clover="true"],.park-tape-symbol[data-symbol="5"]{background-image:url('/assets/symbols/shield-defense-rainbow-gold-v1.webp')!important;background-size:86% 86%!important;background-position:50% 50%!important}
 
 /* v7 step 2: approved shields dock below the shared account balance. */
 .kr-hud-row .park-shield-wallet{position:absolute;left:18px!important;right:auto!important;top:70px!important;width:108px!important;height:54px!important;min-height:calc(44px / var(--kr-hud-px-scale,1))!important;text-decoration:none;cursor:pointer;z-index:2;pointer-events:auto}

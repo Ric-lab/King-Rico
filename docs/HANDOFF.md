@@ -1,3 +1,12 @@
+## Altura visual do escudo normalizada — Codex,24/11/2026
+Basee9f81de; somente prévia. Medida alfa>100: escudo95,5% da imagem, contra
+moeda79,9%, diamante79,5% e circo83%. Mantida correção proporcional dos rolos,
+mas background-size agora86%86% (−14% em ambos os eixos, centrado). Altura útil
+fica82,1%, coerente com os demais; sem achatar ou mudar fonte/contador/modal.
+Mesma regra em data-park-clover e fita símbolo5. Conferidos giro e repouso,
+com escudo/moeda/diamante na mesma linha; prints antes/depois. Próximo: confirmar
+Pages e dono avaliar. Nenhuma mudança na main.
+
 ## Bloco superior, vídeo, pulso adaptativo e seletor — Codex,24/11/2026
 Base15470f2; somente prévia. King+nuvem+placa/valor de win descem7 unidades
 nativas juntos (--park-hero-drop). Medalhão de vídeo desce30 (--park-ad-drop),

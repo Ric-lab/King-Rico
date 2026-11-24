@@ -692,7 +692,7 @@ radiais douradas e12 setores de cores. Substitui a coroa interna. Caminho legado
 shield-defense-rainbow-gold-v1 mantido; PNG fonte e WebP512 atualizados juntos.
 Não altera defesa, estoque ou pagamentos. Arte anterior em archive/assets/symbols.
 
-Proporção do escudo nos rolos24/11: fundo100%100% na caixa já compensada do
+Proporção do escudo nos rolos24/11: fundo86%86% na caixa já compensada do
 atlas103,874×124. Não usar contain no símbolo5: a compressão do gabinete deixa
 o escudo achatado. Mesma regra em data-park-clover e park-tape-symbol5; outros
 consumidores (contador/modal/voos) mantêm a proporção natural da imagem.
@@ -704,3 +704,7 @@ via effectBox (retângulo real → coordenadas locais do fxRef); não usar left/
 computados ignorando transformações. Recriar bitmap apenas se a dimensão mudar.
 Seletor: Escudo/Escudos cheios e nomes completos dos vilões. 1 roleta adiciona
 só1 ao estoque; Completar5 roletas mantém o preset que prepara o bônus.
+
+Tamanho visual24/11: escudo ocupa95,5% de sua textura. Nos rolos,86%86%
+reduz uniformemente14% e deixa altura útil82,1%, próxima de moeda/diamante/circo.
+Preserva proporção e centralização; não reduzir só a altura nem voltar a contain.
