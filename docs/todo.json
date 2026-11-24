@@ -514,16 +514,6 @@
       "notes": "Garantia implementada nos dois gatilhos atuais: 5ª roleta guardada e barra Good Luck completa. Linha real de prêmio mínimo 0,4x se a grade não premiou, preservando roletas coletadas. 20M giros, zero gatilhos sem moedas, retorno ~89,998%; stress passou. Regras Firestore continuam bloqueadas; entrega só na prévia. Atualização colocado apenas na roleta"
     },
     {
-      "id": "t-controle-penalty",
-      "title": "Símbolo do controle de videogame já no jogo: por enquanto abre o antigo Fortune Penalty (só para funcionar; o jogo definitivo vem depois)",
-      "status": "todo",
-      "category": "Economia & Regras",
-      "agent": "",
-      "commit": "",
-      "demoUrl": "",
-      "notes": "Ativar o símbolo do controle nos rolos abrindo o Fortune Penalty temporariamente."
-    },
-    {
       "id": "t-raspadinha-rapida",
       "title": "Raspadinha: o 1º risco rápido não toca o som da raspagem (o som tem que sair mesmo raspando rápido)",
       "status": "done",
