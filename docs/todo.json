@@ -5,13 +5,13 @@
   "items": [
     {
       "id": "t-escudo-roleta-3opcoes",
-      "title": "Escudo estilo roleta: escolher entre as 3 opções geradas (12, 8 ou 10 partes)",
+      "title": "Escudo estilo roleta: arte aprovada e proporção nos rolos",
       "status": "preview",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": "Dono pediu aplicar o escudo mostrado pelo Codex no chat: centro dourado,12 setores e raios. Aplicado nos caminhos ativos PNG/WebP; 3 propostas Gemini preservadas. Somente prévia; conferir rolos, contador e voos."
+      "notes": "Arte do Codex aplicada em66bb41e. Ajuste24/11: escudo achatava com contain no gabinete comprimido. CSS100%100% compartilha compensação do atlas em repouso/giro. Antes/depois conferido; somente prévia, aguarda avaliação."
     },
     {
       "id": "t-bubble-rico",

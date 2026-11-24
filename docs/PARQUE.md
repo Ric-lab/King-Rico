@@ -691,3 +691,8 @@ Escudo24/11 (prévia): centro circular dourado inspirado na roleta, divisórias
 radiais douradas e12 setores de cores. Substitui a coroa interna. Caminho legado
 shield-defense-rainbow-gold-v1 mantido; PNG fonte e WebP512 atualizados juntos.
 Não altera defesa, estoque ou pagamentos. Arte anterior em archive/assets/symbols.
+
+Proporção do escudo nos rolos24/11: fundo100%100% na caixa já compensada do
+atlas103,874×124. Não usar contain no símbolo5: a compressão do gabinete deixa
+o escudo achatado. Mesma regra em data-park-clover e park-tape-symbol5; outros
+consumidores (contador/modal/voos) mantêm a proporção natural da imagem.

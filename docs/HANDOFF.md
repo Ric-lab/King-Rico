@@ -1,3 +1,12 @@
+## Proporção do escudo nos rolos — Codex,24/11/2026
+Base66bb41e, somente prévia. Dono apontou tamanho estranho no rolo. A janela
+comprime verticalmente o gabinete; atlas já compensa isso, mas shield com
+background-size:contain não compensava e ficava achatado. cabinet.css agora
+usa100%100% na caixa corrigida103,874×124, tanto nas casas estáticas quanto na
+fita móvel. Não altera PNG/WebP, contador, modal ou geometria dos rolos.
+Conferido antes/depois no mesmo giro parado com3 escudos (390×844), sem corte.
+Próximo passo: confirmar Pages e dono avaliar proporções em Preview. Sem main.
+
 ## Escudo com centro de roleta aplicado na prévia — Codex,24/11/2026
 Base d75fa9a preservada (Bubble Rico e opções Gemini). O dono pediu aplicar
 A ARTE MOSTRADA NO CHAT PELO CODEX: escudo com centro circular dourado, raios
