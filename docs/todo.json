@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-reward-button",
+      "title": "Botão de moedas por vídeo integrado à identidade do Circus",
+      "status": "done",
+      "category": "Menu & Topo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Botão roxo/dourado sob o saldo: moeda +1.000 e play/Vídeo30s. Mantém fluxo de anúncio e crédito único. Conferir 30s, cancelar e receber."
+    },
+    {
       "id": "p-paytable-clean",
       "title": "Limpar tabela de pagamentos e silhuetas dos vilões",
       "status": "done",
@@ -26,12 +36,12 @@
     {
       "id": "p-preview-parity",
       "title": "Prévia e oficial publicados no mesmo commit",
-      "status": "preview",
+      "status": "done",
       "category": "Infra",
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": "Diagnóstico: Pages69eae93 falhou no cenário aleatório de Tony; main publicou. Teste passa a preparar ataque não zero explicitamente. Regra: Pages confirmado antes de promover o mesmo commit à main."
+      "notes": "Falha do Pages rastreada ao segundo giro aleatório de Tony; teste determinístico aprovado. Publicação do lote exige Pages confirmado primeiro e main depois, no mesmo commit. Conferir ambos os artefatos antes de encerrar."
     },
     {
       "id": "p-counter-hoist",

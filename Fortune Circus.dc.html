@@ -198,7 +198,7 @@ a:hover { color: #fff3c4; }
   </div>
   </div>
 
-<sc-if value="{{ showAd }}" hint-placeholder-val="{{ true }}"><div onClick="{{ watchAd }}" role="button" tabindex="0" aria-label="Ver anúncio e ganhar 1000 moedas" class="kr-hud-ad" style-active="transform: translateY(1px) scale(.94);"><span>+</span></div></sc-if>
+<sc-if value="{{ showAd }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ watchAd }}" aria-label="Ver anúncio e ganhar 1000 moedas" class="kr-hud-ad"><span class="kr-ad-reward"><img src="assets/symbols/sym-coin.webp" alt=""><b>+1.000</b></span><span class="kr-ad-time"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 2.5 13 8l-8 5.5Z" fill="currentColor"/></svg>Vídeo · 30s</span></button></sc-if>
 <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 </div>
 

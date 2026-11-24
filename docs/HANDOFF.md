@@ -1,3 +1,53 @@
+## Lote de paridade, saldo, pagamentos e anúncio — Codex,24/11/2026
+Pedido do dono executado em4 tarefas separadas, cada qual com commit/teste:
+1. Pages antigo: run45317680265 falhou por teste Tony aleatório, não por fontes
+   divergentes. tony_browser agora força ataque com várias patadas para o cenário
+   de interrupção; PASS normal/reduzido, sem mudar jogo ou excluir teste.
+2. Roleta: saldo visível congelado pelo snapshot ao abrir; pendingCredit usa a
+   diferença para o saldo confirmado. Não subtrair baseUnits v6 como se fosse
+   crédito. Voo final libera todos os créditos retidos uma só vez; crédito real
+   e idempotência intactos. preview_motion_browser PASS normal/reduzido/refresh,
+   monitora estabilidade antes do voo e igualdade ao saldo confirmado no fim.
+3. Tabela: +/− e contadores ocultos; especiais sem legendas; silhueta da roleta
+   sob Tucker CONFIRMADA pelo dono, escudo sob Ray. circus_layout_browser PASS
+   320/390/412px e print final conferido após fade.
+4. Anúncio: botão nativo roxo/dourado sob o saldo, moeda+1.000 e Vídeo30s,
+   alvo123×64. Mantido fluxo existente. circus_recharge_browser PASS: cancelar
+   sem crédito;30s com1.000 uma única vez; voo e contador. Print conferido.
+Sem mudança de matemática ou Firestore nesta tarefa. Guias PARQUE/publicar
+atualizados; publicar.md exige Pages com sucesso ANTES de promover o mesmo
+commit à main. Nunca afirmar paridade só pelos hashes no Git.
+Próximo passo exato deste lote: build final após integração, push somente da
+prévia, confirmar Pages e comparar artefatos; então fast-forward main para o
+MESMO commit, conferir Firebase e ambos os arquivos públicos. Se qualquer teste
+falhar, corrigir antes de avançar. Não deixar o oficial à frente da sandbox.
+
+## Paridade da sandbox — Codex,24/11/2026
+Tarefa1 do pedido atual. Ambas as fontes estavam em69eae93, mas Pages falhou
+em tony_browser: o segundo giro aleatório não garantia Tony/patada. Oficial
+publicou e Pages ficou4098fe5. Correção do teste força Tiger e RNG de ataque
+não zero SOMENTE no teste que verifica interrupção entre patadas. Não altera
+as regras nem ignora o resultado0 (coberto por villain_dice e testes do motor).
+Regra permanente em publicar.md: Pages confirmado primeiro, main depois no
+mesmo commit; nunca declarar paridade apenas pelo Git. Próximo passo: concluir
+Pages, promover este mesmo commit à main e confirmar ambos. Depois tratar,
+separadamente: saldo da roleta; tela de pagamentos; botão de anúncio.
+
+## Saldo da roleta — tarefa2,Codex24/11/2026
+Erro de apresentação: showWheel subtraía baseUnits (não creditada em v6), e
+collect substituía o prêmio normal pendente pelo bônus. Isso antecipava parte
+do ganho antes do voo final. Agora guarda prêmio normal+extraUnits; saldo real
+continua confirmado uma única vez, voo libera a soma. Sem mudar motor/regras.
+preview_motion_browser PASS monitora saldo entre giro e voo e compara o fim ao saldo
+da carteira; cobre normal/reduzido e retomada da roleta. Próximo passo: concluir
+esse teste e tratar separadamente a tela de pagamentos, depois anúncio.
+
+## Tabela de pagamentos — tarefa3,Codex24/11/2026
+Oculta +/− e contadores sob a tabela. Power-ups sem legendas. Tucker com
+silhueta de roleta (confirmado pelo dono), Ray com silhueta de escudo. Máscaras
+usam os assets reais, sem emoji nem detalhes internos. circus_layout_browser
+PASS em320/390/412px; print final conferido após o fade. Próximo: botão anúncio.
+
 ## Contadores acompanham as cordas e promoção oficial — Codex,24/11/2026
 Pedido do dono: corrigir escudo/roleta deixados no gramado e publicar no oficial.
 Base: prévia4098fe5 (Pages confirmado); main1dff754. A promoção leva o lote
@@ -1750,29 +1800,3 @@ quadro e folha do primeiro clique no README da mesma pasta. Referência de estud
 fora do runtime; nenhuma interface ou economia alterada. Commit de fontes apenas.
 Próximo passo: usar a referência ao receber o pedido de ajustar o clique;
 preservar a geometria atual até essa iteração, sem copiar a arte comercial.
-
-## Paridade da sandbox — Codex,24/11/2026
-Tarefa1 do pedido atual. Ambas as fontes estavam em69eae93, mas Pages falhou
-em tony_browser: o segundo giro aleatório não garantia Tony/patada. Oficial
-publicou e Pages ficou4098fe5. Correção do teste força Tiger e RNG de ataque
-não zero SOMENTE no teste que verifica interrupção entre patadas. Não altera
-as regras nem ignora o resultado0 (coberto por villain_dice e testes do motor).
-Regra permanente em publicar.md: Pages confirmado primeiro, main depois no
-mesmo commit; nunca declarar paridade apenas pelo Git. Próximo passo: concluir
-Pages, promover este mesmo commit à main e confirmar ambos. Depois tratar,
-separadamente: saldo da roleta; tela de pagamentos; botão de anúncio.
-
-## Saldo da roleta — tarefa2,Codex24/11/2026
-Erro de apresentação: showWheel subtraía baseUnits (não creditada em v6), e
-collect substituía o prêmio normal pendente pelo bônus. Isso antecipava parte
-do ganho antes do voo final. Agora guarda prêmio normal+extraUnits; saldo real
-continua confirmado uma única vez, voo libera a soma. Sem mudar motor/regras.
-preview_motion_browser PASS monitora saldo entre giro e voo e compara o fim ao saldo
-da carteira; cobre normal/reduzido e retomada da roleta. Próximo passo: concluir
-esse teste e tratar separadamente a tela de pagamentos, depois anúncio.
-
-## Tabela de pagamentos — tarefa3,Codex24/11/2026
-Oculta +/− e contadores sob a tabela. Power-ups sem legendas. Tucker com
-silhueta de roleta (confirmado pelo dono), Ray com silhueta de escudo. Máscaras
-usam os assets reais, sem emoji nem detalhes internos. circus_layout_browser
-PASS em320/390/412px; print final conferido após o fade. Próximo: botão anúncio.
