@@ -220,7 +220,7 @@
     {
       "id": "i-escudo",
       "title": "Escudo = defesa contra os vilões (até 5, guardados perto do saldo)",
-      "status": "preview",
+      "status": "done",
       "category": "Ideias",
       "agent": "Codex",
       "commit": null,
