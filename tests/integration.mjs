@@ -1218,7 +1218,7 @@ test('Circus v5 normal spin, tenth bonus, replay and old v4 client preserve the 
  const legacy=await c.call(request({action:'spin',game:'circus',bet:1,park:true,slotVersion:4}));assert.equal(legacy.park.economy.rounds,3);
  assert.equal((await getDoc(parkRef)).data().economy.rounds,3);
 });
-for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['tucker',.01,0,3],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0],['tony-bare',0,0,3],['feature',0,0,4],['tenth',.99,0,0],['wheel-prize',.99,0,4],['bar-prize',.99,0,0]])test('Circus v6 rules/replay '+kind+' stock '+cedros,async()=>{
+for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',.54,2,3],['ray',.54,1,3],['ray',.54,3,3],['ray',.54,4,3],['tucker',.01,0,3],['tucker',.01,0,1],['tucker',.01,0,2],['tucker',.01,0,4],['tucker',.51,2,0],['ray',.04,0,0],['normal',.99,0,0],['cedar',.10,0,0],['tony-bare',0,0,3],['feature',0,0,4],['tenth',.99,0,0],['wheel-prize',.99,0,4],['bar-prize',.99,0,0]])test('Circus v6 rules/replay '+kind+' stock '+cedros+' wheels '+peaches,async()=>{
  const {default:park}=await import('../cloud/park.cjs');const {default:controller}=await import('../cloud/circus-control-v6.cjs');
   let sequence=[];const c=await client('v6-'+kind+'-'+randomUUID(),undefined,{rng:()=>sequence.length?sequence.shift():.99});await c.call(request({action:'bootstrap'}));
   const ref=doc(c.db,'players',c.uid),parkRef=doc(c.db,'players',c.uid,'park','state');
@@ -1231,7 +1231,8 @@ for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',
   }
   const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
   const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
-  if(cedros&&kind!=='ray'){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990+r.outcome.winUnits/100);}
+  if(cedros&&kind!=='ray'&&!(kind==='tucker'&&peaches===0)){assert.equal(r.outcome.defense.against,kind);assert.equal(r.park.cedros,cedros-1);assert.equal(r.player.peaches,peaches);assert.equal(r.player.balance,990+r.outcome.winUnits/100);}
+  if(kind==='tucker'&&peaches===0){assert.equal(r.outcome.tucker.dice,undefined);assert.equal(r.outcome.tucker.stolen,0);assert.equal(r.park.cedros,cedros);}
   if(kind==='ray'&&cedros){assert.ok(!r.outcome.defense);assert.equal(r.park.cedros,cedros-r.outcome.ray.stolen);assert.equal(r.player.peaches,peaches);}
   if(kind==='cedar'){assert.equal(r.outcome.cedarAward,5);assert.equal(r.park.cedros,5);}
   if(kind==='tenth'){assert.equal(r.outcome.feature.rounds.length,5);assert.equal(r.outcome.feature.res.win,4);}
@@ -1295,9 +1296,9 @@ for(const kind of ['tony','tucker','ray'])for(const face of [0,5])test('villain 
   await updateDoc(doc(context.firestore(),'players',c.uid),{peaches:4,peachBank:{count:4,units:999}});
   await setDoc(doc(context.firestore(),'players',c.uid,'park','state'),{...park.fresh(),cycleWagerUnits:0,cedros:kind==='ray'?5:0,economyV6:{...ctrl.freshEconomy(),paidUnits:100000}});
  });
- const z=((face===0?.1:4.9)-2.5)/.625;draws=[kind==='tony'?0:kind==='tucker'?.51:.54,.5,Math.exp(-z*z/2),z<0?.5:0];
+ const index=kind==='tucker'&&face===5?4:face;draws=[kind==='tony'?0:kind==='tucker'?.51:.54,.5,0,...Array(5).fill(.999),(index+.01)/6];
  const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6}),a=await c.call(req);
- assert.equal(a.outcome[kind].dice.value,face);assert.equal(a.outcome[kind].version,4);
+ assert.equal(a.outcome[kind].dice.value,kind==='tucker'?Math.min(4,face):face);assert.equal(a.outcome[kind].version,5);
  if(kind==='tony')assert.equal(a.player.balance,990-face*10);
  else assert.equal(a.outcome[kind].stolen,Math.min(face,kind==='ray'?5:4));
  const b=await c.call(req);assert.deepEqual(b.outcome,a.outcome);assert.equal(b.player.balance,a.player.balance);
@@ -1318,4 +1319,46 @@ for(const kind of ['tony','tucker','ray'])test('villain dice rules reject forged
   const result={game:'circus',bet:10,balanceBefore:1000,balanceDebited:990,baseBalance:p.balanceUnits/100,outcome:x};
   const batch=writeBatch(c.db);batch.set(ref,p);batch.set(pr,s);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged-dice',betUnits:1000,winUnits:x.winUnits,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});await assertFails(batch.commit());
  }
+});
+
+test('Royal Rico pays opening stake x10 through Rules, survives reload and rejects a second collection',async()=>{
+ const name='royal-'+randomUUID(),symbols=engine.slotSymbols(6),total=symbols.reduce((a,s)=>a+s.w,0),grid=[15,15,15,0,2,6,7,8,10];
+ let draws=[.99,...grid.flatMap(sym=>[.99,(symbols.slice(0,sym).reduce((n,s)=>n+s.w,0)+symbols[sym].w/2)/total]),.99,.99,.1,.1,.1];
+ const c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+ const spin=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10}),opened=await c.call(spin);
+ assert.ok(opened.park.royal);assert.equal(opened.park.royal.betUnits,1000);
+ const other=await client(name+'-other',name);assert.equal((await other.call(request({action:'bootstrap'}))).park.royal.id,spin.requestId);
+ const claim=request({action:'royalComplete',roundId:spin.requestId,quit:false}),paid=await c.call(claim);
+ assert.equal(paid.royal.winUnits,10000);assert.equal(paid.player.balance,opened.player.balance+100);
+ assert.equal((await other.call(claim)).player.balance,paid.player.balance);
+ await assert.rejects(other.call(request({action:'royalComplete',roundId:spin.requestId,quit:false})),{code:'king-rico/round-conflict'});
+});
+
+test('Royal Rico Rules reject forged identity, opening stake and a missing controller trinca',async()=>{
+ const {default:park}=await import('../cloud/park.cjs');
+ const c=await client('royal-forge-'+randomUUID());await c.call(request({action:'bootstrap'}));
+ const ref=doc(c.db,'players',c.uid),pr=doc(c.db,'players',c.uid,'park','state'),old=(await getDoc(ref)).data();
+ for(const field of ['id','bet','trigger']){
+  const id=randomUUID(),s=park.fresh(),sy=engine.slotSymbols(6),total=sy.reduce((a,s)=>a+s.w,0),grid=[15,15,15,0,2,6,7,8,10];
+  const q=[.99,...grid.flatMap(sym=>[.99,(sy.slice(0,sym).reduce((n,s)=>n+s.w,0)+sy[sym].w/2)/total]),.99,.99,.1,.1,.1];
+  const x=park.spin(old,s,10,id,()=>q.shift()??.99,6);assert.ok(x.royal);
+  if(field==='id')s.royal.id=x.royal.id=randomUUID();
+  if(field==='bet')s.royal.betUnits=x.royal.betUnits=2000;
+  if(field==='trigger')x.grid[0]=0;
+  const p={...old,balanceUnits:old.balanceUnits-1000+x.winUnits,peaches:x.peaches,peachBank:x.peachBank,revision:old.revision+1,lastOperationId:id,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp()};
+  s.revision=1;s.playerRevision=p.revision;s.lastOperationId=id;
+  const result={game:'circus',bet:10,balanceBefore:1000,balanceDebited:990,baseBalance:p.balanceUnits/100,outcome:x};
+  const batch=writeBatch(c.db);batch.set(ref,p);batch.set(pr,s);batch.set(doc(c.db,'players',c.uid,'operations',id),{action:'spin',game:'circus',selected:-1,fingerprint:'forged-royal-'+field,betUnits:1000,winUnits:x.winUnits,result,createdAt:serverTimestamp(),rulesVersion:engine.RULES_VERSION});
+  await assertFails(batch.commit());
+ }
+});
+
+test('Royal Rico honors the existing 10000-coin maximum stake and pays its saved 10x',async()=>{
+ const name='royal-max-'+randomUUID(),symbols=engine.slotSymbols(6),total=symbols.reduce((a,s)=>a+s.w,0),grid=[15,15,15,0,2,6,7,8,10];
+ let draws=[.99,...grid.flatMap(sym=>[.99,(symbols.slice(0,sym).reduce((n,s)=>n+s.w,0)+symbols[sym].w/2)/total]),.99,.99,.1,.1,.1];
+ const c=await client(name,name,{rng:()=>draws.shift()??.99});await c.call(request({action:'bootstrap'}));
+ await environment.withSecurityRulesDisabled(ctx=>updateDoc(doc(ctx.firestore(),'players',c.uid),{balanceUnits:100000000}));
+ const bet=engine.BETS.at(-1),opened=await c.call(request({action:'spin',game:'circus',park:true,slotVersion:6,bet}));
+ const paid=await c.call(request({action:'royalComplete',roundId:opened.park.royal.id,quit:false}));
+ assert.equal(paid.royal.winUnits,bet*1000);assert.equal(paid.player.balance,opened.player.balance+bet*10);
 });

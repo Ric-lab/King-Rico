@@ -38,3 +38,10 @@ Cloud.flying=(move,bet,roundId,step,selected=-1)=>play({action:'flying',game:'fl
 async function play(data){if(!state.passes[data.game]&&!Cloud.player[data.game+'Round']){if(!await entry(data.game))throw Object.assign(Error('Escolha a entrada antes de jogar.'),{code:'king-rico/entry-required'});}return call(data);}
 
 Cloud.bounce=(move,bet,roundId,n,gold=false)=>play({action:'bounce',game:'bounce',move,bet:25,roundId,n,gold,requestId:move==='start'?roundId:id()});
+
+Cloud.royalComplete=(roundId,quit=false)=>{
+ const key='kingRico.preview.royalRequest';let saved;try{saved=JSON.parse(sessionStorage.getItem(key)||'null');}catch{}
+ const data=saved?.roundId===roundId?saved:{action:'royalComplete',roundId,quit,requestId:id()};
+ if(data.quit!==quit)return Promise.reject(Error('A conclusão anterior está sendo confirmada.'));
+ sessionStorage.setItem(key,JSON.stringify(data));return call(data);
+};

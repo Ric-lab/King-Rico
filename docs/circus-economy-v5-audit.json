@@ -1,11 +1,12 @@
 {
-  "date": "2026-11-24T00:21:11.777Z",
+  "date": "2026-11-24T02:05:17.792Z",
   "command": [
-    "--circus-v5"
+    "--circus-v5",
+    "--spins=5000000"
   ],
   "sourceHashes": {
     "cloud/circus-profile.cjs": "7568bdf991f008e5e4d56a2148bcf60abd66933f64f9ae526829145190b1b999",
-    "cloud/park.cjs": "3f99e61569aded96f3a045f1afda436ca7472ef30e30517d30e40b1e0ab5f712",
+    "cloud/park.cjs": "01feec6c14f97132bef90b83fb6e98d8601865426ca9b3f4276986140e3d82b8",
     "cloud/engine.cjs": "60419cb6fb9de05c5ed4dad531c119929bea0a8a23e4e43a8ffa429a15a9ccad",
     "cloud/circus-control-v5.cjs": "00103107b4e88da579a67cd370efff42bf6b83095d68483791f7544b1a79fecd",
     "cloud/truncated-normal.cjs": "05dbbdee3b1866bc64b7cbdbed74de6d3f9735951bcf6fd1b6aa14c83dd05aeb",

@@ -39,17 +39,17 @@ test('v5 release gate also covers changing stakes and a high bet only on the ten
  for(const row of rows){assert.ok(row.spins>=1000000);for(const value of[row.gross,row.net])assert.ok(value>=.885&&value<=.915&&value<1,JSON.stringify(row));}
 });
 
-test('v6 five million spins at every stake plus changing stakes and armor farming stay near 90%',()=>{
+test('v6 at least one million spins at every stake plus changing stakes and armor farming stay near 90%',()=>{
  const report=JSON.parse(readFileSync('docs/circus-economy-v6-audit.json'));
  assert.equal(report.passed,true);assert.deepEqual(report.results.map(x=>x.bet),[1,10,100,1000]);
  for(const [file,hash]of Object.entries(report.sourceHashes))assert.equal(createHash('sha256').update(readFileSync(file)).digest('hex'),hash,file+' changed after v6 audit');
- for(const row of [...report.results,...JSON.parse(readFileSync('docs/circus-economy-v6-stress.json'))]){
+ for(const row of [...report.results,...(report.highStakes||[]),...JSON.parse(readFileSync('docs/circus-economy-v6-stress.json'))]){
   assert.ok(row.spins>=1000000);assert.deepEqual(row.pays,profile.PAYS_V6);assert.deepEqual(row.weights,profile.WEIGHTS_V6);
   assert.equal(row.cedarProbability,profile.CEDAR_P);
   assert.equal(row.featureHitProbability,profile.FEATURE_HIT_V6);
   assert.ok(row.featureResults.regular>0&&row.featureResults.super>0&&row.featureResults.fiveSmall>0);
   assert.equal(row.triggerPrizes.zeroCash,0);assert.ok(row.triggerPrizes.wheelRounds>0&&row.triggerPrizes.barRounds>0);
-  const c=row.components,r=(c.paid+c.wheel-c.theft)/c.wagered;
+  const c=row.components,r=(c.paid+(c.royal||0)+c.wheel-c.theft)/c.wagered;
   assert.ok(Math.abs(r-row.return)<1e-10);assert.ok(r>=.885&&r<=.915&&r<1);
  }
 });

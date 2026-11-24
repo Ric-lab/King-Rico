@@ -54,8 +54,6 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
    if((data.freeSpinId||park.cloverFreeSpinId)&&data.freeSpinId!==park.cloverFreeSpinId)fail('Esse giro grátis já foi utilizado em outro aparelho.');
    const cost=parkRules.spinCost(park,data.bet,data.slotVersion||6),before=p.balanceUnits;if(before<cost)fail('Moedas insuficientes.');
    if(data.previewFullClover)park.cedros=5;
-   // Explicit picker fixtures only: let the owner see an actual loss, not an empty stock.
-   if(['tony','tucker','ray'].includes(data.previewDiceKind)){park.cedros=data.previewDiceKind==='ray'?5:0;if(data.previewDiceKind==='tucker'){p.peaches=4;p.peachBank={count:4,units:4*engine.units(data.bet)};}}
    // Explicit visual demo only: seed test history, never a real wallet.
    if(data.previewTony)park.economyV6={...controllerV6.freshEconomy(),paidUnits:cost*100};
    if(data.previewGoodLuck){park.spins=9;park.cycleWagerUnits=(park.cycleWagerUnits||0)+cost*9;Object.defineProperty(park,'_barSpins',{value:25,writable:true,configurable:true});}
@@ -75,9 +73,9 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
     park.wheel.result={index,multiplier,winUnits,extraUnits};
     if(park.wheel.economyVersion===6)controllerV6.recordBonus(park,extraUnits);else controller.recordBonus(park,extraUnits);p.balanceUnits+=extraUnits;p.revision++;}
    result={wheel:structuredClone(park.wheel)};
-  }else if(data.action==='preview-credit'){
-   // Só prévia: crédito do cedro (linha completada) e do cedro cheio da Trinca.
-   const pr=records.get(ref);pr.balanceUnits+=Math.max(0,Math.min(10000000,Math.round(Number(data.units)||0)));result={};
+  }else if(data.action==='royalComplete'){
+   if(typeof data.quit!=='boolean')fail('Conclusão inválida.');
+   const royal=parkRules.completeRoyal(park,data.roundId,data.quit);p.balanceUnits+=royal.winUnits;p.revision++;result={royal};
   }else if(data.action==='wheel-close'){
    if(!park.wheel?.result||park.wheel.id!==data.wheelId)fail('Conclua a roleta primeiro.');
    const v6=park.wheel.economyVersion===6;park.wheel=null;if(!v6){park.spins=0;park.bankUnits=0;if('cycleWagerUnits' in park)park.cycleWagerUnits=0;}result={};

@@ -1,3 +1,56 @@
+## Royal10×, dados por estoque e ajuda da roleta — Codex,24/11/2026
+Prévia: https://ric-lab.github.io/King-Rico/Preview — somente Pages, SEM main.
+Base `1dff754` (lidas/preservadas alterações Gemini). Publicar sem [skip ci].
+
+Feito: contador da roleta abre ajuda igual à dos escudos; teclado/toque.
+Dados novos version2 `{value,faces,index}` em eventos version5: zero estoque
+não abre, valor exatamente debitado; Tucker vazio não consome defesa. Faces
+0…N equilibradas. Para3/4 itens, extras variam uniformemente entre rodadas
+(divisão exata por6 é impossível); Tony mantém unidade aposta0…5 com teto/saldo.
+Essas duas interpretações foram comunicadas ao dono, sem resposta contrária.
+Presets de dados não criam estoque; UI diz Tirou N, sem multiplicação. Three
+recebe faceIndex e valores repetidos; cache da cena versionado inventory-v2.
+Física, som, madeira e câmera45° preservados; recibos antigos continuam legíveis.
+
+Royal: trinca cria `park.royal` persistida com id/aposta/resultado/plano. Vencer
+resgata10× a aposta de abertura em MOEDAS; perder/desistir0. Resgate consome a
+rodada, registra ledger v6, usa operação idempotente e atualiza saldo após o
+modal. Refresh retoma pendência; mudar aposta não muda prêmio. Nada de valor ou
+vitória recebidos do cliente. Aguarda outras celebrações e pausa auto.
+Cetro local, contador, feitiço e crédito arbitrário retirados; módulos em
+archive/ui/park/. Campo legado park.cedros continua sendo ESCUDOS, sem migração.
+Corrigido lookup secundário de apostas10→13 valores (até10.000, já aprovados no
+motor). Não há alteração de PAYS, chances dos vilões ou roleta.
+
+Regras: todas as verificações mantidas e distribuídas no mesmo lote atômico.
+A revisão automática rejeitou propostas de reorganização ampla. A alternativa
+aprovada reduz avaliação redundante do helper, sem mudar decisões ou argumentos
+(prova executa corpos reais das regras em41.160 casos). Tipos, id, aposta
+original, trinca de controles, prêmio10×, estoque e ledgers seguem obrigatórios.
+Linhas dos controles reutilizam classificação já calculada; fórmula de feature
+com símbolo único equivale à anterior/ao motor em60 mil casos válidos.
+
+Validação: npm test293/293; focados finais55/55 (incluem prova do helper).
+Rules95/95 completos +9/9 de Royal/fraude/estoques/máximo após ajuste do lookup.
+Navegador: villain_dice_browser, royal_rewards_browser e circus_v6_browser PASS;
+conferidos prints da ajuda e +100 moedas de aposta10, sem cetro. Build de produção
+após integração, apenas conferência local; deploy desta tarefa é Pages.
+Auditoria v6:1 milhão por aposta1/10/100/1000/2500/5000/10000, retorno89,977739%
+(inclui Royal, roleta e roubos; sem recargas/presentes). Mais1 milhão por política:
+tenth-high89,925024%; armor-farm90,119530%; alternada89,914204%; defesa fixa89,940365%.
+Todos abaixo100%; PAYS `[1.2,0,.8,0,0,0,2.5,10,5,0,.4,0,0,0,0,0]` intactos.
+Relatórios e hashes finais em circus-economy-v6-audit/stress.json; legado v4/v5
+regenerado5 milhões por aposta requerida, ambos aprovados. High stakes gerados
+pelo mesmo export auditV6({spins:1000000,bet}), sem outro modelo de simulação.
+Painel atualizado: p-roleta-help, p-dice-inventory, i-pagam-escudos, i-cedro-sai,
+t-se-tiver-0-roletas-o-t-69; apresentação do dado continua em avaliação visual.
+
+Próximo passo exato: conferir sucesso do Pages no commit deste lote e testar
+⚙→🎯→Controle (Royal), Ray/Toucan com estoques reais, e ajuda sob+. Se a
+interpretação do dado para3/4 itens ou Tony mudar, reauditar antes de publicar.
+Não integrar à main nem publicar regras/Hosting oficial nesta tarefa.
+Guias: docs/PARQUE.md e docs/VILOES-DADO.md; ideias antigas em PLANO-V7 sinalizadas.
+
 ## Reequilíbrio Circus v6, apostas 2.500–10.000, roleta ×2..×10 e + embaixo de Configurações — Antigravity/Gemini,23/11/2026
 Base `b65a2cd`. Preparado lote de promoção para `main`:
 - **Reequilíbrio**: corrigida imunidade de vilões (`s.spins < 9` → `s.spins <= 9` em `cloud/park.cjs` e `prevSpins <= 9` em `firestore.rules`), corrigido `tenth-high` (de 95,95% para ~90,00%). Atualizado `tests/circus-trigger-prize.test.cjs` e `prototypes/circus-preview/browser-wallet.mjs`.

@@ -1,3 +1,15 @@
+> Regra24/11 — somente prévia: estoque zero não abre dado nem perde item;
+> Tucker sem roletas também não consome escudo. Com N=1…5, as seis faces têm
+> valores0…N. N=1: três0/três1; N=2: dois de cada; N=5: um de cada. Para3/4,
+> repetições diferem no máximo1 e os valores extras variam uniformemente entre
+> rodadas; todos os valores têm a mesma probabilidade ao longo das rodadas.
+> Recibo novo: evento version5, dice={version:2,value,faces,index}. A face
+> física é index; a quantidade exibida/roubada é faces[index]. Recibos antigos
+> continuam com dice version1. Quantidade aparece como “Tirou N”, sem ×.
+> Tony mantém0…5 apostas, com orçamento/saldo, preservando a regra anterior;
+> Ray/Tucker debitam EXATAMENTE a quantidade do dado, sem cap posterior.
+> Os presets de prévia não acrescentam estoque para obrigar o dado a aparecer.
+
 > Giro e madeira23/11: corrigido backspin inicial (rotação contrária ao
 > deslocamento), que freava o dado no contato com o feltro. Menos atrito e
 > amortecimento inicial, arrasto progressivo preservado; lançamento padrão
@@ -43,8 +55,8 @@ A cena aguarda o usuário, sem lançamento automático. Recursos Three já
 instalados são servidos localmente; não há CDN ou API paga.
 
 A face final pertence ao recibo confirmado, não ao movimento do dedo.
-O sistema usa a distribuição normal limitada existente; não prometer chances
-iguais nem dizer que um gesto altera o prêmio. Uma simetria fixa definida antes da reprodução apresenta
+As faces físicas são equiprováveis e a distribuição acompanha o estoque.
+O gesto altera o lançamento, sem alterar o resultado já confirmado. Uma simetria fixa definida antes da reprodução apresenta
 o resultado salvo através dos quiques, sem reorientar a parada. A interface não faz sorteio ou débito.
 
 - Tony: resultado inteiro0–5 multiplicado pela aposta; limite adicional pelo
@@ -56,21 +68,22 @@ o resultado salvo através dos quiques, sem reorientar a parada. A interface nã
   o símbolo; não há dado de roubo nessa jogada protegida. Ray continua roubando
   escudos conforme a versão atual. Recibos antigos preservam sua apresentação.
 
-Dado salvo como `event.dice={version:1,value}` nos eventos version4. Regras
+Dados novos usam `event.dice={version:2,value,faces,index}` nos eventos version5;
+version4/dice1 permanece legada. Regras
 validam face inteira, limites, correspondência face/perda e atualizações
 atômicas. Repetir a operação usa o mesmo recibo, mesmo em outro cliente.
 Falha no WebGL oferece REVELAR RESULTADO; perda de contexto durante o voo
 mostra o resultado confirmado. Fechar a página cancela a cena, sem outro débito.
 
-## Validação econômica
+## Validação econômica — 24/11, somente prévia
 
-Apostas fixas1/10/100/1000:5 milhões de giros por aposta, retorno89,9747%.
-Estresse1 milhão por política: alternada89,8391%; com proteção fixa90,0038%;
-armadura por aposta90,0115%; aposta alta somente perto do fim95,9524%.
-Essa última estratégia ultrapassa a faixa88,5–91,5%; publicação financeira
-bloqueada. Não alterar a roleta nem os PAYS nesta tarefa só para passar no gate.
-Resultados e hashes em `circus-economy-v6-audit.json` e
-`circus-economy-v6-stress.json`. Oficial preservado; amostra não publicada.
+1 milhão por aposta1/10/100/1000/2500/5000/10000: **89,977739%** em todas.
+Inclui moedas da slot, bônus da roleta, Royal Rico10× recebido e roubos do Tony;
+perdas de escudos/roletas são aplicadas ao estoque/banco e afetam giros futuros.
+Sem presentes/recargas. Políticas de aposta e proteção:1 milhão cada,
+89,914204%–90,119530%. Todos abaixo100%; PAYS e chances de vilões preservados.
+Dados em `circus-economy-v6-audit.json` e `circus-economy-v6-stress.json`.
+Publicação desta tarefa: APENAS Pages, nunca main/Firebase oficial.
 
 ## Próximo cozy
 

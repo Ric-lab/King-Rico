@@ -1,7 +1,7 @@
 // The saved face is presented once. Swipe controls only launch physics.
 const names={tony:'Tony Tiger',tucker:'Tucker Toucan',ray:'Ray Raccoon'};
 const portraits={tony:'/assets/tony/head.webp',tucker:'/assets/tucker/head.webp',ray:'/assets/ray/head-v1.webp'};
-const colors={tony:'#d7772b',ray:'#286e42',tucker:'#226d9b'},sceneUrl='/ui/park/villain-dice-three.js';
+const colors={tony:'#d7772b',ray:'#286e42',tucker:'#226d9b'},sceneUrl='/ui/park/villain-dice-three.js?v=inventory-v2';
 export function playVillainDie(fc,event,kind,signal){
  const value=event?.dice?.value;
  if(!Number.isInteger(value)||value<0||value>5||signal?.aborted)return Promise.resolve(false);
@@ -26,7 +26,7 @@ export function playVillainDie(fc,event,kind,signal){
   animate(table,[{opacity:0},{opacity:1}],{delay:entryDuration*.6,duration:entryDuration*.4,fill:'forwards'});
   later(()=>{entered=true;zoom.remove();table.style.opacity='1';if(mode!=='loading')ready();else root.dataset.phase='loading';},entryDuration);
   function land(){
-   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;caption.textContent=kind==='tony'?(value?value+(value===1?' patada':' patadas'):'Nenhuma patada!'):'';
+   if(done||revealed)return;revealed=true;root.dataset.phase='result';root.dataset.value=String(value);button.hidden=true;caption.textContent='Tirou '+value;
    number.style.opacity='1';root.setAttribute('aria-label',`Dado do ${names[kind]}: ${value}`);
    animate(number,[{transform:'translate(-50%,-50%) scale(.2)',opacity:0},{transform:'translate(-50%,-50%) scale(1)',opacity:1}],{duration:350,easing:'ease-out',fill:'forwards'});
    try{fc.pluck?.(value===0?1046.5:392,.2,.5);fc.buzz?.([35]);}catch{}
@@ -47,6 +47,6 @@ export function playVillainDie(fc,event,kind,signal){
    }else scene?.dragDie?.({dx:0,dy:0});};host.onpointercancel=()=>{down=null;scene?.dragDie?.({dx:0,dy:0});};
   root.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();button.focus();}};
   importTimer=setTimeout(fallbackReady,8000);
-  import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([8]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
+  import(sceneUrl).then(({createDiceScene})=>{if(done||mode==='fallback')return;try{scene=createDiceScene(host,{value,faceIndex:event.dice.index??value,faces:event.dice.faces??[0,1,2,3,4,5],kind,portrait:portraits[kind],onLand:land,onImpact:()=>{try{fc.pluck?.(170,.055,.18);fc.buzz?.([8]);}catch{}},onError:fallbackReady});mode='three';root.dataset.renderer='three';ready();}catch{fallbackReady();}}).catch(fallbackReady);
  });
 }

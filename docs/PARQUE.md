@@ -638,3 +638,33 @@ feixes antigos que saíam dos tubos.
 
 Dado Three.js/Cannon lançado por swipe, faces0–5; valor pertence ao recibo.
 Ver [VILOES-DADO.md](VILOES-DADO.md) para limites, testes e bloqueio de publicação.
+
+## Prévia24/11 — Royal Rico, roletas e estoque dos vilões
+
+O contador de roletas sob+ abre “Suas roletas”, no mesmo modal dos escudos:
+guarde até5; ao completar abre a roleta bônus. Toque, Enter e espaço funcionam.
+Dados novos usam as seis faces versionadas conforme docs/VILOES-DADO.md;
+estoque zero não abre dado e Tucker vazio não gasta defesa. A perda real é
+confirmada uma única vez no store e no banco, inclusive em replay/refresh.
+
+Royal Rico paga10× em moedas sobre a aposta do GIRO QUE O ABRIU. A trinca de
+controles cria `park.royal` com id/aposta/resultado/plano de jogadas confirmados.
+A conclusão `royalComplete` consome esse estado uma vez e registra o prêmio no
+ledger v6; desistir ou perder paga0. Recarregar retoma a partida pendente; mudar
+a aposta não muda seu prêmio. O store não aceita valor nem vitória declarados
+pelo cliente. A probabilidade/plano já existente migrou para a rodada persistida.
+O jogo aguarda outras celebrações e desliga auto quando o convite é confirmado.
+
+Saíram ganho de cedro, contador local, casa transformada e feitiço. Módulos
+preservados em archive/ui/park/, sem import em execução, opção de estoque cheio
+ou endpoint de crédito arbitrário na prévia. O nome interno legado `park.cedros`
+continua significando ESCUDOS0…5; não apagar esse estoque por confundir com o
+antigo cetro/feitiço do Royal Rico. Asset do cetro/arte do King preservados.
+
+Regras dividem checagens entre os mesmos documentos atômicos, sem retirar
+identidade, aposta original, estoque ou prêmio. A expressão de bônus de símbolo
+único é equivalente à anterior (60 mil casos); o helper de dados também tem
+prova de equivalência de41.160 casos. Corrigido lookup secundário que tinha só
+10 apostas, embora motor/índices já permitissem13: agora vai até10.000.
+A prévia usa carteira fictícia; regras novas testadas no emulador, não publicadas
+no Firebase nesta tarefa. Não levar à main sem solicitação do dono.

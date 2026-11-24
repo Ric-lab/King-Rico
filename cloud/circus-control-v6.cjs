@@ -1,6 +1,6 @@
 'use strict';
 const engine=require('./engine.cjs');
-const {boundedNormalInt}=require('./truncated-normal.cjs');
+const {resourceDie}=require('./villain-dice.cjs');
 const freshEconomy=()=>({version:1,rounds:0,wageredUnits:0,paidUnits:0,tigerUnits:0});
 const returned=e=>e.paidUnits-e.tigerUnits;
 function control(p,s,bet){
@@ -21,7 +21,7 @@ function candidate(p,s,bet,rng){
  const grid=[10,2,0,6,8,7,10,0,2];cells.forEach(i=>grid[i]=symbol);
  const bank=p.peachBank||{count:p.peaches,units:p.peaches*c.stake},before=s.cedros||0;
  // Trevo defende Tony e Tucker (nunca o Ray: ele existe para roubar trevos).
- const protect=before>0&&kind!=='ray';
+ const protect=before>0&&(kind==='tony'||kind==='tucker'&&p.peaches>0);
  const x={grid,res:{win:0,cells,lines:[engine.ALL_LINES.findIndex(l=>l.every((v,i)=>v===cells[i]))],full:false,peach:[]},feature:null,peaches:p.peaches,peachBank:bank,slotVersion:6,parkVersion:1,ticketAward:0,cedarAward:0,winUnits:0};
  if(protect){
   s.cedros=before-1;
@@ -35,17 +35,17 @@ function candidate(p,s,bet,rng){
  }
  if(kind==='tony'){
   const ceiling=Math.min(5,Math.floor(c.maxTiger/c.stake));
-  const value=protect?0:boundedNormalInt(0,ceiling,rng),amount=value*c.stake;
+  const dice=protect?null:resourceDie(ceiling,rng),value=dice?.value||0,amount=value*c.stake;
   x.tony=protect?{version:3,minUnits:c.stake,maxUnits:0,stolenUnits:0,hits:[0,0,0]}:
-   {version:4,dice:{version:1,value},stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};
+   {version:5,...(dice?{dice}:{}),stolenUnits:amount,hits:[Math.floor(amount/3),Math.floor(amount/3),amount-2*Math.floor(amount/3)]};
  }else if(kind==='tucker'){
-  const count=p.peaches,value=protect?0:boundedNormalInt(0,5,rng),stolen=Math.min(count,value),remaining=count-stolen;
+  const count=p.peaches,dice=protect?null:resourceDie(count,rng),stolen=dice?.value||0,remaining=count-stolen;
   x.peaches=remaining;x.peachBank={count:remaining,units:count?bank.units-Math.round(bank.units*stolen/count):0};
-  x.tucker=protect?{version:3,stolen:0}:{version:4,dice:{version:1,value},stolen};
+  x.tucker=protect?{version:3,stolen:0}:{version:5,...(dice?{dice}:{}),stolen};
  }else{
   // Saved 0–5 die; resource loss is capped at the actual stock.
-  const value=boundedNormalInt(0,5,rng),stolen=Math.min(before,value);s.cedros=before-stolen;
-  x.ray={version:4,dice:{version:1,value},before,stolen,remaining:before-stolen};
+  const dice=resourceDie(before,rng),stolen=dice?.value||0;s.cedros=before-stolen;
+  x.ray={version:5,...(dice?{dice}:{}),before,stolen,remaining:before-stolen};
  }
  return x;
 }

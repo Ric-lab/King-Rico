@@ -6,7 +6,7 @@ import {createWoodTable} from './table.js';
 // Gesture controls launch velocity and real rigid-body bounces. The receipt owns
 // the final face. A constant cube symmetry is chosen BEFORE playback; it never
 // changes the visible face or pose after the physical roll has stopped.
-export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact,onThrow,onError}){
+export function createDiceScene(host,{value,faceIndex=value,faces=[0,1,2,3,4,5],kind='tony',portrait,onLand,onImpact,onThrow,onError}){
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0x332b24,1);host.append(renderer.domElement);
@@ -22,7 +22,8 @@ export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(5.5,5.5),logoMaterial);logo.rotation.x=-Math.PI/2;logo.position.set(0,.012,-.25);scene.add(logo);
  if(portrait)logoTexture=new THREE.TextureLoader().load(portrait,tex=>{tex.colorSpace=THREE.SRGBColorSpace;logoMaterial.map=tex;logoMaterial.needsUpdate=true;if(!disposed)draw();});
  const textures=[],materials=[];
- for(const n of [1,3,4,5,0,2]){
+ for(const slot of [1,3,4,5,0,2]){
+  const n=faces[slot];
   const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const c=canvas.getContext('2d');
   c.fillStyle='#c91e2e';c.fillRect(0,0,512,512);
   const dots=[[],[[0,0]],[[-1,-1],[1,1]],[[-1,-1],[0,0],[1,1]],[[-1,-1],[1,-1],[-1,1],[1,1]],[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]]];
@@ -48,13 +49,13 @@ export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact
   const simulatedTime=u*plan.frames.length/120;
   while(impactIndex<plan.impacts.length&&plan.impacts[impactIndex]<=simulatedTime){impactIndex++;onImpact?.();}
   if(u===1&&!landed){landed=true;let top=0,dot=-2;for(let k=0;k<6;k++){const d=faceNormals[k].clone().applyQuaternion(displayRotation).y;if(d>dot){dot=d;top=k;}}
-   host.dataset.face=String(top);host.dataset.restFlatness=String(dot);onLand?.();
+   host.dataset.face=String(faces[top]);host.dataset.faceIndex=String(top);host.dataset.restFlatness=String(dot);onLand?.();
   }
   draw();if(!landed)raf=requestAnimationFrame(frame);
  }
  const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(host);
  const lost=e=>{e.preventDefault();onError?.();};renderer.domElement.addEventListener('webglcontextlost',lost);
- resize();host.dataset.renderer='three';host.dataset.mark=kind;host.dataset.table='wood';host.dataset.readyPosition=JSON.stringify(new THREE.Vector3().copy(position).project(camera).toArray());
+ resize();host.dataset.renderer='three';host.dataset.mark=kind;host.dataset.faceLabels=JSON.stringify(faces);host.dataset.table='wood';host.dataset.readyPosition=JSON.stringify(new THREE.Vector3().copy(position).project(camera).toArray());
  return {
   dragDie({dx=0,dy=0}={}){if(disposed||launched)return;
    const r=host.getBoundingClientRect(),bounds=diceTableBounds(r.width,r.height);
@@ -66,7 +67,7 @@ export function createDiceScene(host,{value,kind='tony',portrait,onLand,onImpact
   },
   throwDie({dx=0,dy=-150,duration=240}={}){if(disposed||launched)return false;launched=true;
    const r=host.getBoundingClientRect();plan=planDiceRoll({dx,dy,duration,width:r.width,height:r.height,start:{x:position.x,y:position.y,z:position.z,q:displayRotation.toArray()}});
-   correction.setFromUnitVectors(faceNormals[value],new THREE.Vector3(...plan.axis));
+   correction.setFromUnitVectors(faceNormals[faceIndex],new THREE.Vector3(...plan.axis));
    start=performance.now();raf=requestAnimationFrame(frame);host.dataset.launch=JSON.stringify({vx:plan.vx,vz:plan.vz});onThrow?.();return true;
   },
   dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);resizeObserver.disconnect();renderer.domElement.removeEventListener('webglcontextlost',lost);scene.traverse(n=>n.geometry?.dispose());woodTable.dispose();materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());felt.material.dispose();grain.dispose();logoMaterial.dispose();logoTexture?.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}

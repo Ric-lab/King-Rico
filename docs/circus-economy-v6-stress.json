@@ -45,38 +45,40 @@
     "cedarProbability": 0.12,
     "featureHitProbability": 0.29,
     "featureResults": {
-      "regular": 7939,
-      "big": 1491,
-      "mega": 68,
-      "super": 799,
-      "fiveSmall": 7939
+      "regular": 7703,
+      "big": 1527,
+      "mega": 61,
+      "super": 749,
+      "fiveSmall": 7703
     },
     "components": {
-      "wagered": 94871025,
-      "paid": 81533615.8,
-      "wheel": 7923370,
-      "theft": 4068047
+      "wagered": 93663212,
+      "paid": 80679310.2,
+      "royal": 201420,
+      "wheel": 8505416,
+      "theft": 5159480
     },
-    "return": 0.9000528749425866,
-    "freeSpins": 10,
-    "defenses": 5702,
-    "awards": 11734,
+    "return": 0.8992502435214372,
+    "royalRounds": 180,
+    "freeSpins": 32,
+    "defenses": 6578,
+    "awards": 11378,
     "villains": {
-      "tony": 85020,
-      "tucker": 24755,
-      "ray": 25130
+      "tony": 106527,
+      "tucker": 24892,
+      "ray": 24813
     },
     "triggerPrizes": {
-      "wheelRounds": 17882,
-      "barRounds": 10297,
+      "wheelRounds": 19467,
+      "barRounds": 10040,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 213361,
-      "pairs": 81395
+      "singles": 208658,
+      "pairs": 79246
     },
-    "prizeRate": 0.559663,
-    "features": 10297,
+    "prizeRate": 0.547709,
+    "features": 10040,
     "inRange": true
   },
   {
@@ -125,38 +127,40 @@
     "cedarProbability": 0.12,
     "featureHitProbability": 0.29,
     "featureResults": {
-      "regular": 5325,
-      "big": 1005,
+      "regular": 6009,
+      "big": 1151,
       "mega": 46,
-      "super": 546,
-      "fiveSmall": 5325
+      "super": 563,
+      "fiveSmall": 6009
     },
     "components": {
-      "wagered": 70017908,
-      "paid": 57597155.07,
-      "wheel": 6142846.48,
-      "theft": 910154
+      "wagered": 143476370,
+      "paid": 115319625.23,
+      "royal": 271060,
+      "wheel": 14444094.66,
+      "theft": 734550
     },
-    "return": 0.8973396855844364,
-    "freeSpins": 5,
-    "defenses": 5782,
-    "awards": 7941,
+    "return": 0.9011952971071124,
+    "royalRounds": 151,
+    "freeSpins": 11,
+    "defenses": 6244,
+    "awards": 8817,
     "villains": {
-      "tony": 367839,
-      "tucker": 25072,
-      "ray": 24830
+      "tony": 297711,
+      "tucker": 25182,
+      "ray": 24804
     },
     "triggerPrizes": {
-      "wheelRounds": 9923,
-      "barRounds": 6922,
+      "wheelRounds": 13782,
+      "barRounds": 7769,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 143876,
-      "pairs": 55061
+      "singles": 161166,
+      "pairs": 61289
     },
-    "prizeRate": 0.37646,
-    "features": 6922,
+    "prizeRate": 0.422769,
+    "features": 7769,
     "inRange": true
   },
   {
@@ -205,38 +209,40 @@
     "cedarProbability": 0.12,
     "featureHitProbability": 0.29,
     "featureResults": {
-      "regular": 8582,
-      "big": 1617,
-      "mega": 75,
-      "super": 854,
-      "fiveSmall": 8582
+      "regular": 8533,
+      "big": 1668,
+      "mega": 73,
+      "super": 803,
+      "fiveSmall": 8533
     },
     "components": {
-      "wagered": 500493991,
-      "paid": 425443292.43,
-      "wheel": 42215544.68,
-      "theft": 17567530
+      "wagered": 500479986,
+      "paid": 419229153.79,
+      "royal": 1090790,
+      "wheel": 47034196.6,
+      "theft": 17351543
     },
-    "return": 0.899294127809019,
-    "freeSpins": 15,
-    "defenses": 5647,
-    "awards": 12639,
+    "return": 0.8991420435941269,
+    "royalRounds": 208,
+    "freeSpins": 34,
+    "defenses": 6691,
+    "awards": 12574,
     "villains": {
-      "tony": 17334,
-      "tucker": 24614,
-      "ray": 25136
+      "tony": 17326,
+      "tucker": 25105,
+      "ray": 24926
     },
     "triggerPrizes": {
-      "wheelRounds": 19786,
-      "barRounds": 11128,
+      "wheelRounds": 22034,
+      "barRounds": 11077,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 229861,
-      "pairs": 87941
+      "singles": 230479,
+      "pairs": 87741
     },
-    "prizeRate": 0.603389,
-    "features": 11128,
+    "prizeRate": 0.605528,
+    "features": 11077,
     "inRange": true
   },
   {
@@ -285,38 +291,40 @@
     "cedarProbability": 0.12,
     "featureHitProbability": 0.29,
     "featureResults": {
-      "regular": 8055,
-      "big": 1530,
-      "mega": 73,
-      "super": 733,
-      "fiveSmall": 8055
+      "regular": 8047,
+      "big": 1546,
+      "mega": 63,
+      "super": 732,
+      "fiveSmall": 8047
     },
     "components": {
-      "wagered": 9886020,
-      "paid": 7890408,
-      "wheel": 999700,
+      "wagered": 9885160,
+      "paid": 7873909,
+      "royal": 18400,
+      "wheel": 998440,
       "theft": 0
     },
-    "return": 0.899260571999652,
-    "freeSpins": 11398,
-    "defenses": 101790,
+    "return": 0.899403651534219,
+    "royalRounds": 203,
+    "freeSpins": 11484,
+    "defenses": 97924,
     "awards": 0,
     "villains": {
-      "tony": 76961,
-      "tucker": 24829,
-      "ray": 25016
+      "tony": 78070,
+      "tucker": 24912,
+      "ray": 24779
     },
     "triggerPrizes": {
-      "wheelRounds": 23558,
-      "barRounds": 10391,
+      "wheelRounds": 23536,
+      "barRounds": 10388,
       "zeroCash": 0
     },
     "incidental": {
-      "singles": 216137,
-      "pairs": 82075
+      "singles": 215774,
+      "pairs": 81941
     },
-    "prizeRate": 0.58383,
-    "features": 10391,
+    "prizeRate": 0.583087,
+    "features": 10388,
     "inRange": true
   }
 ]

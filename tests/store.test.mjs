@@ -494,3 +494,21 @@ test('saved villain die and debit survive concurrent repeat and a new client wit
  const balance=a.player.balance;m.setRng(()=>{throw Error('Repeat must never draw again');});
  const reloaded=await m.client('die')(req);assert.deepEqual(reloaded.outcome,a.outcome);assert.equal(reloaded.player.balance,balance);assert.equal(reloaded.replayed,true);
 });
+
+test('Royal Rico snapshots the opening bet, survives reload and credits 10x exactly once',async()=>{
+ const engine=(await import('../cloud/engine.cjs')).default,symbols=engine.slotSymbols(6),total=symbols.reduce((a,s)=>a+s.w,0);
+ const grid=[15,15,15,0,2,6,7,8,10];
+ let draws=[.99,...grid.flatMap(sym=>[.99,(symbols.slice(0,sym).reduce((n,s)=>n+s.w,0)+symbols[sym].w/2)/total]),.99,.99,.1,.1,.1];
+ const m=memory(()=>draws.shift()??.99),call=m.client('royal');await call(request({action:'bootstrap'}));
+ const spin=request({action:'spin',game:'circus',park:true,slotVersion:6,bet:10}),opened=await call(spin);
+ assert.ok(opened.park.royal);assert.equal(opened.park.royal.betUnits,1000);assert.equal(opened.park.royal.won,true);
+ const before=opened.player.balance,other=m.client('royal');
+ assert.deepEqual((await other(request({action:'bootstrap'}))).park.royal,opened.park.royal);
+ await call(request({action:'settings',settings:{slotBetIdx:12}}));
+ const claim=request({action:'royalComplete',roundId:spin.requestId,quit:false});
+ const [a,b]=await Promise.all([call(claim),other(claim)]);
+ assert.equal(a.royal.winUnits,10000);assert.equal(a.player.balance,before+100);assert.equal(b.player.balance,a.player.balance);assert.ok(b.replayed);
+ assert.equal(a.park.royal,undefined);assert.equal(a.park.economyV6.paidUnits,10000);
+ await assert.rejects(call(request({action:'royalComplete',roundId:spin.requestId,quit:false})),{code:'king-rico/round-conflict'});
+ await assert.rejects(call({...claim,requestId:randomUUID(),winUnits:999999}),{code:'king-rico/invalid-argument'});
+});

@@ -18,10 +18,15 @@ with sync_playwright() as p:
    if kind=='ray':
     page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=4;localStorage.setItem(k,JSON.stringify(s));}''')
     page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
+   if smoke and kind=='ray':
+    page.evaluate('KingRicoPreviewPicker()');page.get_by_role('button',name='Dado do Ray',exact=True).click()
    page.wait_for_function('!__fc.cloudBusy()')
+   if kind=='tucker':
+    page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=0;const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=4;p.peachBank={count:4,units:4000};localStorage.setItem(k,JSON.stringify(s));}''')
+    page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
+    if smoke:
+     page.evaluate('KingRicoPreviewPicker()');page.get_by_role('button',name='Dado do Tucker',exact=True).click()
    stock_before=page.evaluate("({shields:KingRicoPark.state.cedros||0,wheels:KingRicoCloud.player.peaches})")
-   if smoke and kind=='tucker':stock_before['wheels']=4
-   if smoke and kind=='ray':stock_before['shields']=5
    page.locator('[data-spin-btn]').click()
    die=page.locator('.park-villain-dice')
    try:die.wait_for(timeout=15000)
@@ -50,6 +55,7 @@ with sync_playwright() as p:
    page.wait_for_function('document.querySelector(".park-villain-dice")?.dataset.phase==="result"')
    receipt=page.evaluate('__fc._cloudSpin');event=receipt['outcome'][kind];value=event['dice']['value']
    assert die.get_attribute('data-value')==str(value)
+   assert json.loads(tray.get_attribute('data-face-labels'))==event.get('dice',{}).get('faces',list(range(6)))
    assert float(die.locator('.park-dice-tray').get_attribute('data-rest-flatness'))>.8
    assert die.locator('.park-dice-tray').get_attribute('data-face')==str(value), {'saved':value,'shown':die.locator('.park-dice-tray').get_attribute('data-face'),'errors':errors,'renderer':die.get_attribute('data-renderer')}
    page.wait_for_timeout(400);page.screenshot(path=f'work/preview-die-{kind}-{mode}.png')

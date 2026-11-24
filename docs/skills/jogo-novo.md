@@ -15,3 +15,14 @@ Rejeitado:
 - Trinca de ingressos fixada sempre na primeira linha.
 - Ingressos aparecendo apenas em trincas premiadas: a prévia inclui um ou dois avulsos sem crédito.
 - Ignorar trincas verticais: o dono pediu pagamento nas três colunas, além das horizontais e diagonais; perfil v3 publicado com oito combinações; preservar v1/v2 nos recibos antigos.
+
+## Circus/Royal Rico — decisão24/11/2026
+
+Circus v6 tem alvo de retorno TOTAL~90%, por pedido explícito do dono; esse alvo
+prevalece sobre o padrão95% acima. Royal Rico ganha10× em moedas da aposta de
+abertura, com rodada persistida, conclusão única e nada de cetro/feitiço local.
+Incluir seu prêmio na auditoria. Dados dos recursos usam0…estoque em seis faces,
+zero estoque não lança; para3/4 itens distribuir extras entre rodadas para não
+favorecer um valor. Não confundir o campo legado cedros (escudos) com o cetro
+arquivado. Preservar as verificações de identidade/aposta/estoque/prêmio ao
+reduzir custo das regras; provar equivalência e testar fraudes no emulador.

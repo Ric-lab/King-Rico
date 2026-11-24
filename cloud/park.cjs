@@ -80,6 +80,7 @@ function spinCost(s,bet,version=6){
  return stake;
 }
 function spinV6(p,s,bet,id,rng){
+ if(s.royal)fail('round-conflict','Conclua o Royal Rico antes de girar.');
  const freeSpin=spinCost(s,bet,6)===0;
  s.cedros??=0;
  if(s.spins>=10){s.spins=0;s.cycleWagerUnits=0;Object.defineProperty(s,'_barSpins',{value:0,writable:true,configurable:true});}
@@ -104,6 +105,10 @@ function spinV6(p,s,bet,id,rng){
   x={...x,parkVersion:1,ticketAward:0,controllerLines,cedarAward:award,cedarLines};
   if(s.cedros===5&&cedarLines.length){s.cloverFreeBetUnits=engine.units(bet);s.cloverFreeSpinId=id;x.freeSpinAward=true;}
   s.cedros+=award;
+  if(controllerLines.length){
+   const won=rng()<.9,moves=15+Math.floor(rng()*16),endAt=won?moves-(rng()<.55?0:1):moves+1;
+   s.royal={id,betUnits:engine.units(bet),won,moves,endAt};x.royal={...s.royal};
+  }
   if(wheelUnits>0)s.wheel={id,roundId:id,prizeVersion:4,economyVersion:6,baseUnits:Math.max(1,Math.round(wheelUnits*prof.WHEEL_SHARE_V6)),pockets:[...POCKETS_V6],result:null};
  }
  if(freeSpin)x.freeSpin=true;
@@ -119,6 +124,12 @@ function spin(p,s,bet,id,rng,version=1){
  const result=x||spinLegacy(p,s,bet,id,random,version);
  if(version>=5||s.economy)controller.recordSpin(s,result,bet);
  return result;
+}
+function completeRoyal(s,roundId,quit=false){
+ const round=s.royal;if(!round||round.id!==roundId)fail('round-conflict','Esse Royal Rico já foi encerrado.');
+ const winUnits=!quit&&round.won?round.betUnits*10:0;
+ delete s.royal;controllerV6.recordBonus(s,winUnits);
+ return {...round,won:winUnits>0,quit,winUnits};
 }
 function entry(p,s,game,method){
  if(!ATTRACTIONS.includes(game)||!['ticket','coins'].includes(method))fail('invalid-argument','Entrada inválida.');
@@ -149,4 +160,4 @@ function bonus(s,wheelId,rng){
  if(!w.result){const random=rng||(()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32);let v=random(),i=0;const weights=[.34,.34,.20,.10,.02],multipliers=w.pockets?.includes(8)?[2,4,6,8,10]:[1,2,3,5,10];while(i<4&&v>=weights[i])v-=weights[i++];const multiplier=multipliers[i],matches=w.pockets.flatMap((m,j)=>m===multiplier?[j]:[]),index=matches[Math.min(matches.length-1,Math.floor(random()*matches.length))],winUnits=w.baseUnits*multiplier;w.result={index,multiplier,winUnits,extraUnits:w.prizeVersion===4?winUnits:winUnits-w.baseUnits};if(w.economyVersion===6)controllerV6.recordBonus(s,w.result.extraUnits);else controller.recordBonus(s,w.result.extraUnits);return w.result.extraUnits;}
  return 0;
 }
-module.exports={TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,POCKETS_V6,fresh,publicState,placeTickets,scatterTickets,spinCost,spin,entry,payment,settle,bonus};
+module.exports={completeRoyal,TONY,TONY_CHANCE,theftUnits,tonySpin,resourceSpin,PRICE,METER_SPINS,TICKET,ATTRACTIONS,POCKETS,POCKETS_V6,fresh,publicState,placeTickets,scatterTickets,spinCost,spin,entry,payment,settle,bonus};

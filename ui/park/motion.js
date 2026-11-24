@@ -1,9 +1,13 @@
 import {shieldTarget} from './shield-wallet.js';
-// Controle: 3 em linha abre a Trinca (Royal Rico). Ganhar = 3 ou 4 giros com a coroa coringa no meio.
-function openControllerGame(fc){if(document.getElementById('kr-controller-game'))return;import('./trinca.js').then(m=>m.openTrinca(fc,{bet:fc.state?.bet??fc._cloudSpin?.bet??1})).catch(()=>{});}
+// Royal Rico reserves the opening stake and result in the shared round.
+function openControllerGame(fc){
+ if(fc._royalPlaying||document.getElementById('kr-controller-game')||!window.KingRicoPark.state.royal||fc.cloudBusy()||fc.isCeleb()||fc.state.showWin||window.KingRicoCloud.dailyRewardActive)return;
+ fc._royalPlaying=true;fc.setState({auto:false});
+ import('./trinca.js').then(m=>m.openTrinca(fc,{round:window.KingRicoPark.state.royal})).catch(e=>window.KingRicoCloud.error(e)).finally(()=>{fc._royalPlaying=false;if(!fc.cloudBusy())fc.applyCloudPlayer?.();});
+}
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
-setTimeout(()=>{import('./trinca.js').then(m=>m.mountCedroDots()).catch(()=>{});import('./cedro-spell.js').then(m=>m.installCedroSpell()).catch(()=>{});},1200);
+
 export function record(fc,type,details={}){const log=fc._parkMotionLog ||= [];log.push({type,at:performance.now(),...details});if(log.length>80)log.shift();}
 export function colorAt(v){const i=Math.max(1,STOPS.findIndex(([p])=>p>=v)),a=STOPS[i-1],b=STOPS[i],t=Math.max(0,Math.min(1,(v-a[0])/(b[0]-a[0])));return `rgb(${a[1].map((c,j)=>Math.round(c+(b[1][j]-c)*t)).join(',')})`;}
 // Cosmetic sub-level only: repeated pours approach the next real level smoothly.
@@ -16,6 +20,7 @@ export function nextPourLevel(before,target,shown=before){
  return {from:start,show};
 }
 export function installMotion(fc,rails,{refresh,showWheel}){
+ const busy=fc.cloudBusy.bind(fc);fc.cloudBusy=(...a)=>!!fc._royalPlaying||busy(...a);fc._parkOpenRoyal=()=>openControllerGame(fc);
  fc._parkMeterLevel=window.KingRicoPark.state.spins;fc._parkVisibleTickets=window.KingRicoPark.state.cedros;
  if(fc._parkMeterLevel>=10){fc._parkMeterLevel=0;fc._parkShown=0;fc._parkFeatureFill=0;fc._parkAfterGoodLuck=true;}
  const spinButton=document.querySelector('[data-spin-btn]');
@@ -56,6 +61,7 @@ export function installMotion(fc,rails,{refresh,showWheel}){
   if(cloverLines.length){fc.setState({winDim:true,winCalm:false});celebrateClover(fc,cloverLines);}
 if(fc._cloudSpin?.outcome?.controllerLines?.length)setTimeout(()=>openControllerGame(fc),900);if(fc._parkTicketAward&&res.win<=0&&!fc._cloudSpin?.outcome?.feature)flyTickets(fc,refresh);};
  fc._parkChargeConfirmed=(before,response,actual)=>{
+  if(response.park.royal)fc.setState({auto:false});
   if(actual&&fc._parkAfterGoodLuck){fc._parkFeatureFill=null;fc._parkAfterGoodLuck=false;fc._parkMeterLevel=0;fc._parkShown=0;before=10;}
   if(!actual&&fc._parkAfterGoodLuck){fc._parkVisibleTickets=response.park.cedros;refresh();return;}
   if(!actual){fc._parkMeterLevel=response.park.spins;fc._parkShown=response.park.spins;rails.style.setProperty('--park-fill',response.park.spins*10+'%');fc._parkVisibleTickets=response.park.cedros;syncColor(response.park.spins);if(!fc._parkMeterBusy)commitSpinColor(response.park.spins);refresh();return;}

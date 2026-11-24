@@ -10,14 +10,14 @@ test('v6 every cedar combination gives one capped defense; old tickets stay unto
  for(const stock of[0,4,5]){const p=player(),s={...park.fresh(),cedros:stock,tickets:97};let first=true;const x=park.spin(p,s,10,'a',()=>first?(first=false,.99):.1,6);assert.equal(x.cedarAward,5-stock);assert.equal(s.cedros,5);assert.equal(s.tickets,97);assert.equal(x.winUnits,0);}
 });
 test('Ray rolls 0 to 5 and caps loss at actual shields',()=>{
- for(const have of[0,1,2,5]){const p=player(),s={...park.fresh(),cedros:have,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>.54,6);assert.ok(x.ray);assert.ok(!x.defense);assert.equal(x.ray.before,have);assert.equal(x.ray.stolen,Math.min(have,x.ray.dice.value));assert.equal(s.cedros,have-x.ray.stolen);assert.equal(x.ray.remaining,s.cedros);assert.equal(x.peaches,p.peaches);}
+ for(const have of[0,1,2,5]){const p=player(),s={...park.fresh(),cedros:have,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>.54,6);assert.ok(x.ray);assert.ok(!x.defense);assert.equal(x.ray.before,have);assert.equal(x.ray.stolen,(x.ray.dice?.value||0));assert.equal(s.cedros,have-x.ray.stolen);assert.equal(x.ray.remaining,s.cedros);assert.equal(x.peaches,p.peaches);}
 });
 test('one cedar blocks the entire attack of Tony and Tucker',()=>{
  for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),cedros:2,economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(x[kind]);assert.equal(x.defense.against,kind);assert.equal(x.grid[x.defense.cell],x.defense.replacement);assert.deepEqual(x.res,e.evaluate(x.grid,10,6));assert.equal(x.winUnits,e.units(x.res.win));assert.equal(s.cedros,1);assert.equal(x.peaches,p.peaches);assert.deepEqual(x.peachBank,p.peachBank);assert.equal(x.tony?.stolenUnits||x[kind].stolen||0,0);}
 });
 test('without defenses, saved dice bound Tony to 0–5 bets and Tucker to stock',()=>{
- for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(!x.defense);if(kind==='tony')assert.equal(x.tony.stolenUnits,x.tony.dice.value*1000);else {assert.equal(x.tucker.stolen,Math.min(3,x.tucker.dice.value));assert.equal(x.peachBank.units,751-Math.round(751*x.tucker.stolen/3));}}
- const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};assert.equal(park.spin(p,s,10,'a',()=>.01,6).defense.against,'tucker');assert.equal(s.cedros,2);
+ for(const [kind,r]of[['tony',0],['tucker',.51]]){const p=player(),s={...park.fresh(),economyV6:{...control.freshEconomy(),paidUnits:1000000}};const x=park.spin(p,s,10,'a',()=>r,6);assert.ok(!x.defense);if(kind==='tony')assert.equal(x.tony.stolenUnits,x.tony.dice.value*1000);else {assert.equal(x.tucker.stolen,x.tucker.dice.value);assert.equal(x.peachBank.units,751-Math.round(751*x.tucker.stolen/3));}}
+ const p=player();p.peaches=0;p.peachBank={count:0,units:0};const s={...park.fresh(),cedros:3};const empty=park.spin(p,s,10,'a',()=>.01,6);assert.equal(empty.defense,undefined);assert.equal(empty.tucker.dice,undefined);assert.equal(s.cedros,3);
  const s0={...park.fresh(),cedros:0};assert.ok(!park.spin(p,s0,10,'b',()=>.01,6).defense);
 });
 test('5 stored Roletas open the bonus wheel and full random sidebar triggers Good Luck',()=>{
@@ -31,13 +31,14 @@ test('5 stored Roletas open the bonus wheel and full random sidebar triggers Goo
  assert.equal(s.spins,10);assert.ok(y.feature);assert.equal(y.feature.bet,10);
 });
 test('compact Firestore line counting is equivalent to engine payments and cedar combinations',()=>{
- let seed=7163;const rand=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32),pool=[-1,0,2,5,6,7,8,10,11];
+ let seed=7163;const rand=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32),pool=[-1,0,2,5,6,7,8,10,11,15];
  for(let i=0;i<100000;i++){
   const g=Array.from({length:9},()=>pool[Math.floor(rand()*pool.length)]),matched=e.ALL_LINES.map(l=>l.every(n=>g[n]===g[l[0]])?g[l[0]]:-1);
   const factors={0:12,2:8,6:25,7:100,8:50,10:4};
   const sum=Object.entries(factors).reduce((v,[id,pay])=>v+matched.filter(n=>n===Number(id)).length*pay,0);
   const win=sum*(new Set(g).size===1?10:1); // stake=1 coin = 100 cents, /10 above =>10 cents per unit.
   assert.equal(e.evaluate(g,1,6).win,win/10);
+  assert.equal(matched.includes(15),e.ALL_LINES.some(l=>l.every(i=>g[i]===15)));
   assert.equal(matched.filter(n=>n===5).length,e.ALL_LINES.filter(l=>l.every(n=>g[n]===5)).length);
  }
 });
@@ -48,4 +49,17 @@ test('feature cents round after the full-screen multiplier, not before it',()=>{
   assert.equal(e.units(e.evaluate(g,stake/100,6).win),Math.round(stake*factor*80));
  }
  assert.equal(e.units(e.evaluate(Array(9).fill(10),4.03,6).win),12896);
+});
+test('single-symbol feature formula equals full engine evaluation for sparse and full grids',()=>{
+ let seed=8124;const rng=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32);
+ const factors={0:12,2:8,6:25,7:100,8:50,10:4};
+ for(const sym of [0,2,6,7,8,10])for(let n=0;n<10000;n++){
+  const g=n===0?Array(9).fill(sym):Array.from({length:9},()=>rng()<.5?sym:-1),stake=[100,250,1000,1000000][n%4];
+  const lines=e.ALL_LINES.filter(l=>l.every(i=>g[i]===sym)).length;
+  const actual=Math.round(stake*factors[sym]*lines*(new Set(g).size===1?10:1)/10);
+  const matches=e.ALL_LINES.map(l=>l.every(i=>g[i]===g[l[0]])?g[l[0]]:-1);
+  const oldSum=Object.entries(factors).reduce((sum,[id,factor])=>sum+matches.filter(v=>v===Number(id)).length*factor,0);
+  assert.equal(actual,Math.round(stake*oldSum*(new Set(g).size===1?10:1)/10));
+  assert.equal(actual,e.units(e.evaluate(g,stake/100,6).win));
+ }
 });

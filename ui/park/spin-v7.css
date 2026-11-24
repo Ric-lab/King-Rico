@@ -103,7 +103,7 @@
 .park-circus-stage .park-key-count b{font-size:15px;line-height:1}
 .park-circus-stage .park-key-count-shield{left:32px}
 .park-circus-stage .park-key-count-wheel{left:367px}
-.park-circus-stage .park-key-count-shield{pointer-events:auto;cursor:pointer}
+.park-circus-stage .park-key-count-shield,.park-circus-stage .park-key-count-wheel{pointer-events:auto;cursor:pointer}
 
 /* Contadores como peças assentadas no gramado (mesma perspectiva das teclas): face oval vista de cima,
    espessura dourada embaixo e sombra no chão. Borda externa alinhada à borda externa das teclas. */

@@ -104,7 +104,7 @@ else {
     await Cloud.ready;
     const key = `kingRico.pending.${Cloud.uid}`, pending = storage.get(key);
     const same = pending && pending.action === payload.action && pending.game === payload.game && pending.bet === payload.bet && pending.selected === payload.selected
-      && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
+      && pending.quit===payload.quit && pending.move===payload.move && pending.roundId===payload.roundId && pending.floor===payload.floor && pending.used===payload.used
       && pending.n===payload.n && pending.gold===payload.gold && pending.step===payload.step && pending.quality===payload.quality && pending.turn===payload.turn && pending.target===payload.target && pending.aimX===payload.aimX && pending.aimZ===payload.aimZ && pending.seed===payload.seed && pending.version===payload.version && pending.selected2===payload.selected2 && pending.source===payload.source && pending.park===payload.park && pending.method===payload.method && pending.wheelId===payload.wheelId;
     if (pending && !same) {
       await call(pending); localStorage.removeItem(key);
@@ -122,6 +122,7 @@ else {
   Cloud.spin = (game, bet, selected) => mutate({ action:'spin', game, bet, ...(game === 'wheel' ? {selected} : {park:true,slotVersion:6,...(Cloud.park?.cloverFreeSpinId?{freeSpinId:Cloud.park.cloverFreeSpinId}:{})}) });
   Cloud.parkEntry=(game,method)=>mutate({action:'parkEntry',game,method});
   Cloud.parkBonus=wheelId=>mutate({action:'parkBonus',wheelId});
+  Cloud.royalComplete=(roundId,quit=false)=>mutate({action:'royalComplete',roundId,quit});
   Cloud.parkBonusClose=wheelId=>mutate({action:'parkBonusClose',wheelId});
   const parkFlags=game=>Cloud.parkMode&&(!Cloud.player?.[game+'Round']||Cloud.park?.passes[game]?.started)?{park:true}:{};
   Cloud.bridge = (move,bet,roundId,step,selected=-1) => mutate({action:'bridge',game:'bridge',move,bet,roundId,step,selected});

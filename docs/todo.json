@@ -4,6 +4,26 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-dice-inventory",
+      "title": "Dados por estoque: faces equilibradas e débito persistente",
+      "status": "done",
+      "category": "Economia & Regras",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "0 itens não abre dado. Faces0…N, N1=3/3, N2=2/2/2; N3/4 com extras rotativos equilibrados. Valor exato debitado no store/banco; replay e refresh testados. Tony mantém aposta como unidade, tela Tirou N. Presets não fabricam estoque."
+    },
+    {
+      "id": "p-roleta-help",
+      "title": "Roletas: contador abre explicação no padrão dos escudos",
+      "status": "done",
+      "category": "Menu & Topo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Modal Suas roletas: guarda até5 e abre bônus ao completar. Mesmo estilo, Enter/espaço/toque; navegador conferido."
+    },
+    {
       "id": "p-previa-ci-rapida",
       "title": "Prévia rápida para CSS, imagens e documentação",
       "status": "done",
@@ -21,7 +41,7 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
-      "notes": "Giro mais livre: corrigido backspin que freava no feltro; lançamento padrão1,22→2,35 voltas. Pickup inclina e mantém pose ao soltar; hápticos6/16/8ms. Borda e base de nogueira3D alinhadas às colisões, câmera45°. Quatro testes físicos e smoke integrado passaram; print conferido. Áudio e economia intactos. Somente prévia."
+      "notes": "24/11: dado por estoque, versão2 com faces/index; zero estoque não lança, zero roletas não gasta escudo. Física/madeira/câmera45° preservadas; somente prévia. Valor exibido em quantidade, perda persistente."
     },
     {
       "id": "p-escudo-rolos-voos",
@@ -187,25 +207,25 @@
     },
     {
       "id": "i-pagam-escudos",
-      "title": "Royal Rico e os outros 2 minigames pagam em escudos",
-      "status": "todo",
+      "title": "Royal Rico paga10× a aposta original em moedas",
+      "status": "done",
       "category": "Economia & Regras",
-      "agent": "Claude",
+      "agent": "Codex",
       "commit": null,
-      "demoUrl": null,
-      "notes": "Liga os minigames à defesa contra vilões.",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Decisão24/11 substitui a proposta de pagar escudos. Rodada e aposta persistidas; resgate único10×, perder/desistir0; muda aposta/refresh/replay sem duplicar. Store, regras e navegador testados. Só prévia.",
       "createdAt": "2026-11-20T03:24:02.198Z",
       "updatedAt": "2026-11-20T03:24:02.198Z"
     },
     {
       "id": "i-cedro-sai",
-      "title": "Decidir: tirar o cedro do jogo",
-      "status": "todo",
+      "title": "Retirar cetro local e feitiço do Royal Rico",
+      "status": "done",
       "category": "Ideias",
-      "agent": "Claude",
+      "agent": "Codex",
       "commit": null,
-      "demoUrl": null,
-      "notes": "Ideia (19/11): o feitiço automático é bonito, mas acontece sozinho e não encaixa. Proposta: tirar o cedro; o prêmio do Royal Rico passa a ser o cofrinho/Plinko.",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Retirados ganho/contador/casa substituída/feitiço e crédito livre; fontes em archive/ui/park. Mantido estoque real dos escudos (campo interno legado cedros), sem converter moeda local.",
       "createdAt": "2026-11-19T19:16:39.179Z",
       "updatedAt": "2026-11-19T19:16:39.179Z"
     },
@@ -246,11 +266,11 @@
     {
       "id": "t-se-tiver-0-roletas-o-t-69",
       "title": "Se tiver 0 roletas o trevo não entra em ação pq não precisa\nO trevo ja não defende do ray e \nSe a pessoa tiver 0 moedas nem vai jogar então tbm não faz sentido\nA unica coisa é o trevo defender do roubo de roletas sem precisar... Isso precisa arrumar",
-      "status": "todo",
+      "status": "done",
       "category": "Economia & Regras",
-      "agent": "",
+      "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
       "notes": ""
     },
     {

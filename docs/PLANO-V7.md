@@ -1,3 +1,8 @@
+> Decisão vigente24/11: Royal Rico paga10× a aposta original em MOEDAS.
+> Cetro/feitiço local retirado. Propostas antigas de pagar escudos ou usar
+> cetro/cofrinho abaixo são históricas/futuras, não a implementação atual.
+> Ver docs/PARQUE.md e HANDOFF.md. Entrega desta tarefa só na prévia.
+
 # Plano v7 — Fortune Circus (estado-alvo, 20/11/2026)
 
 Fonte única do rumo. Se algo aqui conflitar com ideia antiga no TODO, vale ESTE arquivo.
