@@ -405,7 +405,7 @@ test('Neck Rules reject arbitrary guarantees, free progression and unbound credi
   const ref=doc(c.db,'players',c.uid),p=(await getDoc(ref)).data();
   await assertFails(updateDoc(ref,{neckRound:{id:randomUUID(),betUnits:1000,floor:10,peachAt:6,savedUnits:999999},updatedAt:serverTimestamp(),revision:1}));
   await assertFails(updateDoc(ref,{neckRound:{id:randomUUID(),betUnits:1000,floor:1,peachAt:0,savedUnits:0},updatedAt:serverTimestamp(),revision:1}));
-  await assertFails(updateDoc(ref,{settings:{...p.settings,neckBetIdx:10},updatedAt:serverTimestamp(),revision:1}));
+  await assertFails(updateDoc(ref,{settings:{...p.settings,neckBetIdx:13},updatedAt:serverTimestamp(),revision:1}));
   const id=randomUUID(),roundId=randomUUID(),b=writeBatch(c.db);
   const next={...p,neckRound:null,balanceUnits:p.balanceUnits+50000,updatedAt:serverTimestamp(),lastSpinAt:serverTimestamp(),firstSpinAt:serverTimestamp(),revision:1,lastOperationId:id};
   const outcome={move:'collect',roundId,betUnits:1000,peachAt:0,floor:33,savedUnits:0,ok:true,ended:true,winUnits:50000};
@@ -1227,7 +1227,7 @@ for(const [kind,draw,cedros,peaches]of[['tony',0,2,3],['tucker',.51,2,3],['ray',
   sequence=kind==='feature'?[.99,0,...Array.from({length:8},()=>[.99,.4]).flat()]:kind==='tenth'?Array(30).fill(.99):kind==='cedar'?[.99,...Array(9).fill(.1)]:kind==='normal'?Array(30).fill(.99):Array(30).fill(draw);
   if(kind==='wheel-prize'||kind==='bar-prize'){
    const sy=engine.slotSymbols(6),total=sy.reduce((n,x)=>n+x.w,0),grid=[11,0,2,6,7,8,10,2,6];
-   sequence=[...(kind==='wheel-prize'?[.99]:[]),...grid.flatMap(i=>i===11?[0]:[.99,(sy.slice(0,i).reduce((n,x)=>n+x.w,0)+sy[i].w/2)/total])];
+   sequence=[.99,...grid.flatMap(i=>i===11?[0]:[.99,(sy.slice(0,i).reduce((n,x)=>n+x.w,0)+sy[i].w/2)/total])];
   }
   const req=request({action:'spin',game:'circus',bet:10,park:true,slotVersion:6});
   const r=await c.call(req).catch(e=>{e.message=kind+': '+e.message;throw e;});assert.equal(r.outcome.slotVersion,6);assert.equal(r.park.tickets,100);
