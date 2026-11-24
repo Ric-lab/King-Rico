@@ -1,8 +1,16 @@
 {
-  "updatedAt": "2026-11-24",
+  "updatedAt": "2026-11-24T16:09:17.190Z",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "t-bubble-rico",
+      "title": "Bubble Rico + escolha por 2 cartas na trinca de controle",
+      "status": "preview",
+      "agent": "Claude",
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "Trinca de controle abre 2 cartas viradas (Royal Rico / Bubble Rico, posição sorteada). Bubble Rico: arrastar mira (linha com quique), soltar atira, 3+ iguais estouram, soltas caem (valem 2×), tiger regride a barra, 25 tiros do servidor, mesma rodada/10× do Royal Rico. Economia inalterada (mesmo royal round)."
+    },
     {
       "id": "p-background-v2",
       "title": "Aplicar fundo com bandeiras vermelhas e nuvem à direita",

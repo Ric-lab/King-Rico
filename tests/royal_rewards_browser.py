@@ -19,7 +19,7 @@ with sync_playwright() as p:
  page.locator('#kr-preview-picker').get_by_role('button',name='FECHAR',exact=True).click()
  # Fixture is only presentation setup: award still goes through the real shared model.
  def seed():
-  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.royal={id:crypto.randomUUID(),betUnits:1000,won:true,moves:15,endAt:14};s.park.economyV6={version:1,rounds:1,wageredUnits:1000,paidUnits:0,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));localStorage.setItem('kingRico.preview.cedros','3');localStorage.setItem('kingRico.preview.cedrosFull','1');}''')
+  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.royal={id:crypto.randomUUID(),betUnits:1000,won:true,moves:15,endAt:14};s.park.economyV6={version:1,rounds:1,wageredUnits:1000,paidUnits:0,tigerUnits:0};localStorage.setItem(k,JSON.stringify(s));localStorage.setItem('kingRico.preview.cedros','3');localStorage.setItem('kingRico.preview.cedrosFull','1');localStorage.setItem('kingRico.preview.forceGame','royal');}''')
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   page.get_by_role('dialog',name='Royal Rico',exact=True).wait_for()
  seed();before=page.evaluate('KingRicoCloud.player.balance')
