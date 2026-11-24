@@ -1,3 +1,12 @@
+## Fundo v2 — aplicação oficial autorizada24/11/2026
+Dono aprovou apenas a troca do fundo na prévia e no oficial. Base main69eae93.
+Asset circus-garden-lawn-v2.webp: mesmas dimensões941×1672, bandeiras da tenda
+vermelha agora vermelhas e uma nuvem suave alta à direita. park.css muda apenas
+v1→v2; sem alterar enquadramento, controles, economia ou sons. Fonte idêntica à
+arte aprovada/compartilhada da prévia. Não inclui o lote anterior de saldo/tabela/
+anúncio que continua na sandbox. Próximo passo: confirmar workflow Firebase
+após Pages com sucesso e verificar o arquivo servido no oficial.
+
 ## Contadores acompanham as cordas e promoção oficial — Codex,24/11/2026
 Pedido do dono: corrigir escudo/roleta deixados no gramado e publicar no oficial.
 Base: prévia4098fe5 (Pages confirmado); main1dff754. A promoção leva o lote

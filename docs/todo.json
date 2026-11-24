@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-background-v2",
+      "title": "Aplicar fundo com bandeiras vermelhas e nuvem à direita",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Fundo v2 aprovado24/11 na prévia e oficial. Asset941×1672 e referência CSS; nenhuma outra mudança do jogo."
+    },
+    {
       "id": "p-counter-hoist",
       "title": "Escudo e roleta acompanham as cordas da máquina",
       "status": "done",
