@@ -42,7 +42,7 @@ export function installTucker(fc){
   }
   function result(){
    scene.dataset.phase='result';carrier.style.visibility='hidden';
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><strong class="park-tony-total">−${event.stolen}</strong><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou roletas');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tucker Toucan"><strong class="park-tony-total">${event.stolen ? '−'+event.stolen : '0'}</strong><button class="park-action park-action-blue">CONTINUAR</button>`,'Tucker levou roletas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=back;
   }
   function settle(){fc.setState({peaches:window.KingRicoCloud.player.peaches,peachShownBase:null,peachShownAdd:0,balance:window.KingRicoCloud.player.balance,hint:'Vamos de novo?'});}

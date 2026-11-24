@@ -719,3 +719,5 @@ Aplica às9 casas, à fita e ao estado travado. Detalhes em SIMBOLOS-ROLOS.md.
 Os três modais exibem só o rosto do vilão, `−valor` e CONTINUAR. Tony usa
 o formato de moedas; Tucker e Ray mostram quantidades inteiras. Sem título
 ou legenda visível; rótulos acessíveis preservados.
+
+Quando nada é roubado, os três modais mostram `0`, sem sinal nem decimais.

@@ -1,3 +1,10 @@
+## Roubo zero sem sinal — Codex, 24/11/2026
+Base c6e01dc; só prévia. Nos três modais, nenhuma perda mostra exatamente 0,
+sem sinal negativo nem casas decimais. Perdas reais mantêm −valor e formato
+anterior. Teste de navegador ajustado para a distinção zero/perda; templates
+conferidos em zero e valor positivo. Sem mudança financeira.
+Próximo: dono avaliar em Preview após sucesso do Pages. Main não alterada.
+
 ## Modais de roubo simplificados — Codex, 24/11/2026
 Base 2f94cd4; só prévia. Tony, Tucker e Ray mostram apenas retrato, −valor
 (Tony em moedas; Tucker/Ray em quantidade inteira) e CONTINUAR. Sem título ou

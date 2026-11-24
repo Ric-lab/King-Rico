@@ -64,7 +64,9 @@ with sync_playwright() as p:
    dialog.wait_for(timeout=16000)
    assert dialog.locator('h2,p').count()==0
    assert dialog.locator('img').count()==1
-   assert dialog.locator('.park-tony-total').inner_text().startswith('−')
+   lost=event['stolenUnits'] if kind=='tony' else event['stolen']
+   shown=dialog.locator('.park-tony-total').inner_text()
+   assert shown=='0' if lost==0 else shown.startswith('−')
    page.screenshot(path=f'work/preview-villain-modal-{kind}-{mode}.png')
    assert page.locator('.park-villain-dice').count()==0
    phases=page.evaluate('dicePhases');assert all(x in phases for x in ['entering','ready','rolling','result','returning','closed']),phases
