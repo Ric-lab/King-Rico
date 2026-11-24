@@ -1,3 +1,16 @@
+## Estado de publicação e bloqueio automático —24/11/2026
+As4 tarefas abaixo concluídas em commits separados a4912f2/a889747/d1cf310/
+d5a4742. Pages d5a4742 SUCESSO: run45397489178 (todos os navegadores e HEAD
+públicos do workflow). Main permanece69eae93. NÃO anunciar oficial atualizado.
+A revisão automática BLOQUEOU o push direto do lote à main, alegando ausência
+de autorização explícita para publicar este lote no oficial. Não contornar o
+bloqueio por outra ferramenta. Pedir ao dono autorização para promover este
+lote revisável; após resposta, fetch/preservar colegas, fast-forward do mesmo
+commit da prévia para main e confirmar workflow Firebase e paridade.
+GET direto de arquivos Pages pela VM falhou por proxy403; também indisponível
+no conector web. Verificações públicas disponíveis são as HEAD do workflow.
+Nenhuma regra/matemática alterada; deploy oficial não ocorreu nesta tarefa.
+
 ## Lote de paridade, saldo, pagamentos e anúncio — Codex,24/11/2026
 Pedido do dono executado em4 tarefas separadas, cada qual com commit/teste:
 1. Pages antigo: run45317680265 falhou por teste Tony aleatório, não por fontes
