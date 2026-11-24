@@ -242,18 +242,6 @@
       "updatedAt": "2026-11-20T04:07:27.180Z"
     },
     {
-      "id": "i-roleta-jogos",
-      "title": "Controles alternam: Royal Rico → Bubble Rico → Royal Rico…",
-      "status": "todo",
-      "category": "Ideias",
-      "agent": "Claude",
-      "commit": null,
-      "demoUrl": null,
-      "notes": "Decidido em 20/11: por enquanto são 2 minigames (Royal Rico + 1 novo). A cada trinca de controles abre o próximo da fila, alternando. Sem roleta de sorteio. Guardar no estado do jogador qual foi o último.",
-      "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T04:15:45.127Z"
-    },
-    {
       "id": "i-pagam-escudos",
       "title": "Royal Rico paga10× a aposta original em moedas",
       "status": "done",
