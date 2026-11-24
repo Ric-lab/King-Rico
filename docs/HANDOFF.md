@@ -1,3 +1,11 @@
+## Fundo v2 aprovado para prévia e oficial —24/11/2026
+Dono autorizou aplicar a arte nas duas versões; escopo restrito à imagem.
+park.css aponta circus-garden-lawn-v2.webp; enquadramento/tamanho inalterados.
+Main ainda69eae93, prévia677b1fd antes desta troca: não promover o lote anterior
+bloqueado (saldo/tabela/anúncio) sob autorização que diz somente imagem.
+Aplicar à main apenas asset v2+referência CSS, preservando demais fontes.
+Próximo passo: confirmar Pages e depois workflow Firebase dessa troca isolada.
+
 ## Fundo: bandeiras vermelhas e nuvem alta à direita —24/11/2026
 Arte v2 em assets/scenes/circus-garden-lawn-v2.webp, editada a partir da v1.
 Duas bandeiras da tenda vermelha ficaram vermelhas; tenda azul mantém azul.

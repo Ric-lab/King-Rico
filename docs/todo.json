@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-background-v2",
+      "title": "Aplicar fundo com bandeiras vermelhas e nuvem à direita",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Arte v2 aprovada24/11 para prévia e oficial. Só troca referência CSS;941×1672 preservado. Conferência visual focada; sem mudanças no jogo."
+    },
+    {
       "id": "p-reward-button",
       "title": "Botão de moedas por vídeo integrado à identidade do Circus",
       "status": "done",
