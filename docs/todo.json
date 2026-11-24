@@ -146,18 +146,6 @@
       "updatedAt": "2026-11-20T04:15:45.127Z"
     },
     {
-      "id": "i-sem-tucker",
-      "title": "Tirar o Tucker",
-      "status": "todo",
-      "category": "Ideias",
-      "agent": "Claude",
-      "commit": null,
-      "demoUrl": null,
-      "notes": "Proposta anterior não executada. Em23/11 o dono pediu dado0–5 também para o Tucker roubar roletas; preservar o personagem nesta tarefa. Reavaliar retirada apenas com nova decisão.",
-      "createdAt": "2026-11-20T04:02:23.538Z",
-      "updatedAt": "2026-11-20T04:07:27.180Z"
-    },
-    {
       "id": "i-turbo-fixo",
       "title": "Velocidade do spin sempre no turbo; linha dourada pisca 40% menos",
       "status": "todo",
