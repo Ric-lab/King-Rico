@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-preview-parity",
+      "title": "Prévia e oficial publicados no mesmo commit",
+      "status": "preview",
+      "category": "Infra",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Diagnóstico: Pages69eae93 falhou no cenário aleatório de Tony; main publicou. Teste passa a preparar ataque não zero explicitamente. Regra: Pages confirmado antes de promover o mesmo commit à main."
+    },
+    {
       "id": "p-counter-hoist",
       "title": "Escudo e roleta acompanham as cordas da máquina",
       "status": "done",

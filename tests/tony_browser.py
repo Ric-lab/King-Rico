@@ -8,10 +8,17 @@ with sync_playwright() as p:
  for mode in ['no-preference','reduce']:
   ctx=b.new_context(viewport={'width':390 if mode=='no-preference' else 320,'height':844},reduced_motion=mode)
   page=ctx.new_page();errors=[];missing=[]
+  def force_attack():
+   # This scenario tests interruption between impacts, so require a nonzero
+   # attack with several impacts explicitly. A random next spin may legitimately be zero or no Tony.
+   page.evaluate('KingRicoPreviewPicker()')
+   page.get_by_role('button',name='Tiger',exact=True).click()
+   page.evaluate('''()=>{const fetch=window.fetch;window.fetch=async(u,o)=>{if(!o?.body||JSON.parse(o.body).action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>.2;try{return await fetch(u,o)}finally{Math.random=random}}}''')
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
   page.goto(BASE+'/circus?demo=tony');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   page.evaluate('''()=>{window.tonyQA=[];const ss=__fc.setState.bind(__fc);__fc.setState=(s,...a)=>{if(__fc._tonyPlaying&&s&&typeof s==='object'&&'balance'in s)tonyQA.push({at:performance.now(),balance:s.balance});return ss(s,...a)};window.soundQA=[];const claw=__fc.sfxClaw.bind(__fc);__fc.sfxClaw=(...a)=>{if(__fc._tonyPlaying)soundQA.push(performance.now());return claw(...a)};}''')
+  force_attack()
   before=page.evaluate('KingRicoCloud.player.balance');page.locator('[data-spin-btn]').click()
   page.locator('.park-tony-scene').wait_for(timeout=15000)
   page.get_by_role('button',name='JOGAR DADO',exact=True).click()
@@ -50,6 +57,7 @@ with sync_playwright() as p:
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   assert page.locator('.park-tony-scene').count()==0
   assert page.evaluate('KingRicoCloud.player.balance')==end+50
+  force_attack()
   # Interrupt between pats; the authoritative debit has already committed once.
   if mode=='reduce':
    page.evaluate('''()=>{const animate=Element.prototype.animate;Element.prototype.animate=function(...args){if(this.classList.contains('park-tony-claws')||this.classList.contains('is-tony-loss'))throw Error('Simulated animation failure');return animate.apply(this,args)}}''')

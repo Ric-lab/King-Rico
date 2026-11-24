@@ -1751,3 +1751,14 @@ fora do runtime; nenhuma interface ou economia alterada. Commit de fontes apenas
 Próximo passo: usar a referência ao receber o pedido de ajustar o clique;
 preservar a geometria atual até essa iteração, sem copiar a arte comercial.
 
+## Paridade da sandbox — Codex,24/11/2026
+Tarefa1 do pedido atual. Ambas as fontes estavam em69eae93, mas Pages falhou
+em tony_browser: o segundo giro aleatório não garantia Tony/patada. Oficial
+publicou e Pages ficou4098fe5. Correção do teste força Tiger e RNG de ataque
+não zero SOMENTE no teste que verifica interrupção entre patadas. Não altera
+as regras nem ignora o resultado0 (coberto por villain_dice e testes do motor).
+Regra permanente em publicar.md: Pages confirmado primeiro, main depois no
+mesmo commit; nunca declarar paridade apenas pelo Git. Próximo passo: concluir
+Pages, promover este mesmo commit à main e confirmar ambos. Depois tratar,
+separadamente: saldo da roleta; tela de pagamentos; botão de anúncio.
+

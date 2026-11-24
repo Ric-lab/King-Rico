@@ -1,5 +1,15 @@
 # Commit, prévia, publicação
 
+## Paridade obrigatória — decisão do dono,24/11/2026
+
+Prévia é sandbox do jogo oficial: mesma interface, animações e regras; somente
+carteira fictícia, seletor de eventos e avisos de teste diferem. Para promover:
+publicar primeiro Pages, confirmar SUCESSO e conferir artefatos; só depois
+fast-forward do MESMO commit na main. Confirmar os dois workflows e arquivos
+servidos antes de encerrar. Fonte igual não comprova deploy igual. Se Pages
+falhar, corrigir a falha sem retirar teste; não avançar o oficial deixando a
+prévia antiga. Mudanças em avaliação podem adiantar a prévia, nunca o contrário.
+
 - `main` publica sozinha no site oficial depois de passar nos testes (workflow "Publicar King Rico no Firebase"). Teste falhou = nada vai ao ar.
 - Prévia compartilhada: branch `codex/penalty-clown-preview` → GitHub Pages: https://ric-lab.github.io/King-Rico/circus/ (workflow `preview-pages.yml`). Link único do dono: https://ric-lab.github.io/King-Rico/Preview. Não usar o canal Firebase como alternativa automática; ele é apenas legado/manual. Nunca usar a carteira de produção para a prévia.
 - Commit: mensagem em português dizendo o que mudou. Confirmar ao dono com o hash curto.
