@@ -206,18 +206,6 @@
       "updatedAt": "2026-11-20T04:15:45.127Z"
     },
     {
-      "id": "i-trevo-barriga",
-      "title": "Good Luck = trevo de 4 folhas na barriga do King Rico",
-      "status": "todo",
-      "category": "Ideias",
-      "agent": "Claude",
-      "commit": null,
-      "demoUrl": null,
-      "notes": "Conforme joga, as folhas acendem. Com as 4 acesas, ele solta 4 feitiços (reaproveitar os efeitos do prêmio do Royal Rico, que ficaram bons). Substitui a barra lateral como gatilho do Good Luck.",
-      "createdAt": "2026-11-20T03:24:02.198Z",
-      "updatedAt": "2026-11-20T03:24:02.198Z"
-    },
-    {
       "id": "i-dados",
       "title": "(Cancelado) Dados nas barras",
       "status": "cancelled",
