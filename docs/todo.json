@@ -184,7 +184,7 @@
     {
       "id": "i-aposta-menor",
       "title": "Seletor de aposta menor, abaixo do spin",
-      "status": "todo",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": null,
