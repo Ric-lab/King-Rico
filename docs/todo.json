@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-24T16:09:17.190Z",
+  "updatedAt": "2026-11-24",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "t-escudo-roleta-3opcoes",
+      "title": "Escudo estilo roleta: escolher entre as 3 opções geradas (12, 8 ou 10 partes)",
+      "status": "todo",
+      "category": "Visual & Ritmo",
+      "agent": "Antigravity",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "3 opções em docs/concepts/shield-wheel-options/ (01=12 fatias filetes finos, 02=8 partes largas, 03=10 partes raios cônicos), bolinha dourada central igual à roleta e raios dourados. Aguardando escolha do dono."
+    },
     {
       "id": "t-bubble-rico",
       "title": "Bubble Rico + escolha por 2 cartas na trinca de controle",

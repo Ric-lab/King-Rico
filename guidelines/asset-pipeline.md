@@ -524,3 +524,19 @@ de defesa.
 -24/11/2026, fundo Circus v2:1 edição2D GPT Image a partir de v1; bandeiras
 vermelhas e nuvem alta à direita. Arte mostrada no chat; aguardando validação
 antes de trocar referência ativa. Sem créditos Meshy; custo monetário não informado.
+
+### 2026-11-24 — três opções do escudo estilo roleta (para escolha do dono)
+Pedido explícito do dono de 3 alternativas sem aplicar ainda: substituir a coroa
+central por bolinha dourada igual ao cubo da roleta (`wheel-symbol-v1`), com raios
+dourados saindo do centro e dividindo o escudo em partes de cores distintas no
+estilo da roleta. Como o objeto é geométrico simétrico (tabela 2) e `generate_image`
+retornou indisponibilidade de servidor, as 3 opções foram renderizadas via código
+WebGL2 2× supersampled (`2508×2508` → `1254×1254` RGBA + `512×512` WebP q94) sobre
+a moldura dourada exata de `shield-defense-rainbow-gold-v1.png`, preservando 100%
+da silhueta/chanfro externo e o perfil de ouro acetinado de `wheel-symbol-v1.png`
+(custo externo: 0 créditos):
+- `docs/concepts/shield-wheel-options/01-roleta-12-fatias.{png,webp}` (12 fatias + filetes finos);
+- `docs/concepts/shield-wheel-options/02-roleta-8-partes.{png,webp}` (8 partes largas + divisórias encorpadas);
+- `docs/concepts/shield-wheel-options/03-roleta-10-raios.{png,webp}` (10 partes + raios dourados cônicos);
+- gerador versionado em `docs/concepts/shield-wheel-options/generate.py`.
+Checkpoint `[skip ci]` sem trocar o asset ativo; aguardando escolha do dono (1, 2 ou 3).

@@ -1,3 +1,11 @@
+## Três opções do escudo estilo roleta (aguardando escolha do dono) — Antigravity/Gemini, 24/11/2026
+Base `fc83a05` puxada antes de gerar (preservado Bubble Rico do Claude). Pedido do dono: 3 imagens do escudo trocando a coroa central por bolinha dourada tipo o cubo da roleta, com raios dourados saindo do centro e dividindo o escudo em partes coloridas estilo roleta, para ele escolher antes de aplicar.
+- **Artes compartilhadas (custo 0, WebGL2 `2508×2508` → `1254×1254` RGBA + `512×512` WebP sobre a moldura exata de `shield-defense-rainbow-gold-v1.png`)**: `docs/concepts/shield-wheel-options/01-roleta-12-fatias.*` (12 fatias + filetes finos), `02-roleta-8-partes.*` (8 partes largas + divisórias encorpadas) e `03-roleta-10-raios.*` (10 partes + raios cônicos), mais gerador `generate.py`.
+- **Estado**: somente checkpoint `[skip ci]` em `codex/penalty-clown-preview`, sem alterar o escudo ativo em execução.
+- **Próximo passo**: dono escolher entre **1**, **2** ou **3**; aplicar a escolhida ao escudo ativo (rolos, contador oval, modal, defesa, silhueta da tabela se aplicável) e publicar na prévia.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+
 ## Botão de vídeo em bolinha lateral (referência Royal Smash) — Antigravity/Gemini, 24/11/2026
 Base `2d53fd1` puxada antes de editar; entrega somente na prévia (`codex/penalty-clown-preview`) para avaliação do dono.
 - **Formato em bolinha lateral**: `.kr-hud-ad` em `Fortune Circus.dc.html` e `ui/park/spin-v7.css` passa do cartão retangular largo para medalhão circular (`60×60px`, alvo `66×72px`, `right: 7.667px` centrado no mesmo eixo de `⚙` a `40.667px` da borda direita) com aro dourado metálico, fundo roxo radial com raios suaves, ícone 3D de vídeo (`▶`) + moeda (`sym-coin.webp`) no centro e pílula inferior `+1.000`, deixando a nuvem do King Rico livre.
