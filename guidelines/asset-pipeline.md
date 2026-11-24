@@ -521,3 +521,6 @@ anterior `-green-crown-v1.*` preservado como histórico. Sem Meshy; custo da
 ferramenta não exposto. Conferido em `320×740`–`412×915` no contador e no voo
 de defesa.
 
+-24/11/2026, fundo Circus v2:1 edição2D GPT Image a partir de v1; bandeiras
+vermelhas e nuvem alta à direita. Arte mostrada no chat; aguardando validação
+antes de trocar referência ativa. Sem créditos Meshy; custo monetário não informado.

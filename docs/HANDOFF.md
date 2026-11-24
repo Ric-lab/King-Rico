@@ -1,3 +1,12 @@
+## Fundo: bandeiras vermelhas e nuvem alta à direita —24/11/2026
+Arte v2 em assets/scenes/circus-garden-lawn-v2.webp, editada a partir da v1.
+Duas bandeiras da tenda vermelha ficaram vermelhas; tenda azul mantém azul.
+Uma nuvem suave no alto à direita preenche a área abaixo das configurações.
+Imagem mostrada no chat; composição preservada. Uma geração de imagem2D,
+sem Meshy. Somente arte nesta etapa: referência ativa segue v1; próximo passo
+é validar a imagem com o dono e aplicar v2 quando ele pedir. Não alterar UI.
+O bloqueio automático de promoção do lote anterior à main continua pendente.
+
 ## Estado de publicação e bloqueio automático —24/11/2026
 As4 tarefas abaixo concluídas em commits separados a4912f2/a889747/d1cf310/
 d5a4742. Pages d5a4742 SUCESSO: run45397489178 (todos os navegadores e HEAD
