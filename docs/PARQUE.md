@@ -713,3 +713,9 @@ Padronização24/11: a regra ativa de TODOS os símbolos de rolo agora fica em
 ui/park/reel-symbols.css, gerada por scripts/reel-symbols.py. Substitui o ajuste
 isolado86% do escudo: envelope90%W ×82%H, proporção natural, centro de alfa.
 Aplica às9 casas, à fita e ao estado travado. Detalhes em SIMBOLOS-ROLOS.md.
+
+### Resultado dos roubos — 24/11/2026 (prévia)
+
+Os três modais exibem só o rosto do vilão, `−valor` e CONTINUAR. Tony usa
+o formato de moedas; Tucker e Ray mostram quantidades inteiras. Sem título
+ou legenda visível; rótulos acessíveis preservados.

@@ -284,3 +284,6 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-dice-screen-value{position:absolute;left:50%;top:50%;opacity:0;transform:translate(-50%,-50%);font:800 clamp(240px,85vw,520px)/1 'Baloo 2',sans-serif;color:#fff6e3;text-shadow:0 8px 0 #0002;pointer-events:none;z-index:4;will-change:transform}
 .park-dice-fallback{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:110px;height:110px;align-content:center;text-align:center;background:#c91e2e;border-radius:20px;color:#fff7e8;font-size:70px;font-weight:800}
 .park-dice-fallback[hidden],.park-dice-throw[hidden]{display:none!important}
+
+/* Resultados dos roubos: rosto, perda e continuar; respiro sem legenda. */
+.park-tony-result .park-tony-total{margin-bottom:24px}

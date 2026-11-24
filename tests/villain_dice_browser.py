@@ -62,6 +62,10 @@ with sync_playwright() as p:
    balance=page.evaluate('KingRicoCloud.player.balance')
    dialog=page.get_by_role('dialog',name={'tony':'Tony roubou moedas','tucker':'Tucker levou roletas','ray':'Ray e os escudos'}[kind],exact=True)
    dialog.wait_for(timeout=16000)
+   assert dialog.locator('h2,p').count()==0
+   assert dialog.locator('img').count()==1
+   assert dialog.locator('.park-tony-total').inner_text().startswith('−')
+   page.screenshot(path=f'work/preview-villain-modal-{kind}-{mode}.png')
    assert page.locator('.park-villain-dice').count()==0
    phases=page.evaluate('dicePhases');assert all(x in phases for x in ['entering','ready','rolling','result','returning','closed']),phases
    if kind!='tony':

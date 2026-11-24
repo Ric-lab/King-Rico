@@ -1,3 +1,11 @@
+## Modais de roubo simplificados — Codex, 24/11/2026
+Base 2f94cd4; só prévia. Tony, Tucker e Ray mostram apenas retrato, −valor
+(Tony em moedas; Tucker/Ray em quantidade inteira) e CONTINUAR. Sem título ou
+legenda visível; nomes acessíveis dos diálogos preservados. Respiro de 24px antes
+do botão. Não altera débito, dado, animações ou retomada. Conferência pelo fluxo
+dos três vilões em villain_dice_browser.py, com screenshots dos modais.
+Próximo: dono avaliar em Preview após sucesso do Pages. Main não alterada.
+
 ## Padronização dos 12 símbolos em 9 posições — Codex, 24/11/2026
 Base 782523e; somente prévia, sem matemática/regras/sons novos.
 Arte-fonte preservada. scripts/reel-symbols.py mede alfa>100 e gera

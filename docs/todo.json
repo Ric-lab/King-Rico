@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-villain-modal-clean",
+      "title": "Simplificar modais de roubo: rosto, perda e Continuar",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Tony, Tucker e Ray sem títulos/legendas visíveis; só retrato, −valor e CONTINUAR. Valores e animações preservados. Somente prévia."
+    },
+    {
       "id": "p-reel-symbol-standard",
       "title": "Padronizar12 símbolos nas9 posições e estados do rolo",
       "status": "preview",

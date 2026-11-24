@@ -65,7 +65,7 @@ export function installTony(fc){
   }
   function result(){
    wallet?.classList.remove('is-tony-hit');veil.hidden=true;clearPrize();fc.setState({barWin:0});
-   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><h2>${total?'Tony deu '+count+(count===1?' patada':' patadas'):'Tony não levou nada!'}</h2><strong class="park-tony-total">${fc.money(total/100)}</strong><p>moedas</p><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
+   modal=window.KingRicoPark.modal(`<img class="park-tony-portrait" src="${HEAD}" alt="Tony Tiger"><strong class="park-tony-total">−${fc.money(total/100)}</strong><button class="park-action park-action-blue">CONTINUAR</button>`,'Tony roubou moedas');
    modal.classList.add('park-tony-result');modal.querySelector('button').onclick=release;
   }
   function hide(){if(finished)return;finished=true;clean();modal?.close();}
