@@ -7,7 +7,7 @@ with sync_playwright() as p:
  for mode in ['button','swipe','muted']:
   page=b.new_page(viewport={'width':390,'height':844});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key)),id=crypto.randomUUID();s.park.spins=10;s.park.wheel={id,roundId:id,prizeVersion:3,baseUnits:1000,pockets:[10,1,2,1,3,2,1,5,2,1,3,2,1],result:null};localStorage.setItem(key,JSON.stringify(s));}''')
+  page.evaluate('''()=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key)),id=crypto.randomUUID();s.park.spins=10;s.park.wheel={id,roundId:id,prizeVersion:3,baseUnits:1000,pockets:[10,2,4,2,6,4,2,8,4,2,6,4,2],result:null};localStorage.setItem(key,JSON.stringify(s));}''')
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   btn=page.get_by_role('button',name='GIRAR ROLETA',exact=True);btn.wait_for();page.wait_for_function('!document.querySelector("[data-wheel-spin]").disabled')
   page.evaluate('''muted=>{__fc._wheelTicks=0;__fc.setState({sound:!muted,sfxLvl:muted?0:2});}''',mode=='muted')

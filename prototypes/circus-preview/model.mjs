@@ -10,7 +10,7 @@ import {tuckerDemo} from './tucker-demo.mjs';
 import paths from '../../games/fingo/paths.json' with {type:'json'};
 
 export const PRICE=25, METER_SPINS=10;
-export const WHEEL_POCKETS=[10,1,2,1,3,2,1,5,2,1,3,2,1];
+export const WHEEL_POCKETS=[10,2,4,2,6,4,2,8,4,2,6,4,2];
 export const ATTRACTIONS=['clown','penalty','flying','fingo','bounce'];
 const fail=message=>{throw new Error(message);};
 const fresh=()=>({tickets:3,spins:0,bankUnits:0,wheel:null,passes:{},fingo:null});
@@ -67,7 +67,7 @@ export function createPreview(saved={},rng=Math.random,clock=Date.now){
     baseBalance:p.balanceUnits/100,outcome,ticket:outcome.ticketAward===3};
   }else if(data.action==='wheel'){
    if(!park.wheel||data.wheelId!==park.wheel.id)fail('Essa roleta já foi encerrada.');
-   if(!park.wheel.result){const multipliers=[1,2,3,5,10],weights=[.34,.34,.20,.10,.02];let v=rng(),i=0;while(i<4&&v>=weights[i])v-=weights[i++];
+   if(!park.wheel.result){const multipliers=park.wheel.pockets?.includes(8)?[2,4,6,8,10]:[1,2,3,5,10],weights=[.34,.34,.20,.10,.02];let v=rng(),i=0;while(i<4&&v>=weights[i])v-=weights[i++];
     const multiplier=multipliers[i],pockets=park.wheel.pockets;
     const matches=pockets?.flatMap((m,j)=>m===multiplier?[j]:[])||[i];
     const index=matches[Math.min(matches.length-1,Math.floor(rng()*matches.length))];

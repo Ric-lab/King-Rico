@@ -198,6 +198,7 @@ a:hover { color: #fff3c4; }
   </div>
   </div>
 
+<sc-if value="{{ showAd }}" hint-placeholder-val="{{ true }}"><div onClick="{{ watchAd }}" role="button" tabindex="0" aria-label="Ver anúncio e ganhar 1000 moedas" class="kr-hud-ad" style-active="transform: translateY(1px) scale(.94);"><span>+</span></div></sc-if>
 <x-import from="./ui/menu.js" component="MenuButton" dc-props="{{ menuButton }}"></x-import>
 </div>
 
@@ -208,8 +209,8 @@ a:hover { color: #fff3c4; }
     <div class="park-button-aperture park-spin-aperture"><i class="park-spin-contact" aria-hidden="true"></i><i class="park-spin-edge" aria-hidden="true"><i class="park-spin-side-wash"></i></i><i class="park-spin-rear" aria-hidden="true"><i class="park-spin-rear-wash"></i></i>
       <div class="park-spin-face">
       <i class="park-spin-wash" aria-hidden="true"></i>
-      <span class="park-spin-label">{{ betText }}</span>
-      <span class="park-spin-label park-spin-label-lit" aria-hidden="true">{{ betText }}</span>
+      <span class="park-spin-label" style="font-size: {{ betSize }};">{{ betText }}</span>
+      <span class="park-spin-label park-spin-label-lit" style="font-size: {{ betSize }};" aria-hidden="true">{{ betText }}</span>
       <svg class="park-spin-outline" viewBox="0 0 277 107" aria-hidden="true"><path class="park-spin-rim-pulse" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z"/><path class="park-spin-hold-line" d="M138 3 Q177 3 205 8 Q223 10 229 27 L248 83 Q251 92 237 95 Q139 111 40 96 Q26 94 28 84 L48 26 Q53 10 72 8 Q107 3 138 3Z" pathLength="100"/></svg>
     </div></div>
     <span class="park-button-rim park-spin-rim" aria-hidden="true"><img src="assets/machine/spin-king-base-gold-v1.svg" alt="" draggable="false"><i class="park-spin-iridescence"></i></span>
@@ -424,7 +425,7 @@ const FEAT_P_SYM = 0.14, FEAT_P_WILD = 0.04, FEAT_MIN = 10;
 const HP_FRAMES = { ready: 'assets/happeach/f-ready.webp', crouch: 'assets/happeach/f-crouch.webp', launch: 'assets/happeach/f-launch.webp', tuck: 'assets/happeach/f-tuck.webp', drop: 'assets/happeach/f-drop.webp', victory: 'assets/happeach/f-victory.webp', danceA: 'assets/happeach/f-danceA.webp', danceB: 'assets/happeach/f-danceB.webp' };
 const PEACH = 11, PEACH_P = 0.008174081789857218, FREE_SPINS = 10, PEACH_GOAL = 5, PEACH_PAY = 25, FEAT_SPINS = 5;
 const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 const STOP_ORDER = [6, 3, 0, 7, 4, 1, 8, 5, 2];
 const NOTES = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33, 659.25, 784];
 const SKEY = 'fortuneCircus.slot.v3';
@@ -1780,7 +1781,7 @@ class Component extends DCLogic {
       reelMoving: s.spinning || !!this._rs ? 'true' : 'false',
       balanceSize: (() => { const l = this.shownBalance().toLocaleString('pt-BR', { maximumFractionDigits: 2 }).length; return (l <= 6 ? 19 : l <= 8 ? 16.5 : 14) + 'px'; })(),
       walletProps:{value: this.shownBalance().toLocaleString('pt-BR',{maximumFractionDigits:2}),hold:s.showWin,external:!!(this._cfRun||s.winDim)}, balanceText: this.shownBalance().toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }),
-      ...(() => { const b = this.bet(), t = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }); return { betText: t, betSize: (t.length <= 4 ? 36 : t.length <= 5 ? 32 : 28) + 'px' }; })(),
+      ...(() => { const b = this.bet(), t = b.toLocaleString('pt-BR', { maximumFractionDigits: 2 }); return { betText: t, betSize: (t.length <= 5 ? 46 : 38) + 'px' }; })(),
       winText: s.displayWin > 0 ? this.money(s.displayWin) : '',
       winAnim: s.displayWin > 0 ? 'fcBeat .5s ease-in-out infinite' : 'none',
       bigWinText: s.winBigText || '+' + this.money(s.displayWin),
@@ -1792,6 +1793,7 @@ class Component extends DCLogic {
       progressText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Saldo e progresso são salvos na sua conta. Uma jogada confirmada fica registrada mesmo se você fechar o jogo.' : 'Moedas, aposta e ajustes são salvos automaticamente neste aparelho.',
       cloudText: window.KingRicoCloud && window.KingRicoCloud.enabled ? 'Google conectado · moedas virtuais, sem dinheiro real.' : 'Progresso salvo apenas neste aparelho.',
       cloudEnabled: !!(window.KingRicoCloud && window.KingRicoCloud.enabled), analyticsLabel: window.KingRicoCloud && window.KingRicoCloud.player && window.KingRicoCloud.player.analyticsConsent ? 'ligados' : 'desligados',
+      showAd: !s.homeOpen,
       menuButton: {onClick:this.toggleMenu,onPointerDown:this.pressMenu,onPointerUp:this.pressUp,hidden:!!s.homeOpen,style:{marginTop:-(s.hudD || 0)+'px'}},
       menuProps: {open:!!s.menu,onClose:this.closeMenu,onPaytable:this.openPays,screen:'Fortune Circus',
         details:'Gire os símbolos e veja os prêmios na tabela. A barra lateral ativa os 5 giros Good Luck e 5 roletas abrem a Roleta Bônus.',

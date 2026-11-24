@@ -148,7 +148,7 @@ a { color: #ffd257; text-decoration: none; } a:hover { color: #fff1b8; }
 // Fortune Bounce — bola neon quica por placas; cada placa +0,1 no multiplicador (x1,1, x1,2, …, sem teto).
 // Só habilidade decide a queda. A sorte sorteia a dificuldade das placas à frente (visível); rampa mais suave (máx. perto da 60ª); placas que andam só a partir da 13ª.
 // Placa dourada (1 em 40) garante o valor. Retorno depende do jogador (não é fixo): calibrar frequência de placas difíceis e rampa com testes.
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 const SKEY = 'fortuneCircus.slot.v3', BKEY = 'fortuneCircus.bounce.v1', NOTES = [523, 587, 659, 784, 880];
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const multOf = n => Math.round((1 + 0.05 * n) * 100) / 100, SAVE = 10, GOLD = 3;

@@ -84,7 +84,7 @@ export function createGameStore(db, uid, dependencies={}) {
       || (data.version===4 ? !Number.isInteger(data.selected2) || data.selected2< -1 || data.selected2>4 || data.selected2===data.selected : data.selected2!==undefined))) fail('king-rico/invalid-argument','Corrida inválida.');
     const settings=data.settings || {};
     if (data.action==='settings' && (typeof settings!=='object' || Array.isArray(settings) ||
-      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['bridgeBetIdx','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?9:-1))))
+      Object.entries(settings).some(([k,v])=>!Number.isInteger(v) || v<0 || v>(['sfxLvl','vibLvl'].includes(k)?2:['bridgeBetIdx','slotBetIdx','wheelBetIdx','neckBetIdx','fingoBetIdx','penaltyBetIdx','clownBetIdx','bounceBetIdx','flyingBetIdx','twentyOneBetIdx','clawBetIdx','raceBetIdx'].includes(k)?engine.BETS.length-1:-1))))
       fail('king-rico/invalid-argument','Ajustes inválidos.');
     const financial = ['parkEntry','parkBonus','parkBonusClose','bridge','spin','bonus','neck','fingo','penalty','clown','bounce','flying','twentyOne','claw','race','recharge'].includes(data.action);
     const operationRef=financial ? reference(['players',uid,'operations',data.requestId]) : null;

@@ -1,17 +1,16 @@
-## Circus v6 — integração oficial validada (17/11/2026)
+## Circus v6 — reequilíbrio, apostas até 10.000 e roleta ×2..×10 (23/11/2026)
 
 Tabela literal e defesa aprovadas pelo dono: [PARQUE.md](PARQUE.md).
-Simulação completa: cinco milhões de giros em cada aposta 1/10/100/1000,
-retorno aproximado 89,99%; moedas base + Happeach + bônus da roleta − Tony.
-Sem conversão/valorização de ingressos antigos. Arquivos reprodutíveis:
-`node scripts/circus-v6-audit.mjs` e `docs/circus-economy-v6-audit.json`.
-Mudança de aposta no décimo giro, alternância, cultivar defesas com aposta baixa
-e teste artificial de estoque sempre cheio: um milhão cada, 88,5–91,5%.
-As versões v4/v5 também foram reexecutadas após alterar módulos compartilhados.
-Os resultados são estimativas de longo prazo, não promessa de saldo individual.
-Regras e persistência passaram em 17/11: 81 casos, mais navegador real
-emulado. Pagamentos e probabilidades continuam idênticos à auditoria.
-A entrega oficial segue o workflow de main; prévia continua com carteira fictícia.
+- Roleta bônus v6 atualizada para `[2, 4, 6, 8, 10]` (casas `[10,2,4,2,6,4,2,8,4,2,6,4,2]`)
+  com `WHEEL_SHARE_V6 = 0,20` (roletas legadas v1–v5 mantêm `[1, 2, 3, 5, 10]`).
+- Imunidade aos vilões na espera do Good Luck restrita a `s.spins <= 9` (evitando
+  proteção gratuita após completar o ciclo antes do disparo); `tenth-high` reequilibrado
+  dentro de `88,5%–91,5%`.
+- Escala de apostas estendida com `2500`, `5000` e `10000` (validada também nas regras Firestore).
+- Simulação completa v6 (20M giros base + 4M estresse): retorno ~`89,73%–90,01%` em todas
+  as apostas e cenários; testes extras em `2500`/`5000`/`10000` em `89,51%–89,83%`.
+As versões v4/v5 também foram reexecutadas após alterar `cloud/park.cjs`.
+Pagamentos e regras Firestore estão sincronizados para a publicação na `main`.
 
 # Circus v5 — publicado (b394d9f)
 

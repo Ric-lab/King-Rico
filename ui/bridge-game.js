@@ -2,7 +2,7 @@ const h=React.createElement;
 const {MenuButton,MenuPanel}=require('./menu.js');
 const {WalletValue}=require('./wallet-value.js');
 const {RoundControls}=require('./round-controls.js');
-const BETS=[1,2.5,5,10,25,50,100,250,500,1000],MULT=[1.9,3.8,7.5,15,30,60];
+const BETS=[1,2.5,5,10,25,50,100,250,500,1000,2500,5000,10000],MULT=[1.9,3.8,7.5,15,30,60];
 const fmt=n=>n.toLocaleString('pt-BR',{maximumFractionDigits:2});
 const duration=ms=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?Math.min(ms,80):ms;
 class BridgeGame extends React.Component{
@@ -19,7 +19,7 @@ class BridgeGame extends React.Component{
   componentDidUpdate(){if(this.deferred&&!this.locked&&!this.state.busy&&!this.state.result)this.sync();}
   sound(ok){if(!this.state.sfxLvl)return;try{const a=this.audio||=new (window.AudioContext||window.webkitAudioContext)();a.resume();[ok?523:180,ok?659:100,ok?784:65].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+i*.065;o.type=ok?'sine':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.055*(this.state.sfxLvl/2),t);g.gain.exponentialRampToValueAtTime(.0001,t+.24);o.connect(g).connect(a.destination);o.start(t);o.stop(t+.25);});}catch{}}
   async animate(el,frames,ms){if(!el?.animate)return;try{const a=el.animate(frames,{duration:duration(ms),easing:'ease-in-out',fill:'forwards'});await Promise.race([a.finished,new Promise(resolve=>setTimeout(resolve,duration(ms)+100))]);a.cancel();}catch{}}
-  bet=delta=>{if(this.locked||this.state.round||this.state.result)return;this.setState(s=>({betIdx:Math.max(0,Math.min(9,s.betIdx+delta))}));};
+  bet=delta=>{if(this.locked||this.state.round||this.state.result)return;this.setState(s=>({betIdx:Math.max(0,Math.min(BETS.length-1,s.betIdx+delta))}));};
   jump=side=>this.move('jump',side);
   start=()=>this.move('start');collect=()=>this.move('collect');
   async move(move,selected=-1){
@@ -93,7 +93,7 @@ class BridgeGame extends React.Component{
         h('small',null,s.busy?'':active?`Toque no vidro · salto ${Math.min(6,step+1)} de 6`:'Escolha um vidro. Avance ou pegue seu prêmio.')),
       active?h('div',{className:'br-playing-controls'},h('div',null,'PRÓXIMO SALTO',h('strong',null,fmt(Math.round(bet*100*MULT[Math.min(step,5)])/100))),
         h('button',{className:'kr-button kr-button--gold',disabled:busy||!step,onClick:this.collect,'aria-label':`Pegar ${fmt(prize)} moedas`},'PEGAR',h('small',null,fmt(prize)+' moedas'))):
-        h(RoundControls,{active:false,busy,betText:fmt(bet),onBetDown:()=>this.bet(-1),onBetUp:()=>this.bet(1),onStart:this.start,betDownDisabled:s.betIdx===0,betUpDisabled:s.betIdx===9,startDisabled:!s.ready||s.balance<bet}),
+        h(RoundControls,{active:false,busy,betText:fmt(bet),onBetDown:()=>this.bet(-1),onBetUp:()=>this.bet(1),onStart:this.start,betDownDisabled:s.betIdx===0,betUpDisabled:s.betIdx===BETS.length-1,startDisabled:!s.ready||s.balance<bet}),
       !active&&s.ready&&s.balance<1&&h('a',{href:'/home',style:{position:'absolute',top:679,left:0,right:0,textAlign:'center',color:'#ffe1a1',zIndex:15}},'Recarregar moedas na Home'),
       h(MenuPanel,{open:s.menu,onClose:()=>this.setState({menu:false}),screen:'Fortune Bridge',details:'Aposte uma vez e escolha um dos dois vidros. Só um aguenta: a chance de acertar é de 1 em 2 por salto. São seis etapas. Após cada acerto, você pode pegar o prêmio ou continuar. Se o vidro quebrar, perde a aposta e o prêmio acumulado; Nick cai numa rede. Os prêmios incluem a aposta. O caminho é sorteado antes do primeiro salto e continua igual ao atualizar a página. Moedas virtuais, sem dinheiro real.',sfxLvl:s.sfxLvl,vibLvl:s.vibLvl,onSfx:v=>this.setLevel('sfxLvl',v),onVib:v=>this.setLevel('vibLvl',v)}),
       s.result&&h('div',{className:'br-dialog-overlay'},h('section',{className:'br-dialog',role:'dialog','aria-modal':true,'aria-labelledby':'br-result-title'},

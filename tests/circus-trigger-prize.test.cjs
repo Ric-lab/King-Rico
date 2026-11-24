@@ -41,7 +41,7 @@ test('preview trigger prizes survive retries and reload without a second debit o
   const p=saved.records.find(([key])=>key==='players/preview')[1];
   p.peaches=kind==='wheel'?4:0;p.peachBank={count:p.peaches,units:p.peaches*1000};
   if(kind==='bar'){saved.park.spins=9;saved.park.cycleWagerUnits=9000;saved.barSpins=25;}
-  const draws=fromGrid(losing,kind==='bar'?.99:.5);let first=kind==='wheel';
+  const draws=fromGrid(losing,kind==='bar'?.99:.5);let first=true;
   let model=createPreview(saved,()=>first?(first=false,.99):draws());
   const req={action:'spin',game:'circus',bet:10,slotVersion:6,requestId:randomUUID()},r=await model.run(req);
   assert.ok(r.outcome.res.win>0);assert.ok(kind==='wheel'?r.park.wheel:r.outcome.feature);

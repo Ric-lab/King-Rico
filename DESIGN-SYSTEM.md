@@ -327,6 +327,11 @@ aparece no contador oval sob a tecla `−` (`.park-key-count-shield`, que abre o
 modal dos escudos). Os voos de coleta/defesa/giro grátis do escudo partem e
 pousam diretamente no contador oval sob `−`, e o voo da roleta (`dance`) pousa
 no contador oval sob `+` (`.park-key-count-wheel`), com pulso na chegada.
+Em 23/11/2026: o botão circular verde `+` (`.kr-hud-ad`, anúncio/recarga) voltou
+centralizado logo abaixo da engrenagem de configurações (`.kr-menu-button`), as
+apostas permitem `2.500`, `5.000` e `10.000` (ajuste para `38px` quando a aposta
+tem 6+ caracteres no botão de giro) e a roleta v6 usa `×2, ×4, ×6, ×8, ×10`
+com cores por valor em `ui/park/wheel-palette.js` (preservando roletas v1–v5).
 
 ### Composição Circus v7 — wireframe do dono,20/11/2026 (prévia)
 Máquina e spin em sequência central, com respiro antes do banner. Spin começa

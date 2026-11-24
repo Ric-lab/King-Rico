@@ -9,7 +9,7 @@ with sync_playwright() as p:
   ctx=b.new_context(viewport={'width':390,'height':844},reduced_motion=mode);page=ctx.new_page();errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(BASE+'/circus');page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
-  page.evaluate('''index=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key)),pockets=[10,1,2,1,3,2,1,5,2,1,3,2,1],multiplier=pockets[index],id=crypto.randomUUID();s.park.spins=10;s.park.wheel={id,roundId:id,prizeVersion:3,baseUnits:1000,pockets,result:{index,multiplier,winUnits:1000*multiplier,extraUnits:1000*(multiplier-1)}};localStorage.setItem(key,JSON.stringify(s));}''',index)
+  page.evaluate('''index=>{const key='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(key)),pockets=[10,2,4,2,6,4,2,8,4,2,6,4,2],multiplier=pockets[index],id=crypto.randomUUID();s.park.spins=10;s.park.wheel={id,roundId:id,prizeVersion:3,baseUnits:1000,pockets,result:{index,multiplier,winUnits:1000*multiplier,extraUnits:1000*(multiplier-1)}};localStorage.setItem(key,JSON.stringify(s));}''',index)
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
   page.locator('.park-wheel-machine.is-won').wait_for(timeout=15000)
   assert page.locator('.park-wheel-machine').evaluate('e=>getComputedStyle(e).getPropertyValue("--park-result-color").trim()')==color
@@ -24,4 +24,4 @@ with sync_playwright() as p:
   assert not errors,errors
   ctx.close()
  b.close()
-print('Winner color stays identical in takeover and flight: x10 pink, x2 green, x1 blue (cor fixa por valor); normal and reduced motion')
+print('Winner color stays identical in takeover and flight: x10 pink, x4 green, x2 blue (cor fixa por valor); normal and reduced motion')

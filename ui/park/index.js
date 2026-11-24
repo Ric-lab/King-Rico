@@ -137,7 +137,7 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
 function showWheel(){
  if(wheelOpen||!state.wheel)return;if(window.__fc?._parkMeterBusy||window.__fc?._parkFillCelebrating){window.__fc._parkWheelWaiting=true;return;}wheelOpen=true;const wheelId=state.wheel.id;
  const fc=window.__fc;if(fc){fc._parkWheelVisible=true;fc.setState({balance:Cloud.player.balance,balPending:(state.wheel.result?.winUnits||state.wheel.baseUnits)/100,auto:false});}
- const values=state.wheel.pockets||[1,2,3,5,10],n=values.length,seg=360/n;
+ const values=state.wheel.pockets||WHEEL_POCKETS,n=values.length,seg=360/n;
  const colors=pocketColors(n,values);
  const gradient=colors.map((c,i)=>`${c} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
  const el=createWheelScene(fc.lightsRef.current.parentElement,`<div class="park-wheel-heading"><img src="/ui/park/wheel-marquee.svg" alt=""><h2>Bonus</h2></div><div class="park-wheel-wrap"><div class="park-wheel-machine"><div class="park-wheel-rays"></div><div class="park-wheel-rim"></div>${Array.from({length:24},(_,i)=>`<i class="park-wheel-bulb" style="--bulb-angle:${i*15}deg;--bulb-delay:${-i*.08}s"></i>`).join('')}<div class="park-wheel" style="background:conic-gradient(from ${-seg/2}deg,${gradient})">${values.map((v,i)=>`<span style="--a:${i*seg}deg;--half:${seg/2}deg;--pocket-ink:#fff3c4"><b>×${v}</b></span>`).join('')}</div><div class="park-wheel-hub"><strong aria-live="polite">×?</strong></div><div class="park-wheel-hub-ring"></div><div class="park-wheel-pointer"></div></div></div><button class="park-action" data-wheel-spin>GIRAR ROLETA</button>`);

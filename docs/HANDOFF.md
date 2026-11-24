@@ -1,3 +1,11 @@
+## Reequilíbrio Circus v6, apostas 2.500–10.000, roleta ×2..×10 e + embaixo de Configurações — Antigravity/Gemini,23/11/2026
+Base `b65a2cd`. Preparado lote de promoção para `main`:
+- **Reequilíbrio**: corrigida imunidade de vilões (`s.spins < 9` → `s.spins <= 9` em `cloud/park.cjs` e `prevSpins <= 9` em `firestore.rules`), corrigido `tenth-high` (de 95,95% para ~90,00%). Atualizado `tests/circus-trigger-prize.test.cjs` e `prototypes/circus-preview/browser-wallet.mjs`.
+- **Apostas até 10.000**: adicionados `2500`, `5000`, `10000` em `cloud/engine.cjs`, `cloud/store.mjs`, `firestore.rules` (índices até 12 e teto de `peachBank`), `Fortune Circus.dc.html`, `ui/bridge-game.js` e `.dc.html`; fonte do botão de giro reduz para `38px` com `10.000`.
+- **Roleta ×2, ×4, ×6, ×8, ×10**: nova sequência `[10,2,4,2,6,4,2,8,4,2,6,4,2]` para v6 em `cloud/park.cjs`, `prototypes/circus-preview/model.mjs`, `ui/park/wheel-palette.js` (`2` azul, `4` verde, `6` amarelo, `8` laranja, `10` rosa) e `firestore.rules`, com `WHEEL_SHARE_V6 = 0.20` (preservando roletas legadas `[1,2,3,5,10]`).
+- **Botão `+` circular abaixo das Configurações**: `.kr-hud-ad` restaurado em `Fortune Circus.dc.html` e posicionado em `ui/park/spin-v7.css` logo abaixo de `.kr-menu-button` (`top: 67px`, `right: 23.667px`).
+- **Verificações**: `npm test` (289/289 passaram); auditorias v6 (20M base ~89,999% + 4M estresse 89,73–90,01% + 2500/5000/10000 em 89,51–89,83%) e v4/v5 regeneradas; builds preview/produção e testes visuais de navegador validados. Próximo passo: acompanhar deploy oficial na `main` (`Publicar King Rico no Firebase`).
+
 ## Giro solto, resposta tátil e borda de madeira — Codex,23/11/2026
 Base `8241316`. Encontrado backspin em roll.mjs: sinal do eixoX oposto ao
 rolamento correto, freando no feltro. Corrigido; atrito0,12 e damping inicial

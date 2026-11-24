@@ -11,18 +11,18 @@ service cloud.firestore {
         && s.keys().hasOnly('sfxLvl,vibLvl,slotBetIdx,wheelBetIdx,neckBetIdx,fingoBetIdx,penaltyBetIdx,clownBetIdx,bounceBetIdx,flyingBetIdx,twentyOneBetIdx,clawBetIdx,raceBetIdx,bridgeBetIdx'.split(','))
         && s.sfxLvl is int && s.sfxLvl >= 0 && s.sfxLvl <= 2
         && s.vibLvl is int && s.vibLvl >= 0 && s.vibLvl <= 2
-        && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 9
-        && s.wheelBetIdx is int && s.wheelBetIdx >= 0 && s.wheelBetIdx <= 9
-        && s.get('bridgeBetIdx',3) is int && s.get('bridgeBetIdx',3) >= 0 && s.get('bridgeBetIdx',3) <= 9
-        && s.get('neckBetIdx',3) is int && s.get('neckBetIdx',3) >= 0 && s.get('neckBetIdx',3) <= 9
-        && s.get('fingoBetIdx',3) is int && s.get('fingoBetIdx',3) >= 0 && s.get('fingoBetIdx',3) <= 9
-        && s.get('bounceBetIdx',3) is int && s.get('bounceBetIdx',3) >= 0 && s.get('bounceBetIdx',3) <= 9
-        && s.get('clownBetIdx',3) is int && s.get('clownBetIdx',3) >= 0 && s.get('clownBetIdx',3) <= 9
-        && s.get('flyingBetIdx',3) is int && s.get('flyingBetIdx',3) >= 0 && s.get('flyingBetIdx',3) <= 9
-        && s.get('raceBetIdx',3) is int && s.get('raceBetIdx',3) >= 0 && s.get('raceBetIdx',3) <= 9
-        && s.get('clawBetIdx',3) is int && s.get('clawBetIdx',3) >= 0 && s.get('clawBetIdx',3) <= 9
-        && s.get('twentyOneBetIdx',3) is int && s.get('twentyOneBetIdx',3) >= 0 && s.get('twentyOneBetIdx',3) <= 9
-        && s.get('penaltyBetIdx',3) is int && s.get('penaltyBetIdx',3) >= 0 && s.get('penaltyBetIdx',3) <= 9;
+        && s.slotBetIdx is int && s.slotBetIdx >= 0 && s.slotBetIdx <= 12
+        && s.wheelBetIdx is int && s.wheelBetIdx >= 0 && s.wheelBetIdx <= 12
+        && s.get('bridgeBetIdx',3) is int && s.get('bridgeBetIdx',3) >= 0 && s.get('bridgeBetIdx',3) <= 12
+        && s.get('neckBetIdx',3) is int && s.get('neckBetIdx',3) >= 0 && s.get('neckBetIdx',3) <= 12
+        && s.get('fingoBetIdx',3) is int && s.get('fingoBetIdx',3) >= 0 && s.get('fingoBetIdx',3) <= 12
+        && s.get('bounceBetIdx',3) is int && s.get('bounceBetIdx',3) >= 0 && s.get('bounceBetIdx',3) <= 12
+        && s.get('clownBetIdx',3) is int && s.get('clownBetIdx',3) >= 0 && s.get('clownBetIdx',3) <= 12
+        && s.get('flyingBetIdx',3) is int && s.get('flyingBetIdx',3) >= 0 && s.get('flyingBetIdx',3) <= 12
+        && s.get('raceBetIdx',3) is int && s.get('raceBetIdx',3) >= 0 && s.get('raceBetIdx',3) <= 12
+        && s.get('clawBetIdx',3) is int && s.get('clawBetIdx',3) >= 0 && s.get('clawBetIdx',3) <= 12
+        && s.get('twentyOneBetIdx',3) is int && s.get('twentyOneBetIdx',3) >= 0 && s.get('twentyOneBetIdx',3) <= 12
+        && s.get('penaltyBetIdx',3) is int && s.get('penaltyBetIdx',3) >= 0 && s.get('penaltyBetIdx',3) <= 12;
     }
     function neckPrize(bet, floor) {
       let multipliers = [110,120,130,140,150,155,170,180,200,220,250,280,300,333,350,400,450,500,550,580,700,800,900,1000,1200,1400,1550,1800,2000,2500,3000,4000,5000];
@@ -41,7 +41,7 @@ service cloud.firestore {
         && (!('peachBank' in p) || p.peachBank is map && p.peachBank.keys().hasOnly(['count','units'])
           && p.peachBank.count is int && p.peachBank.count >= 0 && p.peachBank.count <= 4
           && p.peachBank.units is int && p.peachBank.units % 50 == 0
-          && p.peachBank.units >= p.peachBank.count*100 && p.peachBank.units <= p.peachBank.count*100000)
+          && p.peachBank.units >= p.peachBank.count*100 && p.peachBank.units <= p.peachBank.count*1000000)
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4 && settings(p.settings)
         && (p.get('bridgeRound',null) == null || p.bridgeRound is map)
         && (p.get('neckRound',null) == null || p.neckRound is map)
@@ -125,8 +125,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,bounceRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['bounceBetIdx'])
-        && preferences.bounceBetIdx is int && preferences.bounceBetIdx >= 0 && preferences.bounceBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.bounceBetIdx]
+        && preferences.bounceBetIdx is int && preferences.bounceBetIdx >= 0 && preferences.bounceBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][preferences.bounceBetIdx]
         && x.keys().hasOnly('roundId,betUnits,move,n,guardUnits,gold,ended,winUnits,parkVersion'.split(','))
         && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
         && x.betUnits == r.betUnits && o.betUnits == attractionDebit(old,o,first)
@@ -158,8 +158,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,clownRound,clownStats,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['clownBetIdx'])
-        && preferences.clownBetIdx is int && preferences.clownBetIdx >= 0 && preferences.clownBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.clownBetIdx]
+        && preferences.clownBetIdx is int && preferences.clownBetIdx >= 0 && preferences.clownBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][preferences.clownBetIdx]
         && x.keys().hasOnly('roundId,betUnits,used,selected,hit,results,sumUnits,ended,winUnits,parkVersion'.split(','))
         && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
         && x.betUnits == r.betUnits && o.betUnits == attractionDebit(old,o,first)
@@ -182,8 +182,8 @@ service cloud.firestore {
       let key = o.game == 'wheel' ? 'wheelBetIdx' : 'slotBetIdx';
       let index = preferences[key];
       return preferences.diff(previous).affectedKeys().hasOnly([key])
-        && index is int && index >= 0 && index <= 9
-        && (o.result.outcome.get('slotVersion',1)==6?int(o.result.bet*100+0.5):o.betUnits) == [100,250,500,1000,2500,5000,10000,25000,50000,100000][index];
+        && index is int && index >= 0 && index <= 12
+        && (o.result.outcome.get('slotVersion',1)==6?int(o.result.bet*100+0.5):o.betUnits) == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][index];
     }
     function emptyCircusEconomy() {
       return {'version':1,'rounds':0,'wageredUnits':0,'paidUnits':0,'tigerUnits':0,'ticketsAwarded':0,'ticketsStolen':0};
@@ -263,7 +263,7 @@ service cloud.firestore {
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.peaches is int && p.peaches >= 0 && p.peaches <= 4
         && spinSettings(p.settings,old.settings,o)
-        && (version==6 && x.get('freeSpin',false)?o.betUnits==0:o.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000])
+        && (version==6 && x.get('freeSpin',false)?o.betUnits==0:o.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000])
         && old.balanceUnits >= o.betUnits && p.balanceUnits == old.balanceUnits - o.betUnits + o.winUnits - debit
         // affectedKeys above already preserves bonuses, consent and every other saved game.
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
@@ -294,12 +294,12 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,neckRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['neckBetIdx'])
-        && p.settings.neckBetIdx is int && p.settings.neckBetIdx >= 0 && p.settings.neckBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.neckBetIdx]
+        && p.settings.neckBetIdx is int && p.settings.neckBetIdx >= 0 && p.settings.neckBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.neckBetIdx]
         && x.keys().hasOnly('move,roundId,betUnits,peachAt,floor,savedUnits,ok,ended,winUnits'.split(','))
         && x.move in ['start','climb','collect'] && x.ok is bool && x.ended is bool
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
-        && x.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000]
+        && x.betUnits in [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000]
         && x.betUnits == r.betUnits && o.betUnits == (first ? x.betUnits : 0)
         && (first ? x.move == 'start' : x.move != 'start' && x.roundId == r.id && x.peachAt == r.peachAt)
         && x.floor is int && x.floor >= 0 && x.floor <= 33 && x.savedUnits is int
@@ -362,8 +362,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,fingoRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['fingoBetIdx'])
-        && preferences.fingoBetIdx is int && preferences.fingoBetIdx >= 0 && preferences.fingoBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.fingoBetIdx]
+        && preferences.fingoBetIdx is int && preferences.fingoBetIdx >= 0 && preferences.fingoBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][preferences.fingoBetIdx]
         && x.keys().hasOnly('move,roundId,betUnits,targets,marks,used,slots,bin,ended,winUnits,payoutVersion'.split(','))
         && x.move in ['roll','drop'] && x.ended is bool && x.bin is int
         && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
@@ -418,8 +418,8 @@ service cloud.firestore {
       return p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,fingoRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && balance is int && balance >= 0 && balance <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['fingoBetIdx'])
-        && index is int && index >= 0 && index <= 9
-        && stake == [100,250,500,1000,2500,5000,10000,25000,50000,100000][index]
+        && index is int && index >= 0 && index <= 12
+        && stake == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][index]
         && before >= debit && balance == before - debit + win
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt + duration.value(300,'ms'))
@@ -484,8 +484,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,penaltyRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && preferences.diff(old.settings).affectedKeys().hasOnly(['penaltyBetIdx'])
-        && preferences.penaltyBetIdx is int && preferences.penaltyBetIdx >= 0 && preferences.penaltyBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][preferences.penaltyBetIdx]
+        && preferences.penaltyBetIdx is int && preferences.penaltyBetIdx >= 0 && preferences.penaltyBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][preferences.penaltyBetIdx]
         && version in [1,2] && (first || version == r.get('ladderVersion',1))
         && x.keys().hasOnly('move,roundId,betUnits,step,quality,goal,ended,winUnits,parkVersion,ladderVersion'.split(','))
         && x.move in ['shoot','collect'] && x.goal is bool && x.ended is bool
@@ -563,8 +563,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,flyingRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['flyingBetIdx'])
-        && p.settings.flyingBetIdx is int && p.settings.flyingBetIdx >= 0 && p.settings.flyingBetIdx <= 9
-        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.flyingBetIdx]
+        && p.settings.flyingBetIdx is int && p.settings.flyingBetIdx >= 0 && p.settings.flyingBetIdx <= 12
+        && x.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.flyingBetIdx]
         && (protected ? x.keys().hasOnly('move,roundId,betUnits,step,popped,selected,ok,ended,winUnits,parkVersion,ladderVersion,peachAt,savedUnits'.split(','))
           && flyingProtection(x,r,first,prize) : x.keys().hasOnly('move,roundId,betUnits,step,popped,selected,ok,ended,winUnits,parkVersion'.split(',')))
         && x.roundId == r.id && x.roundId is string && x.roundId.matches('^[0-9a-fA-F-]{36}$')
@@ -684,8 +684,8 @@ service cloud.firestore {
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,twentyOneRound,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['twentyOneBetIdx'])
-        && p.settings.twentyOneBetIdx is int && p.settings.twentyOneBetIdx >= 0 && p.settings.twentyOneBetIdx <= 9
-        && r.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.twentyOneBetIdx]
+        && p.settings.twentyOneBetIdx is int && p.settings.twentyOneBetIdx >= 0 && p.settings.twentyOneBetIdx <= 12
+        && r.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.twentyOneBetIdx]
         && x.keys().hasOnly('move,round,ended,winUnits'.split(',')) && x.move in 'start,hit,stand,dealer'.split(',')
         && r.keys().hasOnly('id,betUnits,turn,phase,deck,cursor,player,dealer,playerHard,playerAces,dealerHard,dealerAces,result,target,winFactor,dealVersion'.split(','))
         && (!current33 || r.target == 33)
@@ -714,8 +714,8 @@ service cloud.firestore {
       return o.action == 'claw' && o.game == 'claw' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['clawBetIdx'])
-        && p.settings.clawBetIdx is int && p.settings.clawBetIdx >= 0 && p.settings.clawBetIdx <= 9
-        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.clawBetIdx]
+        && p.settings.clawBetIdx is int && p.settings.clawBetIdx >= 0 && p.settings.clawBetIdx <= 12
+        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.clawBetIdx]
         && x.keys().hasOnly('roundId,betUnits,selected,aimX,aimZ,seed,quality,ended,winUnits'.split(','))
         && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
         && x.selected is int && x.selected >= 0 && x.selected < 9 && x.seed is int && x.seed >= 0 && x.seed < 9
@@ -738,8 +738,8 @@ service cloud.firestore {
       return o.action == 'race' && o.game == 'race' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,settings,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['raceBetIdx'])
-        && p.settings.raceBetIdx is int && p.settings.raceBetIdx >= 0 && p.settings.raceBetIdx <= 9
-        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.raceBetIdx]
+        && p.settings.raceBetIdx is int && p.settings.raceBetIdx >= 0 && p.settings.raceBetIdx <= 12
+        && o.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.raceBetIdx]
         && x.keys().hasOnly('roundId,betUnits,selected,seed,winner,ended,winUnits,version,selected2,second'.split(','))
         && x.roundId == p.lastOperationId && x.betUnits == o.betUnits
         && x.selected is int && x.selected >= 0 && x.selected < count
@@ -787,8 +787,8 @@ service cloud.firestore {
       return o.game == 'bridge' && o.selected == x.selected
         && p.diff(old).affectedKeys().hasOnly('balanceUnits,bridgeRound,settings,lastSpinAt,firstSpinAt,revision,updatedAt,lastOperationId'.split(','))
         && p.settings.diff(old.settings).affectedKeys().hasOnly(['bridgeBetIdx'])
-        && p.settings.bridgeBetIdx is int && p.settings.bridgeBetIdx >= 0 && p.settings.bridgeBetIdx <= 9
-        && r.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000][p.settings.bridgeBetIdx]
+        && p.settings.bridgeBetIdx is int && p.settings.bridgeBetIdx >= 0 && p.settings.bridgeBetIdx <= 12
+        && r.betUnits == [100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000][p.settings.bridgeBetIdx]
         && p.balanceUnits is int && p.balanceUnits >= 0 && p.balanceUnits <= 1000000000000
         && (old.lastSpinAt == null || request.time >= old.lastSpinAt+duration.value(300,'ms'))
         && p.lastSpinAt == request.time && p.firstSpinAt == (old.firstSpinAt == null ? request.time : old.firstSpinAt)
@@ -919,7 +919,7 @@ service cloud.firestore {
       let x=o.result.outcome; let r=x.res; let kind=x.get('tony',null)!=null?'tony':x.get('tucker',null)!=null?'tucker':'ray';
       let stock=b.get('cedros',0); let defended=stock>0 && kind!='ray';
       let prevSpins=b.spins>=10?0:b.spins; let prevCycle=b.spins>=10?0:b.get('cycleWagerUnits',0);
-      return prevSpins<9 && s.spins==prevSpins && s.cycleWagerUnits==prevCycle && x.cedarAward==0
+      return prevSpins<=9 && s.spins==prevSpins && s.cycleWagerUnits==prevCycle && x.cedarAward==0
         && (kind=='ray'?s.cedros==stock-x.ray.stolen:s.cedros==stock-(defended?1:0))
         && r.peach==[] && r.full==false && x.feature==null
         && (defended?x.defense.against==kind:x.get('defense',null)==null && r.win==0 && o.winUnits==0 && villainGrid(x,kind=='tony'?12:kind=='tucker'?13:14))
@@ -991,9 +991,9 @@ service cloud.firestore {
       let bank=old.get('peachBank',{'count':old.peaches,'units':old.peaches*int(o.result.bet*100+0.5)});
       let before=bank.count==old.peaches?bank.units:old.peaches*int(o.result.bet*100+0.5);
       let wheelUnits=old.peaches+count>=5?before+(5-old.peaches)*int(o.result.bet*100+0.5):0;
-      let baseUnits=int(wheelUnits*36 / 100.0+0.5);
+      let baseUnits=int(wheelUnits*20 / 100.0+0.5);
       return wheelUnits>0?x.res.win>0 && s.wheel=={'id':s.lastOperationId,'roundId':s.lastOperationId,'prizeVersion':4,'economyVersion':6,
-        'baseUnits':baseUnits>0?baseUnits:1,'pockets':[10,1,2,1,3,2,1,5,2,1,3,2,1],'result':null} && s.spins<10:s.wheel==null;
+        'baseUnits':baseUnits>0?baseUnits:1,'pockets':[10,2,4,2,6,4,2,8,4,2,6,4,2],'result':null} && s.spins<10:s.wheel==null;
     }
     function v6Spin(s,b,o,p) {
       let x=o.result.outcome; let old=get(/databases/$(database)/documents/players/$(request.auth.uid)).data;
@@ -1040,7 +1040,7 @@ service cloud.firestore {
       return old != null && (old.result != null ? w == old && o.winUnits == 0 && o.result.wheel == w : w.diff(old).affectedKeys().hasOnly(['result'])
         && r.keys().hasOnly('index,multiplier,winUnits,extraUnits'.split(','))
         && r.index is int && r.index >= 0 && r.index < 13
-        && r.multiplier in [1,2,3,5,10] && w.pockets[r.index] == r.multiplier
+        && r.multiplier in (w.pockets.hasAny([1,3,5]) ? [1,2,3,5,10] : [2,4,6,8,10]) && w.pockets[r.index] == r.multiplier
         && r.winUnits == old.baseUnits*r.multiplier && r.extraUnits == (old.prizeVersion==4?r.winUnits:r.winUnits-old.baseUnits)
         && o.winUnits == r.extraUnits && o.result.wheel == w)
         && s.diff(b).affectedKeys().hasOnly('version,revision,lastOperationId,playerRevision,wheel,economy,economyV6'.split(','));

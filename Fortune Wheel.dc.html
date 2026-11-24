@@ -195,7 +195,7 @@ const N = POCKETS.length, SEG = 360 / N, PAY_NUM = 10, PAY_COLOR = 2, PAY_FORT =
 const COLOR_OF = n => n === 0 ? 'green' : n % 2 ? 'red' : 'cream', MULT = (p, n) => n === p.v ? (n === 0 ? PAY_FORT : PAY_NUM) : p.v !== 0 && COLOR_OF(n) === COLOR_OF(p.v) ? PAY_COLOR : 0;
 const POS = i => POCKETS[i][0] < 0 ? '0%' : (POCKETS[i][0] * 100 / 11) + '%';
 const PBG = i => i === 0 ? '#2fa83a' : i % 2 ? '#e0321f' : '#fbefd8';
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 const SKEY = 'fortuneCircus.slot.v3', WKEY = 'fortuneCircus.wheel.v2';
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const isRed = n => n % 2 === 1;

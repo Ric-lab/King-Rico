@@ -114,7 +114,7 @@ const M = [1.2, 1.5, 2, 2.5, 3, 4, 5, 8, 12, 20], N = 10, HX = 226, HY0 = 380, D
 // Camera: the tent pans down (and the near floor faster) as he rises, so 9 balloons read as a real climb.
 const PAN = 520, PANK = PAN / (DY * 9), FEET = 640;
 const SLOTS = [[-60, -92], [-20, -100], [20, -100], [60, -92], [-40, -146], [0, -152], [40, -146], [-20, -196], [20, -196], [0, -240]];
-const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+const BETS = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 const CONF = ['#ffd257', '#e8352b', '#2ec962', '#7fcfff', '#fff3c4', '#c86bff'];
 const fmt = n => (Math.round(n * 100) / 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const ease = k => k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;

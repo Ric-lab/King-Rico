@@ -40,7 +40,9 @@ mantidos no repositório). No lugar onde o Happeach ficava guardado (topo direit
 `0/5`), passa a ficar guardada a **Roleta** em arco-íris (`assets/wheel/wheel-symbol-v1.webp`,
 célula 11 de `symbols-v7.webp`, chance `0,015` por célula). O contador `0/5` sobe junto
 com as cordas quando a máquina é içada. Quando juntar **5**, abre a tela da roleta bônus
-(`baseUnits = round(wheelUnits * 0.36)`, onde `wheelUnits` soma as 5 apostas em que cada roleta foi guardada).
+v6 com multiplicadores `×2, ×4, ×6, ×8, ×10` e `baseUnits = round(wheelUnits * 0,20)`
+(onde `wheelUnits` soma as 5 apostas em que cada roleta foi guardada; roletas antigas
+v1–v5 mantêm `[1, 2, 3, 5, 10]`).
 
 As **barras laterais** alimentam o **Good Luck**, sem nuvens sobre os tubos.
 A barra deixa de encher nos 10 giros
