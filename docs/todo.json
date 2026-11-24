@@ -614,16 +614,6 @@
       "notes": "17/11: 81/81 regras, defesa completa e giro grátis concorrente/replay, navegador com carteira Firestore real emulada aprovado. Verificações distribuídas no batch sem alterar matemática. Publicação oficial autorizada, aguardar workflow main."
     },
     {
-      "id": "t-ideia-king-nuvem",
-      "title": "Ideia futura (só fazer quando o dono pedir): King Rico caindo da nuvem até a roleta",
-      "status": "todo",
-      "category": "Ideias",
-      "agent": "",
-      "commit": "",
-      "demoUrl": "",
-      "notes": "Guardado em ideias."
-    },
-    {
       "id": "p-menu-tabela-3blocos",
       "title": "Tabela em 3 blocos (Prêmios, Power-ups, Vilões), só com ícones e valores; botão Home removido; menu = engrenagem; botão ▶ +1000 no header (fora do menu)",
       "status": "done",
