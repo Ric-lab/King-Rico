@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-layout-pulse-picker",
+      "title": "Descer bloco superior e vídeo; pulso acompanha gabinete; revisar seletor",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "King+nuvem+win +7px, vídeo +30px. Pulso mede moldura real, acompanha escala/posição e refaz cache por dimensões; origem no spin atual. Seletor com1 roleta e nomes de escudo/vilões corrigidos. Só prévia."
+    },
+    {
       "id": "t-escudo-roleta-3opcoes",
       "title": "Escudo estilo roleta: arte aprovada e proporção nos rolos",
       "status": "preview",

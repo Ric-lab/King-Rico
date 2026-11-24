@@ -26,7 +26,7 @@ with sync_playwright() as p:
  assert page.locator('#kr-preview-picker,[data-preview-preset]').count()==0
  page.locator('.kr-menu-button').click()
  assert 'Escolher próximos giros' not in page.locator('body').inner_text()
- assert 'Trevos cheios' not in page.locator('body').inner_text()
+ assert 'Escudos cheios' not in page.locator('body').inner_text()
  # Close the real menu, preserving its sound and vibration preferences.
  page.keyboard.press('Escape')
  page.evaluate('''()=>{const native=KingRicoCloud.spin;KingRicoCloud.spin=async(...args)=>{const r=await native(...args);window.liveReceipt=r;return r;};}''')

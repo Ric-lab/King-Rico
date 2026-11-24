@@ -1,3 +1,22 @@
+## Bloco superior, vídeo, pulso adaptativo e seletor — Codex,24/11/2026
+Base15470f2; somente prévia. King+nuvem+placa/valor de win descem7 unidades
+nativas juntos (--park-hero-drop). Medalhão de vídeo desce30 (--park-ad-drop),
+inclusive com saldo largo; preserva alvo e eixo abaixo das configurações.
+Pulso: reelFrameBox usa effectBox/getBoundingClientRect convertido ao espaço
+local de fxRef, incluindo transformações dos pais. Cache do brilho identifica
+largura/altura, refaz bitmaps só quando mudam, reutiliza nas outras jogadas.
+Origem da onda/faíscas e caminho dos cometas usam face real do spin. Não desenha
+retângulo luminoso do botão antigo sobre o botão atual; aro próprio preservado.
+Seletor: Escudo/Escudos cheios, Tony Tiger/Tucker Toucan/Ray Raccoon; nova opção
+1 roleta (wheel-one) sem fabricar4 no estoque, separada de Completar5 roletas.
+IDs antigos continuam válidos. Painel com altura máxima/scroll para não cortar.
+Sem mudanças em cloud/, regras, pagamentos ou sons. Testes layout validam3
+larguras, reserva7/30, pulso após redimensionar gabinete, recriação do cache e
+modo1 roleta; expectativas de rótulos atualizadas em v6/Tony/live.
+Validação: layout e v6 browser PASS; reel-tape/preview-isolation2/2 PASS.
+Prints do pulso e seletor conferidos. Próximo: publicar Pages e confirmar sucesso;
+dono avaliar o lote em https://ric-lab.github.io/King-Rico/Preview. Sem main.
+
 ## Proporção do escudo nos rolos — Codex,24/11/2026
 Base66bb41e, somente prévia. Dono apontou tamanho estranho no rolo. A janela
 comprime verticalmente o gabinete; atlas já compensa isso, mas shield com

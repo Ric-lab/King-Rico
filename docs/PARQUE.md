@@ -696,3 +696,11 @@ Proporção do escudo nos rolos24/11: fundo100%100% na caixa já compensada do
 atlas103,874×124. Não usar contain no símbolo5: a compressão do gabinete deixa
 o escudo achatado. Mesma regra em data-park-clover e park-tape-symbol5; outros
 consumidores (contador/modal/voos) mantêm a proporção natural da imagem.
+
+Ajuste24/11: bloco King/nuvem/prêmio usa --park-hero-drop:7px; placa top165,
+mascote top−7, sem separar valor e placa. Vídeo usa --park-ad-drop:30px além
+da posição anterior, também no saldo largo. Pulso mede moldura e face do botão
+via effectBox (retângulo real → coordenadas locais do fxRef); não usar left/top
+computados ignorando transformações. Recriar bitmap apenas se a dimensão mudar.
+Seletor: Escudo/Escudos cheios e nomes completos dos vilões. 1 roleta adiciona
+só1 ao estoque; Completar5 roletas mantém o preset que prepara o bônus.

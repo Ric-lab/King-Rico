@@ -157,3 +157,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   do dono por medalhão circular lateral ("bolinha", referência Royal Smash)
   centrado sob `⚙`, com arte de play+moeda dentro do círculo e pílula `+1.000`
   na base.
+
+-24/11: pulso fora do gabinete após layout mudar. left/top de getComputedStyle
+não incluem transformações dos pais. Medir retângulo real e converter para o
+espaço local do efeito; invalidar o bitmap por largura/altura e testar resize.

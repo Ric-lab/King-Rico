@@ -1296,10 +1296,17 @@ class Component extends DCLogic {
   }
   machineCut() { return this.layoutMetric('--park-machine-cut'); }
   reelY(y) { return this.layoutMetric('--park-machine-drop') + 219.5 + (y - 219.5) * (this.layoutMetric('--park-reel-scale') || 1); }
+  effectBox(node) {
+    const layer = this.fxRef.current;
+    if (!node || !layer) return null;
+    const r = node.getBoundingClientRect(), origin = layer.getBoundingClientRect();
+    if (!r.width || !r.height || !origin.width || !origin.height) return null;
+    const sx = layer.offsetWidth / origin.width, sy = layer.offsetHeight / origin.height;
+    return { x: (r.left-origin.left)*sx, y: (r.top-origin.top)*sy, width: r.width*sx, height: r.height*sy };
+  }
   reelFrameBox() {
-    const node = typeof document !== 'undefined' && document.querySelector('.park-circus-stage .park-reel-frame');
-    if (node && typeof getComputedStyle === 'function') { const s = getComputedStyle(node); return { x: parseFloat(s.left), y: parseFloat(s.top), width: parseFloat(s.width), height: parseFloat(s.height) }; }
-    return { x: 28, y: 212, width: 398, height: 396 };
+    // Measure the rendered cabinet, including every parent scale/translation.
+    return this.effectBox(document.querySelector('.park-circus-stage .park-reel-frame')) || { x: 28, y: 212, width: 398, height: 396 };
   }
   spinFx(late) {
     const layer = this.fxRef.current; if (!layer || !layer.animate) return;
@@ -1308,6 +1315,14 @@ class Component extends DCLogic {
     // gradients/box-shadows re-rastered per frame), created ONCE and kept composited (persistent will-change),
     // then reused every spin — creating/destroying GPU layers mid-animation is what flashed black on mobile.
     const D = late ? 0 : 280, cut = this.machineCut(), frame = this.reelFrameBox();
+    const modernButton = document.querySelector('.park-circus-stage .park-spin-face');
+    const button = this.effectBox(modernButton || document.querySelector('[data-spin-btn]')) || {x:58.333,y:693-cut,width:337,height:60.5};
+    const originX = button.x + button.width/2, originY = button.y + button.height/2;
+    const frameKey = frame.width.toFixed(2) + ':' + frame.height.toFixed(2);
+    if (this._pulse && this._pulse.frameKey !== frameKey) {
+      this._pulse.host.getAnimations({subtree:true}).forEach(a => a.cancel());
+      this._pulse.host.remove(); this._pulse = null;
+    }
     const P = this._pulse || (this._pulse = (() => {
       const bmp = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); return c.toDataURL('image/png'); };
       const wave = bmp(256, 256, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
@@ -1330,15 +1345,15 @@ class Component extends DCLogic {
         const g = x.createRadialGradient(BW / 2, BH / 2, 0, BW / 2, BH / 2, BW / 2); g.addColorStop(0, 'rgba(255,252,225,.95)'); g.addColorStop(.35, 'rgba(255,230,140,.55)'); g.addColorStop(1, 'rgba(255,200,80,0)');
         x.fillStyle = g; x.fillRect(0, 0, BW, BH); });
       const bc = 'translate3d(58.333px,' + (693 - cut) + 'px,0)';
-      return { sparks, PAD, bc, core: img(core, 'width:337px;height:60.5px;'), wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (frame.width + PAD * 2) + 'px;height:' + (frame.height + PAD * 2) + 'px;'),
+      return { host, frameKey, sparks, PAD, bc, core: img(core, 'width:337px;height:60.5px;'), wave: img(wave, 'width:60px;height:60px;'), glow: img(glow, 'width:' + (frame.width + PAD * 2) + 'px;height:' + (frame.height + PAD * 2) + 'px;'),
         c1: img(comet, 'width:34px;height:34px;'), c2: img(comet, 'width:34px;height:34px;') };
     })());
     if (late === 'prebuild') { this.buildLights(); return; } // built at load so the first spin has no build/decode hitch
     this.lightsPulse(D);
     [P.wave, P.glow, P.c1, P.c2, P.core, ...P.sparks].forEach(e => e.getAnimations().forEach(an => an.cancel()));
     // a luz nasce no botão: clarão interno + aro acende no toque, depois a energia sai pelas pontas do botão
-    P.core.animate([{ transform: P.bc, opacity: 0 }, { transform: P.bc, opacity: .9, offset: .15 }, { transform: P.bc, opacity: 0 }], { duration: D + 160, easing: 'ease-out', fill: 'forwards' });
-    const WX = 223.5 - 30, WY = 722 - cut - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
+    if (!modernButton) P.core.animate([{ transform: P.bc, opacity: 0 }, { transform: P.bc, opacity: .9, offset: .15 }, { transform: P.bc, opacity: 0 }], { duration: D + 160, easing: 'ease-out', fill: 'forwards' });
+    const WX = originX - 30, WY = originY - 30, wt = s => 'translate3d(' + WX + 'px,' + WY + 'px,0) scale(' + s + ')';
     if (!late) P.wave.animate([{ transform: wt(.3), opacity: 0 }, { transform: wt(2), opacity: 1, offset: .2 }, { transform: wt(9), opacity: .9, offset: .85 }, { transform: wt(10.5), opacity: 0 }], { duration: D + 60, easing: 'cubic-bezier(.3,.5,.4,1)', fill: 'forwards' });
     const gt = 'translate3d(' + (frame.x - P.PAD) + 'px,' + (frame.y - P.PAD) + 'px,0)';
     P.glow.animate([{ transform: gt, opacity: 0 }, { transform: gt, opacity: 1, offset: .12 }, { transform: gt, opacity: .55, offset: .5 }, { transform: gt, opacity: 0 }], { duration: 650, delay: D + 34, easing: 'ease-out', fill: 'forwards' });
@@ -1347,14 +1362,14 @@ class Component extends DCLogic {
     [[P.c1, 1], [P.c2, -1]].forEach(([el, side]) => {
       const X = v => CX + (v - CX) * side, K = (x, y, o, op) => ({ offset: o, transform: 'translate3d(' + (X(x) - 17) + 'px,' + (y - 17) + 'px,0)', opacity: op });
       if (late) { el.animate([K(CX, B, 0, 0), K(CX + 30, B, .04, 1), K(R, B, o1, 1), K(R, T, o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: 520, delay: 50, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' }); return; }
-      const BY = 694 - cut, BR = 390, lead = D + 50, tt = lead + 520, f = t => t / tt;
+      const BY = originY, BR = button.x + button.width*.98, lead = D + 50, tt = lead + 520, f = t => t / tt;
       el.animate([K(CX, BY, 0, 0), K(CX + 20, BY, f(30), 1), K(BR, BY, f(lead * .7), 1), K(R - 6, B + 6, f(lead), 1),
         K(R, B, f(lead) + (1 - f(lead)) * o1 * .15, 1), K(R, T, f(lead) + (1 - f(lead)) * o2, 1), K(CX + 8, T, .97, 1), K(CX, T, 1, 0)], { duration: tt, easing: 'linear', fill: 'forwards' });
     });
-    const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = 223.5, by = 722 - cut;
+    const cols = ['#fff6c8', '#ffd257', '#ffb347', '#ffffff'], bx = originX, by = originY;
     // sparks reuse the persistent pool (no per-spin DOM churn)
     P.sparks.forEach((st, i) => {
-      const a = Math.PI + (i / 7) * Math.PI, r = 40 + Math.random() * 50, s = st._s, x0 = bx + (Math.random() - .5) * 220 - s / 2, y0 = by - s / 2;
+      const a = Math.PI + (i / 7) * Math.PI, r = 40 + Math.random() * 50, s = st._s, x0 = bx + (Math.random() - .5) * button.width*.8 - s / 2, y0 = by - s / 2;
 
       const tr = (dx, dy, sc, rot) => 'translate3d(' + (x0 + dx).toFixed(1) + 'px,' + (y0 + dy).toFixed(1) + 'px,0) scale(' + sc + ') rotate(' + (rot || 0) + 'deg)';
       st.animate([{ transform: tr(0, 0, .3), opacity: 0 }, { transform: tr(Math.cos(a) * r * .5, Math.sin(a) * r * .5, 1.1), opacity: 1, offset: .3 }, { transform: tr(Math.cos(a) * r, Math.sin(a) * r + 8, 0, 160), opacity: 0 }], { duration: 650, easing: 'ease-out', fill: 'forwards' });

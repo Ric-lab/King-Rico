@@ -12,7 +12,7 @@ with sync_playwright() as p:
    # This scenario tests interruption between impacts, so require a nonzero
    # attack with several impacts explicitly. A random next spin may legitimately be zero or no Tony.
    page.evaluate('KingRicoPreviewPicker()')
-   page.get_by_role('button',name='Tiger',exact=True).click()
+   page.get_by_role('button',name='Tony Tiger',exact=True).click()
    page.evaluate('''()=>{const fetch=window.fetch;window.fetch=async(u,o)=>{if(!o?.body||JSON.parse(o.body).action!=='spin')return fetch(u,o);const random=Math.random;Math.random=()=>.2;try{return await fetch(u,o)}finally{Math.random=random}}}''')
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)

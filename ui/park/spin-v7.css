@@ -1,10 +1,11 @@
 /* Circus v7. Layout coordinates stay native453x802. Button silhouette is traced
    from guidelines/references/coin-master/spin-button.mp4; three separate assets. */
 .park-circus-scene{overflow:clip!important}
+.park-circus-stage{--park-hero-drop:7px;--park-ad-drop:30px}
 .park-cabinet-body{position:absolute;inset:0;transform:translateY(-41.75px) scale(1.08);transform-origin:226.5px 267.5px;pointer-events:none}
-.park-prize-block{position:absolute;left:117.833px;top:158px;width:220px;height:56px;z-index:4;pointer-events:none}
+.park-prize-block{position:absolute;left:117.833px;top:calc(158px + var(--park-hero-drop));width:220px;height:56px;z-index:4;pointer-events:none}
 .park-prize-block>.park-part-prize,.park-circus-stage .park-prize-block>.park-prize-value[class]{left:0!important;top:0!important;width:100%!important;height:100%!important;box-sizing:border-box;margin:0!important;transform:none!important}
-.park-circus-stage .park-mascot{top:-14px!important}
+.park-circus-stage .park-mascot{top:calc(-14px + var(--park-hero-drop))!important}
 .park-circus-stage .park-part-base,.park-circus-stage .park-bet-well,.park-circus-stage .park-bet-value,.park-circus-stage .park-mode-label,.park-circus-stage .park-panel-control,.park-circus-stage [class*="park-meter"],#kr-cedro-count{display:none!important}
 /* Legacy wheel stock still exists in receipts while its counter stays offscreen. */
 .park-circus-stage .park-basket{visibility:hidden!important;pointer-events:none!important}
@@ -41,8 +42,8 @@
 .park-circus-stage [data-spin-btn][data-auto="true"]~.park-bet-step{opacity:.45;pointer-events:none}
 
 /* Lateral circular medallion ("bolinha") below the settings gear, with play+coin icon and bottom +1.000 pill. */
-.kr-hud-ad{position:absolute!important;left:auto!important;right:7.667px!important;top:max(66px,calc(34.5px + 22px / var(--kr-hud-px-scale,1) + 4px))!important;width:66px!important;height:72px!important;box-sizing:border-box;padding:0!important;border:0!important;border-radius:33px!important;font-family:'Baloo 2',system-ui,sans-serif;color:#fff8e2;display:block!important;cursor:pointer;background:none!important;box-shadow:none!important;overflow:visible!important;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.kr-hud-row.has-wide-wallet .kr-hud-ad{top:max(122px,calc(90px + 22px / var(--kr-hud-px-scale,1) + 4px))!important}
+.kr-hud-ad{position:absolute!important;left:auto!important;right:7.667px!important;top:calc(max(66px,34.5px + 22px / var(--kr-hud-px-scale,1) + 4px) + var(--park-ad-drop))!important;width:66px!important;height:72px!important;box-sizing:border-box;padding:0!important;border:0!important;border-radius:33px!important;font-family:'Baloo 2',system-ui,sans-serif;color:#fff8e2;display:block!important;cursor:pointer;background:none!important;box-shadow:none!important;overflow:visible!important;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.kr-hud-row.has-wide-wallet .kr-hud-ad{top:calc(max(122px,90px + 22px / var(--kr-hud-px-scale,1) + 4px) + var(--park-ad-drop))!important}
 .kr-hud-ad:active{transform:translateY(2.5px) scale(.96)}
 .kr-ad-disc{position:absolute;left:3px;top:0;width:60px;height:60px;box-sizing:border-box;border-radius:50%;border:3.5px solid transparent;background:repeating-conic-gradient(from -8deg at 50% 44%,rgba(255,255,255,.1) 0 12deg,transparent 12deg 24deg) padding-box,radial-gradient(circle at 50% 34%,#b56dff 0%,#782ec9 56%,#461183 100%) padding-box,linear-gradient(180deg,#fff5c0 0%,#ffd257 46%,#c57b0c 100%) border-box;box-shadow:0 0 0 1.5px #6b2e05,0 3px 0 #6b2e05,0 6px 10px rgba(18,4,36,.32),inset 0 2px 1px rgba(255,255,255,.5),inset 0 -3px 5px rgba(34,4,68,.65);pointer-events:none}
 .kr-ad-art{position:absolute;left:3px;top:0;width:60px;height:56px;pointer-events:none}

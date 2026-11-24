@@ -22,7 +22,7 @@ with sync_playwright() as p:
  picker=page.locator('#kr-preview-picker')
  picker.wait_for()
  picker_text=picker.inner_text()
- for label in ['Trevo','Good Luck (barra cheia)','Roleta (5 guardadas)']:
+ for label in ['Escudo','Good Luck (barra cheia)','Completar 5 roletas']:
   assert label in picker_text,picker_text
  assert 'Cedro' not in picker_text and 'Happeach' not in picker_text,picker_text
  picker.get_by_role('button',name='FECHAR').click()
@@ -51,7 +51,7 @@ with sync_playwright() as p:
  # Tucker com 0 roletas guardadas ainda deve ser bloqueado pelo trevo
  page.evaluate('''()=>{const k='kingRico.parque.mobile-preview.v1',s=JSON.parse(localStorage.getItem(k));s.park.cedros=1;const p=s.records.find(([k])=>k==='players/preview')[1];p.peaches=0;p.peachBank={count:0,units:0};localStorage.setItem(k,JSON.stringify(s));}''')
  page.reload();ready()
- page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Toucan').click()
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Tucker Toucan').click()
  page.locator('[data-spin-btn]').click()
  page.get_by_role('dialog',name='Tucker levou roletas',exact=True).wait_for(timeout=15000)
  assert page.evaluate('__fc._cloudSpin.outcome.defense===undefined')
@@ -84,8 +84,8 @@ with sync_playwright() as p:
  page.wait_for_function('document.querySelectorAll(\'.park-reel-cell[data-held="true"]\').length>=1',timeout=15000)
  page.screenshot(path='work/preview-goodluck-held.png')
  page.wait_for_function('!__fc.state.feature&&!__fc._cfRun&&!__fc.cloudBusy()&&!document.querySelector(".park-bigwin-flight")&&(!document.querySelector("[data-bigwin-modal]")||getComputedStyle(document.querySelector("[data-bigwin-modal]")).visibility==="hidden")',timeout=60000)
- # Roleta (5 guardadas): o contador .park-basket deve subir junto com as cordas
- page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Roleta (5 guardadas)').click()
+ # Completar 5 roletas: o contador .park-basket deve subir junto com as cordas
+ page.evaluate('KingRicoPreviewPicker()');page.locator('#kr-preview-picker').get_by_role('button',name='Completar 5 roletas').click()
  page.locator('[data-spin-btn]').click()
  page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=20000)
  assert page.evaluate('__fc._cloudSpin.outcome.res.win')>0,'Fifth wheel must also have a cash prize in its opening spin'

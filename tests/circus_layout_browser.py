@@ -18,10 +18,32 @@ with sync_playwright() as p:
   scale=rect('.park-circus-stage')['width']/453
   prize_gap=(frame['y']-prize['y']-prize['height'])/scale
   button_gap=(spin['y']-frame['y']-frame['height'])/scale
-  assert abs(prize_gap-11.75)<1,prize_gap  # half the original 23.5-unit gap
+  assert abs(prize_gap-4.75)<1,prize_gap  # hero/prize moved down 7 native units
   assert abs(button_gap-15.62)<1,button_gap  # 70% of the original 22.32-unit gap
   assert .63*h<spin['y']<.70*h,(h,spin)
   assert spin['y']+spin['height']<.89*h,(h,spin)
+  geometry=page.evaluate("""()=>{
+   const f=__fc,stage=document.querySelector('.park-circus-stage'),hud=document.querySelector('.kr-hud-row'),ad=document.querySelector('.kr-hud-ad');
+   const sc=parseFloat(getComputedStyle(hud).getPropertyValue('--kr-hud-px-scale'))||1;
+   f.spinFx('prebuild');const old=f._pulse,frame=f.reelFrameBox();
+   const body=document.querySelector('.park-cabinet-body'),before=body.style.transform;
+   body.style.transform='translateY(-31px) scale(1.02)';f.spinFx('prebuild');
+   const rebuilt=f._pulse!==old&&!old.host.isConnected;
+   body.style.transform=before;f.spinFx(true);
+   for(const a of f._pulse.host.getAnimations({subtree:true})){a.pause();a.currentTime=150;}
+   const r=document.querySelector('.park-reel-frame').getBoundingClientRect(),host=f.fxRef.current.getBoundingClientRect(),scale=host.width/f.fxRef.current.offsetWidth;
+   return {rebuilt,frame:f.reelFrameBox(),expected:{x:(r.x-host.x)/scale,y:(r.y-host.y)/scale,width:r.width/scale,height:r.height/scale},
+    glow:[parseFloat(f._pulse.glow.style.width)-2*f._pulse.PAD,parseFloat(f._pulse.glow.style.height)-2*f._pulse.PAD],
+    heroTop:parseFloat(getComputedStyle(document.querySelector('.park-mascot')).top),prizeTop:parseFloat(getComputedStyle(document.querySelector('.park-prize-block')).top),
+    adTop:parseFloat(getComputedStyle(ad).top),adExpected:Math.max(66,34.5+22/sc+4)+30};
+  }""")
+  assert geometry['rebuilt'],geometry
+  for k in ['x','y','width','height']:assert abs(geometry['frame'][k]-geometry['expected'][k])<.1,geometry
+  for got,want in zip(geometry['glow'],[geometry['frame']['width'],geometry['frame']['height']]):assert abs(got-want)<.1,geometry
+  assert abs(geometry['heroTop']+7)<.1 and abs(geometry['prizeTop']-165)<.1,geometry
+  assert abs(geometry['adTop']-geometry['adExpected'])<.1,geometry
+  page.screenshot(path=f'work/preview-layout-live-pulse-{w}.png')
+  page.evaluate('__fc._pulse.host.getAnimations({subtree:true}).forEach(a=>a.cancel())')
   shells=page.locator('.park-reel-shell').all()
   for shell in shells:
    r=shell.bounding_box()
@@ -60,6 +82,16 @@ with sync_playwright() as p:
    assert page.locator('[data-payline]').count()>0
    page.screenshot(path='work/preview-layout-win.png')
    page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending',timeout=20000)
+  if w==390:
+   page.evaluate('KingRicoPreviewPicker()');picker=page.locator('#kr-preview-picker');text=picker.inner_text()
+   assert 'Trevo' not in text and 'Escudo' in text and 'Completar 5 roletas' in text,text
+   page.screenshot(path='work/preview-picker-updated.png')
+   stock=page.evaluate('KingRicoCloud.player.peaches');assert stock<4,stock
+   picker.get_by_role('button',name='1 roleta',exact=True).click();page.locator('[data-spin-btn]').click()
+   page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending',timeout=25000)
+   assert page.evaluate('KingRicoCloud.player.peaches')==stock+1
+   assert page.evaluate('__fc._cloudSpin.outcome.res.peach.length')==1
+   assert page.evaluate('KingRicoPark.state.wheel===null')
   assert not errors and not missing,(errors,missing)
   print(json.dumps({'phone':[w,h],'joinedPrize':True,'alignedDrums':True,'spinTop':round(spin['y']),'errors':errors}),flush=True)
   page.close()
