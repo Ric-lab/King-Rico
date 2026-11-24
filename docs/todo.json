@@ -11,17 +11,17 @@
       "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": "Arte v2 aprovada24/11 para prévia e oficial. Só troca referência CSS;941×1672 preservado. Conferência visual focada; sem mudanças no jogo."
+      "notes": "Fundo v2 aprovado24/11 na prévia e oficial. Asset941×1672 e referência CSS; nenhuma outra mudança do jogo."
     },
     {
       "id": "p-reward-button",
       "title": "Botão de moedas por vídeo integrado à identidade do Circus",
       "status": "done",
       "category": "Menu & Topo",
-      "agent": "Codex",
+      "agent": "Codex / Antigravity",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Botão roxo/dourado sob o saldo: moeda +1.000 e play/Vídeo30s. Mantém fluxo de anúncio e crédito único. Conferir 30s, cancelar e receber."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "24/11: movido para a direita da tela, abaixo do botão de configurações (⚙), com moeda +1.000 e play/Vídeo · 30s. Mantém fluxo de anúncio, cancelamento seguro e crédito único; promovido à prévia e ao oficial."
     },
     {
       "id": "p-paytable-clean",

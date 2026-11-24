@@ -1,3 +1,21 @@
+## Botão de vídeo à direita (abaixo de Configurações) + promoção prévia e oficial — Antigravity/Gemini, 24/11/2026
+Base: merge de `codex/penalty-clown-preview` (`98ef8de`) + `main` (`4e9c06b`), preservando o fundo v2 oficial e o lote completo da prévia (`a4912f2` paridade/Tony determinístico, `a889747` saldo retido da roleta até o voo final, `d1cf310` tabela de pagamentos limpa/silhuetas, `d5a4742` botão nativo roxo/dourado `+1.000 · Vídeo · 30s`).
+- **Ajuste pedido pelo dono**: `.kr-hud-ad` em `ui/park/spin-v7.css` sai da esquerda sob o saldo e passa para a direita da tela, logo abaixo do botão de configurações (`right: 18px`, `top: max(66px, calc(34.5px + var(--kr-hit-side, 44px)/2 + 4px))`, e `122px` quando `.has-wide-wallet`), sem sobrepor o alvo de toque de 44px de `Abrir menu`, o saldo à esquerda nem a moldura da máquina.
+- **Testes e guias**: atualizado `tests/circus_recharge_browser.py` para validar posicionamento à direita abaixo de `Abrir menu`, alvo acessível, cancelamento sem crédito e crédito único de +1.000 após 30s com voo; conferidos `circus_layout_browser.py` (320/390/412px), `npm test`, `npm run test:rules`, `npm run test:integration` e `npm run build:production`. Atualizados `docs/PARQUE.md`, `docs/skills/visual.md` e `docs/todo.json`.
+- **Próximo passo**: confirmar sucesso de `Prévia no GitHub Pages` neste commit, promover o MESMO commit por fast-forward na `main`, confirmar `Publicar King Rico no Firebase` e conferir os arquivos públicos servidos em ambos.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+Oficial: https://king-rico.web.app
+
+## Fundo v2 — aplicação oficial autorizada24/11/2026
+Dono aprovou apenas a troca do fundo na prévia e no oficial. Base main69eae93.
+Asset circus-garden-lawn-v2.webp: mesmas dimensões941×1672, bandeiras da tenda
+vermelha agora vermelhas e uma nuvem suave alta à direita. park.css muda apenas
+v1→v2; sem alterar enquadramento, controles, economia ou sons. Fonte idêntica à
+arte aprovada/compartilhada da prévia. Não inclui o lote anterior de saldo/tabela/
+anúncio que continua na sandbox. Próximo passo: confirmar workflow Firebase
+após Pages com sucesso e verificar o arquivo servido no oficial.
+
 ## Fundo v2 aprovado para prévia e oficial —24/11/2026
 Dono autorizou aplicar a arte nas duas versões; escopo restrito à imagem.
 park.css aponta circus-garden-lawn-v2.webp; enquadramento/tamanho inalterados.

@@ -10,8 +10,10 @@ with sync_playwright() as p:
  page.wait_for_function('!__fc.cloudBusy()');before=page.evaluate('KingRicoCloud.player.balance')
  def open_ad():
   ad=page.get_by_role('button',name='Ver anúncio e ganhar 1000 moedas',exact=True)
-  wallet=page.locator('.kr-hud-balance');ab=ad.bounding_box();wb=wallet.bounding_box()
-  assert ab and wb and abs(ab['x']-wb['x'])<6 and ab['y']>=wb['y']+wb['height'],(ab,wb)
+  menu=page.get_by_role('button',name='Abrir menu',exact=True)
+  wallet=page.locator('.kr-hud-balance');ab=ad.bounding_box();mb=menu.bounding_box();wb=wallet.bounding_box()
+  assert ab and mb and wb and ab['x']>390/2 and ab['x']>wb['x']+wb['width']+12,(ab,wb)
+  assert abs((ab['x']+ab['width'])-(mb['x']+mb['width']))<6 and ab['y']>=mb['y']+mb['height'],(ab,mb)
   assert ab['width']>90 and ab['height']>=44,(ab,'Large accessible target')
   assert '+1.000' in ad.inner_text() and '30s' in ad.inner_text()
   page.screenshot(path='work/preview-circus-reward-button.png')

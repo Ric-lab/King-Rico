@@ -148,3 +148,7 @@ Contadores de power-up: asset acima, quantidade abaixo, com respiro.
   (contato sem deslizamento). Corrigido backspin que freava o cubo. Madeira:
   modelar borda/base de verdade e alinhar abertura com colisões; evitar overlay
   de tela. Pickup e release precisam compartilhar pose e ter resposta imediata.
+
+-24/11: botão roxo/dourado de pegar moedas vendo vídeo (+1.000 · Vídeo 30s) à
+  esquerda abaixo do saldo foi rejeitado; deve ficar na direita da tela, abaixo
+  do botão de configurações.
