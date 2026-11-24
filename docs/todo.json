@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-reel-symbol-standard",
+      "title": "Padronizar12 símbolos nas9 posições e estados do rolo",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Material único por data-reel-symbol: envelope90%W×82%H, alfa centrado, sem deformar.12×9 casas em repouso/fita/travado, pré-carregamento e efeitos conferidos. Controle incluído na fita. Só prévia; guia SIMBOLOS-ROLOS.md e relatório reel-symbol-audit.json."
+    },
+    {
       "id": "p-layout-pulse-picker",
       "title": "Descer bloco superior e vídeo; pulso acompanha gabinete; revisar seletor",
       "status": "preview",

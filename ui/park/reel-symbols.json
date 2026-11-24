@@ -1,0 +1,248 @@
+{
+  "envelope": [
+    0.9,
+    0.82
+  ],
+  "symbols": [
+    {
+      "id": 10,
+      "name": "Ingresso",
+      "source": "assets/machine/ticket-symbol-v3.webp",
+      "tile": null,
+      "size": [
+        560,
+        263
+      ],
+      "bounds": [
+        25,
+        3,
+        534,
+        258
+      ],
+      "visible": [
+        0.9,
+        0.45088408644400785
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Circo",
+      "source": "assets/symbols-v7.webp",
+      "tile": 2,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        11,
+        47,
+        497,
+        472
+      ],
+      "visible": [
+        0.9,
+        0.7870370370370371
+      ]
+    },
+    {
+      "id": 0,
+      "name": "Capa",
+      "source": "assets/symbols-v7.webp",
+      "tile": 0,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        6,
+        48,
+        500,
+        446
+      ],
+      "visible": [
+        0.9,
+        0.7251012145748987
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Moeda",
+      "source": "assets/symbols-v7.webp",
+      "tile": 6,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        48,
+        50,
+        446,
+        459
+      ],
+      "visible": [
+        0.7979462102689486,
+        0.82
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Diamante",
+      "source": "assets/symbols-v7.webp",
+      "tile": 8,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        48,
+        59,
+        460,
+        466
+      ],
+      "visible": [
+        0.8300737100737101,
+        0.8200000000000001
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Coroa",
+      "source": "assets/symbols-v7.webp",
+      "tile": 7,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        17,
+        88,
+        479,
+        417
+      ],
+      "visible": [
+        0.9,
+        0.6409090909090909
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Escudo",
+      "source": "assets/symbols/shield-defense-rainbow-gold-v1.webp",
+      "tile": null,
+      "size": [
+        512,
+        512
+      ],
+      "bounds": [
+        49,
+        9,
+        459,
+        498
+      ],
+      "visible": [
+        0.6875255623721881,
+        0.82
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Roleta",
+      "source": "assets/symbols-v7.webp",
+      "tile": 11,
+      "size": [
+        6144,
+        512
+      ],
+      "bounds": [
+        32,
+        20,
+        479,
+        490
+      ],
+      "visible": [
+        0.7798723404255319,
+        0.82
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Tony",
+      "source": "assets/tony/head.webp",
+      "tile": null,
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds": [
+        48,
+        92,
+        1226,
+        1149
+      ],
+      "visible": [
+        0.9,
+        0.8075551782682513
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Tucker",
+      "source": "assets/tucker/head.webp",
+      "tile": null,
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds": [
+        54,
+        45,
+        1219,
+        1186
+      ],
+      "visible": [
+        0.837248028045574,
+        0.82
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Ray",
+      "source": "assets/ray/head-v1.webp",
+      "tile": null,
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds": [
+        48,
+        113,
+        1226,
+        1148
+      ],
+      "visible": [
+        0.9,
+        0.7907470288624788
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Controle",
+      "source": "assets/machine/controller-symbol-v1.webp",
+      "tile": null,
+      "size": [
+        560,
+        560
+      ],
+      "bounds": [
+        11,
+        56,
+        551,
+        513
+      ],
+      "visible": [
+        0.9,
+        0.7616666666666667
+      ]
+    }
+  ]
+}

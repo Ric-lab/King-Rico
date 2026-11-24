@@ -8,7 +8,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import sys
 
 TESTS = [
-    'royal_rewards_browser.py', 'bubble_rico_browser.py', 'daily_reward_browser.py', 'bigwin_flight_browser.py', 'circus_feedback_browser.py', 'scratch_first_touch_browser.py', 'special_feedback_browser.py',
+    'circus_symbols_browser.py', 'royal_rewards_browser.py', 'bubble_rico_browser.py', 'daily_reward_browser.py', 'bigwin_flight_browser.py', 'circus_feedback_browser.py', 'scratch_first_touch_browser.py', 'special_feedback_browser.py',
     'preview_motion_browser.py', 'circus_columns_browser.py',
     'circus_v6_browser.py', 'shield_wallet_browser.py', 'circus_layout_browser.py', 'spin_press_browser.py', 'circus_recharge_browser.py', 'villain_dice_browser.py', 'tony_browser.py', 'wheel_color_browser.py', 'circus_payout_browser.py', 'wheel_sound_browser.py',
 ]

@@ -1,3 +1,28 @@
+## Padronização dos 12 símbolos em 9 posições — Codex, 24/11/2026
+Base 782523e; somente prévia, sem matemática/regras/sons novos.
+Arte-fonte preservada. scripts/reel-symbols.py mede alfa>100 e gera
+ui/park/reel-symbols.css/json + preloads HTML. Envelope óptico 90% largura × 82%
+altura, centrado pela silhueta e respeitando formato. Clip por tile impede
+vazamento de vizinhos do atlas. Campo data-reel-symbol compartilha material
+entre 9 casas e fita. Camada composta comum evita mudança de nitidez ao parar.
+Fita agora contém controle 15, além dos 11 símbolos anteriores. Células móveis
+126 × 128 envolvem a arte, com a mesma curva de câmera das casas paradas. Removida
+transição antiga de encaixe; símbolos travados mantêm posição/proporção com
+origem central e sem dupla rotação. Não foram alteradas chances ou sequências
+sorteadas; só a sequência visual transitória ganhou o controle.
+Sete arquivos de arte pré-carregados/decodificados e mantidos no holder persistente.
+Fallback de carregamento original mantido. Efeitos de prêmio/roubo semânticos
+continuam próprios do resultado; geometria e material são compartilhados.
+Validação: circus_symbols_browser PASS (12×9, normal/movimento/travado,
+envelope/centro/alpha/proporção, pré-carregamento, dimming/efeitos válidos).
+Comparação parado/fita com diferença média máxima < 0,01 em RGB 0…255 nesta VM.
+Layout, columns e v6 browsers PASS; reel-tape Node PASS incluindo controle 15.
+Folhas visuais antes/depois em work/preview-symbol-sheet-*.png; regeneráveis
+pelo teste versionado. Guia docs/SIMBOLOS-ROLOS.md, resumo/hash em
+docs/reel-symbol-audit.json. Build de produção também compilado, sem deploy.
+Entrega: commit/push somente na prévia; acompanhar Pages antes de informar URL
+atualizada. Próximo passo do dono: avaliar os símbolos em Preview. Sem main.
+
 ## Altura visual do escudo normalizada — Codex,24/11/2026
 Basee9f81de; somente prévia. Medida alfa>100: escudo95,5% da imagem, contra
 moeda79,9%, diamante79,5% e circo83%. Mantida correção proporcional dos rolos,

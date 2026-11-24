@@ -708,3 +708,8 @@ só1 ao estoque; Completar5 roletas mantém o preset que prepara o bônus.
 Tamanho visual24/11: escudo ocupa95,5% de sua textura. Nos rolos,86%86%
 reduz uniformemente14% e deixa altura útil82,1%, próxima de moeda/diamante/circo.
 Preserva proporção e centralização; não reduzir só a altura nem voltar a contain.
+
+Padronização24/11: a regra ativa de TODOS os símbolos de rolo agora fica em
+ui/park/reel-symbols.css, gerada por scripts/reel-symbols.py. Substitui o ajuste
+isolado86% do escudo: envelope90%W ×82%H, proporção natural, centro de alfa.
+Aplica às9 casas, à fita e ao estado travado. Detalhes em SIMBOLOS-ROLOS.md.

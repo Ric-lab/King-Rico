@@ -8,3 +8,10 @@ Testado e rejeitado (branch codex/penalty-clown-preview):
 - Fita de ouro com brilho na linha premiada.
 
 Se um dia retomar: casas sem curva própria + luz/sombra por coluna + emenda de 1–2 px; ver docs/HANDOFF.md (prévia).
+
+## Padrão24/11: arte compartilhada
+Usar scripts/reel-symbols.py e ui/park/reel-symbols.css; não corrigir cada
+posição por um background-size avulso. Caixa óptica90%W ×82%H, centralizada pelo
+alfa. Testar12 símbolos ×9 posições, parado/fita/travado, com
+circus_symbols_browser.py. Uma única camada/material e câmera por linha;
+normalização por porcentagem não muda desenhos ou mecânicas. Ver SIMBOLOS-ROLOS.md.

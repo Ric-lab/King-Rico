@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-24",
+  "scope": "preview-only; visual, no economy changes",
+  "symbols": 12,
+  "positionsPerSymbol": 9,
+  "states": [
+    "stationary",
+    "moving",
+    "held"
+  ],
+  "geometryCases": 324,
+  "envelope": [
+    0.9,
+    0.82
+  ],
+  "maxMeanPixelError": 0.0038837762254992545,
+  "pixelRange": [
+    0,
+    255
+  ],
+  "cases": [
+    {
+      "id": 10,
+      "name": "Ingresso",
+      "positions": 9,
+      "meanPixelError": 0.00018479506227593598
+    },
+    {
+      "id": 2,
+      "name": "Circo",
+      "positions": 9,
+      "meanPixelError": 0.00021251432161732638
+    },
+    {
+      "id": 0,
+      "name": "Capa",
+      "positions": 9,
+      "meanPixelError": 0.0001478360498207488
+    },
+    {
+      "id": 6,
+      "name": "Moeda",
+      "positions": 9,
+      "meanPixelError": 0.0002987520173460965
+    },
+    {
+      "id": 8,
+      "name": "Diamante",
+      "positions": 9,
+      "meanPixelError": 0.0001478360498207488
+    },
+    {
+      "id": 7,
+      "name": "Coroa",
+      "positions": 9,
+      "meanPixelError": 0.0002956720996414976
+    },
+    {
+      "id": 5,
+      "name": "Escudo",
+      "positions": 9,
+      "meanPixelError": 0.00020327456850352958
+    },
+    {
+      "id": 11,
+      "name": "Roleta",
+      "positions": 9,
+      "meanPixelError": 0.00018479506227593598
+    },
+    {
+      "id": 12,
+      "name": "Tony",
+      "positions": 9,
+      "meanPixelError": 0.00019403481538973278
+    },
+    {
+      "id": 13,
+      "name": "Tucker",
+      "positions": 9,
+      "meanPixelError": 0.00014475613211614987
+    },
+    {
+      "id": 14,
+      "name": "Ray",
+      "positions": 9,
+      "meanPixelError": 0.000785379014672728
+    },
+    {
+      "id": 15,
+      "name": "Controle",
+      "positions": 9,
+      "meanPixelError": 0.0038837762254992545
+    }
+  ],
+  "sourceHashes": {
+    "assets/machine/controller-symbol-v1.webp": "80e32759bf6c668d21d592ccde76aebcf63c6eaa60ec6f27647e4b214350ce3f",
+    "assets/machine/ticket-symbol-v3.webp": "96e629310e7cef9654bbbe72b0c48c44078d4d4a6b77ae7464b3100fb019e5b1",
+    "assets/ray/head-v1.webp": "c5029a74919c702492928673c4a1d4fdd9a0cd35be85422dc244ff984dbed468",
+    "assets/symbols-v7.webp": "f3b28313e1b273efbc5b943a172617063520f7bb3640386291d08c25f7df623b",
+    "assets/symbols/shield-defense-rainbow-gold-v1.webp": "29e76ae3b7a968a73d0b524561258afc24ada7e3a82485a35e99b344d5b1effa",
+    "assets/tony/head.webp": "6b507be7a20902445aceead88a8d7a2c819bb29dfca834b368eb82f3a5ea5354",
+    "assets/tucker/head.webp": "54097108c85ac85a161e30cb168044a7fffe2d386dcf2eb8603c795e8b10f0f6",
+    "ui/park/reel-symbols.css": "70bf4136b17d3c29223d163ac4418d8af500c3c15d539e0a11c9264b0cc51eee",
+    "ui/park/reel-tape.js": "a364aba6baa825e65cb1df93436fc8c49e87e20cd49d201a32742d7e2ea69049"
+  }
+}

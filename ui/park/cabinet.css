@@ -131,6 +131,7 @@
 .park-reel-cell[data-physical-moving="true"]{visibility:hidden}
 .park-reel-cell:not([data-physical-moving="true"]){z-index:2}
 .park-physical-reel{position:absolute;top:219.5px;width:126px;height:382px;overflow:hidden;z-index:1;pointer-events:none;contain:paint}
+.park-tape-cell{position:absolute;left:0;width:126px;height:128px;overflow:hidden;transform-origin:50% 50%;backface-visibility:hidden}
 .park-physical-film{position:absolute;inset:0;will-change:transform;pointer-events:none}
 .park-tape-symbol{position:absolute;left:11.062825px;width:103.87435px;height:124px;background:url('/assets/symbols-v7.webp') 0 50%/1200% 100% no-repeat;backface-visibility:hidden;transform-origin:50% 50%}
 .park-tape-symbol.is-ticket,[data-park-ticket="true"]{background-image:url('/assets/machine/ticket-symbol-v3.webp')!important;background-size:100% 55%!important;background-position:50% 50%!important;background-repeat:no-repeat}
@@ -247,7 +248,8 @@
 .park-pocket .park-ticket-wallet-art,.park-basket .park-ticket-wallet-art,.park-tucker-carried-basket .park-ticket-wallet-art{left:50%;top:3px;width:30px;height:30px;transform:translateX(-50%)}
 .park-pocket [data-tickets],.park-basket [data-wheels],.park-tucker-carried-basket [data-wheels]{left:0;right:0;top:auto;bottom:4px;width:100%;height:18px;font-size:18px!important;line-height:1}
 
-/* Match the atlas aspect correction: contain would squash the square shield
+/* Legacy fallback (active Circus art is normalized in reel-symbols.css).
+   Match the atlas aspect correction: contain would squash the square shield
    when the reel window compresses vertically. Uniform 86% sizing matches the
    visible height of other symbols without flattening; same while moving/resting. */
 [data-park-clover="true"],.park-tape-symbol[data-symbol="5"]{background-image:url('/assets/symbols/shield-defense-rainbow-gold-v1.webp')!important;background-size:86% 86%!important;background-position:50% 50%!important}

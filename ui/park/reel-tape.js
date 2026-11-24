@@ -1,6 +1,6 @@
 /* Three continuous physical tapes. Identity belongs to a tape index, never a row. */
 (function(root){
- const PITCH=128,HEIGHT=382,ORDER=[10,2,0,6,8,7,5,11,12,13,14];
+ const PITCH=128,HEIGHT=382,ORDER=[10,2,0,6,8,7,5,11,12,13,14,15];
  function plan({column,from,target,stop,seed=0,ticket=false,wasTicket=false}){
   const anchor=-Math.round(stop/PITCH),items=[];
   for(let index=anchor-4;index<=5;index++){
@@ -23,15 +23,16 @@
     if(items)return;
     items=plan({...options,column,stop});
     for(const item of items){
-     const art=document.createElement('div');art.className='park-tape-symbol';art.dataset.tapeIndex=item.index;art.dataset.symbol=item.symbol;art.dataset.ticket=item.ticket;
-     art.style.top=(item.index*PITCH+2)+'px';
+     const tile=document.createElement('div');tile.className='park-tape-cell';tile.dataset.tapeIndex=item.index;tile.style.top=(item.index*PITCH)+'px';
+     const art=document.createElement('div');art.className='park-tape-symbol';art.dataset.reelSymbol=item.symbol;art.dataset.tapeIndex=item.index;art.dataset.symbol=item.symbol;art.dataset.ticket=item.ticket;
+     art.style.top='2px';
      if(item.symbol<0)art.style.visibility='hidden';
      else if(item.symbol===15)art.classList.add('is-controller');else if(item.symbol===14)art.classList.add('is-ray');
      else if(item.symbol===13)art.classList.add('is-tucker');
      else if(item.symbol===12)art.classList.add('is-tony');
      else if(item.ticket)art.classList.add('is-ticket');
      else art.style.backgroundPositionX=(item.symbol/11*100)+'%';
-     film.append(art);
+     tile.append(art);film.append(tile);
     }
     windows.forEach(n=>n.dataset.physicalMoving='true');
    },
@@ -39,8 +40,8 @@
     if(disposed||!items)return;
     host.dataset.phase=position.toFixed(3);film.style.transform='translate3d(0,'+position.toFixed(3)+'px,0)';
     film.style.filter=velocity>.45?'blur('+Math.min(1.5,velocity*.8).toFixed(2)+'px)':'none';
-    for(const art of film.children){const center=Number(art.dataset.tapeIndex)*PITCH+position+64;if(center < -90||center>HEIGHT+90)continue;
-     const bend=Math.max(-1,Math.min(1,(192-center)/128));art.style.transform='perspective(520px) rotateX('+(bend*15).toFixed(3)+'deg) scaleY('+(1-Math.abs(bend)*.04).toFixed(4)+')';}
+    for(const tile of film.children){const center=Number(tile.dataset.tapeIndex)*PITCH+position+64;if(center < -90||center>HEIGHT+90)continue;
+     const bend=Math.max(-1,Math.min(1,(192-center)/128));tile.style.transform='perspective(520px) rotateX('+(bend*15).toFixed(3)+'deg) scaleY('+(1-Math.abs(bend)*.04).toFixed(4)+')';}
    },
    dispose(){if(disposed)return;disposed=true;host.remove();windows.forEach(n=>delete n.dataset.physicalMoving);}
   };
