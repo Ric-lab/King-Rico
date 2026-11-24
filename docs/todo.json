@@ -172,7 +172,7 @@
     {
       "id": "i-spin-coinmaster",
       "title": "Botão de spin no estilo do Coin Master",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": null,
