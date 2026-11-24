@@ -132,3 +132,8 @@
 .park-spin-luck-bolt{opacity:.55;filter:saturate(.6) drop-shadow(0 1px 1px #0006);transform-box:fill-box;transform-origin:center;transition:opacity .3s,filter .3s}
 .park-spin-luck.is-full .park-spin-luck-bolt{opacity:1;filter:saturate(1.2) drop-shadow(0 0 4px #fff4b0);animation:parkLuckBolt .9s ease-in-out infinite}
 @keyframes parkLuckBolt{50%{transform:scale(1.18)}}
+/* The payment sheet owns the screen; game controls must not float over it. */
+.park-circus-stage:has([data-overlay="pays"]) :is(.park-bet-step,.park-key-count){visibility:hidden!important;pointer-events:none!important}
+.park-pay-silhouette{display:inline-block;width:22px;height:22px;vertical-align:middle;background:#ff7a7a;mask:var(--pay-resource) center/contain no-repeat}
+.park-pay-wheel{--pay-resource:url('/assets/wheel/wheel-symbol-v1.webp')}
+.park-pay-shield{--pay-resource:url('/assets/symbols/shield-defense-rainbow-gold-v1.webp')}

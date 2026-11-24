@@ -39,6 +39,18 @@ with sync_playwright() as p:
   page.evaluate('__fc.setState({goldGrid:false})')
   assert not page.locator('.park-basket').is_visible()
   page.screenshot(path=f'work/preview-layout-idle-{w}.png')
+  page.wait_for_function('!__fc.cloudBusy()&&!__fc.state.balPending')
+  page.get_by_role('button',name='Abrir menu',exact=True).click()
+  page.get_by_role('button',name='Tabela de pagamentos',exact=True).click()
+  sheet=page.locator('[data-overlay="pays"]');sheet.wait_for();page.wait_for_timeout(250)
+  assert sheet.locator('[data-pay-specials]').inner_text().strip()=='','Specials must have no captions'
+  assert sheet.locator('.park-pay-wheel').get_attribute('aria-label')=='Roletas'
+  assert 'wheel-symbol-v1.webp' in sheet.locator('.park-pay-wheel').evaluate('e=>getComputedStyle(e).maskImage')
+  assert page.locator('.park-bet-step,.park-key-count').evaluate_all('ns=>ns.length===4&&ns.every(n=>getComputedStyle(n).visibility==="hidden")'),'Game controls must stay behind the payment sheet'
+  page.screenshot(path=f'work/preview-paytable-clean-{w}.png')
+  sheet.get_by_text('OK',exact=True).click()
+  page.get_by_role('button',name='Fechar menu',exact=True).click()
+  assert page.locator('.park-bet-step,.park-key-count').evaluate_all('ns=>ns.every(n=>getComputedStyle(n).visibility==="visible")')
   if w==390:
    page.locator('[data-spin-btn]').click()
    page.wait_for_function('__fc.state.displayWin>0&&!__fc.state.spinning',timeout=15000)

@@ -675,3 +675,7 @@ no Firebase nesta tarefa. Não levar à main sem solicitação do dono.
 > Saldo da roleta,24/11: a base da roleta v6 não é um crédito. Manter pendente
 > o prêmio normal do giro mais o extra confirmado da roleta; só liberar a soma
 > na chegada das moedas. Não atualizar o saldo visível no resultado/na multiplicação.
+
+Tabela de pagamentos24/11: controles de aposta e contadores inferiores ficam
+ocultos enquanto a tabela está aberta. Power-ups aparecem só como assets, sem
+legendas. Tucker indica roleta por silhueta; Ray indica escudo por silhueta.

@@ -1771,3 +1771,8 @@ preview_motion_browser PASS monitora saldo entre giro e voo e compara o fim ao s
 da carteira; cobre normal/reduzido e retomada da roleta. Próximo passo: concluir
 esse teste e tratar separadamente a tela de pagamentos, depois anúncio.
 
+## Tabela de pagamentos — tarefa3,Codex24/11/2026
+Oculta +/− e contadores sob a tabela. Power-ups sem legendas. Tucker com
+silhueta de roleta (confirmado pelo dono), Ray com silhueta de escudo. Máscaras
+usam os assets reais, sem emoji nem detalhes internos. circus_layout_browser
+PASS em320/390/412px; print final conferido após o fade. Próximo: botão anúncio.

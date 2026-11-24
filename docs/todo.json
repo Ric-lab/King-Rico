@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-paytable-clean",
+      "title": "Limpar tabela de pagamentos e silhuetas dos vilões",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Oculta +/− e contadores durante a tabela; especiais sem texto. Dono confirmou silhueta de roleta sob Tucker, escudo sob Ray."
+    },
+    {
       "id": "p-wheel-single-balance",
       "title": "Saldo da roleta só sobe no voo final das moedas",
       "status": "done",
