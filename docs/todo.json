@@ -160,7 +160,7 @@
     {
       "id": "i-auto-segurar",
       "title": "Auto = segurar o botão de spin",
-      "status": "todo",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": null,
