@@ -122,11 +122,14 @@ with sync_playwright() as p:
    assert page.locator('.park-meter-goal .park-goal-bolt').count()==2,'Each tube has its approved lightning emblem'
    assert page.locator('.park-goal-bolt').evaluate_all('nodes=>nodes.every(n=>n.complete&&n.naturalWidth>0)'),'Both lightning assets loaded'
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="lifting"')
-   page.wait_for_timeout(350);page.screenshot(path='work/preview-hoist-lifting.png')
+   page.wait_for_timeout(350)
+   assert page.locator('.park-key-count').evaluate_all('nodes=>nodes.length===2&&nodes.every(n=>n.inert&&n.classList.contains("park-hoisted-item")&&n.getAnimations().some(a=>a.playState==="running"))'),'Both lower counters must ride the hoist'
+   page.screenshot(path='work/preview-hoist-lifting.png')
   page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000);assert dialog.count()==1
   assert page.locator('.park-modal').count()==0,'Bonus must use the real stage, not a modal'
   assert page.locator('.park-hoist-deck').get_attribute('data-hoist')=='wheel'
   assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='hidden'
+  assert page.locator('.park-key-count').evaluate_all('nodes=>nodes.length===2&&nodes.every(n=>getComputedStyle(n).visibility==="hidden")'),'No counters left on the lawn during the wheel'
   assert page.locator('.kr-hud-row').evaluate('e=>e.getBoundingClientRect().top')>=0
   if mode=='no-preference':
    # A pending bonus must rebuild the same scene after refresh.
@@ -164,6 +167,7 @@ with sync_playwright() as p:
   token=page.locator('.park-flying-multiplier').bounding_box()
   assert token and token['x']+token['width']/2>hub_center[0]+8,(token,hub_center,'Multiplier must travel right')
   assert page.locator('.park-reels').evaluate('e=>getComputedStyle(e).visibility')=='visible'
+  assert page.locator('.park-key-count').evaluate_all('nodes=>nodes.every(n=>getComputedStyle(n).visibility==="visible"&&n.getAnimations().some(a=>a.playState==="running"))'),'Counters return with the cabinet'
   page.screenshot(path='work/preview-game-from-right-'+mode+'.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
@@ -172,6 +176,7 @@ with sync_playwright() as p:
   assert page.locator('.park-flying-multiplier').count()==0
   assert page.locator('.park-hoist-rig,.park-wheel-scene,.park-hoisted-item').count()==0,'Cabinet must return before payout completes'
   assert not page.locator('[data-spin-btn]').evaluate('e=>e.inert')
+  assert page.locator('.park-key-count').evaluate_all('nodes=>nodes.every(n=>!n.inert&&getComputedStyle(n).visibility==="visible"&&getComputedStyle(n).translate==="none")'),'Counters restored and clickable after return'
   paint=page.locator('[data-spin-btn]').evaluate("""e=>({level:__fc._parkMeterLevel,paint:getComputedStyle(e).getPropertyValue('--park-spin-paint').replaceAll(' ',''),face:getComputedStyle(e.querySelector('.park-spin-face')).backgroundImage})""")
   assert paint['level']==0 and paint['paint']=='rgb(130,67,211)' and 'spin-king-cap-purple-v1.svg' in paint['face'],paint
   # Spin coral: raised rigid cap, fixed socket, 27-unit stroke and quick return.

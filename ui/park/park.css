@@ -126,6 +126,7 @@ body:has(.park-attraction-tag) [aria-label="Diminuir aposta"],body:has(.park-att
 .park-hoist-deck>.kr-hud-row{z-index:50!important}
 .park-hoisted-item{pointer-events:none!important}
 .park-hoist-deck[data-hoist="wheel"]>.park-hoisted-item{translate:0 -920px!important;visibility:hidden}
+.park-circus-stage:has(.park-hoist-deck:is([data-hoist="wheel"],[data-hoist="revealing-prize"],[data-hoist="prize"]))>.park-key-count.park-hoisted-item{translate:0 -920px!important;visibility:hidden}
 .park-hoist-rig{position:absolute;left:25px;top:-720px;width:403px;height:990px;z-index:18;pointer-events:none}
 .park-hoist-rig>i{position:absolute;top:0;bottom:7px;width:5px;border-radius:3px;background:repeating-linear-gradient(145deg,#bd8c48 0 3px,#f6d899 3px 5px,#805323 5px 7px);box-shadow:1px 0 2px #38200966}
 .park-hoist-rig>i:first-child{left:11px}.park-hoist-rig>i:nth-child(2){right:11px}

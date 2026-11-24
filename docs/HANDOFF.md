@@ -1,3 +1,17 @@
+## Contadores acompanham as cordas e promoção oficial — Codex,24/11/2026
+Pedido do dono: corrigir escudo/roleta deixados no gramado e publicar no oficial.
+Base: prévia4098fe5 (Pages confirmado); main1dff754. A promoção leva o lote
+completo da prévia, incluindo Royal10×/dados por estoque/regras correspondentes.
+Os contadores inferiores são irmãos do gabinete, não filhos. wheel-transition
+inclui ambos no mesmo grupo de animação/inert, sem mudar posição. CSS os mantém
+ocultos enquanto a roleta ocupa a cena; voltam junto com o jogo e recuperam clique.
+Regressão de preview_motion_browser PASS cobre subida, ocultação, retorno e
+cleanup nos modos normal e reduzido; prints da subida e retorno conferidos.
+Sem alteração de matemática, assets ou áudio.
+Próximo passo: confirmar Actions de Pages e Publicar King Rico no Firebase
+para o commit deste lote e conferir os arquivos publicados no oficial.
+Guias: docs/PARQUE.md. Nenhum arquivo essencial ficou só na VM.
+
 ## Royal10×, dados por estoque e ajuda da roleta — Codex,24/11/2026
 Prévia: https://ric-lab.github.io/King-Rico/Preview — somente Pages, SEM main.
 Base `1dff754` (lidas/preservadas alterações Gemini). Publicar sem [skip ci].

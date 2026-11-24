@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-counter-hoist",
+      "title": "Escudo e roleta acompanham as cordas da máquina",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "24/11: contadores inferiores incluídos no içamento, ocultação e retorno. Teste de navegador cobre normal e movimento reduzido; promoção oficial autorizada pelo dono."
+    },
+    {
       "id": "p-dice-inventory",
       "title": "Dados por estoque: faces equilibradas e débito persistente",
       "status": "done",

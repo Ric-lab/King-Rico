@@ -6,7 +6,10 @@ async function settle(animations,deadline){
 export function createWheelScene(stage,html){
  const el=document.createElement('section');el.className='park-wheel-scene';el.setAttribute('role','region');el.setAttribute('aria-label','Roleta multiplicadora');el.innerHTML=`<div class="park-panel park-wheel-panel">${html}</div>`;
  const rig=document.createElement('div');rig.className='park-hoist-rig';rig.setAttribute('aria-hidden','true');rig.innerHTML='<i></i><i></i><b></b>';
- const items=[...stage.children].filter(n=>!n.classList.contains('kr-hud-row'));
+ // The lower counters live on the outer stage, beside the cabinet wrapper.
+ // Include them in the same motion without moving their layout coordinates.
+ const counters=[...(stage.closest('.park-circus-stage')?.querySelectorAll('.park-key-count')||[])].filter(n=>!stage.contains(n));
+ const items=[...stage.children].filter(n=>!n.classList.contains('kr-hud-row')).concat(counters);
  const inert=items.map(n=>n.inert);items.forEach(n=>{n.classList.add('park-hoisted-item');n.inert=true;});
  stage.classList.add('park-hoist-deck');stage.append(rig,el);
  // Cordas presas no topo REAL da máquina (o layout v7 mudou a altura): mede a moldura dos rolos na hora.

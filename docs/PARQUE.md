@@ -1,3 +1,7 @@
+> Atualização24/11/2026: escudo e roleta sob as teclas acompanham o gabinete
+> nas cordas, ficam ocultos durante o bônus e retornam com a máquina. Seus
+> contadores mantêm o clique de ajuda após a transição. Não içar o saldo/HUD.
+
 > Prévia v7,20/11/2026: composição segue o wireframe do dono. Mostrador e valor
 > unidos acima da máquina, contador de roleta oculto e spin mais alto. Geometria
 > compartilhada em ui/park/spin-v7.css; não reativar machine-scale.js. Economia
