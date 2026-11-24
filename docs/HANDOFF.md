@@ -1762,3 +1762,12 @@ mesmo commit; nunca declarar paridade apenas pelo Git. Próximo passo: concluir
 Pages, promover este mesmo commit à main e confirmar ambos. Depois tratar,
 separadamente: saldo da roleta; tela de pagamentos; botão de anúncio.
 
+## Saldo da roleta — tarefa2,Codex24/11/2026
+Erro de apresentação: showWheel subtraía baseUnits (não creditada em v6), e
+collect substituía o prêmio normal pendente pelo bônus. Isso antecipava parte
+do ganho antes do voo final. Agora guarda prêmio normal+extraUnits; saldo real
+continua confirmado uma única vez, voo libera a soma. Sem mudar motor/regras.
+preview_motion_browser PASS monitora saldo entre giro e voo e compara o fim ao saldo
+da carteira; cobre normal/reduzido e retomada da roleta. Próximo passo: concluir
+esse teste e tratar separadamente a tela de pagamentos, depois anúncio.
+

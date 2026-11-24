@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-wheel-single-balance",
+      "title": "Saldo da roleta só sobe no voo final das moedas",
+      "status": "done",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Corrige a reserva visual do prêmio normal mais extra da roleta. A base v6 não é pagamento; conta não deve subir ao parar a roleta e novamente no voo. Sem alteração financeira do motor."
+    },
+    {
       "id": "p-preview-parity",
       "title": "Prévia e oficial publicados no mesmo commit",
       "status": "preview",

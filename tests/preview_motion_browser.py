@@ -137,8 +137,11 @@ with sync_playwright() as p:
    page.wait_for_function('document.querySelector(".park-hoist-deck")?.dataset.hoist==="wheel"',timeout=10000)
   if mode=='no-preference':
    box=page.locator('.park-wheel-machine').bounding_box();cx=box['x']+box['width']/2;cy=box['y']+box['height']/2;r=box['width']*.32
+   page.evaluate('window.bonusBalanceQA=[];window.bonusBalanceTimer=setInterval(()=>bonusBalanceQA.push({at:performance.now(),value:__fc.shownBalance()}),20)')
    page.mouse.move(cx+r,cy);page.mouse.down();page.mouse.move(cx+r*.7,cy-r*.7,steps=5);page.mouse.move(cx,cy-r,steps=5);page.mouse.up()
-  else:page.get_by_role('button',name='GIRAR ROLETA',exact=True).click()
+  else:
+   page.evaluate('window.bonusBalanceQA=[];window.bonusBalanceTimer=setInterval(()=>bonusBalanceQA.push({at:performance.now(),value:__fc.shownBalance()}),20)')
+   page.get_by_role('button',name='GIRAR ROLETA',exact=True).click()
   page.wait_for_timeout(150)
   a=page.locator('.park-wheel').evaluate('e=>getComputedStyle(e).transform')
   page.wait_for_timeout(150)
@@ -171,6 +174,9 @@ with sync_playwright() as p:
   page.screenshot(path='work/preview-game-from-right-'+mode+'.png')
   page.wait_for_function('!__fc._parkWheelVisible&&!__fc._parkCollecting&&!__fc.state.balPending',timeout=20000)
   page.wait_for_timeout(650)
+  balance_qa=page.evaluate('''()=>{clearInterval(bonusBalanceTimer);const start=__fc._parkMotionLog.find(x=>x.type==='bonus-coins:start');return {samples:bonusBalanceQA.filter(x=>x.at<start.at).map(x=>x.value),final:__fc.shownBalance(),saved:KingRicoCloud.player.balance}}''')
+  assert len(balance_qa['samples'])>5 and max(balance_qa['samples'])-min(balance_qa['samples'])<.001,('Balance must stay put until coins fly',balance_qa)
+  assert abs(balance_qa['final']-balance_qa['saved'])<.001,balance_qa
   origin=page.evaluate('__fc._parkMotionLog.find(x=>x.type==="multiplier:start")')
   assert abs(origin['originX']-hub_center[0])<3 and abs(origin['originY']-hub_center[1])<3,origin
   assert page.locator('.park-flying-multiplier').count()==0

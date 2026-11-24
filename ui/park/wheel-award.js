@@ -42,7 +42,7 @@ export async function applyMultiplier(fc,w,source){
  if(!reduced())await new Promise(r=>setTimeout(r,300));
 }
 export function flyMultipliedPrize(fc,w,flight,player){
- const total=w.result.winUnits/100;let ended=false,timer;
+ const total=fc.state.balPending||0;let ended=false,timer;
  const finish=()=>{if(ended)return;ended=true;clearTimeout(timer);fc._cfRun=false;fc._cf?.draw([]);fc._parkPrizeOrigin=false;fc._parkCollecting=false;fc._parkWheelVisible=false;fc.setState({balPending:0});record(fc,'bonus-coins:done',{amount:total});flight?.done();fc._cloudDeferred=player();fc.applyCloudPlayer();};
  fc._parkPrizeOrigin=true;record(fc,'bonus-coins:start',{amount:total,originY:196});
  timer=setTimeout(finish,6500);

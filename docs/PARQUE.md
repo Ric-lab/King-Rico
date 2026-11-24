@@ -672,3 +672,6 @@ prova de equivalência de41.160 casos. Corrigido lookup secundário que tinha s�
 10 apostas, embora motor/índices já permitissem13: agora vai até10.000.
 A prévia usa carteira fictícia; regras novas testadas no emulador, não publicadas
 no Firebase nesta tarefa. Não levar à main sem solicitação do dono.
+> Saldo da roleta,24/11: a base da roleta v6 não é um crédito. Manter pendente
+> o prêmio normal do giro mais o extra confirmado da roleta; só liberar a soma
+> na chegada das moedas. Não atualizar o saldo visível no resultado/na multiplicação.

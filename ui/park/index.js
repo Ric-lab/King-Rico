@@ -137,7 +137,12 @@ function renderRails(){const el=document.querySelector('.park-circus-rails');if(
 }
 function showWheel(){
  if(wheelOpen||!state.wheel)return;if(window.__fc?._parkMeterBusy||window.__fc?._parkFillCelebrating){window.__fc._parkWheelWaiting=true;return;}wheelOpen=true;const wheelId=state.wheel.id;
- const fc=window.__fc;if(fc){fc._parkWheelVisible=true;fc.setState({balance:Cloud.player.balance,balPending:(state.wheel.result?.winUnits||state.wheel.baseUnits)/100,auto:false});}
+ const fc=window.__fc;
+ // Hold only money actually credited: the v6 wheel base is not a payment.
+ // Keep the ordinary spin prize pending too, until the single final coin flight.
+ const visibleBalance=fc?.shownBalance()??Cloud.player.balance;
+ const pendingCredit=()=>Math.max(0,Math.round((Cloud.player.balance-visibleBalance)*100)/100);
+ if(fc){fc._parkWheelVisible=true;fc.setState({balance:Cloud.player.balance,balPending:pendingCredit(),auto:false});}
  const values=state.wheel.pockets||WHEEL_POCKETS,n=values.length,seg=360/n;
  const colors=pocketColors(n,values);
  const gradient=colors.map((c,i)=>`${c} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
@@ -164,7 +169,7 @@ function showWheel(){
   btn.hidden=true;
   const collect=async()=>{if(busy)return;busy=true;btn.disabled=true;try{
    const fc=window.__fc,flight=fc?._parkPrizeFlight;
-   if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:w.result.winUnits/100,showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
+   if(fc){fc._parkCollecting=true;clearInterval(fc.counter);fc.setState({balance:Cloud.player.balance,balPending:pendingCredit(),showWin:false,barWin:w.baseUnits/100,displayWin:w.baseUnits/100,auto:false});}
    await call({action:'wheel-close',wheelId,requestId:id()});
    const source=holdMultiplier(el.querySelector('.park-wheel-hub strong'),w.result.multiplier,colors[w.result.index]);
    try{const pan=enterGameRight(el);source.target=pan.target;source.duration=pan.duration;source.lateral=pan.offset;
