@@ -148,7 +148,7 @@
     {
       "id": "i-turbo-fixo",
       "title": "Velocidade do spin sempre no turbo; linha dourada pisca 40% menos",
-      "status": "todo",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Claude",
       "commit": null,
