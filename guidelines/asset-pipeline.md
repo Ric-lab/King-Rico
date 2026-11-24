@@ -540,3 +540,8 @@ da silhueta/chanfro externo e o perfil de ouro acetinado de `wheel-symbol-v1.png
 - `docs/concepts/shield-wheel-options/03-roleta-10-raios.{png,webp}` (10 partes + raios dourados cônicos);
 - gerador versionado em `docs/concepts/shield-wheel-options/generate.py`.
 Checkpoint `[skip ci]` sem trocar o asset ativo; aguardando escolha do dono (1, 2 ou 3).
+
+-24/11, escudo roleta Codex: arte aprovada no chat aplicada somente à prévia;
+exportação fiel via GPT Image para recuperar PNG com alfa,1 geração nesta tarefa;
+PNG1254→WebP512 (exportação de formato), sem Meshy. Caminhos ativos mantidos;
+originais com coroa em archive/assets/symbols. Não confundir com3 propostas Gemini.

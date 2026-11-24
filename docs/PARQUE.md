@@ -686,3 +686,8 @@ abaixo do botão de configurações (`⚙`), com aro dourado, interior roxo radi
 sobrepor o alvo de44px do menu nem o saldo; acompanha `.has-wide-wallet`).
 Mantém simulação30s, cancelamento, recibo, crédito idempotente e voo já existentes;
 sem serviço novo de anúncios.
+
+Escudo24/11 (prévia): centro circular dourado inspirado na roleta, divisórias
+radiais douradas e12 setores de cores. Substitui a coroa interna. Caminho legado
+shield-defense-rainbow-gold-v1 mantido; PNG fonte e WebP512 atualizados juntos.
+Não altera defesa, estoque ou pagamentos. Arte anterior em archive/assets/symbols.

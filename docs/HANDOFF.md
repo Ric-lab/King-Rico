@@ -1,3 +1,14 @@
+## Escudo com centro de roleta aplicado na prévia — Codex,24/11/2026
+Base d75fa9a preservada (Bubble Rico e opções Gemini). O dono pediu aplicar
+A ARTE MOSTRADA NO CHAT PELO CODEX: escudo com centro circular dourado, raios
+dourados e12 setores coloridos; não é uma escolha das3 opções Gemini.
+Exportada em PNG1254 e WebP512 nos caminhos ativos shield-defense-rainbow-gold-v1.
+Nome legado mantido para todos os consumidores mudarem juntos, sem JS/regras.
+Versão anterior COM coroa arquivada em archive/assets/symbols/shield-defense-
+rainbow-crown-v1.{png,webp}. As3 propostas Gemini continuam guardadas em docs.
+Próximo passo: confirmar Pages e avaliar escudo nos rolos/contador/modal/voos.
+Somente prévia; oficial não alterado nem aprovado nesta tarefa.
+
 ## Três opções do escudo estilo roleta (aguardando escolha do dono) — Antigravity/Gemini, 24/11/2026
 Base `fc83a05` puxada antes de gerar (preservado Bubble Rico do Claude). Pedido do dono: 3 imagens do escudo trocando a coroa central por bolinha dourada tipo o cubo da roleta, com raios dourados saindo do centro e dividindo o escudo em partes coloridas estilo roleta, para ele escolher antes de aplicar.
 - **Artes compartilhadas (custo 0, WebGL2 `2508×2508` → `1254×1254` RGBA + `512×512` WebP sobre a moldura exata de `shield-defense-rainbow-gold-v1.png`)**: `docs/concepts/shield-wheel-options/01-roleta-12-fatias.*` (12 fatias + filetes finos), `02-roleta-8-partes.*` (8 partes largas + divisórias encorpadas) e `03-roleta-10-raios.*` (10 partes + raios cônicos), mais gerador `generate.py`.

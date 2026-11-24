@@ -6,12 +6,12 @@
     {
       "id": "t-escudo-roleta-3opcoes",
       "title": "Escudo estilo roleta: escolher entre as 3 opções geradas (12, 8 ou 10 partes)",
-      "status": "todo",
+      "status": "preview",
       "category": "Visual & Ritmo",
-      "agent": "Antigravity",
+      "agent": "Codex",
       "commit": "",
       "demoUrl": "",
-      "notes": "3 opções em docs/concepts/shield-wheel-options/ (01=12 fatias filetes finos, 02=8 partes largas, 03=10 partes raios cônicos), bolinha dourada central igual à roleta e raios dourados. Aguardando escolha do dono."
+      "notes": "Dono pediu aplicar o escudo mostrado pelo Codex no chat: centro dourado,12 setores e raios. Aplicado nos caminhos ativos PNG/WebP; 3 propostas Gemini preservadas. Somente prévia; conferir rolos, contador e voos."
     },
     {
       "id": "t-bubble-rico",
