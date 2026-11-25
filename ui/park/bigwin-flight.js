@@ -84,7 +84,7 @@ export function installBigWinFlight(fc){
     const p=clamp((t-2600)/climbDuration),altitude=flightAltitude(maximum,p),pose=flightCurve(width,height,catchX,catchY,p);
     scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=Math.min(-14,lerp(-8,pose.angle,smooth(clamp((t-2600)/650))));if(p>=1)angle=-16;if(!reduced){const live=clamp((t-2600)/400);y+=Math.sin(t*.0055)*7*live;x+=Math.sin(t*.0031)*4*live;angle+=Math.sin(t*.0047)*2.6*live+(Math.random()-.5)*.8*live*(1-p);}
     scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
-    if(!reduced){trail.setAttribute('d',pose.path);trailArea.setAttribute('d',`${pose.path} L ${x} ${pose.baseline} Z`);}
+    if(!reduced){const path=pose.path.replace(/,[^,]*$/,`,${x} ${y}`);trail.setAttribute('d',path);trailArea.setAttribute('d',`${path} L ${x} ${pose.baseline} Z`);} // a linha acompanha o balanço e termina no meio do avião
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*3.4)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');
