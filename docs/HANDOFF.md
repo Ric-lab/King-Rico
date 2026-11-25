@@ -1,3 +1,12 @@
+## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026
+Pedido explícito do dono: pegar o commit mais recente da prévia (`acc5b34`, com Pages `45533173099` aprovado) e publicar no oficial (`main`).
+- **Escopo promovido (`2d53fd1..acc5b34`)**: medalhão circular lateral de vídeo `+1.000` sob `⚙` com ajuste de altura (`--park-ad-drop` / `--park-hero-drop`); Bubble Rico + escolha por 2 cartas na trinca de controle; novo escudo estilo roleta com centro dourado e raios; padronização óptica dos 12 símbolos nas 9 casas e na fita (`ui/park/reel-symbols.css`); modais dos vilões simplificados e roubo zero sem sinal; Big/Super Win com linha dourada curva acompanhando o balanço do avião, riscos de velocidade, som de hélice e arpejo na decolagem.
+- **Validação antes da promoção**: `test:integration` (`100/100` regras/transações + `circus_live_browser.py` na carteira real emulada, print `work/circus-live-wallet.png` conferido), testes unitários de build/fita/bigwin/auditoria (`79/79` PASS) e `npm run build:production`.
+- **Paridade**: commit de sincronização de `HANDOFF.md` e `todo.json` publicado primeiro no caminho rápido de `Prévia no GitHub Pages` e promovido em fast-forward idêntico para `main`, confirmando `Publicar King Rico no Firebase` e os arquivos públicos servidos em ambos.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+Prévia: https://ric-lab.github.io/King-Rico/Preview
+Oficial: https://king-rico.web.app
+
 ## Roubo zero sem sinal — Codex, 24/11/2026
 Base c6e01dc; só prévia. Nos três modais, nenhuma perda mostra exatamente 0,
 sem sinal negativo nem casas decimais. Perdas reais mantêm −valor e formato

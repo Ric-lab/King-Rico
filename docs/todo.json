@@ -1,54 +1,54 @@
 {
-  "updatedAt": "2026-11-24",
+  "updatedAt": "2026-11-25",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
       "id": "p-villain-modal-clean",
       "title": "Simplificar modais de roubo: rosto, perda e Continuar",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "Tony, Tucker e Ray sem títulos/legendas visíveis; só retrato, −valor e CONTINUAR. Valores e animações preservados. Somente prévia."
     },
     {
       "id": "p-reel-symbol-standard",
       "title": "Padronizar12 símbolos nas9 posições e estados do rolo",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "Material único por data-reel-symbol: envelope90%W×82%H, alfa centrado, sem deformar.12×9 casas em repouso/fita/travado, pré-carregamento e efeitos conferidos. Controle incluído na fita. Só prévia; guia SIMBOLOS-ROLOS.md e relatório reel-symbol-audit.json."
     },
     {
       "id": "p-layout-pulse-picker",
       "title": "Descer bloco superior e vídeo; pulso acompanha gabinete; revisar seletor",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "King+nuvem+win +7px, vídeo +30px. Pulso mede moldura real, acompanha escala/posição e refaz cache por dimensões; origem no spin atual. Seletor com1 roleta e nomes de escudo/vilões corrigidos. Só prévia."
     },
     {
       "id": "t-escudo-roleta-3opcoes",
       "title": "Escudo estilo roleta: arte aprovada e proporção nos rolos",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "Escudo do Codex aplicado. Proporção corrigida nos rolos; tamanho visual agora86%86%, centrado (−14% uniforme). Altura útil82,1%, próxima dos demais símbolos. Somente prévia; aguarda avaliação."
     },
     {
       "id": "t-bubble-rico",
       "title": "Bubble Rico + escolha por 2 cartas na trinca de controle",
-      "status": "preview",
+      "status": "done",
       "agent": "Claude",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "Trinca de controle abre 2 cartas viradas (Royal Rico / Bubble Rico, posição sorteada). Bubble Rico: arrastar mira (linha com quique), soltar atira, 3+ iguais estouram, soltas caem (valem 2×), tiger regride a barra, 25 tiros do servidor, mesma rodada/10× do Royal Rico. Economia inalterada (mesmo royal round)."
     },
     {
@@ -64,11 +64,11 @@
     {
       "id": "p-reward-button",
       "title": "Botão de moedas por vídeo integrado à identidade do Circus",
-      "status": "preview",
+      "status": "done",
       "category": "Menu & Topo",
       "agent": "Antigravity",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "24/11: ajustado para bolinha circular lateral estilo Royal Smash sob Configurações (⚙), com aro dourado, ícone de vídeo (▶) + moeda e pílula inferior +1.000."
     },
     {
@@ -144,21 +144,21 @@
     {
       "id": "t-dado0-5-nos-roubos-dos-v",
       "title": "Dado0–5 nos roubos dos vilões",
-      "status": "preview",
+      "status": "done",
       "category": "Jogabilidade",
       "agent": "Codex",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "24/11: dado por estoque, versão2 com faces/index; zero estoque não lança, zero roletas não gasta escudo. Física/madeira/câmera45° preservadas; somente prévia. Valor exibido em quantidade, perda persistente."
     },
     {
       "id": "p-escudo-rolos-voos",
       "title": "Escudo na slot machine e voos do escudo e da roleta aos contadores ovais",
-      "status": "preview",
+      "status": "done",
       "category": "Visual & Ritmo",
       "agent": "Antigravity",
       "commit": "",
-      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "demoUrl": "https://king-rico.web.app",
       "notes": "Troca o trevo na célula 5 (fitas, casas fixas, tabela POWER-UPS, giro grátis e picker) pelo escudo shield-defense-rainbow-gold-v1.webp; voo do escudo mira o contador oval sob − (.park-key-count-shield) e voo da roleta desce ao contador oval sob + (.park-key-count-wheel) acima do z-index 61."
     },
     {
