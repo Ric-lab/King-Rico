@@ -72,7 +72,7 @@ with sync_playwright() as p:
     rotor.evaluate('e=>e.getAnimations()[0].play()')
    page.screenshot(path=f'work/preview-bigwin-climbing-{suffix}.png')
    page.wait_for_function('document.querySelector(".park-bigwin-flight")?.dataset.phase==="result"')
-   assert page.evaluate('performance.now()')-climb_started>(4300 if mode=='reduce' else 6500),'The flight must have time to breathe'
+   assert page.evaluate('performance.now()')-climb_started>(2700 if mode=='reduce' else 4200),'The flight must have time to breathe'
    composition=flight.evaluate('''e=>{const r=e.querySelector('.park-bigwin-plane').getBoundingClientRect(),a=e.querySelector('[data-flight-amount]'),m=e.querySelector('.park-bigwin-score>span'),v=a.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth,amountSize:parseFloat(getComputedStyle(a).fontSize),multipleSize:parseFloat(getComputedStyle(m).fontSize),valueLeft:v.left,valueRight:v.right};}''')
    assert composition['left']>=0 and composition['right']<=width,composition
    assert composition['amountSize']>composition['multipleSize'] and composition['valueLeft']>=0 and composition['valueRight']<=width,composition

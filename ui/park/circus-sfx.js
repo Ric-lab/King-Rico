@@ -35,14 +35,19 @@ export function installCircusSfx(fc){
  fc.sfxSneak=play(1.8,()=>{for(let i=0;i<5;i++)hiss(4800,1.5,.045,.05,i*.045);[392,349.23,311.13,261.63].forEach((f,i)=>P(f,.08,.14,.08+i*.11));});
  fc.sfxScurry=play(1,()=>{for(let i=0;i<8;i++)hiss(1600+(i%2)*400,1.2,1.3,.04,i*.07);});
  // Big win: decolagem, motor que sobe com a altitude e o saldo recebendo.
- fc.sfxTakeoff=play(1.7,()=>{hiss(400,.7,.07,.6,0,'bandpass',1800);P(523.25,.08,.3,.05);P(783.99,.08,.4,.15);});
+ // Decolagem: sopro que sobe + arpejo alegre (dó-mi-sol-dó).
+ fc.sfxTakeoff=play(1.7,()=>{hiss(500,.8,.06,.7,0,'bandpass',2400);[523.25,659.25,783.99,1046.5].forEach((f,i)=>B(f,.35,.07,.08+i*.09));});
+ // Avião: sopro de hélice (ruído picotado pelas pás) + zumbido redondo que sobe com a altitude. Sem dente-de-serra.
  fc.sfxEngine=()=>{if(!ok())return null;try{
-  const ac=fc.ac(),out=fc.out(),t=ac.currentTime,o=ac.createOscillator(),lfo=ac.createOscillator(),lg=ac.createGain(),am=ac.createGain(),lp=ac.createBiquadFilter(),g=ac.createGain();
-  o.type='sawtooth';o.frequency.setValueAtTime(90,t);lfo.frequency.setValueAtTime(18,t);lg.gain.value=.45;am.gain.value=.55;lp.type='lowpass';lp.frequency.value=650;
-  lfo.connect(lg);lg.connect(am.gain);o.connect(lp);lp.connect(am);am.connect(g);g.connect(out);
-  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09,t+.4);o.start(t);lfo.start(t);let done=false;
-  return {set(p){if(done)return;const n=ac.currentTime;o.frequency.setTargetAtTime(90+p*110,n,.12);lfo.frequency.setTargetAtTime(18+p*22,n,.12);lp.frequency.setTargetAtTime(650+p*900,n,.12);},
-   stop(){if(done)return;done=true;try{const n=ac.currentTime;g.gain.cancelScheduledValues(n);g.gain.setValueAtTime(Math.max(g.gain.value,.0002),n);g.gain.exponentialRampToValueAtTime(.0001,n+.45);o.stop(n+.5);lfo.stop(n+.5);}catch{}}};
+  const ac=fc.ac(),out=fc.out(),t=ac.currentTime,g=ac.createGain();g.connect(out);
+  const n=ac.createBufferSource();n.buffer=fc.noise(ac);n.loop=true;const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700;bp.Q.value=.9;
+  const chop=ac.createGain(),lfo=ac.createOscillator(),lg=ac.createGain();lfo.type='sine';lfo.frequency.value=14;lg.gain.value=.5;chop.gain.value=.55;lfo.connect(lg);lg.connect(chop.gain);
+  n.connect(bp);bp.connect(chop);chop.connect(g);
+  const h=ac.createOscillator(),hg=ac.createGain();h.type='triangle';h.frequency.value=140;hg.gain.value=.35;h.connect(hg);hg.connect(g);
+  const h2=ac.createOscillator(),h2g=ac.createGain();h2.type='sine';h2.frequency.value=210;h2g.gain.value=.18;h2.connect(h2g);h2g.connect(g);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.5);[n,lfo,h,h2].forEach(x=>x.start(t));let done=false;
+  return {set(p){if(done)return;const m=ac.currentTime;lfo.frequency.setTargetAtTime(14+p*16,m,.15);bp.frequency.setTargetAtTime(700+p*900,m,.15);h.frequency.setTargetAtTime(140+p*90,m,.15);h2.frequency.setTargetAtTime(210+p*135,m,.15);},
+   stop(){if(done)return;done=true;try{const m=ac.currentTime;g.gain.cancelScheduledValues(m);g.gain.setValueAtTime(Math.max(g.gain.value,.0002),m);g.gain.exponentialRampToValueAtTime(.0001,m+.5);[n,lfo,h,h2].forEach(x=>x.stop(m+.55));}catch{}}};
  }catch{return null;}};
  fc.sfxBank=play(1.4,()=>{for(let i=0;i<12;i++)B(1300+i*90,.18,.045,i*.07);[1046.5,1318.5,1568,2093].forEach((f,i)=>B(f,.6,.1,.9+i*.06));});
  // Good Luck: faísca elétrica na descida e estalo/trovão sincronizados ao impacto no botão.

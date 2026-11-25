@@ -37,7 +37,7 @@ export function installBigWinFlight(fc){
   const jumpActor=createBoardingActor(jumper,departure),pilotActor=createBoardingActor(pilot);
   jumper.style.cssText=`width:${sourceRect.width}px;height:${sourceRect.height}px;transform:translate(${sourceRect.x}px,${sourceRect.y}px)`;
   const width=innerWidth,height=innerHeight,size=Math.min(260,width*.62,height*.33),catchX=sourceRect.x+sourceRect.width/2,catchY=Math.min(height*.53,sourceRect.bottom+65),endX=width*.76,endY=Math.max(210,height*.25);
-  const maximum=amount/stake,climbDuration=6800+flightAltitude(maximum,1)*3000,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
+  const maximum=amount/stake,climbDuration=4400+flightAltitude(maximum,1)*1800,resultAt=2600+climbDuration,returnAt=resultAt+2100,endAt=returnAt+800;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,speed=reduced ? .65 : 1;
   let frame,elapsed=0,last=performance.now(),ended=false,rank=-1,jumpStart;
   fc._parkBigWinFlight=true;fc._afterWin=then;fc._afterWinChains=!!chains;
@@ -80,7 +80,7 @@ export function installBigWinFlight(fc){
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
     const p=clamp((t-2600)/climbDuration),altitude=flightAltitude(maximum,p),pose=flightCurve(width,height,catchX,catchY,p);
-    scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=lerp(-8,pose.angle,smooth(clamp((t-2600)/650)));
+    scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=Math.min(-14,lerp(-8,pose.angle,smooth(clamp((t-2600)/650))));if(p>=1)angle=-16+Math.sin(t*.004)*3;
     scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
     if(!reduced){trail.setAttribute('d',pose.path);trailArea.setAttribute('d',`${pose.path} L ${x} ${pose.baseline} Z`);}
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
@@ -89,9 +89,9 @@ export function installBigWinFlight(fc){
     scene.style.setProperty('--flight-near-y',(p*height*3.2)+'px');
     scene.dataset.altitude=altitude>.72?'space':altitude>.3?'stratosphere':'sky';
     scene.dataset.phase=p<1?'climbing':'result';
-    const value=flightValue(amount,stake,p);amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
+    const value=flightValue(amount,stake,1-Math.pow(1-p,1.8));amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
     engine?.set(p);const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}}
-    if(t>returnAt){scene.dataset.phase='returning';const p=smooth(clamp((t-returnAt)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);scene.style.opacity=String(1-p);}
+    if(t>returnAt){scene.dataset.phase='returning';const p=smooth(clamp((t-returnAt)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);angle=Math.atan2(-size*.5-endY,width+size-endX)*180/Math.PI;scene.style.opacity=String(1-p);}
     if(t>=endAt){finish();return;}
    }
    place(x,y,angle,scale);frame=requestAnimationFrame(tick);
