@@ -40,13 +40,13 @@ export function installCircusSfx(fc){
  // Avião: sopro de hélice (ruído picotado pelas pás) + zumbido redondo que sobe com a altitude. Sem dente-de-serra.
  fc.sfxEngine=()=>{if(!ok())return null;try{
   const ac=fc.ac(),out=fc.out(),t=ac.currentTime,g=ac.createGain();g.connect(out);
-  const n=ac.createBufferSource();n.buffer=fc.noise(ac);n.loop=true;const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700;bp.Q.value=.9;
-  const chop=ac.createGain(),lfo=ac.createOscillator(),lg=ac.createGain();lfo.type='sine';lfo.frequency.value=14;lg.gain.value=.5;chop.gain.value=.55;lfo.connect(lg);lg.connect(chop.gain);
+  const n=ac.createBufferSource();n.buffer=fc.noise(ac);n.loop=true;const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=520;bp.Q.value=1.6;
+  const chop=ac.createGain(),lfo=ac.createOscillator(),lg=ac.createGain();lfo.type='sine';lfo.frequency.value=14;lg.gain.value=.35;chop.gain.value=.3;lfo.connect(lg);lg.connect(chop.gain);
   n.connect(bp);bp.connect(chop);chop.connect(g);
-  const h=ac.createOscillator(),hg=ac.createGain();h.type='triangle';h.frequency.value=140;hg.gain.value=.35;h.connect(hg);hg.connect(g);
+  const h=ac.createOscillator(),hg=ac.createGain();h.type='triangle';h.frequency.value=140;hg.gain.value=.5;h.connect(hg);hg.connect(g);
   const h2=ac.createOscillator(),h2g=ac.createGain();h2.type='sine';h2.frequency.value=210;h2g.gain.value=.18;h2.connect(h2g);h2g.connect(g);
-  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.5);[n,lfo,h,h2].forEach(x=>x.start(t));let done=false;
-  return {set(p){if(done)return;const m=ac.currentTime;lfo.frequency.setTargetAtTime(14+p*16,m,.15);bp.frequency.setTargetAtTime(700+p*900,m,.15);h.frequency.setTargetAtTime(140+p*90,m,.15);h2.frequency.setTargetAtTime(210+p*135,m,.15);},
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.05,t+.6);[n,lfo,h,h2].forEach(x=>x.start(t));let done=false;
+  return {set(p){if(done)return;const m=ac.currentTime;lfo.frequency.setTargetAtTime(14+p*16,m,.15);bp.frequency.setTargetAtTime(520+p*500,m,.15);h.frequency.setTargetAtTime(140+p*90,m,.15);h2.frequency.setTargetAtTime(210+p*135,m,.15);},
    stop(){if(done)return;done=true;try{const m=ac.currentTime;g.gain.cancelScheduledValues(m);g.gain.setValueAtTime(Math.max(g.gain.value,.0002),m);g.gain.exponentialRampToValueAtTime(.0001,m+.5);[n,lfo,h,h2].forEach(x=>x.stop(m+.55));}catch{}}};
  }catch{return null;}};
  fc.sfxBank=play(1.4,()=>{for(let i=0;i<12;i++)B(1300+i*90,.18,.045,i*.07);[1046.5,1318.5,1568,2093].forEach((f,i)=>B(f,.6,.1,.9+i*.06));});

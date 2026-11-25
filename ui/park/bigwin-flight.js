@@ -7,13 +7,11 @@ export function flightValue(amount,bet,progress){
  return {multiple:p===1?multiple:Math.pow(multiple,p),amount:p===1?amount:Math.min(amount,bet*Math.pow(multiple,p))};
 }
 export function flightAltitude(multiple,progress){return Math.max(0,Math.min(1,Math.log2(Math.max(5,multiple)/5)/Math.log2(20)))*Math.max(0,Math.min(1,progress));}
-// One quadratic curve drives both the airplane heading and its visible trail.
+// Trajeto reto: do ponto onde o King embarca até o alto à direita (rastro e nariz seguem a mesma reta).
 export function flightCurve(width,height,startX,startY,progress){
- const p=Math.max(0,Math.min(1,progress)),ox=width*.04,oy=height*.84,ex=width*.76,ey=Math.max(210,height*.25),join=.6;
- const cx=(startX-(1-join)**2*ox-join**2*ex)/(2*(1-join)*join),cy=(startY-(1-join)**2*oy-join**2*ey)/(2*(1-join)*join);
- const t=join+(1-join)*(1-(1-p)**2),u=1-t,x=u*u*ox+2*u*t*cx+t*t*ex,y=u*u*oy+2*u*t*cy+t*t*ey;
- const angle=Math.atan2(u*(cy-oy)+t*(ey-cy),u*(cx-ox)+t*(ex-cx))*180/Math.PI;
- return {x,y,angle,path:`M ${ox} ${oy} Q ${ox+t*(cx-ox)} ${oy+t*(cy-oy)},${x} ${y}`,baseline:oy};
+ const p=Math.max(0,Math.min(1,progress)),ex=width*.76,ey=Math.max(210,height*.25),e=1-(1-p)**2,x=startX+(ex-startX)*e,y=startY+(ey-startY)*e;
+ const angle=Math.atan2(ey-startY,ex-startX)*180/Math.PI;
+ return {x,y,angle,path:`M ${startX} ${startY} L ${x} ${y}`,baseline:Math.max(startY,height*.84)};
 }
 export function installBigWinFlight(fc){
  const nativePrize=fc.showPrize.bind(fc),nativeDismiss=fc.dismissWin.bind(fc),nativeSpin=fc.spin.bind(fc);
@@ -80,9 +78,9 @@ export function installBigWinFlight(fc){
     const settle=clamp((t-2600)/300),compression=Math.sin(settle*Math.PI);
     pilotActor.pose('pilotSide',1+.02*compression-.008*Math.sin(t*.0022),1-.03*compression+.012*Math.sin(t*.0022),dt/1000);
     const p=clamp((t-2600)/climbDuration),altitude=flightAltitude(maximum,p),pose=flightCurve(width,height,catchX,catchY,p);
-    scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=Math.min(-14,lerp(-8,pose.angle,smooth(clamp((t-2600)/650))));if(p>=1)angle=-16+Math.sin(t*.004)*3;
+    scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=lerp(-8,pose.angle,smooth(clamp((t-2600)/650)));if(p>=1)angle=pose.angle+Math.sin(t*.004)*2;
     scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
-    if(!reduced){trail.setAttribute('d',pose.path);trailArea.setAttribute('d',`${pose.path} L ${x} ${pose.baseline} Z`);}
+    if(!reduced){trail.setAttribute('d',pose.path);trailArea.setAttribute('d',`${pose.path} L ${x} ${pose.baseline} L ${catchX} ${pose.baseline} Z`);}
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*2.2)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');
@@ -90,7 +88,7 @@ export function installBigWinFlight(fc){
     scene.dataset.altitude=altitude>.72?'space':altitude>.3?'stratosphere':'sky';
     scene.dataset.phase=p<1?'climbing':'result';
     const value=flightValue(amount,stake,1-Math.pow(1-p,1.8));amountNode.textContent='+'+fc.money(Math.round(value.amount*100)/100);
-    engine?.set(p);const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}}
+    engine?.set(p);const n=Math.floor(p*12);if(n!==rank){rank=n;try{fc.sfxRoll(n);}catch{}if(!reduced)amountNode.animate?.([{transform:'scale(1)'},{transform:'scale(1.14)'},{transform:'scale(1)'}],{duration:260,easing:'ease-out'});}
     if(t>returnAt){scene.dataset.phase='returning';const p=smooth(clamp((t-returnAt)/800));x=lerp(endX,width+size,p);y=lerp(endY,-size*.5,p);angle=Math.atan2(-size*.5-endY,width+size-endX)*180/Math.PI;scene.style.opacity=String(1-p);}
     if(t>=endAt){finish();return;}
    }
