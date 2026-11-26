@@ -14,10 +14,11 @@ with sync_playwright() as p:
   page.reload();page.wait_for_function('window.__fc?._parkHook');collect_daily(page)
  # 1) Cards: choosing one opens exactly that game; the other is revealed too.
  seed(None)
- pick=page.get_by_role('dialog',name='Escolha uma carta',exact=True);pick.wait_for()
+ pick=page.get_by_role('dialog',name='Escolha um jogo',exact=True);pick.wait_for()
  page.screenshot(path='work/preview-game-pick.png')
- game=pick.get_by_role('button',name='Carta 1',exact=True).get_attribute('data-game')
- pick.get_by_role('button',name='Carta 1',exact=True).click()
+ assert pick.get_by_role('button',name='Royal Rico',exact=True).count()==1 and pick.get_by_role('button',name='Bubble Rico',exact=True).count()==1
+ game='bubble'
+ pick.get_by_role('button',name='Bubble Rico',exact=True).click()
  page.wait_for_timeout(900);page.screenshot(path='work/preview-game-pick-open.png')
  name='Bubble Rico' if game=='bubble' else 'Royal Rico'
  page.get_by_role('dialog',name=name,exact=True).wait_for()
