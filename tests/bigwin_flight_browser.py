@@ -50,8 +50,8 @@ with sync_playwright() as p:
    assert second['scale']<first['scale'],'The plane must recede as it climbs'
    assert second['angle']<-30,'The nose must point upwards'
    if mode!='reduce':
-    alignment=flight.evaluate('''e=>{const plane=e.querySelector('.park-bigwin-plane'),s=getComputedStyle(plane),m=new DOMMatrix(s.transform),o=s.transformOrigin.split(' ').map(parseFloat),path=e.querySelector('.park-flight-trail-line'),end=path.getPointAtLength(path.getTotalLength());return Math.hypot(end.x-(m.e+o[0]),end.y-(m.f+o[1]));}''')
-    assert alignment<1,'The curve must meet the middle of the airplane'
+    alignment=flight.evaluate('''e=>{const plane=e.querySelector('.park-bigwin-plane'),s=getComputedStyle(plane),m=new DOMMatrix(s.transform),o=s.transformOrigin.split(' ').map(parseFloat),path=e.querySelector('.park-flight-trail-line'),end=path.getPointAtLength(path.getTotalLength());const w=parseFloat(plane.style.width);return Math.hypot(end.x-(m.e+o[0]-m.a*w*.4),end.y-(m.f+o[1]-m.b*w*.4));}''')
+    assert alignment<2,'The golden curve must leave from the airplane tail'
    halo=flight.locator('[data-flight-amount]').evaluate('''e=>{const s=getComputedStyle(e,'::before');return {width:parseFloat(s.width),height:parseFloat(s.height),animation:s.animationName};}''')
    assert abs(halo['width']-halo['height'])<1 and halo['width']>200
    assert halo['animation']==('none' if mode=='reduce' else 'parkFlightHalo')

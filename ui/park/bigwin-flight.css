@@ -55,3 +55,14 @@ body:has(.park-bigwin-flight) [data-bigwin-modal]{visibility:hidden!important;po
 @media(prefers-reduced-motion:reduce){.park-propeller-rotor{opacity:.3;transform:scaleY(.65);filter:blur(1px)}.park-propeller-rotor.park-propeller-ghost{display:none}}
 /* Chão do circo que fica para trás na subida (sensação de decolar) */
 .park-flight-ground{position:absolute;left:-6%;right:-6%;bottom:0;height:64%;background:url("/assets/scenes/circus-garden-lawn-v2.webp") center bottom/cover no-repeat;transform:translateY(var(--flight-ground-y,0px));will-change:transform;-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 22%)}
+/* Linha dourada de volta (segue a curva do voo e sai da cauda). */
+.park-flight-trail{display:block}
+.is-climbing .park-flight-trail{opacity:.95}
+.park-flight-trail-line{stroke-width:4.5;filter:drop-shadow(0 0 5px #fff5b5) drop-shadow(0 0 10px #ffc94d)}
+.park-flight-trail-area{fill:#ffcf5e1f}
+.park-bigwin-plane{z-index:3}
+/* O jardim do circo corre para trás enquanto afunda: sensação de estar voando. */
+.park-flight-ground{background-repeat:repeat-x!important;background-size:auto 100%!important;background-position:var(--flight-ground-x,0px) bottom!important}
+/* Fim (estilo Fortune Tiger): raios girando atrás do valor. */
+.park-bigwin-flight[data-phase=result] .park-bigwin-score:before{background:repeating-conic-gradient(from 12deg,#fff1a533 0deg 7deg,transparent 7deg 30deg);animation:parkFlightRays 7s linear infinite}
+@keyframes parkFlightRays{to{transform:rotate(360deg)}}
