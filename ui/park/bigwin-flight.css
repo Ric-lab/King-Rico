@@ -53,3 +53,5 @@ body:has(.park-bigwin-flight) [data-bigwin-modal]{visibility:hidden!important;po
 .park-propeller-disc{position:absolute;left:88%;top:22%;width:9%;height:54%;border-radius:50%;background:radial-gradient(ellipse,#fff0ba0a 20%,#fff9df33 65%,#fff6db09 72%,transparent 74%);filter:blur(.5px)}
 @keyframes parkPropellerTurn{0%,100%{transform:scaleY(1)}25%,75%{transform:scaleY(.06)}50%{transform:scaleY(-1)}}
 @media(prefers-reduced-motion:reduce){.park-propeller-rotor{opacity:.3;transform:scaleY(.65);filter:blur(1px)}.park-propeller-rotor.park-propeller-ghost{display:none}}
+/* Chão do circo que fica para trás na subida (sensação de decolar) */
+.park-flight-ground{position:absolute;left:-6%;right:-6%;bottom:0;height:64%;background:url("/assets/scenes/circus-garden-lawn-v2.webp") center bottom/cover no-repeat;transform:translateY(var(--flight-ground-y,0px));will-change:transform;-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 22%)}
