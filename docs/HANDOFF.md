@@ -1,11 +1,12 @@
 ## Propostas de meta-progressão (destino para as moedas) — Antigravity/Gemini, 27/11/2026
-Provocação do dono: no jogo atual só se acumula moedas, sem um objetivo tangível para gastá-las (referências citadas: *Royal Match*, galeria de arte, vilas temáticas viajantes estilo *Coin Master*).
-- **Feito (somente game design e registro compartilhado, sem alterar código do jogo):** análise comparativa documentada em `docs/IDEIAS-DE-JOGOS.md` e card `i-meta-moedas` criado em `docs/todo.json` (`Ideias`).
-  1. **Turnê Mundial do Circo (recomendado):** bolinha lateral (`0/5`) para erguer 5 peças do circo atual com moedas → baú de inauguração → viagem para a próxima parada temática trocando o fundo `941×1672` da própria slot (Jardim → Praia → Noite de Gala → Neve → Oásis), com baixo custo de assets por camadas 2D e visibilidade constante atrás da máquina. Dá peso real ao roubo do Tony Tiger (moeda investida na obra fica protegida).
-  2. **Reforma do Grande Parque King Rico:** ala dedicada com escolha entre 2 estilos visuais por peça comprada (*Royal Match* / *Homescapes*).
-  3. **Galeria de Cartazes & Troféus Mágicos:** mural colecionável de quadros animados da trupe restaurados em 4 etapas (menor escopo de arte).
-- **Regra econômica central registrada:** como no Circus as moedas também são a aposta do giro (sem barra de energia), compras devem respeitar uma **reserva mínima de giro** para nunca travar o jogador zerado, e qualquer baú com moedas/escudos precisa entrar na auditoria do motor (`cloud/engine.cjs` + `firestore.rules`, RTP < 100%, alvo ~90%).
-- **Próximo passo exato:** dono escolher qual dos 3 formatos prefere (e se o baú de conclusão será só cosmético/tema ou dará bônus) antes de prototipar a primeira parada na prévia.
+Provocação do dono: no jogo atual só se acumula moedas, sem objetivo para gastá-las (*Royal Match*, galeria de arte, *Coin Master*). Após a 1ª rodada, o dono apontou com razão que construir no cenário de fundo tem **pouco impacto visual** porque gabinete, botões e King Rico na nuvem cobrem quase a tela inteira, gostou da **praticidade** da Galeria (#3) e pediu mais opções.
+- **Feito (somente game design e registro compartilhado, sem alterar código do jogo):** 2ª rodada documentada em `docs/IDEIAS-DE-JOGOS.md` e card `i-meta-moedas` atualizado em `docs/todo.json`:
+  - **Opção 4 — Camarim & Oficina Real (Skins da Máquina, Spin e Nuvem):** já que gabinete + nuvem ocupam ~85% da tela, as moedas personalizam o próprio gabinete, botão Spin, nuvem (*Tapete Mágico, Balão, Almofada Real*) e chapéus/coroas do King, sem mexer no esqueleto animado.
+  - **Opção 5 — Máquina de Garra de Pelúcias + Amuleto no Gabinete:** gasta moedas para descer a garra e pescar pelúcias da trupe (1 PNG parado cada, super prático); escolhe 1 pelúcia para ficar sentada na quina da slot machine.
+  - **Opção 6 — Álbum de Figurinhas Brilhantes (Rasgar Pacotinhos):** rasga envelopes dourados com o dedo (como na raspadinha) e cola figurinhas comuns/holográficas em páginas curtas de 6 itens; fechar tema libera moldura/skin.
+  - **Opção 7 — Globos de Neve / Caixinhas de Música:** versão tátil e sonora da Galeria (#3), chacoalhando purpurina ao toque.
+- **Regra econômica mantida:** reserva mínima de giro preservada na compra e auditoria (`cloud/engine.cjs` + `firestore.rules`) se houver bônus financeiro ao completar coleção.
+- **Próximo passo exato:** dono escolher a opção preferida (ou combinação, ex.: Álbum/Garra destravando Skins da Máquina) antes de prototipar na prévia.
 Painel: https://ric-lab.github.io/King-Rico/todo/
 
 ## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026

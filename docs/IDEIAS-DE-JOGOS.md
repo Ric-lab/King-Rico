@@ -25,13 +25,26 @@ código.**
   próprio combustível do giro**. Gastar até a última moeda na construção não
   pode travar o jogador sem saldo para girar.
 
-### 3 caminhos ancorados no universo do Circo
+### 1ª rodada de caminhos (referência inicial)
 
-| Caminho | Referência | Como funciona | Custo de arte | Impacto na tela principal |
+| Caminho | Referência | Como funciona | Custo de arte | Observação do dono (27/11) |
 | --- | --- | --- | --- | --- |
-| **1. Turnê Mundial do Circo (Recomendado)** | *Coin Master* + *Royal Match* | Bolinha lateral de obra (`0/5`). Com moedas, ergue 5 peças do circo atual (picadeiro, tenda, roda-gigante, luzes, balão do King). Ao fechar `5/5`, abre baú de inauguração e **viaja para a próxima parada temática**, trocando o fundo `941×1672` da própria slot (Jardim → Praia → Noite de Gala → Neve → Oásis). Permite reequipar cenários já conquistados. | **Médio-baixo e reaproveitável:** 1 cenário base `941×1672` + 4–5 camadas 2D por parada, visíveis o tempo todo atrás da máquina. | **Alto:** o jogador vê sua obra viva atrás dos rolos e sente a viagem temática. |
-| **2. Reforma do Grande Parque King Rico** | *Royal Match* / *Homescapes* | Pátio dedicado dividido em alas (Entrada, Praça da Pipoca, Tenda Mágica, Camarim). Ao comprar cada peça com moedas, o jogador escolhe entre **2 cores/estilos** com um toque, personalizando o parque. | **Médio-alto:** pede tela própria de passeio + 2 variações visuais por peça. | **Médio:** fica numa tela paralela; o fundo da slot muda menos. |
-| **3. Galeria de Cartazes & Troféus Mágicos** | Galeria de arte / Álbum vivo | Mural de pôsteres/dioramas circenses da trupe (King, Tony, Ray). Gastam-se moedas em 4 etapas por quadro (esboço → pintura → moldura dourada → quadro animado vivo). | **Baixo (escopo mínimo):** ilustrações 2D fechadas num modal/galeria, zero mexida no palco. | **Baixo-médio:** ótimo colecionável para 3ª idade, mas não transforma o cenário do jogo. |
+| **1. Turnê Mundial do Circo** | *Coin Master* + *Royal Match* | Bolinha lateral (`0/5`) ergue 5 peças no fundo e viaja trocando o cenário `941×1672`. | Médio-baixo | **Boa ideia, mas pouco impacto visual real:** gabinete, botões e King Rico na nuvem já cobrem quase toda a tela, escondendo o fundo. |
+| **2. Reforma do Grande Parque** | *Royal Match* / *Homescapes* | Pátio dedicado dividido em alas com escolha entre 2 estilos por peça. | Médio-alto | Exige tela paralela pesada em recortes. |
+| **3. Galeria de Cartazes & Troféus** | Galeria de arte | Mural de pôsteres circenses restaurados em 4 etapas. | Baixo | **Gostou pela praticidade**, mas pediu mais opções para comparar. |
+
+### 2ª rodada — opções práticas e com presença real na tela (27/11/2026)
+
+Como gabinete + botões + King na nuvem ocupam ~85% da visão, o gasto de moedas
+só brilha se **(A) transformar as próprias peças da frente** ou **(B) for um
+brinquedo/coleção super prático e tátil**, levando um troféu visível para a tela:
+
+| Nova opção | Como joga com moedas | Praticidade de produção | Impacto visual / Diversão |
+| --- | --- | --- | --- |
+| **4. Camarim & Oficina Real (Skins da Máquina, Spin e Nuvem)** | Compra/evolui o visual **do próprio gabinete, botão Spin, nuvem e chapéus/coroas do King Rico** (ex.: *Clássico → Azul Safira → Algodão-Doce → Noite Neon → Ouro Imperial*; nuvem vira *Almofada Real, Tapete Mágico, Balão*). | **Alta:** troca texturas/camadas das peças que já existem na tela, sem mexer no esqueleto animado do King Rico. | **Máximo na tela principal:** muda exatamente os 85% que o jogador vê em todo giro. |
+| **5. Máquina de Garra de Pelúcias + Amuleto no Gabinete** | Bolinha abre uma **Máquina de Garra** de parque: paga moedas, 1 toque desce a garra e pesca cápsulas com pelúcias da trupe (*Mini-King, Tony filhote, Pato mágico, Elefante dourado*). Escolhe **1 pelúcia para ficar sentada na quina da slot machine** (ou na nuvem). | **Muito alta:** cada pelúcia é **1 único PNG parado** (`256×256`), sem animação complexa. | **Alto apelo tátil + troféu visível:** todo idoso reconhece garra de parque, zero texto, e o bichinho favorito decora a máquina. |
+| **6. Álbum de Figurinhas Brilhantes (Rasgar Pacotinhos)** | Compra pacotinhos dourados com moedas e **passa o dedo para rasgar o lacre** (mesmo gesto gostoso da raspadinha!). Cola 3 figurinhas (comuns e douradas holográficas) em páginas curtas de 6 itens. Repetidas enchem baú de inédita garantida; fechar página dá moldura/brasão no saldo (ou skin). | **Muito alta:** só ilustrações 2D quadradas + brilho holográfico CSS que já usamos. | **Campeão comprovado de retenção** (*Monopoly GO* / Álbum da Copa), nostalgia imediata para 3ª idade. |
+| **7. Estante de Globos de Neve / Caixinhas de Música** | Evolução viva da Galeria (#3): monta em 3–4 etapas pequenos globos de vidro do circo; quando prontos, **tocar no globo sacode neve/confete dourado e toca melodia curta**. | **Muito alta:** tudo contido num círculo 2D fixo num modal, zero mexida no palco. | Mais mágico, sonoro e interativo do que quadros parados na parede. |
 
 ### Regras de ouro para qualquer caminho escolhido
 
