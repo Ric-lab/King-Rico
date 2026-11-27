@@ -33,20 +33,21 @@ código.**
 | **2. Reforma do Grande Parque** | *Royal Match* / *Homescapes* | Pátio dedicado dividido em alas com escolha entre 2 estilos por peça. | Médio-alto | Exige tela paralela pesada em recortes. |
 | **3. Galeria de Cartazes & Troféus** | Galeria de arte | Mural de pôsteres circenses restaurados em 4 etapas. | Baixo | **Gostou pela praticidade**, mas pediu mais opções para comparar. |
 
-### 2ª rodada — opções práticas e com presença real na tela (27/11/2026)
+### 2ª rodada — tentativa descartada pelo dono em 27/11 ("não é isso...")
 
-Como gabinete + botões + King na nuvem ocupam ~85% da visão, o gasto de moedas
-só brilha se **(A) transformar as próprias peças da frente** ou **(B) for um
-brinquedo/coleção super prático e tátil**, levando um troféu visível para a tela:
+Opções exploradas e **rejeitadas** (não implementar): **4. Skins de máquina/nuvem**, **5. Máquina de garra de pelúcias**, **6. Álbum de figurinhas** e **7. Globos de neve**. Motivo do descarte na análise conjunta: soam como lojinha cosmética ou gacha paralelo, sem dar sensação real de **jornada / sair do lugar**.
 
-| Nova opção | Como joga com moedas | Praticidade de produção | Impacto visual / Diversão |
-| --- | --- | --- | --- |
-| **4. Camarim & Oficina Real (Skins da Máquina, Spin e Nuvem)** | Compra/evolui o visual **do próprio gabinete, botão Spin, nuvem e chapéus/coroas do King Rico** (ex.: *Clássico → Azul Safira → Algodão-Doce → Noite Neon → Ouro Imperial*; nuvem vira *Almofada Real, Tapete Mágico, Balão*). | **Alta:** troca texturas/camadas das peças que já existem na tela, sem mexer no esqueleto animado do King Rico. | **Máximo na tela principal:** muda exatamente os 85% que o jogador vê em todo giro. |
-| **5. Máquina de Garra de Pelúcias + Amuleto no Gabinete** | Bolinha abre uma **Máquina de Garra** de parque: paga moedas, 1 toque desce a garra e pesca cápsulas com pelúcias da trupe (*Mini-King, Tony filhote, Pato mágico, Elefante dourado*). Escolhe **1 pelúcia para ficar sentada na quina da slot machine** (ou na nuvem). | **Muito alta:** cada pelúcia é **1 único PNG parado** (`256×256`), sem animação complexa. | **Alto apelo tátil + troféu visível:** todo idoso reconhece garra de parque, zero texto, e o bichinho favorito decora a máquina. |
-| **6. Álbum de Figurinhas Brilhantes (Rasgar Pacotinhos)** | Compra pacotinhos dourados com moedas e **passa o dedo para rasgar o lacre** (mesmo gesto gostoso da raspadinha!). Cola 3 figurinhas (comuns e douradas holográficas) em páginas curtas de 6 itens. Repetidas enchem baú de inédita garantida; fechar página dá moldura/brasão no saldo (ou skin). | **Muito alta:** só ilustrações 2D quadradas + brilho holográfico CSS que já usamos. | **Campeão comprovado de retenção** (*Monopoly GO* / Álbum da Copa), nostalgia imediata para 3ª idade. |
-| **7. Estante de Globos de Neve / Caixinhas de Música** | Evolução viva da Galeria (#3): monta em 3–4 etapas pequenos globos de vidro do circo; quando prontos, **tocar no globo sacode neve/confete dourado e toca melodia curta**. | **Muito alta:** tudo contido num círculo 2D fixo num modal, zero mexida no palco. | Mais mágico, sonoro e interativo do que quadros parados na parede. |
+### Ponto atual da reflexão conjunta (27/11 — em aberto com o dono)
 
-### Regras de ouro para qualquer caminho escolhido
+Ao voltar à raiz do problema ("precisamos pensar juntos"), surgem **3 verdades estruturais** do *Fortune Circus* que explicam por que copiar *Coin Master* ou *Royal Match* pela metade não encaixa sem adaptar a base:
+
+1. **Quem joga há 1 dia ou 3 meses vê exatamente a mesma tela:** o que falta não é "um lugar para queimar moedas", e sim **capítulos/fases visíveis** (sentir que completou `0% → 100%` de uma etapa e avançou para a próxima).
+2. **Por que no *Royal Match* e no *Coin Master* a obra não fica tampada:** nesses jogos o tabuleiro/slot também ocupa a tela inteira durante a partida, mas **a Obra/Vila é uma tela limpa separada (a Home do jogo, com botão grande `JOGAR`)**, e no *Coin Master* avançar de mundo **troca os próprios assets/símbolos temáticos** da partida.
+3. **Paradoxo matemático (RTP 90% + Moeda como combustível do giro):** no *Coin Master* gira-se com Energia (moeda é 100% sobra para vila); no *Royal Match* constrói-se com Estrelas (fase não custa moedas). No Circus, **gastar moedas direto do saldo com RTP 90% acelera zerar a banca**, a menos que:
+   - **(a) Subir de fase evolua também a economia do jogador** (bônus diário, vídeo e patamar de prêmios crescem junto com o mundo, como no *Coin Master*, fazendo o gasto virar evolução real e não perda), **ou**
+   - **(b) O avanço venha junto das vitórias/marcos** (pontos/estrelas gerados ao ganhar ou reserva protegida), sem secar os giros.
+
+### Regras de ouro caso uma direção seja aprovada
 
 1. **Zero leitura para a 3ª idade:** acesso por **bolinha circular lateral**
    (mesma família visual do vídeo `+1.000`), com barra `2/5` e brilho quando há

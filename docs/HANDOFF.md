@@ -1,12 +1,10 @@
-## Propostas de meta-progressão (destino para as moedas) — Antigravity/Gemini, 27/11/2026
-Provocação do dono: no jogo atual só se acumula moedas, sem objetivo para gastá-las (*Royal Match*, galeria de arte, *Coin Master*). Após a 1ª rodada, o dono apontou com razão que construir no cenário de fundo tem **pouco impacto visual** porque gabinete, botões e King Rico na nuvem cobrem quase a tela inteira, gostou da **praticidade** da Galeria (#3) e pediu mais opções.
-- **Feito (somente game design e registro compartilhado, sem alterar código do jogo):** 2ª rodada documentada em `docs/IDEIAS-DE-JOGOS.md` e card `i-meta-moedas` atualizado em `docs/todo.json`:
-  - **Opção 4 — Camarim & Oficina Real (Skins da Máquina, Spin e Nuvem):** já que gabinete + nuvem ocupam ~85% da tela, as moedas personalizam o próprio gabinete, botão Spin, nuvem (*Tapete Mágico, Balão, Almofada Real*) e chapéus/coroas do King, sem mexer no esqueleto animado.
-  - **Opção 5 — Máquina de Garra de Pelúcias + Amuleto no Gabinete:** gasta moedas para descer a garra e pescar pelúcias da trupe (1 PNG parado cada, super prático); escolhe 1 pelúcia para ficar sentada na quina da slot machine.
-  - **Opção 6 — Álbum de Figurinhas Brilhantes (Rasgar Pacotinhos):** rasga envelopes dourados com o dedo (como na raspadinha) e cola figurinhas comuns/holográficas em páginas curtas de 6 itens; fechar tema libera moldura/skin.
-  - **Opção 7 — Globos de Neve / Caixinhas de Música:** versão tátil e sonora da Galeria (#3), chacoalhando purpurina ao toque.
-- **Regra econômica mantida:** reserva mínima de giro preservada na compra e auditoria (`cloud/engine.cjs` + `firestore.rules`) se houver bônus financeiro ao completar coleção.
-- **Próximo passo exato:** dono escolher a opção preferida (ou combinação, ex.: Álbum/Garra destravando Skins da Máquina) antes de prototipar na prévia.
+## Reflexão aberta sobre meta-progressão (uso das moedas) — Antigravity/Gemini, 27/11/2026
+Provocação do dono: hoje só se acumula moedas, sem objetivo de longo prazo (*Royal Match*, galeria de arte, *Coin Master*).
+- **Histórico da conversa (nada aprovado nem implementado):**
+  - Na 1ª rodada, o dono achou boa a ideia de construir/viajar por temas, mas notou que atrás da máquina quase não aparece (gabinete + botões + King na nuvem cobrem ~85% da tela), e gostou da praticidade da Galeria.
+  - Na 2ª rodada, ideias de skins/garra/álbum/globos foram **descartadas pelo dono ("não é isso...")**; o dono pediu para **pensarmos juntos** a partir da raiz.
+- **Diagnóstico estrutural registrado em `docs/IDEIAS-DE-JOGOS.md` (`i-meta-moedas`):** (1) o que falta é sensação de capítulos/sair do lugar (quem joga há 1 dia ou 3 meses vê a mesma tela), não lojinha/gacha; (2) em *Royal Match* e *Coin Master* a obra vive numa Home limpa separada da tela de giro (e/ou troca os próprios símbolos temáticos ao mudar de mundo); (3) como no Circus a moeda paga o giro num RTP de 90% (sem barra de energia), gastar moedas puras seca a banca a menos que subir de fase evolua os ganhos diários/patamar ou venha acoplado às vitórias.
+- **Próximo passo exato:** continuar o desenho conjunto com o dono sobre as 2 decisões-raiz (Home limpa + botão Jogar vs. tela única na máquina; e moeda subindo o patamar de ganhos vs. progresso sem secar o giro) antes de qualquer código ou arte.
 Painel: https://ric-lab.github.io/King-Rico/todo/
 
 ## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026

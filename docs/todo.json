@@ -5,13 +5,13 @@
   "items": [
     {
       "id": "i-meta-moedas",
-      "title": "Decidir meta-progressão (uso das moedas): Skins da Máquina/Nuvem, Garra de Pelúcias, Álbum de Figurinhas ou Globos",
+      "title": "Pensar juntos: meta-progressão e propósito para as moedas",
       "status": "todo",
       "category": "Ideias",
       "agent": "",
       "commit": "",
       "demoUrl": "",
-      "notes": "27/11: dono notou que fundo quase não aparece atrás da máquina/nuvem e gostou da praticidade da Galeria. 2ª rodada (opções 4 a 7) documentada em docs/IDEIAS-DE-JOGOS.md aguardando escolha."
+      "notes": "27/11: 2ª rodada (skins/garra/álbum/globos) descartada ('não é isso'). Em concepção conjunta a partir da raiz estrutural (Home limpa vs. tela única + paradoxo RTP 90% vs. moeda de giro) em docs/IDEIAS-DE-JOGOS.md."
     },
     {
       "id": "p-villain-modal-clean",
