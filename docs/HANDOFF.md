@@ -1,3 +1,13 @@
+## Propostas de meta-progressão (destino para as moedas) — Antigravity/Gemini, 27/11/2026
+Provocação do dono: no jogo atual só se acumula moedas, sem um objetivo tangível para gastá-las (referências citadas: *Royal Match*, galeria de arte, vilas temáticas viajantes estilo *Coin Master*).
+- **Feito (somente game design e registro compartilhado, sem alterar código do jogo):** análise comparativa documentada em `docs/IDEIAS-DE-JOGOS.md` e card `i-meta-moedas` criado em `docs/todo.json` (`Ideias`).
+  1. **Turnê Mundial do Circo (recomendado):** bolinha lateral (`0/5`) para erguer 5 peças do circo atual com moedas → baú de inauguração → viagem para a próxima parada temática trocando o fundo `941×1672` da própria slot (Jardim → Praia → Noite de Gala → Neve → Oásis), com baixo custo de assets por camadas 2D e visibilidade constante atrás da máquina. Dá peso real ao roubo do Tony Tiger (moeda investida na obra fica protegida).
+  2. **Reforma do Grande Parque King Rico:** ala dedicada com escolha entre 2 estilos visuais por peça comprada (*Royal Match* / *Homescapes*).
+  3. **Galeria de Cartazes & Troféus Mágicos:** mural colecionável de quadros animados da trupe restaurados em 4 etapas (menor escopo de arte).
+- **Regra econômica central registrada:** como no Circus as moedas também são a aposta do giro (sem barra de energia), compras devem respeitar uma **reserva mínima de giro** para nunca travar o jogador zerado, e qualquer baú com moedas/escudos precisa entrar na auditoria do motor (`cloud/engine.cjs` + `firestore.rules`, RTP < 100%, alvo ~90%).
+- **Próximo passo exato:** dono escolher qual dos 3 formatos prefere (e se o baú de conclusão será só cosmético/tema ou dará bônus) antes de prototipar a primeira parada na prévia.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+
 ## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026
 Pedido explícito do dono: pegar o commit mais recente da prévia (`acc5b34`, com Pages `45533173099` aprovado) e publicar no oficial (`main`).
 - **Escopo promovido (`2d53fd1..acc5b34`)**: medalhão circular lateral de vídeo `+1.000` sob `⚙` com ajuste de altura (`--park-ad-drop` / `--park-hero-drop`); Bubble Rico + escolha por 2 cartas na trinca de controle; novo escudo estilo roleta com centro dourado e raios; padronização óptica dos 12 símbolos nas 9 casas e na fita (`ui/park/reel-symbols.css`); modais dos vilões simplificados e roubo zero sem sinal; Big/Super Win com linha dourada curva acompanhando o balanço do avião, riscos de velocidade, som de hélice e arpejo na decolagem.

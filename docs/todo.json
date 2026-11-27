@@ -1,8 +1,18 @@
 {
-  "updatedAt": "2026-11-25",
+  "updatedAt": "2026-11-27",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
+    {
+      "id": "i-meta-moedas",
+      "title": "Decidir meta-progressão (o que fazer com as moedas): Turnê do Circo, Reforma do Parque ou Galeria",
+      "status": "todo",
+      "category": "Ideias",
+      "agent": "",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "27/11: dono apontou falta de destino para as moedas (refs: Royal Match, Coin Master, galeria). 3 caminhos circenses + regras de reserva/economia documentados em docs/IDEIAS-DE-JOGOS.md aguardando escolha."
+    },
     {
       "id": "p-villain-modal-clean",
       "title": "Simplificar modais de roubo: rosto, perda e Continuar",
