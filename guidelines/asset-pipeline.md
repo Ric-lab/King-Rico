@@ -552,3 +552,8 @@ individual nos setores; aprovou cores uniformes como a roleta, sem raios
 dourados. PNG fonte preservado, WebP 512×512 por ImageMagick; escala óptica
 recalculada pelo gerador existente. Ferramenta não informou créditos/custo.
 Aplicação somente na prévia. Original arquivado, sem apagar histórico.
+
+27/11/2026 — Duas novas artes em avaliação, sem integração: baú com os três
+símbolos oficiais e rosto do King Rico com coroa. GPT Image com as fontes
+existentes; um refinamento da cabeça para manter orelhas no quadro. Custo não
+informado. PNG/WebP compartilhados em assets/symbols/drafts/; ver README.

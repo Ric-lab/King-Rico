@@ -1,3 +1,13 @@
+## Baú e rosto do King Rico — artes em avaliação, Codex, 27/11/2026
+Base db6a49b. Fontes PNG e WebP em assets/symbols/drafts/, guia README local.
+Baú contém moedas/diamantes/coroa dos símbolos existentes. King é cabeça isolada
+com coroa, enquadramento como os vilões e margem para não cortar as orelhas.
+Sequência solicitada: Capa 0,4×; Moeda 0,8×; Diamante 1,2×; Coroa 2,5×;
+Baú 5×; rosto King Rico 10×. Artes mostradas no chat, ainda em avaliação.
+Este checkpoint NÃO muda jogo, atlas, pagamento ou site; não fazer deploy.
+Próximo passo: consumir feedback do dono sobre as artes; na integração futura,
+revisar tabela/identidades e auditar a economia antes de publicar pagamentos.
+
 ## Escudo sem raios internos, iluminação da roleta — Codex, 27/11/2026
 Base 1a3c94e; pedido do dono para aplicar somente na prévia. Arte aprovada:
 setores coloridos se encontram diretamente, sem divisórias douradas ou reflexos
