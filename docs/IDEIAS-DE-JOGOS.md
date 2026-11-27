@@ -49,14 +49,21 @@ Opções exploradas e **rejeitadas** (não implementar): **4. Skins de máquina/
 
 Opção explorada e **rejeitada** (não implementar): **Níveis de Patamar & Ligas** (subir nível escalando vídeo/raspadinha/aposta e trancando escudos/minigames em marcos). Motivo do descarte pelo dono: **complicado demais e obrigatório demais** — trancar coisas ou alterar economia cria peso num jogo que já tem muitas peças (`roleta, escudo, dado, raspadinha, spin, big win, good luck, controle`).
 
-### Bússola definitiva do dono (27/11 — conversa aberta)
+### Ideia formulada pelo dono (27/11 — aguardando aprovação para prototipar)
 
-1. **100% opcional ("Teste da Avó no Spin"):** se a avó nunca tocar em nada disso e passar a vida inteira só apertando **SPIN**, o jogo funciona **100% igual**, sem nada trancado, reduzido ou cobrando atenção. Só muda/acontece se a pessoa quiser.
-2. **Zero regra nova — puro objeto visual, háptico e de 1 gesto simples:** precisa ter a mesma alma do **dado do Tony**, da **roleta** ou da **raspadinha** (bater o olho, fazer 1 gesto tátil com som + vibração gostosa, sem texto nem tabela).
-3. **Caminhos ultrassimples em discussão aberta (ou até não adicionar nada agora):**
-   - **Quadro / Postal de Raspar & Revelar (a Galeria feita com o gesto háptico da Raspadinha):** ícone discreto e opcional; se sobrar moeda e a pessoa quiser, ela paga moedas e **passa o dedo raspando/polindo uma placa dourada** (com som + vibração contínua igual à raspadinha!) até revelar uma pintura bonita do circo, que fecha na moldura com um estalo (`PLIM!`) e libera o próximo quadro. Zero mecânica nova pra aprender, 100% opcional.
-   - **Quebrar na Batida / Carimbar (`PAF!` háptico de toques):** pagar moedas (só se quiser) para dar **3–5 batidas secas com o dedo** num Baú/Piñata dourada (vibração pesada a cada rachadura, igual ao dado/patada) ou **bater 1 carimbo físico** num Passaporte de Viagens revelando o cartão-postal.
-   - **Hipótese zero (proteger a simplicidade):** reconhecer que, diferente do *Coin Master* (cuja slot é vazia), o Circus já tem 8 mecânicas vivas e talvez **não precise** de mais um sistema agora se qualquer adição pesar na clareza.
+1. **Bolinha lateral direita (abaixo do `+1.000`):** abre a tela opcional de **Quebra-Cabeça**.
+   - Se a avó nunca tocar nessa bolinha, o jogo segue **100% idêntico** (puro cosmético/"frufruzinho", sem alterar jogabilidade nem RTP).
+2. **Comprar pacotes/peças com moedas do jogo:**
+   - Começa com **9 peças (`3×3`)**, e nos próximos quebra-cabeças sobem tanto o **preço** quanto a **quantidade de peças** (`12` = `3×4`, `16` = `4×4`, `20` = `4×5`...).
+   - **Recomendação de design:** sem peças repetidas (sorteia sempre posições inéditas vazias, garantindo surpresa visual sem frustrar quem pagou moedas) e encaixe com ímã forte + som/vibração seca (`CLAC!`).
+3. **Recompensa ao completar (`100%`):** libera uma **Skin Temática** correspondente à imagem do quebra-cabeça (ex.: *Egito, Praia, Neve, Noite de Gala*), trocando **apenas o background (`941×1672`) e as cores dos botões** (se o jogador quiser equipar). **King Rico na nuvem e gabinete da máquina não mudam.**
+4. **Por que NÃO é complexo em assets:**
+   - **Zero recorte manual de peças:** o quebra-cabeça fatia **1 única imagem `.webp`** em código (máscara Canvas/SVG com curvas reais de quebra-cabeça, chanfro e sombra automáticos em qualquer grade `3×3`, `3×4`, `4×4`).
+   - **Zero imagens novas de botões:** a troca de cores dos botões usa apenas variáveis CSS do tema. Custo total por tema novo = **1 única imagem `.webp` + 3 cores CSS**.
+5. **Reorganização dos 6 símbolos de prêmio para ficarem universais em qualquer tema:**
+   - Retirar **Ingresso** e **Tenda de Circo** (que prendiam o jogo a um único tema), descer os 4 atuais e incluir **Baú de Tesouro** e **Rosto do King Rico** no topo (fechando exatos **6 símbolos fixos**, sem alterar matemática/RTP `0,4×` a `10×`):
+     `0,4× Capa` · `0,8× Moeda` · `1,2× Diamante` · `2,5× Coroa` · `5× Baú de Tesouro` · `10× Rosto do King Rico`.
+   - Manter **os 6 símbolos sempre fixos** (em vez de variar os 2 menores por tema) preserva a memória visual imediata do público 40+/60+ e elimina retrabalho de símbolos a cada tema novo.
 
 ## Os três vilões do King Rico — ideia do dono (08/11)
 

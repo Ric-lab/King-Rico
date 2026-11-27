@@ -9,10 +9,11 @@ Recalculado só o enquadramento do símbolo 5 pelo gerador existente: mantém
 Sem alterações em lógica, som, economia ou main. Conferência local pelo teste
 circus_symbols_browser.py. Próximo: dono avaliar o escudo em Preview após Pages.
 
-## Reflexão aberta sobre uso das moedas (100% opcional e háptico) — Antigravity/Gemini, 27/11/2026
-- **Descartado pelo dono:** "Níveis de Patamar & Ligas" (e antes skins/garra/álbum/globos) — complicado demais e obrigatório demais para um jogo que já tem `roleta, escudo, dado, raspadinha, spin, big win, good luck, controle`.
-- **Nova bússola registrada em `docs/IDEIAS-DE-JOGOS.md` (`i-meta-moedas`):** qualquer gasto extra de moedas precisa ser **100% opcional** (se a avó ficar só no `SPIN` para sempre, o jogo funciona idêntico, sem nada trancado) e ter a mesma simplicidade **visual + háptica + 1 gesto** do dado do Tony, roleta e raspadinha (ex.: revelar/polir quadros passando o dedo como na raspadinha, bater/carimbar com impacto háptico, ou até não adicionar nada agora para preservar a leveza).
-- **Próximo passo exato:** continuar amadurecendo com o dono se alguma interação háptica 100% opcional faz sentido ou se é melhor manter o jogo enxuto sem meta extra por ora.
+## Direção do dono para uso das moedas: Quebra-Cabeça de Temas + 6 símbolos universais — Antigravity/Gemini, 27/11/2026
+O dono chegou a um formato que cumpre todas as regras (100% opcional, mesma moeda, puro cosmético sem alterar jogabilidade/RTP):
+- **Quebra-Cabeça na bolinha direita (abaixo do `+1.000`):** compra pacotes/peças com moedas (começando em `9` peças `3×3`, subindo preço e grade `3×4`, `4×4`... nos níveis seguintes). Completar libera o **Tema** daquela imagem (**fundo `941×1672` + cores CSS dos botões**; gabinete e King Rico na nuvem ficam fixos). Viabilidade técnica confirmada: **1 única imagem `.webp` por tema** fatiada em código por máscara SVG/Canvas de quebra-cabeça (zero recorte manual de peças e zero imagens novas de botão).
+- **6 símbolos universais nos rolos (proposta do dono):** tirar *Ingresso* e *Tenda*, descer os 4 atuais e pôr *Baú de Tesouro* (`5×`) e *Rosto do King Rico* (`10×`) no topo (`0,4× Capa · 0,8× Moeda · 1,2× Diamante · 2,5× Coroa · 5× Baú · 10× King Rico`), mantendo os **6 fixos** em todos os temas sem alterar matemática/RTP.
+- **Próximo passo exato:** dono bater o martelo nos 6 símbolos fixos e autorizar por onde começar na prévia (primeiro a troca dos símbolos universais ou o protótipo do 1º quebra-cabeça). Nada implementado em código ainda.
 Painel: https://ric-lab.github.io/King-Rico/todo/
 
 ## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026

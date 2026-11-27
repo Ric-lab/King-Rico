@@ -15,13 +15,13 @@
     },
     {
       "id": "i-meta-moedas",
-      "title": "Pensar mais: destino 100% opcional, visual e háptico para moedas (sem complicar)",
+      "title": "Ideia do dono: Quebra-Cabeça de Temas (bolinha direita) + 6 símbolos universais nos rolos",
       "status": "todo",
       "category": "Ideias",
       "agent": "",
       "commit": "",
       "demoUrl": "",
-      "notes": "27/11: Níveis/Ligas descartados (complicado e obrigatório). Regra do dono: se a avó só apertar Spin pra sempre, o jogo funciona igual; precisa ser simples, visual e háptico como dado/roleta/raspadinha (ou não adicionar nada agora)."
+      "notes": "27/11: bolinha sob +1000 abre Quebra-Cabeça pago em moedas (9 -> 12 -> 16 peças, + caro a cada nível) que libera skin de fundo + cores CSS dos botões (King e máquina fixos). Símbolos universais propostos: 0,4x Capa, 0,8x Moeda, 1,2x Diamante, 2,5x Coroa, 5x Baú, 10x Rosto do King Rico."
     },
     {
       "id": "p-villain-modal-clean",
