@@ -1,3 +1,17 @@
+## Nova sequência visual dos rolos — Codex, 27/11/2026
+Base 9b0800e. Escopo confirmado pelo dono: SÓ trocar as imagens chamadas.
+Matemática, probabilidades, dados salvos, IDs, regras Firestore e testes
+financeiros permanecem idênticos ao commit base. Não publicar na main.
+Mapping visual por ID existente (multiplicadores já pagos):
+10=Capa 0,4×; 2=Moeda 0,8×; 0=Diamante 1,2×; 6=Coroa 2,5×;
+8=Baú 5×; 7=Rosto King Rico 10×. NÃO alterar PAYS para seguir a nova arte.
+Baú aprovado: roxo-ameixa/prata com tesouro dourado; fonte e WebP em
+assets/symbols/treasure-chest-v2.*. Cabeça em assets/king-rico/head-v1.*.
+Material único gerado por scripts/reel-symbols.py atende repouso, fita e travado;
+preloads, tabela de prêmios e seletor de teste usam as mesmas novas referências.
+Artes antigas preservadas, sem sobrescrever atlas. Conferência visual focada nas
+nove posições; build de prévia. Próximo: confirmar Pages e dono avaliar Preview.
+
 ## Baú e rosto do King Rico — artes em avaliação, Codex, 27/11/2026
 Base db6a49b. Fontes PNG e WebP em assets/symbols/drafts/, guia README local.
 Baú contém moedas/diamantes/coroa dos símbolos existentes. King é cabeça isolada

@@ -7,8 +7,9 @@
 <link rel="stylesheet" href="./ui/park/spin-v7.css">
 <link rel="stylesheet" href="./ui/park/reel-symbols.css">
 <!-- reel-art-preload:start -->
-<link rel="preload" as="image" href="./assets/machine/ticket-symbol-v3.webp" data-reel-preload>
 <link rel="preload" as="image" href="./assets/symbols-v7.webp" data-reel-preload>
+<link rel="preload" as="image" href="./assets/symbols/treasure-chest-v2.webp" data-reel-preload>
+<link rel="preload" as="image" href="./assets/king-rico/head-v1.webp" data-reel-preload>
 <link rel="preload" as="image" href="./assets/symbols/shield-defense-rainbow-gold-v1.webp" data-reel-preload>
 <link rel="preload" as="image" href="./assets/tony/head.webp" data-reel-preload>
 <link rel="preload" as="image" href="./assets/tucker/head.webp" data-reel-preload>
@@ -1855,7 +1856,7 @@ class Component extends DCLogic {
       basketTop: [[33, 27, -8, 3], [63, 27, 8, 4]].map(([x, y, r, k]) => ({ x: (x - 17) + 'px', y: (y - 17) + 'px', r: r + 'deg', s: k < cv ? 1 : 0.2, o: k < cv ? 1 : 0 })),
       peachAnim: s.peachBump && Date.now() - s.peachBump < 900 ? 'fcPop .45s cubic-bezier(.2,1.4,.4,1)' : 'none',
       featureText: feat ? 'GIRO ' + Math.min(FEAT_SPINS, FEAT_SPINS - (s.featLeft ?? FEAT_SPINS)) + ' / ' + FEAT_SPINS : '',
-      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===10?"url('assets/machine/ticket-symbol-v3.webp')":"url('assets/symbols-v7.webp')",size:o.i===10?'contain':'1200% 100%', pos: o.i * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
+      payList: this.payoutSymbols().map((sy, i) => ({ i, sy })).filter(o => o.sy.active !== false && o.sy.pay>0).sort((a, b) => a.sy.pay - b.sy.pay).map(o => ({ image:o.i===7?"url('assets/king-rico/head-v1.webp')":o.i===8?"url('assets/symbols/treasure-chest-v2.webp')":"url('assets/symbols-v7.webp')",size:[7,8].includes(o.i)?'contain':'1200% 100%', pos: [7,8].includes(o.i)?'50%':({10:0,2:6,0:8,6:7}[o.i]??o.i) * 100 / 11 + '%', mult: 'x' + o.sy.pay.toFixed(1).replace('.', ',') })),
       adOp: 1,
       tonyNote: 'Junte 5 roletas para abrir a Roleta Bônus. A barra lateral cheia ativa 5 giros Good Luck. Três trevos alinhados dão 1 defesa, até 5. O trevo defende do Tony e do Tucker, nunca do Ray. Ray leva de 1 a 4 trevos.',
       ...(() => { const busy = s.featReady && s.feature ? false : !!(s.spinning || s.queued || s.feature || s.featLock || s.free || s.pressed === 'spin' || (this.isCeleb() && !s.showWin)); const lockC = this.isCeleb() && !s.showWin, intro = s.introLit !== false, iF = s.introFade; return {

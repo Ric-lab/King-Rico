@@ -9,10 +9,11 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 ATLAS = 'assets/symbols-v7.webp'
 SOURCES = [
-    (10, 'Ingresso', 'assets/machine/ticket-symbol-v3.webp', None),
-    (2, 'Circo', ATLAS, 2), (0, 'Capa', ATLAS, 0),
-    (6, 'Moeda', ATLAS, 6), (8, 'Diamante', ATLAS, 8),
-    (7, 'Coroa', ATLAS, 7),
+    (10, 'Capa', ATLAS, 0),
+    (2, 'Moeda', ATLAS, 6), (0, 'Diamante', ATLAS, 8),
+    (6, 'Coroa', ATLAS, 7),
+    (8, 'Baú de Tesouro', 'assets/symbols/treasure-chest-v2.webp', None),
+    (7, 'King Rico', 'assets/king-rico/head-v1.webp', None),
     (5, 'Escudo', 'assets/symbols/shield-defense-rainbow-gold-v1.webp', None),
     (11, 'Roleta', ATLAS, 11),
     (12, 'Tony', 'assets/tony/head.webp', None),

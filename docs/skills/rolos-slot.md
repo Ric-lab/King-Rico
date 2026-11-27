@@ -15,3 +15,7 @@ posição por um background-size avulso. Caixa óptica90%W ×82%H, centralizada 
 alfa. Testar12 símbolos ×9 posições, parado/fita/travado, com
 circus_symbols_browser.py. Uma única camada/material e câmera por linha;
 normalização por porcentagem não muda desenhos ou mecânicas. Ver SIMBOLOS-ROLOS.md.
+
+27/11: sequência nova feita SÓ pelo mapping de arte. IDs e matemática legados
+ficam intactos; não recalibrar PAYS para acompanhar nomes de imagem. Mapping
+10/capa, 2/moeda, 0/diamante, 6/coroa, 8/baú, 7/rosto King Rico. Ver PARQUE.md.

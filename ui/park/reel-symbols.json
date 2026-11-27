@@ -6,46 +6,6 @@
   "symbols": [
     {
       "id": 10,
-      "name": "Ingresso",
-      "source": "assets/machine/ticket-symbol-v3.webp",
-      "tile": null,
-      "size": [
-        560,
-        263
-      ],
-      "bounds": [
-        25,
-        3,
-        534,
-        258
-      ],
-      "visible": [
-        0.9,
-        0.45088408644400785
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Circo",
-      "source": "assets/symbols-v7.webp",
-      "tile": 2,
-      "size": [
-        6144,
-        512
-      ],
-      "bounds": [
-        11,
-        47,
-        497,
-        472
-      ],
-      "visible": [
-        0.9,
-        0.7870370370370371
-      ]
-    },
-    {
-      "id": 0,
       "name": "Capa",
       "source": "assets/symbols-v7.webp",
       "tile": 0,
@@ -65,7 +25,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": 2,
       "name": "Moeda",
       "source": "assets/symbols-v7.webp",
       "tile": 6,
@@ -85,7 +45,7 @@
       ]
     },
     {
-      "id": 8,
+      "id": 0,
       "name": "Diamante",
       "source": "assets/symbols-v7.webp",
       "tile": 8,
@@ -105,7 +65,7 @@
       ]
     },
     {
-      "id": 7,
+      "id": 6,
       "name": "Coroa",
       "source": "assets/symbols-v7.webp",
       "tile": 7,
@@ -122,6 +82,46 @@
       "visible": [
         0.9,
         0.6409090909090909
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Baú de Tesouro",
+      "source": "assets/symbols/treasure-chest-v2.webp",
+      "tile": null,
+      "size": [
+        512,
+        512
+      ],
+      "bounds": [
+        31,
+        20,
+        475,
+        499
+      ],
+      "visible": [
+        0.7600835073068893,
+        0.82
+      ]
+    },
+    {
+      "id": 7,
+      "name": "King Rico",
+      "source": "assets/king-rico/head-v1.webp",
+      "tile": null,
+      "size": [
+        512,
+        512
+      ],
+      "bounds": [
+        32,
+        38,
+        480,
+        458
+      ],
+      "visible": [
+        0.8746666666666666,
+        0.82
       ]
     },
     {

@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-chest-king-reels",
+      "title": "Aplicar baú roxo/prata e rosto do King Rico na sequência visual",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Somente arte: 0,4 capa; 0,8 moeda; 1,2 diamante; 2,5 coroa; 5 baú; 10 King. PAYS, chances e regras sem alterações. Imagens compartilhadas nas nove casas, fita, tabela e seletor."
+    },
+    {
       "id": "p-shield-flat-wheel",
       "title": "Escudo: setores simples e iluminação igual à roleta",
       "status": "preview",

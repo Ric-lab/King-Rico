@@ -15,3 +15,9 @@ Referências de arte: sym-coin.png, sym-gem.png, sym-crown.png, fw6/master.webp 
 Tony/head.webp (só enquadramento da cabeça). Gerados pelo GPT Image, sem custo
 informado; rosto teve uma edição adicional para manter as orelhas no quadro.
 WebP 512×512 por conversão ImageMagick; PNG fontes preservados.
+
+## Aplicação aprovada — 27/11/2026
+Baú v1 marrom ficou arquivado como proposta. Dono aprovou roxo/prata, ativo
+em `assets/symbols/treasure-chest-v2.*`. Cabeça aprovada copiada para
+`assets/king-rico/head-v1.*`. Aplicação autorizada só na prévia e só por troca
+das referências de arte; tabela numérica e chances não mudam. Ver PARQUE.md.

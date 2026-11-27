@@ -5,16 +5,16 @@ let tail=Promise.resolve();
 // Prévia padrão: demo normal (aleatório). Para forçar eventos, o dono usa o seletor no jogo (⚙ → 🎯).
 const DEFAULT_DEMO=null;
 const demoMode=(q=>q==='off'?null:q||DEFAULT_DEMO)(new URLSearchParams(location.search).get('demo'));
-let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','wheel-one','cedar','ticket','controller','goodluck','villain-one','villain-pair','full-clover','dice-tony','dice-tucker','dice-ray'].includes(demoMode);
+let demoSpin=['bigwin','spacewin','tony','tucker','ray','wheel','wheel-one','cedar','ticket','chest','king','controller','goodluck','villain-one','villain-pair','full-clover','dice-tony','dice-tucker','dice-ray'].includes(demoMode);
 // Seletor da prévia (menu → 🎯): o modo escolhido vale para TODOS os giros até trocar; recarregar zera (aleatório).
 let forced=null;
-const SYM={ticket:10,circus:2,cape:0,coin:6,diamond:8,crown:7,cedar:5,controller:15};
+const SYM={ticket:10,circus:2,cape:10,coin:2,diamond:0,crown:6,chest:8,king:7,cedar:5,controller:15};
 const trio=s=>{const f=[0,2,6,7,8,10].filter(x=>x!==s);return [s,s,s,f[0],f[1],f[2],f[3],f[4],f[0]];};
 const gridFor=m=>m==='full-clover'?trio(5):m in SYM?trio(SYM[m]):(m==='wheel'||m==='wheel-one')?[11,0,2,6,7,8,10,2,6]:m==='goodluck'||m==='lose'||m==='villain-one'||m==='villain-pair'?[0,2,6,7,8,10,2,6,0]:m==='spacewin'?Array(9).fill(7):m==='bigwin'?[7,7,7,7,7,7,0,2,6]:[7,7,7,7,7,7,0,2,6];
 const PICKS=[
  ['dice-tony','Dado do Tony','/assets/tony/head.webp|contain|50% 50%'],['dice-tucker','Dado do Tucker','/assets/tucker/head.webp|contain|50% 50%'],['dice-ray','Dado do Ray','/assets/ray/head-v1.webp|contain|50% 50%'],
- ['ticket','Ingresso','/assets/machine/ticket-symbol-v3.webp|contain|50% 50%'],['circus','Circo',"/assets/symbols-v7.webp|1200% 100%|18.182% 50%"],['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
- ['diamond','Diamante',"/assets/symbols-v7.webp|1200% 100%|72.727% 50%"],['crown','Coroa',"/assets/symbols-v7.webp|1200% 100%|63.636% 50%"],['tony','Tony Tiger','/assets/tony/head.webp|contain|50% 50%'],['tucker','Tucker Toucan','/assets/tucker/head.webp|contain|50% 50%'],
+ ['cape','Capa',"/assets/symbols-v7.webp|1200% 100%|0.000% 50%"],['coin','Moeda',"/assets/symbols-v7.webp|1200% 100%|54.545% 50%"],
+ ['diamond','Diamante',"/assets/symbols-v7.webp|1200% 100%|72.727% 50%"],['crown','Coroa',"/assets/symbols-v7.webp|1200% 100%|63.636% 50%"],['chest','Baú de Tesouro','/assets/symbols/treasure-chest-v2.webp|contain|50% 50%'],['king','King Rico','/assets/king-rico/head-v1.webp|contain|50% 50%'],['tony','Tony Tiger','/assets/tony/head.webp|contain|50% 50%'],['tucker','Tucker Toucan','/assets/tucker/head.webp|contain|50% 50%'],
  ['ray','Ray Raccoon','/assets/ray/head-v1.webp|contain|50% 50%'],['cedar','Escudo','/assets/symbols/shield-defense-rainbow-gold-v1.webp|contain|50% 50%'],['goodluck','Good Luck (barra cheia)','/assets/machine/meter-bolt-rainbow-v1.webp|contain|50% 50%'],['controller','Controle','/assets/machine/controller-symbol-v1.webp|contain|50% 50%'],
  ['full-clover','Escudos cheios','/assets/symbols/shield-defense-rainbow-gold-v1.webp|contain|50% 50%'],
  ['lose','Sem trinca',''],['bigwin','Big win',''],['spacewin','Super win',''],['wheel-one','1 roleta','/assets/wheel/wheel-symbol-v1.webp|contain|50% 50%'],['wheel','Completar 5 roletas',"/assets/symbols-v7.webp|1200% 100%|100.000% 50%"]];

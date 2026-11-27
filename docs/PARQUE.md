@@ -729,3 +729,20 @@ Borda exterior e centro dourados preservados. O símbolo mantém envelope óptic
 com 82% de altura; arquivos ativos seguem em
 `assets/symbols/shield-defense-rainbow-gold-v1.png/.webp`. Fonte anterior em
 `archive/assets/shield-spokes-2026-11-27/`.
+
+### Sequência visual dos prêmios — 27/11/2026 (prévia)
+
+Sem alterar valores ou chances, os IDs pagos existentes chamam estas artes:
+
+| ID legado | Arte atual | Multiplicador existente |
+|---|---|---|
+| 10 | Capa (atlas, tile 0) | 0,4× |
+| 2 | Moeda (atlas, tile 6) | 0,8× |
+| 0 | Diamante (atlas, tile 8) | 1,2× |
+| 6 | Coroa (atlas, tile 7) | 2,5× |
+| 8 | Baú roxo/prata (`assets/symbols/treasure-chest-v2.webp`) | 5× |
+| 7 | Rosto King Rico (`assets/king-rico/head-v1.webp`) | 10× |
+
+Os nomes internos legados do motor NÃO são nomes dos assets. O gerador de
+material dos rolos, a tabela e o seletor seguem esse mapping visual. Não trocar
+PAYS/WEIGHTS, probabilidades ou regras para fazer a arte coincidir com o ID.
