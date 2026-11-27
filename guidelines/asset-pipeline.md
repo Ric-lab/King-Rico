@@ -545,3 +545,10 @@ Checkpoint `[skip ci]` sem trocar o asset ativo; aguardando escolha do dono (1, 
 exportação fiel via GPT Image para recuperar PNG com alfa,1 geração nesta tarefa;
 PNG1254→WebP512 (exportação de formato), sem Meshy. Caminhos ativos mantidos;
 originais com coroa em archive/assets/symbols. Não confundir com3 propostas Gemini.
+
+27/11/2026 — Escudo: duas edições GPT Image a partir do escudo atual, segunda
+com referência explícita do asset wheel-symbol-v1. Dono rejeitou o brilho
+individual nos setores; aprovou cores uniformes como a roleta, sem raios
+dourados. PNG fonte preservado, WebP 512×512 por ImageMagick; escala óptica
+recalculada pelo gerador existente. Ferramenta não informou créditos/custo.
+Aplicação somente na prévia. Original arquivado, sem apagar histórico.

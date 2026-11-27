@@ -1,3 +1,14 @@
+## Escudo sem raios internos, iluminação da roleta — Codex, 27/11/2026
+Base 1a3c94e; pedido do dono para aplicar somente na prévia. Arte aprovada:
+setores coloridos se encontram diretamente, sem divisórias douradas ou reflexos
+brancos dentro das cores; borda externa e centro dourados preservados.
+Substituídos PNG fonte e WebP ativo no mesmo caminho; original arquivado em
+archive/assets/shield-spokes-2026-11-27/. Conversão para 512×512, ~32KB.
+Recalculado só o enquadramento do símbolo 5 pelo gerador existente: mantém
+82% de altura visível, proporção natural e centro nas nove casas/fita.
+Sem alterações em lógica, som, economia ou main. Conferência local pelo teste
+circus_symbols_browser.py. Próximo: dono avaliar o escudo em Preview após Pages.
+
 ## Concepção conjunta de Níveis de Patamar (uso das moedas) — Antigravity/Gemini, 27/11/2026
 O dono definiu os 5 limites exatos para o destino das moedas: (1) pagar a própria moeda do jogo para subir de nível, ficando mais caro/difícil; (2) sem segunda moeda; (3) compensar de verdade gastar as moedas da slot nisso; (4) preservar os símbolos conhecidos para o público 40+ ("cadê o ingresso?") e sem retrabalho pesado de assets; (5) sem decoração repetitiva estilo *Royal Match* (cansa após o 5º cenário).
 - **Proposta convergente registrada em `docs/IDEIAS-DE-JOGOS.md` (`i-meta-moedas`, nada implementado ainda):** **"Níveis de Patamar & Ligas do Circo"** — pagar moedas sobe o Nível permanente da conta (protegido contra o Tony), o que **(a)** escala proporcionalmente Vídeo Grátis (`+1.000 → +1.500 → +2.000...`), Raspadinha Diária e giro/prêmios (mantendo `1 vídeo = 10 giros` e RTP 90%), **(b)** destrava vantagens funcionais nos marcos (começar Nível 1 limpo → liberar Royal Rico, Bubble Rico, vagas máximas de Escudo `3 → 4 → 5`, recarga de escudos no Level Up) e **(c)** mantém 100% dos símbolos/personagens intactos, mudando apenas a insígnia de nível e, a cada Liga (ex.: 5 em 5 níveis), sutis tons metálicos/iluminação via CSS.

@@ -14,3 +14,6 @@ Rejeitado:
 - Ingresso com centro mel/âmbar alaranjado (v2): dono prefere dourado mais claro/champagne, mantendo estrela roxa e inclinação.
 - Lava/estética agressiva fora da paleta do circo.
 - Bola/gota "água" com blobs (marching cubes): pareceu sólido imitando líquido.
+
+- Escudo com luz/reflexos brancos por setor destoa da roleta: dono quer cores
+  uniformes, sem raios metálicos internos; ouro só na borda externa e centro.

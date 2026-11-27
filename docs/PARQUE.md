@@ -721,3 +721,11 @@ o formato de moedas; Tucker e Ray mostram quantidades inteiras. Sem título
 ou legenda visível; rótulos acessíveis preservados.
 
 Quando nada é roubado, os três modais mostram `0`, sem sinal nem decimais.
+
+### Escudo: acabamento da roleta — 27/11/2026 (prévia)
+
+Setores com cores uniformes, sem raios dourados nem faixas brancas de reflexo.
+Borda exterior e centro dourados preservados. O símbolo mantém envelope óptico
+com 82% de altura; arquivos ativos seguem em
+`assets/symbols/shield-defense-rainbow-gold-v1.png/.webp`. Fonte anterior em
+`archive/assets/shield-spokes-2026-11-27/`.

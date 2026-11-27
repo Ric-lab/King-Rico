@@ -4,6 +4,16 @@
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
+      "id": "p-shield-flat-wheel",
+      "title": "Escudo: setores simples e iluminação igual à roleta",
+      "status": "preview",
+      "category": "Visual & Ritmo",
+      "agent": "Codex",
+      "commit": "",
+      "demoUrl": "",
+      "notes": "Arte aprovada aplicada: sem divisórias douradas nem reflexos brancos nos setores. Centro/contorno preservados, escala padronizada nas nove casas. Somente prévia."
+    },
+    {
       "id": "i-meta-moedas",
       "title": "Avaliar proposta convergente: Níveis de Patamar & Ligas (subir nível com moedas, sem trocar símbolos)",
       "status": "todo",
