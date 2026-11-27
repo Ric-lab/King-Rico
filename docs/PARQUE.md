@@ -746,3 +746,6 @@ Sem alterar valores ou chances, os IDs pagos existentes chamam estas artes:
 Os nomes internos legados do motor NÃO são nomes dos assets. O gerador de
 material dos rolos, a tabela e o seletor seguem esse mapping visual. Não trocar
 PAYS/WEIGHTS, probabilidades ou regras para fazer a arte coincidir com o ID.
+
+27/11/2026 (prévia): o baú ativo passa a vermelho/prata, rosto do King gravado
+no fecho e RICO em vermelho na frente. Mesmo ID 8, caminho e pagamento 5×.

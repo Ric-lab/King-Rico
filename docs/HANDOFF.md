@@ -1,3 +1,11 @@
+## Baú vermelho aprovado — Codex, 27/11/2026
+Somente arte, na prévia: troca do PNG/WebP do baú no caminho ativo existente.
+Versão vermelha/prata com rosto gravado no fecho e RICO em vermelho na frente.
+Antiga roxa arquivada em archive/assets/chest-purple-2026-11-27/.
+Enquadramento do símbolo 8 regenerado pelo utilitário existente para preservar
+proporção/altura padronizada. Sem lógica, tabela de pagamentos, chances ou regras.
+Conferência visual focada; publicar Pages e dono avaliar Preview. Main intacta.
+
 ## Nova sequência visual dos rolos — Codex, 27/11/2026
 Base 9b0800e. Escopo confirmado pelo dono: SÓ trocar as imagens chamadas.
 Matemática, probabilidades, dados salvos, IDs, regras Firestore e testes
