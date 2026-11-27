@@ -37,13 +37,18 @@ export function pickGame(fc){return new Promise(done=>{
  #kr-game-pick .gp-bubbles{position:relative;width:74%;aspect-ratio:1}
  #kr-game-pick .gp-bubbles i{position:absolute;width:52%;aspect-ratio:1;border-radius:50%;background:center/62% no-repeat,radial-gradient(circle at 32% 28%,#fff,var(--c) 30%,var(--d));box-shadow:0 0 0 2.5px #fff,0 4px 6px rgba(0,0,0,.25)}
  #kr-game-pick .gp-bubbles i:nth-child(1){left:0;top:4%}#kr-game-pick .gp-bubbles i:nth-child(2){right:0;top:4%}#kr-game-pick .gp-bubbles i:nth-child(3){left:24%;bottom:0}
- #kr-game-pick .gp-hand{position:absolute;left:50%;top:62%;width:54px;height:54px;margin-left:-27px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 8px rgba(255,255,255,.3),0 4px 10px rgba(0,0,0,.4);pointer-events:none;animation:gpHand 2.2s ease-in-out infinite}
+ #kr-game-pick .gp-skip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 8vh);transform:translateX(-50%);z-index:2;width:min(70vw,280px);padding:14px 0;border:0;border-radius:999px;font:800 20px/1 'Baloo 2',sans-serif;letter-spacing:1px;color:#fff3c4;background:rgba(40,8,60,.78);box-shadow:0 0 0 2.5px #ffd257,0 4px 0 #3a0d62;cursor:pointer}
+ #kr-game-pick .gp-skip:active{transform:translateX(-50%) translateY(3px);box-shadow:0 0 0 2.5px #ffd257,0 1px 0 #3a0d62}
+ #kr-game-pick .gp-hand-unused{position:absolute;left:50%;top:62%;width:54px;height:54px;margin-left:-27px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 8px rgba(255,255,255,.3),0 4px 10px rgba(0,0,0,.4);pointer-events:none;animation:gpHand 2.2s ease-in-out infinite}
  @keyframes gpHand{0%,100%{transform:translateX(-24vw) scale(1)}20%{transform:translateX(-24vw) scale(.85)}50%{transform:translateX(24vw) scale(1)}70%{transform:translateX(24vw) scale(.85)}}
- </style>`+order.map((id,i)=>`<button type="button" class="gp-card" aria-label="${id==='royal'?'Royal Rico':'Bubble Rico'}" data-game="${id}"><div class="gp-inner" style="transform:rotateY(180deg)"><div class="gp-face gp-back"><i></i></div>${FRONT[id]}</div></button>`).join('')+'<i class="gp-hand"></i><b class="gp-title">ESCOLHA UM JOGO</b><style>#kr-game-pick .gp-title{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12%);left:0;right:0;text-align:center;font:400 clamp(22px,7vw,34px)/1 \'Rammetto One\',\'Baloo 2\',sans-serif;color:#ffd257;text-shadow:0 3px 0 #6b2e05,0 0 18px #ffd25780}</style>';
+ </style>`+order.map((id,i)=>`<button type="button" class="gp-card" aria-label="${id==='royal'?'Royal Rico':'Bubble Rico'}" data-game="${id}"><div class="gp-inner" style="transform:rotateY(180deg)"><div class="gp-face gp-back"><i></i></div>${FRONT[id]}</div></button>`).join('')+'<b class="gp-title">ESCOLHA UM JOGO</b><button type="button" class="gp-skip">NÃO JOGAR</button><style>#kr-game-pick .gp-title{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12%);left:0;right:0;text-align:center;font:400 clamp(22px,7vw,34px)/1 \'Rammetto One\',\'Baloo 2\',sans-serif;color:#ffd257;text-shadow:0 3px 0 #6b2e05,0 0 18px #ffd25780}</style>';
  document.body.append(o);try{fc.sfxWhoosh?.();}catch{}
  let chosen=false;
+ o.querySelector('.gp-skip').addEventListener('click',async e=>{if(chosen)return;chosen=true;const b=e.currentTarget;b.disabled=true;try{fc.sfxClick?.();}catch{}
+  try{const r=window.KingRicoPark?.state?.royal;if(r)await window.KingRicoCloud.royalComplete(r.id,true);}catch(err){chosen=false;b.disabled=false;window.KingRicoCloud?.error?.(err);return;}
+  o.animate([{opacity:1},{opacity:0}],{duration:200,fill:'forwards'}).onfinish=()=>{o.remove();done(null);};});
  o.querySelectorAll('.gp-card').forEach(card=>card.addEventListener('click',()=>{if(chosen)return;chosen=true;
-  o.querySelector('.gp-hand')?.remove();o.querySelectorAll('.gp-card').forEach(c=>c.disabled=true);
+  o.querySelectorAll('.gp-card').forEach(c=>c.disabled=true);
   try{fc.sfxClick?.();}catch{}vib(25);card.classList.add('is-chosen');
   setTimeout(()=>{snd(988,.25,.07);snd(1319,.3,.06,.08);vib([20,30,40]);},260);
   const other=[...o.querySelectorAll('.gp-card')].find(c=>c!==card);

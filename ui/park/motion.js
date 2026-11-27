@@ -3,7 +3,7 @@ import {shieldTarget} from './shield-wallet.js';
 function openControllerGame(fc){
  if(fc._royalPlaying||document.getElementById('kr-controller-game')||!window.KingRicoPark.state.royal||fc.cloudBusy()||fc.isCeleb()||fc.state.showWin||window.KingRicoCloud.dailyRewardActive)return;
  fc._royalPlaying=true;fc.setState({auto:false});
- import('./game-pick.js').then(m=>m.pickGame(fc)).then(id=>id==='bubble'?import('./bubble.js').then(m=>m.openBubble(fc,{round:window.KingRicoPark.state.royal})):import('./trinca.js').then(m=>m.openTrinca(fc,{round:window.KingRicoPark.state.royal}))).catch(e=>window.KingRicoCloud.error(e)).finally(()=>{fc._royalPlaying=false;if(!fc.cloudBusy())fc.applyCloudPlayer?.();});
+ import('./game-pick.js').then(m=>m.pickGame(fc)).then(id=>!id?{won:false,skipped:true}:id==='bubble'?import('./bubble.js').then(m=>m.openBubble(fc,{round:window.KingRicoPark.state.royal})):import('./trinca.js').then(m=>m.openTrinca(fc,{round:window.KingRicoPark.state.royal}))).catch(e=>window.KingRicoCloud.error(e)).finally(()=>{fc._royalPlaying=false;if(!fc.cloudBusy())fc.applyCloudPlayer?.();});
 }
 const STOPS=[[0,[142,36,255]],[.13,[104,48,255]],[.27,[23,79,255]],[.40,[0,207,255]],[.54,[0,242,123]],[.70,[255,218,36]],[.86,[255,148,0]],[1,[255,21,94]]];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
