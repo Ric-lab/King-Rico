@@ -89,7 +89,7 @@ export function installBigWinFlight(fc){
     const p=clamp((t-2600)/climbDuration),altitude=flightAltitude(maximum,p),pose=flightCurve(width,height,catchX,catchY,p);
     scale=lerp(1,.42,smooth(p));x=pose.x;y=pose.y;angle=Math.min(-14,lerp(-8,pose.angle,smooth(clamp((t-2600)/650))));if(p>=1)angle=-16;if(!reduced){const live=clamp((t-2600)/400);y+=Math.sin(t*.0055)*7*live;x+=Math.sin(t*.0031)*4*live;angle+=Math.sin(t*.0047)*2.6*live+(Math.random()-.5)*.8*live*(1-p);}
     scene.style.setProperty('--flight-value-pulse',String(reduced?1:1+Math.sin(p*Math.PI*16)*.018));
-    if(!reduced){const a=angle*Math.PI/180,L=size*scale*.4,tx=x-Math.cos(a)*L,ty=y-Math.sin(a)*L,ox=width*.04,oy=pose.baseline,path=pose.path.replace(/,[^,]*$/,`,${tx} ${ty}`);trail.setAttribute('d',path);trailArea.setAttribute('d',`${path} L ${tx} ${oy} L ${ox} ${oy} Z`);} // a linha segue a curva do voo e sai da cauda do avião
+    if(!reduced){const a=angle*Math.PI/180,L=size*scale*.4,tx=x-Math.cos(a)*L,ty=y-Math.sin(a)*L,ox=0,oy=pose.baseline,D=Math.hypot(tx-ox,oy-ty),path=`M ${ox} ${oy} C ${ox+D*.05} ${oy-D*.45},${tx-Math.cos(a)*D*.42} ${ty-Math.sin(a)*D*.42},${tx} ${ty}`;trail.setAttribute('d',path);trailArea.setAttribute('d',`${path} L ${tx} ${oy} L ${ox} ${oy} Z`);} // rastro sobe da esquerda (íngreme no começo) e entra na cauda na direção do nariz — nunca por cima do avião
     scene.style.setProperty('--flight-high',String(clamp(altitude*2)));
     scene.style.setProperty('--flight-space',String(smooth(clamp((altitude-.45)/.4))));
     scene.style.setProperty('--flight-cloud-y',(p*height*3.4)+'px');scene.style.setProperty('--flight-star-y',(p*height*.45)+'px');
