@@ -15,13 +15,13 @@
     },
     {
       "id": "i-meta-moedas",
-      "title": "Avaliar proposta convergente: Níveis de Patamar & Ligas (subir nível com moedas, sem trocar símbolos)",
+      "title": "Pensar mais: destino 100% opcional, visual e háptico para moedas (sem complicar)",
       "status": "todo",
       "category": "Ideias",
       "agent": "",
       "commit": "",
       "demoUrl": "",
-      "notes": "27/11: dono definiu 5 regras (pagar moedas p/ subir nível + caro, sem 2ª moeda, compensar de verdade, manter símbolos conhecidos p/ 40+, sem decoração repetitiva). Proposta em docs/IDEIAS-DE-JOGOS.md."
+      "notes": "27/11: Níveis/Ligas descartados (complicado e obrigatório). Regra do dono: se a avó só apertar Spin pra sempre, o jogo funciona igual; precisa ser simples, visual e háptico como dado/roleta/raspadinha (ou não adicionar nada agora)."
     },
     {
       "id": "p-villain-modal-clean",

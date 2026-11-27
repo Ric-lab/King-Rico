@@ -9,10 +9,10 @@ Recalculado só o enquadramento do símbolo 5 pelo gerador existente: mantém
 Sem alterações em lógica, som, economia ou main. Conferência local pelo teste
 circus_symbols_browser.py. Próximo: dono avaliar o escudo em Preview após Pages.
 
-## Concepção conjunta de Níveis de Patamar (uso das moedas) — Antigravity/Gemini, 27/11/2026
-O dono definiu os 5 limites exatos para o destino das moedas: (1) pagar a própria moeda do jogo para subir de nível, ficando mais caro/difícil; (2) sem segunda moeda; (3) compensar de verdade gastar as moedas da slot nisso; (4) preservar os símbolos conhecidos para o público 40+ ("cadê o ingresso?") e sem retrabalho pesado de assets; (5) sem decoração repetitiva estilo *Royal Match* (cansa após o 5º cenário).
-- **Proposta convergente registrada em `docs/IDEIAS-DE-JOGOS.md` (`i-meta-moedas`, nada implementado ainda):** **"Níveis de Patamar & Ligas do Circo"** — pagar moedas sobe o Nível permanente da conta (protegido contra o Tony), o que **(a)** escala proporcionalmente Vídeo Grátis (`+1.000 → +1.500 → +2.000...`), Raspadinha Diária e giro/prêmios (mantendo `1 vídeo = 10 giros` e RTP 90%), **(b)** destrava vantagens funcionais nos marcos (começar Nível 1 limpo → liberar Royal Rico, Bubble Rico, vagas máximas de Escudo `3 → 4 → 5`, recarga de escudos no Level Up) e **(c)** mantém 100% dos símbolos/personagens intactos, mudando apenas a insígnia de nível e, a cada Liga (ex.: 5 em 5 níveis), sutis tons metálicos/iluminação via CSS.
-- **Próximo passo exato:** dono dizer se essa fórmula de Níveis de Patamar bateu com o que ele quer (e se prefere aposta subindo junto com o nível sem `+ / −` ou mantendo seletor) antes de desenhar a tabela de níveis/valores.
+## Reflexão aberta sobre uso das moedas (100% opcional e háptico) — Antigravity/Gemini, 27/11/2026
+- **Descartado pelo dono:** "Níveis de Patamar & Ligas" (e antes skins/garra/álbum/globos) — complicado demais e obrigatório demais para um jogo que já tem `roleta, escudo, dado, raspadinha, spin, big win, good luck, controle`.
+- **Nova bússola registrada em `docs/IDEIAS-DE-JOGOS.md` (`i-meta-moedas`):** qualquer gasto extra de moedas precisa ser **100% opcional** (se a avó ficar só no `SPIN` para sempre, o jogo funciona idêntico, sem nada trancado) e ter a mesma simplicidade **visual + háptica + 1 gesto** do dado do Tony, roleta e raspadinha (ex.: revelar/polir quadros passando o dedo como na raspadinha, bater/carimbar com impacto háptico, ou até não adicionar nada agora para preservar a leveza).
+- **Próximo passo exato:** continuar amadurecendo com o dono se alguma interação háptica 100% opcional faz sentido ou se é melhor manter o jogo enxuto sem meta extra por ora.
 Painel: https://ric-lab.github.io/King-Rico/todo/
 
 ## Promoção oficial do lote atual da prévia (`acc5b34`) — Antigravity/Gemini, 24/11/2026

@@ -45,23 +45,18 @@ Opções exploradas e **rejeitadas** (não implementar): **4. Skins de máquina/
 4. **Mudar sem perder a identidade visual (público 40+/avó) e sem trabalho pesado de arte:** os símbolos dos rolos (*Ingresso, Tenda, Capa, Moeda, Diamante, Coroa*) e o *King Rico* **não podem sumir nem virar outros objetos** ("cadê o ingresso?").
 5. **Sem decoração repetitiva estilo *Royal Match*:** criar dezenas de salas/cenários dá trabalho demais e perde a graça depois do 5º cenário.
 
-### Proposta convergente — "Níveis de Patamar & Ligas do Circo" (em avaliação pelo dono)
+### 3ª rodada — tentativa descartada pelo dono em 27/11 ("muito complicado e muito necessário")
 
-Resolve as 5 restrições juntas sem criar moeda nova nem redesenhar assets:
+Opção explorada e **rejeitada** (não implementar): **Níveis de Patamar & Ligas** (subir nível escalando vídeo/raspadinha/aposta e trancando escudos/minigames em marcos). Motivo do descarte pelo dono: **complicado demais e obrigatório demais** — trancar coisas ou alterar economia cria peso num jogo que já tem muitas peças (`roleta, escudo, dado, raspadinha, spin, big win, good luck, controle`).
 
-1. **Como funciona o loop:**
-   - Uma barra/medalha de **Nível** mostra quanto falta para o próximo degrau (ex.: `Nível 1 → Nível 2: 2.500 🪙`). Quando o saldo atinge **Custo + Reserva mínima de giros**, o botão **SUBIR NÍVEL** acende dourado. Nível comprado **nunca cai** (nem com ataque do Tony, o que dá urgência real para gastar antes da patada!).
-2. **Por que compensa de verdade gastar moedas para subir:**
-   - **Todo o patamar da conta sobe junto permanentemente:** o **Vídeo Grátis** (`+1.000 → +1.500 → +2.000 → +3.000...`), a **Raspadinha Diária** e a **escala de giro/prêmios** crescem no mesmo degrau (mantendo `1 vídeo = 10 giros` e **RTP cravado em 90%**!). A pessoa vê seus prêmios diários e Big Wins ficarem cada vez maiores. *(Opcionalmente elimina até a confusão dos botões `+ / −`, virando aposta automática do nível — ou apenas libera tetos maiores).*
-   - **Marcos destravam poder real no jogo (sem repetição de cenário):** o Nível 1 começa super limpo de entender; níveis-marco destravam conquistas funcionais permanentes — ex.: **Nível 2** libera o *Royal Rico*, **Nível 3** abre a **4ª vaga de Escudo** (`3 → 4`), **Nível 4** libera o *Bubble Rico*, **Nível 6** abre a **5ª vaga de Escudo** (`4 → 5`), e cada Level Up já recarrega os Escudos / solta chuva comemorativa.
-   - **Dificuldade crescente real:** mesmo subindo a escala, o preço de cada nível pede um múltiplo maior de giros (`25×` no Nível 1 → `40×` no Nível 3 → `80×` no Nível 6...), exigindo boas sequências de Roleta/Big Win e defesa contra o Tony.
-3. **"Muda, mas não muda muito" (zero estranhamento + quase zero arte nova):**
-   - Todos os **símbolos dos rolos, máquina e King Rico permanecem idênticos** para sempre.
-   - O que muda é a **Insígnia/Coroa do Nível** (`1, 2, 3...`) e, apenas a cada **Liga** (ex.: a cada 5 níveis — *Bronze, Prata, Ouro, Rubi, Safira, Diamante*, ou iluminação *Manhã → Tarde Dourada → Noite de Gala*), mudam sutilmente o **tom metálico da moldura/botões e a luz do céu ao fundo via variáveis CSS**, sem refazer ilustrações.
+### Bússola definitiva do dono (27/11 — conversa aberta)
 
-### Regras técnicas caso aprovado
-
-- Gravar `level` no perfil Firestore (`cloud/` + `firestore.rules`) com `opId` idempotente, exigindo saldo suficiente + reserva mínima de giro e mantendo retorno global < 100% (~90%).
+1. **100% opcional ("Teste da Avó no Spin"):** se a avó nunca tocar em nada disso e passar a vida inteira só apertando **SPIN**, o jogo funciona **100% igual**, sem nada trancado, reduzido ou cobrando atenção. Só muda/acontece se a pessoa quiser.
+2. **Zero regra nova — puro objeto visual, háptico e de 1 gesto simples:** precisa ter a mesma alma do **dado do Tony**, da **roleta** ou da **raspadinha** (bater o olho, fazer 1 gesto tátil com som + vibração gostosa, sem texto nem tabela).
+3. **Caminhos ultrassimples em discussão aberta (ou até não adicionar nada agora):**
+   - **Quadro / Postal de Raspar & Revelar (a Galeria feita com o gesto háptico da Raspadinha):** ícone discreto e opcional; se sobrar moeda e a pessoa quiser, ela paga moedas e **passa o dedo raspando/polindo uma placa dourada** (com som + vibração contínua igual à raspadinha!) até revelar uma pintura bonita do circo, que fecha na moldura com um estalo (`PLIM!`) e libera o próximo quadro. Zero mecânica nova pra aprender, 100% opcional.
+   - **Quebrar na Batida / Carimbar (`PAF!` háptico de toques):** pagar moedas (só se quiser) para dar **3–5 batidas secas com o dedo** num Baú/Piñata dourada (vibração pesada a cada rachadura, igual ao dado/patada) ou **bater 1 carimbo físico** num Passaporte de Viagens revelando o cartão-postal.
+   - **Hipótese zero (proteger a simplicidade):** reconhecer que, diferente do *Coin Master* (cuja slot é vazia), o Circus já tem 8 mecânicas vivas e talvez **não precise** de mais um sistema agora se qualquer adição pesar na clareza.
 
 ## Os três vilões do King Rico — ideia do dono (08/11)
 
