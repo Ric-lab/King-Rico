@@ -37,33 +37,31 @@ código.**
 
 Opções exploradas e **rejeitadas** (não implementar): **4. Skins de máquina/nuvem**, **5. Máquina de garra de pelúcias**, **6. Álbum de figurinhas** e **7. Globos de neve**. Motivo do descarte na análise conjunta: soam como lojinha cosmética ou gacha paralelo, sem dar sensação real de **jornada / sair do lugar**.
 
-### Ponto atual da reflexão conjunta (27/11 — em aberto com o dono)
+### Restrições definidas pelo dono (27/11)
 
-Ao voltar à raiz do problema ("precisamos pensar juntos"), surgem **3 verdades estruturais** do *Fortune Circus* que explicam por que copiar *Coin Master* ou *Royal Match* pela metade não encaixa sem adaptar a base:
+1. **Subir de nível pagando a própria moeda do jogo:** juntou o valor da meta → paga moedas para subir de nível, ficando progressivamente mais caro/difícil.
+2. **Sem segunda moeda:** zero estrelas, gemas ou fichas paralelas.
+3. **Precisa compensar gastar as moedas da slot nisso:** não pode ser só enfeite que empobrece a banca.
+4. **Mudar sem perder a identidade visual (público 40+/avó) e sem trabalho pesado de arte:** os símbolos dos rolos (*Ingresso, Tenda, Capa, Moeda, Diamante, Coroa*) e o *King Rico* **não podem sumir nem virar outros objetos** ("cadê o ingresso?").
+5. **Sem decoração repetitiva estilo *Royal Match*:** criar dezenas de salas/cenários dá trabalho demais e perde a graça depois do 5º cenário.
 
-1. **Quem joga há 1 dia ou 3 meses vê exatamente a mesma tela:** o que falta não é "um lugar para queimar moedas", e sim **capítulos/fases visíveis** (sentir que completou `0% → 100%` de uma etapa e avançou para a próxima).
-2. **Por que no *Royal Match* e no *Coin Master* a obra não fica tampada:** nesses jogos o tabuleiro/slot também ocupa a tela inteira durante a partida, mas **a Obra/Vila é uma tela limpa separada (a Home do jogo, com botão grande `JOGAR`)**, e no *Coin Master* avançar de mundo **troca os próprios assets/símbolos temáticos** da partida.
-3. **Paradoxo matemático (RTP 90% + Moeda como combustível do giro):** no *Coin Master* gira-se com Energia (moeda é 100% sobra para vila); no *Royal Match* constrói-se com Estrelas (fase não custa moedas). No Circus, **gastar moedas direto do saldo com RTP 90% acelera zerar a banca**, a menos que:
-   - **(a) Subir de fase evolua também a economia do jogador** (bônus diário, vídeo e patamar de prêmios crescem junto com o mundo, como no *Coin Master*, fazendo o gasto virar evolução real e não perda), **ou**
-   - **(b) O avanço venha junto das vitórias/marcos** (pontos/estrelas gerados ao ganhar ou reserva protegida), sem secar os giros.
+### Proposta convergente — "Níveis de Patamar & Ligas do Circo" (em avaliação pelo dono)
 
-### Regras de ouro caso uma direção seja aprovada
+Resolve as 5 restrições juntas sem criar moeda nova nem redesenhar assets:
 
-1. **Zero leitura para a 3ª idade:** acesso por **bolinha circular lateral**
-   (mesma família visual do vídeo `+1.000`), com barra `2/5` e brilho quando há
-   compra disponível; 1 toque recolhe a máquina (ou abre a cena), mostra **um
-   botão grande com preço em moedas** e anima a peça entrando com fanfarra.
-2. **Reserva segura de giro:** o botão de construir só sugere/habilita a compra
-   mantendo uma reserva mínima para continuar girando (ex.: `500–1.000` moedas),
-   ou exige apenas o excedente do saldo. Se a aposta permanecer variável (`1` a
-   `10.000`), paradas avançadas mais caras dão **motivo real para subir a
-   aposta**; se a aposta virar fixa (`100`, ideia `i-aposta-fixa`), os preços
-   seguem progressão suave por parada.
-3. **Economia e persistência blindadas:** compras de obra são gravadas no perfil
-   Firestore (`cloud/` + `firestore.rules`) com `opId` idempotente. Se o baú de
-   conclusão (`5/5`) der moedas, escudos ou roleta, entra na simulação para
-   manter o retorno global < 100% (~90%); se der só inauguração cosmética +
-   novo tema, **não altera o RTP da slot**.
+1. **Como funciona o loop:**
+   - Uma barra/medalha de **Nível** mostra quanto falta para o próximo degrau (ex.: `Nível 1 → Nível 2: 2.500 🪙`). Quando o saldo atinge **Custo + Reserva mínima de giros**, o botão **SUBIR NÍVEL** acende dourado. Nível comprado **nunca cai** (nem com ataque do Tony, o que dá urgência real para gastar antes da patada!).
+2. **Por que compensa de verdade gastar moedas para subir:**
+   - **Todo o patamar da conta sobe junto permanentemente:** o **Vídeo Grátis** (`+1.000 → +1.500 → +2.000 → +3.000...`), a **Raspadinha Diária** e a **escala de giro/prêmios** crescem no mesmo degrau (mantendo `1 vídeo = 10 giros` e **RTP cravado em 90%**!). A pessoa vê seus prêmios diários e Big Wins ficarem cada vez maiores. *(Opcionalmente elimina até a confusão dos botões `+ / −`, virando aposta automática do nível — ou apenas libera tetos maiores).*
+   - **Marcos destravam poder real no jogo (sem repetição de cenário):** o Nível 1 começa super limpo de entender; níveis-marco destravam conquistas funcionais permanentes — ex.: **Nível 2** libera o *Royal Rico*, **Nível 3** abre a **4ª vaga de Escudo** (`3 → 4`), **Nível 4** libera o *Bubble Rico*, **Nível 6** abre a **5ª vaga de Escudo** (`4 → 5`), e cada Level Up já recarrega os Escudos / solta chuva comemorativa.
+   - **Dificuldade crescente real:** mesmo subindo a escala, o preço de cada nível pede um múltiplo maior de giros (`25×` no Nível 1 → `40×` no Nível 3 → `80×` no Nível 6...), exigindo boas sequências de Roleta/Big Win e defesa contra o Tony.
+3. **"Muda, mas não muda muito" (zero estranhamento + quase zero arte nova):**
+   - Todos os **símbolos dos rolos, máquina e King Rico permanecem idênticos** para sempre.
+   - O que muda é a **Insígnia/Coroa do Nível** (`1, 2, 3...`) e, apenas a cada **Liga** (ex.: a cada 5 níveis — *Bronze, Prata, Ouro, Rubi, Safira, Diamante*, ou iluminação *Manhã → Tarde Dourada → Noite de Gala*), mudam sutilmente o **tom metálico da moldura/botões e a luz do céu ao fundo via variáveis CSS**, sem refazer ilustrações.
+
+### Regras técnicas caso aprovado
+
+- Gravar `level` no perfil Firestore (`cloud/` + `firestore.rules`) com `opId` idempotente, exigindo saldo suficiente + reserva mínima de giro e mantendo retorno global < 100% (~90%).
 
 ## Os três vilões do King Rico — ideia do dono (08/11)
 

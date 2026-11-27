@@ -5,13 +5,13 @@
   "items": [
     {
       "id": "i-meta-moedas",
-      "title": "Pensar juntos: meta-progressão e propósito para as moedas",
+      "title": "Avaliar proposta convergente: Níveis de Patamar & Ligas (subir nível com moedas, sem trocar símbolos)",
       "status": "todo",
       "category": "Ideias",
       "agent": "",
       "commit": "",
       "demoUrl": "",
-      "notes": "27/11: 2ª rodada (skins/garra/álbum/globos) descartada ('não é isso'). Em concepção conjunta a partir da raiz estrutural (Home limpa vs. tela única + paradoxo RTP 90% vs. moeda de giro) em docs/IDEIAS-DE-JOGOS.md."
+      "notes": "27/11: dono definiu 5 regras (pagar moedas p/ subir nível + caro, sem 2ª moeda, compensar de verdade, manter símbolos conhecidos p/ 40+, sem decoração repetitiva). Proposta em docs/IDEIAS-DE-JOGOS.md."
     },
     {
       "id": "p-villain-modal-clean",
