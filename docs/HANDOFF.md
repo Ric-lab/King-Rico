@@ -1,3 +1,12 @@
+## Imagem final do baú para Gemini aplicar — Codex, 28/11/2026
+Pedido do dono: commit simples da imagem, SEM aplicar ou publicar.
+Fonte final: assets/symbols/treasure-chest-v3-final.png (PNG transparente).
+É a última arte mostrada: coroa inclinada integrada, moedas proporcionais com
+coroa gravada, vãos preenchidos, moeda extra na frente e traço removido.
+Próximo passo (Gemini): usar este PNG para substituir a arte ativa do baú,
+preservar IDs/pagamentos/lógica, converter para WebP e conferir só o encaixe.
+Nenhuma referência do jogo foi alterada neste checkpoint. Commit [skip ci].
+
 ## Baú vermelho aprovado — Codex, 27/11/2026
 Somente arte, na prévia: troca do PNG/WebP do baú no caminho ativo existente.
 Versão vermelha/prata com rosto gravado no fecho e RICO em vermelho na frente.
