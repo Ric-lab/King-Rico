@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-11-27",
+  "updatedAt": "2026-11-28",
   "boardUrl": "https://ric-lab.github.io/King-Rico/todo/",
   "previewBaseUrl": "https://ric-lab.github.io/King-Rico/circus/",
   "items": [
     {
       "id": "p-chest-king-reels",
-      "title": "Aplicar baú roxo/prata e rosto do King Rico na sequência visual",
+      "title": "Baú vermelho/prata final (v3) e rosto do King Rico na sequência visual",
       "status": "preview",
       "category": "Visual & Ritmo",
-      "agent": "Codex",
+      "agent": "Codex / Antigravity",
       "commit": "",
-      "demoUrl": "",
-      "notes": "Somente arte: 0,4 capa; 0,8 moeda; 1,2 diamante; 2,5 coroa; 5 baú; 10 King. PAYS, chances e regras sem alterações. Imagens compartilhadas nas nove casas, fita, tabela e seletor."
+      "demoUrl": "https://ric-lab.github.io/King-Rico/Preview",
+      "notes": "28/11: aplicado treasure-chest-v3-final (coroa inclinada integrada, moedas proporcionais com coroa gravada, vãos preenchidos e moeda extra à frente) sobre o caminho ativo do ID 8. 0,4 capa; 0,8 moeda; 1,2 diamante; 2,5 coroa; 5 baú; 10 King. PAYS e regras intactos."
     },
     {
       "id": "p-shield-flat-wheel",

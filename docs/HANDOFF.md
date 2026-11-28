@@ -1,3 +1,10 @@
+## Baú final (`treasure-chest-v3-final`) aplicado na prévia — Antigravity/Gemini, 28/11/2026
+Base `39062a8`; consumido o PNG transparente deixado pelo Codex em `assets/symbols/treasure-chest-v3-final.png`.
+- **Feito (somente prévia, `main` intacta):** versão anterior de `assets/symbols/treasure-chest-v2.{png,webp}` preservada em `archive/assets/chest-red-v2-2026-11-28/`; `treasure-chest-v3-final.png` (`1254×1254` RGBA) copiado para `assets/symbols/treasure-chest-v2.png` e exportado em `assets/symbols/treasure-chest-v2.webp` (`512×512` RGBA WebP, ~76 KB).
+- **Encaixe e validação:** regenerados `ui/park/reel-symbols.css` e `ui/park/reel-symbols.json` via `scripts/reel-symbols.py` (envelope óptico `81,5%W × 82,0%H` centrado pelo alfa, compartilhado entre 9 casas, fita, travado, tabela e seletor; IDs, `PAYS`, chances e regras intactos). `npm run build:preview`, `circus_symbols_browser.py` (`PASS`, prints `work/preview-symbol-after-8.png` e `work/preview-symbol-sheet-after.png` conferidos) e `check-preview-build.mjs` (`OK`).
+- **Próximo passo:** dono avaliar o baú final e a nova sequência visual em https://ric-lab.github.io/King-Rico/Preview antes de qualquer promoção para `main`.
+Painel: https://ric-lab.github.io/King-Rico/todo/
+
 ## Imagem final do baú para Gemini aplicar — Codex, 28/11/2026
 Pedido do dono: commit simples da imagem, SEM aplicar ou publicar.
 Fonte final: assets/symbols/treasure-chest-v3-final.png (PNG transparente).

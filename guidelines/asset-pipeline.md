@@ -557,3 +557,10 @@ Aplicação somente na prévia. Original arquivado, sem apagar histórico.
 símbolos oficiais e rosto do King Rico com coroa. GPT Image com as fontes
 existentes; um refinamento da cabeça para manter orelhas no quadro. Custo não
 informado. PNG/WebP compartilhados em assets/symbols/drafts/; ver README.
+
+28/11/2026 — Baú final (`assets/symbols/treasure-chest-v3-final.png`, entregue no
+commit `39062a8`) aplicado na prévia sobre o caminho ativo
+`assets/symbols/treasure-chest-v2.{png,webp}`: exportação de empacotamento WebP
+RGBA `512×512` (Pillow LANCZOS q92, 0 créditos) e recálculo do envelope óptico
+pelo `scripts/reel-symbols.py`. Versão vermelha anterior preservada em
+`archive/assets/chest-red-v2-2026-11-28/`.

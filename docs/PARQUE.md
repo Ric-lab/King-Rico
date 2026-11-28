@@ -740,12 +740,11 @@ Sem alterar valores ou chances, os IDs pagos existentes chamam estas artes:
 | 2 | Moeda (atlas, tile 6) | 0,8× |
 | 0 | Diamante (atlas, tile 8) | 1,2× |
 | 6 | Coroa (atlas, tile 7) | 2,5× |
-| 8 | Baú roxo/prata (`assets/symbols/treasure-chest-v2.webp`) | 5× |
+| 8 | Baú vermelho/prata (`assets/symbols/treasure-chest-v2.webp`, fonte `treasure-chest-v3-final.png`) | 5× |
 | 7 | Rosto King Rico (`assets/king-rico/head-v1.webp`) | 10× |
 
 Os nomes internos legados do motor NÃO são nomes dos assets. O gerador de
 material dos rolos, a tabela e o seletor seguem esse mapping visual. Não trocar
 PAYS/WEIGHTS, probabilidades ou regras para fazer a arte coincidir com o ID.
 
-27/11/2026 (prévia): o baú ativo passa a vermelho/prata, rosto do King gravado
-no fecho e RICO em vermelho na frente. Mesmo ID 8, caminho e pagamento 5×.
+28/11/2026 (prévia): aplicado o baú vermelho/prata final (`treasure-chest-v3-final.png` → `treasure-chest-v2.webp`): coroa inclinada integrada ao tesouro, moedas proporcionais com coroa gravada, vãos preenchidos, moeda extra à frente e traço removido. Versão anterior arquivada em `archive/assets/chest-red-v2-2026-11-28/`. Mesmo ID 8, caminho ativo e pagamento 5×.
